@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"20130610102250",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130612183850",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -33,11 +33,20 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-<script src="jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
-<script type="text/javascript" src="site/scripts/jquery_actions.js"></script>
-
+<!--<script type="text/javascript" src="site/scripts/jquery_actions.js"></script>
+-->
+<script type="text/javascript" src="js/jkmegamenu.js"></script>
+<script type="text/javascript">
+jkmegamenu.definemenu("megaanchor", "megamenu1", "mouseover")
+jkmegamenu.definemenu("megaanchor1", "megamenu2", "mouseover")
+jkmegamenu.definemenu("megaanchor2", "megamenu3", "mouseover")
+jkmegamenu.definemenu("megaanchor3", "megamenu4", "mouseover")
+jkmegamenu.definemenu("megaanchor4", "megamenu5", "mouseover")
+jkmegamenu.definemenu("megaanchor5", "megamenu6", "mouseover")
+</script>
 <script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
 
 <script type="text/javascript">
@@ -47,6 +56,54 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
             body {font-family:Arial, Helvetica, sans-serif; font-size:12px;}
             .selCont {clear:both; margin-bottom:20px; padding-bottom:40px; float:left; border-bottom:dotted 1px #000; width:600px;}
         </style>
+     
+  <style>
+.megamenu{
+position: absolute;
+display: none;
+
+background: white;
+padding: 10px;
+font: normal 12px Verdana;
+z-index: 100;
+max-width:900px;
+font-family:Arial, Helvetica, sans-serif;
+box-shadow: 1px 1px 1px 1px #222222;
+
+}
+
+.megamenu .column{
+float: left;
+width: 150px; /*width of each menu column*/
+margin-right: 5px;
+}
+
+.megamenu .column ul{
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+.megamenu .column ul li{
+padding-bottom: 5px;
+}
+
+.megamenu .column h3{
+background: #e0e0e0;
+font: bold 13px Arial;
+margin: 0 0 5px 0;
+}
+
+.megamenu .column ul li a{
+text-decoration: none;
+}
+
+.megamenu .column ul li a:hover{
+color: red;
+}
+div#container div.nav div.navContent > ul > li:hover{background: url(images/background-nav-active.png) repeat-x;}
+
+</style>      
 </head>
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
@@ -124,13 +181,18 @@ This file is intended to go along with the 10-step tutorial at:
  			</div>
 		</div>
         <div class="nav">
-				<div class="navContent"> 
-					<ul>
-						<li>
-							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
-								    <ul>
+				<div class="navContent">
+                <ul>
+						<li><a href="#" id="megaanchor" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a></li>
+                        <li><a href="#" id="megaanchor1" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a></li>
+                        <li><a href="#" id="megaanchor2" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUES</a></li>
+                        <li><a href="#" id="megaanchor3" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a></li>
+                        <li><a href="#" id="megaanchor4" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a></li>
+                        <li><a href="#" id="megaanchor5" onClick="return showContent('search',{KEYWORDS: 'games'});">Games</a></li>
+                         </ul>
+                <div id="megamenu1" class="megamenu">
+                <div class="column">
+                <ul>
 										<li>Action Figures</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
@@ -146,13 +208,17 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
 									</ul>
-									<ul>
+                                    </div>
+                                    <div class="column">
+                                    <ul>
 										<li>Statues</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
 									</ul>
-									<ul>
+                                    </div>
+                                    <div class="column">
+                                    <ul>
 										<li>Comics</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
@@ -161,7 +227,9 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
-									<ul>
+                                    </div>
+                                    <div class="column">
+                                    <ul>
 										<li>Prop Replicas</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
@@ -171,7 +239,9 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
 									</ul>
-									<ul>
+                                    </div>
+                                    <div class="column">
+                                    <ul>
 										<li>Everything Else</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Barware</a></li>
@@ -182,7 +252,9 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
 									</ul>
-									<ul>
+                                    </div>
+                                    <div class="columncolumn">
+                                    <ul>
 										<li>Price</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
@@ -190,14 +262,11 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#" onClick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="https://static.zoovy.com/img/redford/W900-H100/toywars/dropdownfunkopop4.jpg" /></a>
-								</div>
-							</div>
-						</li>
-						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
+                                    </div>
+                                    <a href="#" onClick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="https://static.zoovy.com/img/redford/W900-H100/toywars/dropdownfunkopop4.jpg" /></a>
+                </div>
+                 <div id="megamenu2" class="megamenu">
+                <div class="column">
 								    <ul>
 								        <li>New</li>
 									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New This Week</a></li>
@@ -206,6 +275,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New Last Year</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Collecting Dust</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Preorders</li>
 									</ul>																
@@ -224,6 +295,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'superman figure'});">Superman</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Theme</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who figure'});">Dr. Who</a></li>
@@ -236,7 +309,9 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars figure'});">Star Wars</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
-									<ul>
+									</div>
+                                    <div class="column">
+                                    <ul>                                    
 										<li>Manufacturers</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bandai figure'});">Bandai</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
@@ -255,22 +330,20 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Price</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
-									</ul>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>		
+                                        </ul></div>	                                       							
 									<a href="#"onClick="return showContent('search',{KEYWORDS: 'walking dead figure'});"><img src="https://static.zoovy.com/img/redford/W314-H220/toywars/dropdown_walking_dead2.jpg" /></a>
 								</div>
-							</div>
-						</li>
-						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUES</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
+                    <div id="megamenu3" class="megamenu">
+                    <div class="column">
 									<ul>
 										<li>New</li>
 									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
@@ -279,9 +352,12 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Preorders</li>
-									</ul>																
+									</ul>	
+                                    															
 									<ul>
 										<li>Characters</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
@@ -294,6 +370,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Theme</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who statue'});">Dr. Who</a></li>
@@ -313,6 +391,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Type</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ArtFX'});">ArtFX</a></li>
@@ -327,14 +407,11 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $100</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Over $100</a></li>										
 									</ul>
+                                    </div>
 									<a href="#" onClick="return showContent('search',{KEYWORDS: 'gentle giant preorder'});"><img src="https://static.zoovy.com/img/redford/W314-H220/toywars/dropdown_bibfortuna.jpg" /></a>
-								</div>
-							</div>
-						</li>
-                        <li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
+                    </div>
+                    <div id="megamenu4" class="megamenu">
+                    <div class="column">
 								    <ul>
 								        <li>New</li>
 									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: '20130515'});">New for 5/15</a></li>
@@ -342,9 +419,11 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '20130501'});">New for 5/1</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '20130424'});">New for 4/24</a></li>
 									</ul>
-									<ul>
+                                  <ul>
 										<li>Preorders</li>
-									</ul>																
+									</ul>
+                                    </div>
+                                    <div class="column">																
 									<ul>
 										<li>Characters</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
@@ -360,6 +439,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wonder woman comic'});">Wonder Woman</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Theme</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'avengers comic'});">Avengers</a></li>
@@ -376,6 +457,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wolverine comic'});">Wolverine</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Publishers</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
@@ -385,6 +468,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Price</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
@@ -392,16 +477,12 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
-									</ul>
+									</ul></div>
 									<a href="#"><img src="https://static.zoovy.com/img/redford/W801-H80/toywars/dropdowncomics.jpg" /></a>
 								</div>
-							</div>
-						</li>
-                        
-                        <!--<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
+                                
+                        <div id="megamenu5" class="megamenu">        
+                       <div class="column">
                                     <ul>
 										<li>New</li>
 									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
@@ -412,62 +493,9 @@ This file is intended to go along with the 10-step tutorial at:
 									</ul>
 									<ul>
 										<li>Preorders</li>
-									</ul>																
-									<ul>
-										<li>Categories</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bank'});">Banks</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'tote'});">Lunch Totes</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mini mate'});">Mini Mates</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
-									</ul>
-									<ul>
-										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'beatles'});">Beatles</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
-									</ul>
-									<ul>
-										<li>Manufacturers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-				  						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'official pix'});">Official Pix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
-									</ul>
-									<a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="https://static.zoovy.com/img/redford/W314-H250/toywars/dropdowngandalf3.jpg" /></a>
-								</div>
-							</div>
-						</li>-->
-						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
-                                    <ul>
-										<li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
-									</ul>
-									<ul>
-										<li>Preorders</li>
-									</ul>																
+									</ul>	
+                                    </div>
+                                    <div class="column">															
 									<ul>
 										<li>Characters</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman prop'});">Batman</a></li>
@@ -481,6 +509,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'stormtrooper prop'});">Stormtrooper</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'thor prop'});">Thor</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Theme</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr doctor who prop'});">Dr. Who</a></li>
@@ -488,6 +518,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek prop'});">Star Trek</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars prop'});">Star Wars</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Manufacturers</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
@@ -497,15 +529,12 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
-									</ul>
+									</ul></div>
 									<a href="#" onClick="return showContent('product',{'pid':'EF01110009-RF'})"><img src="https://static.zoovy.com/img/redford/W241-H338/toywars/dropdown_vader.jpg" /></a>
-						  <div>
-							</div>
-						</li>
-						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">Games</a>
-							<div class="subMenu">
-								<div class="dropDownListHolder">
+								</div>  
+                                
+                     <div id="megamenu6" class="megamenu">            
+                    <div class="column">
                                     <ul>
 										<li>New</li>
 									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
@@ -516,7 +545,9 @@ This file is intended to go along with the 10-step tutorial at:
 									</ul>
 									<ul>
 										<li>Preorders</li>
-									</ul>																
+									</ul>	
+                                    </div>
+                                    <div class="column">															
 									<ul>
 										<li>Categories</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
@@ -528,6 +559,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Theme</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
@@ -541,6 +574,8 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
 									</ul>
+                                    </div>
+                                    <div class="column">
 									<ul>
 										<li>Manufacturers</li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
@@ -552,14 +587,11 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
-									</ul>
+									</ul></div>
 									<a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="https://static.zoovy.com/img/redford/W314-H250/toywars/dropdowngandalf3.jpg" /></a>
-								</div>
-							</div>
-						</li>
-					</ul>
+								</div>                   
+                </div>
 				</div>
-			</div>
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
 <!--
@@ -660,9 +692,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <li><img src="images/6.jpg"/></li>
 <li><img src="images/7.jpg"/></li>
 </ul>
-<!--<ul id="wideSlideshow" class="pics slideshow" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
--->
-</div><div style="clear:both;"></div>
+</div>
+<div style="clear:both;"></div>
     </div>
 <div class="rightB"><img src="images/cyber.jpg" /></div><div class="cb"></div>
 </div>
@@ -849,6 +880,7 @@ container ul should have lineItemProdlist class on it instead of productList
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
 				<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 <button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
 <span class="ui-icon ui-icon-cart"></span>
