@@ -253,13 +253,13 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminWarehouseMacro',
+					'WAREHOUSE' : sfo.CODE,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					}; 
 				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
 				delete sfo._macrobuilder;
-				newSfo['@updates'].push('WAREHOUSE-CREATE?CODE='+sfo.CODE);
-				newSfo['@updates'].push('WAREHOUSE-UPDATE?'+$.param(sfo));
+				newSfo['@updates'].push('WAREHOUSE-CREATE?'+$.param(sfo));  // 'code/warehouse' is passed on the outer level.
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
@@ -270,6 +270,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminWarehouseMacro',
+					'WAREHOUSE' : sfo.CODE,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					}; 
@@ -321,7 +322,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 		e : {
 
 //can't use defualt createDialog app event because we need to add a few params to the form.
-			warehouseCreateShow : function($btn)	{
+			warehouseCreateShow : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.warehouseCreateShow').on('click.warehouseCreateShow',function(event){
 					event.preventDefault();
@@ -374,7 +375,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 							if($panel.length)	{
 								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
 								}
-							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','@updates':["WAREHOUSE-DELETE?CODE="+CODE]},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','WAREHOUSE':CODE,'@updates':["WAREHOUSE-DELETE"]},'immutable');
 							app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
 							app.model.dispatchThis('immutable');
 							$modal.dialog('close');

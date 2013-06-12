@@ -366,3 +366,53 @@ JSON editor, which didn't work:
 -->		
 
 
+
+
+
+<!--
+
+/// COMPETITIVE INTELLIGENCE ENGINE \\\
+
+-->
+
+<table>
+<tr id='CIE_DSA_rowTemplate'>
+	<td data-bind='var: agent(AGENTID); format:text;'></td>
+	<td data-bind='var: agent(VERSION); format:text;'></td>
+	<td data-bind='var: agent(SCRIPT_LENGTH); format:text; posttext: Lines;'></td>
+	<td data-bind='var: agent(CREATED_TS); format:text;'></td>
+	<td>
+		<button data-app-event="admin_tools|agentRemoveConfirm">Delete</button>
+		<button data-app-event="admin_tools|agentDetailDMIPanel">Edit</button>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='CIE_DSA_AddUpdateTemplate'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs'>
+
+<input type='hidden' name='GUID' value=''  data-bind='var: agent(GUID); format:popVal;' />
+
+<fieldset>
+
+<label>
+	<span>Name</span>
+	<input name='AGENTID' value='' data-bind='var: agent(AGENTID); format:popVal;' data-app-event='admin|alphaNumeric' />
+</label>
+
+<label>
+	<span>Script</span>
+	<textarea name='SCRIPT' data-bind='var: agent(SCRIPT); format:popVal;' />
+</label>
+
+
+<button data-app-event="admin|processForm">Save</button>
+
+</fieldset>
+</form>
+
+</div>
+

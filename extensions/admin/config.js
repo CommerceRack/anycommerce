@@ -629,25 +629,25 @@ $D.dialog('open');
 				},
 
 // !!! Update this to match the macro name.
-			"couponUpdate" : function(sfo)	{
+			"COUPON/UPDATE" : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminConfigMacro',
 					'_tag':sfo._tag,
-					'@updates':new Array()
+					'@updates':["COUPON/UPDATE?"+$.param(sfo)]
 					}; 				
 				
 				return newSfo;
 				},
 // !!! Update this to match the macro name.
-			"couponCreate" : function(sfo)	{
+			"COUPON/CREATE" : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminConfigMacro',
 					'_tag':sfo._tag,
-					'@updates':new Array()
+					'@updates':["COUPON/CREATE?"+$.param(sfo)]
 					}; 				
 				
 				return newSfo;
@@ -676,7 +676,7 @@ $D.dialog('open');
 						
 					$panel.attr('data-couponcode',couponCode);
 					$('form',$panel)
-						.append("<input type='hidden' name='_macrobuilder' value='admin_config|couponUpdate' /><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' />")
+						.append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/UPDATE' /><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' />")
 					 	.find(".applyDatepicker").datepicker({
 							changeMonth: true,
 							changeYear: true,
@@ -700,7 +700,7 @@ $D.dialog('open');
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|couponCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/CREATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
 						changeYear: true,
@@ -1204,21 +1204,20 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 			}
 		else if(vars.rulesmode == 'coupons')	{
 			//unlike shipping, coupon rules are non-destructive. so we only impact codes that were edited, added or deleted.
+			macros.push("COUPON/RULESTABLE-EMPTY?coupon="+vars.couponCode);
 			$('tr',$tbody).each(function(){
 				var $tr = $(this);
-				if($tr.hasClass('rowTaggedForRemove'))	{
-					macros.push("COUPON:REMOVE?CODE="+$tr.data('code'));//row tagged for delete. do not insert.
+// !!! DO A DESTRUCTIVE RULES IMPORT.
+/*				if($tr.hasClass('rowTaggedForRemove'))	{
+					macros.push("COUPON/RULESTABLE-REMOVE?CODE="+$tr.data('code'));//row tagged for delete. do not insert.
 					}
 				else if($tr.hasClass('isNewRow'))	{
-					macros.push("COUPON:INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
-					}
-				else if($tr.hasClass('edited'))	{
-					macros.push("COUPON:UPDATE?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+					macros.push("COUPON/RULESTABLE-INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
 					}
 				else	{
 					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
 					}
-				});
+*/				});
 
 
 			}

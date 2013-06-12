@@ -554,7 +554,8 @@
 		</div>
 		
 		<div class='formPeriodRange formPeriodRange-SALES-QUICK displayNone'>
-		<select name="PERIOD">
+		<select name="PERIOD" required='required' data-validation-rules='skipIfHidden'>
+			<option value=''></option>
 			<option value="today">Today Only</option>
 			<option value="thismonth">Month to Date</option>
 			<option value="4week">Last 4 Weeks</option>

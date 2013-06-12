@@ -58,7 +58,28 @@ var admin_tools = function() {
 				$("[data-app-role='pickerContainer']:first",$target).append(app.ext.admin.a.getPicker());
 				app.u.handleAppEvents($target,{'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
 
+				},
+			
+			showciEngineAgentManager : function($target)	{
+				
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Secret Agent Man!',
+					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+//					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'buttons' : ["<button data-app-event='admin_tools|agentCreateShow'>Add Agent<\/button>"],
+					'thead' : ['ID','Version','Script Length','Created',''], //the blank at the end is for the th tag for the buttons.
+					'tbodyDatabind' : "var: users(@AGENTS); format:processList; loadsTemplate:CIE_DSA_rowTemplate;"
+					});
+
+				if($table)	{
+					app.model.addDispatchToQ({'_cmd':'adminCIEngineAgentList','_tag':{'datapointer':'adminCIEngineAgentList','callback':'anycontent','jqObj':$table}},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //buildDualMode will handle the error display.
+				
 				}
+			
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -92,7 +113,7 @@ var admin_tools = function() {
 						$("[name='attrib_custom']",$fieldset).attr('required','').removeAttr('required').parent('label').hide();
 						}
 					});
-				},
+				}, //powerToolAttribChange
 			powerToolConditionalChange : function($ele)	{
 				$ele.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(){
 					var $fieldset = $ele.closest('fieldset');
@@ -103,7 +124,7 @@ var admin_tools = function() {
 						$("[data-app-role='conditionalsContainer']:first",$fieldset).hide();
 						}
 					});
-				},
+				}, //powerToolConditionalChange
 			
 			powerToolVerbChange : function($radio)	{
 				$radio.off('click.powerToolVerbChange').on('click.powerToolVerbChange',function(){
@@ -116,8 +137,86 @@ var admin_tools = function() {
 						.attr('required','').removeAttr('required'); //make sure input isn't required.
 					$radio.closest('tr').find('input').attr('disabled','').removeAttr('disabled').attr('required','required'); //enable input(s) related to this verb.
 					});
-				}
-				
+				}, //powerToolVerbChange
+
+			agentDetailDMIPanel : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.agentDetailDMIPanel').on('click.agentDetailDMIPanel',function(event){
+					event.preventDefault();
+					var
+						data = $btn.closest('tr').data()
+
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'CIE_DSA_AddUpdateTemplate',
+						'panelID' : 'agent_'+data.agentid,
+						'header' : 'Edit agent: '+data.agentid,
+						'handleAppEvents' : true
+//						'data' : app.data.adminCIEngineAgentList['@AGENTS'][data.obj_index]
+						});
+
+//					$panel.showLoading({'message':'Fetching Agent Details'});
+					$('form',$panel)
+						.append("<input type='hidden' name='_cmd' value='adminCIEngineAgentUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The agent has been successfully updated.' />")
+						.find("[name='AGENTID']")
+						.closest('label').hide(); //agent id is not editable, once set.
+					
+					app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentDetail','_tag':{'callback':'anycontent','jqObj':$panel,'datapointer':'adminCIEngineAgentDetail|'+data.agentid}},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				}, //agentDetailDMIPanel
+
+			agentCreateShow : function($btn)	{
+
+				$btn.button();
+				$btn.off('click.agentCreateShow').on('click.agentCreateShow',function(event){
+
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Agent',
+						'templateID':'CIE_DSA_AddUpdateTemplate',
+						'data' : {'GUID':app.u.guidGenerator()},
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminCIEngineAgentCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+
+					});
+				}, //agentCreateShow
+			
+			agentRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.agentRemoveConfirm').on('click.agentRemoveConfirm',function(event){
+					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data(),
+						$D;
+
+					$D = app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(){
+						$D.showLoading({"message":"Deleting Agent"});
+						app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentRemove','_tag':{'callback':function(rd){
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$D.dialog('close');
+								$('#globalMessaging').anymessage(app.u.successMsgObject('Agent '+data.agentid+' has been removed.'));
+								$tr.empty().remove(); //removes row from list. no need to refetch entire list.
+								
+								var $panel = $(app.u.jqSelector('#','agent_'+data.agentid));
+								
+								if($panel.length)	{
+									$panel.anypanel('destroy');
+									}
+								}
+							}}},'immutable');
+						app.model.dispatchThis('immutable');
+						}});
+					})
+				} //agentRemoveConfirm
+
 			} //e [app Events]
 		} //r object.
 	return r;

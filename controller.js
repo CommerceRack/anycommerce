@@ -1741,9 +1741,9 @@ VALIDATION
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 
-					if($input.prop('type') != 'radio')	{
-						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')
-						}
+//					if($input.prop('type') != 'radio')	{
+//						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')
+//						}
 					
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
@@ -1752,6 +1752,7 @@ VALIDATION
 //					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
+						//indexOf instead of == means validation-rules (notice the plural) can be a comma seperated list
 						}
 //					else if($input.prop('type') == 'radio'){
 //						app.u.dump("IS A RADIO BUTTON");

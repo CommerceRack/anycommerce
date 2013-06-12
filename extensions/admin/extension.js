@@ -3944,6 +3944,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!ciEngineAgentManager')	{
+					app.ext.admin_tools.a.showciEngineAgentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if(path == '#!couponManager')	{
 					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
@@ -5304,7 +5307,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars = vars || {};
 				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
 				
-				vars.panelID = vars.panelID || 'panel_'+app.u.generateGUID();
+				vars.panelID = vars.panelID || 'panel_'+app.u.guidGenerator();
 				vars.data = vars.data || undefined;
 				
 				var $panel = $("<div\/>").anypanel(vars);
