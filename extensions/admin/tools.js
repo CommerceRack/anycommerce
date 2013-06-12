@@ -67,8 +67,11 @@ var admin_tools = function() {
 					'header' : 'Secret Agent Man!',
 					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 //					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
-					'buttons' : ["<button data-app-event='admin_tools|agentCreateShow'>Add Agent<\/button>"],
-					'thead' : ['ID','Version','Script Length','Created',''], //the blank at the end is for the th tag for the buttons.
+					'buttons' : [
+						"<button data-app-event='admin_tools|agentDetailDMIPanel'>Refresh<\/button>",
+						"<button data-app-event='admin_tools|agentCreateShow'>Add Agent<\/button>"
+						],
+					'thead' : ['ID','Revision#','Lines','Interface','Created',''], //the blank at the end is for the th tag for the buttons.
 					'tbodyDatabind' : "var: users(@AGENTS); format:processList; loadsTemplate:CIE_DSA_rowTemplate;"
 					});
 
