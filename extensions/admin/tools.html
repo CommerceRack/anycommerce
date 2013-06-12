@@ -379,7 +379,7 @@ JSON editor, which didn't work:
 <tr id='CIE_DSA_rowTemplate'>
 	<td data-bind='var: agent(AGENTID); format:text;'></td>
 	<td data-bind='var: agent(VERSION); format:text;'></td>
-	<td data-bind='var: agent(SCRIPT_LENGTH); format:text; posttext: Lines;'></td>
+	<td data-bind='var: agent(LINE_COUNT); format:text; posttext: Lines;'></td>
 	<td data-bind='var: agent(CREATED_TS); format:text;'></td>
 	<td>
 		<button data-app-event="admin_tools|agentRemoveConfirm">Delete</button>
@@ -405,7 +405,7 @@ JSON editor, which didn't work:
 
 <label>
 	<span>Script</span>
-	<textarea name='SCRIPT' data-bind='var: agent(SCRIPT); format:popVal;' />
+	<textarea name='SCRIPT' rows='20' class='fullWidth' data-bind='var: agent(SCRIPT); format:popVal;' />
 </label>
 
 
