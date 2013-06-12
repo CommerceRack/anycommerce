@@ -1699,12 +1699,16 @@ VALIDATION
 				return false //disable key press
 				}
 			},
-		
+
+//* 201320 -> changed to support tab key.
 		alphaNumeric : function(event)	{
 			var r = true; //what is returned.
-			if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
+//			if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
+			var keyCode = event.keyCode ? event.keyCode : event.which
+			if(keyCode == 8 || keyCode == 9)	{} //allows backspace and tabs now. 
 			else	{
-				var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+//				var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+				var key = String.fromCharCode(keyCode);
 				var regex = new RegExp("^[a-zA-Z0-9]+$");
 				if (!regex.test(key)) {
 					event.preventDefault();

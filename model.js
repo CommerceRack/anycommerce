@@ -151,7 +151,7 @@ function zoovyModel() {
 /** 201318 -> if QID was not a string, a catastropic JS error occured. could (and did) happen if call has bug in it. */				
 			else if(typeof QID != 'string') {
 				r = false;
-				app.u.dump("Unable to add dispatch to Queue. QID passed was not a string. dispatch and QID follow:","warn");
+				app.u.dump("Unable to add dispatch to Queue. QID passed was not a string. dispatch and QID follow:","error");
 				//the info below is meant to help troubleshoot where the error occured.
 				app.u.dump("dispatch: "); app.u.dump(dispatch);
 				app.u.dump("QID: "); app.u.dump(QID);
@@ -196,6 +196,8 @@ function zoovyModel() {
 			
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
+				
+				app.u.dump(index+"). "+app.q[QID][index]._cmd+" status: "+app.q[QID][index]._tag.status);
 				
 				if(app.q[QID][index]._tag.status == 'queued')	{
 					app.q[QID][index]._tag.status = "requesting";
@@ -254,7 +256,8 @@ function zoovyModel() {
 //if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid(s) in question.
 //function is also run when model.abortQ is executed.
 //don't need a QID because only the general dispatchQ gets muted... for now. ### add support for multiple qids
-		handleDualRequests : function()	{
+// *** 201320 -> no longer used.
+/*		handleDualRequests : function()	{
 			var inc = 0;
 //			app.u.dump('BEGIN model.handleDualRequests');		
 			for(var index in app.q.mutable) {
@@ -266,7 +269,7 @@ function zoovyModel() {
 			return inc;
 	//		app.u.dump('END model.handleDualRequests. '+inc+' requests set to overriden');
 			},
-
+*/
 //when an immutable request is in process, this is called which handles the re-attempts.
 		handleReDispatch : function(QID)	{
 			if(app.globalAjax.overrideAttempts < 30)	{
@@ -417,7 +420,7 @@ handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.
 set adjustAttempts to true to increment by 1.
 */
 		handleReQ : function(Q,QID,adjustAttempts)	{
-//			app.u.dump("BEGIN handleReQ");
+			app.u.dump("BEGIN handleReQ");
 			var uuid;
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
@@ -692,13 +695,12 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 	//gets called for each response in a pipelined request (or for the solo response in a non-pipelined request) in most cases. request-specific responses may opt to not run this, but most do.
 		handleResponse_defaultAction : function(responseData)	{
 //			app.u.dump('BEGIN handleResponse_defaultAction');
-//			app.u.dump(responseData);
 			var callback = false; //the callback name.
 			var uuid = responseData['_uuid']; //referenced enough to justify saving to a var.
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-//			app.u.dump(" -> handleresponse uuid: "+uuid);
+			app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
 //			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
@@ -948,12 +950,12 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							}  
 						break;
 					default:
-						if(Number(responseData['errid']) > 0) {r = true}
+						if(Number(responseData['errid']) > 0) {r = true;}
 						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
 						else if(responseData['@RESPONSES'] && responseData['@RESPONSES'].length)	{
 							var L = responseData['@RESPONSES'].length;
 							for(var i = 0; i < L; i += 1)	{
-								if(responseData['@RESPONSES'][i]['msgtype'] == 'ERROR')	{
+								if(responseData['@RESPONSES'][i]['msgtype'] == 'ERROR' || responseData['@RESPONSES'][i]['msgtype'] == 'apierr')	{
 									r = true;
 									break; //if we have an error, exit early.
 									}

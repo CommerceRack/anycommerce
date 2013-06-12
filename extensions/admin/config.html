@@ -201,7 +201,7 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <label>
 	<span>Discount Code</span>
-	<input type="text" name='code' value="" size="50"  data-bind='var:coupon(code); format:popVal;' required='required' />
+	<input type="text" name='coupon' value="" size="50"  data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
 	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.">?</span>
 </label>
 
@@ -346,13 +346,14 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <!-- used for each coupon in the coupons 'list'. -->
 <tr id='couponsResultsRowTemplate'>
-	<td data-bind="var:coupon(disabled); format:isNotDisabled; extension:admin_config; hideZero:false;"></td>
-	<td data-bind="var:coupon(code); format:text;"></td>
+	<td data-bind="var:coupon(disabled); format:isDisabled; extension:admin_config; hideZero:false;"></td>
+	<td data-bind="var:coupon(coupon); format:text;"></td>
 	<td data-bind="var:coupon(title); format:text;"></td>
 	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;"></td>
 	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;"></td>
 	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;"></td>
 	<td class='alignRight'>
+	<button data-app-event='admin_config|couponRemoveConfirm'>Delete Coupon</button>
 	<button data-app-event='admin_config|couponDetailDMIPanel'>Edit Coupon</button>
 	</td>
 </tr>
@@ -361,7 +362,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 <!-- used for each coupon rule in a coupon's rules 'list'. -->
 <tr id='ruleBuilderRowTemplate_coupons'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
-	<td data-bind="var: rule(code); format:text;"></td>
+	<td data-bind="var: rule(coupon); format:text;"></td>
 	<td data-bind="var: rule(hint); format:text;"></td>
 	<td data-bind="var: rule(exec); format:text;"></td>
 	<td data-bind="var: rule(match); format:text;"></td>

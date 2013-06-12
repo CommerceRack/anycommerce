@@ -121,21 +121,23 @@ var admin_customer = function() {
 
 			showReviewsManager : function($target)	{
 				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
-					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
-					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
+					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;",
+					'cmdVars' : {
+						'filter':'UNAPPROVED',
+						'_cmd' : 'adminProductReviewList',
+						'_tag' : {
+							'datapointer' : 'adminProductReviewList'
+							}
+						}
 					});
-
-				if($table)	{
-					app.ext.admin.calls.adminProductReviewList.init({'filter':'UNAPPROVED'},{'callback':'anycontent','jqObj':$table},'mutable');
-					app.model.dispatchThis();
-					}
-				else	{} //buildDualMode will handle the error display.
-				},
+				app.model.dispatchThis('mutable');
+				}, //showReviewsManager
 
 
 //in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
@@ -648,20 +650,20 @@ app.model.dispatchThis('immutable');
 			appAdminTicketCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
-event.preventDefault();
-var $D = $("<div \/>").attr('title',"Add a New Organization");
-
-$D.anycontent({'templateID':'crmManagerTicketCreateTemplate','data':{}});
-app.u.handleAppEvents($D);
-$D.dialog({
-	modal: true,
-	width : '70%',
-	close: function(event, ui)	{
-		$(this).dialog('destroy');
-		}
-	});
-
-$D.dialog('open');
+					event.preventDefault();
+					var $D = $("<div \/>").attr('title',"Add a New Organization");
+					
+					$D.anycontent({'templateID':'crmManagerTicketCreateTemplate','data':{}});
+					app.u.handleAppEvents($D);
+					$D.dialog({
+						modal: true,
+						width : '70%',
+						close: function(event, ui)	{
+							$(this).dialog('destroy');
+							}
+						});
+					
+					$D.dialog('open');
 
 					});
 				}, //appAdminTicketCreateShow
@@ -705,7 +707,7 @@ $D.dialog('open');
 						'data' : app.data.adminProductReviewList['@REVIEWS'][$btn.closest('tr').data('obj_index')]
 						});
 					$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					
 					//app.model.addDispatchToQ({'RID':RID,'PID':PID,'_cmd':'adminProductReviewDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
 					//app.model.dispatchThis('mutable');
@@ -722,7 +724,7 @@ $D.dialog('open');
 						data = $tr.data(),
 						$D = $btn.closest('.ui-dialog-content');
 
-					app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(){
+					app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(vars,$D){
 						$D.showLoading({"message":"Deleting Review"});
 						app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
 							$D.hideLoading();
@@ -753,7 +755,7 @@ $D.dialog('open');
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminProductReviewCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminProductReviewCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
 						changeYear: true,
@@ -774,7 +776,7 @@ $D.dialog('open');
 						var $tr = $(this);
 						if($(':checkbox:first',$tr).is(':checked'))	{
 							i += 1;
-							app.model.addDispatchToQ({'RID':$tr.data('id'),'_cmd':'adminProductReviewApprove'},'immutable');
+							app.model.addDispatchToQ({'RID':$tr.data('id'),'PID':$tr.data('pid'),'_cmd':'adminProductReviewApprove'},'immutable');
 							}
 						}); // ends tr loop.
 					
@@ -782,7 +784,7 @@ $D.dialog('open');
 					if(i)	{
 						$tbody.showLoading({'message':'Setting review status to approved for '+i+' review(s)'})
 //reload the reviews manager.
-app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults'}},'immutable');
+app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults','extension':'admin'}},'immutable');
 app.model.dispatchThis('immutable');
 					
 						}

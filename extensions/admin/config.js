@@ -391,22 +391,24 @@ else	{
 				
 				$target.empty();
 				
-				var $table = app.ext.admin.i.DMICreate($target,{
+				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Coupon Manager', //left off because the interface is in a tab.
 					'className' : 'couponManager',
-					'buttons' : ["<button data-app-event='admin_config|couponCreateShow'>Add Coupon<\/button>"],
-					'thead' : ['Enabled','Code','Title','Created','Begins','Expires',''],
-//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
-					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
+						"<button data-app-event='admin_config|couponCreateShow'>Add Coupon<\/button>"
+						],
+					'thead' : ['Disabled','Code','Title','Created','Begins','Expires',''],
+					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminConfigDetail',
+						'coupons' : true,
+						'_tag' : {'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}
+						}
 					});
+				app.model.dispatchThis();
 
-				if($table)	{
-					app.ext.admin.calls.adminConfigDetail.init({'coupons':true},{'datapointer':'adminConfigDetail|coupons|'+app.vars.partition,'callback':'anycontent','jqObj':$table},'mutable');
-					app.model.dispatchThis();
-					}
-				else	{} //buildDualMode will handle the error display.
-
-				},//showPromotionsManager
+				},//showCouponManager
 
 
 //will open the rules builder in a modal.
@@ -453,7 +455,7 @@ if(vars.rulesmode == 'shipping')	{
 else if(vars.rulesmode == 'coupons')	{
 	DMIVars.thead = ['','Code','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
 	DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
-	DMIVars.tbodyDatabind = 'var: rules(@rules); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
+	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
 	}
 else	{}
 
@@ -544,9 +546,9 @@ $D.dialog('open');
 					}
 				},
 //for coupons, disabled=1 is returned, as opposed to enabled=1. so we look for an absolute zero value.
-			isNotDisabled : function($tag,data)	{
-				if(Number(data.value) === 0)	{
-					$tag.append("<span class='ui-icon ui-icon-check' />");
+			isDisabled : function($tag,data)	{
+				if(Number(data.value) === 1)	{
+					$tag.append("<span class='ui-icon ui-icon-closethick' />");
 					}
 				else	{}
 				}
@@ -628,28 +630,32 @@ $D.dialog('open');
 				return newSfo;
 				},
 
-// !!! Update this to match the macro name.
+			"COUPON/INSERT" : function(sfo)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push("COUPON/INSERT?"+$.param(sfo));
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+				return newSfo;
+				},
 			"COUPON/UPDATE" : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminConfigMacro',
 					'_tag':sfo._tag,
-					'@updates':["COUPON/UPDATE?"+$.param(sfo)]
-					}; 				
-				
-				return newSfo;
-				},
-// !!! Update this to match the macro name.
-			"COUPON/CREATE" : function(sfo)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminConfigMacro',
-					'_tag':sfo._tag,
-					'@updates':["COUPON/CREATE?"+$.param(sfo)]
-					}; 				
-				
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push("COUPON/UPDATE?"+$.param(sfo));
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}
 			},
@@ -665,7 +671,7 @@ $D.dialog('open');
 				$btn.off('click.couponDetailDMIPanel').on('click.couponDetailDMIPanel',function(event){
 					event.preventDefault();
 					var
-						couponCode = $btn.closest('tr').data('code'),
+						couponCode = $btn.closest('tr').data('coupon'),
 						$panel = app.ext.admin.i.DMIPanelOpen($btn,{
 							'templateID' : 'couponAddUpdateContentTemplate',
 							'panelID' : 'coupon_'+couponCode,
@@ -676,14 +682,14 @@ $D.dialog('open');
 						
 					$panel.attr('data-couponcode',couponCode);
 					$('form',$panel)
-						.append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/UPDATE' /><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' />")
+						.append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/UPDATE' /><input type='hidden' name='_tag/extension' value='admin' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />")
 					 	.find(".applyDatepicker").datepicker({
 							changeMonth: true,
 							changeYear: true,
 							dateFormat : 'yymmdd'
 							})
 						.end()
-						.find("[name='code']").closest('label').hide(); //code is only editable at create.
+						.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
 					});
 				}, //couponDetailDMIPanel
 
@@ -700,7 +706,8 @@ $D.dialog('open');
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/CREATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/INSERT' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					$("[data-app-event='admin_config|ruleBuilderShow']",$D).hide(); //hide rule builder till after coupon is saved.
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
 						changeYear: true,
@@ -710,6 +717,36 @@ $D.dialog('open');
 					});
 				},	//couponCreateShow
 
+			couponRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.couponRemoveConfirm').on('click.couponRemoveConfirm',function(event){
+					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data(),
+						$D = $btn.closest('.ui-dialog-content');
+
+					app.ext.admin.i.dialogConfirmRemove({
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Deleting Coupon"});
+							app.model.addDispatchToQ({'_cmd':'adminConfigMacro','@updates':["COUPON/REMOVE?coupon="+data.coupon],'_tag':{'callback':function(rd){
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$D.dialog('close');
+									$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
+									$tr.empty().remove(); //removes row for list.
+									}
+								}
+							}
+						},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable'); //update coupon list in memory.
+						app.model.dispatchThis('immutable');
+						}});
+					})
+				},
 
 			showCCSuppInputs : function($ele)	{
 				var
@@ -1207,17 +1244,13 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 			macros.push("COUPON/RULESTABLE-EMPTY?coupon="+vars.couponCode);
 			$('tr',$tbody).each(function(){
 				var $tr = $(this);
-// !!! DO A DESTRUCTIVE RULES IMPORT.
-/*				if($tr.hasClass('rowTaggedForRemove'))	{
-					macros.push("COUPON/RULESTABLE-REMOVE?CODE="+$tr.data('code'));//row tagged for delete. do not insert.
-					}
-				else if($tr.hasClass('isNewRow'))	{
-					macros.push("COUPON/RULESTABLE-INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+				if($tr.hasClass('rowTaggedForRemove'))	{
+					//these are being removed. since the entire table was emptied, just don't pass and they'll be nuked.
 					}
 				else	{
-					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+					macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
 					}
-*/				});
+				});
 
 
 			}
@@ -1243,8 +1276,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 			}
 		else if(vars.rulesmode == 'coupons')	{
 			//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
-			app.model.destroy('adminConfigDetail|coupons|'+app.vars.partition);
-			app.ext.admin.calls.adminConfigDetail.init({'coupons':true},{datapointer : 'adminConfigDetail|coupons|'+app.vars.partition},'immutable');
+			app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable');
 			}
 		else	{} //coupons and shipping are the only two valid modes, so far.
 		

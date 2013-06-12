@@ -63,24 +63,23 @@ var admin_tools = function() {
 			showciEngineAgentManager : function($target)	{
 				
 				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Secret Agent Man!',
 					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
-//					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'buttons' : [
-						"<button data-app-event='admin_tools|agentDetailDMIPanel'>Refresh<\/button>",
+						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
 						"<button data-app-event='admin_tools|agentCreateShow'>Add Agent<\/button>"
 						],
 					'thead' : ['ID','Revision#','Lines','Interface','Created',''], //the blank at the end is for the th tag for the buttons.
-					'tbodyDatabind' : "var: users(@AGENTS); format:processList; loadsTemplate:CIE_DSA_rowTemplate;"
+					'tbodyDatabind' : "var: users(@AGENTS); format:processList; loadsTemplate:CIE_DSA_rowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminCIEngineAgentList',
+						'_tag' : {
+							'datapointer':'adminCIEngineAgentList'
+							}
+						}
 					});
-
-				if($table)	{
-					app.model.addDispatchToQ({'_cmd':'adminCIEngineAgentList','_tag':{'datapointer':'adminCIEngineAgentList','callback':'anycontent','jqObj':$table}},'immutable');
-					app.model.dispatchThis('immutable');
-					}
-				else	{} //buildDualMode will handle the error display.
-				
+				app.model.dispatchThis('mutable');
 				}
 			
 			}, //Actions
@@ -154,12 +153,11 @@ var admin_tools = function() {
 						'panelID' : 'agent_'+data.agentid,
 						'header' : 'Edit agent: '+data.agentid,
 						'handleAppEvents' : true
-//						'data' : app.data.adminCIEngineAgentList['@AGENTS'][data.obj_index]
 						});
 
 //					$panel.showLoading({'message':'Fetching Agent Details'});
 					$('form',$panel)
-						.append("<input type='hidden' name='_cmd' value='adminCIEngineAgentUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The agent has been successfully updated.' />")
+						.append("<input type='hidden' name='_cmd' value='adminCIEngineAgentUpdate' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The agent has been successfully updated.' />")
 						.find("[name='AGENTID']")
 						.closest('label').hide(); //agent id is not editable, once set.
 					
@@ -182,7 +180,7 @@ var admin_tools = function() {
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminCIEngineAgentCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your agent has been created.' />");
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminCIEngineAgentCreate' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your agent has been created.' />");
 
 					});
 				}, //agentCreateShow

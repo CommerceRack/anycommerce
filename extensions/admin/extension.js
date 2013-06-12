@@ -3307,10 +3307,12 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
 			processForm : function($form,q,_tag)	{
-				app.u.dump("BEGIN admin.a.processForm");
+//				app.u.dump("BEGIN admin.a.processForm");
 				var r = true;  //what is returned.
 				var obj = $form.serializeJSON() || {};
 				_tag = _tag || {};
+				
+//				app.u.dump(" -> obj: "); app.u.dump(obj);
 				
 				if($form.length && (obj._cmd || obj.call || obj._macrobuilder))	{
 //build the _tag obj.
@@ -3318,12 +3320,13 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					_tag.jqObj = _tag.jqObj || $form;
 //					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
 					
+					
+					
 					if(obj._macrobuilder)	{
-						app.u.dump(" -> is a macrobuilder.");
+//						app.u.dump(" -> is a macrobuilder.");
 						var mbArr = obj._macrobuilder.split('|');
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 						if(mbArr.length > 1 && app.ext[mbArr[0]] && app.ext[mbArr[0]].macrobuilders &&  typeof app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
-							app.u.dump(" -> built macro. adding to dispatch Q.");
 							app.model.addDispatchToQ(app.ext[mbArr[0]].macrobuilders[mbArr[1]](obj),q);
 							}
 						else	{
@@ -3335,7 +3338,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					else if(obj._cmd)	{
 						app.u.dump(" -> is a command.");
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
-						app.model.addDispatchToQ(obj,q);
+//had an issue w/ adding directly to the Q where if an error was present in the response and 'save' was pushed again, the original dispatch would re-send, not this one. odd. using extend solved problem.
+						app.model.addDispatchToQ($.extend(true,{},obj),q);
 						}
 					else if(obj.call)	{
 						app.u.dump(" -> is a call.");
@@ -3345,12 +3349,34 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
 						}
 					else{} //can't get here. either cmd or call are set by now.
+
+					if(_tag.updateDMIList)	{
+						var $DMI = $(app.u.jqSelector('#',_tag.updateDMIList));
+						if($DMI.length)	{
+							var cmdVars = $DMI.data('cmdVars');
+							if(cmdVars && cmdVars._cmd)	{
+								cmdVars._tag = cmdVars._tag || {};
+								cmdVars._tag.callback = 'DMIUpdateResults';
+								cmdVars._tag.extension = 'admin';
+								cmdVars._tag.jqObj = $DMI;
+								app.model.addDispatchToQ(cmdVars,q);
+								}
+							else	{
+								$form.anymessage({'message':'In admin.a.processForm, _tag/updateDMIList passed but DMI.data("cmdVars") is empty or has no _cmd set. cmdVars should be set at DMICreate and _cmd is required so that the appropriate _cmd can be run.','gMessage':true});
+								}
+							}
+						else	{
+							$form.anymessage({'message':'In admin.a.processForm, _tag/updateDMIList passed but #'+_tag.updateDMIList+' has no length (is not on DOM).','gMessage':true});
+							} //
+						}
 					
 					}
 				else	{
 					r = false;
 					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 					}
+//				app.u.dump("END processForm");
+
 				return r;
 				}, //processForm
 
@@ -3873,7 +3899,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 			getTagObjFromSFO : function(sfo)	{
 				var r = {}; //what is returned.
 				if(!$.isEmptyObject(sfo))	{
-					app.u.dump('not empty object');
+//					app.u.dump('not empty object');
 					for(var key in sfo)	{
 						if(key.substring(0,5) == "_tag/")	{
 							r[key.substring(5)] = sfo[key];//_tag/ must be stripped from key.
@@ -5198,6 +5224,7 @@ vars:
 */
 			DMICreate : function($target,vars)	{
 //				app.u.dump("BEGIN admin.u.buildDualModeInterface");
+//				app.u.dump(" -> vars: "); app.u.dump(vars);
 				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
 				vars = vars || {};
 				if($target instanceof jQuery && vars.tbodyDatabind)	{
@@ -5210,7 +5237,13 @@ vars:
 					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
 
 					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
-
+					var
+						$DMI = $("[data-app-role='dualModeContainer']",$DM),
+						$tbody = $("[data-app-role='dualModeListTbody']:first",$DM),
+						$table = $(".dualModeListTable:first",$DM);
+					
+					$DMI.attr('id','DMI_'+app.u.guidGenerator()); //apply an ID. this allows for content in a dialog to easily reference it's parent DMI.
+					
 //if set, build thead.
 					if(vars.thead && typeof vars.thead == 'object')	{
 //find and get a copy of the template used in the loadsTemplate. use it to determine which headers should be hidden in midetail mode.
@@ -5239,10 +5272,20 @@ vars:
 						}
 					else	{} //no thead. that's fine.
 
-					if(vars.className)	{$('.dualModeContainer:first').addClass(vars.className)}
+					if(vars.className)	{$DMI.addClass(vars.className)}
+					
 					if(vars.tbodyDatabind)	{
-						$("[data-app-role='dualModeListTbody']:first",$DM).attr('data-bind',vars.tbodyDatabind);
+						$tbody.attr('data-bind',vars.tbodyDatabind);
 						}
+
+					if(vars.cmdVars && vars.cmdVars._cmd)	{
+						$DMI.data('cmdVars',vars.cmdVars);
+						vars.cmdVars._tag = vars.cmdVars._tag || {};
+						vars.cmdVars._tag.callback = 'anycontent';
+						vars.cmdVars._tag.jqObj = $table;
+						app.model.addDispatchToQ(vars.cmdVars,'mutable');
+						}
+
 						
 					if(vars.header)	{
 						$("[data-app-role='dualModeListHeader']:first",$DM).text(vars.header);
@@ -5272,15 +5315,16 @@ vars:
 						}
 
 					$DM.children().appendTo($target);
-					r = $(".dualModeListTable:first",$target) //the table gets returned
 //showLoading is applied to the table, not the parent, because that's what is rturned and what anycontent is going to be run on (which will run hideLoading).
 					if(vars.showLoading)	{
-						r.showLoading({"message":vars.showLoadingMessage || undefined});
+						$table.showLoading({"message":vars.showLoadingMessage || undefined});
 						}
 					//needs to be done after table added to DOM.
 					if(vars.anytable)	{
-						r.anytable();
+						$table.anytable();
 						}
+
+					r = $table //the table gets returned
 
 					}
 				else	{
@@ -5400,8 +5444,12 @@ dataAttribs -> an object that will be set as data- on the panel.
 				} //dialogCreate
 
 			},
-			
-			
+
+
+
+//////////////////////////////////// EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
 
 		e : {
 //used for loading a simple dialog w/ no data translation.
@@ -5427,7 +5475,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 			
 //used in conjuction with the new interface (i) functions.
-//won't currently work for macro based commands.
 			processForm : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(){
@@ -5468,6 +5515,28 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 				},
 
+			refreshDMI : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-s"},text: false});
+				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
+
+				if($DMI.length && !$.isEmptyObject($DMI.data('cmdVars')) && $DMI.data('cmdVars')._cmd)	{
+					$btn.off('click.refreshDMI').on('click.refreshDMI',function(event){
+						event.preventDefault();
+						$DMI.showLoading({'message' : 'Refreshing list...' });
+						var cmdVars = $DMI.data('cmdVars');
+						cmdVars._tag = cmdVars._tag || {};
+						cmdVars._tag.callback = 'DMIUpdateResults';
+						cmdVars._tag.extension = 'admin';
+						cmdVars._tag.jqObj = $DMI;
+						app.model.addDispatchToQ(cmdVars,'mutable');
+						app.model.dispatchThis('mutable');
+						});
+					}
+				else	{
+					$btn.hide(); //required params are not set.
+					app.u.dump("A refreshDMI app event was set, however either no parent DMI found [$DMI.length: "+$DMI.length+"] or $DMI.data.cmdVars was empty (these are required for this feature and should be set as part of DMICreate).",'warn');
+					}
+				},
 
 			lockAccordionIfChecked : function($cb)	{
 
