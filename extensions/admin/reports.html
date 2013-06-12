@@ -481,7 +481,7 @@
 				<fieldset class='twoColumn labelsAsBreaks noPadOrMargin'>
 					<legend>Report Type</legend>
 					
-					<label><input type="radio" value="SALES" name="REPORT" required='required' /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
+					<label><input type="radio" value="SALES" name="REPORT" checked="checked" /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
 					
 					<label><input type="radio" value="SALE_SUMMARY" name="REPORT" /> Order Summary <span class='toolTip' title='Displays only one summary row per order.'>?</span></label>
 					
@@ -511,18 +511,21 @@
 					
 					<label>
 						<span>Dates</span>
-						<select name='VERB' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
+						<select name='PERIOD' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
 							<option value=''>please choose</option>
-							<option value='SALES-BYMONTH'>by month</option>
-							<option value='SALES-BYPERIOD'>date range</option>
-							<option value='SALES-QUICK'>by period</option>
-							<option value='SALES-BYINVOICE'>invoice range</option>
+							<option value="today">Today Only</option><!-- lowercase is rel -->
+							<option value="thismonth">Month to Date</option>
+							<option value="4week">Last 4 Weeks</option>
+							<option value="all">All Orders</option>
+							<option value='BYMONTH'>by month</option><!-- uppercase is range -->
+							<option value='BYINVOICE'>invoice range</option>
+							<option value='BYTIMESTAMP'>Date range</option>
 						</select>
 					</label>
 					
 		
 		
-		<div class='formPeriodRange formPeriodRange-SALES-BYMONTH displayNone'>
+		<div class='formPeriodRange formPeriodRange-BYMONTH displayNone'>
 		<select name="month">
 			<option value="1">January</option>
 			<option value="2">February</option>
@@ -548,22 +551,13 @@
 		</select>
 		</div>
 		
-		<div class='formPeriodRange formPeriodRange-SALES-BYPERIOD displayNone'>
-			<label>Begins <input type="text" name="begins" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
-			<label>Ends <input type="text" name="ends" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
+		<div class='formPeriodRange formPeriodRange-BYTIMESTAMP displayNone'>
+			<label>Begins <input type="text" name="begints" size="20" class='datepicker' ></label>
+			<label>Ends <input type="text" name="endts" size="20" class='datepicker' ></label>
 		</div>
 		
-		<div class='formPeriodRange formPeriodRange-SALES-QUICK displayNone'>
-		<select name="PERIOD" required='required' data-validation-rules='skipIfHidden'>
-			<option value=''></option>
-			<option value="today">Today Only</option>
-			<option value="thismonth">Month to Date</option>
-			<option value="4week">Last 4 Weeks</option>
-			<option value="all">All Orders</option>
-		</select>
-		</div>
 		
-		<div class='formPeriodRange formPeriodRange-SALES-BYINVOICE displayNone'>
+		<div class='formPeriodRange formPeriodRange-BYINVOICE displayNone'>
 			<label>First Invoice: <input type="text" name="startinv" maxlength="15" size="15"> ####-##-####</label>
 			<label>Last Invoice: <input type="text" name="endinv" maxlength="15" size="15"> ####-##-####</label>
 		</div>

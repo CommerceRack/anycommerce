@@ -100,7 +100,7 @@ var admin_reports = function() {
 				$('.datepicker',$target).datepicker({
 					changeMonth: true,
 					changeYear: true,
-					dateFormat : "mmddyy"
+					dateFormat : "@"
 					});
 				
 				
@@ -1356,6 +1356,10 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						var sfo = {'%vars':$form.serializeJSON()}
 						sfo.type = 'REPORT';
 						sfo.guid = app.u.guidGenerator();
+						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
+							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
+							sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
+							}
 						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
 						}
 					else	{} //validateForm handles error display.
