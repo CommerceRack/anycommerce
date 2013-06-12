@@ -1272,13 +1272,14 @@ div.catCarousel2 h2
 .sortby {margin:0 0 0 2px;}
 .Account {width:600px;margin-left:-20px;}
 .featuredCategories div.catNavContent p:not(:last-child){width:290px;}
+.productList > li{width:214px;}
 }
 
 /*ipad*/
 @media  only screen and (min-width: 768px) and (max-width: 979px)  and (orientation:portrait) {
 #container {width:99%;}
-.headert1{margin:11px 0 0 -25% ;width:290px;}
-.headert2{margin:41px 35px 0 25px;}
+.headert1{margin:11px 0 0 -179px ;width:290px;}
+.headert2{margin:41px 28px 0 27px;}
 .headert3{margin:10px 0 0 29px;}
 div#container div.nav div.navContent > ul > li > a {font-size:20px;}
 div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
@@ -1294,24 +1295,6 @@ div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18
 .sortby {margin:20px 0 0 2px; width:215px;}
 }
 
-@media  only screen and (max-width: 767px) {
-#container {width:99%;}
-.headert1{margin:11px 0 0 -25% ;width:290px;}
-.headert2{margin:41px 35px 0 25px;}
-.headert3{margin:10px 0 0 29px;}
-div#container div.nav div.navContent > ul > li > a {font-size:20px;}
-div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
-.midmain {margin-left:18px;}
-.featuredCategories div.catNavContent p:not(:last-child) {width:195px;}
-.caroufredsel_wrapper div.ccItem {padding-left:5px;}
-.productList > li{width:216px;}
-div#container div#topNav div#topNavContent p:not(:last-child){ /*{padding-right:11px;*/}
-.fl {padding:8px 21px 0 0}
-div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
-.featuredCategories img.btnViewAllCategories {margin-right:180px;}
-#resultsProductListContainer {width:500px!important;}
-.sortby {margin:20px 0 0 2px; width:215px;}
-}
 
 /*Samsung Big Phone*/
 @media only screen and (min-width: 480px) and (max-width: 767px) {
