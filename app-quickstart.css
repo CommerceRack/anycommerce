@@ -1298,18 +1298,21 @@ div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18
 
 /*Samsung Big Phone*/
 @media only screen and (min-width: 480px) and (max-width: 767px) {
-#mainContentArea {display:none;}
+.headert1 {margin:-50px 0 0 20px;}
 #footer {display:none;}
 .headert2{display:none;}
 .headert3{display:none;}
+div#container div#topNav {display:none;}
 }
 
 /*iphone used*/
 @media only screen and (max-width: 479px) {
 #mainContentArea {display:none;}
+.headert1 {display:none;}
 #footer {display:none;}
 .headert2{display:none;}
 .headert3{display:none;}
+
  }
 
 
