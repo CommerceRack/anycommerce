@@ -2424,7 +2424,8 @@ else if(typeof eleAttr == 'object')	{
 			}
 		$r.data(eleAttr);
 		}
-	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
+// * 201324 -> absence of eleAttr check caused JS error
+	if(eleAttr && eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
 //app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
 return this.handleTranslation($r,data);
@@ -3023,16 +3024,18 @@ $tmp.empty().remove();
 		processList : function($tag,data){
 //			app.u.dump("BEGIN renderFormats.processList");
 			$tag.removeClass('loadingBG');
-			if(data.bindData.loadsTemplate)	{
+// * 201324 -> added check for value to be object, as that's what process list is intended for.
+			if(data.bindData.loadsTemplate && typeof data.value === 'object')	{
 				var $o, //recycled. what gets added to $tag for each iteration.
 				int = 0;
-				app.u.dump(" -> data.value.length: "+data.value.length)
+//				app.u.dump(" -> data.value.length: "+data.value.length);
 				for(var i in data.value)	{
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
 					else	{
 //if data.value was an associative array....
 // ** 201320 -> needed processList to support indexed arrays AND associative arrays.
-						if(typeof data.value[i] == 'object')	{
+// ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
+						if(typeof data.value[i] === 'object')	{
 							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 							if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
 							else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
