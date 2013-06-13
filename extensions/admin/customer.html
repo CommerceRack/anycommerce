@@ -941,7 +941,7 @@ The checkbox below does not work.
 
 <table>
 <tr id='reviewsResultsRowTemplate'>
-	<td><input type='checkbox' /></td>
+	<td><span data-bind="var: giftcard(APPROVED_GMT); format: hideIfSet;"><input type='checkbox' /></span></td>
 	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode valignTop'></td>
 	<td data-bind="var: giftcard(PID); format:text;" class='valignTop'></td>
 	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
@@ -958,7 +958,7 @@ The checkbox below does not work.
 
 
 <div id='reviewAddUpdateTemplate'>
-<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs'>
 <fieldset>
 	<legend>Review Details</legend>
 
@@ -985,7 +985,7 @@ The checkbox below does not work.
 
 	<label>
 		<span>Message</span>
-		<textarea name='MESSAGE' data-bind="var: review(MESSAGE); format:popVal;" required='required'></textarea>
+		<textarea name='MESSAGE' data-bind="var: review(MESSAGE); format:popVal;" rows='6' required='required'></textarea>
 	</label>
 	
 	<label>
@@ -994,7 +994,7 @@ The checkbox below does not work.
 	</label>
 
 	<label>
-		<input type='checkbox' class='applyAnycb' name='approve' />
+		<input type='checkbox' class='applyAnycb' name='approve' data-bind="var: review(APPROVED_GMT); format:popCheckbox;" />
 		Approved
 	</label>
 </fieldset>

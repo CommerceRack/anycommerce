@@ -437,7 +437,7 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('#!taxConfig'); return false;">Sales Tax</a><br />
 			<div class="helper">Configure state and local tax collection amounts.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/promotions/index.cgi'); return false;" title="/biz/setup/promotions/index.cgi">Coupons/Promotions</a><br />
+			<a href="#" onClick="navigateTo('#!couponManager'); return false;">Coupons (beta)</a><br />
 			<div class="helper">Create discounts for special purchases</div>
 			
 <!--
@@ -721,13 +721,13 @@ UTILITIES PAGE TEMPLATE
 <!-- 		<a href="#" onClick="navigateTo('/biz/manage/customer/index.cgi'); return false;">Customer Manager</a> -->
 		<div class="helper">Find or create a customer record for your website.</div>
 		
-		<a href="#" onClick="navigateTo('/biz/manage/giftcard/index.cgi'); return false;">GiftCard Manager</a>
+		<a href="#" onClick="navigateTo('#!giftcardManager'); return false;">GiftCard Manager (beta)</a>
 		<div class="helper">Create / Manage GiftCards.</div>
 		
 		<a href="#" onClick="navigateTo('/biz/manage/newsletters/index.cgi'); return false;">Newsletter Manager</a>
 		<div class="helper">Create subscription lists and then setup Campaigns to send newsletters to your subscribers.</div>
 		
-		<a href="#" onClick="navigateTo('/biz/manage/reviews/index.cgi'); return false;">Reviews</a>
+		<a href="#" onClick="navigateTo('#!reviewsManager'); return false;">Reviews (beta)</a>
 		<div class="helper">Approve customer reviews of your products.</div>
 		
 		<a href="#" onClick="navigateTo('/biz/manage/faqs/index.cgi'); return false;">Frequently Asked Questions</a>
@@ -746,8 +746,11 @@ UTILITIES PAGE TEMPLATE
 			<div class="helper">A list of recently run batches, including reports and syndication 'publishes'.</div>
 			
 						
-			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;" title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
+			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;">CSV Import Utility</a><br />
 			<div class="helper">Import data from a variety of formats.</div>
+						
+			<a href="#" onClick="navigateTo('#!ciEngineAgentManager'); return false;">Agent Manager</a><br />
+			<div class="helper">Manage repricing agents.</div>
 		</div>
 	</div>
 
@@ -771,7 +774,7 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('/biz/manage/schedules/index.cgi'); return false;">Wholesale Pricing Schedules</a>
 		<div class="helper">Create separate price lists for your wholesale customers.</div>
 		
-		<a href="#" onClick="navigateTo('/biz/manage/warehouses/index.cgi'); return false;">Warehouses</a>
+		<a href="#" onClick="navigateTo('#!warehouseManager'); return false;">Warehouses (beta)</a>
 		<div class="helper">Warehouse Management</div>
 		
 		</div>

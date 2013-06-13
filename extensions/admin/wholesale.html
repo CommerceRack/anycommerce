@@ -76,11 +76,11 @@
 	</td>
 </tr>
 
-
-
-
-
 </table>
+
+
+
+
 
 
 
@@ -105,7 +105,7 @@
 	<!-- postal not required for international. don't add it. -->
 	<div class='label'><input type='text'  name='postal' placeholder='zip/postal code'  size='14' value='' data-bind='var: org(ORG.postal); format:popVal;' maxlength='10' /></div>
 
-	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;'></select></div>
+	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;' /></div>
 
 </fieldset>
 
@@ -155,8 +155,6 @@
 
 
 
-
-
 <!--
 ////////////////  SUPPLIER  \\\\\\\\\\\\\\\\\\
 -->
@@ -194,7 +192,6 @@
 		</div>
 	</section>
 </div>
-
 
 
 
@@ -236,6 +233,9 @@
 </table>
 
 
+
+
+
 <div id='supplierOrderListTemplate'>
 
 <table class='gridTable fullWidth'>
@@ -255,6 +255,8 @@
 </table>
 
 </div>
+
+
 
 <div id='supplierItemListTemplate'>
 
@@ -305,6 +307,13 @@
 </form>
 
 </div>
+
+
+
+
+
+
+
 
 
 
@@ -625,7 +634,6 @@
 
 
 
-
 <!--
 ////////////////  WAREHOUSE  \\\\\\\\\\\\\\\\\\
 -->
@@ -705,6 +713,50 @@
 
 </table>
 
+
+
+</div>
+
+
+
+
+
+<div id='warehouseZoneCreateUpdateTemplate'>
+
+<form action='#' onSubmit="return false">
+<fieldset>
+
+	<label>
+		<span>Warehouse Code</span>
+
+	</label>
+	<label>
+		<span>Zone Code</span>
+		<input type="textbox" size="3" maxlength="3" name="ZONE_CODE" value="">
+		<span class='toolTip' title="Each zone should have a unique 3 digit code that designates that area. Pick lists and associated policies will vary by zone - some smaller warehouses may have only a single zone.">?</span>
+	</label>
+
+	<label>
+		<span>Zone Type</span>
+		<select name="ZONE_TYPE">
+			<option value="RECEIVING">Receiving Zone: Useful for cross dock shipping</option>
+			<option value="STANDARD">Standard: Row/Shelf/Bin</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Zone Title</span>
+		<input type="textbox" size="50" maxlength="50" name="ZONE_TITLE" value="">
+		<span class='toolTip' title="An optional title describing the zone">?</span>
+	</label>
+	<label>
+		<span>Zone Preference</span>
+		<input type="textbox" size="3" maxlength="3" name="ZONE_PREFERENCE" value="">
+		<span class='toolTip' title="Zones with a higher preference are picked from first.">?</span>
+	</label>
+
+</fieldset>
+</form>
 
 
 </div>
