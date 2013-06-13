@@ -141,7 +141,7 @@ function zoovyModel() {
 		addDispatchToQ : function(dispatch,QID) {
 //			app.u.dump('BEGIN: addDispatchToQ');
 //			app.u.dump(" -> QID: "+typeof QID);
-//** 201218 -> QID default needs to be before the string check (because a blank value typeof != string.
+//** 201318 -> QID default needs to be before the string check (because a blank value typeof != string.
 			QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			var r; // return value.
 			if(dispatch['_cmd'] == 'undefined')	{
@@ -157,12 +157,15 @@ function zoovyModel() {
 				app.u.dump("QID: "); app.u.dump(QID);
 				}
 			else	{
+//** 201324 -> 	there was an issue w/ a serialized form object being added directly to the Q (as opposed to going through a .call) and then the form being re-submitted after a correction
+//				but the original dispatch was getting resent instead of the updated command. extend creates a duplicate w/ no pointers. solved the issue.
+				var tmp = $.extend(true,{},dispatch); 
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
-				dispatch["_uuid"] = uuid;
-				dispatch._tag = dispatch._tag || {}; //the following line will error if tag is not an object. define as such if not already defined.
-				dispatch['_tag']["status"] = 'queued';
+				tmp["_uuid"] = uuid;
+				tmp._tag = tmp._tag || {}; //the following line will error if tag is not an object. define as such if not already defined.
+				tmp['_tag']["status"] = 'queued';
 //				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
-				app.q[QID][uuid] = dispatch;
+				app.q[QID][uuid] = tmp;
 				r = uuid;
 				}
 			return r;
@@ -197,7 +200,7 @@ function zoovyModel() {
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
 				
-				app.u.dump(index+"). "+app.q[QID][index]._cmd+" status: "+app.q[QID][index]._tag.status);
+//				app.u.dump(index+"). "+app.q[QID][index]._cmd+" status: "+app.q[QID][index]._tag.status);
 				
 				if(app.q[QID][index]._tag.status == 'queued')	{
 					app.q[QID][index]._tag.status = "requesting";
