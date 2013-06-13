@@ -67,20 +67,24 @@ var admin_wholesale = function() {
 			
 			showWarehouseManager : function($target)	{
 				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Warehouse Manager',
 					'className' : 'warehouseManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
-					'buttons' : ["<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"],
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
+						"<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"
+						],
 					'thead' : ['ID','Code','Title','State','Zip','Latency','Cutoff','Created',''],
-					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;"
+					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminWarehouseList',
+						'_tag' : {
+							'datapointer':'adminWarehouseList'
+							}
+						}
 					});
-
-				if($table)	{
-					app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag' : {'datapointer':'adminWarehouseList','callback':'anycontent','jqObj':$table}},'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				else	{} //buildDualMode will handle the error display.
+				app.model.dispatchThis('mutable');
 				},
 			
 			
@@ -333,7 +337,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
 				},
 
@@ -353,7 +357,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						'handleAppEvents' : true
 						});
 					$("[name='CODE']",$panel).closest('label').hide(); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' />");
+					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					
 					//app.model.addDispatchToQ({'WID':WID,'_cmd':'adminWarehouseDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
 					//app.model.dispatchThis('mutable');

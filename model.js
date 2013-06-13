@@ -159,6 +159,7 @@ function zoovyModel() {
 			else	{
 //** 201324 -> 	there was an issue w/ a serialized form object being added directly to the Q (as opposed to going through a .call) and then the form being re-submitted after a correction
 //				but the original dispatch was getting resent instead of the updated command. extend creates a duplicate w/ no pointers. solved the issue.
+// full explanation here: https://github.com/zoovy/AnyCommerce-Development/commit/41396eb5546621c0b31e3273ecc314e686daf4bc
 				var tmp = $.extend(true,{},dispatch); 
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				tmp["_uuid"] = uuid;

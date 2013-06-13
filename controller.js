@@ -3035,7 +3035,7 @@ $tmp.empty().remove();
 //if data.value was an associative array....
 // ** 201320 -> needed processList to support indexed arrays AND associative arrays.
 // ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
-						if(typeof data.value[i] === 'object')	{
+						if(data.value[i] && typeof data.value[i] === 'object')	{
 							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 							if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
 							else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
