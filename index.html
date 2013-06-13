@@ -775,7 +775,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
     
 <div class="catBrowseSidebar">
 <div class="filterContainer clearfix">
-   <form action='#' name='catbatman' id='catbatmansearch' class='layeredSearch'>
+   <form action='#' name='catbatman' id='catbatmansearch' class='layeredSearch' onSubmit="app.ext.store_filter.u.buildElasticFilters($form); return false;">
    <button class="resetButton">Reset</button>
    <fieldset data-elastic-key="base_price" data-filtertype="slider">
    
@@ -880,6 +880,8 @@ container ul should have lineItemProdlist class on it instead of productList
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
 				<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+
+
 
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 <button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
