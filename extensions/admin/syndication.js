@@ -25,7 +25,10 @@ var admin_syndication = function() {
 	//all the DST specific templates are intentionally NOT included here. They'll get loaded as needed.
 	);
 	var r = {
-
+	
+	vars : {
+		ebayXSL : null
+		},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -38,6 +41,11 @@ var admin_syndication = function() {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/syndication.html',theseTemplates);
+				var ebayxsl = $.ajax(app.vars.baseURL+'extensions/admin/resources/syi_attributes.xsl',{
+					success : function(data,b,c)	{
+						app.ext.admin_syndication.vars.ebayXSL = c.responseText;
+						}
+					})
 				r = true;
 
 				return r;
@@ -133,6 +141,23 @@ var admin_syndication = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+			
+			
+			showEBAYCategoryChooserInModal : function($input)	{
+				if($input && $input.length)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'eBay Category Chooser',
+						'anycontent' : false
+						});
+					$D.dialog('open');
+					app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0'},{'callback':'anycontent','jqObj':$D,'templateID' : 'ebayCategoryChooserTemplate'},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.a.showEBAYCategoryChooserInModal, $input was either not passed or does not exist on the dom","gMessage":true});
+					}
+				},
+			
 			showSyndication : function($target)	{
 				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
@@ -141,7 +166,7 @@ var admin_syndication = function() {
 				$target.anycontent({'templateID':'pageSyndicationTemplate',data:{}});
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
 				app.u.handleAppEvents($target);
-				},
+				}, //showSyndication
 
 			showAmzRegisterModal : function(){
 				var $D = $("<div \/>").attr('title',"Approve Amazon Create/Verify your MWS Token").append("<p><b>Welcome back!<\/b>. To complete this process, please push the 'complete activation' button below.<\/p><p class='hint'>You were given this notice because we detected you just returned from Amazon to Create/Verify your MWS Token. If you are not returning directly from Amazon, please do not push the complete activation button..<\/p>");
@@ -178,7 +203,7 @@ var admin_syndication = function() {
 					});
 //					$(':checkbox',$D).anycb(); //{'text' : {'on' : 'yes','off':'no'}} //not working in a dialog for some reason.
 				$D.dialog('open');
-				},
+				}, //showAmzRegisterModal
 
 			showDSTDetails : function(DST,$target)	{
 //				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
@@ -187,7 +212,6 @@ var admin_syndication = function() {
 
 				if($target && DST)	{
 //					app.u.dump(" -> $target and DST are set ");
-
 
 					$target.empty();
 					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
@@ -255,7 +279,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no DST or target specified.",'gMessage':true});
 					}
 				
-				},
+				}, //showDSTDetails
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -289,6 +313,116 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 					$("[data-app-role='saveButton']",$form).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
 					}
 				
+				},
+
+//pass in an LI.  This will load all the children for that LI, if it has them. expects certain data params to be set on the li itself. specifically 
+			handleEBAYChild : function($li)	{
+				app.u.dump("BEGIN admin_syndication.u.handleEBAYChild");
+				if($li && $li.length && $li.data('categoryid'))	{
+					var
+						categoryID = $li.data('categoryid'),
+						$XSLContentArea = $li.closest("[data-app-role='ebayCategoryChooserTable']").find("[data-app-role='ebayCategoryChooserXSLContainer']");
+					
+					app.u.dump(" -> categoryID: "+categoryID);
+					$XSLContentArea.data('categoryid',categoryID);
+					
+//if the children have already been generated, just toggle them on click (display on/off).
+					if($('ul',$li).length)	{
+						app.u.dump(" -> toggle");
+						//on a toggle, XSLContentArea is not emptied (at this time).
+						//already have categories. toggle ul
+						$('ul',$li).first().toggle();
+						}
+					else if(Number($li.data('leaf')) >= 1)	{
+						app.u.dump(" -> leaf!");
+						
+						$XSLContentArea.empty().showLoading({'message':'Fetching item specifics data'});
+						app.ext.admin.calls.adminEBAYCategory.init({
+							'categoryid' : categoryID,
+							'xsl' : app.ext.admin_syndication.vars.ebayXSL
+							},{'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$XSLContentArea.anymessage({'message':rd})
+									}
+								else	{
+								$XSLContentArea.hideLoading();
+								$XSLContentArea.append(app.data[rd.datapointer].html);
+								}
+/*							if(app.model.responseHasErrors(rd)){
+								$XSLContentArea.anymessage({'message':rd})
+								}
+							else	{
+
+								if(app.data[rd.datapointer].xml)	{
+									app.model.addDispatchToQ({
+										"_cmd":"xslMagic",
+										"xsl":app.ext.admin_syndication.vars.ebayXSL,
+										'xml':app.data[rd.datapointer].xml,
+										'_tag' : {
+											'datapointer':'xslMagic|ebay|'+categoryID,
+											'callback':function(rd){
+												$XSLContentArea.hideLoading();
+												if(app.model.responseHasErrors(rd)){
+													$XSLContentArea.anymessage({'message':rd})
+													}
+												else	{										
+													$XSLContentArea.append(app.data[rd.datapointer].html);
+													}
+												}
+											}
+										},'mutable');
+									app.model.dispatchThis('mutable')
+									}
+								else	{
+									$XSLContentArea.append('<br>There is NO XML for this category.');
+									}
+								}
+*/							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						app.u.dump(" -> get subcats");
+						$XSLContentArea.empty(); //empty item specifics container to avoid confusion.
+						var $ul = $("<ul \/>",{'id':'children4_'+$li.data('categoryid'),'data-bind':'var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'});
+						$ul.addClass('noPadOrMargin marginLeft').appendTo($li).showLoading({'message':'Fetching Categories...'});
+						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':$li.data('categoryid')},{'callback':'anycontent','jqObj':$ul},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					}
+				else	{
+					$('.appMessaging').anymessage({"message":"In admin.u.loadEBAYChildren, $li was either not passed, has no length or li.data('id') has no value. DEV: see console for details.","gMessage":true});
+					app.u.dump("What follows this is the $li value passed into loadEBAYChildren: "); app.u.dump($li);
+					}
+				},
+			
+			
+			updateEBAYItemSpecifics : function($form)	{
+				app.u.dump("BEGIN admin_syndication.u.updateSpecifics");
+
+				var $XSLContentArea = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form);
+				
+				if($form && $XSLContentArea&& $XSLContentArea.data('categoryid'))	{
+				
+					$XSLContentArea.showLoading({'message':'Updating item specifics'});
+
+					app.model.addDispatchToQ({
+						"_cmd" : "adminEBAYCategory",
+						"categoryid" : $XSLContentArea.data('categoryid'),
+//						"xsl" : app.ext.admin_syndication.vars.ebayXSL,
+						"%form" : $form.serializeJSON(),
+						"_tag" : {
+							'datapointer' : 'adminEBAYCategory|'+app.model.version+'|'+$XSLContentArea.data('categoryid'),
+							'callback' : function(rd){
+								$XSLContentArea.hideLoading();
+								$XSLContentArea.html(app.data[rd.datapointer].html)
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#APIForm').anymessage({'message':'In admin_syndication.u.updateEBAYItemSpecifics, either $form ['+typeof $form+'] not passed or unable to determine categoryID from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
+					}
 				}
 			
 			}, //u [utilities]

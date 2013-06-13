@@ -453,7 +453,7 @@ if(vars.rulesmode == 'shipping')	{
 	$D.attr('data-provider',vars.provider);
 	}
 else if(vars.rulesmode == 'coupons')	{
-	DMIVars.thead = ['','Code','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
+	DMIVars.thead = ['','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
 	DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
 	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
 	}

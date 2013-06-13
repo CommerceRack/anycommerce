@@ -349,9 +349,9 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<td data-bind="var:coupon(disabled); format:isDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(coupon); format:text;"></td>
 	<td data-bind="var:coupon(title); format:text;"></td>
-	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;"></td>
-	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;"></td>
-	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;"></td>
+	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
 	<button data-app-event='admin_config|couponRemoveConfirm'>Delete Coupon</button>
 	<button data-app-event='admin_config|couponDetailDMIPanel'>Edit Coupon</button>
@@ -362,12 +362,11 @@ ITEM Matching rules: extended total (qty * price) <br>
 <!-- used for each coupon rule in a coupon's rules 'list'. -->
 <tr id='ruleBuilderRowTemplate_coupons'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
-	<td data-bind="var: rule(coupon); format:text;"></td>
 	<td data-bind="var: rule(hint); format:text;"></td>
 	<td data-bind="var: rule(exec); format:text;"></td>
-	<td data-bind="var: rule(match); format:text;"></td>
-	<td data-bind="var: rule(matchvalue); format:text;"></td>
-	<td data-bind="var: rule(value); format:text;"></td>
+	<td data-bind="var: rule(match); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(matchvalue); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(value); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
 		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
 		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>

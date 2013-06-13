@@ -792,12 +792,46 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 
 
 
+
+<div id='syndication_ebf_register'>
+	<h1>Generate eBayAutorization Token</h1>
+	
+	<h2>What is this?</h2>
+	<p>You have been brought to this page in order generate a new eBay Authorization Token. eBay Authorization Tokens permit us to communicate with your eBay account. eBay Authorization Tokens increase security on your eBay account because no storage of your password is required.</p>
+	
+	<p>Creating a new eBay Authorization Token is easy, simply on click the URL below, sign into your eBay account, and follow the steps. </p>
+	
+	
+	<div class='buttonset'>
+		<button>Link eBay Account</button>
+		<button>Link Sandbox Account</button>
+		<button>Join eBay Developer Program</button>
+	</div>
+
+
+<p class='hint'>
+The sandbox can be useful for developers who want to create test listings or present demonstrations. Listings created through the sandbox site will only be visible on the eBay development site - you will not be charged for listings created in the sandbox. Sandbox Notes:
+<ul>
+	<li>Zoovy will automatically validate sandbox accounts and give them a feedback of 1,000.</li>
+	<li>To create an eBay Store in the Sandbox Go to http://sandbox.ebay.com.
+		<ol>
+			<li>Click on the Site Map link at the top of the page.</li>
+			<li>Under Services > eBay Stores, click the Open an eBay Store link.</li>
+			<li>Sign in as your sandbox user and follow the instructions to create an eBay Store.</li>
+		</ol>
+	<li>Stores created on the sandbox will receive no fees.</li>
+</li>
+</p>
+
+<a href='#' onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;">Register eBay Account</a>
+
+</div>
+
 <div id='syndication_ebf'>
 <h1 class='marginBottom'>eBay</h1>
 
 
 <p>
-	<a href='#' onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;">Register eBay Account</a> | 
 	<a href='#' onClick="navigateTo('/biz/setup/ebay/index.cgi?ACTION=PROFILES',{'dialog':true}); return false;">Manage eBay Launch Profiles</a>
 </p>
 
@@ -1677,3 +1711,32 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 
 
+<div id='ebayCategoryChooserTemplate'>
+
+<table data-app-role='ebayCategoryChooserTable' class='fullWidth'>
+<tr>
+	<td class='small valignTop'>
+	<ul class='noPadOrMargin listStyleNone marginRight' data-bind='var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'></ul>
+	</td>
+	<td class='valignTop'>
+	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft' name="APIForm" id="APIForm" >
+		<fieldset data-app-role='ebayCategoryChooserXSLContainer'>
+		
+		</fieldset>
+		
+		<div class='buttonset alignRight'>
+			<button onClick="app.ext.admin_syndication.u.updateEBAYItemSpecifics($(this).closest('form'));">Save</button>
+		</div>
+	</form>
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+<ul>
+	<li id='ebayCategoryListitemTemplate'>
+	<span class='lookLikeLink' data-bind='var:ebay(name); format:text;' onClick="app.ext.admin_syndication.u.handleEBAYChild($(this).parent());"></span>
+	</li>
+</ul>

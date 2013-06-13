@@ -616,6 +616,36 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}			
 			}, //adminDomainList
 
+
+//* 201324 -> though moving towards a non-defined call based approach, for calls that need/want local storage, we'll still declare them (like this one)
+		adminEBAYCategory :  {
+			init : function(obj,_tag,Q)	{
+				obj = obj || {}
+				_tag = _tag || {};
+				_tag.datapointer = "adminEBAYCategory|"+app.model.version+"|"+obj.categoryid;
+				var r = 0;
+//if xsl is set, localstorage is NOT used.
+				if(obj.xsl)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r; 
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminEBAYCategory';
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'mutable');
+				}			
+			}, //adminDomainList
+
+
 //PRT and TYPE (ex: ORDER) are required params
 		adminEmailList : {
 			init : function(obj,_tag,Q)	{

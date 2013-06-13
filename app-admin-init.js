@@ -51,6 +51,11 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.j
 //used in the launchpad. needed early.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.js']);
 
+
+//right now, used in ebay category chooser. Likely to be used more in the future.
+//app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.xsltransform.20071214.js']); //must be loaded after sarissa is done.
+//app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/sarissa.0.9.9.6.js']);
+
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
 app.rq.push(['css',1,app.vars.baseURL+'resources/anyplugins.css']);

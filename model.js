@@ -704,7 +704,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-			app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
+//			app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
 //			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
