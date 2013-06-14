@@ -539,24 +539,18 @@ var cubworld = function() {
 				
 				while(min != max && min != max-1){
 					var target = Math.floor((max+min)/2);
-					//var minMQL = window.matchMedia('(min-resolution:'+target+'dpi)');
-					if(window.matchMedia('(min-resolution:'+target+'dpi),(min-device-pixel-ratio)').matches){min = target;}
-					//var maxMQL = window.matchMedia('(max-resolution:'+target+'dpi)');
+					if(!window.matchMedia('(min-resolution:'+target+'dpi)').matches &&
+					   !window.matchMedia('(max-resolution:'+target+'dpi)').matches){
+						return -1;
+						}
+					if(window.matchMedia('(min-resolution:'+target+'dpi)').matches){min = target;}
 					if(window.matchMedia('(max-resolution:'+target+'dpi)').matches){max = target};
 					app.u.dump(min + ".." + max);
 				}
 				return min;
-			
-				//var mql = window.matchMedia('(resolution:96dpi)');
-				//app.u.dump("dpi 96?: "+mql.matches);
-				//var $div = $('<div />');
-				//$div.css({"width":"1in","height":"0px"});
-				//$div.appendTo($('body'));
-				//var ppi = $div.outerWidth();
-				//return ppi;
-				
-				
-				
+				},
+			getCSSWidth : function(){
+				return screen.availWidth/(this.getPPI()/96)
 				},
 			setTitle : function(title){
 				if(title && typeof title ==="string"){
