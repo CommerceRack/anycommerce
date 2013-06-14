@@ -528,13 +528,26 @@ var cubworld = function() {
 //any functions that are recycled should be here.
 		u : {
 			getPPI : function(){
-				var mql = window.matchMedia('(resolution:96dpi)');
-				app.u.dump("dpi 96?: "+mql.matches);
-				var $div = $('<div />');
-				$div.css({"width":"1in","height":"0px"});
-				$div.appendTo($('body'));
-				var ppi = $div.outerWidth();
-				return ppi;
+				var min=0;
+				var max=1000;
+				
+				while(min != max && min != max-1){
+					var target = Math.floor((max+min)/2);
+					var minMQL = window.matchMedia('(min-resolution:'+target+'dpi)');
+					if(minMQL.matches){min = target;}
+					var maxMQL = window.matchMedia('(max-resolution:'+target+'dpi)');
+					if(maxMQL.matches){max = target};
+					app.u.dump(min + ".." + max);
+				}
+				return min;
+			
+				//var mql = window.matchMedia('(resolution:96dpi)');
+				//app.u.dump("dpi 96?: "+mql.matches);
+				//var $div = $('<div />');
+				//$div.css({"width":"1in","height":"0px"});
+				//$div.appendTo($('body'));
+				//var ppi = $div.outerWidth();
+				//return ppi;
 				
 				
 				
