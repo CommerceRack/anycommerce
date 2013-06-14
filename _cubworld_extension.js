@@ -527,6 +527,18 @@ var cubworld = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			getPPI : function(){
+				var mql = window.matchMedia('(resolution:96dpi)');
+				app.u.dump("dpi 96?: "+mql.matches);
+				var $div = $('<div />');
+				$div.css({"width":"1in","height":"0px"});
+				$div.appendTo($('body'));
+				var ppi = $div.outerWidth();
+				return ppi;
+				
+				
+				
+				},
 			setTitle : function(title){
 				if(title && typeof title ==="string"){
 					//This is what we expect
