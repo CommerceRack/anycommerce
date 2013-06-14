@@ -6,7 +6,9 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
-
+301324
+popCheckbox and popRadio are deprecated. popVal will now handle all input types. all files were updated.
+ -> https://github.com/zoovy/AnyCommerce-Development/commit/877a5a382f629150aedfcaa9087b0f37d1667a92
 
 201314
 jquery.showloading-v1.0.jt must be in pass 0 of rq in init file.

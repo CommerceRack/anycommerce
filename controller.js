@@ -2971,17 +2971,26 @@ $tmp.empty().remove();
 			}, //text
 
 // * 201318 -> allows for data-bind on a radio input.
-// DEPRECATED as of 201324.
-		popRadio : function($tag,data)	{
-			app.renderFormats.popVal($tag,data);
+// *** 201324 -> retired in favor of a more versatile popVal.
+/*		popRadio : function($tag,data)	{
+			if($tag.val() == data.value)	{$tag.attr('checked','checked')}
 			},
-
+*/
 //only use this on fields where the value is boolean
 //if setting checked=checked by default, be sure to pass hideZero as false.
-// DEPRECATED as of 201324.
-		popCheckbox : function($tag,data){
+// *** 201324 -> retired in favor of a more versatile popVal.
+/*		popCheckbox : function($tag,data){
+			if(Number(data.value))	{$tag.attr('checked',true);}
+			else if(data.value === 'on')	{$tag.attr('checked',true);}
+			else if(data.value == true)	{$tag.attr('checked',true);}
+			else if(Number(data.value) === 0){ //treat as number in case API return "0"
+				$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
+				}
+			else{}
 			app.renderFormats.popVal($tag,data);
+
 			},
+*/
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
 //pretext and posttext are added later in the process, but this function needed to be able to put some text before the output
