@@ -1719,13 +1719,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<ul class='noPadOrMargin listStyleNone marginRight' data-bind='var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'></ul>
 	</td>
 	<td class='valignTop'>
-	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft' name="APIForm" id="APIForm" >
+	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft displayNone' name="APIForm" id="APIForm">
 		<fieldset data-app-role='ebayCategoryChooserXSLContainer'>
 		
 		</fieldset>
 		
 		<div class='buttonset alignRight'>
-			<button onClick="app.ext.admin_syndication.u.updateEBAYItemSpecifics($(this).closest('form'));">Save</button>
+			<button data-app-event="admin_syndication|ebaySaveCatAndUpdateItemSpecifics">Save Items Specifics and Category</button>
 		</div>
 	</form>
 	</td>

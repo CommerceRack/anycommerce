@@ -2354,7 +2354,7 @@ function aus_js_submit() {
         	for (var i =0;i< aus_form.length;i++) if (aus_form.elements[i].name=="aus_form_changed") aus_form.elements[i].value=1;
         	aus_form.ButtonLoad.value = 1;
 			disable_inputs();
-        	app.ext.admin_syndication.u.updateEBAYItemSpecifics($('#APIForm')); // this will request adminEBAYCategory, passing along the form, categoryID, XSL, et all and get updated HTML in response.
+        	app.ext.admin_syndication.u.getUpdatedItemSpecificsForm($('#APIForm')); // this will request adminEBAYCategory, passing along the form, categoryID, XSL, et all and get updated HTML in response.
     	}
 }
 
@@ -2755,7 +2755,7 @@ function aus_set_selected_by_index(select_obj, selected_index) {
 }
 
 function createButtonLoad() {
-	document.write("<input type='hidden' name='ActionAttributeLoad'>");
+	$('#APIForm').append("<input type='hidden' name='ActionAttributeLoad'>");
 }
 
 function autoSelect()
@@ -4526,6 +4526,7 @@ aus_disabled_if_empty = {}
 			</xsl:if>
 		</script>
 	</xsl:template>
+<!--	
 	<xsl:template name="Categories">
 		<xsl:choose>
 			<xsl:when test="$selectedSets/@id=$categories/@id">
@@ -4533,7 +4534,7 @@ aus_disabled_if_empty = {}
 			<xsl:otherwise>
 				<label><span>Select category:</span>
 				<select name="vcsid">
-
+					<xsl:attribute name="onchange">javascript: document.forms['<xsl:value-of select="$formName"/>'].submit();</xsl:attribute>
 					<option value="-10">
 						<xsl:if test="$categories/@id != $selectedSets/@id">
 							<xsl:attribute name="selected"><xsl:value-of select="'selected'"/></xsl:attribute>
@@ -4553,6 +4554,7 @@ aus_disabled_if_empty = {}
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+-->	
 	<xsl:template name="PromoMessage">
 		<xsl:param name="Message"/>
 		<xsl:if test="$Message != ''">
