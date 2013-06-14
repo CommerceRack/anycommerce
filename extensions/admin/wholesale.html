@@ -116,9 +116,9 @@
 	<div class='label'>
 		<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
 	</div>
-	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
-	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popCheckbox;' />Allow Resale</label>
-	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popCheckbox;' />Is Locked</label>
+	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popVal;' />Allow Purchase Orders</label>
+	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popVal;' />Allow Resale</label>
+	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popVal;' />Is Locked</label>
 	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
@@ -375,7 +375,7 @@
 </label>
 
 <label>
-	<input name='ITEM_NOTES' type='checkbox' data-bind='var: supplier(ITEM_NOTES); format:popCheckbox;' />
+	<input name='ITEM_NOTES' type='checkbox' data-bind='var: supplier(ITEM_NOTES); format:popVal;' />
 	<span>Item notes:</span>
 </label>
 <div class='hint'>Choose to display supplier code / tracking info on invoice (under each Item)</div />
@@ -512,14 +512,14 @@
 </select>
 </label>
 
-<label><input type='checkbox' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popCheckbox;" />Automatic Ordering</label>
+<label><input type='checkbox' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popVal;" />Automatic Ordering</label>
 <div class='hint'>Orders will not be transmitted to the supplier until they are closed</div>
 
-<label><input type='checkbox' name='notes' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Include order notes</label>
-<label><input type='checkbox' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popCheckbox;" />Show cost field</label>
-<label><input type='checkbox' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Hide zero quantity items</label>
-<label><input type='checkbox' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popCheckbox;" />Dispatch on create (off recommended)</label>
-<label><input type='checkbox' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popCheckbox;" />Transmit full order contents (off recommended)</label>
+<label><input type='checkbox' name='notes' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Include order notes</label>
+<label><input type='checkbox' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popVal;" />Show cost field</label>
+<label><input type='checkbox' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Hide zero quantity items</label>
+<label><input type='checkbox' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popVal;" />Dispatch on create (off recommended)</label>
+<label><input type='checkbox' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popVal;" />Transmit full order contents (off recommended)</label>
 
 <label>
 	<span>Connector: </span>

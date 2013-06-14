@@ -2947,27 +2947,40 @@ $tmp.empty().remove();
 			$tag.html(o);
 			}, //text
 
-//for use on inputs. populates val() with the value
+//for use on inputs.
+//populates val() with the value
+// ** 201324 -> rather than having separate renderFormats for different input types, this can now be used for all.
 		popVal : function($tag,data){
-			$tag.val(data.value);
+			if($tag.is(':checkbox'))	{
+				if(Number(data.value) === 0)	{
+					$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
+					}
+				else	{
+//the value here could be checked, on or some other string. if the value is set (and we won't get this far if it isn't), check the box.
+					$tag.attr('checked',true);
+					}
+				}
+			else if($tag.is(':radio'))	{
+//with radio's the value passed will only match one of the radios in that group, so compare the two and if a match, check it.
+				if($tag.val() == data.value)	{$tag.attr('checked','checked')}
+				}
+			else	{
+//for all other inputs and selects, simply setting the value will suffice.
+				$tag.val(data.value);
+				}
 			}, //text
 
 // * 201318 -> allows for data-bind on a radio input.
+// DEPRECATED as of 201324.
 		popRadio : function($tag,data)	{
-			if($tag.val() == data.value)	{$tag.attr('checked','checked')}
+			app.renderFormats.popVal($tag,data);
 			},
 
 //only use this on fields where the value is boolean
 //if setting checked=checked by default, be sure to pass hideZero as false.
+// DEPRECATED as of 201324.
 		popCheckbox : function($tag,data){
-//			app.u.dump(" -> popCheckbox data.value: "+data.value);
-			if(Number(data.value))	{$tag.attr('checked',true);}
-			else if(data.value === 'on')	{$tag.attr('checked',true);}
-			else if(data.value == true)	{$tag.attr('checked',true);}
-			else if(Number(data.value) === 0){ //treat as number in case API return "0"
-				$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
-				}
-			else{}
+			app.renderFormats.popVal($tag,data);
 			},
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag

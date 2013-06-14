@@ -206,7 +206,7 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 </label>
 
 <label>
-	<input type="checkbox" name="disable" data-bind='var:coupon(disable); format:popCheckbox;' class='applyAnycb' /> Disable/Expire
+	<input type="checkbox" name="disable" data-bind='var:coupon(disable); format:popVal;' class='applyAnycb' /> Disable/Expire
 	<span class='toolTip' title="Check this when the promotion is finished so customers receive a 'this coupon has expired' message">?</span>
 </label>
 
@@ -241,17 +241,17 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 </label>
 
 <label>
-	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popCheckbox;' /> Newsletter/Limited Use
+	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Newsletter/Limited Use
 	<span class='toolTip' title="When enabled this coupon may only be added to the cart using a limited use link. Limited use links are automatically generated when a newsletter is sent out, but could also be generated programatically by custom applications. If this is enabled the coupon MAY NOT be added directly to the cart from 'Coupon Code' box.">?</span>
 </label>
 
 <label>
-	<input type="checkbox" name="stackable" data-bind='var:coupon(stackable); format:popCheckbox;' /> Allow Coupon Stacking/Combinations.
+	<input type="checkbox" name="stackable" data-bind='var:coupon(stackable); format:popVal;' /> Allow Coupon Stacking/Combinations.
 	<span class='toolTip' title="How this works: Coupons codes are added to the cart in alphanumeric order based on coupon code.  Each non-stackable coupon will remove all other coupons (which may have been added before it). When stacking is enabled, any non-combinable codes will need to be explicitly removed using rules. If you're not sure what to do here, leave this disabled.">?</span>
 </label>
 
 <label>
-	<input type="checkbox" checked="" name="taxable" data-bind='var:coupon(taxable); format:popCheckbox;' /> Coupon value should be applied/deducted from tax.
+	<input type="checkbox" checked="" name="taxable" data-bind='var:coupon(taxable); format:popVal;' /> Coupon value should be applied/deducted from tax.
 </label>
 
 <div class='buttonset alignRight'>
@@ -507,11 +507,11 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
 		</label>
 		<label>
-			<input class='applyAnycb' type="checkbox" name="chkout_deny_ship_po" data-bind="var: shipping(chkout_deny_ship_po); format: popCheckbox;">
+			<input class='applyAnycb' type="checkbox" name="chkout_deny_ship_po" data-bind="var: shipping(chkout_deny_ship_po); format: popVal;">
 			Do not allow checkout for addresses that appear to be P.O. Boxes.
 		</label>
 		<label>
-			<input type="checkbox" name="ebay_merge_shipping" data-bind="var: shipping(ebay_merge_shipping); format: popCheckbox;">
+			<input type="checkbox" name="ebay_merge_shipping" data-bind="var: shipping(ebay_merge_shipping); format: popVal;">
 			Use Zoovy store shipping when two or more eBay items are purchased together.
 		</label>
 	
@@ -645,7 +645,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 		<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 	</div>
 	
-	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 	
 	<table>
 	<thead>
@@ -688,7 +688,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
+	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -778,7 +778,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popCheckbox;" /> Enable</label>
+	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -901,7 +901,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 </div>
 
 
-<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
 
 
 <table>
@@ -942,7 +942,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
 lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
+<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popVal;" /> Enable</label>
 
 
 
@@ -1109,48 +1109,48 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<legend>FedEx Domestic Settings</legend>
 		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM' class='floatRight'>Manage General Rules</button>
 		<label>
-			<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable FedEx Domestic Shipping Support
+			<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable FedEx Domestic Shipping Support
 		</label>
 	
 	
 	<table class='gridTable fullWidth marginBottom'>
 	   <tr>
-		  <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popVal;' /></td>
 		  <td>FedEx First Overnight&reg; (8:30am next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_nextearly'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popVal;' /></td>
 		  <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_nextnoon'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popVal;' /></td>
 		  <td>FedEx Standard Overnight&reg; (3pm next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_nextday'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popVal;' /></td>
 		  <td>FedEx 2Day&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_2day'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popVal;' /></td>
 		  <td>FedEx Express Saver&reg; (3 Days)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_3day'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popVal;' /></td>
 		  <td>FedEx&reg; Ground</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_ground'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popCheckbox;' /></td>
+		  <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery**</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_home'>Manage Rules</button></td>
 	   </tr>
 	 <tr>
-		  <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popCheckbox;' /></td>
+		  <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='dom_evening'>Manage Rules</button></td>
 	   </tr>
@@ -1163,28 +1163,28 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	
 		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT' class='floatRight'>Manage General Rules</button>
 		<label>
-			<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable FedEx International Shipping Support
+			<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable FedEx International Shipping Support
 		</label>
 	
 	<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
 	<table class='gridTable fullWidth'>
 	   <tr>
-		  <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popVal;' /></td>
 		  <td>FedEx International First&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='int_nextearly'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popVal;' /></td>
 		  <td>FedEx International Priority&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='int_nextnoon'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popVal;' /></td>
 		  <td>FedEx International Economy&reg;*</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='int_2day'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popCheckbox;' /></td>
+		  <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popVal;' /></td>
 		  <td>FedEx International Ground&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='int_ground'>Manage Rules</button></td>
 	   </tr>
@@ -1238,10 +1238,10 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	</label>
 	
 	
-	<label><input type="checkbox" name="option_multibox" data-bind='var: shipmethod(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
-	<label><input type="checkbox" name="option_residential" data-bind='var: shipmethod(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
-	<label><input type="checkbox" name="option_validation" data-bind='var: shipmethod(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
-	<label><input type="checkbox" name="option_use_rules" data-bind='var: shipmethod(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
+	<label><input type="checkbox" name="option_multibox" data-bind='var: shipmethod(option_multibox); format:popVal;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
+	<label><input type="checkbox" name="option_residential" data-bind='var: shipmethod(option_residential); format:popVal;' /> Treat all customers as residential (default is business).</label>
+	<label><input type="checkbox" name="option_validation" data-bind='var: shipmethod(option_validation); format:popVal;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
+	<label><input type="checkbox" name="option_use_rules" data-bind='var: shipmethod(option_use_rules); format:popVal;' /> Perform rule processing. (RECOMMENDED)</label>
 	
 	</fieldset>
 	
@@ -1251,7 +1251,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		
 		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage General Rules</button></div>
 		
-		<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support </label>
+		<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable UPS Domestic Shipping Support </label>
 		<label><span>Quote Domestic Packaging As:</span>
 		<select name="dom_packaging" data-bind='var: shipmethod(dom_packaging); format:popVal;'>
 			<option value="00" >Your Packaging</option>
@@ -1272,37 +1272,37 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<table class='fullWidth gridTable'>
 	<tbody>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popVal;' /></td>
 		<td>UPS Ground</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GND'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popVal;' /></td>
 		<td>UPS 3 Day Select&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DS'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popVal;' /></td>
 		<td>UPS 2nd Day Air A.M.&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DM'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popVal;' /></td>
 		<td>UPS 2nd Day Air&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popVal;' /></td>
 		<td>UPS Next Day Air Saver&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DP'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DM'>Manage Rules</button></td>
 	</tr>
@@ -1315,7 +1315,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<fieldset>
 	<legend>UPS International Settings</legend>
 		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></div>
-		<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable UPS International Shipping Support</label>
+		<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable UPS International Shipping Support</label>
 		
 		<label>
 			<span>Quote International Packaging As:</span>
@@ -1338,27 +1338,27 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<table class='fullWidth gridTable'>
 		<tbody>
 		<tr >
-			<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popCheckbox;' /></td>
+			<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to Canada</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_STD'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popCheckbox;' /></td>
+			<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XSV'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popCheckbox;' /></td>
+			<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPR'>Manage Rules</button></td>
 		</tr>
 		<tr >
-			<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popCheckbox;' /></td>
+			<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XDM'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popCheckbox;' /></td>
+			<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPD'>Manage Rules</button></td>
 		</tr>
@@ -1387,43 +1387,43 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	</thead>
 	   <tr >
 		  <td>Enable</td>
-		  <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
-		  <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popVal;" /></td>
+		  <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popVal;" /></td>
 	   </tr>
 	   <tr>
 		  <td>First Class</td>
 		  <td></td>
-		  <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popVal;" /></td>
 	   </tr>
 	   <tr>
 		  <td>Parcel Post</td>
-		  <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popVal;" /></td>
 		  <td></td>
 	   </tr>
 	   <tr>
 		  <td>Priority Mail (6-10 days)</td>
-		  <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br />
-			 <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br />
+			 <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popVal;" /> Flat Box.<br />
+			 <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popVal;" /> Flat Env.<br />
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Express Mail (3-5 days)</td>
-		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br />
+			 <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.<br />
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Global Express Guaranteed (1-3 days)</td>
 		  <td></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br />
-			 <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br />
+			 <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popVal;" /> Rectangular.<br />
+			 <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popVal;" /> Non-Rectangular.<br />
 		  </td>
 	   </tr>
 	   <tr>
@@ -1449,7 +1449,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 <fieldset>
 	<legend>General Settings</legend>
 	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popCheckbox;" /> Enable method</label>
+	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popVal;" /> Enable method</label>
 	<label>
 		<span>Region</span>
 		<select name="region"  data-bind="var:shipmethod(region); format:popVal;" >
@@ -1472,7 +1472,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
-	<label><input type="checkbox" name="rules"  data-bind="var:shipmethod(rules); format:popCheckbox;" /> Enable shipping rules</label>
+	<label><input type="checkbox" name="rules"  data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
 	<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 </fieldset>
 

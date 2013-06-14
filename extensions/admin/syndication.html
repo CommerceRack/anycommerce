@@ -318,7 +318,7 @@
 <fieldset>
 	<legend>General Settings</legend>
 
-	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is active</label>
+	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
 
 	<div class='label'>
@@ -358,11 +358,11 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 <fieldset>
 	<legend>General Settings</legend>
 
-	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is active</label>
+	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
 		
 	
-	<label><input type="checkbox" class='applyAnycb'  name="upc_exempt" data-bind="var: mkt(upc_exempt); format:popCheckbox;" /> Google Shopping Account has unique identifer exemption</label>
+	<label><input type="checkbox" class='applyAnycb'  name="upc_exempt" data-bind="var: mkt(upc_exempt); format:popVal;" /> Google Shopping Account has unique identifer exemption</label>
 
 	<label>
 		<span>Google Shopping FTP User</span>
@@ -382,17 +382,17 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 		<span class='toolTip' title="ex: products.xml">?</span>
 	</label>
 	
-	<label><input type="checkbox" class='applyAnycb'  name="trusted_feed" data-bind="var: mkt(trusted_feed); format:popCheckbox;" /> Enable Trusted Stores Shipping/Cancel Feed</label>
+	<label><input type="checkbox" class='applyAnycb'  name="trusted_feed" data-bind="var: mkt(trusted_feed); format:popVal;" /> Enable Trusted Stores Shipping/Cancel Feed</label>
 </fieldset>
 
 
 <fieldset>
 	<legend>Options:</legend>
 <!--
-	<label><input type="checkbox" class='applyAnycb'  value="on" name="navcat_skiphidden" data-bind="var: mkt(navcat_skiphidden); format:popCheckbox;" /> Skip hidden navigation categories.</label>
-	<label><input type="checkbox" class='applyAnycb'  value="on" name="navcat_skiplists" data-bind="var: mkt(navcat_skiplists); format:popCheckbox;" /> Skip lists.</label>
--->	<label><input type="checkbox" class='applyAnycb'  value="on" name="include_shipping" data-bind="var: mkt(include_shipping); format:popCheckbox;" /> Include Fixed Cost Shipping Prices.</label>
-	<label><input type="checkbox" class='applyAnycb'  value="on" name="ignore_validation" data-bind="var: mkt(ignore_validation); format:popCheckbox;" /> Skip recommended validation logic</label>
+	<label><input type="checkbox" class='applyAnycb'  value="on" name="navcat_skiphidden" data-bind="var: mkt(navcat_skiphidden); format:popVal;" /> Skip hidden navigation categories.</label>
+	<label><input type="checkbox" class='applyAnycb'  value="on" name="navcat_skiplists" data-bind="var: mkt(navcat_skiplists); format:popVal;" /> Skip lists.</label>
+-->	<label><input type="checkbox" class='applyAnycb'  value="on" name="include_shipping" data-bind="var: mkt(include_shipping); format:popVal;" /> Include Fixed Cost Shipping Prices.</label>
+	<label><input type="checkbox" class='applyAnycb'  value="on" name="ignore_validation" data-bind="var: mkt(ignore_validation); format:popVal;" /> Skip recommended validation logic</label>
 
 	<label>
 		<span>Pricing Schedule:</span>
@@ -430,7 +430,7 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
 	<label><input type="radio" value="1" name="format" data-bind='var: mkt(format); format:popRadio;' /> Tech Feed (Electronics Only)</label>
 	</div>
 	
-	<label><input type="checkbox" name='ENABLE' data-bind='var: mkt(enable); format:popCheckbox;' /> Is Active</label>
+	<label><input type="checkbox" name='ENABLE' data-bind='var: mkt(enable); format:popVal;' /> Is Active</label>
 	<p class='zhint'>Checkbox must be selected or syndication will not be attempted.</p>
 	
 	<label>
@@ -480,7 +480,7 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
 		<td valign="top">Buy.com FTP Username</td>
 		<td valign="top"><input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" /></td>
@@ -535,7 +535,7 @@ These settings *MUST* match the settings in your Buy.com account.
 <input type='hidden' name='DST' value='HSN' />
 
 <label>
-	<input type="checkbox" name='ENABLE' data-bind='var: mkt(enable); format:popCheckbox;' />
+	<input type="checkbox" name='ENABLE' data-bind='var: mkt(enable); format:popVal;' />
 	Is Active
 </label>
 <p class='zhint'>Checkbox must be selected or syndication will not be attempted.</p>
@@ -603,7 +603,7 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
 
 <table>
 <tr>
-	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 <tr>
   <td>CJ Account #:</td>
   <td><input type="text" name="cjcid" value="" required='required' data-bind="var: mkt(cjcid); format:popVal;" /></td>
@@ -655,7 +655,7 @@ CommissionJunction.</p>
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
 		<td valign="top">BestBuy Marketplace FTP Username</td>
 		<td valign="top"><input type="text" value="" required='required' name="ftp_user" data-bind="var: mkt(ftp_user); format:popVal;" /></td>
@@ -709,7 +709,7 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE' data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE' data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
 		<td valign="top">PriceGrabber.com FTP/Web Username</td>
 		<td valign="top"><input type="text" value="" name="user" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
@@ -749,7 +749,7 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
 
 <input type='hidden' name='DST' value='APA' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -837,7 +837,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 <input type='hidden' name='DST' value='EBF' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -845,7 +845,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <label>
-<input type="checkbox" class='applyAnycb' name="autopilot" data-bind="var: mkt(autopilot); format:popCheckbox;" />
+<input type="checkbox" class='applyAnycb' name="autopilot" data-bind="var: mkt(autopilot); format:popVal;" />
 Use AutoPilot on New Items [RECOMMENDED]
 </label>
 <p class='hint'>
@@ -858,7 +858,7 @@ If the syndication engine encounters too many errors - then your token could be 
 
 
 <label>
-	<input type="checkbox" class='applyAnycb' name="logging" data-bind="var: mkt(logging); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb' name="logging" data-bind="var: mkt(logging); format:popVal;" />
 	Detailed Logging [NOT RECOMMENDED]
 </label>
 <p class='hint'>
@@ -893,7 +893,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 <button class='floatRight' data-app-event="admin_syndication|amazonMWSLinkTo">Create/Verify MWS Token</button>
 <input type='hidden' name='DST' value='AMZ' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1015,12 +1015,12 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	</label>
 
 	<label>
-		<input type='checkbox' name='isgiftwrapavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftwrapavailable); format:popCheckbox;" />
+		<input type='checkbox' name='isgiftwrapavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftwrapavailable); format:popVal;" />
 		Is Gift Wrap Available:
 	</label>
 
 	<label>
-		<input type='checkbox' name='isgiftmessageavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftmessageavailable); format:popCheckbox;" />
+		<input type='checkbox' name='isgiftmessageavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftmessageavailable); format:popVal;" />
 		Is Gift Message Available:
 	</label>
 	
@@ -1048,9 +1048,9 @@ These settings *MUST* match the settings in your eBay Syndication account.
 <fieldset>
 	<legend>Feed Configuration</legend>
 
-	<label><input name="feed_inventory" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_inventory); format:popCheckbox;" /> Sync Inventory to Amazon</label>
-	<label><input name="feed_price" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_price); format:popCheckbox;" /> Sync Prices/Shipping to Amazon</label>
-	<label><input name="feed_product" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_product); format:popCheckbox;" /> Sync Products/Relations/Images to Amazon</label>
+	<label><input name="feed_inventory" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_inventory); format:popVal;" /> Sync Inventory to Amazon</label>
+	<label><input name="feed_price" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_price); format:popVal;" /> Sync Prices/Shipping to Amazon</label>
+	<label><input name="feed_product" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_product); format:popVal;" /> Sync Products/Relations/Images to Amazon</label>
 
 </fieldset>
 
@@ -1058,13 +1058,13 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	<legend>UPC Configuration</legend>
 
 	<label>
-		<input value="1" name="private_label" type="checkbox" class='applyAnycb' data-bind="var: mkt(private_label); format:popCheckbox;" />
+		<input value="1" name="private_label" type="checkbox" class='applyAnycb' data-bind="var: mkt(private_label); format:popVal;" />
 		Amazon has granted your store an exemption to the UPC requirement
 	</label>
 	<p class="hint">(ie your products are sold under your company's own Private Label)</p>
 
 	<label>
-		<input value="1" name="upc_creation" type="checkbox" class='applyAnycb' data-bind="var: mkt(upc_creation); format:popCheckbox;" />
+		<input value="1" name="upc_creation" type="checkbox" class='applyAnycb' data-bind="var: mkt(upc_creation); format:popVal;" />
 		Automatically Create UPCs
 	</label>
 	<p class="hint">(create UPCs for SKUs syndicating to categories that Amazon has deemed them required.)</p>
@@ -1074,7 +1074,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	<legend>Order Configuration</legend>
 	
 	<label>
-		<input name="order_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(orderpermissions); format:popCheckbox;" />
+		<input name="order_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(orderpermissions); format:popVal;" />
 		Import Orders and Send Tracking
 	</label>
 </fieldset>
@@ -1084,7 +1084,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	<legend>Fulfillment by Amazon (EXPERIMENTAL)</legend>
 	
 	<label>
-		<input name="fba_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(fbapermissions); format:popCheckbox;" />
+		<input name="fba_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(fbapermissions); format:popVal;" />
 		Import FBA Orders and Tracking from Amazon
 	</label>
 </fieldset>
@@ -1127,7 +1127,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 
 <input type='hidden' name='DST' value='WSH' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1151,7 +1151,7 @@ SOMETHING SHOULD GO HERE!!!
 </p>
 <input type='hidden' name='DST' value='SAS' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1178,7 +1178,7 @@ SOMETHING SHOULD GO HERE!!!
 
 <input type='hidden' name='DST' value='SHO' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1223,7 +1223,7 @@ These settings *MUST* match the settings in your Shopping.com account.
 
 <input type='hidden' name='DST' value='FND' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1266,7 +1266,7 @@ These settings *MUST* match the settings in your TheFind.com account.
 
 <input type='hidden' name='DST' value='BIN' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1309,7 +1309,7 @@ These settings *MUST* match the settings in your bing.com account.
 
 <input type='hidden' name='DST' value='BZR' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1367,7 +1367,7 @@ These settings *MUST* match the settings in your Shopzilla account.
 
 <input type='hidden' name='DST' value='PTO' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1410,7 +1410,7 @@ These settings *MUST* match the settings in your pronto.com account.
 
 <input type='hidden' name='DST' value='BCM' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1451,7 +1451,7 @@ These settings *MUST* match the settings in your become.com account.
 
 <input type='hidden' name='DST' value='SMT' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1493,7 +1493,7 @@ These settings *MUST* match the settings in your smarter.com account.
 
 <input type='hidden' name='DST' value='DIJ' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1535,7 +1535,7 @@ HINT: The username, password, etc. are provided by Dijipop.com. These settings *
 
 <input type='hidden' name='DST' value='LNK' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1592,7 +1592,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 
 <input type='hidden' name='DST' value='HSN' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1606,7 +1606,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 
 <input type='hidden' name='DST' value='SRS' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1635,7 +1635,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 <tr>
 	<td colspan='2'>
 	<label>
-		<input type="checkbox"  class='applyAnycb' name="safe_sku" data-bind="var: mkt(safe_sku); format:popCheckbox;"> Use Safe SKU Algorithm
+		<input type="checkbox"  class='applyAnycb' name="safe_sku" data-bind="var: mkt(safe_sku); format:popVal;"> Use Safe SKU Algorithm
 	</label>
 	</td>
 </tr>
@@ -1671,7 +1671,7 @@ These settings *MUST* match the settings in your Sears account.
 
 <input type='hidden' name='DST' value='EGG' />
 <label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" />
+	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
 	Is active
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
