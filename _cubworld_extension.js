@@ -528,15 +528,21 @@ var cubworld = function() {
 //any functions that are recycled should be here.
 		u : {
 			getPPI : function(){
+				
+				if(window.devicePixelRatio){
+					app.u.dump("devicePixelRatio set: "+window.devicePixelRatio);
+					return Math.floor(96*parseFloat(window.devicePixelRatio));
+					}
+				
 				var min=0;
 				var max=1000;
 				
 				while(min != max && min != max-1){
 					var target = Math.floor((max+min)/2);
-					var minMQL = window.matchMedia('(min-resolution:'+target+'dpi)');
-					if(minMQL.matches){min = target;}
-					var maxMQL = window.matchMedia('(max-resolution:'+target+'dpi)');
-					if(maxMQL.matches){max = target};
+					//var minMQL = window.matchMedia('(min-resolution:'+target+'dpi)');
+					if(window.matchMedia('(min-resolution:'+target+'dpi),(min-device-pixel-ratio)').matches){min = target;}
+					//var maxMQL = window.matchMedia('(max-resolution:'+target+'dpi)');
+					if(window.matchMedia('(max-resolution:'+target+'dpi)').matches){max = target};
 					app.u.dump(min + ".." + max);
 				}
 				return min;
