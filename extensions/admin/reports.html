@@ -220,9 +220,9 @@
 	<div class='floatLeft marginRight'>
 		<div class='label'>Data Columns:</div>
 	
-		<label><input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popRadio;" /> Dynamic <span class='toolTip' title="Will provide a fixed set of data choices displayed with a predetermined number of columns.">?</span></label>
+		<label><input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> Dynamic <span class='toolTip' title="Will provide a fixed set of data choices displayed with a predetermined number of columns.">?</span></label>
 		
-		<label><input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popRadio;" /> Fixed <span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
+		<label><input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> Fixed <span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
 
 	</div>
 	
@@ -233,9 +233,9 @@
 	<div class='floatLeft displayNone' data-app-role='datasetTypeContainer'>
 		<div class='label'>Data:</div>
 	
-		<label><input type='radio' name='column' value='gms' data-bind="var:chart(column); format:popRadio;" /> Gross Sales</label>
-		<label><input type='radio' name='column' value='distinct' data-bind="var:chart(column); format:popRadio;" /> # Orders</label>
-		<label><input type='radio' name='column' value='total' data-bind="var:chart(column); format:popRadio;" /> # Units Sold</label>
+		<label><input type='radio' name='column' value='gms' data-bind="var:chart(column); format:popVal;" /> Gross Sales</label>
+		<label><input type='radio' name='column' value='distinct' data-bind="var:chart(column); format:popVal;" /> # Orders</label>
+		<label><input type='radio' name='column' value='total' data-bind="var:chart(column); format:popVal;" /> # Units Sold</label>
 	
 	</div>
 	

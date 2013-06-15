@@ -164,7 +164,7 @@ var admin_syndication = function() {
 							}
 						
 						$D.data(vars); //set on dialog so they can be easily located later (on save).
-						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0'},{'callback':'anycontent','jqObj':$D,'templateID' : 'ebayCategoryChooserTemplate'},'mutable');
+						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0','pid':vars.pid},{'callback':'anycontent','jqObj':$D,'templateID' : 'ebayCategoryChooserTemplate'},'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					else	{
@@ -374,6 +374,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 							$XSLContentArea.empty().showLoading({'message':'Fetching item specifics data'});
 							app.ext.admin.calls.adminEBAYCategory.init({
 								'categoryid' : categoryID,
+								'pid' : data.pid,
 								'xsl' : app.ext.admin_syndication.vars.ebayXSL
 								},{'callback':function(rd){
 									if(app.model.responseHasErrors(rd)){
@@ -393,7 +394,10 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 							$XSLContentArea.empty(); //this will get re-populated on another leaf click.
 							var $ul = $("<ul \/>",{'id':'children4_'+$li.data('categoryid'),'data-bind':'var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'});
 							$ul.addClass('noPadOrMargin marginLeft').appendTo($li).showLoading({'message':'Fetching Categories...'});
-							app.ext.admin.calls.adminEBAYCategory.init({'categoryid':$li.data('categoryid')},{'callback':'anycontent','jqObj':$ul},'mutable');
+							app.ext.admin.calls.adminEBAYCategory.init({
+								'categoryid':$li.data('categoryid'),
+								'pid' : data.pid
+								},{'callback':'anycontent','jqObj':$ul},'mutable');
 							app.model.dispatchThis('mutable');
 							}
 
@@ -500,6 +504,19 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 						}
 
 					});
+				},
+			
+			ebayAddCustomDetailShow : function($btn)	{
+
+$btn.button();
+$btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',function(){
+	var
+		$fieldset = $btn.closest('fieldset'),
+		numInputs = $('.inputContainer',$fieldset).length;
+	
+	$btn.after("<div class='inputContainer'><input type='text' placeholder='Detail Title' value='' name='cs_name"+num_inputs+"' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+num_inputs+"' \/><\/div>");
+	});
+
 				},
 			
 			amazonMWSLinkTo : function($btn)	{
