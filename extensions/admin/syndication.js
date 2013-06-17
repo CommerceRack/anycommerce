@@ -46,7 +46,8 @@ var admin_syndication = function() {
 						app.ext.admin_syndication.vars.ebayXSL = c.responseText;
 						},
 					error : function(a,b,c)	{
-						app.u.dump("GOT HERE!!!!!!!!!!!!!!!!!");
+						$('#globalMessaging').anymessage(app.u.errMsgObject('An error occured while trying to load a resource file. The eBay category chooser is not likely to work properly during this session. If you need this feature, please refresh your browser. If the error persists, please contact technical support.'))
+						app.u.dump("An error occured loading the XSL file to ebay store categories. eBay category chooser will NOT work properly. error details:",'error');
 						app.u.dump(a);
 						app.u.dump(b);
 						app.u.dump(c);
