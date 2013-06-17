@@ -604,6 +604,124 @@ This HTML Editor option will be removed altogether in the future.
 
 
 
+
+<div id='productEditorPanelTemplate_ebay' class='productPanel'>
+
+
+<label>
+	<input type='checkbox' name='Item.AutoPay' data-bind="var: product(ebay:Item.AutoPay); format:popVal;" />
+	Autopay
+	<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
+</label>
+
+
+<fieldset>
+	<legend>Best Offer</legend>
+
+	<label>
+		<input type='checkbox' name='Item.BestOfferDetails.BestOfferEnabled' data-bind="var: product(ebay:Item.BestOfferDetails.BestOfferEnabled); format:popVal;" />
+		Enable
+		<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
+	</label>
+	
+	<label>
+		<span>Max # policy violations</span>
+		<input type='number' step='1' min='0' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
+		<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations.Period) before being blocked from buying/bidding on the item. ">?</span>
+	</label>
+	
+	<label>
+		<span>Policy violations period</span>
+		<select name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period); format:popVal;">
+			<option value=''></option>
+			<option value='Days_30'>30</option>
+			<option value='Days_180'>180</option>
+			<option value='Days_360'>360</option>
+			<option value='Days_540'>540</option>
+		</select>
+		<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+	</label>
+
+</fieldset>
+
+
+
+
+<fieldset>
+	<legend>Buyer Requirements</legend>
+
+	<label>
+		<span>Max. item count</span>
+		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount); format:popVal;">
+			<option></option>
+			<option value='1'>1</option>
+			<option value='2'>2</option>
+			<option value='3'>3</option>
+			<option value='4'>4</option>
+			<option value='5'>5</option>
+			<option value='6'>6</option>
+			<option value='7'>7</option>
+			<option value='8'>8</option>
+			<option value='9'>9</option>
+			<option value='10'>10</option>
+			<option value='25'>25</option>
+			<option value='50'>50</option>
+			<option value='100'>100</option>
+		</select>
+		<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+	</label>
+	<label>
+		<span>Min. feedback score</span>
+		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore); format:popVal;">
+			<option></option>
+			<option value='0'>0</option>
+			<option value='1'>1</option>
+			<option value='2'>2</option>
+			<option value='3'>3</option>
+			<option value='4'>4</option>
+			<option value='5'>5</option>
+		</select>
+		<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+	</label>
+
+	<label>
+		<span>Max. feedback score</span>
+		<input type='number' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
+		<span class='toolTip' title="If this field is used, a prospective buyer is blocked from bidding/buying if they have reached or exceeded the MaximumItemCount and their feedback score is less than the value of this field.">?</span>
+	</label>
+
+	<label>
+		<span>Max. feedback score</span>
+		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period); format:popVal;">
+			<option value=''></option>
+			<option value='Days_30'>30</option>
+			<option value='Days_180'>180</option>
+			<option value='Days_360'>360</option>
+		</select>
+		<span class='toolTip' title="If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item.">?</span>
+	</label>
+
+
+
+
+
+
+<label>
+	<span></span>
+	<input  name='' data-bind="var: product(ebay:); format:popVal;" />
+	<span class='toolTip' title="">?</span>
+</label>
+
+
+</fieldset>
+
+
+</div>
+
+
+
+
+
 <!--
 a template for multipage controls
 after this is generated, actions for going to last and next page will be added by the extension.

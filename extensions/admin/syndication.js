@@ -161,6 +161,7 @@ var admin_syndication = function() {
 							'anycontent' : false
 							});
 
+						$D.dialog('option','height',($(window).height() - 100));
 						$D.dialog('open');
 
 						if(vars.inputid = $input.attr('id'))	{} //value for input id is set in if.

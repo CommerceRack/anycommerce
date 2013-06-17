@@ -1388,6 +1388,7 @@ ex of cbc, hint and caution: search 'product' and open 'product edit'
 
 /*
 REPORTING -> KPI
+wasn't enough css to justify a separate .css file. If this content grows, move to extensions/admin/reports.css
 */
 ul.kpiSortable	{width:250px; min-height:200px; max-height:250px; overflow:auto; list-style:none; margin:0; padding:0;}
 ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
@@ -1408,8 +1409,9 @@ ul.kpiSortable li:last-child	{border-bottom:0;}
 
 /*
 SYNDICATION
+wasn't enough css to justify a separate .css file. If this content grows, move to extensions/admin/syndication.css
 */
-.ebayCatChooserLeftColContainer	{height:300px; overflow:auto;}
+
 .ebayCategoryChooser .leftCol	{width:25%;}
 .ebayCategoryChooser .leftCol li	{margin:3px 0 3px 0}
 
