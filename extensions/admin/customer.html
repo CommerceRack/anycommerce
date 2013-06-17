@@ -81,8 +81,7 @@ if the data attrib is changed or any changes are made to the values (especially 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		<h2 class='floatLeft ui-widget-header-padding'>
 User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
-Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span>
-Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
+
 		</h2>
 		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
@@ -98,6 +97,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<h2>General</h2>
 	<div>
 	<fieldset>
+		<div class='label'>Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span></div>
+		<div class='label'>Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	</div>
 		<label><span>Email:</span><input size='20' type="email" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
 		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
 		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
