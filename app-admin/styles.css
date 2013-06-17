@@ -200,6 +200,9 @@ if you want the list responsive, apply the .fluidList class.
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
 
+/* in a list, when one item is 'selected' (such as the ebay category chooser), apply this class to indicate. */
+.activeListItem, .activeListItem.lookLikeLink	{color:#333333;}
+.activeListItem:before	{content: "\00bb "; font-weight:bold;} /* &#187 / double arrow icon */
 
 
 .minHeight100	{min-height:100px;} /* apply onto elements that will have showloading run on them if they're empty.
@@ -1399,6 +1402,14 @@ ul.kpiSortable li:last-child	{border-bottom:0;}
 	webkit-box-sizing:border-box;
 	}
 
+
+
+
+/*
+SYNDICATION
+*/
+.ebayCatChooserLeftColContainer	{height:300px; overflow:auto;}
+.ebayCategoryChooser .leftCol	{width:25%;}
 
 
 /*

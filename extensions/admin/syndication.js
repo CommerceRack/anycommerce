@@ -350,7 +350,8 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 				if($li && $li.length && $li.data('categoryid'))	{
 					var
 						categoryID = $li.data('categoryid'),
-						$XSLContentArea = $li.closest("[data-app-role='ebayCategoryChooserTable']").find("[data-app-role='ebayCategoryChooserXSLContainer']"),
+						$chooser = $li.closest("[data-app-role='ebayCategoryChooserTable']"),
+						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']"),
 						data = $XSLContentArea.closest('.ui-dialog-content').data();
 //categoryselect is necessary so that it can be determined whether or not items specifics should be displayed.
 					if(data.categoryselect) 	{
@@ -377,17 +378,20 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 						else if(Number($li.data('leaf')) >= 1)	{
 							app.u.dump(" -> leaf!");
 							$('#APIForm').show();
-							$XSLContentArea.empty().showLoading({'message':'Fetching item specifics data'});
+							$('.activeListItem',$chooser).removeClass('activeListItem');
+							$li.addClass('activeListItem');
+							$XSLContentArea.empty();
+							$chooser.showLoading({'message':'Fetching item specifics data'});
 							app.ext.admin.calls.adminEBAYCategory.init({
 								'categoryid' : categoryID,
 								'pid' : data.pid,
 								'xsl' : app.ext.admin_syndication.vars.ebayXSL
 								},{'callback':function(rd){
+									$chooser.hideLoading();
 									if(app.model.responseHasErrors(rd)){
 										$XSLContentArea.anymessage({'message':rd})
 										}
 									else	{
-										$XSLContentArea.hideLoading();
 										$XSLContentArea.append(app.data[rd.datapointer].html);
 										}
 									}
@@ -395,11 +399,12 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 							app.model.dispatchThis('mutable');
 							}
 						else	{
-							app.u.dump(" -> get subcats");
+//							app.u.dump(" -> get subcats");
 							$('#APIForm').hide(); //hide item specifics container to avoid confusion.
 							$XSLContentArea.empty(); //this will get re-populated on another leaf click.
 							var $ul = $("<ul \/>",{'id':'children4_'+$li.data('categoryid'),'data-bind':'var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'});
-							$ul.addClass('noPadOrMargin marginLeft').appendTo($li).showLoading({'message':'Fetching Categories...'});
+							$ul.addClass('noPadOrMargin marginLeft').appendTo($li)
+							$ul.showLoading({'message':'Fetching Categories...'});
 							app.ext.admin.calls.adminEBAYCategory.init({
 								'categoryid':$li.data('categoryid'),
 								'pid' : data.pid
@@ -518,16 +523,16 @@ $btn.button();
 $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',function(){
 	var
 		$fieldset = $btn.closest('fieldset'),
-		numInputs = $('.inputContainer',$fieldset).length;
+		numInputs = $('.inputContainer',$fieldset).length || 0;
 	
-	$btn.after("<div class='inputContainer'><input type='text' placeholder='Detail Title' value='' name='cs_name"+num_inputs+"' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+num_inputs+"' \/><\/div>");
+	$btn.after("<div class='inputContainer marginTop'><input type='text' placeholder='Detail Title' value='' name='cs_name"+numInputs+"' class='marginRight' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+numInputs+"' \/><\/div>");
 	});
 
 				}, //ebayAddCustomDetailShow
 				
 			ebayShowTreeByChild : function($ele)	{
 				$ele.off('change.ebayShowTreeByChild').on('change.ebayShowTreeByChild',function(){
-					app.u.dump("BEGIN admin_syndication.e.ebayShowTreeByChild");
+//					app.u.dump("BEGIN admin_syndication.e.ebayShowTreeByChild");
 					
 					$ele.children().first().attr({'disabled':'disabled','selected':'selected'});
 					var
@@ -538,8 +543,9 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']:first");
 					
 					$chooser.showLoading({'message':'Fetching eBay category tree data'});
+					$('.activeListItem',$chooser).removeClass('activeListItem');
 					if(categoryid && data.pid)	{
-						app.u.dump(" -> categoryid ["+categoryid+"] and pid ["+data.pid+"] both obtained.");
+//						app.u.dump(" -> categoryid ["+categoryid+"] and pid ["+data.pid+"] both obtained.");
 //fetch detail on the recently viewed category. This will contain a list of parents orders from closest to leaf (at zero spot) to top-most.
 //xsl is set so that the request doesn't have to be made again.
 						app.ext.admin.calls.adminEBAYCategory.init({
@@ -548,43 +554,44 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 							'xsl' : app.ext.admin_syndication.vars.ebayXSL
 							},{'callback' : function(rd){
 
-if(app.model.responseHasErrors(rd)){
-	$chooser.hideLoading();
-	$messageDiv.anymessage({'message':rd})
-	}
-else	{
-	app.u.dump(" -> successfully retrieved data for leaf ["+categoryid+"].");
-	var
-		leafData = app.data[rd.datapointer], //gets used much later after rd... has been overwritten in other requests.
-		parents = leafData['@PARENTS'],
-		L = parents.length;
-	
-	app.u.dump(" -> leaf has "+L+" parents");
-	//get the category detail for each branch in the tree handy.
-	for(var i = 0; i < L; i += 1)	{
-		app.ext.admin.calls.adminEBAYCategory.init({'categoryid':categoryid,'pid' : data.pid},{},'mutable');
-		}
-	app.calls.ping.init({'callback':function(rd){
-		$chooser.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$messageDiv.anymessage({'message':rd})
-			}
-		else	{
-			app.u.dump(" -> Ping/Pong");
-//All the data is available at this point, right down to the leaf, so trigger a click on each branch, starting at the top (last item in parents array).
-//this only triggers the clicks on the parents, not on the leaf itself. We already have that data from our original request to get the parents.
-			for(var i = (L-1); i >= 0; i -= 1)	{
-				app.u.dump(i+"). "+parents[i].categoryid+" "+parents[i].name);
-				$("[data-categoryid='"+parents[i].categoryid+"']:first",$chooser).find('span:first').trigger('click');
-				}
-			$('#APIForm').show(); //The clicking of parents in the category tree hides this, so unhide after all the click steps.
-			$XSLContentArea.empty().append(leafData.html);
-			
-			}
-		}},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-
+								if(app.model.responseHasErrors(rd)){
+									$chooser.hideLoading();
+									$messageDiv.anymessage({'message':rd})
+									}
+								else	{
+									app.u.dump(" -> successfully retrieved data for leaf ["+categoryid+"].");
+									var
+										leafData = app.data[rd.datapointer], //gets used much later after rd... has been overwritten in other requests.
+										parents = leafData['@PARENTS'],
+										L = parents.length;
+									
+								//	app.u.dump(" -> leaf has "+L+" parents");
+									//get the category detail for each branch in the tree handy.
+									for(var i = 0; i < L; i += 1)	{
+										app.ext.admin.calls.adminEBAYCategory.init({'categoryid':categoryid,'pid' : data.pid},{},'mutable');
+										}
+									app.calls.ping.init({'callback':function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$chooser.hideLoading();
+											$messageDiv.anymessage({'message':rd})
+											}
+										else	{
+								//			app.u.dump(" -> Ping/Pong");
+								//All the data is available at this point, right down to the leaf, so trigger a click on each branch, starting at the top (last item in parents array).
+								//this only triggers the clicks on the parents, not on the leaf itself. We already have that data from our original request to get the parents.
+											for(var i = (L-1); i >= 0; i -= 1)	{
+												app.u.dump(i+"). "+parents[i].categoryid+" "+parents[i].name);
+												$("[data-categoryid='"+parents[i].categoryid+"']:first",$chooser).find('span:first').trigger('click');
+												}
+											$chooser.hideLoading();
+											$XSLContentArea.empty().append(leafData.html);
+											$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
+											$('#APIForm').show(); //The clicking of parents in the category tree hides this, so unhide after all the click steps.
+								
+											}
+										}},'mutable');
+									app.model.dispatchThis('mutable');
+									}
 								}},'mutable');
 						app.model.dispatchThis('mutable');
 						}
