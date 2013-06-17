@@ -1716,9 +1716,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <table data-app-role='ebayCategoryChooserTable' class='fullWidth'>
 <tr>
 	<td class='small valignTop'>
+	<select class='marginBottom' data-bind="var: mkt(@USER_RECENT);format:optionsFromList; text:name; value:categoryid;" data-app-event='admin_syndication|ebayShowTreeByChild'>
+		<option>Recently Viewed</option>
+		
+	</select>
 	<ul class='noPadOrMargin listStyleNone marginRight' data-bind='var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'></ul>
 	</td>
 	<td class='valignTop'>
+	<div data-app-role='eBayCatChooserMessaging'></div>
 	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft displayNone' name="APIForm" id="APIForm">
 		<fieldset data-app-role='ebayCategoryChooserXSLContainer'>
 		

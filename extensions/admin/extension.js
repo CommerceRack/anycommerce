@@ -626,6 +626,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				var r = 0;
 //if xsl is set, localstorage is NOT used.
 				if(obj.xsl)	{
+					app.u.dump(" -> XSL is set, do NOT use what is in memory or local storage");
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}

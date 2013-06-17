@@ -44,6 +44,12 @@ var admin_syndication = function() {
 				var ebayxsl = $.ajax(app.vars.baseURL+'extensions/admin/resources/syi_attributes.xsl',{
 					success : function(data,b,c)	{
 						app.ext.admin_syndication.vars.ebayXSL = c.responseText;
+						},
+					error : function(a,b,c)	{
+						app.u.dump("GOT HERE!!!!!!!!!!!!!!!!!");
+						app.u.dump(a);
+						app.u.dump(b);
+						app.u.dump(c);
 						}
 					})
 				r = true;
@@ -91,7 +97,6 @@ var admin_syndication = function() {
 				$target.anymessage({'message':rd})
 				}
 			},
-
 
 		anycontentPlus : {
 			onSuccess : function(_rtag)	{
@@ -445,7 +450,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 				else	{
 					$('#APIForm').anymessage({'message':'In admin_syndication.u.getUpdatedItemSpecificsForm, either $form ['+typeof $form+'] not passed or unable to determine categoryID from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
 					}
-				},
+				}, //getUpdatedItemSpecificsForm
 
 //The ebay form has cases where there are multiple inputs w/ the same name. so we serialize it into KvP, which doesn't care about that, then do what's needed.
 			updateProductItemSpecifics : function(pid,kvp,$context)	{
@@ -467,7 +472,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 				else	{
 					$context.anymessage({'message':'In admin_syndication.u.updateProductItemSpecifics, pid ['+pid+'] and/or KvP string ['+kvp+'] are empty. Both are required.','gMessage':true});
 					}
-				}
+				} //updateProductItemSpecifics
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
@@ -504,7 +509,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 						}
 
 					});
-				},
+				}, //ebaySaveCatAndUpdateItemSpecifics
 			
 			ebayAddCustomDetailShow : function($btn)	{
 
@@ -517,6 +522,79 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 	$btn.after("<div class='inputContainer'><input type='text' placeholder='Detail Title' value='' name='cs_name"+num_inputs+"' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+num_inputs+"' \/><\/div>");
 	});
 
+				}, //ebayAddCustomDetailShow
+				
+			ebayShowTreeByChild : function($ele)	{
+				$ele.off('change.ebayShowTreeByChild').on('change.ebayShowTreeByChild',function(){
+					app.u.dump("BEGIN admin_syndication.e.ebayShowTreeByChild");
+					
+					$ele.children().first().attr({'disabled':'disabled','selected':'selected'});
+					var
+						categoryid = $ele.val(),
+						$chooser = $ele.closest("[data-app-role='ebayCategoryChooserTable']"),
+						data = $ele.closest('.ui-dialog-content').data() || {},
+						$messageDiv = $chooser.find("[data-app-role='eBayCatChooserMessaging']:first"),
+						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']:first");
+					
+					$chooser.showLoading({'message':'Fetching eBay category tree data'});
+					if(categoryid && data.pid)	{
+						app.u.dump(" -> categoryid ["+categoryid+"] and pid ["+data.pid+"] both obtained.");
+//fetch detail on the recently viewed category. This will contain a list of parents orders from closest to leaf (at zero spot) to top-most.
+//xsl is set so that the request doesn't have to be made again.
+						app.ext.admin.calls.adminEBAYCategory.init({
+							'categoryid':categoryid,
+							'pid' : data.pid,
+							'xsl' : app.ext.admin_syndication.vars.ebayXSL
+							},{'callback' : function(rd){
+
+if(app.model.responseHasErrors(rd)){
+	$chooser.hideLoading();
+	$messageDiv.anymessage({'message':rd})
+	}
+else	{
+	app.u.dump(" -> successfully retrieved data for leaf ["+categoryid+"].");
+	var
+		leafData = app.data[rd.datapointer], //gets used much later after rd... has been overwritten in other requests.
+		parents = leafData['@PARENTS'],
+		L = parents.length;
+	
+	app.u.dump(" -> leaf has "+L+" parents");
+	//get the category detail for each branch in the tree handy.
+	for(var i = 0; i < L; i += 1)	{
+		app.ext.admin.calls.adminEBAYCategory.init({'categoryid':categoryid,'pid' : data.pid},{},'mutable');
+		}
+	app.calls.ping.init({'callback':function(rd){
+		$chooser.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$messageDiv.anymessage({'message':rd})
+			}
+		else	{
+			app.u.dump(" -> Ping/Pong");
+//All the data is available at this point, right down to the leaf, so trigger a click on each branch, starting at the top (last item in parents array).
+//this only triggers the clicks on the parents, not on the leaf itself. We already have that data from our original request to get the parents.
+			for(var i = (L-1); i >= 0; i -= 1)	{
+				app.u.dump(i+"). "+parents[i].categoryid+" "+parents[i].name);
+				$("[data-categoryid='"+parents[i].categoryid+"']:first",$chooser).find('span:first').trigger('click');
+				}
+			$('#APIForm').show(); //The clicking of parents in the category tree hides this, so unhide after all the click steps.
+			$XSLContentArea.empty().append(leafData.html);
+			
+			}
+		}},'mutable');
+	app.model.dispatchThis('mutable');
+	}
+
+								}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else if(!data.pid)	{
+						$messageDiv.anymessage({'message':'In admin_syndication.e.ebayShowTreeByChild, unable to ascertain data.pid. Expected on $ele.closest(.ui-dialog.content).data(pid).','gMessage':true});
+						app.u.dump("This is data() from .ui-dialog-content: "); app.u.dump(data);
+						}
+					else	{
+						$messageDiv.anymessage({'message':'Please choose a category from the list.'})
+						}
+					});
 				},
 			
 			amazonMWSLinkTo : function($btn)	{
@@ -526,7 +604,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					window.location = "https://sellercentral.amazon.com/gp/maws/maws-registration.html?ie=UTF8&amp;id=APF889O5V4GVL&amp;userType=web&amp;returnUrl="
 					+ encodeURIComponent(window.location.href.split('?')[0]+"?linkFrom=amazon-token&PRT="+app.vars.partition)
 					});
-				},
+				}, //amazonMWSLinkTo
 			
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
@@ -617,7 +695,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
-				},			
+				}, //adminSyndicationUnsuspendMacro
 			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
@@ -630,7 +708,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
-				},
+				}, //adminSyndicationUnsuspendAndClearErrorMacro
 			adminSyndicationPublishExec : function($btn)	{
 				$btn.button();
 				
@@ -656,7 +734,7 @@ app.model.dispatchThis('immutable');
 						}
 					
 					})
-				},
+				}, //adminSyndicationPublishExec
 			amazonThesaurusAddShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.amazonThesaurusAddShow').on('click.amazonThesaurusAddShow',function(event){
@@ -677,7 +755,7 @@ app.model.dispatchThis('immutable');
 
 					});
 //				
-				},
+				}, //amazonThesaurusAddShow
 			
 			adminSyndicationDebugExec : function($btn)	{
 				$btn.button();
@@ -707,7 +785,7 @@ else	{
 						$form.anymessage({"message":"In admin.e.adminSyndicationDebugExec, unable to ascertain DST, which is required to proceed.","gMessage":true});
 						}
 					});
-				}
+				} //adminSyndicationDebugExec
 			
 			
 			} //e [app Events]
