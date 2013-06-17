@@ -151,7 +151,8 @@ var admin_syndication = function() {
 //vars is an object that needs to contain a pid and a categoryselect.
 //eBay allows for a primary and secondary category to be set, however attributes are only set on the primary, so that mode is important.
 //var keys are all lower case to allow for easy set via 'data' and consistency.
-			showEBAYCategoryChooserInModal : function($input,vars)	{
+//$span is an optional param which, if set, will have the path of the selected category set.
+			showEBAYCategoryChooserInModal : function($input,vars,$span)	{
 				vars = vars || {};
 				if($input && $input instanceof jQuery)	{
 					if(vars.pid && vars.categoryselect == 'primary' || vars.categoryselect == 'secondary')	{
@@ -169,6 +170,15 @@ var admin_syndication = function() {
 							vars.inputid = 'ebaycat_'+app.u.guidGenerator();
 							$input.attr('id',vars.inputid)
 							}
+
+						if($span)	{
+							if(vars.spanid = $span.attr('id'))	{} //value for input id is set in if.
+							else	{
+								vars.spanid = 'span_'+app.u.guidGenerator();
+								$input.attr('id',vars.spanid)
+								}
+							}
+
 						
 						$D.data(vars); //set on dialog so they can be easily located later (on save).
 						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0','pid':vars.pid},{'callback':'anycontent','jqObj':$D,'templateID' : 'ebayCategoryChooserTemplate'},'mutable');
@@ -368,6 +378,8 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 							$('ul',$li).first().toggle();
 							}
 						else if(Number($li.data('leaf')) >= 1 && data.categoryselect == 'secondary')	{
+							// !!!! THE PRODUCT RECORD SHOULD BE UPDATED HERE. 
+							app.u.dump('the product record needs to be updated. this is NOT done.','error');
 							if(data.inputid)	{
 								$(app.u.jqSelector('#',data.inputid)).val(categoryID).effect('highlight', {}, 2500);;
 								$XSLContentArea.closest('.ui-dialog-content').dialog('close');
@@ -463,16 +475,19 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 			updateProductItemSpecifics : function(pid,kvp,$context)	{
 				var r = false; //what is returned. will be true if a dispatch is added.
 				$context = $context || $('#globalMessaging'); //context is used only for error reporting.
+				var obj = {
+					'_cmd' : 'adminProductUpdate',
+					'@updates' : new Array(),
+					'pid' : pid
+					}
 				if(pid && kvp)	{
 					r = true;
-					console.error('NOT DONE'); //!!!
-
+					app.model.addDispatchToQ(obj,Q || 'mutable');
 /*					var obj = {};
 					obj._cmd = "adminProductUpdate";
 					obj.pid = pid;
 					obj['%attribs'] = {'ebay:attributeset' : XML};
 					app.u.dump(" -> obj: "); app.u.dump(obj);
-					app.model.addDispatchToQ(obj,'immutable');
 */
 
 					}
@@ -495,24 +510,50 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 
 				var
 					$form = $btn.closest('form'),
-					data = $btn.closest('.ui-dialog-content').data();
+					data = $btn.closest('.ui-dialog-content').data(),
+					categoryid = $btn.closest('form').find("[data-app-role='ebayCategoryChooserXSLContainer']").data('categoryid');
 					
-					if(data.pid && data.categoryselect && data.inputid)	{
-						var prodWillUpdate = app.ext.admin_syndication.u.updateProductItemSpecifics(data.pid,$form.serialize(),$form);
-						var categoryid = $li.closest("[data-app-role='ebayCategoryChooserXSLContainer']").data('categoryid');
-						if(prodWillUpdate && categoryid)	{
-							$(app.u.jqSelector('#',data.inputid)).val(categoryid);
-							//need to do a dispatch here, for the updateProductItemSpecifics. !!!
-							}
-						else if(!categoryid)	{
-							$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the ebay category id ['+categoryid+'], it will not be set.','gMessage':true})
-							}
-						else{
-							//the updateProductItemsSpecifics will display it's own error messages.
-							}
+					if(data.pid && data.categoryselect && data.inputid && categoryid)	{
+
+
+var obj = {
+	'_cmd' : 'adminProductUpdate',
+	'@updates' : new Array(),
+	'pid' : data.pid
+	}
+
+
+//build item specifics.
+var
+	itemSpecifics = $("[data-app-event='admin_syndication|itemspecificsFieldset']",$form).serializeJSON(),
+	itemSpecificsString = "";
+if(!$.isEmptyObject(itemSpecifics))	{
+	for(index in itemSpecifics)	{
+		itemSpecificsString += index+":"+itemSpecifics[index]+"\n";
+		}
+	obj['@updates'].push("SET-EBAY?itemspecifics="+encodeURIComponent(itemSpecificsString));
+	}
+
+//set the category.
+obj['@updates'].push("SET-EBAY?category"+(data.categoryselect == 'primary' ? '' : 2)+"="+categoryid);
+
+//!!! NEED TO GET MOST UP TO DATE PRIOR TO SENDING.
+//obj['@updates'].push("SET-EBAY?attributeset="+encodeURIComponent(app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['ebay:attributeset']));
+
+obj['@updates'].push("SET-EBAY?attributeset="+encodeURIComponent('<AttributeSetArray><AttributeSet attributeSetID="7"> <Attribute attributeID="35"><Value><ValueID>32569</ValueID> <ValueID>1777</ValueID> <ValueID>46773</ValueID> </Value> </Attribute> <Attribute attributeID="26446"><Value><ValueID></ValueID> </Value> </Attribute> <Attribute attributeID="12"><Value><ValueID>1028</ValueID> </Value> </Attribute> <Attribute attributeID="10244"><Value><ValueID>-10</ValueID> </Value> </Attribute> <Attribute attributeID="14"><Value><ValueID>1759</ValueID> </Value> </Attribute> </AttributeSet> </AttributeSetArray>'));
+
+
+
+
+//update the original input.
+$(app.u.jqSelector('#',data.inputid)).val(categoryid);					
+						
+//app.u.dump(" OBJ: "); app.u.dump(obj);
+app.model.addDispatchToQ(obj,'immutable');			
+app.model.dispatchThis('immutable');
 						}
 					else	{
-						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] , expected to find them on .ui-dialog-content.data()','gMessage':true});
+						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on .ui-dialog-content.data()','gMessage':true});
 						}
 
 					});

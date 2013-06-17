@@ -684,36 +684,297 @@ This HTML Editor option will be removed altogether in the future.
 		<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
 	</label>
 
+
+
 	<label>
-		<span>Max. feedback score</span>
+		<span>Max. unpaid item strikes count</span>
 		<input type='number' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
-		<span class='toolTip' title="If this field is used, a prospective buyer is blocked from bidding/buying if they have reached or exceeded the MaximumItemCount and their feedback score is less than the value of this field.">?</span>
+		<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
 	</label>
 
 	<label>
-		<span>Max. feedback score</span>
+		<span>Max. unpaid item strikes Period</span>
 		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period); format:popVal;">
 			<option value=''></option>
 			<option value='Days_30'>30</option>
 			<option value='Days_180'>180</option>
 			<option value='Days_360'>360</option>
 		</select>
-		<span class='toolTip' title="If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item.">?</span>
+		<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
 	</label>
 
+
+	
+	<label>
+		<span>Min Feedback Score</span>
+		<input type='number' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
+		<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
+	</label>
+	
+	
+	
+	<label>
+		<input type='checkbox' name='Item.BuyerRequirementDetails.ShipToRegistrationCountry' data-bind="var: product(ebay:Item.BuyerRequirementDetails.ShipToRegistrationCountry); format:popVal;" />
+		Ship to Reg. Country
+		<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
+	</label>
+	
+	
+	<label>
+		<input type='checkbox' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser); format:popVal;" />
+		Verified user
+		<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
+	</label>
+
+
+	
+	<label>
+		<span>Verified user min feedback score</span>
+		<input type='number' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
+		<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
+	</label>
+	
+	
+	
+	<label>
+		<input type='checkbox' name='Item.BuyerResponsibleForShipping' data-bind="var: product(ebay:Item.BuyerResponsibleForShipping); format:popVal;" />
+		Buyer Responsible For Shipping
+		<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
+	</label>
+	<p class='hint'>
+ 	Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
+	</p>
+
+
+</fieldset>
+
+
+
+
+<label>
+	<span>Buy it now price</span>
+	<input  name='Item.BuyItNowPric' data-bind="var: product(ebay:Item.BuyItNowPric); format:popVal;" />
+	<span class='toolTip' title="For auction listings, the Buy It Now feature allows a user to purchase the item at a Buy It Now price and end the auction immediately. Use this field to specify the Buy It Now price. Including and specifying a BuyItNowPrice value enables the Buy It Now feature for the auction listing. ">?</span>
+</label>
+
+
+
+<label>
+	<input type='checkbox' name='Item.CategoryBasedAttributesPrefil' data-bind="var: product(ebay:Item.CategoryBasedAttributesPrefil); format:popVal;" />
+	Category Mapping
+	<span class='toolTip' title="If this field is included in the request and set to 'true', eBay will auto-fill some of a listing's Item Specifics values based on the listing's category (or categories).">?</span>
+</label>
+
+
+
+
+<fieldset>
+	<legend>Charity</legend>
+	<label>
+		<span>ID</span>
+		<input type='text' name='Item.Charity.CharityID' data-bind="var: product(ebay:Item.Charity.CharityID); format:popVal;" />
+		<span class='toolTip' title="A unique identification number assigned by eBay to registered nonprofit charity organizations. Required input when listing Giving Works items.">?</span>
+	</label>
+
+	<label>
+		<span>Number</span>
+		<input type='number' name='Item.Charity.CharityNumber' data-bind="var: product(ebay:Item.Charity.CharityNumber); format:popVal;" />
+		<span class='toolTip' title="A unique identifier assigned to a nonprofit charity organization by the dedicated provider of eBay Giving Works. This value can contain up to 10 digits. This value is superseded by CharityID.">?</span>
+	</label>
+
+	<label>
+		<span>Percent</span>
+		<input type='number' step='.5' min='10.0' name='Item.Charity.DonationPercent' data-bind="var: product(ebay:Item.Charity.DonationPercent); format:popVal;" />
+		<span class='toolTip' title="The percentage of the purchase price that the seller chooses to donate to the selected nonprofit organization. This percentage is displayed in the Giving Works item listing. Possible values: 10.0 to 100.0. Percentages must increment by 5.0. ">?</span>
+	</label>
+
+
+</fieldset>
 
 
 
 
 
 <label>
-	<span></span>
-	<input  name='' data-bind="var: product(ebay:); format:popVal;" />
-	<span class='toolTip' title="">?</span>
+	<span>Condition Description</span>
+	<input type='text' name='Item.ConditionDescription' data-bind="var: product(ebay:Item.ConditionDescription); format:popVal;" />
+	<span class='toolTip' title="Used to more clearly describe the condition of items that are not brand new. ">?</span>
+</label>
+
+<label>
+	<span>Condition ID</span>
+	<input type='number' name='Item.ConditionID' data-bind="var: product(ebay:Item.ConditionID); format:popVal;" />
+	<span class='toolTip' title="The numeric ID (e.g., 1000) for the item condition. Sellers should also clarify the item's condition in their own item description. ">?</span>
+</label>
+
+<label>
+	<span>Country</span>
+	<input type='text' name='Item.Country' size='2' maxlength="2" data-bind="var: product(ebay:Item.Country); format:popVal;" />
+	<span class='toolTip' title="Set to a two character country code">?</span>
 </label>
 
 
+<label>
+	<span>Cross browser trade</span>
+	<input type='text' name='Item.CrossBorderTrade' data-bind="var: product(ebay:Item.CrossBorderTrade); format:popVal;" />
+	<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
+</label>
+
+<label>
+	<span>Country</span>
+	<input type='text' name='Item.Currency' size='3' data-bind="var: product(ebay:Item.Currency); format:popVal;" />
+	<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
+</label>
+
+
+<label>
+	<input type='checkbox' name='Item.DisableBuyerRequirements' data-bind="var: product(ebay:Item.DisableBuyerRequirements); format:popVal;" />
+	Disable Buyer Requirements
+	<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
+</label>
+
+
+<fieldset>
+	<legend>Discount Price Info</legend>
+
+	<label>
+		<span>Comparison price</span>
+		<input type='number' step='.01' name='Item.DiscountPriceInfo.MadeForOutletComparisonPrice' data-bind="var: product(ebay:tem.DiscountPriceInfo.MadeForOutletComparisonPrice); format:popVal;" />
+		<span class='toolTip' title="Applicable only if the item was specifically made for sale through dedicated eBay outlet pages. The comparison price is the price of a comparable product sold through non-outlet channels on eBay (or elsewhere), or not specifically made for the outlet.">?</span>
+	</label>
+
+	<label>
+		<span>MAP</span>
+		<input type='number' step='.01' name='Item.DiscountPriceInfo.MinimumAdvertisedPrice' data-bind="var: product(ebay:tem.DiscountPriceInfo.MinimumAdvertisedPrice); format:popVal;" />
+		<span class='toolTip' title="Minimum Advertised Price (MAP) is an agreement between suppliers (or manufacturers (OEM)) and the retailers (sellers) stipulating the lowest price an item is allowed to be advertised at. Sellers can offer prices below MAP by means of other discounts. This only applies to fixed-price listings and auction listings with the Buy It Now option.">?</span>
+	</label>
+
+
+	<label>
+		<span>MAP exposure</span>
+		<select name='Item.DiscountPriceInfo.MinimumAdvertisedPriceExposure' data-bind="var: product(ebay:tem.DiscountPriceInfo.MinimumAdvertisedPriceExposure); format:popVal;">
+			<option></option>
+			<option value='DuringCheckout'>Discounted price must be shown on the eBay checkout flow page</option>
+			<option value='None'>discount price is not shown via either PreCheckout nor DuringCheckout</option>
+			<option value='PreCheckout'>Buyer must click a link to a separate page/window that displays the discount price</option>
+		</select>
+		<span class='toolTip' title="">?</span>
+	</label>
+
+
+	<label>
+		<span>Original retail price</span>
+		<input type='number' step='.01' name='Item.DiscountPriceInfo.OriginalRetailPrice' data-bind="var: product(ebay:tem.DiscountPriceInfo.OriginalRetailPrice); format:popVal;" />
+		<span class='toolTip' title="The actual retail price set by the manufacturer (OEM). eBay does not maintain or validate the OriginalRetailPrice supplied by the seller. OriginalRetailPrice should always be more than StartPrice. ">?</span>
+	</label>
+	
 </fieldset>
+
+
+
+
+	<label>
+		<span>Dispatch Time Max</span>
+		<input type='number' step='1' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
+		<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
+	</label>
+
+
+<fieldset>
+	<legend>Contact Information/Availability</legend>
+
+	<label>
+		<input type='checkbox' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime); format:popVal;" />
+		Anytime Hours
+		<span class='toolTip' title="Indicates whether or not a user is available to be contacted 24 hours a day during the range of days specified using the Hours1Days element.">?</span>
+	</label>
+
+	<label>
+		<span>Days</span>
+		<select type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days); format:popVal;">
+			<option value='None'>None</option>
+			<option value='EveryDay'>Every day</option>
+			<option value='Weekdays'>Weekdays</option>
+			<option value='Weekends'>Weekends</option>
+		</select>
+		<span class='toolTip' title="Indicates the range of days for which the primary contact hours specified by Hours1AnyTime or Hours1From and Hours1To apply. If a value of None is provided for this field, the values provided for Hours1AnyTime, Hours1From, Hours1To are ignored. ">?</span>
+	</label>
+
+	<label>
+		<span>Available From</span>
+		<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From); format:popVal;" />
+		<span class='toolTip' title="Indicates the starting time of day this eBay user is available for other eBay members to contact for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
+	</label>
+
+	<label>
+		<span>Available To</span>
+		<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To); format:popVal;" />
+		<span class='toolTip' title="Indicates the ending time of day this eBay user is available for other eBay members to contact them for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
+	</label>
+
+
+	
+</fieldset>
+
+
+<label>
+	<input type='checkbox' name='Item.GetItFast' data-bind="var: product(ebay:Item.GetItFast); format:popVal;" />
+	Get it fast
+	<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
+</label>
+
+
+
+<label>
+	<span>Hit counter</span>
+	<select type='text' name='Item.HitCounter' data-bind="var: product(ebay:Item.HitCounter); format:popVal;" >
+		<option value='BasicStyle'>BasicStyle</option>
+		<option value='GreenLED'>GreenLED</option>
+		<option value='Hidden' selected='selected'>Hidden (faster)</option>
+		<option value='HiddenStyle'>HiddenStyle</option>
+		<option value='HonestyStyle'>HonestyStyle</option>
+		<option value='NoHitCounter'>NoHitCounter</option>
+		<option value='RetroStyle'>RetroStyle</option>
+	</select>
+	<span class='toolTip' title="Indicates whether an optional hit counter is displayed on the item's listing page and, if so, what type.">?</span>
+</label>
+
+<!--
+<label>
+	<input type='checkbox' name='Item.IncludeRecommendations' data-bind="var: product(ebay:Item.IncludeRecommendations); format:popVal;" />
+	Include Recommendations
+</label>
+-->
+
+<fieldset>
+	<legend>Item Compatibility</legend>
+
+
+
+	<label>
+		<span>Compatiblity notes</span>
+		<textarea name='Item.ItemCompatibilityList.Compatibility.CompatibilityNotes' data-bind="var: product(ebay:Item.ItemCompatibilityList.Compatibility.CompatibilityNotes); format:popVal;" />
+		<span class='toolTip' title="Optionally enter any notes pertaining to the compatibility being specified. Use this field to specify the placement of the part on a vehicle or the type of vehicle a part fits. ">?</span>
+	</label>
+
+	<label>
+		<span>Name/Value list</span>
+		<textarea name='Item.ItemCompatibilityList.Compatibility.NameValueList' data-bind="var: product(ebay:Item.ItemCompatibilityList.Compatibility.NameValueList); format:popVal;" />
+		<span class='toolTip' title="A name-value pair describing a single compatible application. The allowed names and values are specific to the primary category in which the item is listed. For example, when listing in a Parts & Accessories category, where the applications are vehicles, the allowed names might include Year, Make, and Model, and the values would correspond to specific vehicles in eBay's catalog.">?</span>
+	</label>
+
+</fieldset>
+
+
+
+	<label>
+		<span></span>
+		<input type='text' name='' data-bind="var: product(ebay:); format:popVal;" />
+		<span class='toolTip' title="">?</span>
+	</label>
+
+
+
 
 
 </div>
