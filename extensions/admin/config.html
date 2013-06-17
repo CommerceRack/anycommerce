@@ -2044,7 +2044,7 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 	<legend>Processing Configuration</legend>
 	<label>
 		<span>Capture Funds:</span>
-		<select  name="cc_instant_capture" data-bind='var: payment(cc_instant_capture); format:popVal;'>
+		<select name="capture" data-bind='var: payment(capture); format:popVal;'>
 			<option value=""></option>
 			<option value="ALWAYS">Instant Capture (authorization and transfer of funds occurs at time of checkout)</option>
 			<option value="NEVER">Delayed Capture (only authorization occurs at checkout, funds transferred later by merchant)</option>
