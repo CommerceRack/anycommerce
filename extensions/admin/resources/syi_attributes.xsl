@@ -4526,7 +4526,33 @@ aus_disabled_if_empty = {}
 			</xsl:if>
 		</script>
 	</xsl:template>
-
+	<xsl:template name="Categories">
+		<xsl:choose>
+			<xsl:when test="$selectedSets/@id=$categories/@id">
+			</xsl:when>
+			<xsl:otherwise>
+				<label><span>Select category:</span>
+				<select name="vcsid">
+					<xsl:attribute name="onchange">javascript: document.forms['<xsl:value-of select="$formName"/>'].submit();</xsl:attribute>
+					<option value="-10">
+						<xsl:if test="$categories/@id != $selectedSets/@id">
+							<xsl:attribute name="selected"><xsl:value-of select="'selected'"/></xsl:attribute>
+						</xsl:if>
+						<xsl:text>--</xsl:text>
+					</option>
+					<xsl:for-each select="$categories">
+						<option value="{@id}">
+							<xsl:if test="@id = $selectedSets/@id">
+								<xsl:attribute name="selected"><xsl:value-of select="'selected'"/></xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="DomainName"/>
+						</option>
+					</xsl:for-each>
+				</select>
+				</label>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	<xsl:template name="PromoMessage">
 		<xsl:param name="Message"/>
 		<xsl:if test="$Message != ''">
