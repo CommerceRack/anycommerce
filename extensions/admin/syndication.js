@@ -295,6 +295,32 @@ else	{
 				$D.dialog('open');
 				}, //showAmzRegisterModal
 
+			showEBAY : function($target)	{
+$target.showLoading({'message':'Fetching eBay data'});
+//ebay takes a very different path at this point.  
+//go get 
+app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'immutable');
+app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'immutable');
+app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
+	$target.hideLoading();
+	if(app.model.responseHasErrors(rd)){
+		$target.anymessage({'message':rd})
+		}
+	else	{
+		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
+			$target.anycontent({'templateID':'syndication_ebf','data' : app.data.adminEBAYProfileList,'dataAttribs':{'dst':'EBF'}});
+			}
+		else	{
+			$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
+			}
+		app.u.handleAppEvents($target);
+		}
+	}}},'immutable');
+app.model.dispatchThis('immutable');
+
+
+				},
+
 //shows the editor for a given marketplace, by DST code.
 			showDSTDetails : function(DST,$target)	{
 //				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
@@ -305,69 +331,71 @@ else	{
 //					app.u.dump(" -> $target and DST are set ");
 
 					$target.empty();
-					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
-
 					
-					$('.anytabsContainer',$target).anytabs();
-//there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
-// when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
-					$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
-					
-					var $form = $("[data-anytab-content='settings'] form:first",$target);
-					$form.showLoading({'message':'Fetching Marketplace Details'});
-					
-					app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 					
 					if(DST == 'EBF')	{
-						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'handleEBAY','extension':'admin_syndication','jqObj':$form},'mutable');
+						app.ext.admin_syndication.a.showEBAY($target);
 						}
-					else	{
+					else	{					
+					
+						$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
+	
+						
+						$('.anytabsContainer',$target).anytabs();
+	//there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
+	// when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
+						$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
+						
+						var $form = $("[data-anytab-content='settings'] form:first",$target);
+						$form.showLoading({'message':'Fetching Marketplace Details'});
+						
+						app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
+				
+	
 						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+						
+						app.model.dispatchThis();
+	
+	//add an action to the tab click. the tab code itself already opens the associated content area.
+						$("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='errorsTab']").on('click.fetchData',function(){
+							var
+								$tab = $(this),
+								$tabContent,
+								cmd = "" 
+						
+							if($tab.data('app-role') == 'filesTab')	{
+								cmd = "adminSyndicationListFiles";
+								$tabContent = $("[data-anytab-content='files']",$target);
+								}
+							else if($tab.data('app-role') == 'historyTab')	{
+								cmd = "adminSyndicationHistory";
+								$tabContent = $("[data-anytab-content='history']",$target);
+								}
+							else if($tab.data('app-role') == 'errorsTab')	{
+								cmd = "adminSyndicationFeedErrors";
+								$tabContent = $("[data-anytab-content='errors']",$target);
+								}
+							else	{
+								app.u.dump("UH OH!  got someplace we shouldn't get. In admin.a.showDSTDetails");
+								} //unsupported role. shouldn't get here based on the selector to get into this loop.
+							
+							
+						
+							if($tab.data('haveContent'))	{} //do nothing. content has already been fetched.
+							else if(cmd)	{
+								$tab.data('haveContent',true);
+								$tabContent.showLoading({'message':'Fetching File List'});
+								app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_syndication','jqObj':$tabContent},'mutable');
+								app.model.dispatchThis('mutable');
+								}
+							else	{
+								//should never get here.
+								$('#globalMessaging').anymessage({'message':'In showDSTDetails, the click event added to the tab has an invalid app-role (no cmd could be determined)'});
+								}
+						//	app.u.dump(" -> Tab Click: "+cmd);
+						//	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
+							});
 						}
-					
-					app.model.dispatchThis();
-
-//add an action to the tab click. the tab code itself already opens the associated content area.
-					$("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='errorsTab']").on('click.fetchData',function(){
-						var
-							$tab = $(this),
-							$tabContent,
-							cmd = "" 
-					
-						if($tab.data('app-role') == 'filesTab')	{
-							cmd = "adminSyndicationListFiles";
-							$tabContent = $("[data-anytab-content='files']",$target);
-							}
-						else if($tab.data('app-role') == 'historyTab')	{
-							cmd = "adminSyndicationHistory";
-							$tabContent = $("[data-anytab-content='history']",$target);
-							}
-						else if($tab.data('app-role') == 'errorsTab')	{
-							cmd = "adminSyndicationFeedErrors";
-							$tabContent = $("[data-anytab-content='errors']",$target);
-							}
-						else	{
-							app.u.dump("UH OH!  got someplace we shouldn't get. In admin.a.showDSTDetails");
-							} //unsupported role. shouldn't get here based on the selector to get into this loop.
-						
-						
-					
-						if($tab.data('haveContent'))	{} //do nothing. content has already been fetched.
-						else if(cmd)	{
-							$tab.data('haveContent',true);
-							$tabContent.showLoading({'message':'Fetching File List'});
-							app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_syndication','jqObj':$tabContent},'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						else	{
-							//should never get here.
-							$('#globalMessaging').anymessage({'message':'In showDSTDetails, the click event added to the tab has an invalid app-role (no cmd could be determined)'});
-							}
-					//	app.u.dump(" -> Tab Click: "+cmd);
-					//	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
-						});
-					
-
 					}
 				else if($target)	{
 					$target.anymessage({"message":"In admin.a.showDSTDetails, no DST specified.",'gMessage':true});
@@ -567,13 +595,12 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
 				},
 
-
-
-
 			ebayShowTreeByChild : function(categoryid)	{
 					$('#APIForm').show(); //make sure form is visible.
+					var $chooser = $('#ebayCategoryChooser');					
+					$chooser.data('categoryid',categoryid); //update the 'global' data object to reference the category now in focus.
+					
 					var	
-						$chooser = $('#ebayCategoryChooser'),
 						data = $chooser.data() || {},
 						$messageDiv = $chooser.find("[data-app-role='eBayCatChooserMessaging']:first"),
 						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']:first");
@@ -649,7 +676,6 @@ else	{
 						
 						}
 					},
-
 
 // run when an ebay category is clicked that is a leaf, executed from the XSL file
 
@@ -785,6 +811,41 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebaySaveCatAndUpdateItemSpecifics
 			
+			ebayLaunchProfileUpdateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.ebayLaunchProfileUpdateShow').on('click.ebayLaunchProfileUpdateShow',function(){
+					var
+						$table = $btn.closest('table'),
+						$profileContent = $btn.closest("[data-app-role='launchProfileListDetailContainer']"),
+						profile = $btn.closest('tr').data('profile');
+					
+					$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+					$('button, a',$table).each(function(){
+						$(this).off('close.stickytab').on('click.closeStickytab',function(){
+							$table.stickytab('close');
+							})
+						});
+app.model.addDispatchToQ({
+	'_cmd':'adminEBAYProfileDetail',
+	'PROFILE' : profile,
+	'_tag' : {
+		'datapointer' : 'adminEBAYProfileDetail|'+profile,
+		'callback' : function(rd){
+			if(app.model.responseHasErrors(rd)){
+				$target.anymessage({'message':rd})
+				}
+			else	{
+				$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : app.data[rd.datapointer]});
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');			
+					
+					});
+				},
+			
 			ebayAddCustomDetailShow : function($btn)	{
 
 $btn.button();
@@ -805,7 +866,14 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				},
 			
-	
+
+			ebayTokenLinkTo : function($btn)	{
+				$btn.button();
+				$btn.off('click.ebayGetToken').on('click.ebayGetToken',function(){
+					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1') : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet')
+					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
+					});
+				},
 			
 			amazonMWSLinkTo : function($btn)	{
 				$btn.button();
