@@ -193,9 +193,9 @@
 	<table class='gridTable fullWidth applyAnytable'>
 	<thead>
 	<tr>
-		<th class='alignLeft'>id</th>
-		<th class='alignLeft'>error</th>
-		<th class='alignLeft'>created</th>
+		<th class='alignLeft'>ID</th>
+		<th class='alignLeft'>Error</th>
+		<th class='alignLeft'>Created</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: mkt(@ROWS); format:processList; loadsTemplate:syndicationErrorsRowTemplate;">
@@ -209,11 +209,11 @@
 	<table class='gridTable fullWidth applyAnytable'>
 	<thead>
 	<tr>
-		<th class='alignLeft'>title</th>
-		<th class='alignLeft'>created</th>
-		<th class='alignLeft'>expires</th>
-		<th class='alignLeft'>created by</th>
-		<th class='alignLeft'>filename</th>
+		<th class='alignLeft'>Title</th>
+		<th class='alignLeft'>Created</th>
+		<th class='alignLeft'>Expires</th>
+		<th class='alignLeft'>Created by</th>
+		<th class='alignLeft'>Filename</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: mkt(@FILES); format:processList; loadsTemplate:syndicationFilesRowTemplate;">
@@ -226,9 +226,9 @@
 	<table class='gridTable fullWidth applyAnytable'>
 	<thead>
 	<tr>
-		<th class='alignLeft'>type</th>
-		<th class='alignLeft'>id</th>
-		<th class='alignLeft'>message</th>
+		<th class='alignLeft'>Type</th>
+		<th class='alignLeft'>Date</th>
+		<th class='alignLeft'>Message</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: mkt(@ROWS); format:processList; loadsTemplate:syndicationHistoryRowTemplate;">
@@ -291,7 +291,7 @@
 
 <tr id='syndicationHistoryRowTemplate'>
 	<td data-bind="var: file(0); format:text;"></td>
-	<td data-bind="var: file(1); format:text;"></td>
+	<td data-bind="var: file(1); format:epoch2pretty;"></td>
 	<td data-bind="var: file(2); format:text;"></td>
 </tr>
 
