@@ -827,6 +827,10 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 </div>
 
+
+
+
+
 <div id='syndication_ebf'>
 <h1 class='marginBottom'>eBay</h1>
 
@@ -844,43 +848,15 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 
-<label>
-<input type="checkbox" class='applyAnycb' name="autopilot" data-bind="var: mkt(autopilot); format:popVal;" />
-Use AutoPilot on New Items [RECOMMENDED]
-</label>
-<p class='hint'>
-Auto-Pilot allows Zoovy's eBay Syndication Engine to make 'reasonable guesses' about getting your products up on eBay.  
-This includes using fields such as the price on the website as the eBay Fixed price.
-Without Auto-Pilot, it will be necessary for you to choose eBay settings per product.
-If settings are not configured the product will generate listing event errors which you will need to correct.
-If the syndication engine encounters too many errors - then your token could be deactivated and all eBay processing will be suspended.
-</p>
 
 
-<label>
-	<input type="checkbox" class='applyAnycb' name="logging" data-bind="var: mkt(logging); format:popVal;" />
-	Detailed Logging [NOT RECOMMENDED]
-</label>
-<p class='hint'>
-What this does:
-The syndication engine generates detailed log files (which can be obtained by asking support), 
-that include the decision logic that was used to perform a listing. These log files consume significantly 
-more disk space. You should probably only enable this if instructed to by Zoovy support, but it can be invaluable
-in diagnosing issues with auto-pilot.
-</p>
 
-<label>
-	<span>Pricing Schedule:</span>
-	<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-		<option value=''>none</option>
-	</select>
-	<span class='hint'>Requires Wholesale Bundle</span>
-</label>
 
-<p class="hint">
-HINT: The username, password, etc. are provided by eBay Syndication.
-These settings *MUST* match the settings in your eBay Syndication account.
-</p>
+
+
+
+
+
 </div>
 
 

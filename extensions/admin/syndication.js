@@ -455,6 +455,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 								else	{
 									$XSLContentArea.append(app.data[rd.datapointer].html);
 									$('#APIForm').show(); //form is hidden by default
+									app.u.handleAppEvents($chooser);
 									}
 								}
 							app.model.addDispatchToQ(dispatch,'mutable');
@@ -592,6 +593,7 @@ if(categoryid && data.pid)	{
 							}
 						$chooser.hideLoading();
 						$XSLContentArea.empty().append(leafData.html);
+						app.u.handleAppEvents($chooser);
 						$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
 						$('#APIForm').show(); //form is hidden by default
 			
@@ -617,33 +619,36 @@ else	{
 						$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild,no categoryid passed.','gMessage':true});
 						
 						}
-					}
+					},
 
-/*
-run when an ebay category is clicked that is a leaf. 
+
+// run when an ebay category is clicked that is a leaf, executed from the XSL file
 
 			getUpdatedEBAYAttributesForm : function($form)	{
 
 				app.u.dump("BEGIN admin_syndication.u.updateSpecifics");
 
-				var $XSLContentArea = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form);
-				var pid = $form.closest('.ui-dialog-content').data('pid');
+				var
+					$chooser = $('#ebayCategoryChooser'),
+					$XSLContentArea = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form),
+					pid = $chooser.data('pid'),
+					categoryid = $chooser.data('categoryid');
 				
-				if($form && $XSLContentArea && $XSLContentArea.data('categoryid'))	{
+				if($form && $XSLContentArea && categoryid)	{
 				
-					$XSLContentArea.showLoading({'message':'Updating item specifics'});
-					var dispatch = app.ext.admin_syndication.u.buildEBAYXSLCmd($XSLContentArea.data('categoryid'),pid);
+					$chooser.showLoading({'message':'Updating item specifics'});
+					var dispatch = app.ext.admin_syndication.u.buildEBAYXSLCmd(categoryid,pid);
+					dispatch.form = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form).serialize(); //sent as KvP cuz all the checkboxes have the same name. why wouldn't they? #@!%ing ebay.
 					dispatch._tag.callback = function(rd){
-						$XSLContentArea.hideLoading();
+						$chooser.hideLoading();
 						$form.show(); //form is hidden by default
-
 						if(app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd})
 							}
 						else	{
 							$XSLContentArea.html(app.data[rd.datapointer].html);
+							app.u.handleAppEvents($chooser);
 							}
-
 						}
 
 					app.model.addDispatchToQ(dispatch,'mutable');
@@ -653,7 +658,7 @@ run when an ebay category is clicked that is a leaf.
 					$('#APIForm').anymessage({'message':'In admin_syndication.u.getUpdatedEBAYAttributesForm, either $form ['+typeof $form+'] not passed or unable to determine categoryid from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
 					}
 				} //getUpdatedEBAYAttributesForm
-*/
+
 			}, //u [utilities]
 
 		e : {
@@ -684,6 +689,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 
 $chooser.showLoading({'message':'Saving changes'});
 var dispatch = app.ext.admin_syndication.u.buildEBAYXSLCmd(categoryid,data.pid);
+dispatch.form = $form.serialize(); //sent as KvP cuz all the checkboxes have the same name. why wouldn't they? #@!%ing ebay.
 dispatch._tag.callback = function(rd)	{
 
 	if(app.model.responseHasErrors(rd)){
