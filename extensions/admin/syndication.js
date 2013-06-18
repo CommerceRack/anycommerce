@@ -158,14 +158,17 @@ var admin_syndication = function() {
 				if($input && $input instanceof jQuery)	{
 					if(vars.pid && vars.categoryselect == 'primary' || vars.categoryselect == 'secondary')	{
 						vars.inputid = null;
-						var $D = app.ext.admin.i.dialogCreate({
-							'title':'eBay Category Chooser',
+						var $D = $("<div \/>",{'title':'eBay Category Chooser','id':'ebayCategoryChooser'});
+						$D.dialog({
+							'modal':true,
+							'width' : '90%',
+							'height':($(window).height() - 100)
+							});
+
+						$D.anycontent({
 							'templateID' : 'ebayCategoryChooserTemplate',
 							'showLoadingMessage' : 'Fetching eBay category list'
 							});
-
-						$D.dialog('option','height',($(window).height() - 100));
-						$D.dialog('open');
 
 						if(vars.inputid = $input.attr('id'))	{} //value for input id is set in if.
 						else	{
@@ -181,7 +184,7 @@ var admin_syndication = function() {
 								}
 							}
 
-						
+//						app.u.dump(" -> vars: "); app.u.dump(vars);
 						$D.data(vars); //set on dialog so they can be easily located later (on save).
 						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0','pid':vars.pid},{'callback':function(rd){
 $D.hideLoading();
@@ -395,14 +398,14 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				if($li && $li.length && $li.data('categoryid'))	{
 					var
 						categoryid = $li.data('categoryid'),
-						$chooser = $li.closest("[data-app-role='ebayCategoryChooserTable']"),
+						$chooser = $('#ebayCategoryChooser'),
 						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']"),
-						data = $XSLContentArea.closest('.ui-dialog-content').data();
+						data = $chooser.data();
 //categoryselect is necessary so that it can be determined whether or not items specifics should be displayed.
 					if(data.categoryselect) 	{
 
 //					app.u.dump(" -> categoryid: "+categoryid); app.u.dump(" -> data: "); app.u.dump(data);
-						$XSLContentArea.data('categoryid',categoryid);
+						$chooser.data('categoryid',categoryid);
 					
 //if the children have already been generated, just toggle them on click (display on/off).
 						if($('ul',$li).length)	{
@@ -429,10 +432,10 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 								}
 							if(data.inputid)	{
 								$(app.u.jqSelector('#',data.inputid)).val(categoryid).effect('highlight', {}, 2500);
-								$XSLContentArea.closest('.ui-dialog-content').dialog('close');
+								$chooser.dialog('close');
 								}
 							else	{
-								$('.appMessaging').anymessage({"message":"In admin.u.handleEBAYChildren, unable to determine inputid. Should be set on XSLContentArea.closest(.ui-dialog-content).data() "});
+								$('.appMessaging').anymessage({"message":"In admin.u.handleEBAYChildren, unable to determine inputid. Should be set on $(#ebayCategoryChooser).data() "});
 								}
 							}
 
@@ -473,7 +476,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 							}
 						}
 					else	{
-						$('.appMessaging').anymessage({"message":"In admin.u.loadEBAYChildren, unable to determine categoryselect mode. should be primary or secondary and set on XSLContentArea.closest(.ui-dialog-content).data() "});
+						$('.appMessaging').anymessage({"message":"In admin.u.loadEBAYChildren, unable to determine categoryselect mode. should be primary or secondary and set on $(#ebayCategoryChooser).data() "});
 						}
 					
 					}
@@ -531,7 +534,6 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						kvp += $('input:first',$row).val()+":"+$('input:last',$row).val()+"\n";
 						}
 					})
-
 				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
 				},
 
@@ -539,13 +541,13 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 
 
 			ebayShowTreeByChild : function(categoryid)	{
-
+					$('#APIForm').show(); //make sure form is visible.
 					var	
-						$chooser = $('#APIForm').closest("[data-app-role='ebayCategoryChooserTable']"),
-						data = $chooser.closest('.ui-dialog-content').data() || {},
+						$chooser = $('#ebayCategoryChooser'),
+						data = $chooser.data() || {},
 						$messageDiv = $chooser.find("[data-app-role='eBayCatChooserMessaging']:first"),
 						$XSLContentArea = $chooser.find("[data-app-role='ebayCategoryChooserXSLContainer']:first");
-						
+
 					if(categoryid)	{
 
 $chooser.showLoading({'message':'Fetching eBay category tree data'});
@@ -601,8 +603,8 @@ if(categoryid && data.pid)	{
 	app.model.dispatchThis('mutable');
 	}
 else if(!data.pid)	{
-	$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild, unable to ascertain data.pid. Expected on $ele.closest(.ui-dialog.content).data(pid).','gMessage':true});
-	app.u.dump("This is data() from .ui-dialog-content: "); app.u.dump(data);
+	$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild, unable to ascertain data.pid. Expected on $(#ebayCategoryChooser).data(pid).','gMessage':true});
+	app.u.dump("This is data() from $(#ebayCategoryChooser): "); app.u.dump(data);
 	}
 else	{
 	$messageDiv.anymessage({'message':'Please choose a category from the list.'})
@@ -672,9 +674,9 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 
 				var
 					$form = $btn.closest('form'),
-					$chooser = $btn.closest("[data-app-role='ebayCategoryChooserTable']"),
-					data = $btn.closest('.ui-dialog-content').data(),
-					categoryid = $btn.closest('form').find("[data-app-role='ebayCategoryChooserXSLContainer']").data('categoryid');
+					$chooser = $('#ebayCategoryChooser'),
+					data = $chooser.data(),
+					categoryid = $chooser.data('categoryid');
 					
 					if(data.pid && data.categoryselect && data.inputid && categoryid)	{
 
@@ -699,7 +701,7 @@ dispatch._tag.callback = function(rd)	{
 						$form.anymessage({'message':responseData})
 						}
 					else	{
-						$btn.closest('.ui-dialog-content').dialog('close');
+						$('#ebayCategoryChooser').dialog('close');
 						}
 					}
 				}
@@ -742,7 +744,7 @@ app.model.dispatchThis('immutable');
 
 						}
 					else	{
-						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on .ui-dialog-content.data()','gMessage':true});
+						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on $(\'#ebayCategoryChooser\').data()','gMessage':true});
 						}
 
 					});
