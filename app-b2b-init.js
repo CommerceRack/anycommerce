@@ -138,7 +138,8 @@ app.u.initMVC = function(attempts){
 			app.u.loadApp();
 			}
 		}
-	else if(attempts > 50)	{
+// *** 201324 -> increase # of attempts to reduce pre-timeout error reporting. will help to load app on slow connection/computer.
+	else if(attempts > 250)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
 		$('#appPreView').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
