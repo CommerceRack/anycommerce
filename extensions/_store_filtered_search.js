@@ -41,15 +41,11 @@ var store_filter = function() {
 			
 			//**Wood Chess Pieces**
 			".batman":{
-			"filter": "catbatman",
+			"filter": "batmanForm",
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:5000});}
-			},
+			}
 			
-			
-			"":{
-			"filter": "",
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
-			},                          
+			                
 		},
 
 					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

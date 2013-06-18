@@ -774,40 +774,14 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'>
     
 <div class="catBrowseSidebar">
-<div class="filterContainer clearfix">
-   <form action='#' name='catbatman' id='catbatmansearch' class='layeredSearch' onSubmit="app.ext.store_filter.u.buildElasticFilters($form); return false;">
-   <button class="resetButton">Reset</button>
-   <fieldset data-elastic-key="base_price" data-filtertype="slider">
-   
-<h2>Sort By Price</h2>
-<input type="text" disabled="disabled" class='sliderValue' />
-<div class="slider-range"></div>
-</fieldset>
-<fieldset data-elastic-key="prod_type" data-filtertype="hidden">
-	<input type='hidden' name="prod_type" value="batman12" />
-</fieldset>
-<fieldset class="kingHeight" data-elastic-key="prod_size" data-filtertype="checkboxes">
-<h2>Sort By Size</h2>
-        <label class='break'><input type='checkbox' value='32' />32" and under</label>
-        <label class='break'><input type='checkbox' value='24' />24" and under</label>
-        <label class='break'><input type='checkbox' value='18' />18" and under</label>
-        <label class='break'><input type='checkbox' value='12' />12" and under</label>
-        <label class='break'><input type='checkbox' value='6' />6" and under</label>
-        <label class='break'><input type='checkbox' value='4' />4" and under</label>
-
-</fieldset>
-
-<fieldset class="kingHeight" data-elastic-key="prod_size" data-filtertype="checkboxes">
-         <h2>Sort By Manufacturer</h2>
-                                        <li><input name="marvel_comic" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
-										<li><input name="dc_comic" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
-										<li><input name="dark_horse" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
-										<li><input name="image_comics" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
-
-</fieldset>
-
-   </form>
-   </div></div>
+	
+	
+		<div class='filterContainer clearfix'>
+		
+		</div>
+	
+        <div class="clear"></div>
+    </div>
     </ul><!-- outputs the product list -->
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 </div>
@@ -1915,6 +1889,56 @@ The 'data-action' attribute is used to assign an onclick.
 		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
 	</div>
 </div>
+
+
+<!--
+#################################
+
+LAYERED SEARCH FILTERS
+
+put all filters into the appFilters container.
+
+#################################
+-->
+
+
+
+
+<div id='appFilters' class='displayNone'>
+
+    <!--****CHESS PIECES FILTERED SEARCH FORMS****-->
+    <!--**Wood Chess Pieces-->
+    <form action='#' name='batmanForm' id='batmanForm' class='layeredSearch'>
+    
+        <br />
+        <button class="resetButton"> Reset</button>
+        
+        <fieldset data-elastic-key="base_price" data-filtertype="slider">
+            <legend class="fsCatTitle">SORT BY PRICE</legend>
+            <input type="text" disabled="disabled" class='sliderValue' />
+            <div class="slider-range"></div>
+        </fieldset>
+        
+        <fieldset data-elastic-key="prod_type" data-filtertype="hidden">
+            <input type='hidden' name="prod_character" value="batman" />
+        </fieldset>
+        <fieldset class="productTypes" data-elastic-key="prod_types" data-filtertype="checkboxes">
+            <legend>SORT BY TYPE</legend>
+            <label class='break'><input type='checkbox' value='comics' />Comics</label>
+            <label class='break'><input type='checkbox' value='figures' />Figures</label>
+            <label class='break'><input type='checkbox' value='statues' />Statues</label>
+        </fieldset>
+        
+        
+        <button class="resetButton"> Reset</button>
+        
+    </form>
+
+</div>
+
+
+
+
 <div class='debug displayNone'>
 <table>
 <tr>
