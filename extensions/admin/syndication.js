@@ -100,6 +100,29 @@ var admin_syndication = function() {
 				}
 			},
 
+//ebay requires a registration process. Until that's done, the ebay setup page is not displayed and a register template is displayed instead.
+		handleEBAY : {
+			onSuccess : function(_rtag)	{
+//				app.u.dump("BEGIN callbacks.anycontent");
+
+				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
+					if(app.data[_rtag.datapointer].enable)	{
+						app.ext.admin_syndication.callbacks.anycontentPlus.onSuccess(_rtag); //this is how all the other marketplaces (which don't require auth) are handled.
+						}
+					else	{
+						_rtag.jqObj.hideLoading();
+						_rtag.jqObj.anycontent({'templateID':'syndication_register_ebf','showLoading':false});
+						app.u.handleAppEvents(_rtag.jqObj);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
+					}
+
+
+				
+				}
+			},
 		anycontentPlus : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN callbacks.anycontent");
@@ -295,7 +318,13 @@ else	{
 					
 					app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 					
-					app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+					if(DST == 'EBF')	{
+						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'handleEBAY','extension':'admin_syndication','jqObj':$form},'mutable');
+						}
+					else	{
+						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+						}
+					
 					app.model.dispatchThis();
 
 //add an action to the tab click. the tab code itself already opens the associated content area.
@@ -775,6 +804,8 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					app.ext.admin_syndication.u.ebayShowTreeByChild($ele.val());
 					});
 				},
+			
+	
 			
 			amazonMWSLinkTo : function($btn)	{
 				$btn.button();

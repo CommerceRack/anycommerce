@@ -6247,6 +6247,18 @@ else	{
 
 
 					});
+				},
+			
+			linkOffSite : function($btn)	{
+				$btn.button();
+				$btn.off('click.linkOffSite').on('click.linkOffSite',function(){
+					if($btn.data('url'))	{
+						linkOffSite($btn.data('url'));
+						}
+					else	{
+						$btn.button('disable');
+						}
+					});
 				}
 			
 			} //e / appEvents

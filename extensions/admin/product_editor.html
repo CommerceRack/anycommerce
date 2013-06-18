@@ -978,8 +978,235 @@ This HTML Editor option will be removed altogether in the future.
 		<input type='text' name='Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername); format:popVal;" />
 		<span class='toolTip' title="The user name of the ProStores store.">?</span>
 	</label>
+</fieldset>
+
+<fieldset>
+	<legend>Listing Details</legend>
 
 
+	<label>
+		<span>Auto accept price</span>
+		<input type='number' step='.01' name='Item.ListingDetails.BestOfferAutoAcceptPrice' data-bind="var: product(ebay:Item.ListingDetails.BestOfferAutoAcceptPrice); format:popVal;" />
+		<span class='toolTip' title="The price at which Best Offers are automatically accepted. Similar in use to MinimumBestOfferPrice. If a buyer submits a Best Offer that is above this value, the offer is automatically accepted by the seller. Applies only to items listed in categories that support the BestOfferAutoAcceptPrice feature.">?</span>
+	</label>
+
+
+	<label>
+		<span>Local listing distance</span>
+		<input type='text' name='Item.ListingDetails.LocalListingDistance' data-bind="var: product(ebay:Item.ListingDetails.LocalListingDistance); format:popVal;" />
+		<span class='toolTip' title="Specifies a distance (in miles) used as the radius of the area about the supplied postal code that constitutes the local market.">?</span>
+	</label>
+
+	<label>
+		<span>Min. best offer price</span>
+		<input type='number' step='.01' name='Item.ListingDetails.MinimumBestOfferPrice' data-bind="var: product(ebay:Item.ListingDetails.MinimumBestOfferPrice); format:popVal;" />
+		<span class='toolTip' title="Specifies the minimum acceptable Best Offer price. If a buyer submits a Best Offer that is below this value, the offer is automatically declined by the seller. Applies only to items listed in categories that support the Best Offer Auto-Decline feature.">?</span>
+	</label>
+
+</fieldset>
+
+
+<label>
+	<span>Listing enhancement</span>
+	<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" >
+		<option></option>
+		<option value='BoldTitle'>title for the item's listing in boldface type</option>
+		<option value='Border'>add a border around the listing's pictures</option>
+		<option value='Featured'>display prominently in the Featured Items section</option>
+		<option value='Highlight'>listing is highlighted in a different color in lists</option>
+		<option value='HomePageFeatured'>rotate into a special display on eBay's Home page</option>
+		<option value='ProPackBundle'>ProPack Bundle*</option>
+		<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
+		<option value='ValuePackBundle'>ValuePackBundle**</option>
+		<option value=''></option>
+		<option value=''></option>
+	</select>
+</label>
+<p class='hint'>
+Selecting a value to listing enhancement will affect listing fees<br />
+* eBay Motors only<br />
+** Support for this feature varies by site and category.
+</p>
+
+
+	<label>
+		<span>Location</span>
+		<input type='text' name='Item.Location' data-bind="var: product(ebay:Item.Location); format:popVal;" />
+		<span class='toolTip' title="Geographical location of the item (along with Country) to be displayed on eBay listing pages.">?</span>
+	</label>
+
+	<label>
+		<span>Lot size</span>
+		<input type='number' name='Item.LotSize' max='100000' data-bind="var: product(ebay:Item.LotSize); format:popVal;" />
+		<span class='toolTip' title="A lot is a set of two or more similar items included in a single listing that must be purchased together in a single order line item. The Item.LotSize value is the number of items in the lot. This field is required if two or more items are including in one listing.">?</span>
+	</label>
+
+<fieldset>
+	<legend>Payment Details (motors)</legend>
+	<label>
+		<span>Days to full payment</span>
+		<select name='Item.PaymentDetails.DaysToFullPayment' data-bind="var: product(ebay:Item.LotSize.DaysToFullPayment); format:popVal;">
+			<option value='3'>3</option>
+			<option value='7'>7</option>
+			<option value='10'>10</option>
+			<option value='14'>14</option>
+		</select>
+		<span class='toolTip' title="This integer value indicates the number of days that a buyer has (after he/she commits to buy) to make full payment to the seller and close the remaining balance on a motor vehicle.">?</span>
+	</label>
+
+	
+
+	<label>
+		<span>Deposit amount</span>
+		<input type='number' step='.01' max='2000' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
+		<span class='toolTip' title="This dollar value indicates the amount of the deposit that a buyer must make on a purchased motor vehicle (eBay Motors US and CA). The deposit amount can be as high as $2,000.00.">?</span>
+	</label>
+
+	<label>
+		<span>Deposit type</span>
+		<select name='Item.PaymentDetails.DepositType' data-bind="var: product(ebay:Item.PaymentDetails.DepositType); format:popVal;">
+			<option value=''></option>
+			<option value='None'>No deposit needed</option>
+			<option value='OtherMethod'>PayPal</option>
+		</select>
+		<span class='toolTip' title="This field applies to eBay Motors (US and CA) vehicles listings. If the seller is requiring that the buyer make a deposit on the vehicle, the DepositType value must be included and set to 'OtherMethod'. ">?</span>
+	</label>
+
+
+	<label>
+		<span>Hours to deposit</span>
+		<select name='Item.PaymentDetails.HoursToDeposit' data-bind="var: product(ebay:Item.PaymentDetails.HoursToDeposit); format:popVal;">
+			<option value=''></option>
+			<option value='24'>24</option>
+			<option value='48'>48</option>
+			<option value='72'>72</option>
+		</select>
+		<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
+	</label>
+
+
+</fieldset>
+
+
+<label>
+	<span>Payment methods</span>
+NOT DONE.
+http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+	<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
+</label>
+
+<label>
+	<span>PayPal email address</span>
+	<input type='number' step='.01' max='2000' name='Item.PayPalEmailAddress' data-bind="var: product(ebay:Item.PayPalEmailAddress); format:popVal;" />
+	<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
+</label>
+
+<!--
+<fieldset>
+	<legend>Picture Details</legend>
+not brought over yet. search GalleryType
+</fieldset>
+
+<fieldset>
+	<legend>Product Listing Details</legend>
+not brought over yet. search ProductListingDetails
+</fieldset>
+-->
+
+
+
+<label>
+	<input type='checkbox' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+	<span>Private listing</span>
+	<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
+</label>
+
+
+<fieldset>
+	<legend>Return Policy</legend>
+
+	<label>
+		<span>Description</span>
+		<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" />
+		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
+	</label>
+
+	<label>
+		<span>EAN</span>
+		<input type='text' name='Item.ReturnPolicy.EAN' data-bind="var: product(ebay:Item.ReturnPolicy.EAN); format:popVal;" />
+		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
+	</label>
+<!--
+the input value here is 'token'.?
+	<label>
+		<span>Refund option</span>
+		<input type='text' name='Item.ReturnPolicy.RefundOption' data-bind="var: product(ebay:Item.ReturnPolicy.RefundOption); format:popVal;" />
+		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
+	</label>
+
+	<label>
+		<span>Restocking fee</span>
+		<input type='text' name='Item.ReturnPolicy.RestockingFeeValueOption' data-bind="var: product(ebay:Item.ReturnPolicy.RestockingFeeValueOption); format:popVal;" />
+		<span class='toolTip' title="Indicates the restocking fee charged by the seller for returned items. In order to charge the buyer a restocking fee when an item is returned, a US seller must input a restocking fee value as part of the return policy. ">?</span>
+	</label>
+
+	<label>
+		<span>Returns Accepted</span>
+		<input type='text' name='Item.ReturnPolicy.ReturnsAcceptedOption' data-bind="var: product(ebay:Item.ReturnPolicy.ReturnsAcceptedOption); format:popVal;" />
+		<span class='toolTip' title="ndicates whether the seller allows the buyer to return the item. ">?</span>
+	</label>
+
+	<label>
+		<span>WarrantyDurationOption</span>
+		<input type='text' name='Item.ReturnPolicy.WarrantyDurationOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyDurationOption); format:popVal;" />
+	</label>
+
+	<label>
+		<span>WarrantyOfferedOption</span>
+		<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+	</label>
+
+	<label>
+		<span>WarrantyTypeOption</span>
+		<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+	</label>
+-->
+
+
+</fieldset>
+
+
+
+<fieldset>
+	<legend>Seller Details</legend>
+	
+	<label>	
+		<input type='checkbox' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+		Motors Dealer
+		<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
+	</label>
+
+	<label>
+		<span>Company name</span>
+		<input type='text' name='Item.SellerContactDetails.CompanyName' data-bind="var: product(ebay:Item.SellerContactDetails.CompanyName); format:popVal;" />
+	</label>
+
+	<label>
+		<span>County</span>
+		<input type='text' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Street</span>
+		<input type='text' name='Item.SellerContactDetails.Street' data-bind="var: product(ebay:Item.SellerContactDetails.Street); format:popVal;" />
+	</label>
+	<label>
+		<span>Street2</span>
+		<input type='text' name='Item.SellerContactDetails.Street2' data-bind="var: product(ebay:Item.SellerContactDetails.Street2); format:popVal;" />
+	</label>
+
+
+</fieldset>
 
 
 	<label>
@@ -987,8 +1214,6 @@ This HTML Editor option will be removed altogether in the future.
 		<input type='text' name='' data-bind="var: product(ebay:); format:popVal;" />
 		<span class='toolTip' title="">?</span>
 	</label>
-
-
 
 
 
