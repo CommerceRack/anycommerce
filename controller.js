@@ -3037,6 +3037,29 @@ $tmp.empty().remove();
 				}
 			}, //money
 
+
+
+
+// ** 201324 -> used for displaying a new format for datastorage.
+//wikihash is the name of the datastorage format. looks like this:
+// key:value\nAnotherkey:AnotherValue\n
+// use 'key' and 'value' in the data-binds of the template.
+//pass template to apply per row as loadsTemplate: on the databind.
+//there's an example of this in admin_syndication (ebay category chooser)
+		wikiHash2Template : function($tag,data)	{
+			var
+				rows = data.value.split("\n"),
+				L = rows.length;
+			
+			for(var i = 0; i < L; i += 1)	{
+				var kvp = rows[i].split(/:(.+)?/);
+				$tag.append(app.renderFunctions.transmogrify({'key':kvp[0],'value':kvp[1]},data.bindData.loadsTemplate,{'key':kvp[0],'value':kvp[1]}));
+				}
+			
+			},
+
+
+
 //This should be used for all lists going forward that don't require special handling (such as stufflist, prodlist, etc).
 //everthing that's in the data lineitem gets passed as first param in transmogrify, which will add each key/value as data-key="value"
 //at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.

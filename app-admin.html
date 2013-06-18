@@ -363,7 +363,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<li><a href='#'>Pages</a>
 	<ul>
 		<li>
-		<a href='#' onClick="app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($('#forTestingEBAY'),{'pid':'OUTFIT','categoryselect':'primary'}); return false;">showEBAYCategoryChooserInModal</a>
+		<a href='#' onClick="app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($('#forTestingEBAY'),{'pid':'OUTFIT','categoryselect':'primary'},$('#forTestingEBAYSpan')); return false;">showEBAYCategoryChooserInModal</a>
 		
 		</li>
 		<li><a href='#' onClick="app.ext.admin.a.showPicker(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')); return false;">showPicker</a>
@@ -404,7 +404,8 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <!-- app.model.addDispatchToQ(obj,q); -->
 
-<input type='text' name='test' id='forTestingEBAY' />
+<input type='text' name='test' value='15032' id='forTestingEBAY' />
+<span id='forTestingEBAYSpan' />
 
 </div>
 

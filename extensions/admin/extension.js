@@ -622,7 +622,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(obj,_tag,Q)	{
 				obj = obj || {}
 				_tag = _tag || {};
-				_tag.datapointer = "adminEBAYCategory|"+app.model.version+"|"+obj.categoryid;
+				_tag.datapointer = (obj.pid) ? "adminEBAYCategory|"+app.model.version+"|"+obj.pid+"|"+obj.categoryid : "adminEBAYCategory|"+app.model.version+"|"+obj.categoryid;
 				var r = 0;
 //if xsl is set, localstorage is NOT used.
 				if(obj.xsl)	{
