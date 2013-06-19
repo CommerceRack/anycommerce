@@ -1,0 +1,38 @@
+header:
+- Check ALL links
+- fix th efree shipping image that is now broken.
+- FIx alignment of top nav cat titles and drop downs.
+
+Footer:
+- Check ALL links.
+
+homepage:
+- update homepage banner slideshow to have actual desired images and add proper pagination(imge icons instead of numbers) to them.
+- correct width for the hot items product bar (currently synced to the productlist class sizing).
+- Discuss with Steve what the plan is for the featured categories bottom category navigation area?
+- correct the item list overlap on the bottom category navigation area. 
+- Test ALL links on the page.
+
+Category:
+- talk to Stephen about what he wants as his default content in his new categories. Once we can build this, I will make this content minimize along the top instead of disappearing when filtered search options are selected. When the dropdown arrow for this minimized area is clicked, the search results are minimized and the default content displayed and vice versa.
+
+product:
+- Fix massive alignment issue.
+- add dropdown conversion to buttons for limited edition options. use new plugin.
+- Fix add to cart button. Currently pops up cart but cart not visible.Getting API error. Likely a bad add to cart button syntax on index.
+
+Company:
+- Needs content for almost all pages.
+- all links to customer page need to be made as most links are dead.
+
+Customer:
+- Cannot view links yet as no testing account has been made.
+
+search:
+- Update the buy now button to either pop up the quickview OR change text to say view product or something of that nature.
+
+cart:
+_ **CANNOT VIEW UNTIL ADD TO CART ISSUE IS CORRECTED**
+
+checkout:
+- **CANNOT VIEW UNTIL ADD TO CART ISSUE IS CORRECTED**

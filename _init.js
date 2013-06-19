@@ -31,7 +31,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
-
+app.rq.push(['script',0,app.vars.baseURL+'jquery.select2Buttons/jQuery.select2Buttons.js']);
 
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
@@ -44,6 +44,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+	
 	
 var $context = $(app.u.jqSelector('#',P.parentID));
 	//**COMMENT TO REMOVE AUTO-RESETTING WHEN LEAVING CAT PAGE FOR FILTERED SEARCH**
@@ -143,8 +144,14 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 				}
 			}
 		else	{} //couldn't find the tab to tabificate.
+		
+		//CONVERT CODE FOR LIMITED EDITION CONVERT SELECT TO BUTTONS
+	$('select[name=#Z]').select2Buttons();
 	}]);
-
+	
+app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {	
+	$(".select2Buttons").remove();
+}]);
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
 
@@ -240,48 +247,6 @@ $container.show();
 $("ul",$container).empty(); //empty product list
 $container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
 }]);
-
-
-app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	
-	var $context = $(app.u.jqSelector('#',P.parentID));
-	//**COMMENT TO REMOVE AUTO-RESETTING WHEN LEAVING CAT PAGE FOR FILTERED SEARCH**
-	
-	app.ext.store_filter.vars.catPageID = $(app.u.jqSelector('#',P.parentID)); 
-	
-	
-	app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
-	if(app.ext.store_filter.filterMap[P.navcat])	{
-		app.u.dump(" -> safe id DOES have a filter.");
-
-		var $page = $(app.u.jqSelector('#',P.parentID));
-		app.u.dump(" -> $page.length: "+$page.length);
-		if($page.data('filterAdded'))	{} //filter is already added, don't add again.
-		else	{
-			$page.data('filterAdded',true)
-			var $form = $("[name='"+app.ext.store_filter.filterMap[P.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
-			$form.on('submit.filterSearch',function(event){
-				event.preventDefault()
-				app.u.dump(" -> Filter form submitted.");
-				app.ext.store_filter.a.execFilter($form,$page);
-				});
-	
-			if(typeof app.ext.store_filter.filterMap[P.navcat].exec == 'function')	{
-				app.ext.store_filter.filterMap[P.navcat].exec($form,P)
-				}
-	
-	//make all the checkboxes auto-submit the form.
-			$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
-				$form.submit();      
-				});
-			}
-		}
-		
-		$('.resetButton', $context).click(function(){
-		$context.empty().remove();
-		showContent('category',{'navcat':P.navcat});
-		});
-	}]);
 
 
 //don't execute script till both jquery AND the dom are ready.

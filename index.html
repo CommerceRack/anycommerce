@@ -932,7 +932,7 @@ this will likely become more flexible in the future. ###
 <tr>
 	<td class='imageContainer'>
 <!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix imageCont'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 	<img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='300' height='340' />
 </div>
@@ -942,17 +942,7 @@ this will likely become more flexible in the future. ###
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='50' height='50' /></div>
 
 	</div>
-    <div class='prodlistRelatedContainer'>
-	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
-</div>
-    <div class="cb"></div>
-<div class="protitle">
-    <ul>
-    <div class='prodlistRelatedContainer'>
-	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
-</div>
-</ul>
-</div>
+   
  <!--
 <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
 #017 Harley Quinn Black Queen, Third
@@ -973,10 +963,12 @@ Product Line</li>
     <div class='tabContent' data-anytab-content='prodDesc'>
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div></div>
+<!--**RE-ADD TO MATCH DESIGN**
 <div id='recentlyViewedItemsContainer' class='displayNone'>
 <h2>Recently Viewed Items</h2>
 <ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
+-->
 	</td>
     <td class="RightPcol">
 	<div class='priceContainer marginBottom'>
@@ -1000,7 +992,7 @@ Product Line</li>
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
-		<input type='image' src="images/addtocart.png" value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'>
 	</form>
 	<!--<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>-->
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
@@ -1023,6 +1015,18 @@ Product Line</li>
 </ul>
 	</td>
 </tr>
+<!--**RE-ADD THIS CONTENT TO MATCH DESIGN-->
+ <!--<div class='prodlistRelatedContainer'>
+	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
+</div>
+    <div class="cb"></div>
+<div class="protitle">
+    <ul>
+    <div class='prodlistRelatedContainer'>
+	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
+</div>
+</ul>
+</div>-->
 <tr>
 	<td colspan='2' class="tabbedProductContentTD">
 <!--
@@ -1406,61 +1410,7 @@ subscribeListsArticle is used for authenticated buyers
 	<!--<div class='previewProductDetail displayNone'></div>-->
 	<div class='previewListContainer'>
     <ul class="sortby">
-  <form action='#' name='catbatman' id='catbatmansearch' class='layeredSearch'>
-   <button class="resetButton"> Reset</button>
-   <fieldset data-elastic-key="base_price" data-filtertype="slider">
-<legend>Sort By Price</legend>
-<input type="text" disabled="disabled" class='sliderValue' />
-<div class="slider-range"></div>
-</fieldset>
-<fieldset data-elastic-key="prod_type" data-filtertype="hidden">
-<input type='hidden' name="prod_type" value="batman" />
-</fieldset>
-<fieldset class="kingHeight" data-elastic-key="prod_size" data-filtertype="checkboxes">
-<legend>Sort By Size</legend> 
-        <label class='break'><input type='checkbox' value='32' />32" and under</label>
-        <label class='break'><input type='checkbox' value='24' />24" and under</label>
-        <label class='break'><input type='checkbox' value='18' />18" and under</label>
-        <label class='break'><input type='checkbox' value='18' />12" and under</label>
-        <label class='break'><input type='checkbox' value='18' />6" and under</label>
-        <label class='break'><input type='checkbox' value='18' />4" and under</label>
-
-</fieldset>
-   </form>
-     <!--<h2>Sort By Price</h2>
-     <li><input name="" type="checkbox" value=""><a href='#' onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '100000', 'to' : '250000'}}}}});">$2,500 <span>and under</span></a></li>
-                                        
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '50000', 'to' : '100000'}}}}});">$1000 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '25000', 'to' : '50000'}}}}});">$500 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '10000', 'to' : '25000'}}}}});">$250 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '5000', 'to' : '10000'}}}}});">$100 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '2500', 'to' : '5000'}}}}});">$50 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '1000', 'to' : '2500'}}}}});">$25 <span>and under</span></a></li>	
-                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
-        'range' : {'base_price' : { 'from' : '100', 'to' : '1000'}}}}});">$10 <span>and under</span></a></li>	
-                                        <h2>Sort By Size</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">32" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">24" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">18" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">12" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">6" <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">4" <span>and under</span></a></li>
-                                        <h2>Sort By Manufacturer</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
-                                        <div class="clearfix"></div>
-                   <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif" style="margin:6px 10px 54px 0px;"/></a></li>-->
-                   
-                   
+  
                            <!-- AddThis Button BEGIN -->
   </ul>
 		<!-- productListTemplateResults gets loaded into here -->

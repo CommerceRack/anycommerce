@@ -291,7 +291,6 @@ PRODUCT DETAIL PAGE (productTemplate)
 .prodViewerContainer .prodThumbs div img{display:none;}
 .prodSummaryContainer{width:382px;}
 .prodSummaryContainer h1{ font-size:18px; margin-bottom:14px;}
-.prodViewerContainer .addToCartButton{ padding:0px; border:none !important; background:none !important;}
 .basePrice span{ font-size:10px; color:#000000;}
 .RightPcol{background:#fff; padding:20px; width:180px;}
 .RightPcol h4{float:right; text-align:center;font-size:18px; padding:0 16px 0 0; font-weight:bold;}

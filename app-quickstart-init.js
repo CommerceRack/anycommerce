@@ -14,7 +14,7 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
-app.rq.push(['extension',0,'store_filter','extensions/_thechessstore.js']);
+
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
@@ -32,65 +32,8 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.j
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
 
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed1.js']);	
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
 
 
-app.rq.push(['script',1,app.vars.baseURL+'cycle-2.9999.81.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
-
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-		var $target=$('#wideSlideshow');
-		if(!$target.hasClass('slideshowSet')){ //target doesn't already have slideshow
-			$target.addClass('slideshowSet').cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav'});	
-			}
-		}]);
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
@@ -194,63 +137,10 @@ app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
 	}
 
-app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
-var $container = $('#recentlyViewedItemsContainer');
-$container.show();
-$("ul",$container).empty(); //empty product list
-$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
-}]);
 
-
-app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	
-	var $context = $(app.u.jqSelector('#',P.parentID));
-	//**COMMENT TO REMOVE AUTO-RESETTING WHEN LEAVING CAT PAGE FOR FILTERED SEARCH**
-	
-	app.ext.store_filter.vars.catPageID = $(app.u.jqSelector('#',P.parentID)); 
-	
-	
-	app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
-	if(app.ext.store_filter.filterMap[P.navcat])	{
-		app.u.dump(" -> safe id DOES have a filter.");
-
-		var $page = $(app.u.jqSelector('#',P.parentID));
-		app.u.dump(" -> $page.length: "+$page.length);
-		if($page.data('filterAdded'))	{} //filter is already added, don't add again.
-		else	{
-			$page.data('filterAdded',true)
-			var $form = $("[name='"+app.ext.store_filter.filterMap[P.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
-			$form.on('submit.filterSearch',function(event){
-				event.preventDefault()
-				app.u.dump(" -> Filter form submitted.");
-				app.ext.store_filter.a.execFilter($form,$page);
-				});
-	
-			if(typeof app.ext.store_filter.filterMap[P.navcat].exec == 'function')	{
-				app.ext.store_filter.filterMap[P.navcat].exec($form,P)
-				}
-	
-	//make all the checkboxes auto-submit the form.
-			$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
-				$form.submit();      
-				});
-			}
-		}
-		
-		$('.resetButton', $context).click(function(){
-		$context.empty().remove();
-		showContent('category',{'navcat':P.navcat});
-		});
-	}]);
 
 
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
 	app.u.handleRQ(0)
 	});
-
-
-
-
-
-

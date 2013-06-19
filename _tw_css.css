@@ -51,3 +51,134 @@ div#container div#footer{
 .productList > li{
 	margin-top:0;
 }
+.imageContainer{
+}
+.imageCont{
+	height: 340px;
+    width: 300px;
+}
+.prodSummaryContainer{
+	width:auto;
+	height:auto;
+}
+.prodViewerContainer .addToCartButton{
+    border: 2px outset #9A0000 !important;
+    border-radius: 0 0 0 0;
+    box-shadow: 0 0 3px 2px #888888;
+    color: white !important;
+    font-size: 16px;
+    height: 50px;
+    margin-left: 4px;
+    width: 182px;
+	
+	background: rgb(187,0,0); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(187,0,0,1) 0%, rgba(121,0,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(187,0,0,1)), color-stop(100%,rgba(121,0,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bb0000', endColorstr='#790000',GradientType=0 ); /* IE6-9 */
+}
+.select2Buttons{
+}
+.select-buttons{
+}
+.select2Buttons strong {
+  display: block;
+  clear: left;
+  padding-top: 5px;
+}
+
+.select2Buttons ul {
+  list-style-type: none;
+  clear: left;
+  margin: 5px;
+  padding: 0;
+}
+
+.select2Buttons li, .select2Buttons a {
+  float: left;
+  min-width: 37px;
+}
+
+.select2Buttons li { 
+  margin: 0 5px 5px 0; 
+}
+
+.select2Buttons li a, 
+.select2Buttons .limited a, 
+.select2Buttons .disabled {
+  border: 1px solid black;
+  -moz-border-radius: 3px; 
+  -webkit-border-radius: 3px; 
+}
+
+.select2Buttons li:last-child { 
+  margin-right: 0; 
+}
+
+.select2Buttons a {
+  color: black;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;  
+  border-radius: 0;
+  border: 2px outset #8b7961;
+  box-shadow: 0 0 3px 2px #888888;
+  
+  background: rgb(180,162,136); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(180,162,136,1) 0%, rgba(104,85,64,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(180,162,136,1)), color-stop(100%,rgba(104,85,64,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(180,162,136,1) 0%,rgba(104,85,64,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(180,162,136,1) 0%,rgba(104,85,64,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(180,162,136,1) 0%,rgba(104,85,64,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(180,162,136,1) 0%,rgba(104,85,64,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4a288', endColorstr='#685540',GradientType=0 ); /* IE6-9 */
+
+}
+
+.select2Buttons .disabled span {
+  padding: 4px;
+  display: block;
+  font-size: 15px;
+  min-width: 37px;
+}
+
+.select2Buttons a:hover {
+  color: white;    
+  text-decoration: none;
+}
+.select2Buttons .picked {
+	color:white;
+	border: 2px outset #9A0000;
+	
+	background: rgb(187,0,0); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(187,0,0,1) 0%, rgba(121,0,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(187,0,0,1)), color-stop(100%,rgba(121,0,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bb0000', endColorstr='#790000',GradientType=0 ); /* IE6-9 */
+}
+
+.select2Buttons .limited a, 
+.select2Buttons .disabled {
+  text-align: center;
+}
+
+.select2Buttons .disabled {
+  border: 1px solid #d1d1d1;
+  color: #999;
+}
+
+.select2Buttons .disabled .picked {
+  background: #d1d1d1;
+  border-color: #d1d1d1;
+  color: #FFF;
+}
+.select2Buttons ul.select-buttons li:first-child{
+	display:none;
+}
