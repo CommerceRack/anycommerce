@@ -1688,7 +1688,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <!-- hide this in edit mode -->
 	<label>
 		<span>Profile</span>
-		<input name='PROFILE' value='' data-bind="var: mkt(PROFILE); format:popVal;" /> (HIDE THIS IN EDIT MODE)
+		<input name='PROFILE' value='' data-bind="var: mkt(PROFILE); format:popVal;" />
 	</label>
 	
 	<label>
@@ -1769,22 +1769,22 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<div class='floatRight'>
 		<label>
 			<span>Ship cost</span>
-			<input type='number' step='.01' min='0' name='cost' size='5' />
+			<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
 		</label>
 
 		<label>
 			<span>Addl item cost</span>
-			<input type='number' step='.01' min='0' name='addcost' size='5' />
+			<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
 		</label>
 
 		<label>
 			<span>AK+HI add:</span>
-			<input type='number' step='.01' min='0' name='farcost' size='5' />
+			<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
 		</label>
 
 		<label>
 			<span>Service</span>
-			<select name="service">
+			<select name="service" class='skipTrack' >
 				<option value="ShippingMethodStandard">Standard Shipping</option>
 				<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
 				<option value="ePacketChina">ePacket delivery from China</option>
@@ -1826,7 +1826,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		
 		<label>
 			<span>Priority</span>
-			<select name="priority">
+			<select name="priority" class='skipTrack' >
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -1834,7 +1834,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		</label>
 	
 		<label>
-			<input type='checkbox' class='applyAnycb' name='free' />Free. This method can be selected at no cost to the buyer
+			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 		</label>
 		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
 	</div>
@@ -1863,17 +1863,17 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<div class='floatRight'>
 		<label>
 			<span>Ship cost</span>
-			<input type='number' step='.01' min='0' name='cost' size='5' />
+			<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
 		</label>
 
 		<label>
 			<span>Addl item cost</span>
-			<input type='number' step='.01' min='0' name='addcost' size='5' />
+			<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
 		</label>
 
 		<label>
 			<span>Service</span>
-			<select name="service">
+			<select name="service" class='skipTrack' >
 				<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
 				<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
 				<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
@@ -1902,7 +1902,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		
 		<label>
 			<span>Priority</span>
-			<select name="priority">
+			<select name="priority" class='skipTrack' >
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -1910,7 +1910,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		</label>
 	
 		<label>
-			<input type='checkbox' class='applyAnycb' name='free' />Free. This method can be selected at no cost to the buyer
+			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 		</label>
 		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
 	</div>
@@ -2413,7 +2413,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 <div id='syndication_ebf' class='ui-widget ui-widget-content stdPadding ui-corner-all'>
 	<div class='clearfix marginBottom'>
 		<div class='buttonset alignRight floatRight'>
-			<button>Add Launch Profile</button>
+			<button data-app-event="admin_syndication|ebayLaunchProfileCreateShow">Add Launch Profile</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
 		</div>

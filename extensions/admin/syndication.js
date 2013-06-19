@@ -860,18 +860,19 @@ app.model.dispatchThis('immutable');
 						templateID : 'ebayProfileCreateUpdateTemplate',
 						data : $.extend(true,{},app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)
 						});
-					$('form',$D).append("<button data-app-event='admin_syndication|ebayLaunchProfileCreateExec'>Save Changes</button>");
-					app.u.handleAppEvents($profileContent);
+					$('form',$D).append("<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileCreateExec'>Save Profile<\/button>");
+					app.u.handleAppEvents($D);
+					$D.dialog('open');
 					});
 				}, //ebayLaunchProfileCreateShow
 
 
 //These two app events will be very similar. The should execute a utility that builds the macros. the addExec function should start with an add/create.
 			ebayLaunchProfileCreateExec : function($btn)	{
-				
+				$btn.button();
 				},			
 			ebayLaunchProfileUpdateExec : function($btn)	{
-				
+				$btn.button();
 				},
 
 
@@ -904,8 +905,9 @@ app.model.dispatchThis('immutable');
 								else	{
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
-									$('form',$profileContent).append("<button data-app-event='admin_syndication|ebayLaunchProfileUpdateExec'>Save Changes</button>");
+									$('form',$profileContent).append("<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec'>Save <span class='numChanges'><\/span> Changes</button>");
 									app.u.handleAppEvents($profileContent);
+									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
 									}
 								}
 							}
