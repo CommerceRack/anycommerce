@@ -296,7 +296,7 @@ else	{
 				}, //showAmzRegisterModal
 
 			showEBAY : function($target)	{
-$target.showLoading({'message':'Fetching eBay data'});
+$target.empty().showLoading({'message':'Fetching eBay data'});
 //ebay takes a very different path at this point.  
 //go get 
 app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'immutable');
@@ -309,6 +309,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 	else	{
 		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
 			$target.anycontent({'templateID':'syndication_ebf','data' : app.data.adminEBAYProfileList,'dataAttribs':{'dst':'EBF'}});
+			$('table',$target).anytable();
 			}
 		else	{
 			$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
@@ -811,8 +812,73 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebaySaveCatAndUpdateItemSpecifics
 			
-			ebayLaunchProfileUpdateShow : function($btn)	{
+			ebayLaunchProfileUpdateExec : function($btn)	{
+				
+			}, // e/events
+			
+			
+			ebayLaunchProfileDeleteConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.ebayLaunchProfileDeleteConfirm').on('click.ebayLaunchProfileDeleteConfirm',function(event){
+					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data();
+
+					app.ext.admin.i.dialogConfirmRemove({
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Deleting Launch Profile "+data.profile});
+							app.model.addDispatchToQ({
+								'_cmd':'adminEBAYMacro',
+								'@updates':["PROFILE-REMOVE?PROFILE="+data.profile],
+								'_tag':	{
+									'callback':function(rd){
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										$D.dialog('close');
+										$('#globalMessaging').anymessage(app.u.successMsgObject('The profile has been removed.'));
+										$tr.empty().remove(); //removes row for list.
+										}
+									}
+								}
+							},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						});
+					});
+				},
+
+			ebayLaunchProfileCreateShow : function($btn)	{
 				$btn.button();
+				$btn.off('click.ebayLaunchProfileCreateShow').on('click.ebayLaunchProfileCreateShow',function(event){
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Rules Builder',
+						templateID : 'ebayProfileCreateUpdateTemplate',
+						data : $.extend(true,{},app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)
+						});
+					$('form',$D).append("<button data-app-event='admin_syndication|ebayLaunchProfileCreateExec'>Save Changes</button>");
+					app.u.handleAppEvents($profileContent);
+					});
+				}, //ebayLaunchProfileCreateShow
+
+
+//These two app events will be very similar. The should execute a utility that builds the macros. the addExec function should start with an add/create.
+			ebayLaunchProfileCreateExec : function($btn)	{
+				
+				},			
+			ebayLaunchProfileUpdateExec : function($btn)	{
+				
+				},
+
+
+
+
+			ebayLaunchProfileUpdateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.ebayLaunchProfileUpdateShow').on('click.ebayLaunchProfileUpdateShow',function(){
 					var
 						$table = $btn.closest('table'),
@@ -826,25 +892,28 @@ app.model.dispatchThis('immutable');
 							$table.stickytab('close');
 							})
 						});
-app.model.addDispatchToQ({
-	'_cmd':'adminEBAYProfileDetail',
-	'PROFILE' : profile,
-	'_tag' : {
-		'datapointer' : 'adminEBAYProfileDetail|'+profile,
-		'callback' : function(rd){
-			if(app.model.responseHasErrors(rd)){
-				$target.anymessage({'message':rd})
-				}
-			else	{
-				$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : app.data[rd.datapointer]});
-				}
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');			
+					app.model.addDispatchToQ({
+						'_cmd':'adminEBAYProfileDetail',
+						'PROFILE' : profile,
+						'_tag' : {
+							'datapointer' : 'adminEBAYProfileDetail|'+profile,
+							'callback' : function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$target.anymessage({'message':rd})
+									}
+								else	{
+									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
+									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
+									$('form',$profileContent).append("<button data-app-event='admin_syndication|ebayLaunchProfileUpdateExec'>Save Changes</button>");
+									app.u.handleAppEvents($profileContent);
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');			
 					
 					});
-				},
+				}, //ebayLaunchProfileUpdateShow
 			
 			ebayAddCustomDetailShow : function($btn)	{
 

@@ -1679,22 +1679,31 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 <div id='ebayProfileCreateUpdateTemplate'>
 
-EIAS (which token - select list) and TEMPLATE should also be in this.
-
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 
 <fieldset>
-	<legend>Our Settings</legend>
+	<legend>Launch Profile Settings</legend>
+
+
+<!-- hide this in edit mode -->
+	<label>
+		<span>Profile</span>
+		<input name='PROFILE' value='' data-bind="var: mkt(PROFILE); format:popVal;" /> (HIDE THIS IN EDIT MODE)
+	</label>
 	
 	<label>
 		<span>Token</span>
-		<select name='EIAS'></select>
+		<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_EIAS; value:EBAY_EIAS;">
+		</select>
 	</label>
 
 	<label>
 		<span>Template</span>
-		<select name='template'></select>
+		<select name='template' data-bind="var: mkt(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
+			<option value=''>please choose</option>
+		</select>
 	</label>
+
 
 </fieldset>
 
@@ -1739,6 +1748,175 @@ EIAS (which token - select list) and TEMPLATE should also be in this.
 
 </fieldset>
 
+
+
+<fieldset class='clearfix'>
+	<legend>Domestic Shipping</legend>
+
+	<table data-app-role='dataTable' class='floatLeft'>
+	<thead>
+	<tr>
+		<th>Service</th>
+		<th>Pricing</th>
+		<th></th>
+		<th></th>
+	</tr>
+	</thead>
+		<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+	</tbody>
+	</table>
+
+	<div class='floatRight'>
+		<label>
+			<span>Ship cost</span>
+			<input type='number' step='.01' min='0' name='cost' size='5' />
+		</label>
+
+		<label>
+			<span>Addl item cost</span>
+			<input type='number' step='.01' min='0' name='addcost' size='5' />
+		</label>
+
+		<label>
+			<span>AK+HI add:</span>
+			<input type='number' step='.01' min='0' name='farcost' size='5' />
+		</label>
+
+		<label>
+			<span>Service</span>
+			<select name="service">
+				<option value="ShippingMethodStandard">Standard Shipping</option>
+				<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
+				<option value="ePacketChina">ePacket delivery from China</option>
+				<option value="UPSGround">UPS Ground</option>
+				<option value="ShippingMethodExpress">Expedited Shipping</option>
+				<option value="USPSPriority">USPS Priority Mail</option>
+				<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
+				<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
+				<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
+				<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
+				<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
+				<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
+				<option value="USPSFirstClass">USPS First Class Package</option>
+				<option value="UPS3rdDay">UPS 3 Day Select</option>
+				<option value="UPS2ndDay">UPS 2nd Day Air</option>
+				<option value="Other">Economy Shipping</option>
+				<option value="USPSParcel">USPS Parcel Select</option>
+				<option value="USPSMedia">USPS Media Mail</option>
+				<option value="ShippingMethodOvernight">One-day Shipping</option>
+				<option value="USPSExpressMail">USPS Express Mail</option>
+				<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
+				<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
+				<option value="UPSNextDay">UPS Next Day Air Saver</option>
+				<option value="UPSNextDayAir">UPS Next Day Air</option>
+				<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
+				<option value="FedExExpressSaver">FedEx Express Saver</option>
+				<option value="FedEx2Day">FedEx 2Day</option>
+				<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
+				<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
+				<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
+				<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
+				<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
+				<option value="US_FedExIntlEconomy">FedEx International Economy</option>
+				<option value="Freight">Flat Priced Freight</option>
+				<option value="FreightShipping">Freight Shipping</option>
+				<option value="Pickup">Local Pickup</option>
+			</select>
+		</label>
+		
+		<label>
+			<span>Priority</span>
+			<select name="priority">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+			</select>
+		</label>
+	
+		<label>
+			<input type='checkbox' class='applyAnycb' name='free' />Free. This method can be selected at no cost to the buyer
+		</label>
+		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
+	</div>
+
+
+</fieldset>
+
+
+
+<fieldset class='clearfix'>
+	<legend>International Shipping</legend>
+
+	<table data-app-role='dataTable' class='floatLeft'>
+	<thead>
+	<tr>
+		<th>Service</th>
+		<th>Pricing</th>
+		<th></th>
+		<th></th>
+	</tr>
+	</thead>
+		<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+	</tbody>
+	</table>
+
+	<div class='floatRight'>
+		<label>
+			<span>Ship cost</span>
+			<input type='number' step='.01' min='0' name='cost' size='5' />
+		</label>
+
+		<label>
+			<span>Addl item cost</span>
+			<input type='number' step='.01' min='0' name='addcost' size='5' />
+		</label>
+
+		<label>
+			<span>Service</span>
+			<select name="service">
+				<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
+				<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
+				<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
+				<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
+				<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
+				<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
+				<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
+				<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
+				<option value="USPSExpressMailInternational">USPS Express Mail International</option>
+				<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
+				<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
+				<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
+				<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
+				<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
+				<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
+				<option value="UPSStandardToCanada">UPS Standard To Canada</option>
+				<option value="FedExInternationalEconomy">FedEx International Economy</option>
+				<option value="FedExInternationalPriority">FedEx International Priority</option>
+				<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
+				<option value="StandardInternational">Standard Int'l Shipping</option>
+				<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
+				<option value="OtherInternational">Economy Int'l Shipping</option>
+				<option value="FreightShippingInternational">Freight Shipping</option>
+			</select>
+		</label>
+		
+		<label>
+			<span>Priority</span>
+			<select name="priority">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+			</select>
+		</label>
+	
+		<label>
+			<input type='checkbox' class='applyAnycb' name='free' />Free. This method can be selected at no cost to the buyer
+		</label>
+		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
+	</div>
+
+
+</fieldset>
 
 
 
@@ -2173,6 +2351,8 @@ the input value here is 'token'.?
 
 </fieldset>
 
+
+
 </form>
 
 
@@ -2218,8 +2398,6 @@ The sandbox can be useful for developers who want to create test listings or pre
 </li>
 </p>
 
-<a href='#' onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;">Register eBay Account</a>
-
 </div>
 
 
@@ -2232,16 +2410,18 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 
-<div id='syndication_ebf' class='ui-widget ui-widget-content stdPadding'>
-	<div class='buttonset alignRight floatRight'>
-		<button>Add Launch Profile</button>
-		<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
-		<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
+<div id='syndication_ebf' class='ui-widget ui-widget-content stdPadding ui-corner-all'>
+	<div class='clearfix marginBottom'>
+		<div class='buttonset alignRight floatRight'>
+			<button>Add Launch Profile</button>
+			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
+			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
+		</div>
+	
+		<h1 class='marginBottom'>eBay Launch Profiles</h1>
 	</div>
-
-	<h1 class='marginBottom'>eBay Launch Profiles</h1>
 	<section data-app-role='launchProfileListDetailContainer'>
-	<table>
+	<table class='fullWidth gridTable'>
 	<thead>
 	<tr>
 		<th>Profile</th>
@@ -2257,14 +2437,23 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <table>
+
 <tr id='ebayProfilesRowTemplate'>
 	<td data-bind="var: profile(PROFILE); format:text;"></td>
 	<td data-bind="var: profile(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
-	<td>
-	<button>delete</button>
-	<button>shipping</button>
+	<td class='alignRight'>
+	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>delete</button>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>edit</button>
 	</td>
 </tr>
+
+
+<tr id='ebayShippingRowTemplate'>
+	<td data-bind="var: ebay(service); format:text;"></td>
+	<td data-bind="var: ebay(ship); format:text;"></td>
+	<td data-bind="var: ebay(free); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+
 </table>
