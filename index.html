@@ -767,14 +767,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
-	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
-	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
-	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
-    
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'>
-    
-<div class="catBrowseSidebar">
+	<div class="catBrowseSidebar">
 	
 	
 		<div class='filterContainer clearfix'>
@@ -783,8 +776,18 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
         <div class="clear"></div>
     </div>
-    </ul><!-- outputs the product list -->
-	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+    <div class="catPageContent">
+        <img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
+        <h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
+        <p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+        <ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
+        
+     
+        
+        <ul data-app-role='productList' data-bind="var: category(@products); format: infiniteProductList; extension:prodlist_infinite; loadsTemplate: productListTemplate; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList catPageProdList'></ul><!-- outputs the product list -->
+        </ul><!-- outputs the product list -->
+        <p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+    </div>
 </div>
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
@@ -1925,9 +1928,9 @@ put all filters into the appFilters container.
         </fieldset>
         <fieldset class="productTypes" data-elastic-key="prod_types" data-filtertype="checkboxes">
             <legend>SORT BY TYPE</legend>
-            <label class='break'><input type='checkbox' value='comics' />Comics</label>
-            <label class='break'><input type='checkbox' value='figures' />Figures</label>
-            <label class='break'><input type='checkbox' value='statues' />Statues</label>
+            <label class='break'><input type='checkbox' value='comic' />Comics</label>
+            <label class='break'><input type='checkbox' value='action+figure' />Figures</label>
+            <label class='break'><input type='checkbox' value='statue' />Statues</label>
         </fieldset>
         
         

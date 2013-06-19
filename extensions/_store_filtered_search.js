@@ -147,7 +147,7 @@ if(app.ext.store_filter.u.validateFilterProperties($form))	{
 				}
 			
 			},'datapointer':'appPublicSearch|elasticFiltering',
-			'templateID': $form.data('loadstemplate') || 'productListTemplateResultsFilter'
+			'templateID': $form.data('loadstemplate') || 'productListTemplateResults'
 			});
 			app.u.dump(JSON.stringify(query));
 		app.model.dispatchThis();

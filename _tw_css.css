@@ -8,6 +8,7 @@
     padding-left: 40px;
     padding-top: 8px;
     width: 162px;
+	color:white;
 }
 .layeredSearch fieldset{
 	border: medium none;
@@ -15,4 +16,38 @@
 }
 .layeredSearch input.sliderValue{
 	margin-left:31px;
+	color:black;
+}
+.catBrowseSidebar{
+}
+.catPageContent{
+	float:left;
+}
+.catPageContent p{
+	margin:0;
+}
+.resetButton{
+	background: #bc0000; /* Old browsers */
+	background: -moz-linear-gradient(top,  #bc0000 0%, #7a0000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bc0000), color-stop(100%,#7a0000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #bc0000 0%,#7a0000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bc0000', endColorstr='#7a0000',GradientType=0 ); /* IE6-9 */
+    
+	font-size: 14px;
+    font-weight: 900;
+}
+.layeredSearch label{
+	color:black;
+}
+div#container div#footer{
+	float:left;
+}
+.productList{
+	width:820px;
+}
+.productList > li{
+	margin-top:0;
 }
