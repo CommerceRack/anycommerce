@@ -310,6 +310,48 @@ var admin_syndication = function() {
 				$D.dialog('open');
 				}, //showAmzRegisterModal
 
+// run when an ebay category is clicked that is a leaf, executed from the XSL file
+			showEBAYTemplateEditorInModal : function(profile)	{
+				
+				
+				var $D = $('#ebayTemplateEditor');
+				if($D.length)	{
+					$D.removeData('profile');
+					}
+				else	{
+					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit eBay Template'});
+					$D.dialog({'modal':true, 'autoOpen':false,'width':'90%'});
+					}
+				
+
+				$D.data({'profile':profile}); //this ID is used in the media lib to get the profile. don't change it.
+				$D.dialog('open');
+				$D.showLoading({"message":"Fetching template HTML"});
+
+				app.model.addDispatchToQ({
+					'_cmd':'adminEBAYProfileFileContents',
+					'PROFILE' : profile,
+					'FILENAME' : 'index.html',
+					'_tag' : {
+						'datapointer' : 'adminEBAYProfileFileContents|'+profile,
+						'callback' : function(rd){
+							$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
+							$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($(window).height() - 250).addClass('fullWidth').val(app.data[rd.datapointer]['body']);
+							$D.append($textarea);
+							var $button = $("<button>Save<\/button>").button().on('click',function(){
+								console.log($('.jHtmlArea iframe',$D).contents().find('body').html());
+								}).appendTo($D);
+
+							$textarea.htmlarea();
+							app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
+
+							}
+						}
+					},'immutable');
+				app.model.dispatchThis('immutable');
+				
+				},
+
 			showEBAY : function($target)	{
 $target.empty().showLoading({'message':'Fetching eBay data'});
 //ebay takes a very different path at this point.  
@@ -335,7 +377,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 app.model.dispatchThis('immutable');
 
 
-				},
+				}, //showEBAY
 
 //shows the editor for a given marketplace, by DST code.
 			showDSTDetails : function(DST,$target)	{
@@ -420,9 +462,26 @@ app.model.dispatchThis('immutable');
 					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no DST or target specified.",'gMessage':true});
 					}
 				
-				} //showDSTDetails
+				}, //showDSTDetails
 			
-			
+			showTemplateChooserInModal : function(profile)	{
+if(profile)	{
+	var $D = app.ext.admin.i.dialogCreate({
+		'title' : 'eBay Template Chooser',
+		'templateID' : 'ebayTemplateChooserTemplate',
+		data : app.data.adminEBAYTemplateList
+		});
+	$D.attr('id','ebayTemplateChooser');
+	$D.data('profile',profile);
+	$D.dialog('open');
+	
+	
+	
+	}
+else	{
+	$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, no profile passed.","gMessage":true});
+	}
+				}
 			
 			}, //Actions
 
@@ -610,7 +669,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						}
 					})
 				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
-				},
+				}, //buildItemSpecificsMacro
 
 			ebayShowTreeByChild : function(categoryid)	{
 					app.u.dump("BEGIN admin_syndication.u.ebayShowTreeByChild");
@@ -697,8 +756,6 @@ else	{
 						}
 					}, //ebayShowTreeByChild
 
-// run when an ebay category is clicked that is a leaf, executed from the XSL file
-
 			getUpdatedEBAYAttributesForm : function($form)	{
 
 				app.u.dump("BEGIN admin_syndication.u.updateSpecifics");
@@ -732,7 +789,38 @@ else	{
 				else	{
 					$('#APIForm').anymessage({'message':'In admin_syndication.u.getUpdatedEBAYAttributesForm, either $form ['+typeof $form+'] not passed or unable to determine categoryid from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
 					}
-				} //getUpdatedEBAYAttributesForm
+				}, //getUpdatedEBAYAttributesForm
+
+			handleEBAYTemplateSelect : function(vars)	{
+				vars = vars || {};
+				var $ETC = $('#ebayTemplateChooser'); 
+				if(vars.SUBDIR && vars.PROJECTID && vars.PROFILE)	{
+					$ETC.showLoading({'message':'One moment please. Copying files into profile directory.'});
+					vars._cmd = 'adminEBAYTemplateCopyToProfile'
+					vars._tag = {
+						'callback' : function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd})
+								}
+							else	{
+								$ETC.dialog('close');
+								$('#globalMessaging').anymessage({"message":"Thank you, the eBay template "+vars.SUBDIR+" has been copied into the profile "+vars.PROFILE+".","gMessage":true});
+								$('.pageSyndication:first').find("[data-app-role='ebayTemplateOrigin']:first").text(vars.SUBDIR);
+								}
+							}
+						}
+					app.model.addDispatchToQ(vars,'immutable'); app.model.dispatchThis('immutable');
+					app.model.addDispatchToQ({
+						'_cmd':'adminEBAYProfileUpdate',
+						'template_origin':vars.SUBDIR,
+						'PROFILE' : vars.PROFILE
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					$ETC.anymessage({"message":"","gMessage":true});
+					}
+				} //handleEBAYTemplateSelect
 
 			}, //u [utilities]
 
@@ -875,12 +963,41 @@ app.model.dispatchThis('immutable');
 						data : $.extend(true,{},app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)
 						});
 					$('form',$D).append("<button data-app-role='saveButton' data-mode='create' data-app-event='admin_syndication|ebayLaunchProfileCreateUpdateExec'>Save Profile<\/button>");
+					
+					$("[data-app-role='ebayTemplateConfigContainer']",$D).hide(); //disable layout chooser in 'create' mode.
+
 					app.u.handleAppEvents($D);
 					$D.dialog('open');
+
 					$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
 					});
 				}, //ebayLaunchProfileCreateShow
 
+			ebayTemplateChooserShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.showTemplateChooserInModal').on('click.showTemplateChooserInModal',function(){
+					app.ext.admin_syndication.a.showTemplateChooserInModal($btn.data('profile'));
+					});
+				},
+			ebayTemplateChooserExec : function($ele)	{
+				$ele.off('click.ebayTemplateChooserExec').on('click.ebayTemplateChooserExec',function(){
+					var data = $ele.data();
+					app.ext.admin_syndication.u.handleEBAYTemplateSelect({
+						SUBDIR : data.subdir,
+						PROFILE : $('#ebayTemplateChooser').data('profile'),
+						PROJECTID : data.projectid
+						});
+					})
+				},
+			
+			adminEBAYProfileFileContents : function($btn)	{
+				
+				$btn.button();
+				$btn.off('click.adminEBAYProfileFileContents').on('click.adminEBAYProfileFileContents',function(){
+					app.ext.admin_syndication.a.showEBAYTemplateEditorInModal($btn.data('profile'))
+					})
+				},
+			
 //Create and Update run the exact same process.
 			ebayLaunchProfileCreateUpdateExec : function($btn)	{
 				$btn.button();

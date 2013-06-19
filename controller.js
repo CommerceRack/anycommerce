@@ -2012,7 +2012,7 @@ a word */
 			}, //truncate
 
 		makeSafeHTMLId : function(string)	{
-//			app.u.dump("BEGIN control.u.makesafehtmlid");
+			app.u.dump("BEGIN control.u.makesafehtmlid");
 //			app.u.dump("string: "+string);
 			var r = false;
 			if(typeof string == 'string')	{

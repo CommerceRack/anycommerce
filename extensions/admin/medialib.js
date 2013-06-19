@@ -802,6 +802,14 @@ if(selector && mode)	{
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
+		'ebayTemplateMediaUpload' : function(data,textStatus)	{
+			app.u.dump("Got to ebayTemplateMediaUpload success.");
+			var folderName = "_ebay/"+$('#ebayTemplateEditor').data('profile');
+			for(var i = 0; i < L; i += 1)	{
+				data[i].folder = folderName;
+				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{},'immutable'); //on a successful response, add the file to the media library.
+				}
+			},
 		'csvUploadToBatch' : function(data,textStatus) {
 			app.u.dump("Got to csvUploadToBatch success.");
 	//		app.u.dump(" -> data:"); app.u.dump(data);

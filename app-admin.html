@@ -380,7 +380,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<li><a href='#'>Test</a>
 	<ul>
 
-
+		<li><a href='#' onClick='app.ext.admin_syndication.a.showEBAYTemplateEditorInModal(); return false;'>iFrame test</a></li>
 		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
 		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
@@ -406,9 +406,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <input type='text' name='test' value='38331' id='forTestingEBAY' />
 <span id='forTestingEBAYSpan' />
-
-
-<button onClick="app.model.addDispatchToQ({'_cmd':'adminEBAYMacro','@updates':['PROFILE-UPDATE?PROFILE=MYAPP']},'immutable'); app.model.dispatchThis('immutable');">create profile</button>
 
 </div>
 
