@@ -281,7 +281,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .ui-widget-buttonbar button	{margin:0 2px;}
 
 .ui-widget fieldset	{border:0;}
-.ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
+.ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; margin: 0; padding: 0;} /* Used for the page title element */
 
 /* used for the wiki header 1 & 2 */
 .ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
@@ -299,8 +299,14 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
-
-
+.ui-widget .borderMarginFieldsets fieldset	{
+	margin:0 0 2em 0;
+	border:1px solid #efefef;
+	padding: 2em;
+	-webkit-border-radius: 8px;
+	border-radius: 8px; 
+	}
+.ui-widget .borderMarginFieldsets legend	{margin:.5em;}
 
 
 /*

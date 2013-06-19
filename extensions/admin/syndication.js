@@ -177,22 +177,35 @@ var admin_syndication = function() {
 //var keys are all lower case to allow for easy set via 'data' and consistency.
 //$path is an optional param which, if set, will have the path of the selected category set.
 			showEBAYCategoryChooserInModal : function($input,vars,$path)	{
+				app.u.dump("BEGIN admin_syndication.a.showEBAYCategoryChooserInModal");
 				vars = vars || {};
 				if($input && $input instanceof jQuery)	{
 					if(vars.pid && vars.categoryselect == 'primary' || vars.categoryselect == 'secondary')	{
 						vars.inputid = null;
-						var $D = $("<div \/>",{'title':'eBay Category Chooser','id':'ebayCategoryChooser'});
-						$D.dialog({
-							'modal':true,
-							'width' : '90%',
-							'height':($(window).height() - 100)
-							});
+						
+						var $D = $('#ebayCategoryChooser');
+						if($D.length)	{
+							$("[data-app-role='ebayCategoryChooserXSLContainer']",$D).empty(); //remove old content.
+							$("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",$D).find(".inputContainer").empty().remove();
+							$("[data-app-role='ebayCategoryList']",$D).empty(); //clear categories. they get re-fetched if it's a new product and if not, they'll be in memory.
+							$D.removeData('categoryselect inputid pathid pid categoryid'); //clear old values from previous product/category selection
+							}
+						else	{
+							$D = $("<div \/>",{'title':'eBay Category Chooser','id':'ebayCategoryChooser'});
+							$D.dialog({
+								'modal':true,
+								'width' : '90%',
+								'height':($(window).height() - 100),
+								'autoOpen' : false
+								});
+							$D.anycontent({
+								'templateID' : 'ebayCategoryChooserTemplate',
+								'showLoadingMessage' : 'Fetching eBay category list'
+								});
+							}
 
-						$D.anycontent({
-							'templateID' : 'ebayCategoryChooserTemplate',
-							'showLoadingMessage' : 'Fetching eBay category list'
-							});
-
+//if one doesn't already exist, add an id to both the input and path elements.  The ID's are used to look up the elements later.
+						$D.dialog('open');
 						if(vars.inputid = $input.attr('id'))	{} //value for input id is set in if.
 						else	{
 							vars.inputid = 'ebaycat_'+app.u.guidGenerator();
@@ -209,33 +222,35 @@ var admin_syndication = function() {
 
 //						app.u.dump(" -> vars: "); app.u.dump(vars);
 						$D.data(vars); //set on dialog so they can be easily located later (on save).
+//						app.u.dump(" -> $D.data():"); app.u.dump($D.data());
 						app.ext.admin.calls.adminEBAYCategory.init({'categoryid':'0','pid':vars.pid},{'callback':function(rd){
-$D.hideLoading();
-if(app.model.responseHasErrors(rd)){
-	$D.anymessage({'message':rd})
-	}
-else	{
-	if($input.val())	{
-		app.ext.admin_syndication.u.ebayShowTreeByChild($input.val());
-		}
-	$("[data-app-role='ebayCategoryChooserTable']",$D).anycontent(rd);
-//	app.u.dump(" -> item specifics: "+app.data[rd.datapointer]['ebay:itemspecifics']);
-	if(app.data[rd.datapointer]['ebay:itemspecifics'])	{
-		var
-			rows = app.data[rd.datapointer]['ebay:itemspecifics'].split("\n"),
-			L = (rows.length - 1),
-			$o = $("<div \/>"); //each row is appended to this and then the children are added to the fieldset
-
-		for(var i = 0; i < L; i += 1)	{
-			var kvp = rows[i].split(/:(.+)?/);
-//skip blanks.
-			if(kvp[0])	{
-				$o.append("<div class='inputContainer marginTop'><input type='text' placeholder='Detail Title' value='"+kvp[0]+"' name='cs_name"+i+"' class='marginRight' \/><input type='text' placeholder='Detail Value' value='"+kvp[1]+"' name='cs_value"+i+"' \/><\/div>");
-				}
-			}
-		$("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",$D).prepend($o.children()); //prepend so they appear before button.
-		}
-	}
+							app.u.dump("BEGIN callback for adminEBAYCategory catid 0 and pid: "+vars.pid);
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd})
+								}
+							else	{
+								if($input.val())	{
+									app.ext.admin_syndication.u.ebayShowTreeByChild($input.val());
+									}
+								$("[data-app-role='ebayCategoryChooserTable']",$D).anycontent(rd);
+							//	app.u.dump(" -> item specifics: "+app.data[rd.datapointer]['ebay:itemspecifics']);
+								if(app.data[rd.datapointer]['ebay:itemspecifics'])	{
+									var
+										rows = app.data[rd.datapointer]['ebay:itemspecifics'].split("\n"),
+										L = (rows.length - 1),
+										$o = $("<div \/>"); //each row is appended to this and then the children are added to the fieldset
+							
+									for(var i = 0; i < L; i += 1)	{
+										var kvp = rows[i].split(/:(.+)?/);
+							//skip blanks.
+										if(kvp[0])	{
+											$o.append("<div class='inputContainer marginTop'><input type='text' placeholder='Detail Title' value='"+kvp[0]+"' name='cs_name"+i+"' class='marginRight' \/><input type='text' placeholder='Detail Value' value='"+kvp[1]+"' name='cs_value"+i+"' \/><\/div>");
+											}
+										}
+									$("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",$D).prepend($o.children()); //prepend so they appear before button.
+									}
+								}
 							}},'mutable');
 						app.model.dispatchThis('mutable');
 						}
@@ -308,7 +323,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 		}
 	else	{
 		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
-			$target.anycontent({'templateID':'syndication_ebf','data' : app.data.adminEBAYProfileList,'dataAttribs':{'dst':'EBF'}});
+			$target.anycontent({'templateID':'syndication_ebf','data' : $.extend(true,{},app.data.adminEBAYProfileList,app.data.adminEBAYTokenList),'dataAttribs':{'dst':'EBF'}});
 			$('table',$target).anytable();
 			}
 		else	{
@@ -463,7 +478,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 					if(data.categoryselect) 	{
 
 //					app.u.dump(" -> categoryid: "+categoryid); app.u.dump(" -> data: "); app.u.dump(data);
-						$chooser.data('categoryid',categoryid);
+						
 					
 //if the children have already been generated, just toggle them on click (display on/off).
 						if($('ul',$li).length)	{
@@ -499,6 +514,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 
 						else if(Number($li.data('leaf')) >= 1)	{
 							app.u.dump(" -> leaf!");
+							$chooser.data('categoryid',categoryid); //only set the category ID if a leaf. prohibits a non-leaf category from being selected accidentally.
 							$('.activeListItem',$chooser).removeClass('activeListItem');
 							$li.addClass('activeListItem');
 							$XSLContentArea.empty();
@@ -597,6 +613,8 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				},
 
 			ebayShowTreeByChild : function(categoryid)	{
+					app.u.dump("BEGIN admin_syndication.u.ebayShowTreeByChild");
+					app.u.dump(' -> categoryid: '+categoryid);
 					$('#APIForm').show(); //make sure form is visible.
 					var $chooser = $('#ebayCategoryChooser');					
 					$chooser.data('categoryid',categoryid); //update the 'global' data object to reference the category now in focus.
@@ -645,15 +663,16 @@ if(categoryid && data.pid)	{
 //All the data is available at this point, right down to the leaf, so trigger a click on each branch, starting at the top (last item in parents array).
 //this only triggers the clicks on the parents, not on the leaf itself. We already have that data from our original request to get the parents.
 						for(var i = (L-1); i >= 0; i -= 1)	{
-							app.u.dump(i+"). "+parents[i].categoryid+" "+parents[i].name);
-							$("[data-categoryid='"+parents[i].categoryid+"']:first",$chooser).find('span:first').trigger('click');
+//							app.u.dump(i+"). "+parents[i].categoryid+" "+parents[i].name);
+							var $li = $("[data-categoryid='"+parents[i].categoryid+"']:first",$chooser)
+							if($('ul',$li).length)	{$li.show();} //if the chooser has already been opened, this category may already be loaded.
+							else	{$li.find('span:first').trigger('click');} //category hasn't been loaded yet, trigger a click.
 							}
 						$chooser.hideLoading();
 						$XSLContentArea.empty().append(leafData.html);
 						app.u.handleAppEvents($chooser);
 						$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
 						$('#APIForm').show(); //form is hidden by default
-			
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -676,7 +695,7 @@ else	{
 						$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild,no categoryid passed.','gMessage':true});
 						
 						}
-					},
+					}, //ebayShowTreeByChild
 
 // run when an ebay category is clicked that is a leaf, executed from the XSL file
 
@@ -689,7 +708,7 @@ else	{
 					$XSLContentArea = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form),
 					pid = $chooser.data('pid'),
 					categoryid = $chooser.data('categoryid');
-				
+				app.u.dump(" -> categoryid: "+categoryid);
 				if($form && $XSLContentArea && categoryid)	{
 				
 					$chooser.showLoading({'message':'Updating item specifics'});
@@ -812,11 +831,6 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebaySaveCatAndUpdateItemSpecifics
 			
-			ebayLaunchProfileUpdateExec : function($btn)	{
-				
-			}, // e/events
-			
-			
 			ebayLaunchProfileDeleteConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.ebayLaunchProfileDeleteConfirm').on('click.ebayLaunchProfileDeleteConfirm',function(event){
@@ -829,8 +843,8 @@ app.model.dispatchThis('immutable');
 						'removeFunction':function(vars,$D){
 							$D.showLoading({"message":"Deleting Launch Profile "+data.profile});
 							app.model.addDispatchToQ({
-								'_cmd':'adminEBAYMacro',
-								'@updates':["PROFILE-REMOVE?PROFILE="+data.profile],
+								'_cmd':'adminEBAYProfileRemove',
+								'PROFILE': data.profile,
 								'_tag':	{
 									'callback':function(rd){
 									$D.hideLoading();
@@ -849,7 +863,7 @@ app.model.dispatchThis('immutable');
 							}
 						});
 					});
-				},
+				}, //ebayLaunchProfileDeleteConfirm
 
 			ebayLaunchProfileCreateShow : function($btn)	{
 				$btn.button();
@@ -860,23 +874,57 @@ app.model.dispatchThis('immutable');
 						templateID : 'ebayProfileCreateUpdateTemplate',
 						data : $.extend(true,{},app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)
 						});
-					$('form',$D).append("<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileCreateExec'>Save Profile<\/button>");
+					$('form',$D).append("<button data-app-role='saveButton' data-mode='create' data-app-event='admin_syndication|ebayLaunchProfileCreateUpdateExec'>Save Profile<\/button>");
 					app.u.handleAppEvents($D);
 					$D.dialog('open');
+					$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
 					});
 				}, //ebayLaunchProfileCreateShow
 
-
-//These two app events will be very similar. The should execute a utility that builds the macros. the addExec function should start with an add/create.
-			ebayLaunchProfileCreateExec : function($btn)	{
+//Create and Update run the exact same process.
+			ebayLaunchProfileCreateUpdateExec : function($btn)	{
 				$btn.button();
-				},			
-			ebayLaunchProfileUpdateExec : function($btn)	{
-				$btn.button();
-				},
+				$btn.off('click.ebayLaunchProfileCreateUpdateExec').on('click.ebayLaunchProfileCreateUpdateExec',function(event){
+					event.preventDefault();
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON({'cb':true});
+					
 
+//the domestic and international shipping sections use the 'data table' technology.
+//their contents need formatted and saved to the serialized form object.
+function setShipping(type)	{
+	//type needs to be 'dom' or 'int'
+	var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
+	if($shipping.length)	{
+		sfo['@ship_'+type+'services'] = new Array();
+		$shipping.each(function(index){
+			app.u.dump(" -> index: "+index);
+			var
+				$tr = $(this),
+				data = $tr.data();
+			sfo['@ship_'+type+'services'].push("service="+data.service+"&free="+data.free+"&cost="+data.cost+"&addcost="+data.addcost+"&farcost="+data.farcost);
+			if(index >= 2)	{return false} //exit now. only 3 allowed.
+			})
+		}
+	}
 
+setShipping('dom');
+setShipping('int');
+					
+					$form.showLoading({'message':'Saving Launch Profile'});
+					$('html, body').animate({scrollTop : 0},1000); //scroll to top so messaging appears.
+					sfo._cmd = 'adminEBAYProfileCreate';
+					sfo._tag = {
+						'callback' : 'showMessaging',
+						'jqObj' : $form,
+						'message' : 'Thank you, your changes have been saved'
+						}
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.dispatchThis('immutable');	
 
+					});
+				}, //ebayLaunchProfileCreateUpdateExec
 
 			ebayLaunchProfileUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -903,11 +951,33 @@ app.model.dispatchThis('immutable');
 									$target.anymessage({'message':rd})
 									}
 								else	{
+									// app.u.kvp2Array -> use this on the ship fields.
+									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
+									app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'] = new Array();
+
+//The data for ship_intservices and ship_domservices has each array value as a key/value pair. 
+//because the shipping services use the 'data table' technology, consistency was needed between the original page rendering
+//and how the data table gets updated by the form. Soo..... we convert the key/value pairs to an object and save into a custom attribute.									
+									if(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'])	{
+										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_intservices'].length; i += 1)	{
+											app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'][i]));
+											}
+										}
+									
+									if(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'])	{
+										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_domservices'].length; i += 1)	{
+											app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'][i]));
+											}
+										}
+									
+									
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
-									$('form',$profileContent).append("<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec'>Save <span class='numChanges'><\/span> Changes</button>");
+									$('form',$profileContent).append("<button data-app-role='saveButton' data-mode='update' data-app-event='admin_syndication|ebayLaunchProfileCreateUpdateExec'>Save <span class='numChanges'><\/span> Changes</button>");
 									app.u.handleAppEvents($profileContent);
 									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
+									$('.applyAnycb',$profileContent).anycb();
+									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
 									}
 								}
 							}
@@ -937,6 +1007,68 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				},
 			
+			ebayTokenDeleteConfirm : function($ele)	{
+				
+				$ele.off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
+					//confirm dialog goes here.
+					event.preventDefault();
+
+					var data = $btn.closest('li').data();
+
+					app.ext.admin.i.dialogConfirmRemove({
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Deleting eBay token "+data.ebay_eias});
+							app.model.addDispatchToQ({
+								'_cmd':'adminEBAYMacro',
+								'@updates': ["TOKEN-REMOVE?eias="+data.ebay_eias],
+								'_tag':	{
+									'callback':function(rd){
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										app.ext.admin_syndication.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
+										}
+									}
+								}
+							},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						});
+
+
+					});
+			
+				},
+			
+			ebayTokenDeleteButtonset : function($ele)	{
+				
+				$('button',$ele).button();
+				var $menu = $ele.next('ul');
+				$menu.css({'position':'absolute','width':'350','font-size':'.75em'}).menu().hide();
+				
+				$('button:first',$ele).off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
+					event.preventDefault();
+					$(this).next('button').trigger('click');
+					return false; //here so that the 'one' in the next button doesn't get triggered by this click.
+					})
+				$('button:last',$ele).button({'text' : false, icons : {'primary':'ui-icon-triangle-1-s'}}).off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
+					event.preventDefault();
+					app.u.dump("Click triggered.");
+					$menu.show().position({
+						my: "right top",
+						at: "right bottom",
+						of: this
+						});
+					$(document).one( "click", function() {
+						$menu.hide();
+						});
+					return false;
+					});
+				$ele.buttonset();
+				
+				},
 
 			ebayTokenLinkTo : function($btn)	{
 				$btn.button();
@@ -1135,7 +1267,6 @@ else	{
 						}
 					});
 				} //adminSyndicationDebugExec
-			
 			
 			} //e [app Events]
 		} //r object.

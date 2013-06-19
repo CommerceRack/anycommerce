@@ -1632,7 +1632,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<option>Recently Viewed</option>
 		
 	</select>
-	<ul class='noPadOrMargin listStyleNone marginRight' data-bind='var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'></ul>
+	<ul class='noPadOrMargin listStyleNone marginRight' data-bind='var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;' data-app-role='ebayCategoryList'></ul>
 	
 	</div>
 	</td>
@@ -1679,16 +1679,24 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 <div id='ebayProfileCreateUpdateTemplate'>
 
-<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels borderMarginFieldsets'>
 
 <fieldset>
 	<legend>Launch Profile Settings</legend>
+	
+	<input type='hidden' name='DST' value='EBF' />
+	<label>
+		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
+		Is active
+	</label>
+	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+	
 
 
 <!-- hide this in edit mode -->
 	<label>
 		<span>Profile</span>
-		<input name='PROFILE' value='' data-bind="var: mkt(PROFILE); format:popVal;" />
+		<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: mkt(PROFILE); format:popVal;" />
 	</label>
 	
 	<label>
@@ -1709,15 +1717,6 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 
 
-<input type='hidden' name='DST' value='EBF' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-
-
-
 
 <fieldset>
 	<legend>Best Offer</legend>
@@ -1730,7 +1729,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Max # policy violations</span>
-		<input type='number' step='1' min='0' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
+		<input type='number' step='1' min='0' size='6' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
 		<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations.Period) before being blocked from buying/bidding on the item. ">?</span>
 	</label>
 	
@@ -1753,19 +1752,21 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <fieldset class='clearfix'>
 	<legend>Domestic Shipping</legend>
 
-	<table data-app-role='dataTable' class='floatLeft'>
-	<thead>
-	<tr>
-		<th>Service</th>
-		<th>Pricing</th>
-		<th></th>
-		<th></th>
-	</tr>
-	</thead>
-		<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-	</tbody>
-	</table>
-
+	<div class='floatLeft'>
+		<table data-app-role='dataTable' class='gridTable'>
+		<thead>
+		<tr>
+			<th>Service</th>
+			<th>Free</th>
+			<th>Pricing</th>
+			<th></th>
+		</tr>
+		</thead>
+			<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: shipping(@ship_domservices_arr); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+		</tbody>
+		</table>
+		<p class='hint'>eBay supports a max of 3. Any more than three get dropped at save</p>
+	</div>
 	<div class='floatRight'>
 		<label>
 			<span>Ship cost</span>
@@ -1824,15 +1825,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</select>
 		</label>
 		
-		<label>
-			<span>Priority</span>
-			<select name="priority" class='skipTrack' >
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-			</select>
-		</label>
-	
+
 		<label>
 			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 		</label>
@@ -1847,19 +1840,21 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <fieldset class='clearfix'>
 	<legend>International Shipping</legend>
 
-	<table data-app-role='dataTable' class='floatLeft'>
-	<thead>
-	<tr>
-		<th>Service</th>
-		<th>Pricing</th>
-		<th></th>
-		<th></th>
-	</tr>
-	</thead>
-		<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-	</tbody>
-	</table>
-
+	<div class='floatLeft'>
+		<table data-app-role='dataTable' class='gridTable'>
+		<thead>
+		<tr>
+			<th>Service</th>
+			<th>Free</th>
+			<th>Pricing</th>
+			<th></th>
+		</tr>
+		</thead>
+			<tbody data-app-role='ebayShippingTbody_int' data-bind="var: shipping(@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+		</tbody>
+		</table>
+		<p class='hint'>eBay supports a max of 3. Any more than three get dropped at save</p>
+	</div>
 	<div class='floatRight'>
 		<label>
 			<span>Ship cost</span>
@@ -1900,15 +1895,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</select>
 		</label>
 		
-		<label>
-			<span>Priority</span>
-			<select name="priority" class='skipTrack' >
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-			</select>
-		</label>
-	
+
 		<label>
 			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 		</label>
@@ -1967,7 +1954,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 	<label>
 		<span>Max. unpaid item strikes count</span>
-		<input type='number' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
+		<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
 		<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
 	</label>
 
@@ -1986,7 +1973,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Min Feedback Score</span>
-		<input type='number' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
+		<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
 		<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
 	</label>
 	
@@ -2009,7 +1996,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Verified user min feedback score</span>
-		<input type='number' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
+		<input type='number' step='1' size='5' min='0' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
 		<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
 	</label>
 	
@@ -2125,7 +2112,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 	<label>
 		<span>Deposit amount</span>
-		<input type='number' step='.01' max='2000' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
+		<input type='number' step='.01' max='2000' size='10' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
 		<span class='toolTip' title="This dollar value indicates the amount of the deposit that a buyer must make on a purchased motor vehicle (eBay Motors US and CA). The deposit amount can be as high as $2,000.00.">?</span>
 	</label>
 
@@ -2181,7 +2168,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Dispatch Time Max</span>
-		<input type='number' step='1' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
+		<input type='number' step='1' size='5' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
 		<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
 	</label>
 	
@@ -2211,8 +2198,8 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Listing enhancement</span>
-		<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" >
-			<option></option>
+		<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" multiple="multiple" >
+			<option value=''>none</option>
 			<option value='BoldTitle'>title for the item's listing in boldface type</option>
 			<option value='Border'>add a border around the listing's pictures</option>
 			<option value='Featured'>display prominently in the Featured Items section</option>
@@ -2269,9 +2256,8 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<legend>Return Policy</legend>
 
 	<label>
-		<span>Description</span>
-		<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" />
-		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
+		<span>Description <span class='toolTip' title="A detailed explanation of your return policy.">?</span></span>
+		<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" rows='5' class='fullWidth' />
 	</label>
 
 	<label>
@@ -2336,7 +2322,7 @@ the input value here is 'token'.?
 
 	<label>
 		<span>County</span>
-		<input type='text' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
+		<input type='text'  size='2' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
 	</label>
 
 	<label>
@@ -2351,7 +2337,7 @@ the input value here is 'token'.?
 
 </fieldset>
 
-
+<!-- form is used for both create and update, so the button is added when the template is added to the dom -->
 
 </form>
 
@@ -2412,7 +2398,13 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 <div id='syndication_ebf' class='ui-widget ui-widget-content stdPadding ui-corner-all'>
 	<div class='clearfix marginBottom'>
-		<div class='buttonset alignRight floatRight'>
+		<div class='buttonset alignRight floatRight positionRelative'>
+			<span data-app-event='admin_syndication|ebayTokenDeleteButtonset'>
+				<button>Delete a Token</button>
+				<button>Token List</button>
+			</span>
+			<ul data-bind="var: ebay(@ACCOUNTS); format:processList; loadsTemplate:ebayTokenListItem;">
+			</ul>
 			<button data-app-event="admin_syndication|ebayLaunchProfileCreateShow">Add Launch Profile</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
@@ -2424,9 +2416,9 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<table class='fullWidth gridTable'>
 	<thead>
 	<tr>
-		<th>Profile</th>
-		<th class='hideInMinimalMode'>Created</th>
-		<th class='hideInMinimalMode'>Last Modified</th>
+		<th class='alignLeft'>Profile</th>
+		<th class='alignLeft hideInMinimalMode'>Created</th>
+		<th class='alignLeft hideInMinimalMode'>Last Modified</th>
 		<th></th>
 	</tr>
 	</thead>
@@ -2434,6 +2426,13 @@ The sandbox can be useful for developers who want to create test listings or pre
 	</table>
 	</section>
 </div>
+
+
+<ul>
+	<li id='ebayTokenListItem'>
+	<a href='#' data-bind="var: ebay(EBAY_EIAS); format:text;" data-app-event='admin_syndication|ebayTokenDeleteConfirm'></a>
+	</li>
+</ul>
 
 
 <table>
@@ -2451,8 +2450,12 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 <tr id='ebayShippingRowTemplate'>
 	<td data-bind="var: ebay(service); format:text;"></td>
-	<td data-bind="var: ebay(ship); format:text;"></td>
 	<td data-bind="var: ebay(free); format:text;"></td>
+	<td>
+	<span data-bind="var: ebay(cost); format:text; pretext: first: ;"></span>
+	<span data-bind="var: ebay(addcost); format:text; pretext: addl: ;"></span>
+	<span data-bind="var: ebay(farcost); format:text; pretext: AK+HI: ;"></span>
+	</td>
 	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 
