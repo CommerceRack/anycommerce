@@ -736,7 +736,7 @@ $D.dialog('open');
 									}
 								else	{
 									$D.dialog('close');
-									$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
+									$('#globalMessaging').anymessage(app.u.successMsgObject('The coupon has been removed.'));
 									$tr.empty().remove(); //removes row for list.
 									}
 								}
