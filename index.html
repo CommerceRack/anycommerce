@@ -32,6 +32,7 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link rel="stylesheet" type="text/css" href="_tw_css.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
@@ -1914,12 +1915,12 @@ put all filters into the appFilters container.
         <button class="resetButton"> Reset</button>
         
         <fieldset data-elastic-key="base_price" data-filtertype="slider">
-            <legend class="fsCatTitle">SORT BY PRICE</legend>
+            <legend>SORT BY PRICE</legend>
             <input type="text" disabled="disabled" class='sliderValue' />
             <div class="slider-range"></div>
         </fieldset>
         
-        <fieldset data-elastic-key="prod_type" data-filtertype="hidden">
+        <fieldset data-elastic-key="prod_character" data-filtertype="hidden">
             <input type='hidden' name="prod_character" value="batman" />
         </fieldset>
         <fieldset class="productTypes" data-elastic-key="prod_types" data-filtertype="checkboxes">

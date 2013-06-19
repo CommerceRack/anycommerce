@@ -1,0 +1,18 @@
+.layeredSearch{
+	background-color: white;
+}
+.layeredSearch legend{
+	background-image: url("images/filterSearchCat.png");
+    height: 30px;
+    margin-left: -3px;
+    padding-left: 40px;
+    padding-top: 8px;
+    width: 162px;
+}
+.layeredSearch fieldset{
+	border: medium none;
+	margin-left:-8px;
+}
+.layeredSearch input.sliderValue{
+	margin-left:31px;
+}
