@@ -126,7 +126,6 @@ div#container div#footer{
   font-size: 15px;  
   border-radius: 0;
   border: 2px outset #8b7961;
-  box-shadow: 0 0 3px 2px #888888;
   
   background: rgb(180,162,136); /* Old browsers */
   background: -moz-linear-gradient(top,  rgba(180,162,136,1) 0%, rgba(104,85,64,1) 100%); /* FF3.6+ */
@@ -149,10 +148,12 @@ div#container div#footer{
 .select2Buttons a:hover {
   color: white;    
   text-decoration: none;
+  box-shadow: 0 0 3px 2px #888888;
 }
 .select2Buttons .picked {
 	color:white;
 	border: 2px outset #9A0000;
+	box-shadow: 0 0 3px 2px #888888;
 	
 	background: rgb(187,0,0); /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(187,0,0,1) 0%, rgba(121,0,0,1) 100%); /* FF3.6+ */

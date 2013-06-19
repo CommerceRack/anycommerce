@@ -17,9 +17,7 @@ Category:
 - talk to Stephen about what he wants as his default content in his new categories. Once we can build this, I will make this content minimize along the top instead of disappearing when filtered search options are selected. When the dropdown arrow for this minimized area is clicked, the search results are minimized and the default content displayed and vice versa.
 
 product:
-- Fix massive alignment issue.
-- add dropdown conversion to buttons for limited edition options. use new plugin.
-- Fix add to cart button. Currently pops up cart but cart not visible.Getting API error. Likely a bad add to cart button syntax on index.
+- Add all needed content to match design.
 
 Company:
 - Needs content for almost all pages.
