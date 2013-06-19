@@ -317,6 +317,7 @@ var admin_syndication = function() {
 				var $D = $('#ebayTemplateEditor');
 				if($D.length)	{
 					$D.removeData('profile');
+					$D.empty();
 					}
 				else	{
 					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit eBay Template'});
@@ -325,6 +326,7 @@ var admin_syndication = function() {
 				
 
 				$D.data({'profile':profile}); //this ID is used in the media lib to get the profile. don't change it.
+				$D.dialog('option','height',($(window).height() - 150));
 				$D.dialog('open');
 				$D.showLoading({"message":"Fetching template HTML"});
 
