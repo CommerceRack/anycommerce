@@ -5454,7 +5454,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 					width : '90%',
 					autoOpen : false,
 					close: function(event, ui)	{
+//						app.u.dump('got into dialog.close - destroy.');
 						$(this).dialog('destroy');
+						$(this).empty().remove();
 						}, //will remove from dom on close
 //'open' event will reposition modal to center upon open. handy for when content added between create and open.
 //timeout is to have it happen after content is populated.
@@ -5895,6 +5897,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 				$ele.trigger('change'); //trigger the change so that if a databind has selected the field, the related fieldset is displayed.
 				}, //showConnectorFieldset
+
 
 
 			domainPutInFocus : function($btn)	{

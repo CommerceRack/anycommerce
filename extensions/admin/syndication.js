@@ -907,7 +907,7 @@ else	{
 								}
 							else	{
 								$ETC.dialog('close');
-								$('#globalMessaging').anymessage({"message":"Thank you, the eBay template "+vars.SUBDIR+" has been copied into the profile "+vars.PROFILE+".","gMessage":true});
+								$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the eBay template "+vars.SUBDIR+" has been copied into the profile "+vars.PROFILE+"."));
 								$('.pageSyndication:first').find("[data-app-role='ebayTemplateOrigin']:first").text(vars.SUBDIR);
 								}
 							}
@@ -1348,6 +1348,22 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						}
 					});
 				}, //showDSTDetail
+			
+			hideInputsByCheckbox : function($cb)	{
+function handleCB()	{
+	if($cb.is(':checked'))	{
+		$('.toggleThis',$cb.closest('fieldset')).hide();
+		}
+	else	{
+		$('.toggleThis',$cb.closest('fieldset')).show();
+		}
+	}
+	handleCB();
+	$cb.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+		app.u.dump("GOT HERE");
+		handleCB();
+		});
+				},
 			
 			adminSyndicationMacroExec : function($btn)	{
 				$btn.button();

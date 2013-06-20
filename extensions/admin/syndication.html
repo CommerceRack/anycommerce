@@ -1912,125 +1912,126 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Buyer Requirements</legend>
 		<div class='clearfix'>
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\DisableBuyerRequirements' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\DisableBuyerRequirements' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements); format:popVal;" data-app-event='admin_syndication|hideInputsByCheckbox' />
 				Ignore all buyer requirements, including My Ebay.
 				<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>
-
-			<label>
-				<span>Max # policy violations</span>
-				<input type='number' step='1' min='0' size='6' name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
-				<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations\Period) before being blocked from buying/bidding on the item. ">?</span>
-			</label>
+			<div class='toggleThis'>
+				<label>
+					<span>Max # policy violations</span>
+					<input type='number' step='1' min='0' size='6' name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
+					<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations\Period) before being blocked from buying/bidding on the item. ">?</span>
+				</label>
+				
+				<label>
+					<span>Policy violations period</span>
+					<select name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period); format:popVal;">
+						<option value=''></option>
+						<option value='Days_30'>30</option>
+						<option value='Days_180'>180</option>
+						<option value='Days_360'>360</option>
+						<option value='Days_540'>540</option>
+					</select>
+					<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+				</label>
+	
 			
-			<label>
-				<span>Policy violations period</span>
-				<select name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period); format:popVal;">
-					<option value=''></option>
-					<option value='Days_30'>30</option>
-					<option value='Days_180'>180</option>
-					<option value='Days_360'>360</option>
-					<option value='Days_540'>540</option>
-				</select>
-				<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
-			</label>
-
-		
-			<label>
-				<span>Max. item count</span>
-				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount); format:popVal;">
-					<option></option>
-					<option value='1'>1</option>
-					<option value='2'>2</option>
-					<option value='3'>3</option>
-					<option value='4'>4</option>
-					<option value='5'>5</option>
-					<option value='6'>6</option>
-					<option value='7'>7</option>
-					<option value='8'>8</option>
-					<option value='9'>9</option>
-					<option value='10'>10</option>
-					<option value='25'>25</option>
-					<option value='50'>50</option>
-					<option value='100'>100</option>
-				</select>
-				<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
-			</label>
-			<label>
-				<span>Min. feedback score</span>
-				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore); format:popVal;">
-					<option></option>
-					<option value='0'>0</option>
-					<option value='1'>1</option>
-					<option value='2'>2</option>
-					<option value='3'>3</option>
-					<option value='4'>4</option>
-					<option value='5'>5</option>
-				</select>
-				<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
-			</label>
-		
-		
-		
-			<label>
-				<span>Max. unpaid item strikes count</span>
-				<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count); format:popVal;" />
-				<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
-			</label>
-		
-			<label>
-				<span>Max. unpaid item strikes Period</span>
-				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period); format:popVal;">
-					<option value=''></option>
-					<option value='Days_30'>30</option>
-					<option value='Days_180'>180</option>
-					<option value='Days_360'>360</option>
-				</select>
-				<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
-			</label>
-		
-		
-			
-			<label>
-				<span>Min Feedback Score</span>
-				<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MinimumFeedbackScore); format:popVal;" />
-				<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
-			</label>
-			
-
-			
-			
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN); format:popVal;" />
-				Ship to Reg. Country
-				<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
-			</label>
-			
-			
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN); format:popVal;" />
-				Verified user
-				<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
-			</label>
-		
-		
-			
-			<label>
-				<span>Verified user min feedback score</span>
-				<input type='number' step='1' size='5' min='0' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore); format:popVal;" />
-				<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
-			</label>
+				<label>
+					<span>Max. item count</span>
+					<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount); format:popVal;">
+						<option></option>
+						<option value='1'>1</option>
+						<option value='2'>2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>
+						<option value='5'>5</option>
+						<option value='6'>6</option>
+						<option value='7'>7</option>
+						<option value='8'>8</option>
+						<option value='9'>9</option>
+						<option value='10'>10</option>
+						<option value='25'>25</option>
+						<option value='50'>50</option>
+						<option value='100'>100</option>
+					</select>
+					<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+				</label>
+				<label>
+					<span>Min. feedback score</span>
+					<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore); format:popVal;">
+						<option></option>
+						<option value='0'>0</option>
+						<option value='1'>1</option>
+						<option value='2'>2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>
+						<option value='5'>5</option>
+					</select>
+					<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+				</label>
 			
 			
 			
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerResponsibleForShipping\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerResponsibleForShipping\@BOOLEAN); format:popVal;" />
-				Buyer Responsible For Shipping
-				<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
-			</label>
-			<p class='hint'>
-			Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
-			</p>
+				<label>
+					<span>Max. unpaid item strikes count</span>
+					<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count); format:popVal;" />
+					<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
+				</label>
+			
+				<label>
+					<span>Max. unpaid item strikes Period</span>
+					<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period); format:popVal;">
+						<option value=''></option>
+						<option value='Days_30'>30</option>
+						<option value='Days_180'>180</option>
+						<option value='Days_360'>360</option>
+					</select>
+					<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+				</label>
+			
+			
+				
+				<label>
+					<span>Min Feedback Score</span>
+					<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MinimumFeedbackScore); format:popVal;" />
+					<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
+				</label>
+				
+	
+				
+				
+				<label>
+					<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN); format:popVal;" />
+					Ship to Reg. Country
+					<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
+				</label>
+				
+				
+				<label>
+					<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN); format:popVal;" />
+					Verified user
+					<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
+				</label>
+			
+			
+				
+				<label>
+					<span>Verified user min feedback score</span>
+					<input type='number' step='1' size='5' min='0' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore); format:popVal;" />
+					<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
+				</label>
+				
+				
+				
+				<label>
+					<input type="checkbox" class='applyAnycb' name='Item\BuyerResponsibleForShipping\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerResponsibleForShipping\@BOOLEAN); format:popVal;" />
+					Buyer Responsible For Shipping
+					<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
+				</label>
+				<p class='hint'>
+				Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
+				</p>
+			</div>
 		</div>
 	</fieldset>
 	
