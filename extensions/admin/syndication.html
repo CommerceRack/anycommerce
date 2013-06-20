@@ -1786,7 +1786,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<th></th>
 			</tr>
 			</thead>
-				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: shipping(@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: profile(%PROFILE.@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
 			</tbody>
 			</table>
 			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
@@ -1870,7 +1870,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<th></th>
 			</tr>
 			</thead>
-				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: shipping(@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: profile(%PROFILE.@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
 			</tbody>
 			</table>
 			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
