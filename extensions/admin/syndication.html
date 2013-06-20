@@ -1714,7 +1714,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Launch Profile Settings</legend>
 		<div class='clearfix'>
 		<label>
-			<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
+			<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(enable); format:popVal;" />
 			Is active
 		</label>
 		<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
@@ -1724,26 +1724,26 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<!-- hide this in edit mode -->
 		<label>
 			<span>Profile</span>
-			<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: mkt(PROFILE); format:popVal;" />
+			<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: profile(PROFILE); format:popVal;" />
 		</label>
 		
 		<label>
 			<span>Token</span>
-			<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
+			<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
 			</select>
 		</label>
 	
 		<div class='label' data-app-role='ebayTemplateConfigContainer'>
 			<span>Template</span>
-			<span data-bind='var:mkt(template_origin); format:text' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
-			<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
-			<button data-app-role='ebayTemplateEditButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
+			<span data-bind='var:profile(template_origin); format:text' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
+			<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
+			<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
 		</div>
 	
 	<!--
 		<label>
 			<span>Template</span>
-			<select name='template' data-bind="var: mkt(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
+			<select name='template' data-bind="var: profile(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
 				<option value=''>please choose</option>
 			</select>
 		</label>
@@ -1756,20 +1756,20 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Best Offer</legend>
 		<div class='clearfix'>
 		<label>
-			<input type="checkbox" class='applyAnycb' name='Item.BestOfferDetails.BestOfferEnabled' data-bind="var: product(ebay:Item.BestOfferDetails.BestOfferEnabled); format:popVal;" />
+			<input type="checkbox" class='applyAnycb' name='Item\BestOfferDetails\BestOfferEnabled' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled); format:popVal;" />
 			Enable
 			<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
 		</label>
 		
 		<label>
 			<span>Max # policy violations</span>
-			<input type='number' step='1' min='0' size='6' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
-			<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations.Period) before being blocked from buying/bidding on the item. ">?</span>
+			<input type='number' step='1' min='0' size='6' name='Item\BestOfferDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
+			<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations\Period) before being blocked from buying/bidding on the item. ">?</span>
 		</label>
 		
 		<label>
 			<span>Policy violations period</span>
-			<select name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period); format:popVal;">
+			<select name='Item\BestOfferDetails\MaximumBuyerPolicyViolations\Period' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\MaximumBuyerPolicyViolations\Period); format:popVal;">
 				<option value=''></option>
 				<option value='Days_30'>30</option>
 				<option value='Days_180'>180</option>
@@ -1935,14 +1935,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Buyer Requirements</legend>
 		<div class='clearfix'>
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.DisableBuyerRequirements' data-bind="var: product(ebay:Item.DisableBuyerRequirements); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\DisableBuyerRequirements' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements); format:popVal;" />
 				Disable Buyer Requirements
 				<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>
 		
 			<label>
 				<span>Max. item count</span>
-				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount); format:popVal;">
+				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount); format:popVal;">
 					<option></option>
 					<option value='1'>1</option>
 					<option value='2'>2</option>
@@ -1962,7 +1962,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 			<label>
 				<span>Min. feedback score</span>
-				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore); format:popVal;">
+				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore); format:popVal;">
 					<option></option>
 					<option value='0'>0</option>
 					<option value='1'>1</option>
@@ -1978,13 +1978,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		
 			<label>
 				<span>Max. unpaid item strikes count</span>
-				<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
+				<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count); format:popVal;" />
 				<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
 			</label>
 		
 			<label>
 				<span>Max. unpaid item strikes Period</span>
-				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period); format:popVal;">
+				<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period); format:popVal;">
 					<option value=''></option>
 					<option value='Days_30'>30</option>
 					<option value='Days_180'>180</option>
@@ -1997,21 +1997,22 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Min Feedback Score</span>
-				<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
+				<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MinimumFeedbackScore); format:popVal;" />
 				<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
 			</label>
 			
+
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.ShipToRegistrationCountry' data-bind="var: product(ebay:Item.BuyerRequirementDetails.ShipToRegistrationCountry); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry); format:popVal;" />
 				Ship to Reg. Country
 				<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
 			</label>
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser); format:popVal;" />
 				Verified user
 				<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
 			</label>
@@ -2020,14 +2021,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Verified user min feedback score</span>
-				<input type='number' step='1' size='5' min='0' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
+				<input type='number' step='1' size='5' min='0' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\MinimumFeedbackScore); format:popVal;" />
 				<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
 			</label>
 			
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.BuyerResponsibleForShipping' data-bind="var: product(ebay:Item.BuyerResponsibleForShipping); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerResponsibleForShipping' data-bind="var: profile(%PROFILE.Item\BuyerResponsibleForShipping); format:popVal;" />
 				Buyer Responsible For Shipping
 				<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
 			</label>
@@ -2046,19 +2047,19 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<div class='clearfix'>
 			<label>
 				<span>ID</span>
-				<input type='text' name='Item.Charity.CharityID' data-bind="var: product(ebay:Item.Charity.CharityID); format:popVal;" />
+				<input type='text' name='Item\Charity.CharityID' data-bind="var: profile(%PROFILE.Item\Charity.CharityID); format:popVal;" />
 				<span class='toolTip' title="A unique identification number assigned by eBay to registered nonprofit charity organizations. Required input when listing Giving Works items.">?</span>
 			</label>
 		
 			<label>
 				<span>Number</span>
-				<input type='number' name='Item.Charity.CharityNumber' data-bind="var: product(ebay:Item.Charity.CharityNumber); format:popVal;" />
+				<input type='number' name='Item\Charity.CharityNumber' data-bind="var: profile(%PROFILE.Item\Charity.CharityNumber); format:popVal;" />
 				<span class='toolTip' title="A unique identifier assigned to a nonprofit charity organization by the dedicated provider of eBay Giving Works. This value can contain up to 10 digits. This value is superseded by CharityID.">?</span>
 			</label>
 		
 			<label>
 				<span>Percent</span>
-				<input type='number' step='.5' min='10.0' name='Item.Charity.DonationPercent' data-bind="var: product(ebay:Item.Charity.DonationPercent); format:popVal;" />
+				<input type='number' step='.5' min='10.0' name='Item\Charity.DonationPercent' data-bind="var: profile(%PROFILE.Item\Charity.DonationPercent); format:popVal;" />
 				<span class='toolTip' title="The percentage of the purchase price that the seller chooses to donate to the selected nonprofit organization. This percentage is displayed in the Giving Works item listing. Possible values: 10.0 to 100.0. Percentages must increment by 5.0. ">?</span>
 			</label>
 		</div>
@@ -2070,14 +2071,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Contact Information/Availability</legend>
 		<div class='clearfix'>
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime); format:popVal;" />
 				Anytime Hours
 				<span class='toolTip' title="Indicates whether or not a user is available to be contacted 24 hours a day during the range of days specified using the Hours1Days element.">?</span>
 			</label>
 		
 			<label>
 				<span>Days</span>
-				<select type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days); format:popVal;">
+				<select type='text' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1Days' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1Days); format:popVal;">
 					<option value='None'>None</option>
 					<option value='EveryDay'>Every day</option>
 					<option value='Weekdays'>Weekdays</option>
@@ -2088,13 +2089,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		
 			<label>
 				<span>Available From</span>
-				<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From); format:popVal;" />
+				<input type='text' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1From' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1From); format:popVal;" />
 				<span class='toolTip' title="Indicates the starting time of day this eBay user is available for other eBay members to contact for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
 			</label>
 		
 			<label>
 				<span>Available To</span>
-				<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To); format:popVal;" />
+				<input type='text' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1To' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1To); format:popVal;" />
 				<span class='toolTip' title="Indicates the ending time of day this eBay user is available for other eBay members to contact them for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
 			</label>
 		</div>
@@ -2107,12 +2108,12 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 		<label>
 			<span>ProStores name</span>
-			<input type='text' name='Item.ListingCheckoutRedirectPreference.ProStoresStoreName' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.ProStoresStoreName); format:popVal;" />
+			<input type='text' name='Item\ListingCheckoutRedirectPreference\ProStoresStoreName' data-bind="var: profile(%PROFILE.Item\ListingCheckoutRedirectPreference\ProStoresStoreName); format:popVal;" />
 		</label>
 	
 		<label>
 			<span>Third party username</span>
-			<input type='text' name='Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername); format:popVal;" />
+			<input type='text' name='Item\ListingCheckoutRedirectPreference\SellerThirdPartyUsername' data-bind="var: profile(%PROFILE.Item\ListingCheckoutRedirectPreference\SellerThirdPartyUsername); format:popVal;" />
 			<span class='toolTip' title="The user name of the ProStores store.">?</span>
 		</label>
 	</fieldset>
@@ -2123,7 +2124,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Payment Details (motors)</legend>
 		<label>
 			<span>Days to full payment</span>
-			<select name='Item.PaymentDetails.DaysToFullPayment' data-bind="var: product(ebay:Item.LotSize.DaysToFullPayment); format:popVal;">
+			<select name='Item\PaymentDetails\DaysToFullPayment' data-bind="var: profile(%PROFILE.Item\PaymentDetails\DaysToFullPayment); format:popVal;">
 				<option value='3'>3</option>
 				<option value='7'>7</option>
 				<option value='10'>10</option>
@@ -2136,13 +2137,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 		<label>
 			<span>Deposit amount</span>
-			<input type='number' step='.01' max='2000' size='10' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
+			<input type='number' step='.01' max='2000' size='10' name='Item\PaymentDetails\DepositAmount' data-bind="var: profile(%PROFILE.Item\PaymentDetails\DepositAmount); format:popVal;" />
 			<span class='toolTip' title="This dollar value indicates the amount of the deposit that a buyer must make on a purchased motor vehicle (eBay Motors US and CA). The deposit amount can be as high as $2,000.00.">?</span>
 		</label>
 	
 		<label>
 			<span>Deposit type</span>
-			<select name='Item.PaymentDetails.DepositType' data-bind="var: product(ebay:Item.PaymentDetails.DepositType); format:popVal;">
+			<select name='Item\PaymentDetails\DepositType' data-bind="var: profile(%PROFILE.Item\PaymentDetails\DepositType); format:popVal;">
 				<option value=''></option>
 				<option value='None'>No deposit needed</option>
 				<option value='OtherMethod'>PayPal</option>
@@ -2153,7 +2154,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 		<label>
 			<span>Hours to deposit</span>
-			<select name='Item.PaymentDetails.HoursToDeposit' data-bind="var: product(ebay:Item.PaymentDetails.HoursToDeposit); format:popVal;">
+			<select name='Item\PaymentDetails\HoursToDeposit' data-bind="var: profile(%PROFILE.Item\PaymentDetails\HoursToDeposit); format:popVal;">
 				<option value=''></option>
 				<option value='24'>24</option>
 				<option value='48'>48</option>
@@ -2172,33 +2173,33 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<div class='clearfix'>
 			<label>
 				<span>Country</span>
-				<input type='text' name='Item.Country' size='2' maxlength="2" data-bind="var: product(ebay:Item.Country); format:popVal;" />
+				<input type='text' name='Item\Country' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\Country); format:popVal;" />
 				<span class='toolTip' title="Set to a two character country code">?</span>
 			</label>
 			
 			
 			<label>
 				<span>Cross border trade</span>
-				<input type='text' name='Item.CrossBorderTrade' data-bind="var: product(ebay:Item.CrossBorderTrade); format:popVal;" />
+				<input type='text' name='Item\CrossBorderTrade' data-bind="var: profile(%PROFILE.Item\CrossBorderTrade); format:popVal;" />
 				<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
 			</label>
 			
 			<label>
 				<span>Currency</span>
-				<input type='text' name='Item.Currency' size='3' data-bind="var: product(ebay:Item.Currency); format:popVal;" />
+				<input type='text' name='Item\Currency' size='3' data-bind="var: profile(%PROFILE.Item\Currency); format:popVal;" />
 				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
 			</label>
 			
 			
 			<label>
 				<span>Dispatch Time Max</span>
-				<input type='number' step='1' size='5' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
+				<input type='number' step='1' size='5' name='Item\DispatchTimeMax' data-bind="var: profile(%PROFILE.Item\DispatchTimeMax); format:popVal;" />
 				<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
 			</label>
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.GetItFast' data-bind="var: product(ebay:Item.GetItFast); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\GetItFast' data-bind="var: profile(%PROFILE.Item\GetItFast); format:popVal;" />
 				Get it fast
 				<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
 			</label>
@@ -2207,7 +2208,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Hit counter</span>
-				<select type='text' name='Item.HitCounter' data-bind="var: product(ebay:Item.HitCounter); format:popVal;" >
+				<select type='text' name='Item\HitCounter' data-bind="var: profile(%PROFILE.Item\HitCounter); format:popVal;" >
 					<option value='BasicStyle'>BasicStyle</option>
 					<option value='GreenLED'>GreenLED</option>
 					<option value='Hidden' selected='selected'>Hidden (faster)</option>
@@ -2222,7 +2223,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Listing enhancement</span>
-				<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" multiple="multiple" >
+				<select type='text' name='Item\ListingEnhancement' data-bind="var: profile(%PROFILE.Item\ListingEnhancement); format:popVal;" multiple="multiple" >
 					<option value=''>none</option>
 					<option value='BoldTitle'>title for the item's listing in boldface type</option>
 					<option value='Border'>add a border around the listing's pictures</option>
@@ -2246,7 +2247,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing' data-bind="var: profile(%PROFILE.Item\PrivateListing); format:popVal;" />
 				<span>Private listing</span>
 				<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
 			</label>
@@ -2262,13 +2263,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>PayPal email address</span>
-				<input type='number' step='.01' max='2000' name='Item.PayPalEmailAddress' data-bind="var: product(ebay:Item.PayPalEmailAddress); format:popVal;" />
+				<input type='number' step='.01' max='2000' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
 				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
 			</label>
 		
 		
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item.AutoPay' data-bind="var: product(ebay:Item.AutoPay); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\AutoPay' data-bind="var: profile(%PROFILE.Item\AutoPay); format:popVal;" />
 				Autopay
 				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
 			</label>
@@ -2282,7 +2283,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<div class='clearfix'>
 			<label>
 				<span>Description <span class='toolTip' title="A detailed explanation of your return policy.">?</span></span>
-				<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" rows='5' class='fullWidth' />
+				<textarea name='Item\ReturnPolicy\Description' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\Description); format:popVal;" rows='5' class='fullWidth' />
 			</label>
 		<!--
 		EAN is a product level field.
@@ -2290,35 +2291,35 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		the input value here is 'token'.?
 			<label>
 				<span>Refund option</span>
-				<input type='text' name='Item.ReturnPolicy.RefundOption' data-bind="var: product(ebay:Item.ReturnPolicy.RefundOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\RefundOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\RefundOption); format:popVal;" />
 				<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
 			</label>
 		
 			<label>
 				<span>Restocking fee</span>
-				<input type='text' name='Item.ReturnPolicy.RestockingFeeValueOption' data-bind="var: product(ebay:Item.ReturnPolicy.RestockingFeeValueOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\RestockingFeeValueOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\RestockingFeeValueOption); format:popVal;" />
 				<span class='toolTip' title="Indicates the restocking fee charged by the seller for returned items. In order to charge the buyer a restocking fee when an item is returned, a US seller must input a restocking fee value as part of the return policy. ">?</span>
 			</label>
 		
 			<label>
 				<span>Returns Accepted</span>
-				<input type='text' name='Item.ReturnPolicy.ReturnsAcceptedOption' data-bind="var: product(ebay:Item.ReturnPolicy.ReturnsAcceptedOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\ReturnsAcceptedOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\ReturnsAcceptedOption); format:popVal;" />
 				<span class='toolTip' title="ndicates whether the seller allows the buyer to return the item. ">?</span>
 			</label>
 		
 			<label>
 				<span>WarrantyDurationOption</span>
-				<input type='text' name='Item.ReturnPolicy.WarrantyDurationOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyDurationOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\WarrantyDurationOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\WarrantyDurationOption); format:popVal;" />
 			</label>
 		
 			<label>
 				<span>WarrantyOfferedOption</span>
-				<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\WarrantyTypeOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\WarrantyTypeOption); format:popVal;" />
 			</label>
 		
 			<label>
 				<span>WarrantyTypeOption</span>
-				<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+				<input type='text' name='Item\ReturnPolicy\WarrantyTypeOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\WarrantyTypeOption); format:popVal;" />
 			</label>
 		--></div>
 	</fieldset>
@@ -2329,28 +2330,28 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Seller Details</legend>
 		<div class='clearfix'>
 			<label>	
-				<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing' data-bind="var: profile(%PROFILE.Item\PrivateListing); format:popVal;" />
 				Motors Dealer
 				<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
 			</label>
 		
 			<label>
 				<span>Company name</span>
-				<input type='text' name='Item.SellerContactDetails.CompanyName' data-bind="var: product(ebay:Item.SellerContactDetails.CompanyName); format:popVal;" />
+				<input type='text' name='Item\SellerContactDetails\CompanyName' data-bind="var: profile(%PROFILE.Item\SellerContactDetails\CompanyName); format:popVal;" />
 			</label>
 		
 			<label>
 				<span>County</span>
-				<input type='text'  size='2' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
+				<input type='text'  size='2' name='Item\SellerContactDetails\County' data-bind="var: profile(%PROFILE.Item\SellerContactDetails\County); format:popVal;" />
 			</label>
 		
 			<label>
 				<span>Street</span>
-				<input type='text' name='Item.SellerContactDetails.Street' data-bind="var: product(ebay:Item.SellerContactDetails.Street); format:popVal;" />
+				<input type='text' name='Item\SellerContactDetails\Street' data-bind="var: profile(%PROFILE.Item\SellerContactDetails\Street); format:popVal;" />
 			</label>
 			<label>
 				<span>Street2</span>
-				<input type='text' name='Item.SellerContactDetails.Street2' data-bind="var: product(ebay:Item.SellerContactDetails.Street2); format:popVal;" />
+				<input type='text' name='Item\SellerContactDetails\Street2' data-bind="var: profile(%PROFILE.Item\SellerContactDetails\Street2); format:popVal;" />
 			</label>
 		</div>
 	</fieldset>
