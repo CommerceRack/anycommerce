@@ -1255,7 +1255,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 							$D.showLoading({"message":"Deleting eBay token "+data.ebay_eias});
 							app.model.addDispatchToQ({
 								'_cmd':'adminEBAYMacro',
-								'@updates': ["TOKEN-REMOVE?eias="+data.ebay_username],
+								'@updates': ["TOKEN-REMOVE?eias="+data.ebay_eias],
 								'_tag':	{
 									'callback':function(rd){
 									$D.hideLoading();
