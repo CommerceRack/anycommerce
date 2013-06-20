@@ -337,16 +337,39 @@ var admin_syndication = function() {
 					'_tag' : {
 						'datapointer' : 'adminEBAYProfileFileContents|'+profile,
 						'callback' : function(rd){
-							$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-							$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($(window).height() - 250).addClass('fullWidth').val(app.data[rd.datapointer]['body']);
-							$D.append($textarea);
-							var $button = $("<button>Save<\/button>").button().on('click',function(){
-								console.log($('.jHtmlArea iframe',$D).contents().find('body').html());
-								}).appendTo($D);
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd})
+								}
+							else	{
+								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($(window).height() - 250).addClass('fullWidth').val(app.data[rd.datapointer]['body']);
+								$D.append($textarea);
+								var $button = $("<button>Save<\/button>").button().on('click',function(){
 
-							$textarea.htmlarea();
-							app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
+									app.model.addDispatchToQ({
+										'_cmd' : 'adminEBAYProfileFileSave',
+										'PROFILE' : profile,
+										'FILENAME' : 'index.html',
+										'_tag' : {
+											'callback' : function(responseData)	{
+												if(app.model.responseHasErrors(responseData)){
+													$D.anymessage({'message':responseData})
+													}
+												else	{
+													$D.dialog('close');
+													$('#globalMessaging').anymessage({"message":"Thank you, your changes have been saved.","gMessage":true});
+													}
+												}
+											},
+										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+										},'immutable');
+									app.model.dispatchThis();
 
+									}).appendTo($D);
+	
+								$textarea.htmlarea();
+								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
+								}
 							}
 						}
 					},'immutable');
