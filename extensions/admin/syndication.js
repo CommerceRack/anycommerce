@@ -445,7 +445,7 @@ app.model.dispatchThis('immutable');
 										}
 */
 									
-									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
+									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
 	
 									$('fieldset',$profileContent).each(function(){
@@ -1181,8 +1181,14 @@ app.model.dispatchThis('immutable');
 					
 					setShipping('dom');
 					setShipping('int');
+//form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
+delete sfo.cost
+delete sfo.farcost
+delete sfo.service
+delete sfo.addcost
+delete sfo.free
 
-					sfo._cmd = 'adminEBAYProfileUpdate';
+					sfo._cmd = 'adminEBAYProfileCreate'; //!!! set to create temporarily to nuke old fields.
 					sfo._tag = {
 						'callback' : function(rd)	{
 							$tab.hideLoading();

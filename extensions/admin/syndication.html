@@ -1705,7 +1705,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<button>Refresh Listings</button>
 		<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
 	</div>
-	<h1 data-bind='var: ebay(PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
+	<h1 data-bind='var: profile(PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
 </div>
 
 <section class='twoColumn'>
@@ -1713,41 +1713,33 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<fieldset data-panelname='eBayLaunchProfileSettings'>
 		<legend>Launch Profile Settings</legend>
 		<div class='clearfix'>
-		<label>
-			<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(enable); format:popVal;" />
-			Is active
-		</label>
-		<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+			<label>
+				<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
+				Is active
+			</label>
+			<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+			
 		
-	
-	
-	<!-- hide this in edit mode -->
-		<label>
-			<span>Profile</span>
-			<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: profile(PROFILE); format:popVal;" />
-		</label>
 		
-		<label>
-			<span>Token</span>
-			<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
-			</select>
-		</label>
-	
-		<div class='label' data-app-role='ebayTemplateConfigContainer'>
-			<span>Template</span>
-			<span data-bind='var:profile(template_origin); format:text' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
-			<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
-			<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
-		</div>
-	
-	<!--
-		<label>
-			<span>Template</span>
-			<select name='template' data-bind="var: profile(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
-				<option value=''>please choose</option>
-			</select>
-		</label>
-	-->
+		<!-- hide this in edit mode -->
+			<label>
+				<span>Profile</span>
+				<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: profile(%PROFILE.PROFILE); format:popVal;" />
+			</label>
+			
+			<label>
+				<span>Token</span>
+				<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
+				</select>
+			</label>
+		
+			<div class='label' data-app-role='ebayTemplateConfigContainer'>
+				<span>Template</span>
+				<span data-bind='var:profile(%PROFILE.template_origin); format:text;' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
+				<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
+				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
+			</div>
+
 		</div>
 	</fieldset>
 	
