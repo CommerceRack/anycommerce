@@ -236,7 +236,7 @@ Use this in a table where you want clear separation between rows and cells. This
 .gridTable tr.ui-state-highlight	{background: inherit !important;}
 .gridTable tr.ui-state-highlight	{background: inherit !important;}
 
-.gridTable th, .gridTable .tf	{background:#cccccc;}
+.gridTable th, .gridTable .tf	{background:#efefef; text-align:left;}
 
 .gridTable tr.alert {background:#ffc8c8;}
 .gridTable tr.warning {background:#fbf9dc;}
