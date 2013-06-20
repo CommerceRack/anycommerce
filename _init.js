@@ -16,6 +16,7 @@ app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 app.rq.push(['extension',0,'store_filter','extensions/_store_filtered_search.js']);
 app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
+app.rq.push(['extension',0,'store_toywars','extensions/_store_toywars.js']);
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
@@ -36,10 +37,23 @@ app.rq.push(['script',0,app.vars.baseURL+'jquery.select2Buttons/jQuery.select2Bu
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
-}]);
-
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+	
+	//RANDOM SHIPPING LOGO GENERATOR
+	$(".shipLogo1").hide();
+	$(".shipLogo2").hide();
+	$(".shipLogo3").hide();
+	$(".shipLogo4").hide();
+	
+	var  randomLogo = Math.floor((Math.random()*4)+1);
+	if(randomLogo === 1){
+		$(".shipLogo1").show();
+	}else if(randomLogo === 2){
+		$(".shipLogo2").show();
+		}else if(randomLogo === 3){
+			$(".shipLogo3").show();
+			}else if(randomLogo === 4){
+				$(".shipLogo4").show();
+			}
 }]);
 
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {

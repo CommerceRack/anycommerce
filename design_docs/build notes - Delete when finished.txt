@@ -17,7 +17,10 @@ Category:
 - talk to Stephen about what he wants as his default content in his new categories. Once we can build this, I will make this content minimize along the top instead of disappearing when filtered search options are selected. When the dropdown arrow for this minimized area is clicked, the search results are minimized and the default content displayed and vice versa.
 
 product:
-- Add all needed content to match design.
+- Add new styling for quantity bar.
+- add display controls for showing/hiding warning tags (i.e. choking hazard warning currently displaying on site).
+- Syle all needed content to match design.
+- Add entire bottom half of product page.
 
 Company:
 - Needs content for almost all pages.
