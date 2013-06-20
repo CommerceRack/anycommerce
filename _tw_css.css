@@ -183,3 +183,17 @@ div#container div#footer{
 .select2Buttons ul.select-buttons li:first-child{
 	display:none;
 }
+.div#container div.nav div.navContent > ul > li{
+	padding-left: 30px;
+    padding-right: 30px;
+}
+.productList2{
+	width:100%;
+}
+.caroufredsel_wrapper div.ccItem{
+	width: 1020px;
+}
+#carCat6{
+	width: 1020px;
+	padding-top:10px;
+}

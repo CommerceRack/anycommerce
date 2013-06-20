@@ -855,12 +855,10 @@ ul.categoryList li div.catName span {
 	float: left;
 	height: auto;
 	overflow: hidden;
-	padding-left:25px;
-	/*width: 970px;*/
-	max-width:977px;
+	
 }
 
-.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ max-width:948px; margin:0px auto; padding:10px 0 0 9px;}
+.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ width:948px; margin:0px auto; padding:10px 0 0 9px;}
 
 div.catCarousel h2
 {
