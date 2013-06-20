@@ -1188,7 +1188,7 @@ delete sfo.service
 delete sfo.addcost
 delete sfo.free
 
-					sfo._cmd = 'adminEBAYProfileCreate'; //!!! set to create temporarily to nuke old fields.
+					sfo._cmd = 'adminEBAYProfileUpdate';
 					sfo._tag = {
 						'callback' : function(rd)	{
 							$tab.hideLoading();
