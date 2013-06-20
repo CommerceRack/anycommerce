@@ -1701,7 +1701,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 	<label>
 		<span>Token</span>
-		<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_EIAS; value:EBAY_EIAS;">
+		<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
 		</select>
 	</label>
 
@@ -2085,7 +2085,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 </fieldset>
 
 
-
+<!--
 <fieldset>
 	<legend>Listing Redirect</legend>
 
@@ -2148,7 +2148,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 
 </fieldset>
-
+-->
 
 
 <fieldset>
@@ -2267,13 +2267,9 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<span>Description <span class='toolTip' title="A detailed explanation of your return policy.">?</span></span>
 		<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" rows='5' class='fullWidth' />
 	</label>
-
-	<label>
-		<span>EAN</span>
-		<input type='text' name='Item.ReturnPolicy.EAN' data-bind="var: product(ebay:Item.ReturnPolicy.EAN); format:popVal;" />
-		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
-	</label>
 <!--
+EAN is a product level field.
+
 the input value here is 'token'.?
 	<label>
 		<span>Refund option</span>
