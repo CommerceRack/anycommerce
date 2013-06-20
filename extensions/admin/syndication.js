@@ -1245,7 +1245,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 							$D.showLoading({"message":"Deleting eBay token "+data.ebay_eias});
 							app.model.addDispatchToQ({
 								'_cmd':'adminEBAYMacro',
-								'@updates': ["TOKEN-REMOVE?eias="+data.ebay_eias],
+								'@updates': ["TOKEN-REMOVE?eias="+data.ebay_username],
 								'_tag':	{
 									'callback':function(rd){
 									$D.hideLoading();
@@ -1271,7 +1271,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 				
 				$('button',$ele).button();
 				var $menu = $ele.next('ul');
-				$menu.css({'position':'absolute','width':'350','font-size':'.75em'}).menu().hide();
+				$menu.css({'position':'absolute','width':'200'}).menu().hide();
 				
 				$('button:first',$ele).off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
 					event.preventDefault();

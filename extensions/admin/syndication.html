@@ -17,9 +17,9 @@
 	<div class='marginBottom pointer' data-mkt="GOO" data-app-event="admin_syndication|showDSTDetail">	
 	<img height="40" width="150" src="app-admin/images/marketplaces/googletrustedstores.png" />
 	</div>
-		
 
-	<div class='marginBottom pointer' data-mkt="EBF" data-app-event="admin_syndication|showDSTDetail"><!--  onClick="navigateTo('/biz/syndication/ebay/index.cgi');" -->
+
+	<div class='marginBottom pointer' onClick="navigateTo('#!ebay');"><!-- data-mkt="EBF" data-app-event="admin_syndication|showDSTDetail"  -->
 	<img height="40" width="150"  src="app-admin/images/marketplaces/ebay.png" />
 	</div>
 
@@ -2448,7 +2448,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 <ul>
 	<li id='ebayTokenListItem'>
-	<a href='#' data-bind="var: ebay(EBAY_EIAS); format:text;" data-app-event='admin_syndication|ebayTokenDeleteConfirm'></a>
+	<a href='#' data-bind="var: ebay(EBAY_USERNAME); format:text;" data-app-event='admin_syndication|ebayTokenDeleteConfirm'></a>
 	</li>
 </ul>
 
