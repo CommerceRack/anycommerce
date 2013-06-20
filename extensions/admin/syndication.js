@@ -403,6 +403,78 @@ app.model.dispatchThis('immutable');
 
 
 				}, //showEBAY
+		
+			showEBAYLaunchProfileEditor : function($target,profile)	{
+
+				if($target instanceof jQuery && profile)	{
+
+					var $profileContent = $("<div \/>").css('min-height','200').addClass('clearfix'); /* minheight is for showloading */
+	
+	//instead of applying anycontent to the tab itself, it's applied to a child element. avoids potential conflicts down the road.
+					$target.empty().append($profileContent);
+					$target.showLoading({'message':'Fetching launch profile details for '+profile});
+	
+					app.model.addDispatchToQ({
+						'_cmd':'adminEBAYProfileDetail',
+						'PROFILE' : profile,
+						'_tag' : {
+							'datapointer' : 'adminEBAYProfileDetail|'+profile,
+							'callback' : function(rd){
+								$target.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$target.anymessage({'message':rd})
+									}
+								else	{
+									// app.u.kvp2Array -> use this on the ship fields.
+									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
+									app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'] = new Array();
+	
+	//The data for ship_intservices and ship_domservices has each array value as a key/value pair. 
+	//because the shipping services use the 'data table' technology, consistency was needed between the original page rendering
+	//and how the data table gets updated by the form. Soo..... we convert the key/value pairs to an object and save into a custom attribute.									
+									if(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'])	{
+										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_intservices'].length; i += 1)	{
+											app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'][i]));
+											}
+										}
+									
+									if(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'])	{
+										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_domservices'].length; i += 1)	{
+											app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'][i]));
+											}
+										}
+									
+									
+									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
+									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
+	
+									$('fieldset',$profileContent).each(function(){
+										var $fieldset = $(this);
+//										app.u.dump(" -> $fieldset.data('panelname'): "+$fieldset.data('panelname'));
+										$fieldset.anypanel({
+											'showClose': false,
+											'extension' : 'admin_syndication',
+											'state' : 'persistent',
+											'persistent' : true,
+											'name' : $fieldset.data('panelname')
+											});
+										$fieldset.addClass('marginBottom');
+										})
+									app.u.handleAppEvents($profileContent);
+									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
+									$('.applyAnycb',$profileContent).anycb();
+									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showEBAYLaunchProfileEditor, either $target not a valid jquery object ["+($target instanceof jQuery)+"] or profile ["+profile+"] is blank.","gMessage":true});
+					
+					}
+				}, //showEBAYLaunchProfileEditor
 
 //shows the editor for a given marketplace, by DST code.
 			showDSTDetails : function(DST,$target)	{
@@ -414,8 +486,8 @@ app.model.dispatchThis('immutable');
 //					app.u.dump(" -> $target and DST are set ");
 
 					$target.empty();
-					
-					
+		
+		
 					if(DST == 'EBF')	{
 						app.ext.admin_syndication.a.showEBAY($target);
 						}
@@ -847,6 +919,7 @@ else	{
 					}
 				} //handleEBAYTemplateSelect
 
+
 			}, //u [utilities]
 
 		e : {
@@ -983,18 +1056,60 @@ app.model.dispatchThis('immutable');
 				$btn.off('click.ebayLaunchProfileCreateShow').on('click.ebayLaunchProfileCreateShow',function(event){
 					event.preventDefault();
 					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Rules Builder',
-						templateID : 'ebayProfileCreateUpdateTemplate',
-						data : $.extend(true,{},app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)
+						'title' : 'Create new eBay Launch Profile'
 						});
-					$('form',$D).append("<button data-app-role='saveButton' data-mode='create' data-app-event='admin_syndication|ebayLaunchProfileCreateUpdateExec'>Save Profile<\/button>");
 					
-					$("[data-app-role='ebayTemplateConfigContainer']",$D).hide(); //disable layout chooser in 'create' mode.
+					$D.dialog('option','width','350');
+					var 
+						$input = $("<input name='PROFILE' placeholder='profile name' value='' maxlength='8' type='text' \/>"),
+						$button = $("<button>Create<\/button>").button();
 
-					app.u.handleAppEvents($D);
+					$input
+						.on('keyup',function(){
+							$(this).val($(this).val().toUpperCase()); //value needs to be uppercase.
+							})
+						.off('keypress.alphaNumeric').on('keypress.alphaNumeric',function(event){
+							return app.u.alphaNumeric(event); //disable all special characters
+							})
+						.addClass('marginBottom');
+
+					$button.on('click',function(event){
+						event.preventDefault();
+						if($D.find('.ui-widget-anymessage').length)	{$D.anymessage('close')} //clear any existing error messages.
+						if($input.val())	{
+							var profile = $input.val();
+							if(profile.length < 9 && profile.length > 3)	{
+								$D.showLoading({'message':'Creating profile '+profile});
+								app.model.addDispatchToQ({
+									'_cmd' : 'adminEBAYProfileCreate',
+									'PROFILE' : profile,
+									'_tag' : {
+										'callback' : function(rd){
+											if(app.model.responseHasErrors(rd)){
+												$D.anymessage({'message':rd});
+												}
+											else	{
+												$D.hideLoading();
+												$D.dialog('close');
+												app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),profile);
+												}
+											}
+										}
+									},'immutable');
+								app.model.dispatchThis('immutable');	
+								}
+							else	{
+								$D.anymessage({"message":"Profile name must be between 4 and 8 characters."});
+								}
+							}
+						else	{
+							$D.anymessage({"message":"Please enter a profile name"});
+							}
+						});
+					
+					$("<form \/>").append($input).append("<span class='hint'>4-8 characters<\/span><br>").append($button).appendTo($D);
+					
 					$D.dialog('open');
-
-					$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
 					});
 				}, //ebayLaunchProfileCreateShow
 
@@ -1023,44 +1138,52 @@ app.model.dispatchThis('immutable');
 					})
 				},
 			
-//Create and Update run the exact same process.
-			ebayLaunchProfileCreateUpdateExec : function($btn)	{
+
+			ebayLaunchProfileUpdateExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.ebayLaunchProfileCreateUpdateExec').on('click.ebayLaunchProfileCreateUpdateExec',function(event){
+				$btn.off('click.ebayLaunchProfileUpdateExec').on('click.ebayLaunchProfileUpdateExec',function(event){
 					event.preventDefault();
+					
 					var
 						$form = $btn.closest('form'),
+						$tab = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),
 						sfo = $form.serializeJSON({'cb':true});
-					
 
-//the domestic and international shipping sections use the 'data table' technology.
-//their contents need formatted and saved to the serialized form object.
-function setShipping(type)	{
-	//type needs to be 'dom' or 'int'
-	var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
-	if($shipping.length)	{
-		sfo['@ship_'+type+'services'] = new Array();
-		$shipping.each(function(index){
-			app.u.dump(" -> index: "+index);
-			var
-				$tr = $(this),
-				data = $tr.data();
-			sfo['@ship_'+type+'services'].push("service="+data.service+"&free="+data.free+"&cost="+data.cost+"&addcost="+data.addcost+"&farcost="+data.farcost);
-			if(index >= 2)	{return false} //exit now. only 3 allowed.
-			})
-		}
-	}
-
-setShipping('dom');
-setShipping('int');
+					$tab.showLoading({'message':'Saving Launch Profile'});
 					
-					$form.showLoading({'message':'Saving Launch Profile'});
-					$('html, body').animate({scrollTop : 0},1000); //scroll to top so messaging appears.
-					sfo._cmd = 'adminEBAYProfileCreate';
+					//the domestic and international shipping sections use the 'data table' technology.
+					//their contents need formatted and saved to the serialized form object.
+					function setShipping(type)	{
+						//type needs to be 'dom' or 'int'
+						var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
+						if($shipping.length)	{
+							sfo['@ship_'+type+'services'] = new Array();
+							$shipping.each(function(index){
+								app.u.dump(" -> index: "+index);
+								var
+									$tr = $(this),
+									data = $tr.data();
+								sfo['@ship_'+type+'services'].push("service="+data.service+"&free="+data.free+"&cost="+data.cost+"&addcost="+data.addcost+"&farcost="+data.farcost);
+								if(index >= 2)	{return false} //exit now. only 3 allowed.
+								})
+							}
+						}
+					
+					setShipping('dom');
+					setShipping('int');
+
+					sfo._cmd = 'adminEBAYProfileUpdate';
 					sfo._tag = {
-						'callback' : 'showMessaging',
-						'jqObj' : $form,
-						'message' : 'Thank you, your changes have been saved'
+						'callback' : function(rd)	{
+							$tab.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
+								$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
+								}
+							}
 						}
 					app.model.addDispatchToQ(sfo,'immutable');
 					app.model.dispatchThis('immutable');	
@@ -1071,60 +1194,20 @@ setShipping('int');
 			ebayLaunchProfileUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.ebayLaunchProfileUpdateShow').on('click.ebayLaunchProfileUpdateShow',function(){
-					var
-						$table = $btn.closest('table'),
-						$profileContent = $btn.closest("[data-app-role='launchProfileListDetailContainer']"),
-						profile = $btn.closest('tr').data('profile');
-					
-					$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
+					var $table = $btn.closest('table');
+//build the stickytab, if necessary.
+					if($btn.closest('.ui-widget-stickytab-content').length)	{} //already in a sticky tab
+					else	{
+						$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-					$('button, a',$table).each(function(){
-						$(this).off('close.stickytab').on('click.closeStickytab',function(){
-							$table.stickytab('close');
-							})
-						});
-					app.model.addDispatchToQ({
-						'_cmd':'adminEBAYProfileDetail',
-						'PROFILE' : profile,
-						'_tag' : {
-							'datapointer' : 'adminEBAYProfileDetail|'+profile,
-							'callback' : function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$target.anymessage({'message':rd})
-									}
-								else	{
-									// app.u.kvp2Array -> use this on the ship fields.
-									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
-									app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'] = new Array();
-
-//The data for ship_intservices and ship_domservices has each array value as a key/value pair. 
-//because the shipping services use the 'data table' technology, consistency was needed between the original page rendering
-//and how the data table gets updated by the form. Soo..... we convert the key/value pairs to an object and save into a custom attribute.									
-									if(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'])	{
-										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_intservices'].length; i += 1)	{
-											app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'][i]));
-											}
-										}
-									
-									if(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'])	{
-										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_domservices'].length; i += 1)	{
-											app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'][i]));
-											}
-										}
-									
-									
-									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
-									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
-									$('form',$profileContent).append("<button data-app-role='saveButton' data-mode='update' data-app-event='admin_syndication|ebayLaunchProfileCreateUpdateExec'>Save <span class='numChanges'><\/span> Changes</button>");
-									app.u.handleAppEvents($profileContent);
-									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
-									$('.applyAnycb',$profileContent).anycb();
-									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
-									}
-								}
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');			
+						$('button, a',$table).each(function(){
+							$(this).off('close.stickytab').on('click.closeStickytab',function(){
+								$table.stickytab('close');
+								})
+							});
+						}
+//now show the editor.  This must happen after stickytab generation or the click events on the row buttons in the table get dropped.
+					app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('profile'));
 					
 					});
 				}, //ebayLaunchProfileUpdateShow
@@ -1232,7 +1315,10 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
-					if($ele.data('mkt'))	{
+					if($ele.data('mkt') == 'EBF')	{
+						app.ext.admin_syndication.a.showEBAY($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')))
+						}
+					else if($ele.data('mkt'))	{
 						app.ext.admin_syndication.a.showDSTDetails($ele.data('mkt'),$mktContainer)
 						}
 					else	{

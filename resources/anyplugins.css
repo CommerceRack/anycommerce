@@ -1,4 +1,10 @@
 
+
+
+/* STICKYTAB */
+
+
+
 /* the tab itself. text is in tab-text */
 .ui-widget-stickytab-tab	{
 	text-align:center;
@@ -25,3 +31,12 @@
 	.ui-widget-stickytab	{width: 90%;}
 
 	}
+
+
+
+
+
+/* ANYPANEL */
+
+
+fieldset.ui-widget-anypanel	{border:none; padding:0; margin:0;} /* get rid of some browser defaults if fieldset is the container for anypanel. */

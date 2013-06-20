@@ -1663,6 +1663,16 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 
 
+
+
+
+
+
+
+
+
+
+<!-- used in the ebay category chooser -->
 <ul>
 	<li id='ebayCategoryListitemTemplate'>
 	<span class='lookLikeLink' data-bind='var:ebay(name); format:text;' onClick="app.ext.admin_syndication.u.handleEBAYChild($(this).parent());"></span>
@@ -1677,671 +1687,675 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 
 
+
+
+
+
+
+
+
 <div id='ebayProfileCreateUpdateTemplate'>
 
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels borderMarginFieldsets'>
 
-<fieldset>
-	<legend>Launch Profile Settings</legend>
-	
-	<input type='hidden' name='DST' value='EBF' />
-	<label>
-		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-		Is active
-	</label>
-	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-	
 
-
-<!-- hide this in edit mode -->
-	<label>
-		<span>Profile</span>
-		<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: mkt(PROFILE); format:popVal;" />
-	</label>
-	
-	<label>
-		<span>Token</span>
-		<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
-		</select>
-	</label>
-
-	<div class='label' data-app-role='ebayTemplateConfigContainer'>
-		<span>Template</span>
-		<span data-bind='var:mkt(template_origin); format:text' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
-		<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
-		<button data-app-role='ebayTemplateEditButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
-	</label>
-
-<!--
-	<label>
-		<span>Template</span>
-		<select name='template' data-bind="var: mkt(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
-			<option value=''>please choose</option>
-		</select>
-	</label>
--->
-
-</fieldset>
-
-
-
-
-<fieldset>
-	<legend>Best Offer</legend>
-
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.BestOfferDetails.BestOfferEnabled' data-bind="var: product(ebay:Item.BestOfferDetails.BestOfferEnabled); format:popVal;" />
-		Enable
-		<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
-	</label>
-	
-	<label>
-		<span>Max # policy violations</span>
-		<input type='number' step='1' min='0' size='6' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
-		<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations.Period) before being blocked from buying/bidding on the item. ">?</span>
-	</label>
-	
-	<label>
-		<span>Policy violations period</span>
-		<select name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period); format:popVal;">
-			<option value=''></option>
-			<option value='Days_30'>30</option>
-			<option value='Days_180'>180</option>
-			<option value='Days_360'>360</option>
-			<option value='Days_540'>540</option>
-		</select>
-		<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
-	</label>
-
-</fieldset>
-
-
-
-<fieldset class='clearfix'>
-	<legend>Domestic Shipping</legend>
-
-	<div class='floatLeft'>
-		<table data-app-role='dataTable' class='gridTable'>
-		<thead>
-		<tr>
-			<th>Service</th>
-			<th>Free</th>
-			<th>Pricing</th>
-			<th></th>
-		</tr>
-		</thead>
-			<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: shipping(@ship_domservices_arr); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-		</tbody>
-		</table>
-		<p class='hint'>eBay supports a max of 3. Any more than three get dropped at save</p>
-	</div>
+<div class='marginBottom clearfix ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<div class='floatRight'>
-		<label>
-			<span>Ship cost</span>
-			<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
-		</label>
+<!--		<button>Delete</button> -->
+		<button>Refresh Listings</button>
+		<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	<h1 data-bind='var: ebay(PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
+</div>
 
+<section class='twoColumn'>
+	
+	<fieldset data-panelname='eBayLaunchProfileSettings'>
+		<legend>Launch Profile Settings</legend>
+		<div class='clearfix'>
 		<label>
-			<span>Addl item cost</span>
-			<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+			<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
+			Is active
 		</label>
-
+		<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+		
+	
+	
+	<!-- hide this in edit mode -->
 		<label>
-			<span>AK+HI add:</span>
-			<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
-		</label>
-
-		<label>
-			<span>Service</span>
-			<select name="service" class='skipTrack' >
-				<option value="ShippingMethodStandard">Standard Shipping</option>
-				<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
-				<option value="ePacketChina">ePacket delivery from China</option>
-				<option value="UPSGround">UPS Ground</option>
-				<option value="ShippingMethodExpress">Expedited Shipping</option>
-				<option value="USPSPriority">USPS Priority Mail</option>
-				<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
-				<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
-				<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
-				<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
-				<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
-				<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
-				<option value="USPSFirstClass">USPS First Class Package</option>
-				<option value="UPS3rdDay">UPS 3 Day Select</option>
-				<option value="UPS2ndDay">UPS 2nd Day Air</option>
-				<option value="Other">Economy Shipping</option>
-				<option value="USPSParcel">USPS Parcel Select</option>
-				<option value="USPSMedia">USPS Media Mail</option>
-				<option value="ShippingMethodOvernight">One-day Shipping</option>
-				<option value="USPSExpressMail">USPS Express Mail</option>
-				<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
-				<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
-				<option value="UPSNextDay">UPS Next Day Air Saver</option>
-				<option value="UPSNextDayAir">UPS Next Day Air</option>
-				<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
-				<option value="FedExExpressSaver">FedEx Express Saver</option>
-				<option value="FedEx2Day">FedEx 2Day</option>
-				<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
-				<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
-				<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
-				<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
-				<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
-				<option value="US_FedExIntlEconomy">FedEx International Economy</option>
-				<option value="Freight">Flat Priced Freight</option>
-				<option value="FreightShipping">Freight Shipping</option>
-				<option value="Pickup">Local Pickup</option>
-			</select>
+			<span>Profile</span>
+			<input name='PROFILE' value='' size='10' maxlength="8" data-bind="var: mkt(PROFILE); format:popVal;" />
 		</label>
 		
-
 		<label>
-			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
-		</label>
-		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
-	</div>
-
-
-</fieldset>
-
-
-
-<fieldset class='clearfix'>
-	<legend>International Shipping</legend>
-
-	<div class='floatLeft'>
-		<table data-app-role='dataTable' class='gridTable'>
-		<thead>
-		<tr>
-			<th>Service</th>
-			<th>Free</th>
-			<th>Pricing</th>
-			<th></th>
-		</tr>
-		</thead>
-			<tbody data-app-role='ebayShippingTbody_int' data-bind="var: shipping(@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-		</tbody>
-		</table>
-		<p class='hint'>eBay supports a max of 3. Any more than three get dropped at save</p>
-	</div>
-	<div class='floatRight'>
-		<label>
-			<span>Ship cost</span>
-			<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
-		</label>
-
-		<label>
-			<span>Addl item cost</span>
-			<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
-		</label>
-
-		<label>
-			<span>Service</span>
-			<select name="service" class='skipTrack' >
-				<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
-				<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
-				<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
-				<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
-				<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
-				<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
-				<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
-				<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
-				<option value="USPSExpressMailInternational">USPS Express Mail International</option>
-				<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
-				<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
-				<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
-				<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
-				<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
-				<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
-				<option value="UPSStandardToCanada">UPS Standard To Canada</option>
-				<option value="FedExInternationalEconomy">FedEx International Economy</option>
-				<option value="FedExInternationalPriority">FedEx International Priority</option>
-				<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
-				<option value="StandardInternational">Standard Int'l Shipping</option>
-				<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
-				<option value="OtherInternational">Economy Int'l Shipping</option>
-				<option value="FreightShippingInternational">Freight Shipping</option>
+			<span>Token</span>
+			<select name='EIAS' data-bind="var: mkt(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
 			</select>
 		</label>
-		
-
+	
+		<div class='label' data-app-role='ebayTemplateConfigContainer'>
+			<span>Template</span>
+			<span data-bind='var:mkt(template_origin); format:text' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
+			<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
+			<button data-app-role='ebayTemplateEditButton' data-bind='var:mkt(PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
+		</div>
+	
+	<!--
 		<label>
-			<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
+			<span>Template</span>
+			<select name='template' data-bind="var: mkt(@TEMPLATES);format:optionsFromList; text:FILENAME; value:GUID;">
+				<option value=''>please choose</option>
+			</select>
 		</label>
-		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div><!-- needs to be within same fieldset as dataTable -->
-	</div>
-
-
-</fieldset>
-
-
-
-<fieldset>
-	<legend>Buyer Requirements</legend>
-
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.DisableBuyerRequirements' data-bind="var: product(ebay:Item.DisableBuyerRequirements); format:popVal;" />
-		Disable Buyer Requirements
-		<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
-	</label>
-
-	<label>
-		<span>Max. item count</span>
-		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount); format:popVal;">
-			<option></option>
-			<option value='1'>1</option>
-			<option value='2'>2</option>
-			<option value='3'>3</option>
-			<option value='4'>4</option>
-			<option value='5'>5</option>
-			<option value='6'>6</option>
-			<option value='7'>7</option>
-			<option value='8'>8</option>
-			<option value='9'>9</option>
-			<option value='10'>10</option>
-			<option value='25'>25</option>
-			<option value='50'>50</option>
-			<option value='100'>100</option>
-		</select>
-		<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
-	</label>
-	<label>
-		<span>Min. feedback score</span>
-		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore); format:popVal;">
-			<option></option>
-			<option value='0'>0</option>
-			<option value='1'>1</option>
-			<option value='2'>2</option>
-			<option value='3'>3</option>
-			<option value='4'>4</option>
-			<option value='5'>5</option>
-		</select>
-		<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
-	</label>
-
-
-
-	<label>
-		<span>Max. unpaid item strikes count</span>
-		<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
-		<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
-	</label>
-
-	<label>
-		<span>Max. unpaid item strikes Period</span>
-		<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period); format:popVal;">
-			<option value=''></option>
-			<option value='Days_30'>30</option>
-			<option value='Days_180'>180</option>
-			<option value='Days_360'>360</option>
-		</select>
-		<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
-	</label>
-
-
-	
-	<label>
-		<span>Min Feedback Score</span>
-		<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
-		<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
-	</label>
+	-->
+		</div>
+	</fieldset>
 	
 	
-	
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.ShipToRegistrationCountry' data-bind="var: product(ebay:Item.BuyerRequirementDetails.ShipToRegistrationCountry); format:popVal;" />
-		Ship to Reg. Country
-		<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
-	</label>
-	
-	
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser); format:popVal;" />
-		Verified user
-		<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
-	</label>
-
-
-	
-	<label>
-		<span>Verified user min feedback score</span>
-		<input type='number' step='1' size='5' min='0' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
-		<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
-	</label>
-	
-	
-	
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.BuyerResponsibleForShipping' data-bind="var: product(ebay:Item.BuyerResponsibleForShipping); format:popVal;" />
-		Buyer Responsible For Shipping
-		<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
-	</label>
-	<p class='hint'>
- 	Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
-	</p>
-
-
-</fieldset>
-
-
-
-<!--
-<fieldset>
-	<legend>Charity</legend>
-	<label>
-		<span>ID</span>
-		<input type='text' name='Item.Charity.CharityID' data-bind="var: product(ebay:Item.Charity.CharityID); format:popVal;" />
-		<span class='toolTip' title="A unique identification number assigned by eBay to registered nonprofit charity organizations. Required input when listing Giving Works items.">?</span>
-	</label>
-
-	<label>
-		<span>Number</span>
-		<input type='number' name='Item.Charity.CharityNumber' data-bind="var: product(ebay:Item.Charity.CharityNumber); format:popVal;" />
-		<span class='toolTip' title="A unique identifier assigned to a nonprofit charity organization by the dedicated provider of eBay Giving Works. This value can contain up to 10 digits. This value is superseded by CharityID.">?</span>
-	</label>
-
-	<label>
-		<span>Percent</span>
-		<input type='number' step='.5' min='10.0' name='Item.Charity.DonationPercent' data-bind="var: product(ebay:Item.Charity.DonationPercent); format:popVal;" />
-		<span class='toolTip' title="The percentage of the purchase price that the seller chooses to donate to the selected nonprofit organization. This percentage is displayed in the Giving Works item listing. Possible values: 10.0 to 100.0. Percentages must increment by 5.0. ">?</span>
-	</label>
-</fieldset>
--->
-
-
-<fieldset>
-	<legend>Contact Information/Availability</legend>
-
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime); format:popVal;" />
-		Anytime Hours
-		<span class='toolTip' title="Indicates whether or not a user is available to be contacted 24 hours a day during the range of days specified using the Hours1Days element.">?</span>
-	</label>
-
-	<label>
-		<span>Days</span>
-		<select type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days); format:popVal;">
-			<option value='None'>None</option>
-			<option value='EveryDay'>Every day</option>
-			<option value='Weekdays'>Weekdays</option>
-			<option value='Weekends'>Weekends</option>
-		</select>
-		<span class='toolTip' title="Indicates the range of days for which the primary contact hours specified by Hours1AnyTime or Hours1From and Hours1To apply. If a value of None is provided for this field, the values provided for Hours1AnyTime, Hours1From, Hours1To are ignored. ">?</span>
-	</label>
-
-	<label>
-		<span>Available From</span>
-		<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From); format:popVal;" />
-		<span class='toolTip' title="Indicates the starting time of day this eBay user is available for other eBay members to contact for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
-	</label>
-
-	<label>
-		<span>Available To</span>
-		<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To); format:popVal;" />
-		<span class='toolTip' title="Indicates the ending time of day this eBay user is available for other eBay members to contact them for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
-	</label>
-
-
-	
-</fieldset>
-
-
-<!--
-<fieldset>
-	<legend>Listing Redirect</legend>
-
-	<label>
-		<span>ProStores name</span>
-		<input type='text' name='Item.ListingCheckoutRedirectPreference.ProStoresStoreName' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.ProStoresStoreName); format:popVal;" />
-	</label>
-
-	<label>
-		<span>Third party username</span>
-		<input type='text' name='Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername); format:popVal;" />
-		<span class='toolTip' title="The user name of the ProStores store.">?</span>
-	</label>
-</fieldset>
-
-
-
-<fieldset>
-	<legend>Payment Details (motors)</legend>
-	<label>
-		<span>Days to full payment</span>
-		<select name='Item.PaymentDetails.DaysToFullPayment' data-bind="var: product(ebay:Item.LotSize.DaysToFullPayment); format:popVal;">
-			<option value='3'>3</option>
-			<option value='7'>7</option>
-			<option value='10'>10</option>
-			<option value='14'>14</option>
-		</select>
-		<span class='toolTip' title="This integer value indicates the number of days that a buyer has (after he/she commits to buy) to make full payment to the seller and close the remaining balance on a motor vehicle.">?</span>
-	</label>
-
-	
-
-	<label>
-		<span>Deposit amount</span>
-		<input type='number' step='.01' max='2000' size='10' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
-		<span class='toolTip' title="This dollar value indicates the amount of the deposit that a buyer must make on a purchased motor vehicle (eBay Motors US and CA). The deposit amount can be as high as $2,000.00.">?</span>
-	</label>
-
-	<label>
-		<span>Deposit type</span>
-		<select name='Item.PaymentDetails.DepositType' data-bind="var: product(ebay:Item.PaymentDetails.DepositType); format:popVal;">
-			<option value=''></option>
-			<option value='None'>No deposit needed</option>
-			<option value='OtherMethod'>PayPal</option>
-		</select>
-		<span class='toolTip' title="This field applies to eBay Motors (US and CA) vehicles listings. If the seller is requiring that the buyer make a deposit on the vehicle, the DepositType value must be included and set to 'OtherMethod'. ">?</span>
-	</label>
-
-
-	<label>
-		<span>Hours to deposit</span>
-		<select name='Item.PaymentDetails.HoursToDeposit' data-bind="var: product(ebay:Item.PaymentDetails.HoursToDeposit); format:popVal;">
-			<option value=''></option>
-			<option value='24'>24</option>
-			<option value='48'>48</option>
-			<option value='72'>72</option>
-		</select>
-		<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
-	</label>
-
-
-</fieldset>
--->
-
-
-<fieldset>
-	<legend>Listing Settings</legend>
-
-	<label>
-		<span>Country</span>
-		<input type='text' name='Item.Country' size='2' maxlength="2" data-bind="var: product(ebay:Item.Country); format:popVal;" />
-		<span class='toolTip' title="Set to a two character country code">?</span>
-	</label>
+	<fieldset data-panelname='eBayBestOffer'>
+		<legend>Best Offer</legend>
+		<div class='clearfix'>
+		<label>
+			<input type="checkbox" class='applyAnycb' name='Item.BestOfferDetails.BestOfferEnabled' data-bind="var: product(ebay:Item.BestOfferDetails.BestOfferEnabled); format:popVal;" />
+			Enable
+			<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
+		</label>
+		
+		<label>
+			<span>Max # policy violations</span>
+			<input type='number' step='1' min='0' size='6' name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Count); format:popVal;" />
+			<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations.Period) before being blocked from buying/bidding on the item. ">?</span>
+		</label>
+		
+		<label>
+			<span>Policy violations period</span>
+			<select name='Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period' data-bind="var: product(ebay:Item.BestOfferDetails.MaximumBuyerPolicyViolations.Period); format:popVal;">
+				<option value=''></option>
+				<option value='Days_30'>30</option>
+				<option value='Days_180'>180</option>
+				<option value='Days_360'>360</option>
+				<option value='Days_540'>540</option>
+			</select>
+			<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+		</label>
+		</div>
+	</fieldset>
 	
 	
-	<label>
-		<span>Cross border trade</span>
-		<input type='text' name='Item.CrossBorderTrade' data-bind="var: product(ebay:Item.CrossBorderTrade); format:popVal;" />
-		<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
-	</label>
+	<fieldset  data-panelname='eBayDomShipping'>
+		<legend>Domestic Shipping</legend>
+		<div class='clearfix'>
+			<table data-app-role='dataTable' class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>Service</th>
+				<th>Free</th>
+				<th>Pricing</th>
+				<th></th>
+			</tr>
+			</thead>
+				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: shipping(@ship_domservices_arr); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+			</tbody>
+			</table>
+			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
+
+			<label>
+				<span>Ship cost</span>
+				<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+			</label>
 	
-	<label>
-		<span>Currency</span>
-		<input type='text' name='Item.Currency' size='3' data-bind="var: product(ebay:Item.Currency); format:popVal;" />
-		<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
-	</label>
+			<label>
+				<span>Addl item cost</span>
+				<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+			</label>
+	
+			<label>
+				<span>AK+HI add:</span>
+				<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
+			</label>
+	
+			<label>
+				<span>Service</span>
+				<select name="service" class='skipTrack' >
+					<option value="ShippingMethodStandard">Standard Shipping</option>
+					<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
+					<option value="ePacketChina">ePacket delivery from China</option>
+					<option value="UPSGround">UPS Ground</option>
+					<option value="ShippingMethodExpress">Expedited Shipping</option>
+					<option value="USPSPriority">USPS Priority Mail</option>
+					<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
+					<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
+					<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
+					<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
+					<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
+					<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
+					<option value="USPSFirstClass">USPS First Class Package</option>
+					<option value="UPS3rdDay">UPS 3 Day Select</option>
+					<option value="UPS2ndDay">UPS 2nd Day Air</option>
+					<option value="Other">Economy Shipping</option>
+					<option value="USPSParcel">USPS Parcel Select</option>
+					<option value="USPSMedia">USPS Media Mail</option>
+					<option value="ShippingMethodOvernight">One-day Shipping</option>
+					<option value="USPSExpressMail">USPS Express Mail</option>
+					<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
+					<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
+					<option value="UPSNextDay">UPS Next Day Air Saver</option>
+					<option value="UPSNextDayAir">UPS Next Day Air</option>
+					<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
+					<option value="FedExExpressSaver">FedEx Express Saver</option>
+					<option value="FedEx2Day">FedEx 2Day</option>
+					<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
+					<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
+					<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
+					<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
+					<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
+					<option value="US_FedExIntlEconomy">FedEx International Economy</option>
+					<option value="Freight">Flat Priced Freight</option>
+					<option value="FreightShipping">Freight Shipping</option>
+					<option value="Pickup">Local Pickup</option>
+				</select>
+			</label>
+			
+	
+			<label>
+				<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
+			</label>
+			<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add Service</button></div><!-- needs to be within same fieldset as dataTable -->
+	
+		</div>
+	</fieldset>
 	
 	
-	<label>
-		<span>Dispatch Time Max</span>
-		<input type='number' step='1' size='5' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
-		<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
-	</label>
+	<fieldset data-panelname='eBayIntShipping'>
+		<legend>International Shipping</legend>
+		<div class='clearfix'>
+			<table data-app-role='dataTable' class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>Service</th>
+				<th>Free</th>
+				<th>Pricing</th>
+				<th></th>
+			</tr>
+			</thead>
+				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: shipping(@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+			</tbody>
+			</table>
+			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
+
+			<label>
+				<span>Ship cost</span>
+				<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+			</label>
+	
+			<label>
+				<span>Addl item cost</span>
+				<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+			</label>
+	
+			<label>
+				<span>Service</span>
+				<select name="service" class='skipTrack' >
+					<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
+					<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
+					<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
+					<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
+					<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
+					<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
+					<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
+					<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
+					<option value="USPSExpressMailInternational">USPS Express Mail International</option>
+					<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
+					<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
+					<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
+					<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
+					<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
+					<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
+					<option value="UPSStandardToCanada">UPS Standard To Canada</option>
+					<option value="FedExInternationalEconomy">FedEx International Economy</option>
+					<option value="FedExInternationalPriority">FedEx International Priority</option>
+					<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
+					<option value="StandardInternational">Standard Int'l Shipping</option>
+					<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
+					<option value="OtherInternational">Economy Int'l Shipping</option>
+					<option value="FreightShippingInternational">Freight Shipping</option>
+				</select>
+			</label>
+			
+	
+			<label>
+				<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
+			</label>
+			<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add Service</button></div><!-- needs to be within same fieldset as dataTable -->
+		</div>
+	</fieldset>
 	
 	
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.GetItFast' data-bind="var: product(ebay:Item.GetItFast); format:popVal;" />
-		Get it fast
-		<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
-	</label>
+	<fieldset data-panelname='eBayBuyerRequirements'>
+		<legend>Buyer Requirements</legend>
+		<div class='clearfix'>
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.DisableBuyerRequirements' data-bind="var: product(ebay:Item.DisableBuyerRequirements); format:popVal;" />
+				Disable Buyer Requirements
+				<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
+			</label>
+		
+			<label>
+				<span>Max. item count</span>
+				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MaximumItemCount); format:popVal;">
+					<option></option>
+					<option value='1'>1</option>
+					<option value='2'>2</option>
+					<option value='3'>3</option>
+					<option value='4'>4</option>
+					<option value='5'>5</option>
+					<option value='6'>6</option>
+					<option value='7'>7</option>
+					<option value='8'>8</option>
+					<option value='9'>9</option>
+					<option value='10'>10</option>
+					<option value='25'>25</option>
+					<option value='50'>50</option>
+					<option value='100'>100</option>
+				</select>
+				<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+			</label>
+			<label>
+				<span>Min. feedback score</span>
+				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore); format:popVal;">
+					<option></option>
+					<option value='0'>0</option>
+					<option value='1'>1</option>
+					<option value='2'>2</option>
+					<option value='3'>3</option>
+					<option value='4'>4</option>
+					<option value='5'>5</option>
+				</select>
+				<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+			</label>
+		
+		
+		
+			<label>
+				<span>Max. unpaid item strikes count</span>
+				<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Count); format:popVal;" />
+				<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
+			</label>
+		
+			<label>
+				<span>Max. unpaid item strikes Period</span>
+				<select name='Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MaximumItemRequirements.MinimumFeedbackScore.Period); format:popVal;">
+					<option value=''></option>
+					<option value='Days_30'>30</option>
+					<option value='Days_180'>180</option>
+					<option value='Days_360'>360</option>
+				</select>
+				<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+			</label>
+		
+		
+			
+			<label>
+				<span>Min Feedback Score</span>
+				<input type='number' step='1' size='5'  min='0' name='Item.BuyerRequirementDetails.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.MinimumFeedbackScore); format:popVal;" />
+				<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
+			</label>
+			
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.ShipToRegistrationCountry' data-bind="var: product(ebay:Item.BuyerRequirementDetails.ShipToRegistrationCountry); format:popVal;" />
+				Ship to Reg. Country
+				<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
+			</label>
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.VerifiedUser); format:popVal;" />
+				Verified user
+				<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
+			</label>
+		
+		
+			
+			<label>
+				<span>Verified user min feedback score</span>
+				<input type='number' step='1' size='5' min='0' name='Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore' data-bind="var: product(ebay:Item.BuyerRequirementDetails.VerifiedUserRequirements.MinimumFeedbackScore); format:popVal;" />
+				<span class='toolTip' title="Block verified users who have a feedback score less than the specified value. Ignored if 'verified user' is not enabled.">?</span>
+			</label>
+			
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.BuyerResponsibleForShipping' data-bind="var: product(ebay:Item.BuyerResponsibleForShipping); format:popVal;" />
+				Buyer Responsible For Shipping
+				<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
+			</label>
+			<p class='hint'>
+			Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
+			</p>
+		</div>
+	</fieldset>
+	
+</section>
+<section class='twoColumn column2'>
+	
+	<!--
+	<fieldset data-panelname='charity'>
+		<legend>Charity</legend>
+		<div class='clearfix'>
+			<label>
+				<span>ID</span>
+				<input type='text' name='Item.Charity.CharityID' data-bind="var: product(ebay:Item.Charity.CharityID); format:popVal;" />
+				<span class='toolTip' title="A unique identification number assigned by eBay to registered nonprofit charity organizations. Required input when listing Giving Works items.">?</span>
+			</label>
+		
+			<label>
+				<span>Number</span>
+				<input type='number' name='Item.Charity.CharityNumber' data-bind="var: product(ebay:Item.Charity.CharityNumber); format:popVal;" />
+				<span class='toolTip' title="A unique identifier assigned to a nonprofit charity organization by the dedicated provider of eBay Giving Works. This value can contain up to 10 digits. This value is superseded by CharityID.">?</span>
+			</label>
+		
+			<label>
+				<span>Percent</span>
+				<input type='number' step='.5' min='10.0' name='Item.Charity.DonationPercent' data-bind="var: product(ebay:Item.Charity.DonationPercent); format:popVal;" />
+				<span class='toolTip' title="The percentage of the purchase price that the seller chooses to donate to the selected nonprofit organization. This percentage is displayed in the Giving Works item listing. Possible values: 10.0 to 100.0. Percentages must increment by 5.0. ">?</span>
+			</label>
+		</div>
+	</fieldset>
+	-->
+	
+	
+	<fieldset data-panelname='eBayContactInfo'>
+		<legend>Contact Information/Availability</legend>
+		<div class='clearfix'>
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1AnyTime); format:popVal;" />
+				Anytime Hours
+				<span class='toolTip' title="Indicates whether or not a user is available to be contacted 24 hours a day during the range of days specified using the Hours1Days element.">?</span>
+			</label>
+		
+			<label>
+				<span>Days</span>
+				<select type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1Days); format:popVal;">
+					<option value='None'>None</option>
+					<option value='EveryDay'>Every day</option>
+					<option value='Weekdays'>Weekdays</option>
+					<option value='Weekends'>Weekends</option>
+				</select>
+				<span class='toolTip' title="Indicates the range of days for which the primary contact hours specified by Hours1AnyTime or Hours1From and Hours1To apply. If a value of None is provided for this field, the values provided for Hours1AnyTime, Hours1From, Hours1To are ignored. ">?</span>
+			</label>
+		
+			<label>
+				<span>Available From</span>
+				<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1From); format:popVal;" />
+				<span class='toolTip' title="Indicates the starting time of day this eBay user is available for other eBay members to contact for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
+			</label>
+		
+			<label>
+				<span>Available To</span>
+				<input type='text' name='Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To' data-bind="var: product(ebay:Item.ExtendedSellerContactDetails.ContactHoursDetails.Hours1To); format:popVal;" />
+				<span class='toolTip' title="Indicates the ending time of day this eBay user is available for other eBay members to contact them for the range of days specified using Hours1Days. Enter times in 30 minute increments from the top of the hour. That is, enter values either on the hour (:00) or 30 minutes past the hour (:30). Other values will be will be rounded down to the next closest 30 minute increment. Times entered should be local to the value provided for TimeZoneID. ">?</span>
+			</label>
+		</div>
+	</fieldset>
+	
+	
+	<!--
+	<fieldset>
+		<legend>Listing Redirect</legend>
+	
+		<label>
+			<span>ProStores name</span>
+			<input type='text' name='Item.ListingCheckoutRedirectPreference.ProStoresStoreName' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.ProStoresStoreName); format:popVal;" />
+		</label>
+	
+		<label>
+			<span>Third party username</span>
+			<input type='text' name='Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername' data-bind="var: product(ebay:Item.ListingCheckoutRedirectPreference.SellerThirdPartyUsername); format:popVal;" />
+			<span class='toolTip' title="The user name of the ProStores store.">?</span>
+		</label>
+	</fieldset>
 	
 	
 	
-	<label>
-		<span>Hit counter</span>
-		<select type='text' name='Item.HitCounter' data-bind="var: product(ebay:Item.HitCounter); format:popVal;" >
-			<option value='BasicStyle'>BasicStyle</option>
-			<option value='GreenLED'>GreenLED</option>
-			<option value='Hidden' selected='selected'>Hidden (faster)</option>
-			<option value='HiddenStyle'>HiddenStyle</option>
-			<option value='HonestyStyle'>HonestyStyle</option>
-			<option value='NoHitCounter'>NoHitCounter</option>
-			<option value='RetroStyle'>RetroStyle</option>
-		</select>
-		<span class='toolTip' title="Indicates whether an optional hit counter is displayed on the item's listing page and, if so, what type.">?</span>
-	</label>
+	<fieldset>
+		<legend>Payment Details (motors)</legend>
+		<label>
+			<span>Days to full payment</span>
+			<select name='Item.PaymentDetails.DaysToFullPayment' data-bind="var: product(ebay:Item.LotSize.DaysToFullPayment); format:popVal;">
+				<option value='3'>3</option>
+				<option value='7'>7</option>
+				<option value='10'>10</option>
+				<option value='14'>14</option>
+			</select>
+			<span class='toolTip' title="This integer value indicates the number of days that a buyer has (after he/she commits to buy) to make full payment to the seller and close the remaining balance on a motor vehicle.">?</span>
+		</label>
+	
+		
+	
+		<label>
+			<span>Deposit amount</span>
+			<input type='number' step='.01' max='2000' size='10' name='Item.PaymentDetails.DepositAmount' data-bind="var: product(ebay:Item.PaymentDetails.DepositAmount); format:popVal;" />
+			<span class='toolTip' title="This dollar value indicates the amount of the deposit that a buyer must make on a purchased motor vehicle (eBay Motors US and CA). The deposit amount can be as high as $2,000.00.">?</span>
+		</label>
+	
+		<label>
+			<span>Deposit type</span>
+			<select name='Item.PaymentDetails.DepositType' data-bind="var: product(ebay:Item.PaymentDetails.DepositType); format:popVal;">
+				<option value=''></option>
+				<option value='None'>No deposit needed</option>
+				<option value='OtherMethod'>PayPal</option>
+			</select>
+			<span class='toolTip' title="This field applies to eBay Motors (US and CA) vehicles listings. If the seller is requiring that the buyer make a deposit on the vehicle, the DepositType value must be included and set to 'OtherMethod'. ">?</span>
+		</label>
 	
 	
-	<label>
-		<span>Listing enhancement</span>
-		<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" multiple="multiple" >
-			<option value=''>none</option>
-			<option value='BoldTitle'>title for the item's listing in boldface type</option>
-			<option value='Border'>add a border around the listing's pictures</option>
-			<option value='Featured'>display prominently in the Featured Items section</option>
-			<option value='Highlight'>listing is highlighted in a different color in lists</option>
-			<option value='HomePageFeatured'>rotate into a special display on eBay's Home page</option>
-			<option value='ProPackBundle'>ProPack Bundle*</option>
-			<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
-			<option value='ValuePackBundle'>ValuePackBundle**</option>
-			<option value=''></option>
-			<option value=''></option>
-		</select>
-	</label>
-	<p class='hint'>
-	Selecting a value to listing enhancement will affect listing fees<br />
-	* eBay Motors only<br />
-	** Support for this feature varies by site and category.
-	</p>
+		<label>
+			<span>Hours to deposit</span>
+			<select name='Item.PaymentDetails.HoursToDeposit' data-bind="var: product(ebay:Item.PaymentDetails.HoursToDeposit); format:popVal;">
+				<option value=''></option>
+				<option value='24'>24</option>
+				<option value='48'>48</option>
+				<option value='72'>72</option>
+			</select>
+			<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
+		</label>
+	
+	
+	</fieldset>
+	-->
+	
+	
+	<fieldset data-panelname='eBayListingSettings'>
+		<legend>Listing Settings</legend>
+		<div class='clearfix'>
+			<label>
+				<span>Country</span>
+				<input type='text' name='Item.Country' size='2' maxlength="2" data-bind="var: product(ebay:Item.Country); format:popVal;" />
+				<span class='toolTip' title="Set to a two character country code">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Cross border trade</span>
+				<input type='text' name='Item.CrossBorderTrade' data-bind="var: product(ebay:Item.CrossBorderTrade); format:popVal;" />
+				<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
+			</label>
+			
+			<label>
+				<span>Currency</span>
+				<input type='text' name='Item.Currency' size='3' data-bind="var: product(ebay:Item.Currency); format:popVal;" />
+				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Dispatch Time Max</span>
+				<input type='number' step='1' size='5' name='Item.DispatchTimeMax' data-bind="var: product(ebay:Item.DispatchTimeMax); format:popVal;" />
+				<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
+			</label>
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.GetItFast' data-bind="var: product(ebay:Item.GetItFast); format:popVal;" />
+				Get it fast
+				<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
+			</label>
+			
+			
+			
+			<label>
+				<span>Hit counter</span>
+				<select type='text' name='Item.HitCounter' data-bind="var: product(ebay:Item.HitCounter); format:popVal;" >
+					<option value='BasicStyle'>BasicStyle</option>
+					<option value='GreenLED'>GreenLED</option>
+					<option value='Hidden' selected='selected'>Hidden (faster)</option>
+					<option value='HiddenStyle'>HiddenStyle</option>
+					<option value='HonestyStyle'>HonestyStyle</option>
+					<option value='NoHitCounter'>NoHitCounter</option>
+					<option value='RetroStyle'>RetroStyle</option>
+				</select>
+				<span class='toolTip' title="Indicates whether an optional hit counter is displayed on the item's listing page and, if so, what type.">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Listing enhancement</span>
+				<select type='text' name='Item.ListingEnhancement' data-bind="var: product(ebay:Item.ListingEnhancement); format:popVal;" multiple="multiple" >
+					<option value=''>none</option>
+					<option value='BoldTitle'>title for the item's listing in boldface type</option>
+					<option value='Border'>add a border around the listing's pictures</option>
+					<option value='Featured'>display prominently in the Featured Items section</option>
+					<option value='Highlight'>listing is highlighted in a different color in lists</option>
+					<option value='HomePageFeatured'>rotate into a special display on eBay's Home page</option>
+					<option value='ProPackBundle'>ProPack Bundle*</option>
+					<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
+					<option value='ValuePackBundle'>ValuePackBundle**</option>
+					<option value=''></option>
+					<option value=''></option>
+				</select>
+			</label>
+			<p class='hint'>
+			Selecting a value to listing enhancement will affect listing fees<br />
+			* eBay Motors only<br />
+			** Support for this feature varies by site and category.
+			</p>
+			
+			
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+				<span>Private listing</span>
+				<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
+			</label>
+			
+			
+			
+			<label>
+				<span>Payment methods</span>
+			NOT DONE.
+			http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+				<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
+			</label>
+			
+			<label>
+				<span>PayPal email address</span>
+				<input type='number' step='.01' max='2000' name='Item.PayPalEmailAddress' data-bind="var: product(ebay:Item.PayPalEmailAddress); format:popVal;" />
+				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
+			</label>
+		
+		
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item.AutoPay' data-bind="var: product(ebay:Item.AutoPay); format:popVal;" />
+				Autopay
+				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
+			</label>
+		
+			</div>
+	</fieldset>
+	
+	
+	<fieldset data-panelname='eBayReturnPolicy'>
+		<legend>Return Policy</legend>
+		<div class='clearfix'>
+			<label>
+				<span>Description <span class='toolTip' title="A detailed explanation of your return policy.">?</span></span>
+				<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" rows='5' class='fullWidth' />
+			</label>
+		<!--
+		EAN is a product level field.
+		
+		the input value here is 'token'.?
+			<label>
+				<span>Refund option</span>
+				<input type='text' name='Item.ReturnPolicy.RefundOption' data-bind="var: product(ebay:Item.ReturnPolicy.RefundOption); format:popVal;" />
+				<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
+			</label>
+		
+			<label>
+				<span>Restocking fee</span>
+				<input type='text' name='Item.ReturnPolicy.RestockingFeeValueOption' data-bind="var: product(ebay:Item.ReturnPolicy.RestockingFeeValueOption); format:popVal;" />
+				<span class='toolTip' title="Indicates the restocking fee charged by the seller for returned items. In order to charge the buyer a restocking fee when an item is returned, a US seller must input a restocking fee value as part of the return policy. ">?</span>
+			</label>
+		
+			<label>
+				<span>Returns Accepted</span>
+				<input type='text' name='Item.ReturnPolicy.ReturnsAcceptedOption' data-bind="var: product(ebay:Item.ReturnPolicy.ReturnsAcceptedOption); format:popVal;" />
+				<span class='toolTip' title="ndicates whether the seller allows the buyer to return the item. ">?</span>
+			</label>
+		
+			<label>
+				<span>WarrantyDurationOption</span>
+				<input type='text' name='Item.ReturnPolicy.WarrantyDurationOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyDurationOption); format:popVal;" />
+			</label>
+		
+			<label>
+				<span>WarrantyOfferedOption</span>
+				<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+			</label>
+		
+			<label>
+				<span>WarrantyTypeOption</span>
+				<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
+			</label>
+		--></div>
+	</fieldset>
 	
 	
 	
-	
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
-		<span>Private listing</span>
-		<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
-	</label>
-	
-	
-	
-	<label>
-		<span>Payment methods</span>
-	NOT DONE.
-	http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
-		<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
-	</label>
-	
-	<label>
-		<span>PayPal email address</span>
-		<input type='number' step='.01' max='2000' name='Item.PayPalEmailAddress' data-bind="var: product(ebay:Item.PayPalEmailAddress); format:popVal;" />
-		<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
-	</label>
+	<fieldset data-panelname='eBaySellerDetails'>
+		<legend>Seller Details</legend>
+		<div class='clearfix'>
+			<label>	
+				<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
+				Motors Dealer
+				<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
+			</label>
+		
+			<label>
+				<span>Company name</span>
+				<input type='text' name='Item.SellerContactDetails.CompanyName' data-bind="var: product(ebay:Item.SellerContactDetails.CompanyName); format:popVal;" />
+			</label>
+		
+			<label>
+				<span>County</span>
+				<input type='text'  size='2' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
+			</label>
+		
+			<label>
+				<span>Street</span>
+				<input type='text' name='Item.SellerContactDetails.Street' data-bind="var: product(ebay:Item.SellerContactDetails.Street); format:popVal;" />
+			</label>
+			<label>
+				<span>Street2</span>
+				<input type='text' name='Item.SellerContactDetails.Street2' data-bind="var: product(ebay:Item.SellerContactDetails.Street2); format:popVal;" />
+			</label>
+		</div>
+	</fieldset>
 
-
-	<label>
-		<input type="checkbox" class='applyAnycb' name='Item.AutoPay' data-bind="var: product(ebay:Item.AutoPay); format:popVal;" />
-		Autopay
-		<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
-	</label>
-
-
-</fieldset>
-
-<fieldset>
-	<legend>Return Policy</legend>
-
-	<label>
-		<span>Description <span class='toolTip' title="A detailed explanation of your return policy.">?</span></span>
-		<textarea name='Item.ReturnPolicy.Description' data-bind="var: product(ebay:Item.ReturnPolicy.Description); format:popVal;" rows='5' class='fullWidth' />
-	</label>
-<!--
-EAN is a product level field.
-
-the input value here is 'token'.?
-	<label>
-		<span>Refund option</span>
-		<input type='text' name='Item.ReturnPolicy.RefundOption' data-bind="var: product(ebay:Item.ReturnPolicy.RefundOption); format:popVal;" />
-		<span class='toolTip' title="A detailed explanation of your return policy.">?</span>
-	</label>
-
-	<label>
-		<span>Restocking fee</span>
-		<input type='text' name='Item.ReturnPolicy.RestockingFeeValueOption' data-bind="var: product(ebay:Item.ReturnPolicy.RestockingFeeValueOption); format:popVal;" />
-		<span class='toolTip' title="Indicates the restocking fee charged by the seller for returned items. In order to charge the buyer a restocking fee when an item is returned, a US seller must input a restocking fee value as part of the return policy. ">?</span>
-	</label>
-
-	<label>
-		<span>Returns Accepted</span>
-		<input type='text' name='Item.ReturnPolicy.ReturnsAcceptedOption' data-bind="var: product(ebay:Item.ReturnPolicy.ReturnsAcceptedOption); format:popVal;" />
-		<span class='toolTip' title="ndicates whether the seller allows the buyer to return the item. ">?</span>
-	</label>
-
-	<label>
-		<span>WarrantyDurationOption</span>
-		<input type='text' name='Item.ReturnPolicy.WarrantyDurationOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyDurationOption); format:popVal;" />
-	</label>
-
-	<label>
-		<span>WarrantyOfferedOption</span>
-		<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
-	</label>
-
-	<label>
-		<span>WarrantyTypeOption</span>
-		<input type='text' name='Item.ReturnPolicy.WarrantyTypeOption' data-bind="var: product(ebay:Item.ReturnPolicy.WarrantyTypeOption); format:popVal;" />
-	</label>
--->
-
-
-</fieldset>
-
-
-
-<fieldset>
-	<legend>Seller Details</legend>
-	
-	<label>	
-		<input type="checkbox" class='applyAnycb' name='Item.PrivateListing' data-bind="var: product(ebay:Item.PrivateListing); format:popVal;" />
-		Motors Dealer
-		<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
-	</label>
-
-	<label>
-		<span>Company name</span>
-		<input type='text' name='Item.SellerContactDetails.CompanyName' data-bind="var: product(ebay:Item.SellerContactDetails.CompanyName); format:popVal;" />
-	</label>
-
-	<label>
-		<span>County</span>
-		<input type='text'  size='2' name='Item.SellerContactDetails.County' data-bind="var: product(ebay:Item.SellerContactDetails.County); format:popVal;" />
-	</label>
-
-	<label>
-		<span>Street</span>
-		<input type='text' name='Item.SellerContactDetails.Street' data-bind="var: product(ebay:Item.SellerContactDetails.Street); format:popVal;" />
-	</label>
-	<label>
-		<span>Street2</span>
-		<input type='text' name='Item.SellerContactDetails.Street2' data-bind="var: product(ebay:Item.SellerContactDetails.Street2); format:popVal;" />
-	</label>
-
-
-</fieldset>
-
-<!-- form is used for both create and update, so the button is added when the template is added to the dom -->
+</section>
 
 </form>
 

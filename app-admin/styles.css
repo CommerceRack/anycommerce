@@ -177,7 +177,7 @@ using these shared margins will help make the UI more consistent.
 .marginLeft	{margin-left:12px;}
 .marginRight	{margin-right:12px;}
 .marginTop	{margin-top:12px;}
-.marginBottom	{margin-bottom:12px;}
+.marginBottom	{margin-bottom:12px !important;}
 
 .paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
 
@@ -191,6 +191,9 @@ section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide por
 	-webkit-border-radius: 0px;
 	border-radius: 0px; 	
 	}
+
+
+
 
 /* 
 LIST CLASSES
@@ -298,15 +301,6 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
-
-.ui-widget .borderMarginFieldsets fieldset	{
-	margin:0 0 2em 0;
-	border:1px solid #efefef;
-	padding: 2em;
-	-webkit-border-radius: 8px;
-	border-radius: 8px; 
-	}
-.ui-widget .borderMarginFieldsets legend	{margin:.5em;}
 
 
 /*
