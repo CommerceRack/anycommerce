@@ -381,8 +381,9 @@ var admin_syndication = function() {
 $target.empty().showLoading({'message':'Fetching eBay data'});
 //ebay takes a very different path at this point.  
 //go get 
-app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'immutable');
-app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'immutable');
+app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
+app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
+app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
 app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
 	$target.hideLoading();
 	if(app.model.responseHasErrors(rd)){
@@ -390,7 +391,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 		}
 	else	{
 		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
-			$target.anycontent({'templateID':'syndication_ebf','data' : $.extend(true,{},app.data.adminEBAYProfileList,app.data.adminEBAYTokenList),'dataAttribs':{'dst':'EBF'}});
+			$target.anycontent({'templateID':'syndication_ebf','data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList),'dataAttribs':{'dst':'EBF'}});
 			$('table',$target).anytable();
 			}
 		else	{
@@ -398,8 +399,8 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 			}
 		app.u.handleAppEvents($target);
 		}
-	}}},'immutable');
-app.model.dispatchThis('immutable');
+	}}},'mutable');
+app.model.dispatchThis('mutable');
 
 
 				}, //showEBAY
@@ -425,25 +426,6 @@ app.model.dispatchThis('immutable');
 									$target.anymessage({'message':rd})
 									}
 								else	{
-									// app.u.kvp2Array -> use this on the ship fields.
-/*									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
-									app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'] = new Array();
-	
-	//The data for ship_intservices and ship_domservices has each array value as a key/value pair. 
-	//because the shipping services use the 'data table' technology, consistency was needed between the original page rendering
-	//and how the data table gets updated by the form. Soo..... we convert the key/value pairs to an object and save into a custom attribute.									
-									if(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'])	{
-										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_intservices'].length; i += 1)	{
-											app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_intservices'][i]));
-											}
-										}
-									
-									if(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'])	{
-										for(var i = 0; i < app.data[rd.datapointer]['%PROFILE']['@ship_domservices'].length; i += 1)	{
-											app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'][i]));
-											}
-										}
-*/
 									
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
@@ -488,10 +470,7 @@ app.model.dispatchThis('immutable');
 					$target.empty();
 		
 		
-					if(DST == 'EBF')	{
-						app.ext.admin_syndication.a.showEBAY($target);
-						}
-					else	{					
+				
 					
 						$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
 	
@@ -506,8 +485,15 @@ app.model.dispatchThis('immutable');
 						
 						app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 				
-	
+
+					if(DST == 'EBF')	{
+						app.ext.admin_syndication.a.showEBAY($form);
+						}
+					else	{	
 						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+						}
+
+						
 						
 						app.model.dispatchThis();
 	
@@ -550,7 +536,7 @@ app.model.dispatchThis('immutable');
 						//	app.u.dump(" -> Tab Click: "+cmd);
 						//	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
 							});
-						}
+
 					}
 				else if($target)	{
 					$target.anymessage({"message":"In admin.a.showDSTDetails, no DST specified.",'gMessage':true});
@@ -1032,6 +1018,10 @@ app.model.dispatchThis('immutable');
 						data = $tr.data();
 
 					app.ext.admin.i.dialogConfirmRemove({
+						"title" : "Delete Profile "+data.profile,
+						"removeButtonText" : "Delete Profile",
+						"message" : "Please confirm that you want to delete the  launch  profile: "+data.profile+" . There is no undo for this action.",
+
 						'removeFunction':function(vars,$D){
 							$D.showLoading({"message":"Deleting Launch Profile "+data.profile});
 							app.model.addDispatchToQ({
@@ -1119,12 +1109,27 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebayLaunchProfileCreateShow
 
+			ebayLaunchProfileRefreshListingsExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.ebayLaunchProfileRefreshListingsExec').on('click.ebayLaunchProfileRefreshListingsExec',function(){
+
+					app.ext.admin_batchJob.a.adminBatchJobCreate({
+						'guid' : app.u.guidGenerator(),
+						'profile' : $("input[name='PROFILE']",$btn.closest('form')).val(),
+						'APP' : 'EBAY_UPDATE',
+						'function' : 'refresh'
+						});	
+
+					})
+				},
+
 			ebayTemplateChooserShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.showTemplateChooserInModal').on('click.showTemplateChooserInModal',function(){
 					app.ext.admin_syndication.a.showTemplateChooserInModal($btn.data('profile'));
 					});
 				},
+
 			ebayTemplateChooserExec : function($ele)	{
 				$ele.off('click.ebayTemplateChooserExec').on('click.ebayTemplateChooserExec',function(){
 					var data = $ele.closest('li').data();
@@ -1135,7 +1140,25 @@ app.model.dispatchThis('immutable');
 						});
 					})
 				},
-			
+
+			ebayRefreshStoreCategoriesExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
+				$btn.off('click.ebayRefreshStoreCategoriesExec').on('click.ebayRefreshStoreCategoriesExec',function(){
+					var $tab = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+					$tab.showLoading({'message':'Fetching catgories from eBay'});
+					app.model.addDispatchToQ({
+						'_cmd' : 'adminEBAYMacro',
+						'@updates' : ["LOAD-STORE-CATEGORIES?eias="+$btn.closest('tr').data('ebay_eias')],
+						'_tag' : {
+							'callback' : 'showMessaging',
+							'jqObj' : $tab,
+							'message' : 'Your eBay store categories have been updated.'
+							}
+						},'immutable');
+					app.model.dispatchThis('immutable');	
+					});
+				},
+
 			adminEBAYProfileFileContents : function($btn)	{
 				
 				$btn.button();
@@ -1143,7 +1166,6 @@ app.model.dispatchThis('immutable');
 					app.ext.admin_syndication.a.showEBAYTemplateEditorInModal($btn.data('profile'))
 					})
 				},
-			
 
 			ebayLaunchProfileUpdateExec : function($btn)	{
 				$btn.button();
@@ -1254,15 +1276,18 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				},
 			
-			ebayTokenDeleteConfirm : function($ele)	{
-				
-				$ele.off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
+			ebayTokenDeleteConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
 					//confirm dialog goes here.
 					event.preventDefault();
-
-					var data = $btn.closest('li').data();
+					
+					var data = $btn.closest('tr').data();
 
 					app.ext.admin.i.dialogConfirmRemove({
+						"title" : "Delete Token for "+data.ebay_username,
+						"removeButtonText" : "Delete Token",
+						"message" : "Please confirm that you want to delete the token. There is no undo for this action.",
 						'removeFunction':function(vars,$D){
 							$D.showLoading({"message":"Deleting eBay token "+data.ebay_eias});
 							app.model.addDispatchToQ({
@@ -1337,10 +1362,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
-					if($ele.data('mkt') == 'EBF')	{
-						app.ext.admin_syndication.a.showEBAY($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')))
-						}
-					else if($ele.data('mkt'))	{
+					if($ele.data('mkt'))	{
 						app.ext.admin_syndication.a.showDSTDetails($ele.data('mkt'),$mktContainer)
 						}
 					else	{
@@ -1350,19 +1372,19 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 				}, //showDSTDetail
 			
 			hideInputsByCheckbox : function($cb)	{
-function handleCB()	{
-	if($cb.is(':checked'))	{
-		$('.toggleThis',$cb.closest('fieldset')).hide();
-		}
-	else	{
-		$('.toggleThis',$cb.closest('fieldset')).show();
-		}
-	}
-	handleCB();
-	$cb.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
-		app.u.dump("GOT HERE");
-		handleCB();
-		});
+				function handleCB()	{
+					if($cb.is(':checked'))	{
+						$('.toggleThis',$cb.closest('fieldset')).hide();
+						}
+					else	{
+						$('.toggleThis',$cb.closest('fieldset')).show();
+						}
+					}
+				handleCB();
+				$cb.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+					app.u.dump("GOT HERE");
+					handleCB();
+					});
 				},
 			
 			adminSyndicationMacroExec : function($btn)	{
@@ -1443,6 +1465,7 @@ function handleCB()	{
 						}
 					});
 				}, //adminSyndicationUnsuspendMacro
+
 			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
@@ -1456,6 +1479,7 @@ function handleCB()	{
 						}
 					});
 				}, //adminSyndicationUnsuspendAndClearErrorMacro
+
 			adminSyndicationPublishExec : function($btn)	{
 				$btn.button();
 				
@@ -1482,6 +1506,7 @@ app.model.dispatchThis('immutable');
 					
 					})
 				}, //adminSyndicationPublishExec
+
 			amazonThesaurusAddShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.amazonThesaurusAddShow').on('click.amazonThesaurusAddShow',function(event){

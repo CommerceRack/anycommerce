@@ -19,10 +19,9 @@
 	</div>
 
 
-	<div class='marginBottom pointer' onClick="navigateTo('#!ebay');"><!-- data-mkt="EBF" data-app-event="admin_syndication|showDSTDetail"  -->
+	<div class='marginBottom pointer' data-mkt="EBF" data-app-event="admin_syndication|showDSTDetail"><!--  onClick="navigateTo('#!ebay');" -->
 	<img height="40" width="150"  src="app-admin/images/marketplaces/ebay.png" />
 	</div>
-
 
 	<div class='marginBottom pointer' data-mkt="AMZ" data-app-event="admin_syndication|showDSTDetail"><!--  onClick="navigateTo('/biz/syndication/amazon/index.cgi');" -->
 	<img height="40" width="150"  src="app-admin/images/marketplaces/amazon_services.png" />
@@ -1702,7 +1701,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <div class='marginBottom clearfix ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<div class='floatRight'>
 <!--		<button>Delete</button> -->
-		<button>Refresh Listings</button>
+		<button data-app-event='admin_syndication|ebayLaunchProfileRefreshListingsExec'>Refresh Listings</button>
 		<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	<h1 data-bind='var: profile(%PROFILE.PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
@@ -1713,13 +1712,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<fieldset data-panelname='eBayLaunchProfileSettings'>
 		<legend>Launch Profile Settings</legend>
 		<div class='clearfix'>
-<!--
-			<label>
-				<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
-				Is active
-			</label>
-			<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
--->			
+
 		
 		
 		<!-- hide this in edit mode -->
@@ -2412,15 +2405,10 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 
-<div id='syndication_ebf' class='ui-widget ui-widget-content stdPadding ui-corner-all'>
+<div id='syndication_ebf'>
+
 	<div class='clearfix marginBottom'>
 		<div class='buttonset alignRight floatRight positionRelative'>
-			<span data-app-event='admin_syndication|ebayTokenDeleteButtonset'>
-				<button>Delete a Token</button>
-				<button>Token List</button>
-			</span>
-			<ul data-bind="var: ebay(@ACCOUNTS); format:processList; loadsTemplate:ebayTokenListItem;">
-			</ul>
 			<button data-app-event="admin_syndication|ebayLaunchProfileCreateShow">Add Launch Profile</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
 			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
@@ -2428,6 +2416,35 @@ The sandbox can be useful for developers who want to create test listings or pre
 	
 		<h1 class='marginBottom'>eBay Launch Profiles</h1>
 	</div>
+
+
+
+
+	<label class='marginBottom'>
+		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
+		Is active
+	</label>
+	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+
+
+	<section data-app-role='tokenListDetailContainer' class='marginBottom'>
+	<table class='fullWidth gridTable'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>eBay Username</th>
+		<th class='alignLeft hideInMinimalMode'>Errors</th>
+		<th class='alignLeft hideInMinimalMode'>Has Store</th>
+		<th class='alignLeft hideInMinimalMode'>Feedback Score</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:ebay(@ACCOUNTS); format:processList; loadsTemplate:ebayTokensRowTemplate;"></tbody>
+	</table>
+	</section>
+
+
 	<section data-app-role='launchProfileListDetailContainer'>
 	<table class='fullWidth gridTable'>
 	<thead>
@@ -2441,17 +2458,24 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<tbody data-bind="var:ebay(@PROFILES); format:processList; loadsTemplate:ebayProfilesRowTemplate;"></tbody>
 	</table>
 	</section>
+
 </div>
 
 
-<ul>
-	<li id='ebayTokenListItem'>
-	<a href='#' data-bind="var: ebay(EBAY_USERNAME); format:text;" data-app-event='admin_syndication|ebayTokenDeleteConfirm'></a>
-	</li>
-</ul>
-
-
 <table>
+
+<tr id='ebayTokensRowTemplate'>
+	<td data-bind="var: profile(EBAY_USERNAME); format:text;"></td>
+	<td data-bind="var: profile(ERRORS); format:text; hideZero:false;"></td>
+	<td>
+	<span data-bind="var: profile(HAS_STORE); format:addClass; className:ui-icon ui-icon-check;"></span>
+	</td>
+	<td data-bind="var: profile(EBAY_FEEDBACKSCORE); format:text; hideZero:false;" class='hideInMinimalMode'></td>
+	<td class='alignRight'>
+	<button title='Delete this token' data-app-event='admin_syndication|ebayTokenDeleteConfirm'>delete</button>
+	<button title="Refresh your eBay Store categories" data-app-event='admin_syndication|ebayRefreshStoreCategoriesExec'>refresh eBay Categories</button>
+	</td>
+</tr>
 
 <tr id='ebayProfilesRowTemplate'>
 	<td data-bind="var: profile(PROFILE); format:text;"></td>

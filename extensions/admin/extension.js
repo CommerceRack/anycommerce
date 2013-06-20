@@ -1508,7 +1508,7 @@ if giftcard is on there, no paypal will appear.
 		adminSyndicationDetail : {
 			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationDetail";
+				_tag.datapointer = "adminSyndicationDetail|"+DST;
 				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
@@ -2938,6 +2938,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 		showTrueIfSet : function($tag,data)	{
 			$tag.text('true') //won't get into renderFormat if not populated.
 			},
+
 
 //a value, such as media library folder name, may be a path (my/folder/name) and a specific value from that string may be needed.
 //set bindData.splitter and the value gets split on that character.
