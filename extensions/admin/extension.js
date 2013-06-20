@@ -2906,6 +2906,9 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
+		graphicURL : function($tag,data)	{
+			$tag.attr('src',"https://"+app.vars.https_domain+data.value);
+			},
 
 //used for adding email message types to a select menu.
 //designed for use with the vars object returned by a adminEmailList _cmd

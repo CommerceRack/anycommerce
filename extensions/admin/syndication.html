@@ -2483,13 +2483,14 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <div id='ebayTemplateChooserTemplate'>
-	<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:ebayTemplateChooserItemTemplate;">
+	<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:ebayTemplateChooserItemTemplate;" class='listStyleNone'>
 </div>
 
 
 <ul>
-	<li id='ebayTemplateChooserItemTemplate' data-app-event='admin_syndication|ebayTemplateChooserExec'>
-	<span data-bind="var: template(SUBDIR); format:text;"></span>
+	<li id='ebayTemplateChooserItemTemplate' data-app-event='admin_syndication|ebayTemplateChooserExec' class='floatLeft stdMargin small pointer'>
+	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS.0); format:graphicURL; extension:admin;' />
+	<div data-bind="var: template(SUBDIR); format:text;"></div>
 	</li>
 </ul>
 
