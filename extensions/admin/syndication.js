@@ -426,7 +426,7 @@ app.model.dispatchThis('immutable');
 									}
 								else	{
 									// app.u.kvp2Array -> use this on the ship fields.
-									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
+/*									app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'] = new Array();
 									app.data[rd.datapointer]['%PROFILE']['@ship_intservices_arr'] = new Array();
 	
 	//The data for ship_intservices and ship_domservices has each array value as a key/value pair. 
@@ -443,7 +443,7 @@ app.model.dispatchThis('immutable');
 											app.data[rd.datapointer]['%PROFILE']['@ship_domservices_arr'].push(app.u.kvp2Array(app.data[rd.datapointer]['%PROFILE']['@ship_domservices'][i]));
 											}
 										}
-									
+*/
 									
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer]['%PROFILE'],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
@@ -1163,7 +1163,17 @@ app.model.dispatchThis('immutable');
 								var
 									$tr = $(this),
 									data = $tr.data();
-								sfo['@ship_'+type+'services'].push("service="+data.service+"&free="+data.free+"&cost="+data.cost+"&addcost="+data.addcost+"&farcost="+data.farcost);
+									obj = {
+										"service" : data.service,
+										"free" : data.free,
+										"cost" : data.cost,
+										"addcost" : data.addcost
+										}
+//international has no farcost (AK+HI)
+								if(type == 'dom')	{
+									obj.farcost = data.farcost
+									}
+								sfo['@ship_'+type+'services'].push(obj);
 								if(index >= 2)	{return false} //exit now. only 3 allowed.
 								})
 							}
