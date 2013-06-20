@@ -1705,7 +1705,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<button>Refresh Listings</button>
 		<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
 	</div>
-	<h1 data-bind='var: profile(PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
+	<h1 data-bind='var: profile(%PROFILE.PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
 </div>
 
 <section class='twoColumn'>
@@ -1713,12 +1713,13 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<fieldset data-panelname='eBayLaunchProfileSettings'>
 		<legend>Launch Profile Settings</legend>
 		<div class='clearfix'>
+<!--
 			<label>
 				<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
 				Is active
 			</label>
 			<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-			
+-->			
 		
 		
 		<!-- hide this in edit mode -->
@@ -1748,28 +1749,12 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Best Offer</legend>
 		<div class='clearfix'>
 		<label>
-			<input type="checkbox" class='applyAnycb' name='Item\BestOfferDetails\BestOfferEnabled' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled); format:popVal;" />
+			<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\BestOfferEnabled\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN); format:popVal;" />
 			Enable
 			<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
 		</label>
 		
-		<label>
-			<span>Max # policy violations</span>
-			<input type='number' step='1' min='0' size='6' name='Item\BestOfferDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
-			<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations\Period) before being blocked from buying/bidding on the item. ">?</span>
-		</label>
-		
-		<label>
-			<span>Policy violations period</span>
-			<select name='Item\BestOfferDetails\MaximumBuyerPolicyViolations\Period' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\MaximumBuyerPolicyViolations\Period); format:popVal;">
-				<option value=''></option>
-				<option value='Days_30'>30</option>
-				<option value='Days_180'>180</option>
-				<option value='Days_360'>360</option>
-				<option value='Days_540'>540</option>
-			</select>
-			<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
-		</label>
+
 		</div>
 	</fieldset>
 	
@@ -1928,9 +1913,28 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<div class='clearfix'>
 			<label>
 				<input type="checkbox" class='applyAnycb' name='Item\DisableBuyerRequirements' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements); format:popVal;" />
-				Disable Buyer Requirements
+				Ignore all buyer requirements, including My Ebay.
 				<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>
+
+			<label>
+				<span>Max # policy violations</span>
+				<input type='number' step='1' min='0' size='6' name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
+				<span class='toolTip' title="This integer value sets the maximum number of buyer policy violations that a prospective buyer is allowed to have during a specified time period (MaximumBuyerPolicyViolations\Period) before being blocked from buying/bidding on the item. ">?</span>
+			</label>
+			
+			<label>
+				<span>Policy violations period</span>
+				<select name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Period); format:popVal;">
+					<option value=''></option>
+					<option value='Days_30'>30</option>
+					<option value='Days_180'>180</option>
+					<option value='Days_360'>360</option>
+					<option value='Days_540'>540</option>
+				</select>
+				<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
+			</label>
+
 		
 			<label>
 				<span>Max. item count</span>
@@ -1997,14 +2001,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN); format:popVal;" />
 				Ship to Reg. Country
 				<span class='toolTip' title="Enable to block bidders who reside (according to their eBay primary shipping address) in countries that are on the ship-to exclusion list..">?</span>
 			</label>
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\VerifiedUserRequirements\VerifiedUser\@BOOLEAN); format:popVal;" />
 				Verified user
 				<span class='toolTip' title="To block non-verified users from buying/bidding on their items, the seller should include this field and set its value to on. The default value of this field is off, so, if it is not included, non-verified users on the Australia, France, India, Ireland, Spain, and UK will be able to buy/bid on the seller's items.">?</span>
 			</label>
@@ -2020,7 +2024,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerResponsibleForShipping' data-bind="var: profile(%PROFILE.Item\BuyerResponsibleForShipping); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerResponsibleForShipping\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerResponsibleForShipping\@BOOLEAN); format:popVal;" />
 				Buyer Responsible For Shipping
 				<span class='toolTip' title="If on, the buyer is responsible for vehicle pickup or shipping. If off, specify vehicle shipping arrangements in the item description. Default is on. (The description can also include vehicle shipping arrangements when this value is true.) If the item has bids or ends within 12 hours, you cannot modify this flag. Do not specify ShippingDetails.ShippingServiceOptions for vehicle listings.">?</span>
 			</label>
@@ -2063,7 +2067,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Contact Information/Availability</legend>
 		<div class='clearfix'>
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN); format:popVal;" />
 				Anytime Hours
 				<span class='toolTip' title="Indicates whether or not a user is available to be contacted 24 hours a day during the range of days specified using the Hours1Days element.">?</span>
 			</label>
@@ -2178,7 +2182,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Currency</span>
-				<input type='text' name='Item\Currency' size='3' data-bind="var: profile(%PROFILE.Item\Currency); format:popVal;" />
+				<input type='text' name='Item\Currency\@CURRENCY' size='3' data-bind="var: profile(%PROFILE.Item\Currency\@CURRENCY); format:popVal;" />
 				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
 			</label>
 			
@@ -2191,7 +2195,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\GetItFast' data-bind="var: profile(%PROFILE.Item\GetItFast); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\GetItFast\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\GetItFast\@BOOLEAN); format:popVal;" />
 				Get it fast
 				<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
 			</label>
@@ -2239,7 +2243,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing' data-bind="var: profile(%PROFILE.Item\PrivateListing); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\PrivateListing\@BOOLEAN); format:popVal;" />
 				<span>Private listing</span>
 				<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
 			</label>
@@ -2261,7 +2265,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		
 		
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\AutoPay' data-bind="var: profile(%PROFILE.Item\AutoPay); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\AutoPay\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\AutoPay\@BOOLEAN); format:popVal;" />
 				Autopay
 				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
 			</label>
@@ -2322,7 +2326,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 		<legend>Seller Details</legend>
 		<div class='clearfix'>
 			<label>	
-				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing' data-bind="var: profile(%PROFILE.Item\PrivateListing); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\PrivateListing\@BOOLEAN); format:popVal;" />
 				Motors Dealer
 				<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
 			</label>
@@ -2481,9 +2485,9 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <ul>
-	<li id='ebayTemplateChooserItemTemplate' data-app-event='admin_syndication|ebayTemplateChooserExec' class='floatLeft stdMargin small pointer'>
+	<li id='ebayTemplateChooserItemTemplate' class='floatLeft stdMargin small pointer'>
 	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS.0); format:graphicURL; extension:admin;' />
-	<div data-bind="var: template(SUBDIR); format:text;"></div>
+	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink' data-app-event='admin_syndication|ebayTemplateChooserExec'></div>
 	</li>
 </ul>
 

@@ -342,7 +342,7 @@ var admin_syndication = function() {
 								}
 							else	{
 								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($(window).height() - 250).addClass('fullWidth').val(app.data[rd.datapointer]['body']);
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 250).css('width','90%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
 								var $button = $("<button>Save<\/button>").button().on('click',function(){
 
@@ -572,7 +572,13 @@ if(profile)	{
 	$D.data('profile',profile);
 	$D.dialog('open');
 	
-	
+	$D.imagegallery({
+		selector: 'a[data-gallery="gallery"]',
+		show: 'fade',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: false
+		});
 	
 	}
 else	{
@@ -1121,7 +1127,7 @@ app.model.dispatchThis('immutable');
 				},
 			ebayTemplateChooserExec : function($ele)	{
 				$ele.off('click.ebayTemplateChooserExec').on('click.ebayTemplateChooserExec',function(){
-					var data = $ele.data();
+					var data = $ele.closest('li').data();
 					app.ext.admin_syndication.u.handleEBAYTemplateSelect({
 						SUBDIR : data.subdir,
 						PROFILE : $('#ebayTemplateChooser').data('profile'),
@@ -1150,7 +1156,7 @@ app.model.dispatchThis('immutable');
 						sfo = $form.serializeJSON({'cb':true});
 
 					$tab.showLoading({'message':'Saving Launch Profile'});
-					
+
 					//the domestic and international shipping sections use the 'data table' technology.
 					//their contents need formatted and saved to the serialized form object.
 					function setShipping(type)	{

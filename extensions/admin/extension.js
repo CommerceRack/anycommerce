@@ -2908,6 +2908,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 		graphicURL : function($tag,data)	{
 			$tag.attr('src',"https://"+app.vars.https_domain+data.value);
+			$tag.wrap("<a href='https://"+app.vars.https_domain+data.value+"' data-gallery='gallery'>");
 			},
 
 //used for adding email message types to a select menu.
