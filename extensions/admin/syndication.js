@@ -353,10 +353,10 @@ var admin_syndication = function() {
 								}
 							else	{
 //								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','90%').val(app.data[rd.datapointer]['body']);
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','98%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
 								$D.append("<input name='template' id='templateName' value='' class='marginRight' placeholder='template name' \/>");
-								$("<button>Save As New Template<\/button>").button().on('click',function(){
+								$("<button>Save As New Template<\/button>").addClass('ui-state-active').button().on('click',function(){
 									var templateName = $('#templateName').val();
 									if(templateName && templateName.length > 5)	{
 										$D.showLoading({'message':'Saving as new template: '+templateName});
@@ -384,7 +384,7 @@ var admin_syndication = function() {
 
 
 									}).appendTo($D);
-								$("<button>Save Changes<\/button>").addClass('floatRight ui-state-highlight').button().on('click',function(){
+								$("<button>Save Changes<\/button>").addClass('floatRight ui-state-focus marginRight').button().on('click',function(){
 									$D.showLoading({'message':'Saving changes'});
 									app.model.addDispatchToQ({
 										'_cmd' : 'adminEBAYProfileFileSave',
@@ -402,7 +402,7 @@ var admin_syndication = function() {
 													}
 												}
 											},
-										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+										'body' : $('.jHtmlArea iframe:first',$D).contents().find('html').html()
 										},'immutable');
 									app.model.dispatchThis('immutable');
 
