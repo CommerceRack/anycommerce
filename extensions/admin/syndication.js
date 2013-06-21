@@ -354,8 +354,27 @@ var admin_syndication = function() {
 								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
 								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 250).css('width','90%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
-								
-								var $button = $("<button>Save To Profile<\/button>").button().on('click',function(){
+								$("<button>Save As Template<\/button>").button().on('click',function(){
+
+									app.model.addDispatchToQ({
+										'_cmd' : 'adminEBAYMacro',
+										'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile],
+										'_tag' : {
+											'callback' : function(responseData)	{
+												if(app.model.responseHasErrors(responseData)){
+													$D.anymessage({'message':responseData})
+													}
+												else	{
+													$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
+													}
+												}
+											},
+										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+										},'immutable');
+									app.model.dispatchThis();
+
+									}).appendTo($D);
+								$("<button>Save To Profile<\/button>").button().on('click',function(){
 
 									app.model.addDispatchToQ({
 										'_cmd' : 'adminEBAYProfileFileSave',
@@ -368,7 +387,7 @@ var admin_syndication = function() {
 													}
 												else	{
 													$D.dialog('close');
-													$('#globalMessaging').anymessage({"message":"Thank you, your changes have been saved.","gMessage":true});
+													$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
 													}
 												}
 											},
