@@ -320,7 +320,7 @@ var admin_syndication = function() {
 					$D.empty();
 					}
 				else	{
-					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit eBay Template'});
+					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit Listing HTML'});
 					$D.dialog({
 						'modal':true,
 						'autoOpen':false,
@@ -336,7 +336,7 @@ var admin_syndication = function() {
 				
 
 				$D.data({'profile':profile}); //this ID is used in the media lib to get the profile. don't change it.
-				$D.dialog('option','height',($(window).height() - 150));
+				$D.dialog('option','height',($(window).height() - 100));
 				$D.dialog('open');
 				$D.showLoading({"message":"Fetching template HTML"});
 
@@ -347,12 +347,13 @@ var admin_syndication = function() {
 					'_tag' : {
 						'datapointer' : 'adminEBAYProfileFileContents|'+profile,
 						'callback' : function(rd){
+							$D.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd})
 								}
 							else	{
-								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 250).css('width','90%').val(app.data[rd.datapointer]['body']);
+//								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','90%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
 								$D.append("<input name='template' id='templateName' value='' class='marginRight' placeholder='template name' \/>");
 								$("<button>Save As New Template<\/button>").button().on('click',function(){
@@ -383,7 +384,7 @@ var admin_syndication = function() {
 
 
 									}).appendTo($D);
-								$("<button>Save Changes<\/button>").button().on('click',function(){
+								$("<button>Save Changes<\/button>").addClass('floatRight ui-state-highlight').button().on('click',function(){
 									$D.showLoading({'message':'Saving changes'});
 									app.model.addDispatchToQ({
 										'_cmd' : 'adminEBAYProfileFileSave',
@@ -408,7 +409,7 @@ var admin_syndication = function() {
 									}).appendTo($D);
 	
 								$textarea.htmlarea();
-								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
+//								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
 								}
 							}
 						}
