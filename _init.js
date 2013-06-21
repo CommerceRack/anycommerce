@@ -62,9 +62,8 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		width   : 620,
 		height	: 340,
 		items   : 1,
-		auto : false,
 		scroll: 1,
-		duration    : 500,
+		duration    : 1000,
 		pagination  : "#slideshowNav"
 	});
 	}
@@ -116,6 +115,7 @@ var $context = $(app.u.jqSelector('#',P.parentID));
 			$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
 				$form.submit();      
 				});
+				$form.submit();
 			}
 		}
 		

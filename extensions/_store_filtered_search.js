@@ -39,7 +39,7 @@ var store_filter = function() {
 		
 			".batman":{
 			"filter": "batmanForm",
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:5000});}
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
 			}
 			
 			                
