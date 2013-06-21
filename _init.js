@@ -68,7 +68,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	});
 	}
 	carouselHPBanner = foo1;
-	setTimeout(carouselHPBanner, 2000);
+	setTimeout(carouselHPBanner, 1000);
 	
 	function foo2(){
 	var incrementPage = 1;
@@ -79,7 +79,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	})
 	}
 	carouselHPBanner2 = foo2;
-	setTimeout(carouselHPBanner2, 2100);
+	setTimeout(carouselHPBanner2, 1100);
 }]);
 
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
@@ -115,6 +115,7 @@ var $context = $(app.u.jqSelector('#',P.parentID));
 			$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
 				$form.submit();      
 				});
+				
 				$form.submit();
 			}
 		}

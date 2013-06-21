@@ -688,13 +688,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="slideshowContainer">
 <div id="slideshowNav"></div>
 <ul id="wideSlideshow" class="pics slideshow">
-<li><img src="images/1.jpg"/></li>
-<li><img src="images/2.jpg"/></li>
-<li><img src="images/3.jpg"/></li>
-<li><img src="images/4.jpg"/></li>
-<li><img src="images/5.jpg"/></li>
-<li><img src="images/6.jpg"/></li>
-<li><img src="images/7.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'DCD526277'});" src="images/Homepage/topBannerImages/banner1.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'DCD516729'});" src="images/Homepage/topBannerImages/banner2.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'DCD522903'});" src="images/Homepage/topBannerImages/banner3.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'QMSTR-0034-RF'});" src="images/Homepage/topBannerImages/banner4.jpg"/></li>
+<li><img onClick="return showContent('search',{KEYWORDS: 'walking dead pop'});" src="images/Homepage/topBannerImages/banner5.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'DCD612120'});" src="images/Homepage/topBannerImages/banner6.jpg"/></li>
+<li><img onClick="return showContent('product',{'pid':'DCD612281'});" src="images/Homepage/topBannerImages/banner7.jpg"/></li>
 </ul>
 </div>
 <div style="clear:both;"></div>
@@ -1866,11 +1866,16 @@ put all filters into the appFilters container.
         <br />
         <button class="resetButton"> Reset</button>
         
-        <fieldset data-elastic-key="base_price" data-filtertype="slider">
+        <fieldset class="filterSliderImage" data-elastic-key="base_price" data-filtertype="slider">
             <legend>SORT BY PRICE</legend>
             <input type="text" disabled="disabled" class='sliderValue' />
             <div class="slider-range"></div>
         </fieldset>
+        <!--<fieldset class="filterSliderImage" data-elastic-key="prod_salesrank" data-filtertype="slider">
+            <legend>SORT BY RELEASE DATE</legend>
+            <input type="text" disabled="disabled" class='sliderValue' />
+            <div class="slider-range"></div>
+        </fieldset>-->
         
         <fieldset data-elastic-key="prod_character" data-filtertype="hidden">
             <input type='hidden' name="prod_character" value="batman" />

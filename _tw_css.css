@@ -21,7 +21,9 @@
 .catBrowseSidebar{
 }
 .catPageContent{
-	float:left;
+	float: left;
+    margin-left: 30px;
+    width: 710px;
 }
 .catPageContent p{
 	margin:0;
@@ -219,6 +221,8 @@ div#container div#footer{
     text-align: right;
     width: 621px;
     z-index: 9;
+	background-color:rgb(2, 2, 2);
+	background-color: rgba(10, 10, 10, 0.7);
 }
 #slideshowNav a{
 	 background: none;
@@ -228,30 +232,49 @@ div#container div#footer{
     padding: 0;
     width: 67px;
 }
+#wideSlideshow li{
+	cursor:pointer;
+}
 .hpSSTopPage1{
-	background-image:url(images/1%20-%20Copy.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner1Thumb.jpg) !important;
 }
 .hpSSTopPage2{
-	background-image:url(images/2.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner2Thumb.jpg) !important;
 }
 .hpSSTopPage3{
-	background-image:url(images/3.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner3Thumb.jpg) !important;
 }
 .hpSSTopPage4{
-	background-image:url(images/4.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner4Thumb.jpg) !important;
 }
 .hpSSTopPage5{
-	background-image:url(images/5.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner5Thumb.jpg) !important;
 }
 .hpSSTopPage6{
-	background-image:url(images/6.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner6Thumb.jpg) !important;
 }
 .hpSSTopPage7{
-	background-image:url(images/7.jpg) !important;
+	background-image:url(images/Homepage/topBannerImages/banner7Thumb.jpg) !important;
 }
 .bannerS{
 	width: 642px;
 }
 .sliderM{
 	max-width: 962px;
+}
+fieldset.filterSliderImage div.ui-slider a.ui-slider-handle{
+	background-image:none !important;
+	
+	background: rgb(187,0,0) !important; /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(187,0,0,1) 0%, rgba(121,0,0,1) 100%) !important; /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(187,0,0,1)), color-stop(100%,rgba(121,0,0,1))) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%) !important; /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%) !important; /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%) !important; /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bb0000', endColorstr='#790000',GradientType=0 ) !important; /* IE6-9 */
+}
+div#container div.nav div.navContent > ul > li{
+	padding-left: 30px;
+    padding-right: 25px;
 }
