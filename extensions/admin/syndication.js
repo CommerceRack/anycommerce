@@ -410,9 +410,44 @@ var admin_syndication = function() {
 								$("<button>Cancel<\/button>").addClass('floatRight marginRight').button().on('click',function(){
 									$D.dialog('close');
 									}).appendTo($D);
-								$textarea.htmlarea();
+								$textarea.htmlarea({
+    // Override/Specify the Toolbar buttons to show
+toolbar: [
+	["html"],
+	["bold", "italic","strikethrough"],
+	["p","h1", "h2", "h3", "h4", "h5", "h6"],
+	["orderedList","unorderedList","|","indent","outdent"],
+	["horizontalrule"],
+	["justifyleft","justifycenter","justifyright"],
+	["link", "unlink"],
+	[
+		{
+			// The CSS class used to style the <a> tag of the toolbar button
+			css: 'image',
+
+			// The text to use as the <a> tags "Alt" attribute value
+			text: 'Add Image to Profile',
+
+			// The callback function to execute when the toolbar button is clicked
+			action: function (btn) {
+				var $D = $("<div \/>",{'id':'ebayTemplateMediaLibFileUpload'});
+				$D.dialog({
+					'modal':true,
+					'autoOpen' : false
+					});
+				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
+				$D.dialog('open');
+				app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateMediaLibFileUpload','ebayTemplateMediaUpload');
+				// 'this' = jHtmlArea object
+				// 'btn' = jQuery object that represents the <a> ("anchor") tag for the toolbar button
+
+				// Take some action or do something here
+			}
+		}
+	]
+]
+									});
 								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
-//								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
 								}
 							}
 						}
@@ -1227,6 +1262,7 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebayRefreshStoreCategoriesExec
 
+//opens the ebay template in an editor
 			adminEBAYProfileFileContents : function($btn)	{
 				
 				$btn.button();

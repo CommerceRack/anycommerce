@@ -2527,8 +2527,9 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Upgrade Launch Profile</button>
-	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>delete</button>
-	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>edit</button>
+	<button data-app-event='admin_syndication|adminEBAYProfileFileContents' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;'>Edit eBay Template</button>
+	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>Delete</button>
+	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>Edit</button>
 	</td>
 </tr>
 
