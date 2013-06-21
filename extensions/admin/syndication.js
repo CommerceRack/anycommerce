@@ -353,10 +353,11 @@ var admin_syndication = function() {
 								}
 							else	{
 //								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','98%').val(app.data[rd.datapointer]['body']);
+//The save changes and save template buttons have a right margin to compensate for the 99% on the iframe. a 100% on the iframe sometimes cause a horizontal scrollbar to appear in the modal.
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','99%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
-								$D.append("<input name='template' id='templateName' value='' class='marginRight' placeholder='template name' \/>");
-								$("<button>Save As New Template<\/button>").addClass('ui-state-active').button().on('click',function(){
+								var $templateInput = $("<input name='template' id='templateName' value='' class='marginRight floatRight' placeholder='template name' \/>");
+								var $templateButton = $("<button>Save As New Template<\/button>").addClass('ui-state-active floatRight smallButton marginRight').button().on('click',function(){
 									var templateName = $('#templateName').val();
 									if(templateName && templateName.length > 5)	{
 										$D.showLoading({'message':'Saving as new template: '+templateName});
@@ -383,7 +384,7 @@ var admin_syndication = function() {
 										}
 
 
-									}).appendTo($D);
+									});
 								$("<button>Save Changes<\/button>").addClass('floatRight ui-state-focus marginRight').button().on('click',function(){
 									$D.showLoading({'message':'Saving changes'});
 									app.model.addDispatchToQ({
@@ -409,6 +410,7 @@ var admin_syndication = function() {
 									}).appendTo($D);
 	
 								$textarea.htmlarea();
+								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
 //								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
 								}
 							}
