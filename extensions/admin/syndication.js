@@ -430,14 +430,14 @@ toolbar: [
 
 			// The callback function to execute when the toolbar button is clicked
 			action: function (btn) {
-				var $D = $("<div \/>",{'id':'ebayTemplateMediaLibFileUpload'});
+				var $D = $("<div \/>");
 				$D.dialog({
 					'modal':true,
 					'autoOpen' : false
 					});
 				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
 				$D.dialog('open');
-				app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateMediaLibFileUpload','ebayTemplateMediaUpload');
+				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
 				// 'this' = jHtmlArea object
 				// 'btn' = jQuery object that represents the <a> ("anchor") tag for the toolbar button
 
