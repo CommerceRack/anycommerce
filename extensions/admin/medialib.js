@@ -806,6 +806,8 @@ if(selector && mode)	{
 			},
 		'ebayTemplateMediaUpload' : function(data,textStatus)	{
 			app.u.dump("Got to ebayTemplateMediaUpload success.");
+			var L = data.length;
+			var tagObj;
 			var folderName = "_ebay/"+$('#ebayTemplateEditor').data('profile');
 			for(var i = 0; i < L; i += 1)	{
 				data[i].folder = folderName;
