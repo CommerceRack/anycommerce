@@ -769,8 +769,10 @@ app.u.dump(" -> mode: "+mode);
 
 //both a selector and a mode are required.
 if(selector && mode)	{
-	
-	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
+	// *** 201324 -> selector can now be a jquery object OR a string of a selector.
+//	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
+	var $selector = (selector instanceof jQuery) ? selector : $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
+
 //	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
 //	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
