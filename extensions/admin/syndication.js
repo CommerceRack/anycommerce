@@ -1189,14 +1189,14 @@ app.model.dispatchThis('immutable');
 						});	
 
 					})
-				},
+				}, //ebayLaunchProfileRefreshListingsExec
 
 			ebayTemplateChooserShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.showTemplateChooserInModal').on('click.showTemplateChooserInModal',function(){
 					app.ext.admin_syndication.a.showTemplateChooserInModal($btn.data('profile'));
 					});
-				},
+				}, //ebayTemplateChooserShow
 
 			ebayTemplateChooserExec : function($ele)	{
 				$ele.off('click.ebayTemplateChooserExec').on('click.ebayTemplateChooserExec',function(){
@@ -1207,7 +1207,7 @@ app.model.dispatchThis('immutable');
 						PROJECTID : data.projectid
 						});
 					})
-				},
+				}, //ebayTemplateChooserExec
 
 			ebayRefreshStoreCategoriesExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
@@ -1225,7 +1225,7 @@ app.model.dispatchThis('immutable');
 						},'immutable');
 					app.model.dispatchThis('immutable');	
 					});
-				},
+				}, //ebayRefreshStoreCategoriesExec
 
 			adminEBAYProfileFileContents : function($btn)	{
 				
@@ -1233,7 +1233,7 @@ app.model.dispatchThis('immutable');
 				$btn.off('click.adminEBAYProfileFileContents').on('click.adminEBAYProfileFileContents',function(){
 					app.ext.admin_syndication.a.showEBAYTemplateEditorInModal($btn.data('profile'))
 					})
-				},
+				}, //adminEBAYProfileFileContents
 
 			ebayLaunchProfileUpdateExec : function($btn)	{
 				$btn.button();
@@ -1368,7 +1368,7 @@ delete sfo.free
 				else	{
 					$btn.hide();
 					} //already upgraded. don't show button.
-				},
+				}, //ebayLaunchProfileUpgradeConfirm
 			
 			ebayAddCustomDetailShow : function($btn)	{
 
@@ -1388,7 +1388,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 				$ele.off('change.ebayShowTreeByChild').on('change.ebayShowTreeByChild',function(){
 					app.ext.admin_syndication.u.ebayShowTreeByChild($ele.val());
 					});
-				},
+				}, //ebayShowTreeByChild
 			
 			ebayTokenDeleteConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
@@ -1456,7 +1456,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				$ele.buttonset();
 				
-				},
+				}, //ebayTokenDeleteButtonset
 
 			ebayTokenLinkTo : function($btn)	{
 				$btn.button();
@@ -1465,7 +1465,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
 					});
 				}, //ebayTokenLinkTo
-			
+
 			amazonMWSLinkTo : function($btn)	{
 				$btn.button();
 				$btn.off('click.amazonMWSLinkTo').on('click.amazonMWSLinkTo',function(event){
@@ -1474,7 +1474,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					+ encodeURIComponent(window.location.href.split('?')[0]+"?linkFrom=amazon-token&PRT="+app.vars.partition)
 					});
 				}, //amazonMWSLinkTo
-			
+
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
@@ -1486,7 +1486,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						}
 					});
 				}, //showDSTDetail
-			
+
 			hideInputsByCheckbox : function($cb)	{
 				function handleCB()	{
 					if($cb.is(':checked'))	{
@@ -1502,7 +1502,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					handleCB();
 					});
 				}, //hideInputsByCheckbox
-			
+
 			adminSyndicationMacroExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationMacroExec').on('click.adminSyndicationMacroExec',function(){
@@ -1555,19 +1555,11 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 						else	{
 							$form.anymessage({"message":"In admin_syndication.u.adminSyndicationMacroExec, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 							}		
-						
-						
-						
-
-						
-
-						
-						
 						}
 					else	{} //validateForm handles error display.
 					});
 				}, //adminSyndicationMacroExec
-			
+
 			adminSyndicationUnsuspendMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
@@ -1644,7 +1636,7 @@ app.model.dispatchThis('immutable');
 					});
 //				
 				}, //amazonThesaurusAddShow
-			
+
 			adminSyndicationDebugExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationDebugExec').on('click.adminSyndicationDebugExec',function(){
