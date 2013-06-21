@@ -321,7 +321,17 @@ var admin_syndication = function() {
 					}
 				else	{
 					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit eBay Template'});
-					$D.dialog({'modal':true, 'autoOpen':false,'width':'90%'});
+					$D.dialog({
+						'modal':true,
+						'autoOpen':false,
+						'width':'90%',
+						close: function(event, ui)	{
+							$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
+							}, //will remove from dom on close
+						open : function(event,ui)	{
+							$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
+							}
+						});
 					}
 				
 
@@ -344,7 +354,8 @@ var admin_syndication = function() {
 								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
 								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 250).css('width','90%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
-								var $button = $("<button>Save<\/button>").button().on('click',function(){
+								
+								var $button = $("<button>Save To Profile<\/button>").button().on('click',function(){
 
 									app.model.addDispatchToQ({
 										'_cmd' : 'adminEBAYProfileFileSave',
@@ -1255,6 +1266,47 @@ delete sfo.free
 					
 					});
 				}, //ebayLaunchProfileUpdateShow
+			
+			ebayLaunchProfileUpgradeConfirm : function($btn)	{
+				var data = $btn.closest('tr').data();
+				if(Number(data.v) === 0)	{
+					$btn.button();
+					$btn.off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){
+						//confirm dialog goes here.
+						event.preventDefault();
+						
+						
+	
+						app.ext.admin.i.dialogConfirmRemove({
+							"title" : "Upgrade launch profile: "+data.profile,
+							"removeButtonText" : "Upgrade Profile",
+							"message" : "The upgrade process is new. Please perform this on a launch profile that is infrequently used or create a new profile and point your product to that one. Immediately test after upgrade.",
+							'removeFunction':function(vars,$D){
+								$D.showLoading({"message":"Upgrading profile "+data.profile});
+								app.model.addDispatchToQ({
+									'_cmd':'adminEBAYMacro',
+									'@updates': ["PROFILE-UPGRADE?PROFILE="+data.profile],
+									'_tag':	{
+										'callback':function(rd){
+										$D.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$('#globalMessaging').anymessage({'message':rd});
+											}
+										else	{
+											app.ext.admin_syndication.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
+											}
+										}
+									}
+								},'immutable');
+								app.model.dispatchThis('immutable');
+								}
+							});
+						});
+					}
+				else	{
+					$btn.hide();
+					} //already upgraded. don't show button.
+				},
 			
 			ebayAddCustomDetailShow : function($btn)	{
 

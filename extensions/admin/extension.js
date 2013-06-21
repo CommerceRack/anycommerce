@@ -5455,6 +5455,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					width : '90%',
 					autoOpen : false,
 					close: function(event, ui)	{
+						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
 //						app.u.dump('got into dialog.close - destroy.');
 						$(this).dialog('destroy');
 						$(this).empty().remove();
@@ -5462,6 +5463,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 //'open' event will reposition modal to center upon open. handy for when content added between create and open.
 //timeout is to have it happen after content is populated.
 					open : function(event,ui)	{
+						$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
 						setTimeout(function(){
 							//make sure dialog is smaller than window. do this BEFORE reposition so new position takes into account new height.
 							if($D.closest('.ui-dialog').height() > $(window).height())	{

@@ -2482,6 +2482,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<td data-bind="var: profile(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
+	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Update Launch Profile</button>
 	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>delete</button>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>edit</button>
 	</td>
@@ -2522,7 +2523,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 <form id="ebayTemplateEditorImageUpload" class='clearfix marginBottom'  name="ebayTemplateEditorImageUpload" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='IMAGES'>
 <!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload images for use in this template</h1>
+<h1 class='floatLeft'>Upload images for use in this profile</h1>
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
 </form>
 </div>
