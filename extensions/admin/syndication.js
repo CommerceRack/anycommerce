@@ -159,7 +159,7 @@ var admin_syndication = function() {
 					$('#globalMessage').anymessage({'message':rd});
 					}
 				}
-			}, //anycontentPlus
+			} //anycontentPlus
 
 
 		}, //callbacks
@@ -312,8 +312,6 @@ var admin_syndication = function() {
 
 // run when an ebay category is clicked that is a leaf, executed from the XSL file
 			showEBAYTemplateEditorInModal : function(profile)	{
-				
-				
 				var $D = $('#ebayTemplateEditor');
 				if($D.length)	{
 					$D.removeData('profile');
@@ -458,6 +456,8 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 			app.ext.admin.u.applyEditTrackingToInputs($target);
 
 //populate 'extras' tab, which is used for tokens and profiles.
+app.u.dump(" -> $('.anytabsContainer',$target).find('li'): "+$('.anytabsContainer:first',$slimLeftContent).find('li:eq(2)').length);
+			$('.anytabsContainer:first',$slimLeftContent).find('li:eq(1) a').trigger('click'); //make tokens and profiles tab active.
 			$extrasTabContent.anycontent({
 				'templateID' : 'ebayTokensAndProfilesTemplate',
 				'data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList)
@@ -545,7 +545,7 @@ app.model.dispatchThis('mutable');
 					$('.anytabsContainer',$target).anytabs();
 //there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
 // when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
-					$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
+					
 					
 					var $form = $("[data-anytab-content='settings'] form:first",$target);
 					$form.showLoading({'message':'Fetching Marketplace Details'});
@@ -556,7 +556,8 @@ app.model.dispatchThis('mutable');
 					if(DST == 'EBF')	{
 						app.ext.admin_syndication.a.showEBAY($form);
 						}
-					else	{	
+					else	{
+						$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
 						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
 						}
 
