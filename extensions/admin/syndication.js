@@ -354,34 +354,44 @@ var admin_syndication = function() {
 								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
 								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 250).css('width','90%').val(app.data[rd.datapointer]['body']);
 								$D.append($textarea);
-								$("<button>Save As Template<\/button>").button().on('click',function(){
+								$D.append("<input name='template' id='templateName' value='' class='marginRight' placeholder='template name' \/>");
+								$("<button>Save As New Template<\/button>").button().on('click',function(){
+									var templateName = $('#templateName').val();
+									if(templateName && templateName.length > 5)	{
+										$D.showLoading({'message':'Saving as new template: '+templateName});
+										app.model.addDispatchToQ({
+											'_cmd' : 'adminEBAYMacro',
+											'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
+											'_tag' : {
+												'callback' : function(responseData)	{
+													$D.hideLoading();
+													if(app.model.responseHasErrors(responseData)){
+														$D.anymessage({'message':responseData})
+														}
+													else	{
+														$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
+														}
+													}
+												},
+											'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+											},'mutable');
+										app.model.dispatchThis('mutable');
+										}
+									else	{
+										$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
+										}
 
-									app.model.addDispatchToQ({
-										'_cmd' : 'adminEBAYMacro',
-										'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile],
-										'_tag' : {
-											'callback' : function(responseData)	{
-												if(app.model.responseHasErrors(responseData)){
-													$D.anymessage({'message':responseData})
-													}
-												else	{
-													$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-													}
-												}
-											},
-										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
-										},'immutable');
-									app.model.dispatchThis();
 
 									}).appendTo($D);
-								$("<button>Save To Profile<\/button>").button().on('click',function(){
-
+								$("<button>Save Changes<\/button>").button().on('click',function(){
+									$D.showLoading({'message':'Saving changes'});
 									app.model.addDispatchToQ({
 										'_cmd' : 'adminEBAYProfileFileSave',
 										'PROFILE' : profile,
 										'FILENAME' : 'index.html',
 										'_tag' : {
 											'callback' : function(responseData)	{
+												$D.hideLoading();
 												if(app.model.responseHasErrors(responseData)){
 													$D.anymessage({'message':responseData})
 													}
@@ -393,7 +403,7 @@ var admin_syndication = function() {
 											},
 										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
 										},'immutable');
-									app.model.dispatchThis();
+									app.model.dispatchThis('immutable');
 
 									}).appendTo($D);
 	
@@ -1267,10 +1277,14 @@ delete sfo.free
 
 			ebayLaunchProfileUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				if(Number($btn.closest('tr').data('v')) === 0)	{
+					$btn.button('disable');
+					}
 				$btn.off('click.ebayLaunchProfileUpdateShow').on('click.ebayLaunchProfileUpdateShow',function(){
 					var $table = $btn.closest('table');
 //build the stickytab, if necessary.
 					if($btn.closest('.ui-widget-stickytab-content').length)	{} //already in a sticky tab
+					else if($('#stickytabs').children().length)	{} //not clicked from the sticky tab, but the tab is already open.
 					else	{
 						$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
