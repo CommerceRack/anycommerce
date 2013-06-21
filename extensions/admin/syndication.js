@@ -422,6 +422,16 @@ var admin_syndication = function() {
 
 			showEBAY : function($target)	{
 $target.empty().showLoading({'message':'Fetching eBay data'});
+
+var
+	$slimLeftContent = $target.closest("[data-app-role='slimLeftContentSection']"),
+	$extrasTab = $("[data-app-role='extrasTab']",$slimLeftContent),
+	$extrasTabContent = $("[data-anytab-content='extras']",$slimLeftContent);
+	
+
+$extrasTab.show().find('a').text('Tokens & Profiles');
+
+//ebayTokensAndProfilesTemplate
 //ebay takes a very different path at this point.  
 //go get 
 app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
@@ -434,13 +444,28 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 		}
 	else	{
 		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
-			$target.anycontent({'templateID':'syndication_ebf','data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList),'dataAttribs':{'dst':'EBF'}});
-			$('table',$target).anytable();
+//populate syndication tab
+			$target.anycontent({
+				'templateID':'syndication_ebf',
+				'data' : app.data['adminSyndicationDetail|EBF'],
+				'dataAttribs':{'dst':'EBF'}
+				});
+			app.u.handleAppEvents($target);
+			$(':checkbox.applyAnycb',$target).anycb();
+			app.ext.admin.u.applyEditTrackingToInputs($target);
+
+//populate 'extras' tab, which is used for tokens and profiles.
+			$extrasTabContent.anycontent({
+				'templateID' : 'ebayTokensAndProfilesTemplate',
+				'data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList)
+				});
+			$('table',$extrasTabContent).anytable();
+			app.u.handleAppEvents($extrasTabContent);
 			}
 		else	{
 			$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
+			app.u.handleAppEvents($target);
 			}
-		app.u.handleAppEvents($target);
 		}
 	}}},'mutable');
 app.model.dispatchThis('mutable');
@@ -511,22 +536,18 @@ app.model.dispatchThis('mutable');
 //					app.u.dump(" -> $target and DST are set ");
 
 					$target.empty();
-		
-		
-				
-					
-						$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
+					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
 	
 						
-						$('.anytabsContainer',$target).anytabs();
-	//there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
-	// when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
-						$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
-						
-						var $form = $("[data-anytab-content='settings'] form:first",$target);
-						$form.showLoading({'message':'Fetching Marketplace Details'});
-						
-						app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
+					$('.anytabsContainer',$target).anytabs();
+//there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
+// when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
+					$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
+					
+					var $form = $("[data-anytab-content='settings'] form:first",$target);
+					$form.showLoading({'message':'Fetching Marketplace Details'});
+					
+					app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 				
 
 					if(DST == 'EBF')	{
@@ -1525,7 +1546,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 
 							}
 						else	{
-							$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+							$form.anymessage({"message":"In admin_syndication.u.adminSyndicationMacroExec, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 							}		
 						
 						

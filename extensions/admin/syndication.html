@@ -167,7 +167,8 @@
 
 	<div class='anytabsContainer'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
 	<ul>
-		<li><a href='#settings' data-app-role='settings'>Settings</a></li>
+		<li><a href='#settings' data-app-role='settings'>Syndication</a></li>
+		<li class='displayNone' data-app-role='extrasTab'><a href='#extras' data-app-role='extras'></a></li><!-- DST specific. change tab text and content in showDST or showEBAy -->
 		<li><a href='#files' data-app-role='filesTab'>Files</a></li>
 		<li><a href='#history' data-app-role='historyTab'>History</a></li>
 		<li><a href='#errors' data-app-role='errorsTab'>Errors</a></li>
@@ -182,6 +183,11 @@
 			<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_syndication|adminSyndicationMacroExec">Save <span class='numChanges'></span> Changes</button>
 		</div>
 		</form>
+	</section>
+
+
+	<section data-anytab-content='extras' class='clearfix'>
+
 	</section>
 
 
@@ -201,7 +207,25 @@
 	
 	</tbody>
 	</table>
+	</section>
+
+
+	<section data-anytab-content='errors' class='clearfix'>
+	<div class='buttonset alignRight'>
+	<button data-app-event="admin_syndication|adminSyndicationUnsuspendAndClearErrorMacro">Clear Errors</button>
+	</div>
+	<table class='gridTable fullWidth applyAnytable'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>ID</th>
+		<th class='alignLeft'>Error</th>
+		<th class='alignLeft'>Created</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: mkt(@ROWS); format:processList; loadsTemplate:syndicationErrorsRowTemplate;">
 	
+	</tbody>
+	</table>
 	</section>
 
 	<section data-anytab-content='files' class='clearfix'>
@@ -2409,17 +2433,17 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 	<div class='clearfix marginBottom'>
 		<div class='buttonset alignRight floatRight positionRelative'>
-			<button data-app-event="admin_syndication|ebayLaunchProfileCreateShow">Add Launch Profile</button>
-			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
-			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
+			<button data-app-event="admin_syndication|adminSyndicationPublishExec">Publish</button>
+			<button data-app-event="admin_syndication|adminSyndicationUnsuspendMacro">Unsuspend</button>
+			<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_syndication|adminSyndicationMacroExec">Save <span class='numChanges'></span> Changes</button>
 		</div>
 	
-		<h1 class='marginBottom'>eBay Launch Profiles</h1>
+		<h1 class='marginBottom'>eBay Syndication</h1>
 	</div>
 
 
 
-
+	<input type='hidden' name='DST' value='EBF' />
 	<label class='marginBottom'>
 		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
 		Is active
@@ -2428,6 +2452,22 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 
+
+
+</div>
+
+
+<div id='ebayTokensAndProfilesTemplate'>
+
+	<div class='clearfix marginBottom'>
+		<div class='buttonset alignRight floatRight positionRelative'>
+		
+			<button data-app-event="admin_syndication|ebayLaunchProfileCreateShow">Add Launch Profile</button>
+			<button data-app-event="admin_syndication|ebayTokenLinkTo" >Link eBay Account</button>
+			<button data-app-event="admin_syndication|ebayTokenLinkTo" data-sandbox='1'>Link Sandbox Account</button>
+		</div>
+		<h1 class='marginBottom'>eBay Tokens and Launch Profiles</h1>
+	</div>
 
 	<section data-app-role='tokenListDetailContainer' class='marginBottom'>
 	<table class='fullWidth gridTable'>
@@ -2459,7 +2499,9 @@ The sandbox can be useful for developers who want to create test listings or pre
 	</table>
 	</section>
 
+
 </div>
+
 
 
 <table>
