@@ -1354,7 +1354,8 @@ delete sfo.free
 											$('#globalMessaging').anymessage({'message':rd});
 											}
 										else	{
-											app.ext.admin_syndication.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
+											$D.dialog('close');
+											app.ext.admin_syndication.a.showEBAY($btn.closest("[data-app-role='slimLeftContentSection']"));
 											}
 										}
 									}
@@ -1413,7 +1414,9 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 										$('#globalMessaging').anymessage({'message':rd});
 										}
 									else	{
-										app.ext.admin_syndication.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
+										$D.dialog('close');
+										$('#globalMessaging').anymessage(app.u.successMsgObject('Your token has been removed.'));
+										app.ext.admin_syndication.a.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
 										}
 									}
 								}
