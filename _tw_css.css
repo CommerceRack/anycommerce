@@ -103,7 +103,9 @@ div#container div#footer{
 }
 
 .select2Buttons li { 
-  margin: 0 5px 5px 0; 
+  float: left;
+  margin: 5px 20px 30px 0;
+  position: relative;
 }
 
 .select2Buttons li a, 
@@ -126,6 +128,7 @@ div#container div#footer{
   font-size: 15px;  
   border-radius: 0;
   border: 2px outset #8b7961;
+  position:absolute;
   
   background: rgb(180,162,136); /* Old browsers */
   background: -moz-linear-gradient(top,  rgba(180,162,136,1) 0%, rgba(104,85,64,1) 100%); /* FF3.6+ */
@@ -196,4 +199,59 @@ div#container div#footer{
 #carCat6{
 	width: 1020px;
 	padding-top:10px;
+}
+.btnCatBack {
+	margin-left: 325px;
+}
+#wideSlideshow{
+	padding-left: 1px;
+}
+#wideSlideshow li{
+	list-style:none;
+}
+#slideshowNav{
+	bottom: 0;
+    height: 60px;
+    left: 0;
+    padding-right: 0;
+    padding-top: 7px;
+    position: absolute;
+    text-align: right;
+    width: 621px;
+    z-index: 9;
+}
+#slideshowNav a{
+	 background: none;
+    float: left;
+    height: 50px;
+    margin: 0 7px 0 12px;
+    padding: 0;
+    width: 67px;
+}
+.hpSSTopPage1{
+	background-image:url(images/1%20-%20Copy.jpg) !important;
+}
+.hpSSTopPage2{
+	background-image:url(images/2.jpg) !important;
+}
+.hpSSTopPage3{
+	background-image:url(images/3.jpg) !important;
+}
+.hpSSTopPage4{
+	background-image:url(images/4.jpg) !important;
+}
+.hpSSTopPage5{
+	background-image:url(images/5.jpg) !important;
+}
+.hpSSTopPage6{
+	background-image:url(images/6.jpg) !important;
+}
+.hpSSTopPage7{
+	background-image:url(images/7.jpg) !important;
+}
+.bannerS{
+	width: 642px;
+}
+.sliderM{
+	max-width: 962px;
 }

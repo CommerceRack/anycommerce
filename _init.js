@@ -32,10 +32,10 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
+app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);
 app.rq.push(['script',0,app.vars.baseURL+'jquery.select2Buttons/jQuery.select2Buttons.js']);
 
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {	
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 	
 	//RANDOM SHIPPING LOGO GENERATOR
@@ -54,6 +54,33 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 			}else if(randomLogo === 4){
 				$(".shipLogo4").show();
 			}
+			
+	//TOP SLIDESHOW BANNER
+	var carouselHPBanner;
+	function foo1(){ $("#wideSlideshow").carouFredSel
+	({
+		width   : 620,
+		height	: 340,
+		items   : 1,
+		auto : false,
+		scroll: 1,
+		duration    : 500,
+		pagination  : "#slideshowNav"
+	});
+	}
+	carouselHPBanner = foo1;
+	setTimeout(carouselHPBanner, 2000);
+	
+	function foo2(){
+	var incrementPage = 1;
+	$("#slideshowNav").children().each(function() {
+		$(this).addClass("hpSSTopPage" + incrementPage);
+		incrementPage = incrementPage + 1;
+		$(this).children().remove();
+	})
+	}
+	carouselHPBanner2 = foo2;
+	setTimeout(carouselHPBanner2, 2100);
 }]);
 
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
@@ -141,10 +168,6 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 app.rq.push(['script',1,app.vars.baseURL+'cycle-2.9999.81.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
 
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-		var $target=$('#wideSlideshow');
-		if(!$target.hasClass('slideshowSet')){ //target doesn't already have slideshow
-			$target.addClass('slideshowSet').cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav'});	
-			}
 		}]);
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product

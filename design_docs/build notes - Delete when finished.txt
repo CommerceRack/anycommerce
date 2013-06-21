@@ -8,9 +8,6 @@ Footer:
 
 homepage:
 - update homepage banner slideshow to have actual desired images and add proper pagination(imge icons instead of numbers) to them.
-- correct width for the hot items product bar (currently synced to the productlist class sizing).
-- Discuss with Steve what the plan is for the featured categories bottom category navigation area?
-- correct the item list overlap on the bottom category navigation area. 
 - Test ALL links on the page.
 
 Category:
