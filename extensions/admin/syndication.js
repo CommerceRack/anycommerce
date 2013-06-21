@@ -332,6 +332,7 @@ var admin_syndication = function() {
 							$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
 							}
 						});
+					$D.dialog("option", "position", "center");
 					}
 				
 
@@ -408,7 +409,9 @@ var admin_syndication = function() {
 									app.model.dispatchThis('immutable');
 
 									}).appendTo($D);
-	
+								$("<button>Cancel<\/button>").addClass('floatRight marginRight').button().on('click',function(){
+									$D.dialog('close');
+									}).appendTo($D);
 								$textarea.htmlarea();
 								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
 //								app.ext.admin_medialib.u.convertFormToJQFU('#ebayTemplateEditor','ebayTemplateMediaUpload');
