@@ -423,29 +423,82 @@ toolbar: [
 	[
 		{
 			// The CSS class used to style the <a> tag of the toolbar button
-			css: 'image',
+			css: 'imageadd',
 
 			// The text to use as the <a> tags "Alt" attribute value
-			text: 'Add Image to Profile',
+			text: 'Upload New Image to Profile',
 
 			// The callback function to execute when the toolbar button is clicked
 			action: function (btn) {
 				var $D = $("<div \/>");
 				$D.dialog({
 					'modal':true,
+					'width':500,
+					height : 500,
 					'autoOpen' : false
 					});
 				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
 				$D.dialog('open');
 				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
+				
 				// 'this' = jHtmlArea object
 				// 'btn' = jQuery object that represents the <a> ("anchor") tag for the toolbar button
 
 				// Take some action or do something here
 			}
-		}
+		},
+		{
+			// The CSS class used to style the <a> tag of the toolbar button
+			css: 'image',
+
+			// The text to use as the <a> tags "Alt" attribute value
+			text: 'Place Image',
+
+			// The callback function to execute when the toolbar button is clicked
+			action: function (btn) {
+				var 
+					$D = $('#ebayTemplateEditorImageListModal'),
+					profile = $('#ebayTemplateEditor').data('profile'),
+					jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
+				if($D.length)	{
+					$D.empty(); //clear contents
+					}
+				else	{
+					$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
+					$D.dialog({
+						'title' : 'Select Media',
+						'modal':true,
+						'width':'60%',
+						'autoOpen' : false
+						});
+					}
+//				$D.append("<div>Use the inputs below to resize the graphic<\/div>");
+//				$D.append("<label>width: <input name='width' type='number' step='1' /><\/label>");
+//				$D.append("<label>height: <input name='height' type='number' step='1' /><\/label>");
+				$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
+				$D.dialog('open');
+				$D.showLoading({'message':'Updating File List'});
+				app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						//success content goes here.
+						var L = app.data[rd.datapointer]['@images'].length;
+//need a 'path' set for the data-bind to render.
+						for(var i = 0; i < L; i += 1)	{
+							app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
+							}
+						$D.anycontent({'datapointer':rd.datapointer});
+						app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
+						$D.dialog("option", "position", "center");
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			}
+		]
 	]
-]
 									});
 								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
 								}
@@ -1270,6 +1323,15 @@ app.model.dispatchThis('immutable');
 					app.ext.admin_syndication.a.showEBAYTemplateEditorInModal($btn.data('profile'))
 					})
 				}, //adminEBAYProfileFileContents
+
+//executed on click in file chooser portion of the template editor (in jhtml toolbar add image)
+			ebayHTMLEditorAddImage : function($ele,vars)	{
+				$ele.off('click.ebayHTMLEditorAddImage').on('click.ebayHTMLEditorAddImage',function(){
+ // Insert an Image by URL
+       				vars.jhtmlobject.image($ele.data('Name'));
+					$('#ebayTemplateEditorImageListModal').dialog('close');
+					});
+				},
 
 			ebayLaunchProfileUpdateExec : function($btn)	{
 				$btn.button();

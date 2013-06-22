@@ -813,6 +813,9 @@ if(selector && mode)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{},'immutable'); //on a successful response, add the file to the media library.
 				}
+//refresh the projects file list so that upon returning to the file chooser, it loads quick.
+			app.model.destroy("adminImageFolderDetail|"+folderName);
+			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable');
 			},
 		'csvUploadToBatch' : function(data,textStatus) {
 			app.u.dump("Got to csvUploadToBatch success.");
