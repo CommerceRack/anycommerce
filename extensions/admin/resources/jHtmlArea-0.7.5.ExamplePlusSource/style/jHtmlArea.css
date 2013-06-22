@@ -20,7 +20,7 @@ div.jHtmlArea .ToolBar ul li a.orderedlist { background-position: -96px 0; }
 div.jHtmlArea .ToolBar ul li a.unorderedlist { background-position: -112px 0; }
 div.jHtmlArea .ToolBar ul li a.image { background-position: -128px 0; }
 /* * 201324 -> for adding an image to the media library */ 
-div.jHtmlArea .ToolBar ul li a.imageadd {background:url(../images/image_add.png);}
+div.jHtmlArea .ToolBar ul li a.imageadd {background:url(image_add.png);}
 div.jHtmlArea .ToolBar ul li a.cut { background-position: -144px 0; }
 div.jHtmlArea .ToolBar ul li a.copy { background-position: -160px 0; }
 div.jHtmlArea .ToolBar ul li a.paste { background-position: -176px 0; }
