@@ -37,10 +37,17 @@ var store_filter = function() {
 //key is safe id. value is name of the filter form.
 	filterMap : {
 		
+			//****SEARCH PAGE'S FILTER FORM****
+			"searchPage":{
+			"filter": "searchPageForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			//****CATEGORY PAGES' FILTER FORMS****
 			".batman":{
 			"filter": "batmanForm",
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:1000});}
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
 			}
+			
 			
 			                
 		},
@@ -115,7 +122,7 @@ var store_filter = function() {
 
 app.u.dump("BEGIN store_filter.a.filter");
 var $prodlist = $("[data-app-role='productList']",$page).first().empty();
-
+app.u.dump($prodlist);
 
 $('.categoryList',$page).hide(); //hide any subcategory lists in the main area so customer can focus on results
 $('.categoryText',$page).hide(); //hide any text blocks.

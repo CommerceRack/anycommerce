@@ -87,7 +87,6 @@ app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 	
 	
 var $context = $(app.u.jqSelector('#',P.parentID));
-	//**COMMENT TO REMOVE AUTO-RESETTING WHEN LEAVING CAT PAGE FOR FILTERED SEARCH**
 	
 	app.ext.store_filter.vars.catPageID = $(app.u.jqSelector('#',P.parentID));  
 	
@@ -121,20 +120,6 @@ var $context = $(app.u.jqSelector('#',P.parentID));
 		}
 		
 		
-		
-		//selector function for filtered search that displays appropriate wood menu options when wood is selected.	
-		/*$('.woodPieces:checkbox').click(function() {
-    		var woodPieces = $(this);
-			// $this will contain a reference to the checkbox   
-			if (woodPieces.is(':checked')) {
-				 $(".woodType").show();
-				 $(".kingHeight").show();
-			} else {
-				$(".woodType").hide();
-				$(".kingHeight").hide();
-			}
-		});*/
-		
 		$('.resetButton', $context).click(function(){
 		$context.empty().remove();
 		showContent('category',{'navcat':P.navcat});
@@ -161,6 +146,34 @@ app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
 
 app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+	
+	var $context = $(app.u.jqSelector('#',P.parentID));
+	var $page = $(app.u.jqSelector('#',P.parentID));
+	
+	//****FILTERED SEARCH CODE****
+	app.u.dump("BEGIN searchTemplate onCompletes for filtering");
+	var $form = $("[name='searchPageForm']",'#appFilters').clone().appendTo($('.filterContainerSearch',$page));
+	$form.on('submit.filterSearch',function(event){
+		event.preventDefault()
+		app.u.dump(" -> Filter form submitted.");
+		app.ext.store_filter.a.execFilter($form,$page);
+				});
+	
+		if(typeof app.ext.store_filter.filterMap["searchPage"].exec == 'function')	{
+			app.ext.store_filter.filterMap["searchPage"].exec($form,P)
+			}
+	
+	//make all the checkboxes auto-submit the form.
+		$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
+			$form.submit(); 
+			$("#resultsProductListContainer").hide();     
+			});
+				
+			
+		
+		$('.resetButtonSearchPage', $context).click(function(){
+		//BUILD RESET FUNCTIONALITY FOR SEARCH PAGE
+		});
 }]);
 
 

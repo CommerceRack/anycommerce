@@ -41,6 +41,28 @@
 	font-size: 14px;
     font-weight: 900;
 }
+.resetButtonSearchPage
+{
+	width:100px;
+	height:30px;
+	margin-left: 50px;
+	margin-bottom: 10px;
+	border:none;
+	border-radius:4px;
+	color:white;
+	background: #bc0000; /* Old browsers */
+	background: -moz-linear-gradient(top,  #bc0000 0%, #7a0000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bc0000), color-stop(100%,#7a0000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #bc0000 0%,#7a0000 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #bc0000 0%,#7a0000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bc0000', endColorstr='#7a0000',GradientType=0 ); /* IE6-9 */
+    
+	font-size: 14px;
+    font-weight: 900;
+}
+
 .layeredSearch label{
 	color:black;
 }
@@ -277,4 +299,24 @@ fieldset.filterSliderImage div.ui-slider a.ui-slider-handle{
 div#container div.nav div.navContent > ul > li{
 	padding-left: 30px;
     padding-right: 25px;
+}
+.filterContainerSearch{
+	float: left;
+    width: 220px;
+}
+.layeredSearch legend.searchPageFSLegend{
+	width: 185px;
+}
+.searchFilterResults{
+	float: left;
+    width: 760px;
+}
+.searchFilterResults li{
+	float:left;
+	list-style:none;
+	min-height: 225px;
+    width: 216px;
+	background-color:white;
+	margin-bottom: 20px;
+    margin-right: 20px;
 }
