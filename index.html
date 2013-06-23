@@ -170,6 +170,7 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
 				<img onClick="return showContent('category',{'navcat':'.new-arrivals'});" src="img/catNavRow1/cw12_n_newarr-129x19.png" alt="New Arrivals" />
 				<div class="dropdown displayNone">
+					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-blackhawks-apparel.stanley_cup_playoffs'});">NEW: Stanley Cup Gear</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-accessories'});">Accessories</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-hats-caps'});">Hats & Caps</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-shirts'});">Shirts</div>
