@@ -2415,6 +2415,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 
 
 
+
 <div id='syndication_register_ebf'>
 	<h1>Generate eBayAutorization Token</h1>
 	
@@ -2443,8 +2444,8 @@ The sandbox can be useful for developers who want to create test listings or pre
 		</ol>
 	<li>Stores created on the sandbox will receive no fees.</li>
 </li>
+</ul>
 </p>
-
 </div>
 
 
@@ -2579,7 +2580,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <div id='ebayTemplateChooserTemplate'>
-	<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:ebayTemplateChooserItemTemplate;" class='listStyleNone'>
+	<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:ebayTemplateChooserItemTemplate;" class='listStyleNone'></ul>
 </div>
 
 
@@ -2603,8 +2604,8 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 <ul>
-	<li id='ebayTemplateEditorMediaFileTemplate' class='lookLikeLink small' data-app-event="admin_syndication|ebayHTMLEditorAddImage">
-<!--	<img src='blank.gif' data-bind='var: media(path); format:imageURL;' width='75' height='75' alt='' /><br /> -->
-	<span data-bind="var:media(Name); format:text;"></span>
+	<li id='ebayTemplateEditorMediaFileTemplate' class='lookLikeLink small floatLeft stdMargin'>
+	<img src='blank.gif' data-bind='var: media(path); format:publicURL; extension:admin;' width='75' height='75' alt='' /><br />
+	<span data-bind="var:media(Name); format:text;" class='small' data-app-event="admin_syndication|ebayHTMLEditorAddImage"></span>
 	</li>
 </ul>

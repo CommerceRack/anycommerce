@@ -491,6 +491,13 @@ toolbar: [
 							}
 						$D.anycontent({'datapointer':rd.datapointer});
 						app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
+						$D.imagegallery({
+							selector: 'a[data-gallery="gallery"]',
+							show: 'fade',
+							hide: 'fade',
+							fullscreen: false,
+							slideshow: false
+							});
 						$D.dialog("option", "position", "center");
 						}
 					}},'mutable');
@@ -1328,7 +1335,7 @@ app.model.dispatchThis('immutable');
 			ebayHTMLEditorAddImage : function($ele,vars)	{
 				$ele.off('click.ebayHTMLEditorAddImage').on('click.ebayHTMLEditorAddImage',function(){
  // Insert an Image by URL
-       				vars.jhtmlobject.image($ele.data('Name'));
+       				vars.jhtmlobject.image($ele.closest("[data-name]").data('Name'));
 					$('#ebayTemplateEditorImageListModal').dialog('close');
 					});
 				},

@@ -2767,6 +2767,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.wrap("<a href='https://"+app.vars.https_domain+data.value+"' data-gallery='gallery'>");
 			},
 
+		publicURL : function($tag,data)	{
+			$tag.attr('src',"http://"+app.vars.domain+"/media/merchant/"+app.vars.username+"/"+data.value);
+			$tag.wrap("<a href='http://"+app.vars.domain+"/media/merchant/"+app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
+			},
+
 //used for adding email message types to a select menu.
 //designed for use with the vars object returned by a adminEmailList _cmd
 		emailMessagesListOptions : function($tag,data)	{
