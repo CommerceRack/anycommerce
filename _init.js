@@ -38,6 +38,8 @@ app.rq.push(['script',0,app.vars.baseURL+'jquery.select2Buttons/jQuery.select2Bu
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {	
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 	
+	var $context = $(app.u.jqSelector('#',P.parentID));
+	
 	//RANDOM SHIPPING LOGO GENERATOR
 	$(".shipLogo1").hide();
 	$(".shipLogo2").hide();
@@ -68,25 +70,28 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	});
 	}
 	carouselHPBanner = foo1;
-	setTimeout(carouselHPBanner, 1000);
+	setTimeout(carouselHPBanner, 2000);
 	
-	function foo2(){
-	var incrementPage = 1;
-	$("#slideshowNav").children().each(function() {
-		$(this).addClass("hpSSTopPage" + incrementPage);
-		incrementPage = incrementPage + 1;
-		$(this).children().remove();
-	})
-	}
-	carouselHPBanner2 = foo2;
-	setTimeout(carouselHPBanner2, 1100);
+	
+	
+		function foo2(){
+			var incrementPage = 1;
+			$("#slideshowNav").children().each(function() {
+				$(this).addClass("hpSSTopPage" + incrementPage);
+				incrementPage = incrementPage + 1;
+				$(this).children().remove();
+			})
+		}
+		carouselHPBanner2 = foo2;
+		setTimeout(carouselHPBanner2, 2100);
+	
 }]);
 
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 	
 	
-var $context = $(app.u.jqSelector('#',P.parentID));
+	var $context = $(app.u.jqSelector('#',P.parentID));
 	
 	app.ext.store_filter.vars.catPageID = $(app.u.jqSelector('#',P.parentID));  
 	
@@ -151,6 +156,9 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 	var $page = $(app.u.jqSelector('#',P.parentID));
 	
 	//****FILTERED SEARCH CODE****
+	$('.fsCheckbox').attr('checked', false);
+	$("#resultsProductListContainer").show(); 
+	$(".searchFilterResults").hide();    
 	app.u.dump("BEGIN searchTemplate onCompletes for filtering");
 	var $form = $("[name='searchPageForm']",'#appFilters').clone().appendTo($('.filterContainerSearch',$page));
 	$form.on('submit.filterSearch',function(event){
@@ -166,13 +174,28 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 	//make all the checkboxes auto-submit the form.
 		$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
 			$form.submit(); 
-			$("#resultsProductListContainer").hide();     
-			});
+			//app.u.dump("Filter search actvated");
+			$("#resultsProductListContainer").hide();  
+			
+			$group1 = $('.fsCheckbox');
+			if($group1.filter(':checked').length === 0){
+				//app.u.dump("All checkboxes removed. Filter search deactivated.");
+				$("#resultsProductListContainer").show(); 
+				$(".searchFilterResults").hide();    
+			}
+			else{
+				//app.u.dump("All checkboxes removed. Filter search still active.");
+				$("#resultsProductListContainer").hide(); 
+				$(".searchFilterResults").show();    
+			}  
+		});
 				
 			
 		
 		$('.resetButtonSearchPage', $context).click(function(){
-		//BUILD RESET FUNCTIONALITY FOR SEARCH PAGE
+			$('.fsCheckbox').attr('checked', false);
+			$("#resultsProductListContainer").show(); 
+			$(".searchFilterResults").hide();    
 		});
 }]);
 
