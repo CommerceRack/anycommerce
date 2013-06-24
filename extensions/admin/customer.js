@@ -95,7 +95,16 @@ var admin_customer = function() {
 				$target.empty()
 				$target.showLoading({"message":"Fetching list of recently updated/created tickets."});
 				
-				app.ext.admin.calls.adminAppTicketList.init('NEW',{'callback':'anycontent','jqObj':$target,'templateID':'crmManagerPageTemplate'},'mutable');
+				app.model.addDispatchToQ({
+					"_cmd":"adminAppTicketList",
+					"STATUS":'NEW',
+					"_tag":{
+						'callback':'anycontent',
+						'datapointer' : 'adminAppTicketList',
+						'jqObj':$target,
+						'templateID':'crmManagerPageTemplate'
+						}
+					},'mutable');	
 				app.model.dispatchThis();
 				},
 
@@ -515,9 +524,16 @@ else	{
 						
 						$dualModeListContents.empty(); //empty all the existing rows.
 						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-						
-						app.ext.admin.calls.adminAppTicketList.init($ele.val(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
-						app.model.dispatchThis();
+						app.model.addDispatchToQ({
+							"_cmd":"adminAppTicketList",
+							"STATUS":$ele.val(),
+							"_tag":{
+								'callback':'anycontent',
+								'datapointer' : 'adminAppTicketList',
+								'jqObj':$dualModeListContents.parent()
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
 						}
 					});
 				}, //appAdminTicketListFilterExec
@@ -572,7 +588,8 @@ app.model.dispatchThis('immutable');
 						}},'immutable');
 					
 					app.model.destroy('adminAppTicketDetail|'+tktcode);
-					app.ext.admin.calls.adminAppTicketDetail.init(tktcode,{},'immutable');
+//					app.ext.admin.calls.adminAppTicketDetail.init(tktcode,{},'immutable');
+					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktcode,"_tag":{'datapointer':'adminAppTicketDetail|'+tktcode}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				
@@ -601,7 +618,16 @@ app.model.dispatchThis('immutable');
 					if(app.u.validateForm($form))	{
 						$dualModeListContents.empty(); //empty all the existing rows.
 						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-						app.ext.admin.calls.adminAppTicketSearch.init($form.serializeJSON(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
+						var sfo = $.extend(true,{},$form.serializeJSON(),{
+							"_cmd":"adminAppTicketSearch",
+							"_tag":{
+								'callback':'anycontent',
+								'datapointer' : 'adminAppTicketSearch',
+								'jqObj':$dualModeListContents.parent()
+								}
+							});
+						
+						app.model.addDispatchToQ(sfo,'mutable');	
 						app.model.dispatchThis();
 						}
 					else	{} //validateForm will handle error display.
@@ -630,18 +656,7 @@ app.model.dispatchThis('immutable');
 					app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
 					$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
 					
-					
-					app.ext.admin.calls.adminAppTicketDetail.init(data.tktcode,{
-						'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								app.u.throwMessage(rd);
-								}
-							else	{		
-								$panel.anycontent({'datapointer':rd.datapointer});
-								app.u.handleAppEvents($panel); 
-								}
-							}
-						},'mutable');
+app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode}},'mutable');						
 					app.model.dispatchThis('mutable');
 					});
 
@@ -651,20 +666,9 @@ app.model.dispatchThis('immutable');
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
 					event.preventDefault();
-					var $D = $("<div \/>").attr('title',"Add a New Organization");
-					
-					$D.anycontent({'templateID':'crmManagerTicketCreateTemplate','data':{}});
+					var $D = app.ext.admin.i.dialogCreate({'templateID':'crmManagerTicketCreateTemplate','data':{}});
 					app.u.handleAppEvents($D);
-					$D.dialog({
-						modal: true,
-						width : '70%',
-						close: function(event, ui)	{
-							$(this).dialog('destroy');
-							}
-						});
-					
 					$D.dialog('open');
-
 					});
 				}, //appAdminTicketCreateShow
 
@@ -676,15 +680,15 @@ app.model.dispatchThis('immutable');
 				var
 					$form = $btn.closest('form'),
 					sfo = $form.serializeJSON();
-				
-				app.ext.admin.calls.adminAppTicketCreate.init(sfo,{'callback' : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$form.anymessage({'message':rd})
+					sfo._cmd = 'adminAppTicketCreate';
+					sfo._tag = {
+						'callback' : 'showMessaging',
+						'jqObjEmpty': true,
+						'jqObj' : $form,
+						'message' : 'The ticket has been created.'
 						}
-					else	{
-						$form.empty().anymessage(app.u.successMsgObject('The ticket has been created.'));
-						}
-					}},'immutable');
+				$form.showLoading({'message':'Creating CRM Ticket'});
+				app.model.addDispatchToQ(sfo,'immutable');
 				app.model.dispatchThis('immutable');
 
 					});
