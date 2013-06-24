@@ -589,7 +589,7 @@ This HTML Editor option will be removed altogether in the future.
 	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix ui-widget-buttonbar">
 	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 	<button data-app-event="admin_prodEdit|configOptions">Config Options</button>
-	<button data-app-event="admin_prodEdit|webPageEditor">Web Page Editor</button>
+	<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly'>Web Page Editor</button>
 	<button data-app-event="admin_prodEdit|viewProductOnWebsite">Preview</button>
 	</div>
 	</fieldset>
@@ -1311,3 +1311,127 @@ time.
 
 </div>
 
+
+
+
+<div id='variationManagerTemplate'>
+
+
+
+</div>
+
+<div id='variationCreateUpdateTemplate'>
+
+<form action='#' onSubmit="return false;" class='labelsAsBreaks'>
+
+<table>
+<tr>
+	<td class='valignTop'>
+<fieldset>
+	<legend>Settings</legend>
+	
+	<label>
+		<span>Prompt</span>
+		<input type='text' name='PROMPT' data-bind="var: variation(PROMPT); format:popVal;" />
+		<span class='toolTip' title="This is what your users will be displayed e.g. Size, Color, Preference.">?</span>
+	</label>
+
+	<label>
+		<span>Hint</span>
+		<input type='text' name='GHINT' data-bind="var: variation(GHINT); format:popVal;" />
+		<span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span>
+	</label>
+	
+	<label>
+		<span>Amazon keyword</span>
+		<select name="AMZ" data-bind="var: variation(AMZ); format:popVal;">
+<option value="">None</option>
+<option value="APPAREL: Color">APPAREL: Color</option>
+<option value="APPAREL: Size">APPAREL: Size</option>
+<option value="AUTO: Color">AUTO: Color</option>
+<option value="AUTO: Size">AUTO: Size</option>
+<option value="CAMERA: None">CAMERA: None</option>
+<option value="CE: None">CE: None</option>
+<option value="EYEWEAR: Color">EYEWEAR: Color</option>
+<option value="EYEWEAR: ColorName">EYEWEAR: ColorName</option>
+<option value="EYEWEAR: LensColor">EYEWEAR: LensColor</option>
+<option value="EYEWEAR: LensWidth">EYEWEAR: LensWidth</option>
+<option value="EYEWEAR: MagnificationStrength">EYEWEAR: MagnificationStrength</option>
+<option value="EYEWEAR: Size">EYEWEAR: Size</option>
+<option value="FOOD: Flavor">FOOD: Flavor</option>
+<option value="FOOD: Size">FOOD: Size</option>
+<option value="HANDBAG: Color">HANDBAG: Color</option>
+<option value="HEALTH: Color">HEALTH: Color</option>
+<option value="HEALTH: Count">HEALTH: Count</option>
+<option value="HEALTH: Flavor">HEALTH: Flavor</option>
+<option value="HEALTH: Size">HEALTH: Size</option>
+<option value="HOME: Color">HOME: Color</option>
+<option value="HOME: ItemPackageQuantity">HOME: ItemPackageQuantity</option>
+<option value="HOME: Material">HOME: Material</option>
+<option value="HOME: Scent">HOME: Scent</option>
+<option value="HOME: Size">HOME: Size</option>
+<option value="JEWELRY: Length">JEWELRY: Length</option>
+<option value="JEWELRY: MetalType">JEWELRY: MetalType</option>
+<option value="JEWELRY: RingSize">JEWELRY: RingSize</option>
+<option value="JEWELRY: SizePerPearl">JEWELRY: SizePerPearl</option>
+<option value="JEWELRY: TotalDiamondWeight">JEWELRY: TotalDiamondWeight</option>
+<option value="MUSIC: Color">MUSIC: Color</option>
+<option value="OFFICE: None">OFFICE: None</option>
+<option value="SHOEACCESSORY: Color">SHOEACCESSORY: Color</option>
+<option value="SHOEACCESSORY: Size">SHOEACCESSORY: Size</option>
+<option value="SHOES: Color">SHOES: Color</option>
+<option value="SHOES: Size">SHOES: Size</option>
+<option value="SOFTWARE: None">SOFTWARE: None</option>
+<option value="SPORTS: Color">SPORTS: Color</option>
+<option value="SPORTS: GolfFlex">SPORTS: GolfFlex</option>
+<option value="SPORTS: GolfLoft">SPORTS: GolfLoft</option>
+<option value="SPORTS: GripSize">SPORTS: GripSize</option>
+<option value="SPORTS: GripType">SPORTS: GripType</option>
+<option value="SPORTS: Hand">SPORTS: Hand</option>
+<option value="SPORTS: Length">SPORTS: Length</option>
+<option value="SPORTS: LensColor">SPORTS: LensColor</option>
+<option value="SPORTS: ShaftMaterial">SPORTS: ShaftMaterial</option>
+<option value="SPORTS: ShaftType">SPORTS: ShaftType</option>
+<option value="SPORTS: Size">SPORTS: Size</option>
+<option value="SPORTS: Style">SPORTS: Style</option>
+<option value="SPORTS: TensionLevel">SPORTS: TensionLevel</option>
+<option value="SPORTS: Weight">SPORTS: Weight</option>
+<option value="SPORTS: WeightSupported">SPORTS: WeightSupported</option>
+<option value="SPORTS: Width">SPORTS: Width</option>
+<option value="TOOLS: None">TOOLS: None</option>
+<option value="TOYSBABY: None">TOYSBABY: None</option>
+<option value="WIRELESS: None">WIRELESS: None</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Google keyword</span>
+		<select name="GOO" data-bind="var: variation(GOO); format:popVal;">
+			<option value="">None</option>
+			<option value="Color">Color</option>
+			<option value="Size">Size</option>
+			<option value="Material">Material</option>
+			<option value="Pattern">Pattern</option>
+		</select>
+	</label>
+
+	<label>
+		<span>eBay specifics name</span>
+		<input type='text' name='EBAY' data-bind="var: variation(EBAY); format:popVal;" />
+		<span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span>
+	</label>
+
+	<label>
+		<input type="checkbox" name="optional" class='applyAnycb' />
+		Optional <span class='toolTip' title="If enabled, the variation will not display in cart/order if it is not selected.">?</span>
+	</label>
+</fieldset>
+	</td>
+	<td class='valignTop'></td>
+</tr>
+</table>
+
+</form>
+
+
+</div>

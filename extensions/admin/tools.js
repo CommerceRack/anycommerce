@@ -202,7 +202,7 @@ for(index in sfo)	{
 						.not("[app-data-role='powerToolConditionalContainer'] input") //skip the conditional inputs
 						.not(':radio') //don't lock the radios or verb can't be changed.
 						.attr('disabled','disabled')  //disable all other inputs. helps clearly indicate what's required.
-						.attr('required','').removeAttr('required'); //make sure input isn't required.
+						.attr('required','').removeAttr('required').val(""); //make sure input isn't required. empty any value that was set to avoid confusion.
 					$radio.closest('tr').find('input').attr('disabled','').removeAttr('disabled').attr('required','required'); //enable input(s) related to this verb.
 					});
 				}, //powerToolVerbChange

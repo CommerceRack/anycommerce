@@ -341,7 +341,11 @@ has to be within the fieldset to for data-table to work right.
 	<td data-bind='var: action(verb); format:text;'></td>
 	<td data-bind='var: action(attrib); format:text;'></td>
 	<td data-bind='var: action(value); format:text;'></td>
-	<td data-bind='var: action(condition); format:text;'></td>
+	<td>
+<span  data-bind='var: action(when-attrib); format:text; pretext:when ;'></span>
+<span  data-bind='var: action(when-attrib-operator); format:text;'></span>
+<span  data-bind='var: action(when-attrib-contains); format:text;'></span>
+	</td>
 	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 
