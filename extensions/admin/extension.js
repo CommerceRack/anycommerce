@@ -3876,8 +3876,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				var $button = $("[data-app-role='saveButton']",$context);
 				app.u.dump(" -> button.length: "+$button.length);
 				if($('.edited',$context).length)	{
-					$('.numChanges',$button).text($('.edited',$context).length)
-					$button.button("enable").addClass('ui-state-highlight');
+					$('.numChanges',$button).text($('.edited',$context).length);
+					if($button.hasClass('ui-button'))	{
+						$button.button("enable");
+						}
 					}
 				else	{
 					$('.numChanges',$button).text("")
@@ -5872,7 +5874,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 						}
 					else	{
 //adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
-						$btn.addClass('ui-state-error').parents('tr').addClass('edited').addClass('rowTaggedForRemove').find('button').each(function(){
+						$btn.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find('button').each(function(){
+							app.u.dump(" -> $(this).text(): "+$(this).text());
 							$(this).button('disable')
 							}); //disable the other buttons
 						$btn.button('enable');

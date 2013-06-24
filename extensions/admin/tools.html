@@ -7,7 +7,7 @@
 
 
 <h1>Product Power Tool</h1>
-<p class="hint">REMINDER: The Product Power Tool lets you to make a lot of changes all at once - PLEASE BE SURE TO HAVE BACKUPS OF YOUR DATA.</p>
+<p class="hint">REMINDER: The Product Power Tool lets you to make a lot of changes all at once - Please be sure to have backups of your data.</p>
 
 <table class='fullWidth'>
 <tbody>
@@ -295,7 +295,7 @@ has to be within the fieldset to for data-table to work right.
 	<td class="valignTop nwColumnN">
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Step 3: Drop the Hammer</h3>
+		<h3>Step 3: Make It So</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
@@ -312,7 +312,7 @@ has to be within the fieldset to for data-table to work right.
 	<th></th>
 </tr>
 </thead>
-<tbody data-bind="var: batch(@ACTIONS); format:processList; loadsTemplate:powerToolActionsRowTemplate;" ></tbody>
+<tbody id='powerToolActionListTbody' data-bind="var: batch(@ACTIONS); format:processList; loadsTemplate:powerToolActionsRowTemplate;" ></tbody>
 </table>
 </div>
 
@@ -322,7 +322,7 @@ has to be within the fieldset to for data-table to work right.
 			<span class='toolTip' title="Job title is optional, but is very useful if you plan to use this again.">?</span>
 		</label>
 
-		<button>Do It!</button>
+		<button data-app-role='saveButton'>Do It!</button>
 
 		</div>
 	</div>

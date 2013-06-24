@@ -116,8 +116,24 @@ for(index in sfo)	{
 	handleIt('supplier');
 	handleIt('mancat');
 	}
+				}/*,
+			powerToolGetValue : function(sfo)	{
+				var value = ""; //what is returned. based on what verb is set.
+				switch(sfo.verb)	{
+					case 'set':
+					  r = sfo.setval;
+					  break;
+					case 'add':
+					  r = sfo.addval;
+					case 'replace':
+					  r = sfo.searchval;
+					  
+					  break;
+					default:
+					  
+					}
 				}
-			}, //u [utilities]
+*/			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
 //right now, these are not fully supported, but they will be going forward. 
@@ -130,13 +146,28 @@ for(index in sfo)	{
 				$btn.button();
 				$btn.off('click.powerToolAddAction').on('click.powerToolAddAction',function(){
 					var $form = $btn.closest('form');
+					var sfo = $form.serializeJSON({'cb':true});
 
-					if(app.u.validateForm($form))	{
-						var sfo = $form.serializeJSON({'cb':true});
+					if(app.u.validateForm($form) && sfo.verb)	{
 						app.ext.admin_tools.u.pickerSelection2CSV(sfo); //manipulate the data. drop supperfluous inputs.
-						app.u.dump(sfo);
+
+						var 
+							$dataTbody = $('#powerToolActionListTbody'),
+							bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+							$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+
+							$tr.anycontent({'data':sfo}).appendTo($dataTbody);
+							$tr.addClass('edited');
+							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+
+							app.u.handleAppEvents($tr); //vars are passed through so that buttons in list can inheret. rules uses this.
 						}
-					else	{} //validateForm will handle error display.
+					else	{
+						//validateForm will handle most error display.
+						if(!sfo.verb)	{
+							$form.anymessage({'message':"Please choose an action in the 'now what to do' section."})
+							}
+						} 
 					});
 				},
 			

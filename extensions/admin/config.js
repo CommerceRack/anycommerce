@@ -967,8 +967,6 @@ $D.dialog('open');
 								$tr.appendTo($dataTbody);
 								}
 							app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
-					//this function will look for .edited in the form and, if present, enable and update the save button.
-							app.ext.admin.u.handleSaveButtonByEditedClass($form);
 							}
 						else	{
 							app.u.dump("form did not validate");
