@@ -56,7 +56,7 @@ var admin_tools = function() {
 				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false});
 				$('.toolTip',$target).tooltip();
 				$("[data-app-role='pickerContainer']:first",$target).append(app.ext.admin.a.getPicker());
-				app.u.handleAppEvents($target,{'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
+				app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
 
 				},
 			
@@ -97,6 +97,26 @@ var admin_tools = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			pickerSelection2CSV : function(sfo)	{
+sfo.navcat = "";
+sfo.supplier = "";
+sfo.mancat = "";
+function handleIt(type)	{
+	if(index.indexOf(type+'_') === 0)	{
+		if(Number(sfo[index]) === 1)	{
+			sfo[type] += index.substring(type.length + 1)+','; //the substring strips the 'type' indicator and the underscore (the +1) from the front of the index. (makes navcat_.safeid into .safeid)
+			}
+		delete sfo[index]; //trim the fat off of the object.
+		}
+	}
+
+
+for(index in sfo)	{
+	handleIt('navcat');
+	handleIt('supplier');
+	handleIt('mancat');
+	}
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
@@ -105,6 +125,21 @@ var admin_tools = function() {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			
+			powerToolAddAction : function($btn)	{
+				$btn.button();
+				$btn.off('click.powerToolAddAction').on('click.powerToolAddAction',function(){
+					var $form = $btn.closest('form');
+
+					if(app.u.validateForm($form))	{
+						var sfo = $form.serializeJSON({'cb':true});
+						app.ext.admin_tools.u.pickerSelection2CSV(sfo); //manipulate the data. drop supperfluous inputs.
+						app.u.dump(sfo);
+						}
+					else	{} //validateForm will handle error display.
+					});
+				},
+			
 			powerToolAttribChange : function($ele)	{
 				$ele.off('change.powerToolAttribChange').on('change.powerToolAttribChange',function(){
 					var $fieldset = $ele.closest('fieldset');

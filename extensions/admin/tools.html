@@ -2,8 +2,9 @@
 
 <div id='productPowerToolTemplate'>
 
-<form action='#' onSubmit="return false" class='labelsAsBreaks'>
+<form action='#' onSubmit="return false" class='labelsAsBreaks' id='productPowerToolForm'>
 <input type="hidden" value="0" name="JOBID" />
+
 
 <h1>Product Power Tool</h1>
 <p class="hint">REMINDER: The Product Power Tool lets you to make a lot of changes all at once - PLEASE BE SURE TO HAVE BACKUPS OF YOUR DATA.</p>
@@ -11,7 +12,7 @@
 <table class='fullWidth'>
 <tbody>
 <tr>
-	<td class="valignTop">
+	<td class="valignTop nwColumnN">
 
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
@@ -23,7 +24,7 @@
 
 	</td><!-- /step 1 -->
 	
-	<td class="valignTop">
+	<td class="valignTop nwColumnW">
 
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
@@ -32,6 +33,17 @@
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		<fieldset>
 			<legend>Which attribute to Change</legend>
+
+
+<!--
+data-app-role='manipulatedDataContainer' is used for storing picker data after it's been put into a more usable format. 
+It's a separate container than the fieldset so it can be emptied.
+has to be within the fieldset to for data-table to work right.
+ -->
+<div data-app-role='manipulatedDataContainer'></div>
+
+
+
 
 			<label>
 				<span>Attribute</span>
@@ -272,7 +284,7 @@
 			</div>
 			
 			
-			<button data-app-event='admin_config|dataTableAddExec'>Add Action</button>
+			<button data-app-event='admin_tools|powerToolAddAction'>Add Action</button><!-- admin_config|dataTableAddExec -->
 			<p class='hint'>HINT: You can add more than one action.</p>
 		</fieldset>
 		</div>
@@ -280,7 +292,7 @@
 	
 	</td><!-- /step 2 -->
 
-	<td class="valignTop">
+	<td class="valignTop nwColumnN">
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Step 3: Drop the Hammer</h3>

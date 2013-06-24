@@ -924,7 +924,7 @@ $D.dialog('open');
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
-// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes.
+// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes. that form is NOT validated or included in the serialized Form Object.
 // $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
 // $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
 			dataTableAddExec : function($btn,vars)	{
@@ -953,7 +953,7 @@ $D.dialog('open');
 								sfo = $container.serializeJSON({'cb':true}),
 								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 							
-					//		app.u.dump(" -> sfo: "); app.u.dump(sfo);
+							app.u.dump(" -> sfo: "); app.u.dump(sfo);
 							
 							$tr.anycontent({data:sfo});
 							$tr.addClass('edited');
