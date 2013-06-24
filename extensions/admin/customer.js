@@ -830,7 +830,17 @@ var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 	'panelID' : 'giftcard_'+GCID,
 	'header' : 'Edit Giftcard: '+GCID
 	});
-app.ext.admin.calls.adminGiftcardDetail.init(GCID,{'callback':'anycontent','jqObj':$panel},'mutable');
+
+
+app.model.addDispatchToQ({
+	'_cmd' : 'adminGiftcardDetail',
+	'GCID' : GCID,
+	'_tag' : {
+		'callback':'anycontent',
+		'jqObj':$panel,
+		'datapointer' : 'adminGiftcardDetail|'+GCID
+		}
+	},'mutable');
 app.model.dispatchThis('mutable');
 					});
 				},

@@ -590,6 +590,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}			
 			}, //adminEmailList
+
 		adminEmailSave : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -607,50 +608,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminDataQuery
 
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminGiftcardSearch : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminGiftcardSearch"
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminGiftcardSearch'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminGiftcardSearch
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminGiftcardDetail : {
-			init : function(GCID,_tag,Q)	{
-				var r = 0;
-				if(GCID)	{
-					_tag = _tag || {}; 
-					_tag.datapointer = "adminGiftcardDetail|"+GCID;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(GCID,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminGiftcardDetail, GCID not passed","gMessage":true});
-					}
-				return r;
-				},
-			dispatch : function(GCID,_tag,Q)	{
-				var obj = {};
-				obj.GCID = GCID;
-				obj._cmd = 'adminGiftcardDetail'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminGiftcardSearch
-		
 
 //obj requires title and uuid, priority and @GRAPHS are optional.
 		adminKPIDBCollectionCreate : {
@@ -816,22 +773,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminKPIDBUserDataSetsList
 
-
-
-
-		adminProductReviewList : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProductReviewList"
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd ="adminProductReviewList";
-				obj._tag = _tag
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminKPIDBCollectionList	
 
 
 
