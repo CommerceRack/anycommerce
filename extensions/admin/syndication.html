@@ -2270,11 +2270,39 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Payment methods</span>
-			NOT DONE.
-			http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+				<select multiple='multiple'>
+					<option value='AmEx'>American Express</option>
+					<option value='CashInPerson'>Cash-in-person option</option>
+					<option value='CashOnPickup'>Payment on delivery</option>
+					<option value='CCAccepted'>Credit card</option>
+<!--					<option value='COD'>Cash on delivery</option> -->
+					<option value='Diners'>Diners</option>
+					<option value='Discover'>Discover</option>
+					<option value='IntegratedMerchantCreditCard'>Integrated merchant credit card</option>
+					<option value='LoanCheck'>Loan check</option>
+					<option value='MOCC'>Money order/cashiers check</option>
+					<option value='Moneybookers'>Moneybookers</option>
+					<option value='MoneyXferAccepted'>Direct transfer of money</option>
+					<option value='MoneyXferAcceptedInCheckout'>Direct transfer of money in checkout</option>
+					<option value='None'>None</option>
+					<option value='Other'>Other forms of payment</option>
+					<option value='OtherOnlinePayments'>All other online payments</option>
+					<option value='Paymate'>Paymate</option>
+					<option value='PaymentSeeDescription'>Payment See description</option>
+					<option value='PayOnPickup'>PayOnPickup</option>
+					<option value='PayPal'>PayPal</option>
+					<option value='PersonalCheck'>Personal check</option>
+					<option value='ProPay'>ProPay</option>
+					<option value='StandardPayment'>Standard payment</option>
+					<option value='VisaMC'>Visa/MC</option>
+				</select>
+<!--			http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html -->
 				<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
 			</label>
-			
+<p class='hint'>
+Not all payment types are available for all listing types.  See eBay for the compatibility list.<br />
+http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+</p>
 			<label>
 				<span>PayPal email address</span>
 				<input type='number' step='.01' max='2000' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
