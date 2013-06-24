@@ -64,7 +64,7 @@ var admin_tools = function() {
 				
 				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
-					'header' : 'Secret Agent Man!',
+					'header' : 'Agent Manager',
 					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'buttons' : [
 						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
