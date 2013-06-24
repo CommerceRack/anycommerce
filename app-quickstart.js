@@ -909,6 +909,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	//					app.u.dump(" -> Got to search case.");	
 						app.ext.myRIA.u.showSearch(infoObj);
 						infoObj.parentID = 'mainContentArea_search';
+						infoObj.preservePage = true;
 						break;
 	
 					case 'customer':

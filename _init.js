@@ -150,6 +150,8 @@ app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
 }]);
 
 app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
+	if(P.preservePage){ alert("You hit the back button");
+	
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 	
 	var $context = $(app.u.jqSelector('#',P.parentID));
