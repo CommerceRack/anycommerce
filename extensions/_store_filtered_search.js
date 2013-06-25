@@ -37,14 +37,326 @@ var store_filter = function() {
 //key is safe id. value is name of the filter form.
 	filterMap : {
 		
+		//EXAMPLE:
+		
+		/*".":{
+			"filter": "",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			}
+			*/
+		
 			//****SEARCH PAGE'S FILTER FORM****
 			"searchPage":{
 			"filter": "searchPageForm",
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
 			},
 			//****CATEGORY PAGES' FILTER FORMS****
-			".batman":{
+			//**CHARACTER FILTER FORMS**
+			".character.batman":{
 			"filter": "batmanForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.captain_america":{
+			"filter": "cptAmericaForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.flash":{
+			"filter": "FlashForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.harry_potter":{
+			"filter": "harryPForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.incredible_hulk":{
+			"filter": "hulkForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.iron_man":{
+			"filter": "ironmanForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.james_bond":{
+			"filter": "jamesBondForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.joker":{
+			"filter": "jokerForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.spider_man":{
+			"filter": "spidermanForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.star_wars.darth_vader":{
+			"filter": "darthVaderForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.star_wars.luke_skywalker":{
+			"filter": "lukeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.star_wars.stormtrooper":{
+			"filter": "stormtrooperForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.superman":{
+			"filter": "supermanForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.thor":{
+			"filter": "thorForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".character.wonder_woman":{
+			"filter": "wonderWomanForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			
+				
+		//**THEME FILTER FORMS**
+			".theme.avengers":{
+			"filter": "avengersForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.batman":{
+			"filter": "batmanThemeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.beatles":{
+			"filter": "beatlesForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.big_bang_theory":{
+			"filter": "bigBangTheoryForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.deadpool":{
+			"filter": "deadpoolForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.dr_who":{
+			"filter": "drWhoForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.green_lantern":{
+			"filter": "greenLanternForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.halo":{
+			"filter": "haloForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.iron_man":{
+			"filter": "ironmanThemeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.justice_league":{
+			"filter": "justiceLeagueForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.mass_effect":{
+			"filter": "massEffectForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.predator":{
+			"filter": "predatorForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.star_trek":{
+			"filter": "starTrekForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.star_wars":{
+			"filter": "starWarsForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.the_hobbit":{
+			"filter": "hobbitForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.walking_dead":{
+			"filter": "walkingDeadForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.wolverine":{
+			"filter": "wolverineForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".theme.x_men":{
+			"filter": "xMenForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			
+			//**PRODUCT TYPE FILTER SEARCH FORMS**
+			".item_type.action_figures":{
+			"filter": "actionFiguresForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.art":{
+			"filter": "artForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			//".":{
+			//"filter": "artworkForm",
+			//"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			//},
+			".item_type.barware":{
+			"filter": "barwareForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.bobblehead":{
+			"filter": "bobbleheadForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.cologne_fragrances":{
+			"filter": "fragranceForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.comic_books":{
+			"filter": "comicForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.costumes":{
+			"filter": "costumeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.film_cell":{
+			"filter": "filmCellForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.maquette":{
+			"filter": "maquetteForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.mini_bust":{
+			"filter": "miniBustForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.minimate":{
+			"filter": "minimateForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.plush":{
+			"filter": "plushForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.pop_vinyl":{
+			"filter": "popVinylForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".item_type.posters":{
+			"filter": "postersForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			
+			//****MANUFACTURER FILTER SEARCH FORMS****-
+			".manufacturer.acme_archivesAcme":{
+			"filter": "acmeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.bandai":{
+			"filter": "bandaiForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.bif_bang_pow":{
+			"filter": "bifBangPowForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.bridge_direct":{
+			"filter": "directBridgeForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.dark_horse_deluxe":{
+			"filter": "darkHorseForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.dc_comics":{
+			"filter": "dcForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.diamond_comics":{
+			"filter": "diamondSelectForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.efx":{
+			"filter": "efxForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.enterbay":{
+			"filter": "enterbayForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.factory_entertainment":{
+			"filter": "entertainmentFactoryForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.film_cells_ltd":{
+			"filter": "filmCellsLtdForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.gentle_giant":{
+			"filter": "gentleGiantForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.hasbro":{
+			"filter": "hasbroForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.hot_toys":{
+			"filter": "hotToysForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.image_comics":{
+			"filter": "imageComicsForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.kotobukiya":{
+			"filter": "kotobukiyaForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.marvel":{
+			"filter": "marvelForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.master_replicas":{
+			"filter": "masterReplicasForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.mcfarlane":{
+			"filter": "mcFarlaneForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.medicom":{
+			"filter": "medicomForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.museum_replicas":{
+			"filter": "museumReplicasForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.noble_collection":{
+			"filter": "nobleForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.official_pix":{
+			"filter": "officialPixForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.square_enix":{
+			"filter": "squareForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.underground_toys":{
+			"filter": "undergroundToysForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.united_cutlery":{
+			"filter": "unitedCutleryForm",
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
+			},
+			".manufacturer.weta":{
+			"filter": "wetaForm",
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:2000});}
 			}
 			
