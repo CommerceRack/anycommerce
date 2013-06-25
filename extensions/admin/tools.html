@@ -32,7 +32,7 @@
 		</div>
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		<fieldset>
-			<legend>Which attribute to Change</legend>
+			<h2>Which attribute to Change</h2>
 
 
 <!--
@@ -174,10 +174,8 @@ has to be within the fieldset to for data-table to work right.
 				<input type="text" name='attrib_custom'>
 			</label>
 
-		</fieldset>
-		
-		<fieldset data-app-role='verbContainer'>
-			<legend>Now what to do?</legend>
+
+			<h2>Now what to do?</h2>
 			
 			<table>
 			<tbody>
@@ -284,7 +282,7 @@ has to be within the fieldset to for data-table to work right.
 			</div>
 			
 			
-			<button data-app-event='admin_tools|powerToolAddAction'>Add Action</button><!-- admin_config|dataTableAddExec -->
+			<button data-app-event='admin_config|dataTableAddExec'>Add Action</button><!-- admin_config|dataTableAddExec -->
 			<p class='hint'>HINT: You can add more than one action.</p>
 		</fieldset>
 		</div>
@@ -322,7 +320,7 @@ has to be within the fieldset to for data-table to work right.
 			<span class='toolTip' title="Job title is optional, but is very useful if you plan to use this again.">?</span>
 		</label>
 
-		<button data-app-role='saveButton'>Do It!</button>
+		<button data-app-role='saveButton' data-app-event='admin_tools|powerToolBatchJobExec'>Git er Done</button>
 
 		</div>
 	</div>
@@ -339,8 +337,19 @@ has to be within the fieldset to for data-table to work right.
 <table>
 <tr id='powerToolActionsRowTemplate'>
 	<td data-bind='var: action(verb); format:text;'></td>
-	<td data-bind='var: action(attrib); format:text;'></td>
-	<td data-bind='var: action(value); format:text;'></td>
+	<td>
+<span data-bind='var: action(attrib); format:text;'></span>
+<div data-bind='var: action(attrib_custom); format:text;'></div>
+	</td>
+	<td>
+<div data-bind='var: action(setval); format:text;'></div>
+<div data-bind='var: action(addval); format:text;'></div>
+<div data-bind='var: action(searchval); format:text; pretext: replace ;'></div>
+<div data-bind='var: action(replaceval); format:text; pretext: with ;'></div>
+<div data-bind='var: action(copyto); format:text;'></div>
+<div data-bind='var: action(copyfrom); format:text;'></div>
+
+	</td>
 	<td>
 <span  data-bind='var: action(when-attrib); format:text; pretext:when ;'></span>
 <span  data-bind='var: action(when-attrib-operator); format:text;'></span>

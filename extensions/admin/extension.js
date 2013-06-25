@@ -53,7 +53,7 @@ var admin = function() {
 		'pageTemplateSites',
 		'domainListTemplate',
 		'partitionListTemplate'
-		
+
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
 //		'projectCreateTemplate',
@@ -2980,6 +2980,7 @@ $("[data-app-role='accordionContainer']",$D).first().accordion({
 		app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
 
 		if(!ui.newPanel.data('contentloaded'))	{
+			ui.newPanel.showLoading({'message':'Fetching List'});
 			var _tag = {}
 			_tag.callback = function(rd)	{
 				app.u.dump('got into callback');
@@ -2997,7 +2998,8 @@ $("[data-app-role='accordionContainer']",$D).first().accordion({
 				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
 				}
 			else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-				// !!! profiles?
+				_tag.datapointer = 'adminEBAYProfileList'
+				app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
 				}
 			else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
 				app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');

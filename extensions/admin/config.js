@@ -932,7 +932,7 @@ $D.dialog('open');
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
 					event.preventDefault();
 					
-					app.u.dump("BEGIN admin_config.e.dataTableAddExec");
+//					app.u.dump("BEGIN admin_config.e.dataTableAddExec");
 					
 					var
 						$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
@@ -942,18 +942,18 @@ $D.dialog('open');
 					
 					
 					if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
-						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
+//						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
 					//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
 					//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
 					//	$('input',$container).attr('required','required'); 
 						if(app.u.validateForm($container))	{
-							app.u.dump(" -> form is validated.");
+//							app.u.dump(" -> form is validated.");
 							var 
 								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
 								sfo = $container.serializeJSON({'cb':true}),
 								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 							
-							app.u.dump(" -> sfo: "); app.u.dump(sfo);
+//							app.u.dump(" -> sfo: "); app.u.dump(sfo);
 							
 							$tr.anycontent({data:sfo});
 							$tr.addClass('edited');

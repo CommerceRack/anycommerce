@@ -55,9 +55,16 @@ var admin_tools = function() {
 			showPPT : function($target)	{
 				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false});
 				$('.toolTip',$target).tooltip();
-				$("[data-app-role='pickerContainer']:first",$target).append(app.ext.admin.a.getPicker());
+				var $picker = $("[data-app-role='pickerContainer']:first",$target);
+				$picker.append(app.ext.admin.a.getPicker());
+				$('.applyDatepicker',$picker).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					maxDate : 0,
+					dateFormat : 'yymmdd'
+					});
 				app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
-
+//				$("input",$picker).each(function(){});
 				},
 			
 			showciEngineAgentManager : function($target)	{
@@ -97,43 +104,107 @@ var admin_tools = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			pickerSelection2CSV : function(sfo)	{
-sfo.navcat = "";
-sfo.supplier = "";
-sfo.mancat = "";
-function handleIt(type)	{
-	if(index.indexOf(type+'_') === 0)	{
-		if(Number(sfo[index]) === 1)	{
-			sfo[type] += index.substring(type.length + 1)+','; //the substring strips the 'type' indicator and the underscore (the +1) from the front of the index. (makes navcat_.safeid into .safeid)
-			}
-		delete sfo[index]; //trim the fat off of the object.
-		}
-	}
+			pickerSelection2KVP : function($context)	{
+				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
+				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
+				var sfo = $context.serializeJSON({'cb':true});
 
-
-for(index in sfo)	{
-	handleIt('navcat');
-	handleIt('supplier');
-	handleIt('mancat');
-	}
-				}/*,
-			powerToolGetValue : function(sfo)	{
-				var value = ""; //what is returned. based on what verb is set.
-				switch(sfo.verb)	{
-					case 'set':
-					  r = sfo.setval;
-					  break;
-					case 'add':
-					  r = sfo.addval;
-					case 'replace':
-					  r = sfo.searchval;
-					  
-					  break;
-					default:
-					  
+				if(Number(sfo.SELECTALL) === 1)	{
+					r = 'all'
 					}
+				else	{
+					function handleIt(type)	{
+						if(Number(sfo[index]) === 1)	{
+							r += index.replace('+','=')+"\n"; // input name is navcat+.something, so simply changing + to = makes it macroesque-ready.
+							}
+						}
+				
+					for(index in sfo)	{
+						if(index.indexOf('NAVCAT') === 0)	{handleIt('NAVCAT');}
+						else if(index.indexOf('SUPPLIER') === 0)	{handleIt('SUPPLIER');}
+						else if(index.indexOf('MANAGECAT') === 0)	{handleIt('MANAGECAT');}
+						else if(index.indexOf('PROFILE') === 0)	{handleIt('PROFILE');}
+						else	{} //do nada. isn't a checkbox list.
+						}
+					
+					if(sfo.rstart && sfo.rend)	{
+						r += "range?"+sfo.rstart+"|"+sfo.rend+"\n";
+						}
+
+					if(sfo.createstart && sfo.createend)	{
+						r += "created?"+sfo.createstart+"|"+sfo.createend+"\n";
+						}
+					
+					if(sfo.csv)	{
+						r += "csv?"+sfo.csv+"\n";
+						}
+					}
+				app.u.dump(" -> r: "+r)
+				return r;
+				},
+
+//will return an array of macro-esque values
+//context could be the fieldset or the parent form.
+			pickerSelection2Array : function($context)	{
+				app.u.dump("BEGIN admin_tools.u.powerToolBatchJobExec");
+				var r = new Array(); //what is returned. array w/ each entry formatted as: 'navcat=.safe.name' or 'vendor=XYZ'
+				var sfo = $context.serializeJSON({'cb':true});
+				
+//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				function handleIt(type)	{
+					if(Number(sfo[index]) === 1)	{
+						r.push(index.replace('+','=')); // input name is navcat+.something, so simply changing + to = makes it macroesque-ready.
+						}
+					}
+
+				if($("[name='SELECTALL']",$context).is(':checked'))	{
+					r.push('all')
+					}
+				else	{
+				
+					for(index in sfo)	{
+						if(index.indexOf('navcat') === 0)	{handleIt('navcat');}
+						else if(index.indexOf('supplier') === 0)	{handleIt('supplier');}
+						else if(index.indexOf('managecat') === 0)	{app.u.dump(" -> managecat");handleIt('managecat');}
+						else if(index.indexOf('launchprofile') === 0)	{handleIt('mancat');}
+						else	{} //do nada. isn't a checkbox list.
+						}
+					
+					if($("[name='rstart']",$context).val() && $("[name='rend']",$context).val())	{
+						r.push("range?"+encodeURIComponent($("[name='rstart']",$context).val()+"|"+$("[name='rend']",$context).val()))
+						}
+					
+					if($("[name='csv']",$context).val())	{
+						r.push("csv?"+encodeURIComponent($("[name='csv']",$context).val()));
+						}
+					
+					}
+				
+				return r;
+				},
+			powertoolActions2Array : function($tbody)	{
+				var r = new Array();
+				$('tr',$tbody).each(function(){
+					var
+						data = $(this).data(),
+						verb = data.verb;
+					delete data.verb;
+					r.push(verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data));
+					});
+				return r;
+				},
+			powertoolActions2KVP : function($tbody)	{
+				var r = new Array();
+				$('tr',$tbody).each(function(){
+					var
+						data = $(this).data(),
+						verb = data.verb;
+					delete data.verb;
+					r += verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data);
+					});
+				return r;
 				}
-*/			}, //u [utilities]
+			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
 //right now, these are not fully supported, but they will be going forward. 
@@ -142,33 +213,27 @@ for(index in sfo)	{
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
-			powerToolAddAction : function($btn)	{
+			
+			powerToolBatchJobExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.powerToolAddAction').on('click.powerToolAddAction',function(){
-					var $form = $btn.closest('form');
-					var sfo = $form.serializeJSON({'cb':true});
-
-					if(app.u.validateForm($form) && sfo.verb)	{
-						app.ext.admin_tools.u.pickerSelection2CSV(sfo); //manipulate the data. drop supperfluous inputs.
-
-						var 
-							$dataTbody = $('#powerToolActionListTbody'),
-							bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-							$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
-
-							$tr.anycontent({'data':sfo}).appendTo($dataTbody);
-							$tr.addClass('edited');
-							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-
-							app.u.handleAppEvents($tr); //vars are passed through so that buttons in list can inheret. rules uses this.
-						}
-					else	{
-						//validateForm will handle most error display.
-						if(!sfo.verb)	{
-							$form.anymessage({'message':"Please choose an action in the 'now what to do' section."})
+				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(){
+					app.u.dump("BEGIN powerToolBatchJobExec click event.");
+					var	$form = $btn.closest('form');
+						obj = {
+							'%vars' : {
+								'GUID' : app.u.guidGenerator(),
+								'APP' : 'PRODUCT_POWERTOOL',
+								'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
+								'actions' : app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
+								},
+							'type' : 'UTILITY'
 							}
-						} 
-					});
+//					console.clear();
+//					app.u.dump(" -> actions: "+obj['%vars'].actions);
+//					app.u.dump(" -> obj: "); app.u.dump(obj); 
+					app.ext.admin_batchJob.a.adminBatchJobCreate(obj);
+					
+					})
 				},
 			
 			powerToolAttribChange : function($ele)	{
