@@ -5,6 +5,7 @@ Needs to be assigned to a group:
 - default hte quantity box to 1 and hide if this won't cause any kind of issues with SEO or other unintended consequences.
 - Update limited edition pog so that the title returned is: Choose Limited Edition Number . Talk to TIm about making this change.
 - and a what's this pop up that explains the above pog IF it is sowing for that product.
+- Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
 
 
 header:
