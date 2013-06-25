@@ -473,8 +473,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							$("input[name='bill/region']",$fieldset).attr('required','required');
 							}
 						else	{
-							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
-							$("input[name='bill/region']",$fieldset).removeAttr('required');
+//							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
+//							$("input[name='bill/region']",$fieldset).removeAttr('required');
+// *** 201324 -> best practice is to empty the attrib before removing it. (fixed an issue for Clinton)
+							$("input[name='bill/postal']",$fieldset).attr('required','').removeAttr('required').removeAttr('data-minlength');
+							$("input[name='bill/region']",$fieldset).attr('required','').removeAttr('required');
 							}
 						
 						if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
@@ -512,8 +515,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							$("input[name='ship/region']",$fieldset).attr('required','required');
 							}
 						else	{
-							$("input[name='ship/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
-							$("input[name='ship/region']",$fieldset).removeAttr('required');
+//							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
+//							$("input[name='bill/region']",$fieldset).removeAttr('required');
+// *** 201324 -> best practice is to empty the attrib before removing it. (fixed an issue for Clinton)
+							$("input[name='bill/postal']",$fieldset).attr('required','').removeAttr('required').removeAttr('data-minlength');
+							$("input[name='bill/region']",$fieldset).attr('required','').removeAttr('required');
 							}
 						
 						if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
