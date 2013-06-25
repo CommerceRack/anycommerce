@@ -802,7 +802,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 		handleResponse_adminOrderCreate : function(responseData)	{
 			this.handleResponse_cartOrderCreate(responseData); //share the same actions. append as needed.
 			},
-	
+
 		handleResponse_authNewAccountCreate : function(responseData)	{
 			app.model.handleResponse_authAdminLogin(responseData); //this will have the same response as a login if successful.
 			},
@@ -931,6 +931,14 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find product "+responseData.pid+". Product may no longer exist. ";
 							} //db:id will not be set if invalid sku was passed.
 						break;
+					case 'adminEBAYProfileDetail':
+//					app.u.dump("GOT HERE!@!!!!!!!!!!!!!!!"); app.u.dump(responseData);
+						if(!responseData['%PROFILE'] || !responseData['%PROFILE'].profile)	{
+							r = true;
+							responseData['errid'] = "MVC-M-300";
+							responseData['errtype'] = "apperr"; 
+							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.profile.";
+							}
 					case 'appCategoryDetail':
 						if(responseData.errid > 0 || responseData['exists'] == 0)	{
 							r = true
