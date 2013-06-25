@@ -50,56 +50,71 @@ var partner_addthis = function() {
 					if(typeof addthis_id !== 'undefined'){
 						scriptPath+= '#pubid='+addthis_id;
 					}
+					//setTimeout used to test asynchronous loading and dependency checks
+					//setTimeout(function(){app.u.loadScript(scriptPath);},3000);
 					app.u.loadScript(scriptPath);
-					
+					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
+						app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj);
+						}]);
+					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
+						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
+						}]);
 					return true;
 				},
 				onError : function() {
 					app.u.dump('BEGIN app.ext.partner_addthis.callbacks.init.onError');
 				}
-			},
-			
-			startExtension : {
-				onSuccess : function (){
-					if(app.ext.myRIA && app.ext.myRIA.template){
-						app.u.dump("Loading Addthis Extension");
-						app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {
-							//Adds the addthis code to the container specified
-							//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
-							//Note: this also includes using custom share icons.
-							$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).append(
-									'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-								+		'<a class="addthis_button_preferred_1"></a>'
-								+		'<a class="addthis_button_preferred_2"></a>'
-								+		'<a class="addthis_button_preferred_3"></a>'
-								+		'<a class="addthis_button_preferred_4"></a>'
-								+		'<a class="addthis_button_compact"></a>'
-								+	'</div>');
-							
-							//Set URL+title for most sharing code
-							var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";
-							addthis_share.url = url;
-							addthis_share.title = app.data[P.datapointer]['%attribs']['zoovy:prod_name'];
-							
-							//Set URL+title for Facebook
-							$('#ogURL').attr('content',url);
-							$('#ogTitle').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_name']);
-							$('#ogImage').attr('content',app.u.makeImage({"name":app.data[P.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
-							$('#ogDescription, #metaDescription').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_desc']);
-							
-							//Hooks everything in
-							addthis.toolbox('#socialLinks');
-							});
-						app.ext.myRIA.template.productTemplate.onDeparts.push(function(P) {
-							$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).empty();
-						});
-					} else	{
-						setTimeout(function(){app.ext.partner_addthis.callbacks.startExtension.onSuccess()},250);
-					}
-				},
-				onError : function (){
-					app.u.dump('BEGIN app.ext.partner_addthis.callbacks.startExtension.onError');
+			}
+		},
+		
+	u : {
+		buildSocialLinksProductPage : function(infoObj, attempts){
+			attempts = attempts || 0;
+			//app.u.dump("-> Addthis attempt: "+attempts);
+			if(typeof addthis !== "undefined"){
+				//Adds the addthis code to the container specified
+				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
+				//Note: this also includes using custom share icons.
+				var $context = $(app.u.jqSelector('#',infoObj.parentID));
+				
+				$(app.ext.partner_addthis.vars.selector, $context).append(
+						'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
+					+		'<a class="addthis_button_preferred_1"></a>'
+					+		'<a class="addthis_button_preferred_2"></a>'
+					+		'<a class="addthis_button_preferred_3"></a>'
+					+		'<a class="addthis_button_preferred_4"></a>'
+					+		'<a class="addthis_button_compact"></a>'
+					+	'</div>');
+				
+				//Set URL+title for most sharing code
+				var url = zGlobals.appSettings.http_app_url+"product/"+infoObj.pid+"/";
+				addthis_share.url = url;
+				addthis_share.title = app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name'];
+				
+				//Set URL+title for Facebook
+				$('#ogURL').attr('content',url);
+				$('#ogTitle').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name']);
+				$('#ogImage').attr('content',app.u.makeImage({"name":app.data[infoObj.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
+				$('#ogDescription, #metaDescription').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_desc']);
+				
+				//Hooks everything in
+				//app.u.dump("-> Calling addthis.toolbox...");
+				addthis.toolbox('#socialLinks');
 				}
+			else {
+				//app.u.dump("-> Addthis is not defined...");
+				var n = 40;
+				if(attempts > n){
+					app.u.dump("Failed to build social links after "+(n/4)+" seconds.  infoObj follows: "); app.u.dump(infoObj);
+					}
+				else{
+					setTimeout(function(){app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj, attempts+1);}, 250);
+					}
+				}
+			},
+		destroySocialLinks : function(infoObj){
+			var $context = $(app.u.jqSelector('#',infoObj.parentID));
+			$(app.ext.partner_addthis.vars.selector, $context).empty();
 			}
 		}
 	}
