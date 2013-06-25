@@ -108,6 +108,24 @@ var admin_customer = function() {
 				app.model.dispatchThis();
 				},
 
+			showCampaignManager : function($target)	{
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Campaign Manager',
+					'className' : 'campaignManager',
+					'buttons' : ["<button data-title='Create a New Campaign'>Create New Campaign</button>"],
+					'thead' : ['ID','Title','Status','Created',''],
+//					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;"
+					});
+
+				if($table)	{
+					app.model.addDispatchToQ({'_cmd':'adminGiftcardList','_tag' : {'datapointer':'adminGiftcardList','callback':'anycontent','jqObj':$table}},'mutable');
+					app.model.dispatchThis();
+					}
+				else	{} //buildDualMode will handle the error display.
+
+				},
 
 			showGiftcardManager : function($target)	{
 				$target.empty();

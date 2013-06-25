@@ -1031,3 +1031,65 @@ The checkbox below does not work.
 </form>
 
 </div>
+
+
+
+<!-- campaignManager -->
+
+<table>
+<tr id='campaignResultsRowTemplate'>
+	<td data-bind="var: campaign(id); format:text;"></td>
+	<td data-bind="var: campaign(title); format:text;"></td>
+	<td data-bind="var: campaign(status); format:text;"></td>
+	<td data-bind="var: campaign(created); format:text;"></td>
+	<td><button>delete</button><button>clone</button><button>edit</button></td>
+</tr>
+</table>
+
+
+
+<div id='caimpaignCreateUpdateTemplate' class='campaignEditor'>
+
+
+<form action='#' onsubmit="return false">
+<table>
+<tr>
+	<td>
+	<fieldset>
+		<legend>Campaign Settings</legend>
+		stuff.
+	</fieldset>
+	</td>
+
+	<td>
+
+<fieldset>
+	<legend>Campaign Content</legend>
+<label>
+	<span>Subject</span>
+	<input type='text' name='subject' value='' data-bind="var: campaign(subject); format:popVal;" />
+</label>
+<label>
+	<span>Title</span>
+	<input type='text' name='subject' value='' data-bind="var: campaign(title); format:popVal;" />
+</label>
+
+<label>
+	<span>content</span>
+</label>
+<textarea class='marginBottom' data-app-role='htmlEditor'></textarea>
+
+</fieldset>
+
+	</td>
+</tr>
+</table>
+
+</form>
+
+
+</div>
+
+
+
+
