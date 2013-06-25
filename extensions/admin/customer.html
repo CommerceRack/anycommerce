@@ -1042,7 +1042,15 @@ The checkbox below does not work.
 	<td data-bind="var: campaign(title); format:text;"></td>
 	<td data-bind="var: campaign(status); format:text;"></td>
 	<td data-bind="var: campaign(created); format:text;"></td>
-	<td><button>delete</button><button>clone</button><button>edit</button></td>
+	<td class='alignRight'>
+		<button>delete</button>
+		<button>clone</button>
+		<button>edit</button>
+		<button>send</button>
+		<!-- these need to be in the editor, not here:
+		send test,
+		select recipients
+		--></td>
 </tr>
 </table>
 
@@ -1051,14 +1059,66 @@ The checkbox below does not work.
 <div id='caimpaignCreateUpdateTemplate' class='campaignEditor'>
 
 
-<form action='#' onsubmit="return false">
+<form action='#' onsubmit="return false" class='labelsAsBreaks'>
 <table>
 <tr>
 	<td>
 	<fieldset>
 		<legend>Campaign Settings</legend>
-		stuff.
+
+
+<label>
+	<input type='checkbox' name='SEND_EMAIL' />Email
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_APPLEIOS' />Apple iOS <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_APPLEIOS' />Android <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_TWITTER' />Twitter <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_FACEBOOK' />Facebook <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_SMS' />SMS/Text <span class='hint'>coming soon</span>
+</label>
+
+
+
+Start Time YYYYMMDDHHMMSS
+Expiration YYYYMMDDHHMMSS
+
+
+<label>
+	<span>Queue mode</span>
+	<select name='QUEUEMODE'>
+		<option value='FRONT'>Front</option>
+		<option value='BACK'>Back</option>
+		<option value='OVERWRITE'>Overwrite</option>
+	</select>
+	<span>? (need help here)</span>
+</label>
+
 	</fieldset>
+
+<fieldset>
+	<legend>Customer Selection</legend>
+
+tags
+emails
+subscriber lists
+
+
+</fieldset>
+
 	</td>
 
 	<td>
@@ -1067,19 +1127,23 @@ The checkbox below does not work.
 	<legend>Campaign Content</legend>
 <label>
 	<span>Subject</span>
-	<input type='text' name='subject' value='' data-bind="var: campaign(subject); format:popVal;" />
-</label>
+	<input type='text' name='SUBJECT' value='' data-bind="var: campaign(SUBJECT); format:popVal;" />
+</label><!--
 <label>
 	<span>Title</span>
-	<input type='text' name='subject' value='' data-bind="var: campaign(title); format:popVal;" />
+	<input type='text' name='TITLE' value='' data-bind="var: campaign(TITLE); format:popVal;" />
 </label>
-
+-->
 <label>
 	<span>content</span>
 </label>
-<textarea class='marginBottom' data-app-role='htmlEditor'></textarea>
+<textarea class='marginBottom' data-app-role='htmlEditor' name='HTML'></textarea>
 
 </fieldset>
+
+
+
+
 
 	</td>
 </tr>

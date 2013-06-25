@@ -113,16 +113,16 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
-					'buttons' : ["<button data-title='Create a New Campaign' data-app-event='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>","<button data-title='Create a New Campaign' data-app-event='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
 					'thead' : ['ID','Title','Status','Created',''],
-					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;"
+					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminCampaignList',
+						'_tag' : {'datapointer' : 'adminCampaignList'}
+						}
 					});
 
-				if($table)	{
-					app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag' : {'datapointer':'adminCampaignList','callback':'anycontent','jqObj':$table}},'mutable');
-					app.model.dispatchThis();
-					}
-				else	{} //buildDualMode will handle the error display.
+				app.model.dispatchThis();
 
 				}, //showCampaignManager
 
@@ -505,6 +505,7 @@ else	{
 				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
 					event.preventDefault();
 					var $D = app.ext.admin.i.dialogCreate({'templateID':'caimpaignCreateUpdateTemplate','data':{}});
+					$('form',$D).append("<input type='hidden' name='_cmd' value='adminCampaignCreate' \/><input type='hidden' name='GUID' value='"+app.u.guidGenerator()+"' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/><input type='hidden' name='_tag/message' value='Thank you, your campaign has been created.' \/><button data-app-event='admin|processForm'>Create<\/button>");
 					app.u.handleAppEvents($D);
 					$D.dialog('open');
 //may need to add some for attributes for processForm or a custom app event button. That'll depend on how the file vs other changes get saved.

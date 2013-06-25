@@ -59,7 +59,6 @@ var admin = function() {
 //		'projectCreateTemplate',
 		
 //		'rssAddUpdateTemplate',
-//		'rssPageTemplate',
 //		'rssListTemplate'		
 		
 		); 
@@ -801,53 +800,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			},
 
 
-
-
-
-
-
-		adminRSSList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSList|"+app.vars.partition;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminRSSList","_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminRSSList
-
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminRSSCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSCreate"
-				obj = obj || {};
-				if(obj.CPG)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSCreate, uuid or title not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminRSSCreate'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminRSSCreate
 //obj requires title and uuid, priority and @GRAPHS are optional.
 		adminRSSRemove : {
 			init : function(listID,_tag,Q)	{
@@ -866,7 +818,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(listID,_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminRSSRemove","_tag":_tag,"ID":listID},Q || 'immutable');	
 				}
-			}, //adminRSSCreate
+			}, //adminRSSRemove
 
 		adminRSSUpdate : {
 			init : function(obj,_tag,Q)	{
@@ -888,7 +840,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
-			}, //adminRSSCreate
+			}, //adminRSSUpdate
 
 		adminRSSDetail : {
 			init : function(cpg,_tag,Q)	{
@@ -912,7 +864,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(cpg,_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminRSSDetail","CPG":cpg,"_tag" : _tag},Q || 'mutable');
 				}
-			}, //adminRSSList
+			}, //adminRSSDetail
 
 
 		adminMessagesList : {
@@ -3500,21 +3452,22 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 			showRSS : function($target)	{
-				$target.empty().showLoading({'message':'Fetching project list'});
-				app.ext.admin.calls.adminRSSList.init({'callback':function(rd){
+				
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'RSS Feeds',
+					'className' : 'rssFeeds',
+					'controls' : "",
+					'buttons' : ["<button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
+					'thead' : ['ID','Title','Status','Profile','Schedule',''],
+					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;"
+					});
 
-$target.hideLoading();
-if(app.model.responseHasErrors(rd)){
-	app.u.throwMessage(rd);
-	}
-else	{
-	$target.anycontent({'templateID':'rssPageTemplate','datapointer':rd.datapointer});
-	
-	$('.gridTable',$target).anytable();
-	app.u.handleAppEvents($target);
-	}
-					}},'mutable');
+				if($table)	{
+					app.model.addDispatchToQ({'_cmd':'adminRSSList','_tag': {'datapointer':'adminRSSList','callback':'anycontent','jqObj':$table}},'mutable');
 					app.model.dispatchThis('mutable');
+					}
+				else	{} //buildDualMode will handle the error display.			
 				},
 
 //opens a dialog with a list of domains for selection.
@@ -5366,7 +5319,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
 //set data-templateid on the button to specify a template.
 			openDialog : function($btn,vars)	{
-
 				$btn.button();
 				$btn.off('click.openDialog').on('click.openDialog',function(){
 					vars = vars || {};
@@ -5381,7 +5333,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 						$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
 						}
 					});
-				
 				},
 			
 //used in conjuction with the new interface (i) functions.
@@ -5467,7 +5418,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 					return app.u.alphaNumeric(event);
 					})
 				},
-
+/*
+not in use
 			achievementDetail : function($row)	{
 				$row.on('mouseover.achievementDetail',function(){
 					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
@@ -5486,7 +5438,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 							}
 						});
 				},
-
+*/
 /* app chooser */
 
 			appChooserAppChoose : function($btn)	{
@@ -5835,10 +5787,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 				else	{
 					$btn.hide();
 					}
-				},			
+				},
 			projectUpdateShow : function($btn)	{
-
-
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(event){
 					event.preventDefault();
@@ -5863,7 +5813,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 						},'mutable');
 					app.model.dispatchThis('mutable');
 					});
-
 				},
 			
 			projectCreateExec  : function($btn,vars)	{
@@ -5931,7 +5880,6 @@ buttons: {
 	"Delete Feed": function() {
 		$D.dialog('close');
 		$('body').showLoading({'message':'Deleting Feed'});
-		app.model.destroy('adminRSSList|'+app.vars.partition); //clear local so a dispatch occurs.
 		app.ext.admin.calls.adminRSSRemove.init(data.id,{'callback':function(rd){
 			if(app.model.responseHasErrors(rd)){
 				$('body').hideLoading();
@@ -5941,7 +5889,15 @@ buttons: {
 				app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 				}
 			}},'immutable');
-		app.ext.admin.calls.adminRSSList.init({},'immutable');
+
+		app.model.addDispatchToQ({
+			"_cmd":"adminRSSList",
+			"_tag" : {
+				'datapointer' : 'adminRSSList|'+app.vars.partition
+				}
+			},'immutable');
+
+
 		app.model.dispatchThis('immutable');
 		},
 	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
@@ -5979,76 +5935,58 @@ else	{} //validateForm handles error display
 
 		//to render the addUpdate template for rss, the following data sources are necessary:  schedules, domains, navcat 'lists' and the detail for the rss feed itself.			
 			adminRSSUpdateShow : function($btn){
+
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminRSSUpdateShow').on('click.adminRSSUpdateShow',function(){
+				$btn.off('click.adminRSSUpdateShow').on('click.adminRSSUpdateShow',function(event){
+					event.preventDefault();
+					app.ext.admin.u.fetchRSSDataSources('mutable')
 
-var
-	$container = $btn.closest("[data-app-role='dualModeContainer']"),
-	data = $btn.closest('tr').data(),
-	$target = $("[data-app-role='dualModeDetail']",$container),
-	$div = $("<div \/>"), //used for the content in anypanel. a varso it can easily be passed into the handleRSScontent func.
-	panelID = app.u.jqSelector('','ruleBuilder_'+data.provider),
-	numRequests = app.ext.admin.u.fetchRSSDataSources('mutable')
+					var data = $btn.closest('tr').data();
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
+						'panelID' : 'rss'+data.cpg,
+						'header' : 'Edit Project: '+data.cpg,
+						'handleAppEvents' : false, //handled later.
+						showLoading : true
+						});
 
-
-numRequests += app.ext.admin.calls.adminRSSDetail.init(data.cpg,{},'mutable');
-
-var $panel = $("<div\/>").hide().anypanel({
-	'header':'Edit: '+data.provider,
-	content : $div,
-	}).prependTo($target);
-app.ext.admin.u.toggleDualMode($container,'detail');
-$panel.slideDown('fast'); //,function(){$panel.showLoading({'message':'loading...'})}
-
-
-var	callback = function(rd){
-	$target.hideLoading();
-	if(app.model.responseHasErrors(rd)){
-		$target.anymessage({'message':rd})
-		}
-	else	{
-
-		$div.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminWholesaleScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
-		$('.buttonbar',$target).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-		$('.toolTip',$target).tooltip();
-		$("[name='CPG']",$target).attr('readonly','readonly').css('border','none');
-
-//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
-		if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
-			$("[name='feed_link']",$target).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
-			}
-		
-		if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
-			$("[name='schedule']",$target).val(app.data['adminRSSDetail|'+data.cpg].schedule);
-			}
-		
-		if(app.data['adminRSSDetail|'+data.cpg].list)	{
-			$("[name='list']",$target).val(app.data['adminRSSDetail|'+data.cpg].list);
-			}
-		
-
-		app.u.handleAppEvents($target);
-		}
-	}
-
-
-if(numRequests)	{
-	app.calls.ping.init({'callback':callback},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else	{
-	callback({});
-	}
-
-
-
-
-
-
-
-
-					
+//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
+					app.model.addDispatchToQ({
+						"_cmd":"adminRSSDetail",
+						"CPG":data.cpg,
+						"_tag": {
+							'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									$panel.anycontent({'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminWholesaleScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
+									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
+									$('.toolTip',$panel).tooltip();
+									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
+								
+								//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
+									if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
+										$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
+										}
+									
+									if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
+										$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
+										}
+									
+									if(app.data['adminRSSDetail|'+data.cpg].list)	{
+										$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
+										}
+									app.u.handleAppEvents($panel);
+									}
+								},
+							'datapointer' : 'adminRSSDetail|'+data.cpg
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 					});
+
 				}, //adminRSSUpdateShow
 
 			adminRSSCreateExec : function($btn,vars)	{
@@ -6060,19 +5998,23 @@ var
 
 if(app.u.validateForm($form))	{
 	$form.showLoading({'message':'Creating RSS Feed'});
-	app.ext.admin.calls.adminRSSCreate.init(sfo,{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd})
+	
+	app.model.addDispatchToQ($.extend(true,{},sfo,{
+		"_cmd":"adminRSSCreate",
+		"_tag" : {
+			'callback':function(rd){
+				$form.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					$form.anymessage({'message':rd})
+					}
+				else	{
+					vars['$dialog'].empty().anymessage(app.u.successMsgObject('Thank you, your feed has been created.'));
+					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					}
+				}
 			}
-		else	{
-			vars['$dialog'].empty().anymessage(app.u.successMsgObject('Thank you, your feed has been updated.'));
-			app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-			}
-		}},'immutable');
-//get a clean copy of the list for the manager.
-	app.model.destroy('adminRSSList|'+app.vars.partition);
-	app.ext.admin.calls.adminRSSList.init({},'immutable');
+		}),'immutable');
+
 	app.model.dispatchThis('immutable');
 	}
 else	{} //validateForm handles error display
