@@ -703,10 +703,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </div>
 	<div class="midmain">
     
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
     
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList productList2'></ul>
-	<!--
+	-->
+    <!--
 <p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 -->
 <!-- a sample of how to format an elastic native search in a data-bind -->
@@ -1413,8 +1414,8 @@ subscribeListsArticle is used for authenticated buyers
     <div class="filterContainerSearch"></div>
   
 		<!-- productListTemplateResults gets loaded into here -->
-        	<ul style="float: right; width: 760px;" id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
-    		<ul class="searchFilterResults" data-app-role='productList'>
+        	<ul style="float: right; width: 760px;" id='resultsProductListContainer' class='listStyleNone fluidList productList'></ul>
+    		<ul class="searchFilterResults productList" data-app-role='productList'>
         	</ul>
     </div>
 </div>
@@ -1888,9 +1889,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2108,9 +2108,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2242,9 +2242,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2363,7 +2363,6 @@ put all filters into the appFilters container.
         <fieldset data-elastic-key="prod_character" data-filtertype="checkboxes">
             <legend class="searchPageFSLegend">SORT BY CHARACTERS</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='batman' />Batman</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='captain+america' />Captain America</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='darth+vader' />Darth Vader</label>
@@ -2378,7 +2377,7 @@ put all filters into the appFilters container.
          <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
             <legend class="searchPageFSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2512,9 +2511,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="batman" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2639,9 +2637,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="captain+america" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2766,9 +2763,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="flash" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -2893,9 +2889,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="harry+potter" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3020,9 +3015,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="hulk" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3147,9 +3141,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="iron+man" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3274,9 +3267,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="james+bond" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3401,9 +3393,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="joker" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3528,9 +3519,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="spider+man" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3655,9 +3645,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="darth+vader" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3782,9 +3771,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="luke+skywalker" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -3909,9 +3897,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="storm+trooper" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -4036,9 +4023,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="super+man" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -4163,9 +4149,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="thor" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -4290,9 +4275,8 @@ put all filters into the appFilters container.
             <input type='hidden' name="prod_character" value="wonder+woman" />
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -5615,9 +5599,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -5745,9 +5729,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -5875,9 +5859,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6005,9 +5989,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6135,9 +6119,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6265,9 +6249,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6395,9 +6379,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6525,9 +6509,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6655,9 +6639,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6785,9 +6769,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -6915,9 +6899,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7045,9 +7029,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7175,9 +7159,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7305,9 +7289,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7435,9 +7419,9 @@ put all filters into the appFilters container.
             </div> 
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7571,9 +7555,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7704,9 +7688,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7837,9 +7821,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -7970,9 +7954,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8103,9 +8087,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8236,9 +8220,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8369,9 +8353,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8502,9 +8486,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8635,9 +8619,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8768,9 +8752,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -8901,9 +8885,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9034,9 +9018,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9167,9 +9151,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9300,9 +9284,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9433,9 +9417,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9566,9 +9550,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9699,9 +9683,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9832,9 +9816,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -9965,9 +9949,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10098,9 +10082,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10231,9 +10215,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10364,9 +10348,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10497,9 +10481,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10630,9 +10614,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10763,9 +10747,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -10896,9 +10880,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
@@ -11029,9 +11013,9 @@ put all filters into the appFilters container.
             </div>
         </fieldset>
         <fieldset data-elastic-key="prod_theme" data-filtertype="checkboxes">
-            <legend class="searchPageFSLegend">SORT BY THEME</legend>
+            <legend class="FSLegend">SORT BY THEME</legend>
             <div>
-                <legend class="searchPageFSLegend"></legend>
+                
                 <!--<label class='break'><input class="fsCheckbox" type='checkbox' value='24' />24</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='300' />300</label>
                 <label class='break'><input class="fsCheckbox" type='checkbox' value='a+christmas+story' />A Christmas Story</label>
