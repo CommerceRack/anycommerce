@@ -48,8 +48,8 @@ var admin_batchJob = function() {
 				if(tagObj.parentID)	{
 					$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
 					}
-				else if(tagObj.jqObj && typeof tabgbj.jqObj === 'object')	{
-					tabgbj.jqObj.hideLoading();
+				else if(tagObj.jqObj && typeof tagObj.jqObj === 'object')	{
+					tagObj.jqObj.hideLoading();
 					}
 				else	{} //nothing to hideloading on.
 //error handling for no jobid is handled inside this function.

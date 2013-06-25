@@ -73,6 +73,7 @@ var admin_syndication = function() {
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj === 'object')	{
 					$target = _rtag.jqObj
 					$target.hideLoading();
+					app.u.handleAppEvents($target);  //re-execute these so that changes to the marketplace lock/unlock buttons as needed.
 					}
 				else	{
 					$target = $('#globalMessaging');
@@ -1695,18 +1696,42 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 
 			adminSyndicationPublishExec : function($btn)	{
 				$btn.button();
-				
+				var
+					$form = $btn.closest('form'),
+					DST = $("[name='DST']",$form).val();
+					
+//the markeplace must be enabled prior to publishing. That change needs to be saved, then the button will unlock.
+//that ensures all information required for syndication is provided.
+				if(DST && app.data['adminSyndicationDetail|'+DST])	{
+					if(Number(app.data['adminSyndicationDetail|'+DST].enable) >= 1)	{
+						$btn.button('enable');
+						}
+					else	{
+						$btn.button('disable');
+						}
+					}
 				//"adminSyndicationPublish"
 				$btn.off('click.adminSyndicationPublishExec').on('click.adminSyndicationPublishExec',function(){
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON({'cb':true});
+					var sfo = $form.serializeJSON({'cb':true});
 					
 					if(sfo.DST)	{
-						if(sfo.enable)	{
-$form.showLoading({"message":"Creating batch job for syndication feed publication..."});
-app.ext.admin.calls.adminSyndicationPublish.init(sfo.DST,{'callback':'showBatchJobStatus','extension':'admin_batchJob','jqObj':$form},'immutable');
-app.model.dispatchThis('immutable');
+						if(sfo.ENABLE)	{
+							if(app.u.validateForm($form))	{
+								$form.showLoading({"message":"Creating batch job for syndication feed publication..."});
+								
+								app.model.addDispatchToQ({
+									'_cmd' : 'adminSyndicationPublish',
+									'DST' : sfo.DST,
+									'FEEDTYPE' : 'PRODUCT',
+									'_tag' : {
+										'callback':'showBatchJobStatus',
+										'extension':'admin_batchJob',
+										'datapointer' : 'adminBatchJobStatus',
+										'jqObj':$form}
+									},'immutable');
+								app.model.dispatchThis('immutable');
+								}
+							else	{} //validate form handles display errors.
 
 							}
 						else	{
