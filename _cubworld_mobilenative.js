@@ -69,7 +69,7 @@ var cubworld_mobilenative = function() {
 					var regID = anyCommerceAndroidInterface.getRegID();
 					if(typeof regID === "undefined"){
 						app.u.dump("-> mobilenative no regID present, prompting registration");
-						app.ext.cubworld_mobilenative.u.promptAndroidRegistration();
+						setTimeout(app.ext.cubworld_mobilenative.u.promptAndroidRegistration, 2000);
 						}
 					else {
 						app.u.dump("-> mobilenative regID: "+regID);
@@ -108,7 +108,6 @@ var cubworld_mobilenative = function() {
 		u : {
 			promptAndroidRegistration : function(){
 				var $regForm = $('<form class="displayNone"/>');
-				//$body.append($regForm);
 				$regForm.on('submit', function(){
 					anyCommerceAndroidInterface.register(JSON.stringify($(this).serializeJSON()));
 					$(this).dialog('close');
@@ -126,7 +125,6 @@ var cubworld_mobilenative = function() {
 				
 				app.u.dump('-> mobilenative opening prompt');
 				$regForm.dialog({'modal':'true', 'title':'Android Notification Registration'});
-				//$regForm.dialog('open');
 				},
 			androidRegister : function(regID, json){
 				app.u.dump("-> mobilenative regID received from android: "+regID);
