@@ -41,66 +41,66 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <script type="text/javascript" src="js/jkmegamenu.js"></script>
 <script type="text/javascript">
-jkmegamenu.definemenu("megaanchor", "megamenu1", "mouseover")
-jkmegamenu.definemenu("megaanchor1", "megamenu2", "mouseover")
-jkmegamenu.definemenu("megaanchor2", "megamenu3", "mouseover")
-jkmegamenu.definemenu("megaanchor3", "megamenu4", "mouseover")
-jkmegamenu.definemenu("megaanchor4", "megamenu5", "mouseover")
-jkmegamenu.definemenu("megaanchor5", "megamenu6", "mouseover")
+	jkmegamenu.definemenu("megaanchor", "megamenu1", "mouseover")
+	jkmegamenu.definemenu("megaanchor1", "megamenu2", "mouseover")
+	jkmegamenu.definemenu("megaanchor2", "megamenu3", "mouseover")
+	jkmegamenu.definemenu("megaanchor3", "megamenu4", "mouseover")
+	jkmegamenu.definemenu("megaanchor4", "megamenu5", "mouseover")
+	jkmegamenu.definemenu("megaanchor5", "megamenu6", "mouseover")
 </script>
 <script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"_init.js");
+	app.u.loadScript(app.vars.baseURL+"_init.js");
 </script>
 <style type="text/css">
-            body {font-family:Arial, Helvetica, sans-serif; font-size:12px;}
-            .selCont {clear:both; margin-bottom:20px; padding-bottom:40px; float:left; border-bottom:dotted 1px #000; width:600px;}
-        </style>
+	body {font-family:Arial, Helvetica, sans-serif; font-size:12px;}
+	.selCont {clear:both; margin-bottom:20px; padding-bottom:40px; float:left; border-bottom:dotted 1px #000; width:600px;}
+</style>
      
-  <style>
+<style>
 .megamenu{
-position: absolute;
-display: none;
-
-background: white;
-padding: 10px;
-font: normal 12px Verdana;
-z-index: 100;
-max-width:900px;
-font-family:Arial, Helvetica, sans-serif;
-box-shadow: 1px 1px 1px 1px #222222;
+	position: absolute;
+	display: none;
+	
+	background: white;
+	padding: 10px;
+	font: normal 12px Verdana;
+	z-index: 100;
+	max-width:900px;
+	font-family:Arial, Helvetica, sans-serif;
+	box-shadow: 1px 1px 1px 1px #222222;
 
 }
 
 .megamenu .column{
-float: left;
-width: 150px; /*width of each menu column*/
-margin-right: 5px;
+	float: left;
+	width: 150px; /*width of each menu column*/
+	margin-right: 5px;
 }
 
 .megamenu .column ul{
-margin: 0;
-padding: 0;
-list-style-type: none;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
 }
 
 .megamenu .column ul li{
-padding-bottom: 5px;
+	padding-bottom: 5px;
 }
 
 .megamenu .column h3{
-background: #e0e0e0;
-font: bold 13px Arial;
-margin: 0 0 5px 0;
+	background: #e0e0e0;
+	font: bold 13px Arial;
+	margin: 0 0 5px 0;
 }
 
 .megamenu .column ul li a{
-text-decoration: none;
+	text-decoration: none;
 }
 
 .megamenu .column ul li a:hover{
-color: red;
+	color: red;
 }
 div#container div.nav div.navContent > ul > li:hover{background: url(images/background-nav-active.png) repeat-x;}
 
@@ -955,12 +955,9 @@ this will likely become more flexible in the future. ###
                         <div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
                     </div>
                 </div>
-                <!--**RE-ADD TO MATCH DESIGN**
-                <div id='recentlyViewedItemsContainer' class='displayNone'>
-                <h2>Recently Viewed Items</h2>
-                <ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-                </div>
-                -->
+               
+                
+                
             </td>
             <td class="RightPcol">
                 <div class='priceContainer marginBottom'>
@@ -1009,19 +1006,9 @@ this will likely become more flexible in the future. ###
                 </ul>
             </td>
         </tr>
-    <!--**RE-ADD THIS CONTENT TO MATCH DESIGN-->
-     <!--<div class='prodlistRelatedContainer'>
-        <li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
-    </div>
-        <div class="cb"></div>
-    <div class="protitle">
-        <ul>
-        <div class='prodlistRelatedContainer'>
-        <li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
-    </div>
-    </ul>
-    </div>-->
+        
         <tr>
+        	
             <td colspan='2' class="tabbedProductContentTD">
                 <!--
                 the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
@@ -1062,6 +1049,35 @@ this will likely become more flexible in the future. ###
             </td>
         </tr>
     </table>
+    <!--BEGIN CAROUSEL CODE-->
+        <div class="ppCarousel">
+            <div class="prodPageCaroTitleCont">
+                <div class="prodPageCarouselTitles">
+                	<h2>Placeholder</h2>
+                    <h2>Recently Viewed Items</h2>
+                    <h2>Suggested Items</h2>
+                </div>
+                <img id="prevPPCaro" src="images/carousel_left.png" />
+                <img id="nextPPCaro" src="images/carousel_right.png" />
+            </div>
+            <div class="prodPageCarouselContentCont">
+                <div class="prodPageCarouselContent">
+                    <div id='recentlyViewedItemsContainer'>
+                        <ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+                        <h1>START VIEWING PRODUCTS TO ADD TO THIS LIST</h1>
+                    </div>
+                  
+                    <div class='prodlistRelatedContainer'>
+                    	<div class="displayNone" data-bind="var: product(zoovy:related_products); format:showIfSet;">
+                        	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+                    	</div>
+                        <h1>NO RELATED PRODUCTS FOR THIS ITEM. CHECK BACK LATER!</h1>
+                    </div>
+                    <div class="placeholderCaroCat">
+                    </div>
+                </div>
+            </div>
+        </div>
     <!--<div class='prodlistRelatedContainer'>
         <ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
     </div>
@@ -1162,11 +1178,11 @@ if you change these, you should move them above this comment so that when you (o
 			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
 			<fieldset style="border:0px;">
 				<div id='contactFormMessaging'></div>
-				<div><input type='email' name='sender' required='required' id='contactFormSender' Placeholder='E-mail Address'/></div>
-				<div><input type='text' name='subject' id='contactFormSubject' Placeholder='Subject'/></div>
-				<div><input type='text' name='OID' id='contactFormOID' Placeholder='Order Number (if applicable)'/></div>
-				<div><textarea name='body' required='required' id='contactFormBody' Placeholder='Message/Notes'></textarea></div>
-				<div class='alignRight'><input type='image' src="images/sendmessage.png" class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' style="width:308px; height:42px; margin:0 0 0 -2px; box-shadow:none; border:0px; background:none; padding:0px;"/>
+				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
+				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
+				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
+				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
+				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
 				</div>
 			</fieldset>
 			</form>

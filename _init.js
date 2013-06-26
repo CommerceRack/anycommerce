@@ -65,7 +65,11 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		height	: 340,
 		items   : 1,
 		scroll: 1,
-		duration    : 1000,
+		auto : {
+			duration    : 500,
+			timeoutDuration: 5000,
+			pauseOnHover: true
+		},
 		pagination  : "#slideshowNav"
 	});
 	}
@@ -223,6 +227,49 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		
 		//CONVERT CODE FOR LIMITED EDITION CONVERT SELECT TO BUTTONS
 	$('select[name=#Z]').select2Buttons();
+	
+	
+	//BEGIN CAROUSEL CODE FOR RECENTLY VIEWED/RELATED ITEMS
+	var carouselPPTitle;
+	function foo1(){ $(".prodPageCarouselTitles").carouFredSel
+	({
+		width   : 1020,
+		height	: 60,
+		align: "left",
+		items   : 3,
+		scroll: 1,
+		auto : false,
+		items: {minimum: 1}
+		
+	});
+	}
+	carouselPPTitle = foo1;
+	setTimeout(carouselPPTitle, 2000);
+	
+	
+	var carouselPPContent;
+	function foo2(){ $(".prodPageCarouselContent").carouFredSel
+	({
+		width   : 1020,
+		height	: 500,
+		items   : 1,
+		scroll: 1,
+		auto : false
+	});
+	}
+	
+	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL
+	$("#nextPPCaro").click(function() {
+    	$(".prodPageCarouselTitles").trigger("next", 1);
+		$(".prodPageCarouselContent").trigger("next", 1);
+    });
+	$("#prevPPCaro").click(function() {
+    	$(".prodPageCarouselTitles").trigger("prev", 1);
+		$(".prodPageCarouselContent").trigger("prev", 1);
+    });
+	
+	carouselPPContent = foo2;
+	setTimeout(carouselPPContent, 2000);
 	}]);
 	
 app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {	

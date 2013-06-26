@@ -74,8 +74,11 @@ div#container div#footer{
 }
 .productList > li{
 	margin-top:0;
+	height: 235px;
+	overflow: hidden;
 }
 .imageContainer{
+	width:30%;
 }
 .imageCont{
 	height: 340px;
@@ -337,4 +340,105 @@ div#container div.nav div.navContent > ul > li{
 }
 .RightPcol .marginBottom{
 	border-bottom:none;
+}
+
+/*Begin carousel code for product page*/
+.ppCarousel{
+	height: 574px;
+    width: 100%;
+	background-image:
+	url(images/pp_caro_background.png)
+}
+.prodPageCaroTitleCont{
+	height: 60px;
+    width: 1016px;
+	box-shadow: 0 2px 3px 2px black;
+	border: 2px outset #9A0000 !important;
+    border-radius: 0 0 0 0;
+	position:relative;
+	
+	background: #950000; /* Old browsers */
+	background: -moz-linear-gradient(top,  #950000 0%, #530000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#950000), color-stop(100%,#530000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #950000 0%,#530000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #950000 0%,#530000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #950000 0%,#530000 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #950000 0%,#530000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#950000', endColorstr='#530000',GradientType=0 ); /* IE6-9 */
+
+}
+.prodPageCarouselTitles{
+	height: 60px;
+    width: 100%;
+}
+.prodPageCarouselTitles h2{
+	color: white;
+    float: left;
+    font-size: 26px;
+    line-height: 60px;
+    text-align: center;
+    width: 340px;
+}
+#prevPPCaro{
+	left: 330px;
+    position: absolute;
+    top: 15px;
+}
+#nextPPCaro{
+	position: absolute;
+    right: 330px;
+    top: 15px;
+}
+.prodPageCarouselContentCont{
+	height: 500px;
+    width: 1020px;
+	float:left;
+	margin-top:10px;
+	margin-left: 35px;
+}
+.prodPageCarouselContent{
+	height: 500px !important;
+    width: 1020px !important;
+}
+#recentlyViewedItemsContainer{
+	height: 500px;
+    width: 1020px;
+	overflow:hidden;
+}
+#recentlyViewedItemsContainer div ul{
+	height: 500px;
+    width: 1020px;
+}
+#recentlyViewedItemsContainer H1{
+	color: red;
+    height: 500px;
+    line-height: 440px;
+    text-align: center;
+    width: 1020px;
+}
+.prodlistRelatedContainer{
+	height: 500px;
+    width: 1020px;
+	overflow:hidden;
+}
+.prodlistRelatedContainer div{
+	height: 500px;
+    width: 1020px;
+}
+.prodlistRelatedContainer h1{
+	color: red;
+    height: 500px;
+    line-height: 360px;
+    text-align: center;
+    width: 1020px;
+}
+.prodlistRelatedContainer ul{
+	height: 500px;
+    width: 1020px;
+}
+.placeholderCaroCat{
+	height: 500px;
+    width: 1020px;
+}
+.caroufredsel_wrapper{
 }
