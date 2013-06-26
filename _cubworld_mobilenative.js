@@ -117,9 +117,10 @@ var cubworld_mobilenative = function() {
 				
 				var $skipButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Skip</button>');
 				$skipButton.on('click', function(){$regForm.dialog('close');});
+				$regForm.append($skipButton);
 				
 				var $submitButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Register for Android Notifications</button>');
-				$submitButton.on('click', function(){$regForm.submit();}
+				$submitButton.on('click', function(){$regForm.submit();});
 				$regForm.append($submitButton);
 				
 				$regForm.dialog({'modal':'true', 'title':'Android Notification Registration'});
