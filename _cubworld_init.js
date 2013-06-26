@@ -16,6 +16,7 @@ app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 app.rq.push(['extension',0,'cubworld','_cubworld_extension.js','startExtension']);
 app.rq.push(['extension',0,'jerseypreview','_jerseypreview_extension.js']);
+app.rq.push(['extension',0,'cubworld_mobilenative','_cubworld_mobilenative.js','startExtension']);
 app.rq.push(['extension',0,'pogs_cubworld','_pogs_extension.js','startExtension']);
 app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js','startExtension']);
 app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
