@@ -238,6 +238,28 @@ var admin_prodEdit = function() {
 			}, //saveProductPanel
 
 
+		showStoreVariationsManager : function($target)	{
+			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
+			if($target && $target instanceof jQuery)	{
+
+$target.empty().showLoading({"message":"Fetching Variations..."});
+app.model.addDispatchToQ({
+	'_cmd':'adminSOGComplete',
+	'_tag':	{
+		'datapointer' : 'adminSOGComplete',
+		'callback':'anycontent',
+		'jqObj' : $target,
+		'templateID' : 'variationsManagerTemplate'
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showStoreVariationsManager, $target was either not specified or is not an instance of jQuery.","gMessage":true});
+				}
+			},
+
 //call executed to open the editor for a given pid.
 //legacy call for panel list is needed (for now). productGet is used for panels as they're upgraded to full-app 
 		showPanelsFor : function(pid)	{
@@ -255,9 +277,7 @@ var admin_prodEdit = function() {
 			else	{
 				app.u.handleCallback(callback);
 				}
-			
 			}
-		
 		},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -296,57 +316,16 @@ var admin_prodEdit = function() {
 
 
 		handleProductListTab : function(process)	{
-//			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
-			var $target = $('#productListTab');
+			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
+			var
+				$target = $('#productListTab'),
+				$table = $('#prodEditorResultsTable')
+
 			if($target.length)	{
-//init should be run when the extension is loaded. adds click events and whatnot.
-				if(process == 'init')	{
-//					app.u.dump(" -> process = init");
-					$target.hide();  //make sure it's invisible.
-					$('.tab',$target).on('click.showProductListTab',function(){
-						if($target.css('left') == '0px')	{
-							app.ext.admin_prodEdit.u.handleProductListTab('collapse');
-							}
-						else	{
-							app.ext.admin_prodEdit.u.handleProductListTab('expand');
-							}
-						});
-					}
-				else if(process == 'activate')	{
-					$target.css('left',0).show(); //make tab/contents visible.
-					var $tbody = $('tbody',$target);
-					$('thead tr',$target).empty().append($('th','#prodEditorResultsTable').clone());
-					
-					app.u.dump(" -> $('#prodEditorResultsTbody').children(): "+$('#prodEditorResultsTbody').children().length);
-					app.u.dump(" -> $('#prodEditorResultsTbody'): "+$('#prodEditorResultsTbody').length);
-					app.u.dump(" -> $('tbody',#prodEditorResultsTable): "+$('tbody','#prodEditorResultsTbody').length);
-					
-					$tbody.empty().append($('#prodEditorResultsTbody').children()); //clear old orders first then copy rows over.
-//remove click event to move the orders over to the tab, since they're already in the tab.
-					$("[data-app-event='admin_prodEdit|showProductEditor']",$tbody).off('click.moveProductsToTab').on('click.hideProductTab',function(){
-						app.ext.admin_prodEdit.u.handleProductListTab('collapse');
-						});
-					$("table",$target).anytable();
-//pause for just a moment, then shrink the panel. Lets user see what happened.
-					setTimeout(function(){
-						app.ext.admin_prodEdit.u.handleProductListTab('collapse');
-						},1500);
-					}
-				else if(process == 'collapse')	{
-					$target.animate({left: -($target.outerWidth())}, 'slow');
-					}
-				else if(process == 'expand')	{
-					$target.animate({left: 0}, 'fast');
-					}
-				else if(process == 'deactivate')	{
-					$target.hide();
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.u.handleProductListTab, unrecognized process ['+process+']','gMessage':true});
-					}
+				//tab is already present, just update the contents.
 				}
 			else	{
-				app.u.dump("admin_prodEdit.u.handleProductListTab function executed, but orderListTab not on DOM."); //noncritical error. do not show to user.
+				$table.stickytab({'tabtext':'product results','tabID':'productListTab'})
 				}
 			},
 

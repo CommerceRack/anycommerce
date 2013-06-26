@@ -1049,7 +1049,7 @@ else	{
 				var $ETC = $('#ebayTemplateChooser'); 
 				if(vars.SUBDIR && vars.PROJECTID && vars.PROFILE)	{
 					$ETC.showLoading({'message':'One moment please. Copying files into profile directory.'});
-					vars._cmd = 'adminEBAYTemplateCopyToProfile'
+					vars._cmd = 'adminEBAYTemplateInstall';
 					vars._tag = {
 						'callback' : function(rd)	{
 							if(app.model.responseHasErrors(rd)){
@@ -1062,7 +1062,7 @@ else	{
 								}
 							}
 						}
-					app.model.addDispatchToQ(vars,'immutable'); app.model.dispatchThis('immutable');
+					app.model.addDispatchToQ(vars,'immutable'); //app.model.dispatchThis('immutable');
 					app.model.addDispatchToQ({
 						'_cmd':'adminEBAYProfileUpdate',
 						'template_origin':vars.SUBDIR,

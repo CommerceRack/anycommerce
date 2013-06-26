@@ -2882,7 +2882,7 @@ if($target && $target.length)	{
 	else	{
 		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
 		if(mode == 'app')	{
-			app.ext.admin.u.loadNativeApp(path,opts);
+			app.ext.admin.u.loadNativeApp(path,opts,$target);
 			}
 		else if(mode == 'legacy')	{
 			app.ext.admin.u.handleShowSection(path,opts,$target);
@@ -3160,7 +3160,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 			processForm : function($form,q,_tag)	{
 //				app.u.dump("BEGIN admin.a.processForm");
 				var r = true;  //what is returned.
-				var obj = $form.serializeJSON() || {};
+				var obj = $form.serializeJSON({'cb':$form.data('cb_tf')}) || {};
 				_tag = _tag || {};
 				
 //				app.u.dump(" -> obj: "); app.u.dump(obj);
@@ -3589,6 +3589,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 						}
 					else	{
 						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+//						$('#globalMessaging').anymessage({"message":"Welcome to the future!"});
 						}
 					}
 				app.model.dispatchThis('immutable');
@@ -3766,7 +3767,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				},
 
 
-			loadNativeApp : function(path,opts){
+			loadNativeApp : function(path,opts,$target){
 //				app.u.dump("BEGIN loadNativeApp");
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
@@ -3803,6 +3804,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
 					}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
+				else if(path == '#!variationsManager')	{
+//					app.u.dump("$target: "); app.u.dump($target);
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if(path == '#!help')	{
 					$('#supportContent').empty(); //here just for testing. won't need at deployment.
 					this.bringTabIntoFocus('support');

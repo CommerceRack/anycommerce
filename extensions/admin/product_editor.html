@@ -55,6 +55,7 @@
 	</ul>
 	</li>
 	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
+	<li><a href='#' onClick="return showUI('#!variationsManager',{'targetID':'productTabMainContent'});">Variations (alpha)</a></li>
 	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
@@ -1435,3 +1436,52 @@ time.
 
 
 </div>
+
+
+
+
+
+
+
+<!--
+///////////////////////// VARIATIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+
+<button class='floatRight'>Add New</button>
+<h1>Store Variations</h1>
+<table class='fullWidth gridTable applyAnytable marginTop'>
+<thead>
+<tr>
+	<th>ID</th>
+	<th>Name</th>
+	<th># options</th>
+	<th>Inv.</th>
+	<th>Global</th>
+	<th>Type</th>
+	<th></th>
+</tr>
+</thead>
+<tbody data-bind="var:variations(%SOGS); format:processList; loadsTemplate:variationsManagerRowTemplate;">
+	
+</tbody>
+</table>
+
+</div>
+
+<table>
+<tr id='variationsManagerRowTemplate'>
+	<td data-bind="var:variation(id); format:text;"></td>
+	<td data-bind="var:variation(prompt); format:text;"></td>
+	<td data-bind="var:variation(@options.length); format:text;"></td>
+	<td><span data-bind="var:variation(inv); format:showIfSet;" class='ui-icon ui-icon-check'></span></td>
+	<td><span data-bind="var:variation(global); format:showIfSet;" class='ui-icon ui-icon-check'></span></td>
+	<td data-bind="var:variation(type); format:text;"></td>
+	<td>
+		<button>Delete</button>
+		<button>Edit</button>
+	</td>
+</tr>
+</table>

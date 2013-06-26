@@ -933,11 +933,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						break;
 					case 'adminEBAYProfileDetail':
 //					app.u.dump("GOT HERE!@!!!!!!!!!!!!!!!"); app.u.dump(responseData);
-						if(!responseData['%PROFILE'] || !responseData['%PROFILE'].profile)	{
+						if(!responseData['%PROFILE'] || !responseData['%PROFILE'].PROFILE)	{
 							r = true;
 							responseData['errid'] = "MVC-M-300";
 							responseData['errtype'] = "apperr"; 
-							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.profile.";
+							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.PROFILE.";
 							}
 					case 'appCategoryDetail':
 						if(responseData.errid > 0 || responseData['exists'] == 0)	{

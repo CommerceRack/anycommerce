@@ -3088,7 +3088,7 @@ $tmp.empty().remove();
 							$tag.append($o);
 							}
 						else	{
-							$o = app.renderFunctions.transmogrify({'value':data.value[i]},data.bindData.loadsTemplate,{'value':data.value[i]});
+							$o = app.renderFunctions.transmogrify({'value':data.value[i],'key':i},data.bindData.loadsTemplate,{'value':data.value[i],'key':i});
 							$tag.append($o);
 							$o.attr('data-obj_index',i);
 //							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});

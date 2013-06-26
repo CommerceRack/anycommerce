@@ -114,17 +114,70 @@ var admin_customer = function() {
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
 					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>","<button data-title='Create a New Campaign' data-app-event='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
-					'thead' : ['ID','Title','Status','Created',''],
+					'thead' : ['ID','Subject','Status','Methods','Q Mode','Created','Expired',''],
 					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminCampaignList',
 						'_tag' : {'datapointer' : 'adminCampaignList'}
 						}
 					});
-
+//get this handy.
+				app.model.addDispatchToQ({'_cmd':'adminCampaignTemplateList','_tag':{'datapointer' : 'adminCampaignTemplateList'}},'mutable');
 				app.model.dispatchThis();
 
 				}, //showCampaignManager
+			
+			showCampaignEditor : function($target,CAMPAIGNID)	{
+				app.u.dump("BEGING admin_customer.a.showCampaignEditor");
+				if($target && $target instanceof jQuery && CAMPAIGNID)	{
+
+$target.empty()
+var data = app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
+//app.u.dump(" -> campaign data:"); app.u.dump(data);
+if(data)	{
+	$target.showLoading({"message":"Fetching template contents"});
+//generate template instance and get some content in front of user. will be blocked by loading till template data available.
+	$("<div \/>").anycontent({'templateID':'caimpaignUpdateTemplate','data':data}).appendTo($target);
+	
+	$('.applyDatepicker',$target).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		minDate : 0, //can't start before today.
+		dateFormat : 'yymmddhhmm00'
+		});
+	app.model.addDispatchToQ({
+		'_cmd':'adminCampaignFileContents',
+		'CAMPAIGNID' : CAMPAIGNID,
+		'FILENAME' : 'index.html',
+		'_tag':	{
+			'datapointer' : 'adminCampaignFileContents|'+CAMPAIGNID,
+			'callback':function(rd)	{
+				$target.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					$target.anymessage({'message':rd});
+					}
+				else	{
+					//success content goes here.
+					var $textarea = $("[data-app-role='htmlEditor']",$target);
+					$textarea.val(app.data[rd.datapointer].body)
+					$textarea.htmlarea();
+					app.u.handleAppEvents($target);
+					}
+				}
+			}
+		},'mutable');
+	app.model.dispatchThis('mutable');
+	}
+else if(data === false)	{
+	$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});
+	}
+else	{} //an error occured. getCampaignByCAMPAIGNID will handle displaying the error.
+					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, either $target is blank or not a jquery instance ["+$target instanceof jQuery+"] or CAMPAIGNID ["+CAMPAIGNID+"] not set.","gMessage":true});
+					}
+				},
 
 			showGiftcardManager : function($target)	{
 				$target.empty();
@@ -487,6 +540,30 @@ else	{
 				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
 //				app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
+				},
+
+			getCampaignByCAMPAIGNID : function(CAMPAIGNID)	{
+				var r = false; //what is returned. Either 'false' if not found, null if an error occured or the data object.
+				if(CAMPAIGNID)	{
+					if(app.data.adminCampaignList && app.data.adminCampaignList['@CAMPAIGNS'] && app.data.adminCampaignList['@CAMPAIGNS'].length)	{
+						var L = app.data.adminCampaignList['@CAMPAIGNS'].length;
+						for(var i = 0; i < L; i += 1)	{
+							if(app.data.adminCampaignList['@CAMPAIGNS'][i].CAMPAIGNID == CAMPAIGNID)	{
+								r = app.data.adminCampaignList['@CAMPAIGNS'][i];
+								break; //match found. Exit early.
+								}
+							}
+						}
+					else	{
+						r = null;
+						$('#globalMessaging').anymessage({"message":"In admin_customer.u.getCampaignByCAMPAIGNID, app.data.adminCampaignList not in memory or @CAMPAIGNS is empty.","gMessage":true});
+						}
+					}
+				else	{
+					r = null;
+					$('#globalMessaging').anymessage({"message":"In admin_customer.u.getCampaignByCAMPAIGNID, no CAMPAIGNID specified.","gMessage":true});
+					}
+				return r;
 				}
 
 			}, //u [utilities]
@@ -500,19 +577,117 @@ else	{
 		e : {
 //custom event instead of using openDialog because of html editor.
 			adminCampaignCreateShow : function($btn)	{
-				
+//consider the 'create' just having the subject and ID, then creating and going right into the editor. probably a good idea.
 				$btn.button();
 				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
 					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({'templateID':'caimpaignCreateUpdateTemplate','data':{}});
-					$('form',$D).append("<input type='hidden' name='_cmd' value='adminCampaignCreate' \/><input type='hidden' name='GUID' value='"+app.u.guidGenerator()+"' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/><input type='hidden' name='_tag/message' value='Thank you, your campaign has been created.' \/><button data-app-event='admin|processForm'>Create<\/button>");
-					app.u.handleAppEvents($D);
+					var $D = app.ext.admin.i.dialogCreate({'templateID':'caimpaignCreateTemplate','data':app.data.adminCampaignTemplateList,'showLoading':false,'title':'Create a New Campaign'});
+//					app.u.handleAppEvents($D);
+					$D.dialog('option','width','60%');
 					$D.dialog('open');
 //may need to add some for attributes for processForm or a custom app event button. That'll depend on how the file vs other changes get saved.
 					});
-				
+				},
+			
+			adminCampaignCreateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						$form.showLoading({'message':'Creating Campaign...'});
+						var
+							sfo = $form.serializeJSON(),
+							CAMPAIGNID = sfo.CAMPAIGNID+"_"+app.u.unixNow(); //appending unix timestamp increases likelyhood that campaignID will be globally unique.
+						
+						app.model.addDispatchToQ({
+							'_cmd':'adminCampaignCreate',
+							'CAMPAIGNID' : CAMPAIGNID,
+							'_tag':	{
+								'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$form.hideLoading();
+										$form.anymessage({'message':rd});
+										}
+									else	{
+										//Campaign was successfully created.  Handle the templating piece.
+										//call is daisy chained instead of pipelined in case the first call (create) fails.
+										app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag':{'datapointer' : 'adminCampaignList'}},'immutable');
+										app.model.addDispatchToQ({
+											'_cmd':'adminCampaignTemplateInstall',
+											'PROJECTID' : "$SYSTEM", //set by what template was selected. !!! needs to be loaded from select list option data. the option renderformat should add more info as data to each option.
+											'CAMPAIGNID' : CAMPAIGNID,
+											'SUBDIR' : sfo.template_origin, //what is the file we are copying in.
+											'_tag':	{
+												'callback':function(responseData){
+													$form.hideLoading();
+													if(app.model.responseHasErrors(responseData)){
+														$form.anymessage({'message':rd});
+														}
+													else	{
+														//Template content was successfully added.
+														$btn.closest('.ui-dialog-content').dialog('close'); //closes the 'create' dialog.
+														app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),CAMPAIGNID); //opens the editor for this campaign.
+														}
+													}
+												}
+											},'immutable');
+										app.model.dispatchThis('immutable');
+										}
+									}
+								}
+							},'immutable');
+						
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //validateForm handles error display.
+					});
 				},
 
+//clicked from campaign list row.
+			adminCampaignUpdateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
+					$btn.closest('tbody').stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
+					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data('campaignid'));
+					})
+				},
+//clicked within the campaign editor.
+			adminCampaignUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminCampaignUpdateExec').on('click.adminCampaignUpdateExec',function(){
+app.u.dump("BEGIN adminCampaignUpdateExec click event");
+var $form = $btn.closest('form');
+if(app.u.validateForm($form))	{
+	var sfo = $form.serializeJSON({'cb':true});
+	var HTML = sfo.HTML;
+	delete sfo.html; //sanitize SFO/update of html, which is updated w/ a different call.
+	
+//update the campaign.
+	app.model.addDispatchToQ($.extend(true,{},sfo,{
+		'_cmd':'adminCampaignUpdate',
+		'_tag':	{
+			'callback':'showMessaging',
+			'message' : 'your changes have been saved.',
+			jqObj : $form
+			}
+		}),'immutable');
+
+//update the campaign Template
+	
+
+	app.model.dispatchThis('immutable');
+
+
+
+	//run a macro here to save the non-message content based changes.
+	}
+else	{
+	//validateform will handle error display.
+	}
+
+					})
+				},
 
 			adminCampaignRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
