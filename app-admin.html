@@ -367,7 +367,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 		
 		</li>
 		<li><a href='#' onClick="app.ext.admin.a.showPicker(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')); return false;">showPicker</a>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminCampaignFileContents','base64':true,'FILENAME' : 'index.html','CAMPAIGNID':'222222_1372278124','_tag':	{'callback':'downloadBase64File','extension':'admin','datapointer' : 'adminCampaignFileContent'}},'mutable'); app.model.dispatchThis('mutable');">downloadBase64File</a></li>
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminCampaignFileContents','base64':true,'FILENAME' : 'index.html','CAMPAIGNID':'222222_1372278124','_tag':	{'callback':'downloadBase64File','extension':'admin','datapointer' : 'adminCampaignFileContent'}},'mutable'); app.model.dispatchThis('mutable'); return false;">downloadBase64File</a></li>
 
 		<li><a href='#' onClick="app.ext.admin_config.a.showRulesBuilderInModal({'mode':'shipping','provider':'FLEX:LOCAL_CANADA_1369228546','table':'RULES'}); return false;">showRulesBuilderInModal</a></li>
 		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>

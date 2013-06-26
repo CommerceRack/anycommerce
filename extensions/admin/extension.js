@@ -2345,17 +2345,22 @@ Function does NOT dispatch.
 
 		downloadBase64File : {
 			onSuccess : function(_rtag)	{
-				const MIME_TYPE = 'application/octet-stream,base64';
-				var base64 = new Array(app.data[_rtag.datapointer].body);
+				app.u.dump(_rtag);
+				const MIME_TYPE = 'text/plain';
+// this worked, but not an ideal solution. we like blob better.
+//				var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(app.data[_rtag.datapointer].body);
+//				var $a = $('<a>',{'download':app.data[_rtag.datapointer].FILENAME || 'file',"href":uri}).text('download me');
+
+//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
+				var base64 = atob(app.data[_rtag.datapointer].body);
 			
-				var bb = new Blob(base64, {type: MIME_TYPE});
-				var filename = _rtag.filename || 'file';
+				var bb = new Blob(new Array(base64), {type: MIME_TYPE});
+				var filename = app.data[_rtag.datapointer].FILENAME || 'file';
 				
 			//a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
 				var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
 				$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
 					var a = this;
-					console.log('got here');
 					a.textContent = 'Downloaded';
 					a.dataset.disabled = true;
 					// Need a small delay for the revokeObjectURL to work properly.
@@ -2364,7 +2369,7 @@ Function does NOT dispatch.
 						window.URL.revokeObjectURL(a.href);
 						}, 1500);
 					});
-				
+
 				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
 				$a.appendTo($D);
 				$D.dialog({
