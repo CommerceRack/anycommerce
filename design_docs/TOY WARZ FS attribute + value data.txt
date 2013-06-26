@@ -1,0 +1,1623 @@
+
+   {
+      "type" : "checkbox",
+      "title" : "Tag: Clearance",
+      "id" : "is:user2"
+   },
+   {
+      "index" : "prod_collectible",
+      "hint" : "Check box if collectible",
+      "type" : "checkbox",
+      "title" : "Collectible",
+      "id" : "user:prod_collectible"
+   },
+   {
+      "hint" : "Check box if available for preorder",
+      "type" : "checkbox",
+      "title" : "Preorder",
+      "id" : "is:preorder"
+   },
+   {
+      "hint" : "Check box if item is on sale",
+      "type" : "checkbox",
+      "title" : "Sale item",
+      "id" : "is:sale"
+   },
+   {
+      "hint" : "Check box if special order",
+      "type" : "checkbox",
+      "title" : "Specialorder",
+      "id" : "is:specialorder"
+   },
+   {
+      "index" : "made_usa",
+      "hint" : "Check box if item is made in USA",
+      "type" : "checkbox",
+      "title" : "Made In USA",
+      "id" : "user:made_usa"
+   },
+   {
+      "bit" : "19",
+      "panel" : "flexedit",
+      "index" : "user3",
+      "hint" : "Check box if limited edition",
+      "id" : "is:user3",
+      "tag" : "IS_USER3",
+      "title" : "Limited Edition",
+      "type" : "checkbox"
+   },
+   {
+      "index" : "prod_special",
+      "hint" : "Check box if specialized product",
+      "type" : "checkbox",
+      "title" : "Specialized",
+      "id" : "user:prod_special"
+   },
+   {
+      "id" : "zoovy:prod_cpsiawarning"
+   },
+
+*************************************************************************************************************************************************************
+					****PROD_THEME INFO****
+   {
+      "index" : "prod_theme",
+      "options" : [
+         {
+            "p" : "24",
+            "v" : "24"
+         },
+         {
+            "p" : "300",
+            "v" : "300"
+         },
+         {
+            "p" : "A Christmas Story",
+            "v" : "a+christmas+story"
+         },
+         {
+            "p" : "Adventure Time",
+            "v" : "adventure+time"
+         },
+         {
+            "p" : "Alice in Wonderland",
+            "v" : "alice+in+wonderland"
+         },
+         {
+            "p" : "Alice Madness",
+            "v" : "alice+madness"
+         },
+         {
+            "p" : "Aliens",
+            "v" : "aliens"
+         },
+         {
+            "p" : "Assassin's Creed",
+            "v" : "assassin+s+creed"
+         },
+         {
+            "p" : "Avatar",
+            "v" : "avatar"
+         },
+         {
+            "p" : "Avengers",
+            "v" : "avengers"
+         },
+         {
+            "p" : "Back to the Future",
+            "v" : "back+to+the+future"
+         },
+         {
+            "p" : "Batman",
+            "v" : "batman"
+         },
+         {
+            "p" : "Battlestar Galactica",
+            "v" : "battlestar+gallactica"
+         },
+         {
+            "p" : "Beatles",
+            "v" : "beatles"
+         },
+         {
+            "p" : "Big Bang Theory",
+            "v" : "big+bang+theory"
+         },
+         {
+            "p" : "Big Lebowski",
+            "v" : "big+lebowski"
+         },
+         {
+            "p" : "Bioshock",
+            "v" : "bioshock"
+         },
+         {
+            "p" : "Braveheart",
+            "v" : "braveheart"
+         },
+         {
+            "p" : "Captain America",
+            "v" : "captain+america"
+         },
+         {
+            "p" : "Clash of the Titans",
+            "v" : "clash+of+the+titans"
+         },
+         {
+            "p" : "Coraline",
+            "v" : "coraline"
+         },
+         {
+            "p" : "Crysis",
+            "v" : "crysis"
+         },
+         {
+            "p" : "Da Vinci Code",
+            "v" : "da+vinci+code"
+         },
+         {
+            "p" : "DC",
+            "v" : "dc"
+         },
+         {
+            "p" : "Dead Space",
+            "v" : "dead+space"
+         },
+         {
+            "p" : "Deadpool",
+            "v" : "deadpool"
+         },
+         {
+            "p" : "Dexter",
+            "v" : "dexter"
+         },
+         {
+            "p" : "Diary of a Wimpy Kid",
+            "v" : "diary+of+a+wimpy+kid"
+         },
+         {
+            "p" : "Disney",
+            "v" : "disney"
+         },
+         {
+            "p" : "District 9",
+            "v" : "district+9"
+         },
+         {
+            "p" : "Dr. Grordbort",
+            "v" : "dr+grordbort"
+         },
+         {
+            "p" : "Dr. Horrible",
+            "v" : "dr+horrilbe"
+         },
+         {
+            "p" : "Doctor Who",
+            "v" : "dr+who"
+         },
+         {
+            "p" : "Evil Dead",
+            "v" : "evil+dead"
+         },
+         {
+            "p" : "Family Guy",
+            "v" : "family+guy"
+         },
+         {
+            "p" : "Fantastic Four",
+            "v" : "fantastic+four"
+         },
+         {
+            "p" : "Friday the 13th",
+            "v" : "friday+the+13th"
+         },
+         {
+            "p" : "Game of Thrones",
+            "v" : "game+of+thrones"
+         },
+         {
+            "p" : "Gears of War",
+            "v" : "gears+of+war"
+         },
+         {
+            "p" : "Ghostbusters",
+            "v" : "ghostbusters"
+         },
+         {
+            "p" : "GI Joe",
+            "v" : "gi+joe"
+         },
+         {
+            "p" : "God of War",
+            "v" : "god+of+war"
+         },
+         {
+            "p" : "Godzilla",
+            "v" : "godzilla"
+         },
+         {
+            "p" : "Golden Compass",
+            "v" : "golden+compass"
+         },
+         {
+            "p" : "Gone with the Wind",
+            "v" : "gone+with+the+wind"
+         },
+         {
+            "p" : "Green Hornet",
+            "v" : "green+hornet"
+         },
+         {
+            "p" : "Green Lantern",
+            "v" : "green+lantern"
+         },
+         {
+            "p" : "Gremlins",
+            "v" : "gremlins"
+         },
+         {
+            "p" : "Grindhouse",
+            "v" : "grindhouse"
+         },
+         {
+            "p" : "Guitar Hero",
+            "v" : "guitar+hero"
+         },
+         {
+            "p" : "Gundam",
+            "v" : "gundam"
+         },
+         {
+            "p" : "Halo",
+            "v" : "halo"
+         },
+         {
+            "p" : "Hangover",
+            "v" : "hangover"
+         },
+         {
+            "p" : "Hanna Montana",
+            "v" : "hannah+montana"
+         },
+         {
+            "p" : "Harry Potter",
+            "v" : "harry+potter"
+         },
+         {
+            "p" : "Heroes",
+            "v" : "heroes"
+         },
+         {
+            "p" : "Hunger Games",
+            "v" : "hunger+games"
+         },
+         {
+            "p" : "Incredible Hulk",
+            "v" : "incredible+hulk"
+         },
+         {
+            "p" : "Indiana Jones",
+            "v" : "indiana+jones"
+         },
+         {
+            "p" : "Inglourious Basterds",
+            "v" : "inglouious+basterds"
+         },
+         {
+            "p" : "Iron Man",
+            "v" : "iron+man"
+         },
+         {
+            "p" : "James Bond",
+            "v" : "james+bond"
+         },
+         {
+            "p" : "John Wayne",
+            "v" : "john+wayne"
+         },
+         {
+            "p" : "Justice League",
+            "v" : "justice+league"
+         },
+         {
+            "p" : "Kick Ass",
+            "v" : "kick+ass"
+         },
+         {
+            "p" : "Kill Bill",
+            "v" : "kill+bill"
+         },
+         {
+            "p" : "KISS",
+            "v" : "kiss"
+         },
+         {
+            "p" : "Lord of the Rings",
+            "v" : "lord+of+the+rings"
+         },
+         {
+            "p" : "Marvel",
+            "v" : "marvel"
+         },
+         {
+            "p" : "Mass Effect",
+            "v" : "mass+effect"
+         },
+         {
+            "p" : "Mega Man",
+            "v" : "mega+man"
+         },
+         {
+            "p" : "Men In Black",
+            "v" : "men+in+black"
+         },
+         {
+            "p" : "Munsters",
+            "v" : "munsters"
+         },
+         {
+            "p" : "Muppets",
+            "v" : "muppets"
+         },
+         {
+            "p" : "New 52",
+            "v" : "new+52"
+         },
+         {
+            "p" : "Nightmare Before Christmas",
+            "v" : "nightmare+before+christmas"
+         },
+         {
+            "p" : "Nightmare on Elm Street",
+            "v" : "nightmare+on+elm+street"
+         },
+         {
+            "p" : "Pan's Labyrinth",
+            "v" : "pan+s+labyrinth"
+         },
+         {
+            "p" : "Pirates of the Caribbean",
+            "v" : "pirates+of+the+caribbean"
+         },
+         {
+            "p" : "Portal",
+            "v" : "portal"
+         },
+         {
+            "p" : "Predator",
+            "v" : "predator"
+         },
+         {
+            "p" : "Prototype Alex",
+            "v" : "prototype+alex"
+         },
+         {
+            "p" : "Reservoir Dogs",
+            "v" : "reservoir+dogs"
+         },
+         {
+            "p" : "Resident Evil",
+            "v" : "resident+evil"
+         },
+         {
+            "p" : "Robin Hood",
+            "v" : "robin+hood"
+         },
+         {
+            "p" : "Rolling Stones",
+            "v" : "rolling+stones"
+         },
+         {
+            "p" : "Saw",
+            "v" : "saw"
+         },
+         {
+            "p" : "Scarface",
+            "v" : "scarface"
+         },
+         {
+            "p" : "Scream",
+            "v" : "scream"
+         },
+         {
+            "p" : "Serenity",
+            "v" : "serenity"
+         },
+         {
+            "p" : "Silence of the Lambs",
+            "v" : "silence+of+the+lambs"
+         },
+         {
+            "p" : "Sin City",
+            "v" : "sin+city"
+         },
+         {
+            "p" : "Skylanders",
+            "v" : "skylanders"
+         },
+         {
+            "p" : "Sonic",
+            "v" : "sonic"
+         },
+         {
+            "p" : "South Park",
+            "v" : "south+park"
+         },
+         {
+            "p" : "Spider Man",
+            "v" : "spider+man"
+         },
+         {
+            "p" : "Splinter Cell",
+            "v" : "splinter+cell"
+         },
+         {
+            "p" : "SpongeBob",
+            "v" : "spongebob"
+         },
+         {
+            "p" : "Sports",
+            "v" : "sports"
+         },
+         {
+            "p" : "Star Trek",
+            "v" : "star+trek"
+         },
+         {
+            "p" : "Star Wars",
+            "v" : "star+wars"
+         },
+         {
+            "p" : "Stargate",
+            "v" : "stargate"
+         },
+         {
+            "p" : "Steampunk",
+            "v" : "steampunk"
+         },
+         {
+            "p" : "Street Fighter",
+            "v" : "street+fighter"
+         },
+         {
+            "p" : "Sucker Punch",
+            "v" : "sucker+punch"
+         },
+         {
+            "p" : "Super 8",
+            "v" : "super+8"
+         },
+         {
+            "p" : "Superman",
+            "v" : "superman"
+         },
+         {
+            "p" : "Sweeney Todd",
+            "v" : "sweeny+todd"
+         },
+         {
+            "p" : "Terminator",
+            "v" : "terminator"
+         },
+         {
+            "p" : "The Chronicles of Narnia",
+            "v" : "the+chronicles+of+narnia"
+         },
+         {
+            "p" : "The Crow",
+            "v" : "the+crow"
+         },
+         {
+            "p" : "The Fly",
+            "v" : "the+fly"
+         },
+         {
+            "p" : "Green Hornet",
+            "v" : "green+hornet+"
+         },
+         {
+            "p" : "The Hobbit",
+            "v" : "the+hobbit"
+         },
+         {
+            "p" : "The Office",
+            "v" : "the+office"
+         },
+         {
+            "p" : "The Phantom",
+            "v" : "the+phantom"
+         },
+         {
+            "p" : "The Simpsons",
+            "v" : "the+simpsons"
+         },
+         {
+            "p" : "The Twilight Zone",
+            "v" : "the+twilight+zone"
+         },
+         {
+            "p" : "Thor",
+            "v" : "thor"
+         },
+         {
+            "p" : "Tintin",
+            "v" : "tintin"
+         },
+         {
+            "p" : "Tom and Jerry",
+            "v" : "tom+and+jerry"
+         },
+         {
+            "p" : "Transformers",
+            "v" : "transformers"
+         },
+         {
+            "p" : "Tron",
+            "v" : "tron"
+         },
+         {
+            "p" : "True Blood",
+            "v" : "true+blood"
+         },
+         {
+            "p" : "Tudors",
+            "v" : "tudors"
+         },
+         {
+            "p" : "Twilight",
+            "v" : "twilight"
+         },
+         {
+            "p" : "Universal Monsters",
+            "v" : "universal+monsters"
+         },
+         {
+            "p" : "Venture Bros",
+            "v" : "venture+bros"
+         },
+         {
+            "p" : "Walking Dead",
+            "v" : "walking+dead"
+         },
+         {
+            "p" : "Warehouse 13",
+            "v" : "warehouse+13"
+         },
+         {
+            "p" : "Watchmen",
+            "v" : "watchmen"
+         },
+         {
+            "p" : "Wizard of Oz",
+            "v" : "wizard+of+oz"
+         },
+         {
+            "p" : "Wolverine",
+            "v" : "wolverine"
+         },
+         {
+            "p" : "Wonder Woman",
+            "v" : "wonder+woman"
+         },
+         {
+            "p" : "World of Warcraft",
+            "v" : "world+of+warcraft"
+         },
+         {
+            "p" : "World War II",
+            "v" : "world+war+ii"
+         },
+         {
+            "p" : "X Men",
+            "v" : "x+men"
+         },
+         {
+            "p" : "EMPTY",
+            "v" : ""
+         }
+      ],
+      "hint" : "Select a product theme",
+      "type" : "select",
+      "title" : "Product Theme",
+      "id" : "user:prod_theme"
+   },
+
+*************************************************************************************************************************************************************
+					****PROD_TYPES INFO****
+   {
+      "index" : "prod_types",
+      "options" : [
+         {
+            "p" : "Accessories",
+            "v" : "accessories"
+         },
+         {
+            "p" : "Action Figure",
+            "v" : "action+figure"
+         },
+         {
+            "p" : "Art",
+            "v" : "art"
+         },
+         {
+            "p" : "Barware",
+            "v" : "barware"
+         },
+         {
+            "p" : "Bobblehead",
+            "v" : "bobblehead"
+         },
+         {
+            "p" : "Book",
+            "v" : "book"
+         },
+         {
+            "p" : "Collectible",
+            "v" : "collectible"
+         },
+         {
+            "p" : "Cologne and Fragrances",
+            "v" : "cologne+fragrances"
+         },
+         {
+            "p" : "Comic Books",
+            "v" : "comic+books"
+         },
+         {
+            "p" : "Costumes",
+            "v" : "costumes"
+         },
+         {
+            "p" : "Decor",
+            "v" : "decor"
+         },
+         {
+            "p" : "Die Cast Vehicles",
+            "v" : "die+cast+vehicle"
+         },
+         {
+            "p" : "Disney Pins",
+            "v" : "disney+pins"
+         },
+         {
+            "p" : "DVD and Blu-ray",
+            "v" : "dvd+blu+ray"
+         },
+         {
+            "p" : "Figurine",
+            "v" : "figurine"
+         },
+         {
+            "p" : "Film Cell",
+            "v" : "film+cell"
+         },
+         {
+            "p" : "Games",
+            "v" : "games"
+         },
+         {
+            "p" : "Lego",
+            "v" : "lego"
+         },
+         {
+            "p" : "Maquette",
+            "v" : "maquette"
+         },
+         {
+            "p" : "Mini Bust",
+            "v" : "mini+bust"
+         },
+         {
+            "p" : "Minimate",
+            "v" : "minimate"
+         },
+         {
+            "p" : "Model",
+            "v" : "model"
+         },
+         {
+            "p" : "Photos",
+            "v" : "photos"
+         },
+         {
+            "p" : "Plush",
+            "v" : "plush"
+         },
+         {
+            "p" : "Pop Vinyl",
+            "v" : "pop+vinyl"
+         },
+         {
+            "p" : "Posters",
+            "v" : "posters"
+         },
+         {
+            "p" : "Prop Replica",
+            "v" : "prop+replica"
+         },
+         {
+            "p" : "Statue",
+            "v" : "statue"
+         },
+         {
+            "p" : "Sword",
+            "v" : "sword"
+         },
+         {
+            "p" : "T-Shirt",
+            "v" : "t+shirt"
+         },
+         {
+            "p" : "Toy",
+            "v" : "toy"
+         },
+         {
+            "p" : "Wacky Wobbler",
+            "v" : "wacky+wobbler"
+         },
+         {
+            "p" : "EMPTY",
+            "v" : ""
+         }
+      ],
+      "hint" : "Product type comic toy book etc",
+      "type" : "select",
+      "title" : "Product Type",
+      "id" : "user:prod_types"
+   },
+
+*************************************************************************************************************************************************************
+					****PROD_CHARACTER INFO****
+   {
+      "index" : "prod_character",
+      "options" : [
+         {
+            "p" : "Aquaman",
+            "v" : "aquaman"
+         },
+         {
+            "p" : "Admiral Ackbar",
+            "v" : "admiral+ackbar"
+         },
+         {
+            "p" : "Ahsoka Tano",
+            "v" : "ahsoka+tano"
+         },
+         {
+            "p" : "Anakin Skywalker",
+            "v" : "anakin+skywalker"
+         },
+         {
+            "p" : "Asajj Ventress",
+            "v" : "asajj+ventress"
+         },
+         {
+            "p" : "Bart Simpson",
+            "v" : "bart+simpson"
+         },
+         {
+            "p" : "Batgirl",
+            "v" : "batgirl"
+         },
+         {
+            "p" : "Batman",
+            "v" : "batman"
+         },
+         {
+            "p" : "Batwoman",
+            "v" : "batwoman"
+         },
+         {
+            "p" : "Betty Boop",
+            "v" : "betty+boop"
+         },
+         {
+            "p" : "Bilbo Baggins",
+            "v" : "bilbo+baggins"
+         },
+         {
+            "p" : "Boba Fett",
+            "v" : "boba+fett"
+         },
+         {
+            "p" : "Bounty Hunters",
+            "v" : "bounty+hunters"
+         },
+         {
+            "p" : "Buzz Lightyear",
+            "v" : "buzz+lightyear"
+         },
+         {
+            "p" : "C-3PO",
+            "v" : "c+3po"
+         },
+         {
+            "p" : "Cad Bane",
+            "v" : "cad+bane"
+         },
+         {
+            "p" : "Captain America",
+            "v" : "captain+america"
+         },
+         {
+            "p" : "Captain Kirk",
+            "v" : "captain+kirk"
+         },
+         {
+            "p" : "Catwoman",
+            "v" : "catwoman"
+         },
+         {
+            "p" : "Chewbacca",
+            "v" : "chewbacca"
+         },
+         {
+            "p" : "Clone Trooper",
+            "v" : "clone+trooper"
+         },
+         {
+            "p" : "Count Dooku",
+            "v" : "count+dooku"
+         },
+         {
+            "p" : "Creature from the Black Lagoon",
+            "v" : "creature+from+the+black+lagoon"
+         },
+         {
+            "p" : "Darth Maul",
+            "v" : "darth+maul"
+         },
+         {
+            "p" : "Darth Sidious",
+            "v" : "darth+sidious"
+         },
+         {
+            "p" : "Darth Vader",
+            "v" : "darth+vader"
+         },
+         {
+            "p" : "DC",
+            "v" : "dc"
+         },
+         {
+            "p" : "Dengar",
+            "v" : "dengar"
+         },
+         {
+            "p" : "Dexter",
+            "v" : "dexter"
+         },
+         {
+            "p" : "Doctor Who",
+            "v" : "doctor+who"
+         },
+         {
+            "p" : "Dorothy Gale",
+            "v" : "dorothy+gale"
+         },
+         {
+            "p" : "Dracula",
+            "v" : "dracula"
+         },
+         {
+            "p" : "Elvis",
+            "v" : "elvis"
+         },
+         {
+            "p" : "Emperor Palpatine",
+            "v" : "emperor+palpatine"
+         },
+         {
+            "p" : "Ewok",
+            "v" : "ewok"
+         },
+         {
+            "p" : "Flash",
+            "v" : "flash"
+         },
+         {
+            "p" : "Frankenstein",
+            "v" : "frankenstein"
+         },
+         {
+            "p" : "Freddy Krueger",
+            "v" : "freddy+krueger"
+         },
+         {
+            "p" : "Gamorrean Guard",
+            "v" : "gamorrean+guard"
+         },
+         {
+            "p" : "Gandalf",
+            "v" : "gandalf"
+         },
+         {
+            "p" : "General Grievous",
+            "v" : "general+grevious"
+         },
+         {
+            "p" : "Godfather",
+            "v" : "godfather"
+         },
+         {
+            "p" : "Godzilla",
+            "v" : "godzilla"
+         },
+         {
+            "p" : "Gollum",
+            "v" : "gollum"
+         },
+         {
+            "p" : "Greedo",
+            "v" : "greedo"
+         },
+         {
+            "p" : "Green Hornet",
+            "v" : "green+hornet"
+         },
+         {
+            "p" : "Green Lantern",
+            "v" : "green+lantern"
+         },
+         {
+            "p" : "Han Solo",
+            "v" : "han+solo"
+         },
+         {
+            "p" : "Harley Quinn",
+            "v" : "harley+quinn"
+         },
+         {
+            "p" : "Harry Potter",
+            "v" : "harry+potter"
+         },
+         {
+            "p" : "Hawkeye",
+            "v" : "hawkeye"
+         },
+         {
+            "p" : "Imperial Officer",
+            "v" : "imperial+officer"
+         },
+         {
+            "p" : "Incredible Hulk",
+            "v" : "incredible+hulk"
+         },
+         {
+            "p" : "Indiana Jones",
+            "v" : "indiana+jones"
+         },
+         {
+            "p" : "Iron Man",
+            "v" : "iron+man"
+         },
+         {
+            "p" : "Jabba the Hutt",
+            "v" : "jabba+the+hutt"
+         },
+         {
+            "p" : "Jack Skellington",
+            "v" : "jack+skellington"
+         },
+         {
+            "p" : "Jack Sparrow",
+            "v" : "jack+sparrow"
+         },
+         {
+            "p" : "James Bond",
+            "v" : "james+bond"
+         },
+         {
+            "p" : "Jango Fett",
+            "v" : "jango+fett"
+         },
+         {
+            "p" : "Jar Jar",
+            "v" : "jar+jar"
+         },
+         {
+            "p" : "Jason Voorhees",
+            "v" : "jason"
+         },
+         {
+            "p" : "Jawa",
+            "v" : "jawa"
+         },
+         {
+            "p" : "Joker",
+            "v" : "joker"
+         },
+         {
+            "p" : "Kermit the Frog",
+            "v" : "kermit"
+         },
+         {
+            "p" : "Kiss",
+            "v" : "kiss"
+         },
+         {
+            "p" : "Kit Fisto",
+            "v" : "kit+fisto"
+         },
+         {
+            "p" : "Lando Calrissian",
+            "v" : "lando+calrissian"
+         },
+         {
+            "p" : "Luke Skywalker",
+            "v" : "luke+skywalker"
+         },
+         {
+            "p" : "Mace Windu",
+            "v" : "mace+windu"
+         },
+         {
+            "p" : "Michael Jackson",
+            "v" : "michael+jackson"
+         },
+         {
+            "p" : "Mike Myers",
+            "v" : "mike+myers"
+         },
+         {
+            "p" : "Nick Fury",
+            "v" : "nick+fury"
+         },
+         {
+            "p" : "Obi Wan Kenobi",
+            "v" : "obi+wan+kenobi"
+         },
+         {
+            "p" : "Other",
+            "v" : "other"
+         },
+         {
+            "p" : "Padme Amidala",
+            "v" : "padme+amidala"
+         },
+         {
+            "p" : "Poison Ivy",
+            "v" : "poison+ivy"
+         },
+         {
+            "p" : "Princess Leia",
+            "v" : "princess+leia"
+         },
+         {
+            "p" : "Queen Amidala",
+            "v" : "queen+amidala"
+         },
+         {
+            "p" : "Qui-Gonn Jin",
+            "v" : "qui+gonn+jin"
+         },
+         {
+            "p" : "R2-D2",
+            "v" : "r2+d2"
+         },
+         {
+            "p" : "Sandtrooper",
+            "v" : "sandtrooper"
+         },
+         {
+            "p" : "Savage Opress",
+            "v" : "savage+opress"
+         },
+         {
+            "p" : "Scarface",
+            "v" : "scarface"
+         },
+         {
+            "p" : "Scarlett O'Hara",
+            "v" : "scarlett+o+hara"
+         },
+         {
+            "p" : "Six Million Dollar Man",
+            "v" : "six+million+dollar+man"
+         },
+         {
+            "p" : "Snowtrooper",
+            "v" : "snowtrooper"
+         },
+         {
+            "p" : "Spider Man",
+            "v" : "spider+man"
+         },
+         {
+            "p" : "Star Wars",
+            "v" : "star+wars"
+         },
+         {
+            "p" : "Stay Puft",
+            "v" : "stay+puft"
+         },
+         {
+            "p" : "Stormtrooper",
+            "v" : "stormtrooper"
+         },
+         {
+            "p" : "Superman",
+            "v" : "superman"
+         },
+         {
+            "p" : "Thor",
+            "v" : "thor"
+         },
+         {
+            "p" : "Tom and Jerry",
+            "v" : "tom+and+jerry"
+         },
+         {
+            "p" : "Tusken Raider",
+            "v" : "tusken+raider"
+         },
+         {
+            "p" : "Wedge Antilles",
+            "v" : "wedge+antilles"
+         },
+         {
+            "p" : "Wimpy Kid",
+            "v" : "wimpy+kid"
+         },
+         {
+            "p" : "Wolfman",
+            "v" : "wolfman"
+         },
+         {
+            "p" : "Wonder Woman",
+            "v" : "wonder+woman"
+         },
+         {
+            "p" : "Yoda",
+            "v" : "yoda"
+         },
+         {
+            "p" : "EMPTY",
+            "v" : ""
+         }
+      ],
+      "hint" : "Who is the character",
+      "type" : "select",
+      "title" : "Character",
+      "id" : "user:prod_character"
+   },
+
+*************************************************************************************************************************************************************
+					****PROD_MFGR INFO****
+   {
+      "index" : "prod_mfgr",
+      "options" : [
+         {
+            "p" : "Acme Archives",
+            "v" : "acme+archives"
+         },
+         {
+            "p" : "Activision",
+            "v" : "activision"
+         },
+         {
+            "p" : "Aoshima",
+            "v" : "aoshima"
+         },
+         {
+            "p" : "Ape Entertainment",
+            "v" : "ape+entertainment"
+         },
+         {
+            "p" : "Arcana Studio",
+            "v" : "arcana+studio"
+         },
+         {
+            "p" : "Archie Comics",
+            "v" : "archie+comics"
+         },
+         {
+            "p" : "Atlanta Cutlery",
+            "v" : "atlanta+cutlery"
+         },
+         {
+            "p" : "Attakus",
+            "v" : "attakus"
+         },
+         {
+            "p" : "Auto World",
+            "v" : "auto+world"
+         },
+         {
+            "p" : "Avatar Press",
+            "v" : "avatar+press"
+         },
+         {
+            "p" : "Bandai",
+            "v" : "bandai"
+         },
+         {
+            "p" : "Battlestar Galactica",
+            "v" : "battlestar+galactica"
+         },
+         {
+            "p" : "Bif Bang Pow",
+            "v" : "bif+bang+pow"
+         },
+         {
+            "p" : "Big Chief",
+            "v" : "big+chief"
+         },
+         {
+            "p" : "Big Fish Toys",
+            "v" : "big+fish+toys"
+         },
+         {
+            "p" : "Bongo Comics",
+            "v" : "bongo+comics"
+         },
+         {
+            "p" : "Boom Entertainment",
+            "v" : "boom+entertainment"
+         },
+         {
+            "p" : "Bridge Direct",
+            "v" : "bridge+direct"
+         },
+         {
+            "p" : "Brothers",
+            "v" : "brothers"
+         },
+         {
+            "p" : "Capcom",
+            "v" : "capcom"
+         },
+         {
+            "p" : "Carlisle",
+            "v" : "carlisle"
+         },
+         {
+            "p" : "Commonwealth",
+            "v" : "commonwealth"
+         },
+         {
+            "p" : "Corgi",
+            "v" : "corgi"
+         },
+         {
+            "p" : "Cryptozoic",
+            "v" : "cryptozoic"
+         },
+         {
+            "p" : "CS Moore Studio",
+            "v" : "cs+moore+studio"
+         },
+         {
+            "p" : "Dark Horse Deluxe",
+            "v" : "dark+horse+deluxe"
+         },
+         {
+            "p" : "Davis Marketing Services",
+            "v" : "davis+marketing+services"
+         },
+         {
+            "p" : "DC Comics",
+            "v" : "dc+comics"
+         },
+         {
+            "p" : "DC Direct",
+            "v" : "dc+direct"
+         },
+         {
+            "p" : "DeAgostini",
+            "v" : "deagostini"
+         },
+         {
+            "p" : "Diamond Select Toys",
+            "v" : "diamond+comics"
+         },
+         {
+            "p" : "Disney",
+            "v" : "disney"
+         },
+         {
+            "p" : "Disney Auctions",
+            "v" : "disney+auctions"
+         },
+         {
+            "p" : "Disney Publishing Worldwide",
+            "v" : "disney+publishing+worldwide"
+         },
+         {
+            "p" : "Dragon Models USA",
+            "v" : "dragon+models+usa"
+         },
+         {
+            "p" : "Dream Works Fine Art",
+            "v" : "dream+works+fine+art"
+         },
+         {
+            "p" : "Dynamic Forces",
+            "v" : "dynamic+forces"
+         },
+         {
+            "p" : "EagleMoss",
+            "v" : "eaglemoss"
+         },
+         {
+            "p" : "eFX Collectibles",
+            "v" : "efx"
+         },
+         {
+            "p" : "Enesco",
+            "v" : "enesco"
+         },
+         {
+            "p" : "Enterbay",
+            "v" : "enterbay"
+         },
+         {
+            "p" : "Entertainment Earth",
+            "v" : "entertainment+earth"
+         },
+         {
+            "p" : "Factory Entertainment",
+            "v" : "factory+entertainment"
+         },
+         {
+            "p" : "Figures Toy Company",
+            "v" : "figures+toy+company"
+         },
+         {
+            "p" : "Film Cells",
+            "v" : "film+cells+ltd"
+         },
+         {
+            "p" : "Funko",
+            "v" : "funko"
+         },
+         {
+            "p" : "Gamester",
+            "v" : "gamster"
+         },
+         {
+            "p" : "Gentle Giant",
+            "v" : "gentle+giant"
+         },
+         {
+            "p" : "Hasbro",
+            "v" : "hasbro"
+         },
+         {
+            "p" : "Hollywood Collectibles Group",
+            "v" : "hollywood+collectibles+group"
+         },
+         {
+            "p" : "Hot Toys",
+            "v" : "hot+toys"
+         },
+         {
+            "p" : "IDW Publishing",
+            "v" : "idw+publishing"
+         },
+         {
+            "p" : "Image Comics",
+            "v" : "image+comics"
+         },
+         {
+            "p" : "Jada",
+            "v" : "jada"
+         },
+         {
+            "p" : "JADS International",
+            "v" : "jads+international"
+         },
+         {
+            "p" : "Jazwares Inc.",
+            "v" : "jazwares+inc"
+         },
+         {
+            "p" : "Jinx",
+            "v" : "jinx"
+         },
+         {
+            "p" : "Kotobukiya",
+            "v" : "kotobukiya"
+         },
+         {
+            "p" : "Lego",
+            "v" : "lego"
+         },
+         {
+            "p" : "Marvel",
+            "v" : "marvel"
+         },
+         {
+            "p" : "Master Cutlery",
+            "v" : "master+cutlery"
+         },
+         {
+            "p" : "Master Replicas",
+            "v" : "master+replicas"
+         },
+         {
+            "p" : "Mattel",
+            "v" : "mattel"
+         },
+         {
+            "p" : "McFarlane",
+            "v" : "mcfarlane"
+         },
+         {
+            "p" : "Medicom",
+            "v" : "medicom"
+         },
+         {
+            "p" : "Mezco Toys",
+            "v" : "mezco+toys"
+         },
+         {
+            "p" : "Monogram",
+            "v" : "monogram"
+         },
+         {
+            "p" : "Monster Arts",
+            "v" : "monster+arts"
+         },
+         {
+            "p" : "Museum Replicas",
+            "v" : "museum+replicas"
+         },
+         {
+            "p" : "NECA",
+            "v" : "neca"
+         },
+         {
+            "p" : "Head Knockers",
+            "v" : "head+knockers"
+         },
+         {
+            "p" : "Noble Collection",
+            "v" : "noble+collection"
+         },
+         {
+            "p" : "Official Pix",
+            "v" : "official+pix"
+         },
+         {
+            "p" : "Pirates of the Caribbean",
+            "v" : "pirates+of+the+caribbean"
+         },
+         {
+            "p" : "Play Imaginative PTE Ltd",
+            "v" : "play+imaginative+pte+ltd"
+         },
+         {
+            "p" : "Playmates",
+            "v" : "playmates"
+         },
+         {
+            "p" : "PopCo",
+            "v" : "popco"
+         },
+         {
+            "p" : "Pretty Ugly",
+            "v" : "pretty+ugly"
+         },
+         {
+            "p" : "Quantum Mechanix",
+            "v" : "quantum+mechanix"
+         },
+         {
+            "p" : "Ripple Junction",
+            "v" : "ripple+junction"
+         },
+         {
+            "p" : "Round 2",
+            "v" : "round+2"
+         },
+         {
+            "p" : "Sega",
+            "v" : "sega"
+         },
+         {
+            "p" : "Sideshow",
+            "v" : "sideshow"
+         },
+         {
+            "p" : "Square Enix",
+            "v" : "square+enix"
+         },
+         {
+            "p" : "Studio Art Technology",
+            "v" : "studio+art+technology"
+         },
+         {
+            "p" : "Tamashii Nations",
+            "v" : "tamashii+nations"
+         },
+         {
+            "p" : "ThreeA",
+            "v" : "threea"
+         },
+         {
+            "p" : "Thundercats",
+            "v" : "thundercats"
+         },
+         {
+            "p" : "Titan",
+            "v" : "titan"
+         },
+         {
+            "p" : "Tomy",
+            "v" : "tomy"
+         },
+         {
+            "p" : "Tonner",
+            "v" : "tonner"
+         },
+         {
+            "p" : "Toy2R",
+            "v" : "toy2r"
+         },
+         {
+            "p" : "Triforce",
+            "v" : "triforce"
+         },
+         {
+            "p" : "Umbrella Corporation",
+            "v" : "umbrella+corporation"
+         },
+         {
+            "p" : "Underground Toys",
+            "v" : "underground+toys"
+         },
+         {
+            "p" : "United Cutlery",
+            "v" : "united+cutlery"
+         },
+         {
+            "p" : "United Plankton Pictures",
+            "v" : "united+plankton+pictures"
+         },
+         {
+            "p" : "USAopoly",
+            "v" : "usaopoly"
+         },
+         {
+            "p" : "Valiant Entertainment LLC",
+            "v" : "valiant+entertainment+llc"
+         },
+         {
+            "p" : "Vertigo Comics",
+            "v" : "vertigo+comics"
+         },
+         {
+            "p" : "WDCC",
+            "v" : "wdcc"
+         },
+         {
+            "p" : "WETA",
+            "v" : "weta"
+         },
+         {
+            "p" : "Wizards of the Coast",
+            "v" : "wizards+of+the+coast"
+         },
+         {
+            "p" : "X-Plus USA Inc.",
+            "v" : "x-plus+usa+inc"
+         },
+         {
+            "p" : "EMPTY",
+            "v" : ""
+         }
+      ],
+      "hint" : "Select a product Manufacturer",
+      "type" : "select",
+      "title" : "Product Manufacturer",
+      "id" : "user:prod_mfgr"
+   },
+   {
+      "index" : "prod_salesrank",
+      "hint" : "A date formatted as YYYYMMDD (or YYYYMMDDHHMM if needed) for sorting in a product list",
+      "origin" : "expeditionimports/LAYOUT.~prod_5pics",
+      "type" : "number",
+      "title" : "Arrival/Release Date (salesrank - formatted as YYYYMMDD)",
+      "id" : "zoovy:prod_salesrank",
+      "size" : "18"
+   }
