@@ -668,11 +668,19 @@ if(app.u.validateForm($form))	{
 		'_cmd':'adminCampaignUpdate',
 		'_tag':	{
 			'callback':'showMessaging',
-			'message' : 'your changes have been saved.',
+			'message' : 'Your campaign changes have been saved.',
 			jqObj : $form
 			}
 		}),'immutable');
-
+	app.model.addDispatchToQ({
+		'_cmd':'adminCampaignTemplateInstall',
+		'CAMPAIGNID' : sfo.CAMPAIGNID,
+		'_tag':	{
+			'callback':'showMessaging',
+			'message' : 'your changes have been saved.',
+			jqObj : $form
+			}
+		},'immutable');
 //update the campaign Template
 	
 

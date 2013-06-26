@@ -2341,6 +2341,43 @@ Function does NOT dispatch.
 			},
 
 
+
+
+		downloadBase64File : {
+			onSuccess : function(_rtag)	{
+				const MIME_TYPE = 'application/octet-stream,base64';
+				var base64 = new Array(app.data[_rtag.datapointer].body);
+			
+				var bb = new Blob(base64, {type: MIME_TYPE});
+				var filename = _rtag.filename || 'file';
+				
+			//a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
+				var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+				$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
+					var a = this;
+					console.log('got here');
+					a.textContent = 'Downloaded';
+					a.dataset.disabled = true;
+					// Need a small delay for the revokeObjectURL to work properly.
+					//revokeObjectURL causes browser to drop reference to the file.
+					setTimeout(function() {
+						window.URL.revokeObjectURL(a.href);
+						}, 1500);
+					});
+				
+				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+				$a.appendTo($D);
+				$D.dialog({
+					'modal' : true,
+					'width' : 300,
+					'height' : 300
+					});
+				
+				}
+			},
+
+
+
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
@@ -3660,30 +3697,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 
 
-//used to determine what domain should be used. mostly in init, but could be used elsewhere.
-/*
-// * 201320 -> this function is no longer used.
-			getDomain : function(){
-				var domain = false;
-				var localVars = {};
-				
-				if(app.model.fetchData('authAdminLogin'))	{
-					localVars = app.data['authAdminLogin'];
-					}
-//will use the domain auto-created by a recently created account.
-				else if(app.model.fetchData('authNewAccountCreate'))	{
-					localVars = app.data['authNewAccountCreate'].domain;
-					}
-				else	{} //no other local lookup 
 
-				if(domain = app.u.getParameterByName('domain')) {} //the single = here is intentional. sets the val during the if so the function doesn't have to be run twice.
-				else if(app.vars.domain)	{domain = app.vars.domain}
-				else if(localVars.domain){domain = localVars.domain}
-				else {} //at this time, no other options.
-				return domain;
-				}, //getDomain
 
-*/
+
 
 
 
