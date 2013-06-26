@@ -110,7 +110,7 @@ var magicToolBox_mzp = function() {
 					var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
 //					app.u.dump('IMGSRC => '+imgSrc);
 					$tag.attr('src',imgSrc);
-					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' rev='"+app.u.makeImage({'tag':0,'w':350,'h':350,'name':data.value,'b':bgcolor})+"' class='MagicThumb Selector MagicThumb-swap'  />")
+					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' rev='"+app.u.makeImage({'tag':0,'w':400,'h':350,'name':data.value,'b':bgcolor})+"' class='MagicThumb Selector MagicThumb-swap'  />")
 					// makes shit blow up: rel='zoom-id:bigAssImage_href; selectors-change:mouseover;'
 					}
 				else	{

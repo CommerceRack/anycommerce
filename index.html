@@ -924,25 +924,27 @@ this will likely become more flexible in the future. ###
     <table class='prodViewerContainer'>
         <tr>
             <td class='imageContainer' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-        <!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
-        
-                <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-                <img src='blank.gif' class='prodBigImage' rel='rel="selectors-change: mouseover' name='prodBigImage' data-bind='useParentData:true; format: magicZoomPlus; extension: magicToolBox_mzp;' width='300' height='340' />
+        		<div class="imageInnerCont">
+            <!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
             
-                <div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs prodThumbsPP'>
-                    <ul data-bind='var: product(pid); format: productImages; extension: magicToolBox_mzp;'></ul>      
+                    <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+                    <img src='blank.gif' class='prodBigImage' rel='rel="selectors-change: mouseover' name='prodBigImage' data-bind='useParentData:true; format: magicZoomPlus; extension: magicToolBox_mzp;' width='300' height='340' />
+                
+                    <div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs prodThumbsPP'>
+                        <ul data-bind='var: product(pid); format: productImages; extension: magicToolBox_mzp;'></ul>      
+                    </div>
+                
+                   
+                     <!--
+                    <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
+                    #017 Harley Quinn Black Queen, Third
+                    Product Line</li>
+                        <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
+                        <li><img src="images/grayb.gif" width="20" height="21" style="margin:5px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
+                    #017 Black Queen, Third Product Line</li>
+                        <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
+                    -->
                 </div>
-            
-               
-                 <!--
-                <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
-                #017 Harley Quinn Black Queen, Third
-                Product Line</li>
-                    <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
-                    <li><img src="images/grayb.gif" width="20" height="21" style="margin:5px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
-                #017 Black Queen, Third Product Line</li>
-                    <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
-                -->
             </td>
             <td class='prodSummaryContainer marginBottom no_underline'>
                 <div style="background:#c9bca8; padding:20px; margin-right:20px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>

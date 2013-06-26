@@ -79,6 +79,7 @@ div#container div#footer{
 }
 .imageContainer{
 	width:30%;
+	position:relative;
 }
 .imageCont{
 	height: 340px;
@@ -341,6 +342,28 @@ div#container div.nav div.navContent > ul > li{
 .RightPcol .marginBottom{
 	border-bottom:none;
 }
+.prodThumbsPP{
+	bottom: 0;
+    position: absolute;
+    width: 100%;
+	height: 70px;
+	background-color:rgb(2, 2, 2);
+	background-color: rgba(10, 10, 10, 0.7);
+}
+.prodThumbsPP ul{
+	list-style:none;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+.prodThumbsPP ul li{
+	float:left;
+	margin-right: 35px;
+}
+.imageInnerCont{
+	position:relative;
+	height: 410px;
+    position: relative;
+}
 
 /*Begin carousel code for product page*/
 .ppCarousel{
@@ -441,4 +464,8 @@ div#container div.nav div.navContent > ul > li{
     width: 1020px;
 }
 .caroufredsel_wrapper{
+}
+.MagicZoomPlus img{
+	width:300px !important;
+	height:340px !important;
 }
