@@ -107,7 +107,8 @@ var cubworld_mobilenative = function() {
 //any functions that are recycled should be here.
 		u : {
 			promptAndroidRegistration : function(){
-				var $regForm = $('<form />');
+				var $regForm = $('<form class="displayNone"/>');
+				//$body.append($regForm);
 				$regForm.on('submit', function(){
 					anyCommerceAndroidInterface.register(JSON.stringify($(this).serializeJSON()));
 					$(this).dialog('close');
@@ -115,16 +116,17 @@ var cubworld_mobilenative = function() {
 					});
 				$regForm.append($('<input name="email" type="text" placeholder="email address"/>'));
 				
-				var $skipButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Skip</button>');
-				$skipButton.on('click', function(){$regForm.dialog('close');});
-				$regForm.append($skipButton);
-				
 				var $submitButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Register for Android Notifications</button>');
 				$submitButton.on('click', function(){$regForm.submit();});
 				$regForm.append($submitButton);
 				
-				$regForm.dialog({'modal':'true', 'title':'Android Notification Registration'});
+				var $skipButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Skip</button>');
+				$skipButton.on('click', function(){$regForm.dialog('close');});
+				$regForm.append($skipButton);
 				
+				app.u.dump('-> mobilenative opening prompt');
+				$regForm.dialog({'modal':'true', 'title':'Android Notification Registration'});
+				//$regForm.dialog('open');
 				},
 			androidRegister : function(regID, json){
 				app.u.dump("-> mobilenative regID received from android: "+regID);
