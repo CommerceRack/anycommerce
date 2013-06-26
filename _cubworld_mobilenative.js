@@ -48,7 +48,7 @@ var cubworld_mobilenative = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN cubworld_mobilenative.callbacks.init.onError');
 				}
-			}
+			},
 		
 		startExtension : {
 			onSuccess : function(){
