@@ -29,7 +29,20 @@ var cubworld_mobilenative = function() {
 	
 	vars : {},
 
-
+	calls : {
+		appBuyerDeviceRegistration : {
+			init : function(obj,_tag)	{
+				this.dispatch(obj,_tag);
+				return 1;
+				},
+			dispatch : function(obj,_tag){
+				obj._tag = _tag = _tag || {};
+				obj._cmd = "appBuyerDeviceRegistration";
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}
+		},
+	
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
@@ -53,7 +66,15 @@ var cubworld_mobilenative = function() {
 		startExtension : {
 			onSuccess : function(){
 				if(app.ext.cubworld_mobilenative.vars.android){
-					app.u.dump(" -> mobilenative get regID: " + anyCommerceAndroidInterface.getRegID());
+					var regID = anyCommerceAndroidInterface.getRegID();
+					if(typeof regID === "undefined"){
+						app.u.dump("-> mobilenative no regID present, prompting registration");
+						app.ext.cubworld_mobilenative.u.promptAndroidRegistration();
+						}
+					else {
+						app.u.dump("-> mobilenative regID: "+regID);
+						//verify registration
+						}
 					}
 				},
 			onError : function(){
@@ -69,7 +90,7 @@ var cubworld_mobilenative = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-
+			
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -85,6 +106,44 @@ var cubworld_mobilenative = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			promptAndroidRegistration : function(){
+				var $regForm = $('<form />');
+				$regForm.on('submit', function(){
+					anyCommerceAndroidInterface.register(JSON.stringify($(this).serializeJSON()));
+					$(this).dialog('close');
+					return false;
+					});
+				$regForm.append($('<input name="email" type="text" placeholder="email address"/>'));
+				
+				var $skipButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Skip</button>');
+				$skipButton.on('click', function(){$regForm.dialog('close');});
+				
+				var $submitButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Register for Android Notifications</button>');
+				$submitButton.on('click', function(){$regForm.submit();}
+				$regForm.append($submitButton);
+				
+				$regForm.dialog({'modal':'true', 'title':'Android Notification Registration'});
+				
+				},
+			androidRegister : function(regID, json){
+				app.u.dump("-> mobilenative regID received from android: "+regID);
+				var obj = JSON.parse(json);
+				obj.os = "android";
+				obj.registrationid = regID;
+				obj.verb = "create";
+				var _tag = {
+					'callback' : function(rd){
+						if(!app.model.responseHasErrors(rd)){
+							app.u.throwMessage(app.u.successMsgObject("Thank you, you have been registered for Android notifications!"));
+							}
+						else { 
+							app.u.throwMessage(rd); 
+							}
+						}
+					}
+				//app.ext.cubworld_mobilenative.calls.appBuyerDeviceRegistration.init(obj, _tag);
+				//app.model.dispatchThis('immutable');
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
