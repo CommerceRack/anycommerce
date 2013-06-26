@@ -320,3 +320,21 @@ div#container div.nav div.navContent > ul > li{
 	margin-bottom: 20px;
     margin-right: 20px;
 }
+.bottomLatency{
+}
+.bottomLatency img{
+	float: left;
+}
+.bottomLatency div{
+	font-size: 13px;
+}
+.bottomP{
+	border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+    margin-top: 0;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.RightPcol .marginBottom{
+	border-bottom:none;
+}
