@@ -713,13 +713,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
     <div class="featuredCategories">
         <div class="catNav">
             <div class="catNavContent">
-                <!--<p class="prevCat" style="float:left; color:#FFFFFF;   font-size:24px; padding-top:16px;">AVENGERS</p>-->
-                <img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" style="display:block;"/>
+                <p class="currentCat">AVENGERS</p>
                 <p class="currentCat">THE HOBBIT</p>
-                <img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" style="display:block;"  />
-                <!--<p class="nextCat currentCat" style="float:left;  color:#FFFFFF;  font-size:24px; margin-left:130px;">STAR WARS</p>-->
-                <!--<p class="nextCat navCats"></p>-->
+                <p class="currentCat">STAR WARS</p>
+                <p class="currentCat">DOCTOR WHO</p>
+                <p class="currentCat">WALKIGN DEAD</p>
             </div>
+            <img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" style="display:block;"  />
+            <img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" style="display:block;"/>
                 <!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
         </div>
             <div class="catCarousel">
@@ -1066,7 +1067,7 @@ this will likely become more flexible in the future. ###
             <div class="prodPageCarouselContentCont">
                 <div class="prodPageCarouselContent">
                     <div id='recentlyViewedItemsContainer'>
-                        <ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+                        <ul data-bind="var: session(session.recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
                         <h1>START VIEWING PRODUCTS TO ADD TO THIS LIST</h1>
                     </div>
                   
