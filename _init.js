@@ -285,9 +285,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		align: "left",
 		items   : 3,
 		scroll: 1,
-		auto : false,
-		items: {minimum: 1}
-		
+		auto : false
 	});
 	}
 	carouselPPTitle = foo1;
