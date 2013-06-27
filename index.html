@@ -927,7 +927,9 @@ this will likely become more flexible in the future. ###
         		<div class="imageInnerCont">
             <!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
             
+                    <!--
                     <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+                    -->
                     <img src='blank.gif' class='prodBigImage' rel='rel="selectors-change: mouseover' name='prodBigImage' data-bind='useParentData:true; format: magicZoomPlus; extension: magicToolBox_mzp;' width='300' height='340' />
                 
                     <div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs prodThumbsPP'>
@@ -987,6 +989,8 @@ this will likely become more flexible in the future. ###
                 </form>
                 <!--<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>-->
                 <div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+                <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+                <span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
                 <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
                     <a class="a2a_dd" href="http://www.addtoany.com/share_save"><img src="images/share.png" width="88" height="42"></a>
                     <script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
@@ -994,10 +998,10 @@ this will likely become more flexible in the future. ###
                     <!-- Lockerz Share BEGIN -->
                     <!-- Lockerz Share END -->
                 </menu>
-                <section class='marginBottom'>
+                <!--<section class='marginBottom'>
                     <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
                     <span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
-                </section>
+                </section>-->
                 <ul class="bottomP">
                     <li data-bind='var: product(zoovy:prod_cpsiawarning); format:showIfSet;' class="displayNone"><img src="images/redalert.gif" width="20" height="17" />WARNING CHOKING HAZARD: Small parts. Not for children under 3 yrs.</li>
                     <li data-bind='var: product(zoovy:ship_latency); format:showIfSet;' class="displayNone bottomLatency"><img src="images/grayalert.gif" width="20" height="17" /><div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Usually ships in ;posttext: day(s);' class='latency marginBottom'></div></li>

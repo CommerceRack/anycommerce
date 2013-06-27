@@ -9,25 +9,22 @@ Needs to be assigned to a group:
 
 
 header:
-- Check ALL links
-- fix th efree shipping image that is now broken.
-- FIx alignment of top nav cat titles and drop downs.
+- Revert all links temporarily back to search links rather than categories. Will be reverting to filtered search based categories once filtered search can be implemented.
+- 
 
 Footer:
 - Check ALL links.
 
 homepage:
-- update homepage banner slideshow to have actual desired images and add proper pagination(imge icons instead of numbers) to them.
-- Test ALL links on the page.
+- Add requisite list items for each of the single li lists (best seller, new item, pre order, and one other(ask Stephen)).
 
 Category:
-- talk to Stephen about what he wants as his default content in his new categories. Once we can build this, I will make this content minimize along the top instead of disappearing when filtered search options are selected. When the dropdown arrow for this minimized area is clicked, the search results are minimized and the default content displayed and vice versa.
+- Hide all filtered search material, revert page to 4 column format.
 
 product:
-- Add new styling for quantity bar.
-- add display controls for showing/hiding warning tags (i.e. choking hazard warning currently displaying on site).
-- Syle all needed content to match design.
-- Add entire bottom half of product page.
+- find out last category for bottom carousel.
+- fix magic zoom issue.
+- correct recently viewed only working on first product only issue.
 
 Company:
 - Needs content for almost all pages.
@@ -37,10 +34,14 @@ Customer:
 - Cannot view links yet as no testing account has been made.
 
 search:
-- Update the buy now button to either pop up the quickview OR change text to say view product or something of that nature.
+- Disable filtered search and restlye page until filtered search can be implemented properly.
 
 cart:
-_ **CANNOT VIEW UNTIL ADD TO CART ISSUE IS CORRECTED**
+_ Done albeit an occassional bug in which the cart is not being initialized. Discuss and correct Thursday.
 
 checkout:
-- **CANNOT VIEW UNTIL ADD TO CART ISSUE IS CORRECTED**
+- Fix styling issues.
+
+
+ROUND 2:
+
