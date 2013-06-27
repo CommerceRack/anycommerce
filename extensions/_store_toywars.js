@@ -75,6 +75,103 @@ var store_toywars = function() {
 			
 				
 			}, //renderFormats
+			
+			
+			
+////////////////////////////////////   VARATIONS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+			variations : {
+
+			renderOptionCUSTOMIMGSELECT: function(pog) {
+
+//				app.u.dump('POG -> '); app.u.dump(pog);
+
+				var $parent = $('<div class="optionsParent" />');
+				var $select = $("<select class='optionsSelect' name="+pog.id+" />");
+				var $hint = $('<div class="zhint">mouse over thumbnail to see larger swatches</div>');
+				$parent.append($hint);
+
+				var len = pog.options.length;				
+				if(len > 0) {
+					optionTxt = (pog['optional'] == 1) ? "" : "Please choose (required)";
+					selOption = "<option value='' disabled='disabled' selected='selected'>"+optionTxt+"<\/option>";
+					$select.append(selOption);
+				}
+
+				var $option;
+				for (var index in pog.options) {
+					var option = pog.options[index];
+//					app.u.dump('IMG: '); app.u.dump(option.img);
+					$option = $("<option value="+option.v+">"+option.prompt+"</option>");
+					$select.append($option);
+					var thumbImg = app.u.makeImage({"w":pog.width,"h":pog.height,"name":option.img,"b":"FFFFFF","tag":false,"lib":app.username});
+					var bigImg = app.u.makeImage({"w":200,"h":200,"name":option.img,"b":"FFFFFF","tag":false,"lib":app.username});																									//need to try moving these to be appended
+
+					var $imgContainer = $('<div class="floatLeft optionImagesCont" data-pogval="'+option.v+'" />');
+					/*var $mzpLink = $('<a id="imgGridHref_'+pog.id+'_'+option.v+'" alt="'+option.prompt+'" class="MagicZoom" title="'+option.prompt+'" rel="hint:false; show-title:top; title-source=#id;" href="'+mzBigImg+'" />');
+					
+					$mzpLink.click(function(){
+						var pogval = $(this).parent().attr('data-pogval');
+						
+						$select.val(pogval);
+						app.u.dump(pogval);
+						app.u.dump(pogval);
+						app.u.dump(pogval);
+						app.u.dump(pogval);
+						$('.optionImagesCont', $parent).each(function(){
+							if($(this).hasClass('selected')){ 
+								$(this).removeClass('selected'); 
+								}
+							if($(this).attr('data-pogval') == pogval){ 
+								$(this).addClass('selected'); 
+								}
+							});	
+						});
+						
+					$mzpLink.append($('<img src='+thumbImg+' title="'+pog.prompt+'" data-pogval="'+option.v+'"/>'));
+					$imgContainer.append($mzpLink);*/
+
+					$imgContainer.click(function(){
+						var pogval = $(this).attr('data-pogval');
+
+						$select.val(pogval);
+						$('.optionImagesCont', $parent).each(function(){
+							if($(this).hasClass('selected')){ 
+								$(this).removeClass('selected'); 
+								}
+							if($(this).attr('data-pogval') == pogval){ 
+								$(this).addClass('selected'); 
+								}
+							});	
+						});
+
+					$img = $('<img src="'+thumbImg+'" data-big-img="'+bigImg+'" data-tooltip-title="'+option.prompt+'"/>')
+
+					//Tooltip called in init
+
+					$imgContainer.append($img);
+					$parent.append($imgContainer);
+
+	//				to add description info to label for
+	//				$mzpLink.mouseover(function() {
+	//					$('.optionImagesCont', $parent).each(function(){
+	//						$('label[value="Fabric"]').empty().text('Fabric: '+option.prompt+'');
+	//						app.u.dump(option.prompt);
+	//					});		
+	//				});
+
+				} // END for
+
+				$parent.append($select);
+				return $parent;
+			}, // END renderOptionCUSTOMIMGSELECT
+
+			xinit : function(){
+				this.addHandler("type","imgselect","renderOptionCUSTOMIMGSELECT");
+				app.u.dump("--- RUNNING XINIT");
+			}
+
+		},
+
 ////////////////////////////////////   UTIL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
