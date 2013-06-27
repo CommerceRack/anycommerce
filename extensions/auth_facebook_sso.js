@@ -103,7 +103,7 @@ var auth_facebook_sso = function() {
 
 		u : {
 			showSignInModal : function(){
-				var $container = $('<div class="outer"><fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button><div>')
+				var $container = $('<div class="outer"><fb:login-button scope="email" show-faces="true" width="200" max-rows="1"></fb:login-button><div>')
 				$container.dialog({'modal':'true','title':'Sign in with Facebook'});
 				FB.XFBML.parse($container.get(0));
 				

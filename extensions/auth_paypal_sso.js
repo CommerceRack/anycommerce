@@ -18,9 +18,9 @@
 
 
 
-// An extension for Google Single Sign On 
+// An extension for Paypal Single Sign On 
 
-var auth_google_sso = function() {
+var auth_paypal_sso = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -35,7 +35,7 @@ var auth_google_sso = function() {
 			onSuccess : function()	{
 				var r = false; 
 				
-				app.u.loadResourceFile(['script',0,'https://apis.google.com/js/client:plusone.js']);
+				app.u.loadResourceFile(['script',0,'https://www.paypalobjects.com/js/external/api.js']);
 
 				r = true;
 
@@ -46,27 +46,8 @@ var auth_google_sso = function() {
 				}
 			},
 		signin : {
-			onSuccess : function(authResult){
-				if (authResult['access_token']) {
-					// Successfully authorized
-					// Hide the sign-in button now that the user is authorized, for example:
-					//$('#signinButton').dialog('close');
-					app.u.dump(authResult);
-					
-					var resultObj = {};
-					
-					$.extend(resultObj, authResult);
-					
-					//app.u.dump(JSON.stringify(resultObj));
-					app.u.throwMessage(app.u.successMsgObject("You have been signed in with Google+!"));
-					} 
-				else if (authResult['error']) {
-					// There was an error.
-					// Possible error codes:
-					//   "access_denied" - User denied access to your app
-					//   "immediate_failed" - Could not automatically log in the user
-					// console.log('There was an error: ' + authResult['error']);
-					}
+			onSuccess : function(){
+				
 
 				},
 			onError : function(){
@@ -85,19 +66,19 @@ var auth_google_sso = function() {
 
 		u : {
 			showSignInModal : function(){
-				window.gplusCallback = window.gplusCallback ? window.gplusCallback : app.ext.auth_google_sso.callbacks.signin.onSuccess;
-				var $container = $('<div class="outer"><div class="inner" /><div>')
+				var $container = $('<div id="paypalLogin123" class="outer"><div>')
 
-				$container.dialog({'modal':'true','title':'Sign In With Google+'});
+				$container.dialog({'modal':'true','title':'Sign In With Paypal'});
 				
-				gapi.signin.render($container.children().get(0), {
-					clientid :'464875398878.apps.googleusercontent.com',
-					callback : "gplusCallback",
-					cookiepolicy : "single_host_origin",
-					requestvisibleactions : "http://schemas.google.com/AddActivity",
-					scope : "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email",
-					approvalprompt : "force"
+				paypal.use(["login"], function(login) {
+					login.render ({
+						"appid": "AZoSsxAcahsSiRGy5Q7fB3E_y1Uw5yiNS7fsJsxGb-3ktx3nz6re32_8dSbq",
+						"scopes": "profile email address phone https://uri.paypal.com/services/paypalattributes",
+						"containerid": "paypalLogin123",
+						"locale": "en-us",
+						"returnurl": "http://app.sportsworldchicago.com/"
 					});
+				});
 				
 				
 

@@ -66,6 +66,7 @@ var cubworld_mobilenative = function() {
 		startExtension : {
 			onSuccess : function(){
 				if(app.ext.cubworld_mobilenative.vars.android){
+					window.androidRegister = app.ext.cubworld_mobilenative.u.androidRegister;
 					var regID = anyCommerceAndroidInterface.getRegID();
 					if(typeof regID === "undefined"){
 						app.u.dump("-> mobilenative no regID present, prompting registration");
