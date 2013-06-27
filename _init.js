@@ -36,7 +36,7 @@ app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery
 app.rq.push(['script',0,app.vars.baseURL+'jquery.select2Buttons/jQuery.select2Buttons.js']);
 
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {	
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+	//app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 	
 	var $context = $(app.u.jqSelector('#',P.parentID));
 	
@@ -86,8 +86,55 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 				$(this).children().remove();
 			})
 		}
-		carouselHPBanner2 = foo2;
-		setTimeout(carouselHPBanner2, 2100);
+		carouselPaginationClasses = foo2;
+		setTimeout(carouselPaginationClasses, 2100);
+		
+	//**HOMEPAGE BOTTOM CATEGORY CAROUSEL**
+	var carouselBottomCats;
+	function foo2(){ $(".catCarousel").carouFredSel({
+			auto : false,
+			items   : 1,
+			scroll: 1
+	});}
+	carouselBottomCats = foo2;
+	setTimeout(carouselBottomCats, 2000);
+	
+	var carouselBottomCatTitles;
+	function foo3(){ $(".catNavContent").carouFredSel({
+			auto : false,
+			items   : 3,
+			height: 63,
+			scroll: 1
+	});}
+	carouselBottomCatTitles = foo3;
+	setTimeout(carouselBottomCatTitles, 2000);
+	
+	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL
+	$(".btnCatNext").click(function() {
+    	$(".catNavContent").trigger("next", 1);
+		$(".catCarousel").trigger("next", 1);
+    });
+	$(".btnCatBack").click(function() {
+    	$(".catNavContent").trigger("prev", 1);
+		$(".catCarousel").trigger("prev", 1);
+    });
+	
+	$(".btnCatBack").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$(".btnCatNext").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$(".btnCatBack").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});	
+	$(".btnCatNext").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});		
 	
 }]);
 
@@ -267,6 +314,23 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
     	$(".prodPageCarouselTitles").trigger("prev", 1);
 		$(".prodPageCarouselContent").trigger("prev", 1);
     });
+	
+	$("#nextPPCaro").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$("#prevPPCaro").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$("#nextPPCaro").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});	
+	$("#prevPPCaro").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});		
 	
 	carouselPPContent = foo2;
 	setTimeout(carouselPPContent, 2000);

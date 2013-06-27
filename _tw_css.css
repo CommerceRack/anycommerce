@@ -469,3 +469,17 @@ div#container div.nav div.navContent > ul > li{
 	width:300px !important;
 	height:340px !important;
 }
+
+.featuredCategories div.catNav{
+	width:1020px;
+}
+.featuredCategories div.catNavContent{
+	height:62px !important;
+	width:1700px !important;
+}
+.featuredCategories div.catNavContent p.currentCat{
+	width:20%;
+	text-align:center;
+}
+.ccItem{
+}

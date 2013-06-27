@@ -3,8 +3,8 @@ jQuery(document).ready(function()
 	var carousel1;
 	function foo1(){ $(".catCarousel").carouFredSel({
 			auto : false,
-			prev : ".btnCatBack",
-			next : ".btnCatNext",
+			items   : 5,
+			scroll: 1
 	});}
 	carousel1 = foo1;
 	setTimeout(carousel1, 1000);
