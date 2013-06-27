@@ -46,11 +46,12 @@ var auth_google_sso = function() {
 				}
 			},
 		signin : {
-			onSuccess : function(){
+			onSuccess : function(authResult){
 				if (authResult['access_token']) {
 					// Successfully authorized
 					// Hide the sign-in button now that the user is authorized, for example:
 					//$('#signinButton').dialog('close');
+					app.u.dump(JSON.stringify(authResult));
 					app.u.throwMessage(app.u.successMsgObject("You have been signed in with Google+!"));
 					} 
 				else if (authResult['error']) {
@@ -88,7 +89,9 @@ var auth_google_sso = function() {
 					callback : "gplusCallback",
 					cookiepolicy : "single_host_origin",
 					requestvisibleactions : "http://schemas.google.com/AddActivity",
-					scope : "https://www.googleapis.com/auth/plus.login"
+					scope : "https://www.googleapis.com/auth/plus.login",
+					apppackagename : "com.sportsworldchicago.app",
+					approvalprompt : "force"
 					});
 				
 				
