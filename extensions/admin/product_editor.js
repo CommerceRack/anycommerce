@@ -630,8 +630,45 @@ app.model.dispatchThis('mutable');
 						app.u.dump(formJSON);
 						}
 					});
-				}
+				},
 			
+			variationHandleTypeSelect : function($ele)	{
+				$ele.off('click.variationHandleTypeSelect').on('click.variationHandleTypeSelect',function(){
+					app.u.dump('click triggered');
+					var value = $ele.val();
+					var $form = $ele.closest('form');
+					if(value == 'select' || value == 'radio' || value == 'cb' || value == 'imggrid' || value == 'imgselect' )	{
+						$("[data-app-role='variationInventorySettings']",$form).show();
+						}
+					else	{
+						$("[name='INV']",$form).prop('checked','');
+						$("[data-app-role='variationInventorySettings']",$form).hide();
+						$("[data-app-role='variationInventorySupplementals']",$form).hide(); //safe to hide this
+						}
+					});
+				}, //variationHandleTypeSelect
+			variationHandleInventoryChange : function($cb)	{
+				$cb.off('change.variationHandleInventoryChange').on('change.variationHandleInventoryChange',function(){
+					if($cb.is(":checked"))	{
+						$("[data-app-role='variationInventorySupplementals']",$cb.closest('form')).show();
+						}
+					else	{
+						$("[data-app-role='variationInventorySupplementals']",$cb.closest('form')).hide();
+						}
+					});
+				}, //variationHandleInventoryChange
+			variationsCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.variationsCreateShow').on('click.variationsCreateShow',function(){
+					var mode = $btn.data('variationmode');
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Create a new '+jQuery.camelCase(mode)+' variation',
+						'templateID' : 'variationsManagerCreateTemplate',
+						'showLoading' : false
+						});
+					$D.dialog('open');
+					});
+				} //variationsCreateShow
 			}
 		
 		} //r object.

@@ -1450,7 +1450,7 @@ time.
 
 <div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 
-<button class='floatRight'>Add New</button>
+<button class='floatRight' data-app-event='admin_prodEdit|variationsCreateShow' data-variationmode="store">Add New</button>
 <h1>Store Variations</h1>
 <table class='fullWidth gridTable applyAnytable marginTop'>
 <thead>
@@ -1476,8 +1476,8 @@ time.
 	<td data-bind="var:variation(id); format:text;"></td>
 	<td data-bind="var:variation(prompt); format:text;"></td>
 	<td data-bind="var:variation(@options.length); format:text;"></td>
-	<td><span data-bind="var:variation(inv); format:showIfSet;" class='ui-icon ui-icon-check'></span></td>
-	<td><span data-bind="var:variation(global); format:showIfSet;" class='ui-icon ui-icon-check'></span></td>
+	<td><span data-bind="var:variation(inv); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
+	<td><span data-bind="var:variation(global); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
 	<td data-bind="var:variation(type); format:text;"></td>
 	<td>
 		<button>Delete</button>
@@ -1485,3 +1485,228 @@ time.
 	</td>
 </tr>
 </table>
+
+
+<div id='variationsManagerCreateTemplate'>
+
+<form action='#' onSubmit='return false' class='labelsAsBreaks'>
+
+<fieldset>
+	<label>
+		<span>Prompt</span>
+		<input type='text' name='PROMPT' value='' />
+		<span class='toolTip' title="The prompt is displayed the customers so they know what they are choosing. E.g. 'Size', 'Color'.  You can edit/change the prompt later if you want to.">?</span>
+</fieldset>
+
+<fieldset>
+	<legend>Type <span class='toolTip' title="Type impacts how the variation appears on the storefront as well as whether or not it can be inventory-able.">?</span></legend>
+
+<div class='threeColumn floatLeft'>
+
+	<label>
+	<input type="radio" value="select" name="TYPE" required='required' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Select box (drop down)
+	<span class='toolTip' title="A select list is also commonly known as a drop down list. A select list should be used when the number of options exceeds 5 or more. As a rule when designing options you should never use more than 25 options in a select list since it will make it difficult for the user to see all the choices and arrive at a decision.">?</span>
+	</label>
+
+
+	<label>
+	<input type="radio" value="radio" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Radio buttons
+	<span class='toolTip' title="Used to display all the options available with a circle next to each option. The user chooses the appropriate option and the circle becomes filled in. Unlike select lists a radio button		always displays all options to the customer. Radio buttons should typically be used with 10 or less options since they consume a lot of screen space and make the customer need to scroll.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="cb" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Checkbox
+	<span class='toolTip' title="Have only two possible states, either ON or OFF. Checkboxes should be used whenever the user has only two possible choices. ">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="hidden" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Hidden Attributes
+	<span class='toolTip' title="A hidden attribute allows you to specify additional text which will appear in the product description. Such as a disclaimer or any text which you want to be printed in the product description to the customer and which is NOT editable by the customer.">?</span>
+	</label>
+
+
+	<label>
+	<input type="radio" value="assembly" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Base Assembly 
+	<span class='toolTip' title="A hidden attribute uses the option subsystem to set/store properties of an item (usually this is done through a custom javascript module).">?</span>
+	</label>
+
+</div>
+
+
+<div class='threeColumn floatLeft'>
+	<label>
+	<input type="radio" value="text" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Free-Form TextBox
+	<span class='toolTip' title="This is the simpliest form of customer input. A text input should be used for limited text entry. 	If you need multiple lines consider using a text area. 	You can assses additional fees per character or per line. Fees are additive and will be summed together to present a total.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="number" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Free-Form Number
+	<span class='toolTip' title="Allows a customer to input a number. This is NOT the same as quantity, and should not be used for any sort of inventory control. You can restrict the number to a specific minimum and maximu value.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="textarea" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Multi-Line Text Area
+	<span class='toolTip' title="Large format text box in which users can enter a block of text. You can also restrict the number of characters. Like a textbox you can assess fees per character (excluding spaces and punctuation), and per word.  The textarea also allows you assess fees per line. Fees are additive and can be used together.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="readonly" name="TYPE" />
+	Readonly Instructions	
+	<span class='toolTip' title="Displays contents to buyer but allows no interaction or input.">?</span>
+	</label>
+</div>
+
+<div class='threeColumn floatLeft'>
+
+
+	<label>
+	<input type="radio" value="biglist" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Dynamic "BIG" List
+	<span class='toolTip' title="Biglist lets you create a multi-stage select (drop down) list. When the first option is chosen, then the customer must make a second selection in another box which appears. The boxes may only go two deep. Use this when you have options which are tiered to reduce the number of decisions a customer needs to make. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="imgselect" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Image Select List
+	<span class='toolTip' title="When a customer chooses an option an image (if available) will be displayed adjacent to it. Image select lists are ideally suited for situations where there are 10 or more options and it is likely the customer will NOT want to look at all the pictures before making a choice. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="imggrid" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	Image Grid
+	<span class='toolTip' title="Unlike an image select list which the user must manually choose each option in order to see the image associated with it - instead all images are displayed in a grid with a radio button below each option. The advantage of an image grid is it displays ALL the possible choices and their respective images to the customer, which is also it's disadvantage if you have a product with a lot of pictures it can consume a vast amount of real-estate and increase page load times. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="calendar" name="TYPE" />
+	Calendar
+	<span class='toolTip' title="Allows the user to easily choose a date. The date is stored in a text field in YYYY/MM/DD format. The calendar has the ability to apply a rush fee if the date is within a certain number of days of today. This allows you to create additional revenue for speciality things like 'Rush Fees'. ">?</span>
+	</label>
+			
+</div>
+
+</fieldset>
+
+<fieldset data-app-role='variationInventorySettings' class='displayNone'>
+	<legend>Inventory</legend>
+	<label>
+		<input type='checkbox' name='INV' class='applyAnycb' data-app-event="admin_prodEdit|variationHandleInventoryChange" />
+		This option affects inventory.
+		<span class='toolTip' title="If you want to have price and/or weight modifiers or track inventory per variation, enable this.">?</span>
+	</label>
+
+</fieldset>
+
+<fieldset data-app-role='variationInventorySupplementals' class='displayNone'>
+
+	<label>
+	<span>Amazon Variation Keyword:</span>
+	<select name="AMZ">
+	<option value="">None</option>
+	<option value="APPAREL: Color">APPAREL: Color</option>
+	<option value="APPAREL: Size">APPAREL: Size</option>
+	<option value="AUTO: Color">AUTO: Color</option>
+	<option value="AUTO: Size">AUTO: Size</option>
+	<option value="CAMERA: None">CAMERA: None</option>
+	<option value="CE: None">CE: None</option>
+	<option value="EYEWEAR: Color">EYEWEAR: Color</option>
+	<option value="EYEWEAR: ColorName">EYEWEAR: ColorName</option>
+	<option value="EYEWEAR: LensColor">EYEWEAR: LensColor</option>
+	<option value="EYEWEAR: LensWidth">EYEWEAR: LensWidth</option>
+	<option value="EYEWEAR: MagnificationStrength">EYEWEAR: MagnificationStrength</option>
+	<option value="EYEWEAR: Size">EYEWEAR: Size</option>
+	<option value="FOOD: Flavor">FOOD: Flavor</option>
+	<option value="FOOD: Size">FOOD: Size</option>
+	<option value="HANDBAG: Color">HANDBAG: Color</option>
+	<option value="HEALTH: Color">HEALTH: Color</option>
+	<option value="HEALTH: Count">HEALTH: Count</option>
+	<option value="HEALTH: Flavor">HEALTH: Flavor</option>
+	<option value="HEALTH: Size">HEALTH: Size</option>
+	<option value="HOME: Color">HOME: Color</option>
+	<option value="HOME: ItemPackageQuantity">HOME: ItemPackageQuantity</option>
+	<option value="HOME: Material">HOME: Material</option>
+	<option value="HOME: Scent">HOME: Scent</option>
+	<option value="HOME: Size">HOME: Size</option>
+	<option value="JEWELRY: Length">JEWELRY: Length</option>
+	<option value="JEWELRY: MetalType">JEWELRY: MetalType</option>
+	<option value="JEWELRY: RingSize">JEWELRY: RingSize</option>
+	<option value="JEWELRY: SizePerPearl">JEWELRY: SizePerPearl</option>
+	<option value="JEWELRY: TotalDiamondWeight">JEWELRY: TotalDiamondWeight</option>
+	<option value="MUSIC: Color">MUSIC: Color</option>
+	<option value="OFFICE: None">OFFICE: None</option>
+	<option value="SHOEACCESSORY: Color">SHOEACCESSORY: Color</option>
+	<option value="SHOEACCESSORY: Size">SHOEACCESSORY: Size</option>
+	<option value="SHOES: Color">SHOES: Color</option>
+	<option value="SHOES: Size">SHOES: Size</option>
+	<option value="SOFTWARE: None">SOFTWARE: None</option>
+	<option value="SPORTS: Color">SPORTS: Color</option>
+	<option value="SPORTS: GolfFlex">SPORTS: GolfFlex</option>
+	<option value="SPORTS: GolfLoft">SPORTS: GolfLoft</option>
+	<option value="SPORTS: GripSize">SPORTS: GripSize</option>
+	<option value="SPORTS: GripType">SPORTS: GripType</option>
+	<option value="SPORTS: Hand">SPORTS: Hand</option>
+	<option value="SPORTS: Length">SPORTS: Length</option>
+	<option value="SPORTS: LensColor">SPORTS: LensColor</option>
+	<option value="SPORTS: ShaftMaterial">SPORTS: ShaftMaterial</option>
+	<option value="SPORTS: ShaftType">SPORTS: ShaftType</option>
+	<option value="SPORTS: Size">SPORTS: Size</option>
+	<option value="SPORTS: Style">SPORTS: Style</option>
+	<option value="SPORTS: TensionLevel">SPORTS: TensionLevel</option>
+	<option value="SPORTS: Weight">SPORTS: Weight</option>
+	<option value="SPORTS: WeightSupported">SPORTS: WeightSupported</option>
+	<option value="SPORTS: Width">SPORTS: Width</option>
+	<option value="TOOLS: None">TOOLS: None</option>
+	<option value="TOYSBABY: None">TOYSBABY: None</option>
+	<option value="WIRELESS: None">WIRELESS: None</option>
+	</select>
+
+	<label>
+	<span>Google Variation Keyword</span>
+	<select name="GOO">
+		<option value="">None</option>
+		<option value="Color">Color</option>
+		<option value="Size">Size</option>
+		<option value="Material">Material</option>
+		<option value="Pattern">Pattern</option>
+	</select>
+	</label>
+
+	<label>
+	<span>eBay Variation Specifics Name: </span>
+	<input type="text" name="EBAY" />
+	</label>
+
+</fieldset>
+
+<fieldset>
+	<legend>Variation Behavior</legend>
+
+	<label>
+	<input type="radio" value="0" name="GLOBAL" checked="checked" />
+	Manual: I need to select options, and customize modifiers on a product by product basis.
+	</label>
+	
+	<label>
+	<input type="radio" value="1" name="GLOBAL" />
+	Automatic: Any changes should automatically affect all products using this group.
+	</label>
+	
+</fieldset>
+<p class='hint'>Before saving please take a moment to review your choices. All settings on this page, (except prompt) cannot be edited once the option group is saved.</p>
+
+<button>Save</button>
+</form>
+
+</div>
+
