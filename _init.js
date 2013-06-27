@@ -78,7 +78,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	
 	
 	
-		function foo2(){
+		function foo4(){
 			var incrementPage = 1;
 			$("#slideshowNav").children().each(function() {
 				$(this).addClass("hpSSTopPage" + incrementPage);
@@ -86,7 +86,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 				$(this).children().remove();
 			})
 		}
-		carouselPaginationClasses = foo2;
+		carouselPaginationClasses = foo4;
 		setTimeout(carouselPaginationClasses, 2100);
 		
 	//**HOMEPAGE BOTTOM CATEGORY CAROUSEL**

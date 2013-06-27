@@ -240,12 +240,12 @@ div#container div#footer{
 #slideshowNav{
 	bottom: 0;
     height: 60px;
-    left: 0;
+    left: 1;
     padding-right: 0;
     padding-top: 7px;
     position: absolute;
     text-align: right;
-    width: 621px;
+    width: 620px;
     z-index: 9;
 	background-color:rgb(2, 2, 2);
 	background-color: rgba(10, 10, 10, 0.7);
@@ -264,23 +264,44 @@ div#container div#footer{
 .hpSSTopPage1{
 	background-image:url(images/Homepage/topBannerImages/banner1Thumb.jpg) !important;
 }
+.hpSSTopPage1:hover{
+	opacity:.65;
+}
 .hpSSTopPage2{
 	background-image:url(images/Homepage/topBannerImages/banner2Thumb.jpg) !important;
+}
+.hpSSTopPage2:hover{
+	opacity:.65;
 }
 .hpSSTopPage3{
 	background-image:url(images/Homepage/topBannerImages/banner3Thumb.jpg) !important;
 }
+.hpSSTopPage3:hover{
+	opacity:.65;
+}
 .hpSSTopPage4{
 	background-image:url(images/Homepage/topBannerImages/banner4Thumb.jpg) !important;
+}
+.hpSSTopPage4:hover{
+	opacity:.65;
 }
 .hpSSTopPage5{
 	background-image:url(images/Homepage/topBannerImages/banner5Thumb.jpg) !important;
 }
+.hpSSTopPage5:hover{
+	opacity:.65;
+}
 .hpSSTopPage6{
 	background-image:url(images/Homepage/topBannerImages/banner6Thumb.jpg) !important;
 }
+.hpSSTopPage6:hover{
+	opacity:.65;
+}
 .hpSSTopPage7{
 	background-image:url(images/Homepage/topBannerImages/banner7Thumb.jpg) !important;
+}
+.hpSSTopPage7:hover{
+	opacity:.65;
 }
 .bannerS{
 	width: 642px;
@@ -481,5 +502,6 @@ div#container div.nav div.navContent > ul > li{
 	width:20%;
 	text-align:center;
 }
-.ccItem{
+.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{
+	padding-left:0;
 }
