@@ -1,30 +1,26 @@
-Needs to be assigned to a group:
-- expand header and footer to touch edge of screen at all resolutions.
-- Add span tags to product lists.
-- image library adding white space to certain images. He wants the whitespace removed without compromising the image quality.
-- default hte quantity box to 1 and hide if this won't cause any kind of issues with SEO or other unintended consequences.
+Requests for support/implementation:
 - Update limited edition pog so that the title returned is: Choose Limited Edition Number . Talk to TIm about making this change.
-- and a what's this pop up that explains the above pog IF it is sowing for that product.
+
+all pages:
 - Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
 
-
 header:
-- Revert all links temporarily back to search links rather than categories. Will be reverting to filtered search based categories once filtered search can be implemented.
-- 
+- expand header and footer to touch edge of screen at all resolutions.
 
 Footer:
 - Check ALL links.
+- expand header and footer to touch edge of screen at all resolutions.
 
 homepage:
 - Add requisite list items for each of the single li lists (best seller, new item, pre order, and one other(ask Stephen)).
 
 Category:
-- Hide all filtered search material, revert page to 4 column format.
+
 
 product:
 - find out last category for bottom carousel.
 - fix magic zoom issue.
-- correct recently viewed only working on first product only issue.
+
 
 Company:
 - Needs content for almost all pages.
@@ -34,7 +30,7 @@ Customer:
 - Cannot view links yet as no testing account has been made.
 
 search:
-- Disable filtered search and restlye page until filtered search can be implemented properly.
+
 
 cart:
 _ Done albeit an occassional bug in which the cart is not being initialized. Discuss and correct Thursday.
@@ -42,6 +38,25 @@ _ Done albeit an occassional bug in which the cart is not being initialized. Dis
 checkout:
 - Fix styling issues.
 
+product lists:
+- Add span tags to product lists.
+
+
+
 
 ROUND 2:
+
+header: 
+- revert top nav links to categories( see document named top nav cats - link types with link data in designs folder).
+
+category:
+- finish filter forms for all categories.
+- re-enable filtered search.
+
+product:
+- image library adding white space to certain images. He wants the whitespace removed without compromising the image quality.
+- and a what's this pop up that explains the above pog IF it is sowing for that product.
+
+search:
+- reactivate filtered search and restlye to fit.
 

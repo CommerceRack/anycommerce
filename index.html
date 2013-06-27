@@ -929,9 +929,18 @@ this will likely become more flexible in the future. ###
                     <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
                     -->
                     <img src='blank.gif' class='prodBigImage' rel='rel="selectors-change: mouseover' name='prodBigImage' data-bind='useParentData:true; format: magicZoomPlus; extension: magicToolBox_mzp;' width='300' height='340' />
+                    <!--<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' />-->
                 
                     <div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs prodThumbsPP'>
-                        <ul data-bind='var: product(pid); format: productImages; extension: magicToolBox_mzp;'></ul>      
+                       <!-- <ul data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+                        	<li class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image1); format:imageURL;' alt='' width='100' height='100' /></li>
+
+                            <li class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt=''  width='100' height='100' /></li>
+                            
+                            <li class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt='' width='100' height='100' /></li>
+                        </ul>
+                        -->
+                        <ul data-bind='var: product(pid); format: productImages; extension: magicToolBox_mzp;'></ul>   
                     </div>
                 
                    

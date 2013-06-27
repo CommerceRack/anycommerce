@@ -86,17 +86,14 @@ var magicToolBox_mzp = function() {
 			magicZoomPlus : function($tag,data)	{
 				app.u.dump('BEGIN myRIA.renderFormats.magicZoomPlus');
 				var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
-/*MAIN IMAGES SWAPPING CHANGE*/	
-				var fileName = data.value['%attribs']['zoovy:prod_image1'];
-/*MAIN IMAGES SWAPPING CHANGE*/	
-				var pid = data.value.pid;
+/*TOY WARS*/	var fileName = data.value['%attribs']['zoovy:prod_image1'];
+/*TOY WARS*/	var pid = data.value.pid;
 				if(fileName)	{
 					var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':fileName,'b':bgcolor});
 					//app.u.dump('ID => '); app.u.dump(data.value);
 					$tag.attr('src',imgSrc);
 					/*$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' class='MagicZoomPlus' id='"+$tag.attr('id')+"_href' />")*/
-/*MAIN IMAGES SWAPPING CHANGE*/		
-					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':fileName,'b':bgcolor})+"' class='MagicZoomPlus' id='prodBigImage_href_"+pid+"' rel='selectors-change: mouseover; zoom-width:410; zoom-height:410; hint: false;' />")
+/*TOY WARS*/		$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':fileName,'b':bgcolor})+"' class='MagicZoomPlus' id='prodBigImage_href_"+pid+"' rel='selectors-change: mouseover; zoom-width:410; zoom-height:410; hint: false;' />")
 					}
 				else	{
 					$tag.style('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
@@ -110,7 +107,7 @@ var magicToolBox_mzp = function() {
 					var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
 //					app.u.dump('IMGSRC => '+imgSrc);
 					$tag.attr('src',imgSrc);
-					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' rev='"+app.u.makeImage({'tag':0,'w':400,'h':350,'name':data.value,'b':bgcolor})+"' class='MagicThumb Selector MagicThumb-swap'  />")
+					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' rev='"+app.u.makeImage({'tag':0,'w':350,'h':350,'name':data.value,'b':bgcolor})+"' class='MagicThumb Selector MagicThumb-swap'  />")
 					// makes shit blow up: rel='zoom-id:bigAssImage_href; selectors-change:mouseover;'
 					}
 				else	{
@@ -130,8 +127,7 @@ var magicToolBox_mzp = function() {
 					imgName = pdata['zoovy:prod_image'+i];
 //					app.u.dump(" -> "+i+": "+imgName);
 					if(app.u.isSet(imgName))	{
-/*MAIN IMAGES SWAPPING CHANGE*/	
-						imgs += "<li><a class='MagicThumb-swap' rel='zoom-id: prodBigImage_href_"+data.value+"; hint: false' rev='"+app.u.makeImage({'tag':0,'w':340,'h':340,'name':imgName,'b':'ffffff'})+"' href='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"'><img src='"+app.u.makeImage({'tag':0,'w':50,'h':50,'name':imgName,'b':'ffffff'})+"' \/><\/a><\/li>";
+/*TOY WARS*/			imgs += "<li><a class='MagicThumb-swap' rel='zoom-id: prodBigImage_href_"+data.value+"; hint: false' rev='"+app.u.makeImage({'tag':0,'w':340,'h':340,'name':imgName,'b':'ffffff'})+"' href='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"'><img src='"+app.u.makeImage({'tag':0,'w':50,'h':50,'name':imgName,'b':'ffffff'})+"' \/><\/a><\/li>";
 						}
 					}
 				$tag.append(imgs);
