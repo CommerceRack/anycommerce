@@ -109,6 +109,7 @@ var cubworld_mobilenative = function() {
 			promptAndroidRegistration : function(){
 				var $regForm = $('<form class="displayNone"/>');
 				$regForm.on('submit', function(){
+					app.u.dump("-> mobilenative calling register");
 					anyCommerceAndroidInterface.register(JSON.stringify($(this).serializeJSON()));
 					$(this).dialog('close');
 					return false;
@@ -116,11 +117,11 @@ var cubworld_mobilenative = function() {
 				$regForm.append($('<input name="email" type="text" placeholder="email address"/>'));
 				
 				var $submitButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Register for Android Notifications</button>');
-				$submitButton.on('click', function(){$regForm.submit();});
+				$submitButton.on('click', function(){$regForm.submit(); return false;});
 				$regForm.append($submitButton);
 				
 				var $skipButton = $('<button class="ui-button-text ui-button ui-state-default ui-corner-all">Skip</button>');
-				$skipButton.on('click', function(){$regForm.dialog('close');});
+				$skipButton.on('click', function(){$regForm.dialog('close'); return false;});
 				$regForm.append($skipButton);
 				
 				app.u.dump('-> mobilenative opening prompt');
