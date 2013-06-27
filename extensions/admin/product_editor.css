@@ -53,3 +53,8 @@
 	}
 #productListTab .productContainer	{overflow:auto; width:400px; height:300px;}
 #productListTab table	{font-size:.75em; width:100%;}
+
+
+td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; padding:0; width:2px;}
+td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
+td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}

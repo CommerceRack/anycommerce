@@ -55,7 +55,7 @@
 	</ul>
 	</li>
 	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li><a href='#' onClick="return showUI('#!variationsManager',{'targetID':'productTabMainContent'});">Variations (alpha)</a></li>
+	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Variations (alpha)</a></li>
 	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
@@ -1449,10 +1449,11 @@ time.
 
 
 <div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
-
-<button class='floatRight' data-app-event='admin_prodEdit|variationsCreateShow' data-variationmode="store">Add New</button>
-<h1>Store Variations</h1>
-<table class='fullWidth gridTable applyAnytable marginTop'>
+	<div class='clearfix marginBottom'>
+		<button class='floatRight' data-app-event='admin_prodEdit|variationsCreateShow' data-variationmode="store">Add New</button>
+		<h1>Store Variations</h1>
+	</div>
+<table class='fullWidth gridTable applyAnytable'>
 <thead>
 <tr>
 	<th>ID</th>
@@ -1479,12 +1480,19 @@ time.
 	<td><span data-bind="var:variation(inv); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
 	<td><span data-bind="var:variation(global); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
 	<td data-bind="var:variation(type); format:text;"></td>
-	<td>
+	<td class='alignRight'>
+	
 		<button>Delete</button>
-		<button>Edit</button>
+		<button title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
+		<button data-variationmode="store" data-app-event='admin_prodEdit|variationUpdateShow'>Edit</button>
 	</td>
 </tr>
 </table>
+
+
+
+
+
 
 
 <div id='variationsManagerCreateTemplate'>
@@ -1496,6 +1504,7 @@ time.
 		<span>Prompt</span>
 		<input type='text' name='PROMPT' value='' />
 		<span class='toolTip' title="The prompt is displayed the customers so they know what they are choosing. E.g. 'Size', 'Color'.  You can edit/change the prompt later if you want to.">?</span>
+	</label>
 </fieldset>
 
 <fieldset>
@@ -1505,20 +1514,20 @@ time.
 
 	<label>
 	<input type="radio" value="select" name="TYPE" required='required' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
-	Select box (drop down)
+	Select box (drop down)*
 	<span class='toolTip' title="A select list is also commonly known as a drop down list. A select list should be used when the number of options exceeds 5 or more. As a rule when designing options you should never use more than 25 options in a select list since it will make it difficult for the user to see all the choices and arrive at a decision.">?</span>
 	</label>
 
 
 	<label>
 	<input type="radio" value="radio" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
-	Radio buttons
+	Radio buttons*
 	<span class='toolTip' title="Used to display all the options available with a circle next to each option. The user chooses the appropriate option and the circle becomes filled in. Unlike select lists a radio button		always displays all options to the customer. Radio buttons should typically be used with 10 or less options since they consume a lot of screen space and make the customer need to scroll.">?</span>
 	</label>
 
 	<label>
 	<input type="radio" value="cb" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
-	Checkbox
+	Checkbox*
 	<span class='toolTip' title="Have only two possible states, either ON or OFF. Checkboxes should be used whenever the user has only two possible choices. ">?</span>
 	</label>
 
@@ -1576,27 +1585,29 @@ time.
 
 	<label>
 	<input type="radio" value="imgselect" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
-	Image Select List
+	Image Select List*
 	<span class='toolTip' title="When a customer chooses an option an image (if available) will be displayed adjacent to it. Image select lists are ideally suited for situations where there are 10 or more options and it is likely the customer will NOT want to look at all the pictures before making a choice. ">?</span>
 	</label>
 	
 
 	<label>
 	<input type="radio" value="imggrid" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
-	Image Grid
+	Image Grid*
 	<span class='toolTip' title="Unlike an image select list which the user must manually choose each option in order to see the image associated with it - instead all images are displayed in a grid with a radio button below each option. The advantage of an image grid is it displays ALL the possible choices and their respective images to the customer, which is also it's disadvantage if you have a product with a lot of pictures it can consume a vast amount of real-estate and increase page load times. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="calendar" name="TYPE" />
+	<input type="radio" value="calendar" name="TYPE" data-app-event='admin_prodEdit|variationHandleTypeSelect' />
 	Calendar
 	<span class='toolTip' title="Allows the user to easily choose a date. The date is stored in a text field in YYYY/MM/DD format. The calendar has the ability to apply a rush fee if the date is within a certain number of days of today. This allows you to create additional revenue for speciality things like 'Rush Fees'. ">?</span>
 	</label>
 			
 </div>
-
+<p class='hint'>* is inventory-able</p>
 </fieldset>
+
+
 
 <fieldset data-app-role='variationInventorySettings' class='displayNone'>
 	<legend>Inventory</legend>
@@ -1608,7 +1619,35 @@ time.
 
 </fieldset>
 
-<fieldset data-app-role='variationInventorySupplementals' class='displayNone'>
+<fieldset data-app-role='variationInventorySupplementals' class='displayNone' data-bind="format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate; useParentData:true;"></fieldset>
+
+<fieldset>
+	<legend>Variation Behavior</legend>
+
+	<label>
+	<input type="radio" value="0" name="GLOBAL" checked="checked" />
+	Manual: I need to select options, and customize modifiers on a product by product basis.
+	</label>
+	
+	<label>
+	<input type="radio" value="1" name="GLOBAL" />
+	Automatic: Any changes should automatically affect all products using this group.
+	</label>
+	
+</fieldset>
+<p class='hint'>Before saving please take a moment to review your choices. All settings on this page, (except prompt) cannot be edited once the option group is saved.</p>
+
+<button>Save</button>
+</form>
+
+</div>
+
+
+
+
+
+<div id='variationsDSTInputsTemplate'>
+
 
 	<label>
 	<span>Amazon Variation Keyword:</span>
@@ -1670,6 +1709,7 @@ time.
 	<option value="TOYSBABY: None">TOYSBABY: None</option>
 	<option value="WIRELESS: None">WIRELESS: None</option>
 	</select>
+	</label>
 
 	<label>
 	<span>Google Variation Keyword</span>
@@ -1687,26 +1727,388 @@ time.
 	<input type="text" name="EBAY" />
 	</label>
 
+</div>
+
+
+
+
+
+
+<div id='variationEditorTemplate' class='ui-widget'>
+	<form action="#" onSubmit='return false' class='labelsAsBreaks'>
+	
+	<hgroup class='ui-widget-header stdPadding ui-corner-top'>
+		<h4 class='floatRight' data-bind="var:variation(pid); format:text; pretext:Product ID: ;"></h4>
+		<h3 data-bind="var:variation(id); format:text; pretext:Variation ID: ;"></h3>
+	</hgroup>
+	<section class='ui-widget-content ui-corner-bottom'>
+	
+<table class='fullWidth stdMargin'>
+<tbody>
+<tr>
+	<td class='column3' data-app-role='variationSettingsContainer'>
+<!-- high level settings -->
+	<fieldset class='stdPadding'>
+		<legend>Variation Settings</legend>
+
+		<label>
+			<span>Prompt</span>
+			<input type='text' name='PROMPT' data-bind="var: variation(prompt); format:popVal;" />
+			<span class='toolTip' title="This is what your users will be displayed e.g. Size, Color, Preference.">?</span>
+		</label>
+	
+		<label>
+			<span>Hint <span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span></span>
+			<textarea name='GHINT' data-bind="var: variation(ghint); format:popVal;" class='fullWidth'></textarea>
+		</label>
+
+		<div data-bind="var:variation(inv); format:showIfSet;" class='displayNone'>
+			<fieldset data-app-role='variationInventorySupplementals' data-bind="format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate;  useParentData:true;"></fieldset>
+		</div>
+
+		<div>
+			<span data-bind="var:variation(inv); format:showIfSet;" class='displayNone'>This group affects inventory.</span>
+			<span data-bind="var:variation(global); format:showIfSet;" class='displayNone'>This group is globally managed.</span>
+		</div>
+
+	</fieldset>
+
+
+	</td>
+
+<!-- show this only for select/radio style editor. allows left side of editor to be minimized so there's more room for dataTable. -->
+	<td class='variationEditorSplitter smallButton'>
+	<div>
+	<button data-app-event="admin_prodEdit|variationSettingsToggle" class='displayNone'>Toggle Variations Settings Display</button>
+	</div>
+	</td>
+
+	<td class='valignTop'>
+<!-- variation specific template loaded into this div, based on 'type' -->
+<div data-app-role='variationsTypeSpecificsContainer' class='stdPadding'></div>
+
+<div class='buttonset clearfix'>
+<button class='floatRight'>Save Changes</button>
+</div>
+
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+	</section>
+	</form>
+</div>
+
+
+
+
+
+
+
+<fieldset id='variationsEditor_select'>
+	<legend>Select Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
 </fieldset>
 
-<fieldset>
-	<legend>Variation Behavior</legend>
+
+<fieldset id='variationsEditor_radio'>
+	<legend>Radio Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_cb'>
+	<legend>Checkbox Settings</legend>
+</fieldset>
+
+
+<fieldset id='variationsEditor_hidden'>
+	<legend>Hidden Settings</legend>
 
 	<label>
-	<input type="radio" value="0" name="GLOBAL" checked="checked" />
-	Manual: I need to select options, and customize modifiers on a product by product basis.
+		<span>Maximum length</span>
+		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
-	<input type="radio" value="1" name="GLOBAL" />
-	Automatic: Any changes should automatically affect all products using this group.
+		<span>Default text</span>
+		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
 	</label>
 	
-</fieldset>
-<p class='hint'>Before saving please take a moment to review your choices. All settings on this page, (except prompt) cannot be edited once the option group is saved.</p>
+	<label>
+		<span>Fee per character </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;'>
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;'>
+	</label>
 
-<button>Save</button>
-</form>
+</fieldset>
+
+
+<fieldset id='variationsEditor_assembly'>
+	<legend>Assembly Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_text'>
+	<legend>Text Settings</legend>
+
+
+	<label>
+		<span>Maximum length</span>
+		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default text</span>
+		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per character </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;'>
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;'>
+	</label>
+
+</fieldset>
+
+<fieldset id='variationsEditor_number'>
+	<legend>Number Settings</legend>
+
+	<label>
+		<span>Maximum Length</span>
+		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default Text</span>
+		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Minimum Number</span>
+		<input size="10" name="MIN" value="3" type="number" data-bind='var: variation(min); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Maximum Number</span>
+		<input type="number" value="8" name="MAX" size="10" data-bind='var: variation(max); format:popVal;' />
+	</label>
+
+</fieldset>
+
+
+
+<fieldset id='variationsEditor_textarea'>
+	<legend>Textarea Settings</legend>
+	<label>
+		<span>Rows</span>
+		<input type="textbox" name="ROWS" size="3" value="" data-bind='var: variation(rows); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Columns</span>
+		<input type="textbox" name="COLS" size="3" value="" data-bind='var: variation(cols); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Maximum length</span>
+		<input type="textbox" name="MAXLENGTH" size="4" value="" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default text</span>
+		<textarea name="DEFAULT" cols="40" rows="4" data-bind='var: variation(default); format:popVal;' /></textarea>
+	</label>
+	
+	<label>
+		<span>Fee per character </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per line: </span>
+		$<input type="number" value="" step='.01' min='0' size="6" name="FEE_LINE" data-bind='var: variation(fee_line); format:popVal;' />
+	</label>
+</fieldset>
+
+
+<fieldset id='variationsEditor_readonly'>
+	<legend>Readonly Settings</legend>
+
+	<label>
+		<span>Readonly text/HTML</span>
+		<textarea name="DEFAULT" class='fullWidth' rows="20" data-bind="var:variations(default); format:popVal;"></textarea>
+	</label>
+	<p class='hint'>
+	The Readonly type simply outputs the text in the box above to the customers browser. You can use the readonly type to display messages to customers.
+	</p>
+</fieldset>
+
+
+<fieldset id='variationsEditor_attribs'>
+	<legend>Attribs Settings</legend>
+	
+	Confirm, but I believe this is a finder based editor and should just load the 'select' template.
+	
+</fieldset>
+
+<fieldset id='variationsEditor_biglist'>
+	<legend>Big List Settings</legend>
+</fieldset>
+
+
+<fieldset id='variationsEditor_imgselect'>
+	<legend>Image Select Settings</legend>
+	will need image WxH inputs.
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_imggrid'>
+	<legend>Image Grid Settings</legend>
+	will need image WxH inputs.
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_calendar'>
+	<legend>Calendar Settings</legend>
+	<label>
+		<span>Add a rush fee of</span>
+		<input type="number" step='.01' value="" name="FEE_RUSH" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
+		for orders within
+		<input type='number' step='1' value='' name='RUSH_DAYS' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Rush prompt</span>
+		<input type="text" value="" name="RUSH_PROMPT" data-bind="var: variation(rush_prompt); format:popVal;" />
+		<span class='toolTip' title="In addition to showing up on the product page, this will be displayed on the cart and checkout pages as well as the invoice.">?</span>
+	</label>
+	<label>
+		<span>Rush message</span>
+		<textarea name="RUSH_MSG" data-bind="var: variation(rush_msg); format:popVal;"></textarea>
+	</label>
+</fieldset>
+
+<!-- a shared template used by select and radio input variation types -->
+<div id='optionsEditor' data-app-role='variationOptionEditorContainer'>
+
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class='valignTop'>
+	<table class='gridTable fullWidth' data-app-role='dataTable'>
+	<thead>
+	<tr>
+		<th></th>
+		<th></th>
+		<th>Prompt</th>
+		<th>Price</th>
+		<th>Weight</th>
+		<th>Assembly</th>
+		<th>ID/Value</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-app-role="variationsOptionsTbody" data-bind="var:variations(@options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
+	
+	</tbody>
+	</table>
+	</td>
+	
+	<td class='threeColumn valignTop' >
+	<div class='buttonset alignRight'>
+		<button data-app-role='addNewOptionButton' data-app-event='admin_prodEdit|variationOptionAddShow'>Add New Option</button>
+	</div>
+	
+	<div  data-app-role='varitionOptionAddUpdateContainer'>
+	<!-- gets populated w/ the input forms for either update or add option -->
+	</div>
+	</td>
+</tr>
+</tbody>
+</table>
+
 
 </div>
 
+
+<!-- this is it's own template so that it can be easily cleared and repopulated w/ option specific data (for update and create) -->
+<div id='optionEditorInputsTemplate' class='alignedLabels'>
+	<input type='hidden' name='guid' value='' data-bind="var: variation(guid); format:popVal;" />
+	<label>
+		<span>Text</span>
+		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Weight modifier</span>
+		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Price modifier</span>
+		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Assembly</span>
+		<input type="textbox" name="asm" value="" data-bind="var: variation(asm); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Image</span>
+		Something will sometimes need to go somewhere around here.
+	</label>
+
+
+	<label>
+		<span>RTF/HTML/Wiki detail text</span>
+		<textarea name="html" rows="5" class='fullWidth' data-bind="var: variation(html); format:popVal;"></textarea>
+	</label>
+</div>
+
+
+
+<table>
+<tr id='optionsEditorRowTemplate' class='pointer'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
+	<td data-bind="var:option(prompt); format:text;"></td>
+	<td data-bind="var:option(p); format:text;"></td>
+	<td data-bind="var:option(w); format:text;"></td>
+	<td data-bind="var:option(asm); format:text;"></td>
+	<td data-bind="var:option(id); format:text;"></td>
+	<td class='alignRight'>
+	<button data-app-event="admin|tagRowForRemove">delete</button>
+	<button data-app-event="admin_prodEdit|variationOptionUpdateShow">edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
+	</td>
+</tr>
+</table>

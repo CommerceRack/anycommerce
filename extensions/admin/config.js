@@ -987,6 +987,13 @@ $D.dialog('open');
 					});
 				}, //dataTableAddExec
 
+//a generic app event for updating a dataTable. This button would go on the fieldset and would search withing that fieldset for a dataTable, then use data-guid to find a match in that table.
+//this isn't necessary.  dataTableAddExec already does this.  Left here so next time I come to write this, I'm reminded I've already done it. 
+//			dataTableUpdateExec : function($btn,vars)	{},
+
+
+
+
 //deletes a given shipmethod/provider. then reloads shippingManager.
 			shipmethodRemoveExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
