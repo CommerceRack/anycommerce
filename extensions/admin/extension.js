@@ -2922,58 +2922,69 @@ else	{
 			navigateTo : function(path,$t)	{
 				return this.showUI(path,$t ? $t : {});
 				},
-
+//data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data)	{
+var r = false;  //what is returned. either false of a jquery object.
 data = data || {};
-var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
-$D.anycontent({'templateID':'pickerTemplate','showLoading':'false',data:data});
-$("[data-app-role='accordionContainer']",$D).first().accordion({
-	heightStyle: "content",
-	activate : function(event,ui)	{
-		app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
-		app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
-
-		if(!ui.newPanel.data('contentloaded'))	{
-			ui.newPanel.showLoading({'message':'Fetching List'});
-			var _tag = {}
-			_tag.callback = function(rd)	{
-				app.u.dump('got into callback');
-				if(app.model.responseHasErrors(rd)){
-					$target.anymessage({'message':rd})
+if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
+	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
+	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
+	$D.data('pickermode',data.mode);
+	$("[data-app-role='accordionContainer']",$D).first().accordion({
+		heightStyle: "content",
+		activate : function(event,ui)	{
+			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
+			if(!ui.newPanel.data('contentloaded'))	{
+				ui.newPanel.showLoading({'message':'Fetching List'});
+				var _tag = {}
+				_tag.callback = function(rd)	{
+					if(app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd})
+						}
+					else	{
+						ui.newPanel.anycontent(rd).data('contentloaded',true);
+						}
+					}
+				if(ui.newHeader.data('pickmethod') == 'LIST')	{
+					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
+					}
+				else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
+					}
+				else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
+					app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
+					}
+				else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
+					_tag.datapointer = 'adminEBAYProfileList'
+					app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
+					}
+				else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
+					app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
+					}
+				else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
+					app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
 					}
 				else	{
-					ui.newPanel.anycontent(rd).data('contentloaded',true);
+					//ERROR! unrecognized pick method. !!!
+					ui.newPanel.hideLoading();
+					ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
 					}
+				app.model.dispatchThis('mutable');
 				}
-			if(ui.newHeader.data('pickmethod') == 'LIST')	{
-				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
-				}
-			else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
-				}
-			else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-				_tag.datapointer = 'adminEBAYProfileList'
-				app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
-				}
-			else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-				app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
-				}
-			else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
-				app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
-				}
-			else	{
-				//ERROR! unrecognized pick method. !!!
-				}
-			app.model.dispatchThis('mutable');
+			else	{}
 			}
-		else	{}
-		}
-	
-	});
-
+		
+		});
+	r = $D.children();
+	}
+else	{
+	$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
+	}
 //use this to disable the accordion if 'select all' is checked.	
 //$( ".selector" ).accordion( "option", "disabled", true );
-				return $D.children();
+				return r;
 				},
 
 			showSitesTab : function($target)	{
@@ -5428,10 +5439,11 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 			lockAccordionIfChecked : function($cb)	{
-
 				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
 					if($cb.is(':checked'))	{
-						$cb.closest('.ui-accordion').accordion( "disable" );
+						$cb.closest('.ui-accordion').find('.ui-accordion-header').each(function(){
+							$(this).addClass("ui-state-disabled");
+							}) //.accordion( "disable" ); //disable works, but the aesthetic of what it does isn't great.
 						}
 					else	{
 						$cb.closest('.ui-accordion').accordion( "enable" );

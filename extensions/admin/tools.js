@@ -56,7 +56,7 @@ var admin_tools = function() {
 				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false});
 				$('.toolTip',$target).tooltip();
 				var $picker = $("[data-app-role='pickerContainer']:first",$target);
-				$picker.append(app.ext.admin.a.getPicker());
+				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
 				$('.applyDatepicker',$picker).datepicker({
 					changeMonth: true,
 					changeYear: true,

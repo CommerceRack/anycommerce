@@ -46,7 +46,9 @@ var admin_customer = function() {
 	'crmManagerResultsRowTemplate',
 	'crmManagerTicketDetailTemplate',
 	'crmManagerTicketCreateTemplate',
-	'crmManagerTicketMsgRowTemplate'
+	'crmManagerTicketMsgRowTemplate',
+	
+	'pickerSubscriberListsRowTemplate'
 	
 	);
 	var r = {
@@ -145,6 +147,13 @@ if(data)	{
 		minDate : 0, //can't start before today.
 		dateFormat : 'yymmddhhmm00'
 		});
+
+
+var $picker = $("[data-app-role='pickerContainer']:first",$target);
+$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
+
+
+
 	app.model.addDispatchToQ({
 		'_cmd':'adminCampaignFileContents',
 		'CAMPAIGNID' : CAMPAIGNID,
@@ -648,7 +657,7 @@ else	{
 			adminCampaignUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
-					$btn.closest('tbody').stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
+					$btn.closest('table').stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
 					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data('campaignid'));
 					})
 				},

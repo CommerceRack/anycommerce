@@ -1156,11 +1156,9 @@ icons for fb, twit, etc.
 
 <fieldset>
 	<legend>Customer Selection</legend>
-
-tags
-emails
-subscriber lists
-
+	<div data-app-role='pickerContainer'>
+	
+	</div>
 
 </fieldset>
 
@@ -1204,29 +1202,30 @@ subscriber lists
 
 
 
-<div id='customerSelectorTemplate'>
+<div id='customerPickerTemplate'>
 	<div data-app-role='accordionContainer' class='labelsAsBreaks'>
 
-		<h6 data-pickmethod='SELECTALL'>All</h6>
+		<h6 data-pickmethod='CUSTOMER_SELECTALL'>All</h6>
 		<div data-contentloaded='true'>
 		<label><input type='checkbox' name='SELECTALL' data-app-event='admin|lockAccordionIfChecked' /> Select all customers</label>
 		<p class='note'>If checked, all other menus will be disabled</p>
 		</div>
 
-		<h6 class='showForZoovyOnly' data-pickmethod='SUBSCRIBELIST'>From Subscriber List</h6>
-		<div class='showForZoovyOnly' data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
+		<h6 class='showForZoovyOnly' data-pickmethod='CUSTOMER_SUBSCRIBERLISTS'>From Subscriber List</h6>
+		<div class='showForZoovyOnly' data-bind="var: list(@lists); format: processList; loadsTemplate:pickerSubscriberListsRowTemplate;"></div>
 
-		<h6 data-pickmethod='TAG'>From Tags</h6>
+		<h6 data-pickmethod='CUSTOMER_TAG'>From Tags</h6>
 		<div class='labelsAsBreaks' data-contentloaded='true'>
 Coming Soon
 		</div>
 
 
-		<h6 data-pickmethod='LOCATION'>By Location</h6>
+		<h6 data-pickmethod='CUSTOMER_LOCATION'>By Location</h6>
+		<div class='labelsAsBreaks' data-contentloaded='true'>
 Coming Soon
 		</div>
 	
-		<h6 data-pickmethod='EMAIL'>By CSV Upload</h6>
+		<h6 data-pickmethod='CUSTOMER_EMAIL'>By CSV Upload</h6>
 		<div data-contentloaded='true'>
 <textarea name='csv' rows='10' class='fullWidth'></textarea>
 		</div>
@@ -1234,3 +1233,8 @@ Coming Soon
 	</div>
 
 </div>
+
+
+<label id='pickerSubscriberListsRowTemplate' class='displayNone' data-bind="var: list(NAME); format:showIfSet;">
+	<input type='checkbox' name='' data-bind="var:list(ID); format:assignAttribute; attribute:name; valuePretext:SUBSCRIBERLIST+;" /><span data-bind="var: list(NAME); format:text;"></span>
+</label>
