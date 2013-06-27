@@ -362,17 +362,9 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<li>
-		<a href='#' onClick="app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($('#forTestingEBAY'),{'pid':'OUTFIT','categoryselect':'primary'},$('#forTestingEBAYSpan')); return false;">showEBAYCategoryChooserInModal</a>
-		
-		</li>
-		<li><a href='#' onClick="app.ext.admin.a.showPicker(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')); return false;">showPicker</a>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminCampaignFileContents','base64':true,'FILENAME' : 'index.html','CAMPAIGNID':'222222_1372278124','_tag':	{'callback':'downloadBase64File','extension':'admin','datapointer' : 'adminCampaignFileContent'}},'mutable'); app.model.dispatchThis('mutable'); return false;">downloadBase64File</a></li>
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminCampaignFileContents','base64':true,'FILENAME' : 'index.html','CAMPAIGNID':'222222_1372278124','_tag':	{'callback':'downloadBase64File','extension':'admin','datapointer' : 'adminCampaignFileContent','mime_type':'text/plain'}},'mutable'); app.model.dispatchThis('mutable'); return false;">downloadBase64File</a></li>
 
-		<li><a href='#' onClick="app.ext.admin_config.a.showRulesBuilderInModal({'mode':'shipping','provider':'FLEX:LOCAL_CANADA_1369228546','table':'RULES'}); return false;">showRulesBuilderInModal</a></li>
 		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!giftcardManager'); return false;">giftcardManager</a></li>
-		<li><a href='#' onClick="navigateTo('#!reviewsManager'); return false;">showReviewsManager</a></li>
 		<li><a href='#' onClick="navigateTo('#!supplierManager'); return false;">Supplier Manager</a></li>
 		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
 		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
@@ -380,8 +372,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Test</a>
 	<ul>
-		<li><a href='#' onClick="app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/BOB',{},'mutable'); app.model.dispatchThis('mutable');">adminImageFolderDetail</a></li>
-		<li><a href='#' onClick='app.ext.admin_syndication.a.showEBAYTemplateEditorInModal(); return false;'>iFrame test</a></li>
 		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
 		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
@@ -394,19 +384,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 </ul>
 
-<!--
-<button onClick="app.ext.admin.calls.appResource.init('email_macros.json',{},'mutable'); app.model.dispatchThis('mutable');">appResource</button>
-<button onClick="app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); app.model.dispatchThis('mutable');">shipcodes.json</button>
-<button onClick="app.ext.admin.calls.adminEmailList.init({},'mutable'); app.model.dispatchThis('mutable');">adminEmailList</button>
-<button onClick="app.model.addDispatchToQ({'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)},'mutable'); app.model.dispatchThis('mutable');">adminDataQuery</button>
-<button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
-
--->
-
-<!-- app.model.addDispatchToQ(obj,q); -->
-
-<input type='text' name='test' value='38331' id='forTestingEBAY' />
-<span id='forTestingEBAYSpan' />
 
 </div>
 
@@ -418,28 +395,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 
-
-
-<!--
-
-This is content that isn't template worthy, but still necessary (most likely for modals or static pages)
-
--->
-
-
-
-
-<div id='orderListTab' class='ui-widget ui-widget-content displayNone'>
-	<div class='positionRelative'>
-		<div class='tab ui-state-default ui-corner-right smallPadding'><span>Order&nbsp;Results</span></div><!-- non breaking space to prevent word wrap -->
-		<div class='ordersContainer minimalMode'>
-		<table class='gridTable'>
-			<thead><tr></tr></thead><!-- will get a clone of order list thead -->
-			<tbody></tbody><!-- will get appended w/ the children of the order list -->
-		</table>
-		</div>
-	</div>
-</div>
 
 
 

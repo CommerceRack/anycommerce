@@ -714,7 +714,7 @@ else	{
 							$D.showLoading({"message":"Deleting Campaign "+data.campaignid});
 							app.model.addDispatchToQ({
 								'_cmd':'adminCampaignRemove',
-								'campaignid': data.campaignid,
+								'CAMPAIGNID': data.campaignid,
 								'_tag':	{
 									'callback':function(rd){
 									$D.hideLoading();

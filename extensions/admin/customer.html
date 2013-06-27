@@ -1039,19 +1039,19 @@ The checkbox below does not work.
 <table>
 <tr id='campaignResultsRowTemplate'>
 	<td data-bind="var: campaign(CAMPAIGNID); format:text;"></td>
-	<td data-bind="var: campaign(SUBJECT); format:text;"></td>
-	<td data-bind="var: campaign(STATUS); format:text;"></td>
+	<td data-bind="var: campaign(SUBJECT); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: campaign(STATUS); format:text;" class='hideInMinimalMode'></td>
 	<td>
 icons for fb, twit, etc.
 	</td>
-	<td data-bind="var: campaign(QUEUE_MODE); format:text;"></td>
-	<td data-bind="var: campaign(CREATED_TS); format:text;"></td>
-	<td data-bind="var: campaign(EXPIRES_TS); format:text;"></td>
+	<td data-bind="var: campaign(QUEUE_MODE); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: campaign(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: campaign(EXPIRES_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
-		<button data-app-event='admin_customer|adminCampaignRemoveConfirm'>delete</button>
-		<button>clone</button>
+		<button class='hideInMinimalMode' data-app-event='admin_customer|adminCampaignRemoveConfirm'>delete</button>
+		<button class='hideInMinimalMode'>clone</button>
 		<button data-app-event="admin_customer|adminCampaignUpdateShow">edit</button>
-		<button>send</button>
+		<button class='hideInMinimalMode'>send</button>
 		<!-- these need to be in the editor, not here:
 		send test,
 		select recipients

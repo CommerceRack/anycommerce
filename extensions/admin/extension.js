@@ -2345,39 +2345,10 @@ Function does NOT dispatch.
 
 		downloadBase64File : {
 			onSuccess : function(_rtag)	{
-				app.u.dump(_rtag);
-				const MIME_TYPE = 'text/plain';
-// this worked, but not an ideal solution. we like blob better.
-//				var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(app.data[_rtag.datapointer].body);
-//				var $a = $('<a>',{'download':app.data[_rtag.datapointer].FILENAME || 'file',"href":uri}).text('download me');
-
-//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
-				var base64 = atob(app.data[_rtag.datapointer].body);
-			
-				var bb = new Blob(new Array(base64), {type: MIME_TYPE});
-				var filename = app.data[_rtag.datapointer].FILENAME || 'file';
-				
-			//a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
-				var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
-				$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
-					var a = this;
-					a.textContent = 'Downloaded';
-					a.dataset.disabled = true;
-					// Need a small delay for the revokeObjectURL to work properly.
-					//revokeObjectURL causes browser to drop reference to the file.
-					setTimeout(function() {
-						window.URL.revokeObjectURL(a.href);
-						}, 1500);
-					});
-
-				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
-				$a.appendTo($D);
-				$D.dialog({
-					'modal' : true,
-					'width' : 300,
-					'height' : 300
-					});
-				
+				app.ext.admin.u.fileDownloadInModal({'filename':app.data[_rtag.datapointer].FILENAME,'mime_type':app.data[_rtag.datapointer]._rtag.mime_type,'body':app.data[_rtag.datapointer].body});
+				if(_rtag.jqObj && _rtag.jqObj instanceof jQuery)	{
+					_rtag.jqObj.hideLoading();
+					}
 				}
 			},
 
@@ -2891,18 +2862,7 @@ else if(opts.tab)	{
 	$target = $(app.u.jqSelector('#',opts.targetID));
 
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
-	if(opts.tab != 'orders')	{
-		app.ext.admin_orders.u.handleOrderListTab('deactivate');
-		}
-	if(opts.tab != 'product')	{
-		app.ext.admin_prodEdit.u.handleProductListTab('deactivate');
-		}
-
-	if(opts.tab == 'utilities' && path == '#!batchManager')	{}
-	else	{
-//nuke sticky tab once leaving batchManager.
-		$('#batchJobsStickyTab').stickytab('destroy');
-		}
+$('#stickytabs').empty(); //clear all the sticky tabs.
 	
 	}
 //no tab was specified. use the open tab, if it's set.
@@ -3702,8 +3662,48 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 
 
+//vars requires MIME_TYPE and body.
+//vars.filename is optional
+			fileDownloadInModal : function(vars)	{
+				vars = vars || {};
+				if(vars.mime_type && vars.body)	{
+					var filename = vars.filename || 'file';
+					const MIME_TYPE = vars.mime_type;
+	// this worked, but not an ideal solution. we like blob better.
+	//				var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(app.data[_rtag.datapointer].body);
+	//				var $a = $('<a>',{'download':app.data[_rtag.datapointer].FILENAME || 'file',"href":uri}).text('download me');
+	
+	//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
+					var base64 = atob(vars.body);
+					var bb = new Blob(new Array(base64), {type: vars.MIME_TYPE});
+					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+					$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
+						var a = this;
+						a.textContent = 'Downloaded';
+						a.dataset.disabled = true;
+						$D.dialog('close');
+						// Need a small delay for the revokeObjectURL to work properly.
+						//revokeObjectURL causes browser to drop reference to the file.
+						setTimeout(function() {
+							window.URL.revokeObjectURL(a.href);
+							$D.empty().remove(); //nuke dialog.
+							}, 1500);
+						});
+	
+					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+					$a.appendTo($D);
+					$D.dialog({
+						'modal' : true,
+						'width' : 300,
+						'height' : 200
+						});
+					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.u.fileDownloadInModal, either mime_type ["+vars.mime_type+"] or body ["+typeof vars.body+"] not passed.","gMessage":true});
+					}
 
-
+				},
 
 
 
