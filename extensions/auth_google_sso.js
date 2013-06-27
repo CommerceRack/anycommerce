@@ -33,44 +33,67 @@ var auth_google_sso = function() {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
-				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+				var r = false; 
+				
+				app.u.loadResourceFile(['script',0,'https://apis.google.com/js/client:plusone.js']);
 
-				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
 				return r;
 				},
 			onError : function()	{
-//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
-//you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				app.u.dump('BEGIN auth_google_sso.callbacks.init.onError');
+				}
+			},
+		signin : {
+			onSuccess : function(){
+				if (authResult['access_token']) {
+					// Successfully authorized
+					// Hide the sign-in button now that the user is authorized, for example:
+					//$('#signinButton').dialog('close');
+					app.u.throwMessage(app.u.successMsgObject("You have been signed in with Google+!"));
+					} 
+				else if (authResult['error']) {
+					// There was an error.
+					// Possible error codes:
+					//   "access_denied" - User denied access to your app
+					//   "immediate_failed" - Could not automatically log in the user
+					// console.log('There was an error: ' + authResult['error']);
+					}
+
+				},
+			onError : function(){
+				
 				}
 			}
 		}, //callbacks
 
-
-
-////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-//actions are functions triggered by a user interaction, such as a click/tap.
-//these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 
 			}, //Actions
 
-////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-//renderFormats are what is used to actually output data.
-//on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
-//that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 
 			}, //renderFormats
-////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//utilities are typically functions that are exected by an event or action.
-//any functions that are recycled should be here.
 		u : {
+			showSignInModal : function(){
+				window.gplusCallback = window.gplusCallback ? window.gplusCallback : app.ext.auth_google_sso.callbacks.signin.onSuccess;
+				var $container = $('<div class="outer"><div class="inner" /><div>')
+
+				$container.dialog({'modal':'true','title':'Sign In With Google+'});
+				
+				gapi.signin.render($container.children().get(0), {
+					clientid :'464875398878.apps.googleusercontent.com',
+					callback : "gplusCallback",
+					cookiepolicy : "single_host_origin",
+					requestvisibleactions : "http://schemas.google.com/AddActivity",
+					scope : "https://www.googleapis.com/auth/plus.login"
+					});
+				
+				
+
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
