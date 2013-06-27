@@ -3591,7 +3591,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 						}
 					else	{
 						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
-//						$('#globalMessaging').anymessage({"message":"Welcome to the future!"});
+						if(document.URL.indexOf("/future/") > 0)	{
+							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
+							}
 						}
 					}
 				app.model.dispatchThis('immutable');
