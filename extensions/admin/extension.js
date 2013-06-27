@@ -5715,14 +5715,15 @@ not in use
 //if this class is already present, the button is set for delete already. unset the delete.
 //added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
 					if($btn.hasClass('ui-state-error'))	{
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find('button').each(function(){
+// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
+						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 							$(this).button('enable');
 							}); //enable the other buttons
 						$btn.button('enable');
 						}
 					else	{
 //adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
-						$btn.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find('button').each(function(){
+						$btn.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 							app.u.dump(" -> $(this).text(): "+$(this).text());
 							$(this).button('disable')
 							}); //disable the other buttons
