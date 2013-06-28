@@ -342,6 +342,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		align: "left",
 		items   : 3,
 		scroll: 1,
+		infinite: true,
 		auto : false
 	});
 	}
@@ -361,28 +362,28 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	}
 	
 	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL
-	$("#nextPPCaro").click(function() {
+	$(".nextPPCaro").click(function() {
     	$(".prodPageCarouselTitles").trigger("next", 1);
 		$(".prodPageCarouselContent").trigger("next", 1);
     });
-	$("#prevPPCaro").click(function() {
+	$(".prevPPCaro").click(function() {
     	$(".prodPageCarouselTitles").trigger("prev", 1);
 		$(".prodPageCarouselContent").trigger("prev", 1);
     });
 	
-	$("#nextPPCaro").mouseover(function()
+	$(".nextPPCaro").mouseover(function()
 	{
 		$(this).css("opacity",".65");
 	});	
-	$("#prevPPCaro").mouseover(function()
+	$(".prevPPCaro").mouseover(function()
 	{
 		$(this).css("opacity",".65");
 	});	
-	$("#nextPPCaro").mouseout(function()
+	$(".nextPPCaro").mouseout(function()
 	{
 		$(this).css("opacity","1");
 	});	
-	$("#prevPPCaro").mouseout(function()
+	$(".prevPPCaro").mouseout(function()
 	{
 		$(this).css("opacity","1");
 	});		
@@ -393,6 +394,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	
 app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {	
 	$(".select2Buttons").remove();
+	$('select[name=#Z]').show();
 }]);
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
