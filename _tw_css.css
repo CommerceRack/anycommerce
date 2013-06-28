@@ -251,12 +251,14 @@ and override using classes or id's as needed.
 #cartStuffList li h4{ font-size:14px;}
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0; font-size:12px;} /* h4 - h6 are used in default templates for name, price, etc */
 
-.midmain{ margin:0px auto; max-width:948px;}
+.midmain{ height: 245px;
+    margin: 0 auto;
+    max-width: 948px;}
 .midmain .productList li{font-size:.8em;border: 2px solid #FFFFFF; box-shadow: 1px 1px 5px 1px #222222; background:#fff; height: 225px; margin-left: 0; margin-right: 20px; position: relative; text-align: center; max-width:213px;}
 .midmain .productList li img.prodThumb{ width:213px;}
 .midmain .prodThumbContainer{ width:215px !important;}
 .productList li, .categoryList li{font-size:.8em;}
-.productList h5{ min-height:50px; width:180px; margin:10px auto 0;}
+.productList h5{ min-height:50px; width:180px; margin:20px auto 0;}
 .productList h6{font-size:18px; width:100px; float:left;}
 #carCat1 h6, #carCat2 h6, #carCat3 h6, #carCat4 h6, #carCat5 h6, #carCat6 h6, #carCat7 h6, #carCat8 h6{ padding:0 0 0 15px;}
 #carCat1 .moreDetails, #carCat2 .moreDetails, #carCat3 .moreDetails, #carCat4 .moreDetails, #carCat5 .moreDetails, #carCat6 .moreDetails{ float:right; margin:0 8px 10px 0;}
@@ -1856,4 +1858,52 @@ div#container div.nav div.navContent > ul > li{
 }
 .caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{
 	padding-left:0;
+}
+
+
+#homeProdSearchBestSellers{
+	 left: 0 !important;
+}
+.homeProdSearchBestSellerCont{
+	height: 230px;
+    width: 225px;
+	position:relative;
+}
+#homeProdSearchBestSellers li.searchResultsProduct{
+	float:left;
+}
+.hotItemsNext{
+	bottom: 89px;
+    position: absolute;
+    right: 19px;
+}
+.hotItemsPrev{
+	bottom: 89px;
+    left: 15px;
+    position: absolute;
+}
+#homeProdSearchBestSellersPage{
+	bottom: 89px;
+    left: 55px;
+    position: absolute;
+}
+#homeProdSearchBestSellersPage a{
+	display: block;
+    float: left;
+    height: 10px;
+    margin-right: 15px;
+    width: 10px;
+	background-image:url(images/h_specialty_item_pagination_inactive.png);
+}
+#homeProdSearchBestSellersPage a.selected{
+	background-image:url(images/h_specialty_item_pagination_active.png);
+	
+}
+#homeProdSearchBestSellersPage a span{
+	display:none;
+}
+.hpSpecialtyListLogo{
+	position: absolute;
+    right: 10px;
+    top: 5px;
 }

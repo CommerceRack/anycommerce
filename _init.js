@@ -78,7 +78,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	
 	
 	
-		function foo4(){
+		function foo2(){
 			var incrementPage = 1;
 			$("#slideshowNav").children().each(function() {
 				$(this).addClass("hpSSTopPage" + incrementPage);
@@ -86,27 +86,76 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 				$(this).children().remove();
 			})
 		}
-		carouselPaginationClasses = foo4;
+		carouselPaginationClasses = foo2;
 		setTimeout(carouselPaginationClasses, 2100);
+		
+		
+		
+	//**MID HOMEPAGE BESTSELLER/NEW/PREORDER CAROUSELSS**
+	
+	//**BEST SELLERS/HOT ITEMS**
+	var carouselHPBestseller;
+	function foo3(){ $("#homeProdSearchBestSellers").carouFredSel
+	({
+		width   : 220,
+		height	: 235,
+		items   : 1,
+		scroll: 1,
+		auto : false,
+		next: ".hotItemsNext",
+		prev: ".hotItemsPrev",
+		pagination  : "#homeProdSearchBestSellersPage"
+	});
+	}
+	carouselHPBestseller = foo3;
+	setTimeout(carouselHPBestseller, 2000);
+	
+	//**NEW ITEMS**
+	var carouselHPNewItems;
+	function foo4(){ $("#homeProdSearchNewItems").carouFredSel
+	({
+		items   : 5,
+		scroll: 1,
+		auto : false,
+		pagination  : "#homeProdSearchNewItemsPage"
+	});
+	}
+	carouselHPNewItems = foo4;
+	setTimeout(carouselHPNewItems, 2000);
+	
+	//**PRE-ORDER ITEMS**
+	var carouselHPPreItems;
+	function foo5(){ $("#homeProdSearchPreItems").carouFredSel
+	({
+		items   : 5,
+		scroll: 1,
+		auto : false,
+		pagination  : "#homeProdSearchPreItemsPage"
+	});
+	}
+	carouselHPPreItems = foo5;
+	setTimeout(carouselHPPreItems, 2000);
+		
+		
 		
 	//**HOMEPAGE BOTTOM CATEGORY CAROUSEL**
 	var carouselBottomCats;
-	function foo2(){ $(".catCarousel").carouFredSel({
+	function foo6(){ $(".catCarousel").carouFredSel({
 			auto : false,
 			items   : 1,
 			scroll: 1
 	});}
-	carouselBottomCats = foo2;
+	carouselBottomCats = foo6;
 	setTimeout(carouselBottomCats, 2000);
 	
 	var carouselBottomCatTitles;
-	function foo3(){ $(".catNavContent").carouFredSel({
+	function foo7(){ $(".catNavContent").carouFredSel({
 			auto : false,
 			items   : 3,
 			height: 63,
 			scroll: 1
 	});}
-	carouselBottomCatTitles = foo3;
+	carouselBottomCatTitles = foo7;
 	setTimeout(carouselBottomCatTitles, 2000);
 	
 	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL

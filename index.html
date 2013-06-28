@@ -143,10 +143,10 @@ div#container div.nav div.navContent > ul > li:hover{background: url(images/back
 			<div id="topNavContent">
 				<img src="images/account-icon.png" alt="">
 				<span class="fl">Welcome,
-                <span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
-                <span class="loginHide">Guest! <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span> <a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign-Up</a></span>
+                    <span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+                    <span class="loginHide">Guest! <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span> <a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign-Up</a></span>
                 </span>
-			<img src="images/view-cart-icon.png" alt="View Cart">
+				<img src="images/view-cart-icon.png" alt="View Cart" />
 				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onClick="return showContent('cart',{});">VIEW CART</a></p>
 				<img src="images/contact-us-icon.png" alt="Contact Us">
 				<p><a href="#" onClick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
@@ -165,10 +165,10 @@ div#container div.nav div.navContent > ul > li:hover{background: url(images/back
                 </div>
                 <div class="headert3">
                 	<div id="headerFreeShipping" format: categoryList; extension: store_navcats;>
-					<img src="images/header-free-shipping-icon-1.png" class="shipLogo1 displayNone" />
-                    <img src="images/header-free-shipping-icon-2.png" class="shipLogo2 displayNone" />
-                    <img src="images/header-free-shipping-icon-3.png" class="shipLogo3 displayNone" />
-                    <img src="images/header-free-shipping-icon-4.png" class="shipLogo4 displayNone" />
+                        <img src="images/header-free-shipping-icon-1.png" class="shipLogo1 displayNone" />
+                        <img src="images/header-free-shipping-icon-2.png" class="shipLogo2 displayNone" />
+                        <img src="images/header-free-shipping-icon-3.png" class="shipLogo3 displayNone" />
+                        <img src="images/header-free-shipping-icon-4.png" class="shipLogo4 displayNone" />
 					</div>
 				<div class="socialicona"><a id="btnSocialFacebook" href="http://www.facebook.com/shoptoywars"><img src="images/facebook.png" alt="Facebook"></a>
 				<a id="btnSocialTwitter" href="#"><img src="images/twitter.png" alt="Twitter"></a>
@@ -701,14 +701,19 @@ the homepageTemplate template is loaded into mainContentArea by default when the
     <p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
     -->
     <!-- a sample of how to format an elastic native search in a data-bind -->
-        <!--
-    <ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-    -->
+     <div class="homeProdSearchBestSellerCont">   
+     	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"5","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+     	<img src="images/h_specialty_item_arrow_right.png" class="hotItemsNext" />
+        <img src="images/h_specialty_item_arrow_left.png" class="hotItemsPrev" />
+        <div id="homeProdSearchBestSellersPage"></div>
+        <img class="hpSpecialtyListLogo" src="images/hot_item_logo.png" />
+     </div>
+    
         <!--
     <a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
     -->
     <!-- a sample of how to get a 'list' src onto the page. -->
-        <ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+        <!--<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 	</div>
     <div class="featuredCategories">
         <div class="catNav">
@@ -717,7 +722,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                 <p class="currentCat">THE HOBBIT</p>
                 <p class="currentCat">STAR WARS</p>
                 <p class="currentCat">DOCTOR WHO</p>
-                <p class="currentCat">WALKIGN DEAD</p>
+                <p class="currentCat">WALKING DEAD</p>
             </div>
             <img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" style="display:block; position:absolute; right: 330px; top: 15px;" />
             <img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" style="display:block; position:absolute; left: 0; top: 15px;" />
@@ -1013,8 +1018,7 @@ this will likely become more flexible in the future. ###
                     <li data-bind='var: product(zoovy:prod_cpsiawarning); format:showIfSet;' class="displayNone"><img src="images/redalert.gif" width="20" height="17" />WARNING CHOKING HAZARD: Small parts. Not for children under 3 yrs.</li>
                     <li data-bind='var: product(zoovy:ship_latency); format:showIfSet;' class="displayNone bottomLatency"><img src="images/grayalert.gif" width="20" height="17" /><div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Usually ships in ;posttext: day(s);' class='latency marginBottom'></div></li>
                     <li data-bind='var: product(is:shipfree); format:showIfSet;' class="displayNone"><img src="images/grayalert.gif" width="20" height="17" />Eligible for FREE Shipping</li>
-                    <!--NEEDS A FLEX FIELD CREATED FOR IT SO THIS LABEL CAN BE SHOWN/HIDDEN AS NEEDED PER PRODUCT.
-                    <li data-bind='var: product(); format:showIfSet;' class="displayNone"><img src="images/grayalert.gif" width="20" height="17">Available for Store Pick-up</li>
+                    <li data-bind='var: product(user:prod_storepickup); format:showIfSet;' class="displayNone"><img src="images/grayalert.gif" width="20" height="17">Available for Store Pick-up</li>
                     -->
                 </ul>
             </td>
