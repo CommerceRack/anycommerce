@@ -112,12 +112,16 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	
 	//**NEW ITEMS**
 	var carouselHPNewItems;
-	function foo4(){ $("#homeProdSearchNewItems").carouFredSel
+	function foo4(){ $("#homeProdSearchFresh").carouFredSel
 	({
-		items   : 5,
+		width   : 220,
+		height	: 235,
+		items   : 1,
 		scroll: 1,
 		auto : false,
-		pagination  : "#homeProdSearchNewItemsPage"
+		next: ".freshItemsNext",
+		prev: ".freshItemsPrev",
+		pagination  : "#homeProdSearchFreshPage"
 	});
 	}
 	carouselHPNewItems = foo4;
@@ -125,12 +129,16 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	
 	//**PRE-ORDER ITEMS**
 	var carouselHPPreItems;
-	function foo5(){ $("#homeProdSearchPreItems").carouFredSel
+	function foo5(){ $("#homeProdSearchPreorder").carouFredSel
 	({
-		items   : 5,
+		width   : 220,
+		height	: 235,
+		items   : 1,
 		scroll: 1,
 		auto : false,
-		pagination  : "#homeProdSearchPreItemsPage"
+		next: ".preorderItemsNext",
+		prev: ".preorderItemsPrev",
+		pagination  : "#homeProdSearchPreorderPage"
 	});
 	}
 	carouselHPPreItems = foo5;

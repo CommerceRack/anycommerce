@@ -703,10 +703,26 @@ the homepageTemplate template is loaded into mainContentArea by default when the
     <!-- a sample of how to format an elastic native search in a data-bind -->
      <div class="homeProdSearchBestSellerCont">   
      	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"5","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-     	<img src="images/h_specialty_item_arrow_right.png" class="hotItemsNext" />
-        <img src="images/h_specialty_item_arrow_left.png" class="hotItemsPrev" />
+     	<img src="images/h_specialty_item_arrow_right.png" class="hotItemsNext pointer" />
+        <img src="images/h_specialty_item_arrow_left.png" class="hotItemsPrev pointer" />
         <div id="homeProdSearchBestSellersPage"></div>
         <img class="hpSpecialtyListLogo" src="images/hot_item_logo.png" />
+     </div>
+     
+     <div class="homeProdSearchFreshCont">   
+     	<ul id='homeProdSearchFresh' data-bind='var: elastic-native({"size":"5","mode":"elastic-native","filter":{"term":{"tags":"IS_FRESH"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+     	<img src="images/h_specialty_item_arrow_right.png" class="freshItemsNext pointer" />
+        <img src="images/h_specialty_item_arrow_left.png" class="freshItemsPrev pointer" />
+        <div id="homeProdSearchFreshPage"></div>
+        <img class="hpSpecialtyListLogo" src="images/new_item_logo.png" />
+     </div>
+     
+     <div class="homeProdSearchPreorderCont">   
+     	<ul id='homeProdSearchPreorder' data-bind='var: elastic-native({"size":"5","mode":"elastic-native","filter":{"term":{"tags":"IS_PREORDER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+     	<img src="images/h_specialty_item_arrow_right.png" class="preorderItemsNext pointer" />
+        <img src="images/h_specialty_item_arrow_left.png" class="preorderItemsPrev pointer" />
+        <div id="homeProdSearchPreorderPage"></div>
+        <img class="hpSpecialtyListLogo" src="images/preorder_item_logo.png" />
      </div>
     
         <!--
