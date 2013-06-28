@@ -183,7 +183,8 @@ addToCart : function (pid,$form){
 			
 //No work to do if there are no sogs. 
 			if(sogJSON)	{
-	//			app.u.dump('got into the pogs-are-present validation');
+				app.u.dump('got into the pogs-are-present validation');
+				app.u.dump(sogJSON);
 				for(var i = 0; i < sogJSON.length; i++)	{
 					pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
 					pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
@@ -677,15 +678,17 @@ NOTES
 					sku = $("input[name='sku']",$form).val();
 
 					if(sku && $qtyInput.val() >= 1)	{
+						obj = $form.serializeJSON();
+						app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
+//here for the admin side of things. Will have no impact on retail as price can't be set.
+//should always occur, validating or not.
+						if(obj.price == "")	{delete obj.price; app.u.dump("Deleting price");}
+						else{}
+
 //There are use cases for skipping validation, such as admin, quick order, etc.
 						if($form.data('skipvalidation') || app.ext.store_product.validate.addToCart(sku,$form))	{
-							obj = $form.serializeJSON();
+							
 							obj['%variations'] = {};
-	//here for the admin side of things. Will have no impact on retail as price can't be set.
-							if(obj.price)	{
-								if(obj.price != ""){}
-								else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-								}
 	
 							for(var index in obj)	{
 	//							app.u.dump(" -> index: "+index);
@@ -699,15 +702,21 @@ NOTES
 
 							}
 						else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+							obj = false;
 							//the validation itself will display the errors.
 							}
 						}
 					else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+						obj = false;
 						$form.anymessage({'message':'The form for store_product.u.handleAddToCart was either missing a sku ['+sku+'] or qty input ['+$qtyInput.length+'].','gMessage':true});
 						}
 		
 					}
 				else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+					obj = false;
 					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form not passed.','gMessage':true});
 					}
 				return obj;
