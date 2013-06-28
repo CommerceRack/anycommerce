@@ -19,6 +19,7 @@ app.rq.push(['extension',0,'jerseypreview','_jerseypreview_extension.js']);
 app.rq.push(['extension',0,'cubworld_mobilenative','_cubworld_mobilenative.js','startExtension']);
 app.rq.push(['extension',0,'pogs_cubworld','_pogs_extension.js','startExtension']);
 app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js','startExtension']);
+app.rq.push(['extension',0,'tools_lightbox','extensions/tools_lightbox/tools_lightbox.js']);
 app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 
 app.rq.push(['extension',0,'auth_google_sso','extensions/auth_google_sso.js']);

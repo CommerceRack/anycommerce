@@ -1515,15 +1515,28 @@ this will likely become more flexible in the future. ###
 	<!--
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 	-->
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='296' height='296' />
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='296' height='296' />
+	</a>
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:fancybox; extension:fancybox;' width='54' height='54' />
+	
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image3; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image5; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image6; groupingPrefix:prodPage_; groupingAttr:pid;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='54' height='54' />
+	</a>
 <!--
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
 
