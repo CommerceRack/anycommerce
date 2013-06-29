@@ -26,7 +26,24 @@ var auth_google_sso = function() {
 
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+	
+	calls : {
+		appBuyerAuthenticate : {
+			init : function(obj,_tag)	{
+			
+				obj = obj || {};
+				obj.auth = 'google';
+				
+				this.dispatch(obj,_tag);
+				return 1;
+				},
+			dispatch : function(obj,_tag){
+				obj._tag = _tag = _tag || {};
+				obj._cmd = "appBuyerAuthenticate";
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}
+		},
 
 
 	callbacks : {
@@ -53,12 +70,24 @@ var auth_google_sso = function() {
 					//$('#signinButton').dialog('close');
 					app.u.dump(authResult);
 					
-					var resultObj = {};
+					var obj = {};
+					obj.access_token = authResult.access_token;
+					obj.id_token = authResult.id_token;
 					
-					$.extend(resultObj, authResult);
+					var _tag = {
+						callback : function(rd){
+							if(app.model.responseHasErrors(rd)){
+								app.u.throwMessage(rd);
+								}
+							else {
+								app.u.throwMessage(app.u.successMsgObject("You have been signed in with Google+!"));
+								}
+							}
+						};
 					
-					//app.u.dump(JSON.stringify(resultObj));
-					app.u.throwMessage(app.u.successMsgObject("You have been signed in with Google+!"));
+					app.ext.auth_google_sso.calls.appBuyerAuthenticate.init(obj, _tag);
+					app.model.dispatchThis('immutable');
+					
 					} 
 				else if (authResult['error']) {
 					// There was an error.
