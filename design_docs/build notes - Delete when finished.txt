@@ -3,23 +3,21 @@ Requests for support/implementation:
 
 all pages:
 - Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
+- Tes for browser compatibility and fix by Monday.
 
 header:
-- expand header and footer to touch edge of screen at all resolutions.
 
 Footer:
 - Check ALL links.
-- expand header and footer to touch edge of screen at all resolutions.
 
 homepage:
-- Add requisite list items for each of the single li lists (best seller, new item, pre order, and one other(ask Stephen)).
+- Need feedback on last specialty item list. 
 
 Category:
 
 
 product:
 - find out last category for bottom carousel.
-- fix magic zoom issue.
 
 
 Company:
@@ -33,13 +31,14 @@ search:
 
 
 cart:
-_ Done albeit an occassional bug in which the cart is not being initialized. Discuss and correct Thursday.
+- Done albeit an occassional bug in which the cart is not being initialized. Discuss and correct Thursday.
 
 checkout:
-- Fix styling issues.
 
 product lists:
 - Add span tags to product lists.
+
+
 
 
 
@@ -56,6 +55,8 @@ category:
 product:
 - image library adding white space to certain images. He wants the whitespace removed without compromising the image quality.
 - and a what's this pop up that explains the above pog IF it is sowing for that product.
+- Build checks to make sure product variations have a value selection made to add to cart.
+- fix magic zoom issue.
 
 search:
 - reactivate filtered search and restlye to fit.

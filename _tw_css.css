@@ -69,68 +69,90 @@ and offMenu is toggle off, hiding the change button.
 .rightB img{width:100%;} 
 #couponCode{height:15px; width:124px; margin:0 -6px 0 0; padding:2px 6px;}
 #addCouponBtn{background:none !important; border:none !important; margin:-2px 0 0 0px;}
-div#container{margin:0px auto; position:relative; max-width:1020px;}
-div#container div#topNav{background: url(images/background-top-nav.png) repeat-x; height: 30px; position: relative; width: 100%;}
-div#container div#topNav div#topNavContent{color: #FFFFFF; font-family: Helvetica; height: 30px; margin: 0px auto; position: relative; max-width: 960px;}
-div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p{float:left; position: relative;}
-div#container div#topNav div#topNavContent img{margin-top: 7px; padding-right: 11px;}
-div#container div#topNav div#topNavContent img:first-child{margin-left: 12px;}
-div#container div#topNav div#topNavContent p{color: #FFFFFF; font-family: Helvetica; font-size: 12px; margin-top: 8px;}
-div#container div#topNav div#topNavContent p:not(:last-child){padding-right: 51px;}
-div#container div#topNav div#topNavContent p a{color: #FFFFFF;}
-div#container div#header{background: url(images/background-header.png) repeat-x; height: 124px; position: relative; width: 100%;}
-div#container div#header div#headerContent{height: 124px; margin: 0px auto; position: relative; max-width: 960px;}
-div#container div#header div#headerContent img#logo{cursor: pointer; left: 10px; position: relative; top: 11px;}
-div#container div#header div#headerContent input#txtSearch{height:32px; width:125px; color:#999; font-size:14px; padding:0 10px; /*left: 470px; position: absolute; top: 46px;*/}
+div.container{margin:0px auto; position:relative; max-width:1020px;}
+div#topNav{background: url(images/background-top-nav.png) repeat-x; height: 30px; position: relative; width: 100%;}
+div#topNav div#topNavContent{color: #FFFFFF; font-family: Helvetica; height: 30px; margin: 0px auto; position: relative; max-width: 960px;}
+div#topNav div#topNavContent img, div#topNav div#topNavContent p{float:left; position: relative;}
+div#topNav div#topNavContent img{margin-top: 7px; padding-right: 11px;}
+div#topNav div#topNavContent img:first-child{margin-left: 12px;}
+div#topNav div#topNavContent p{color: #FFFFFF; font-family: Helvetica; font-size: 12px; margin-top: 8px;}
+div#topNav div#topNavContent p:not(:last-child){padding-right: 51px;}
+div#topNav div#topNavContent p a{color: #FFFFFF;}
+div#header{background: url(images/background-header.png) repeat-x; height: 124px; position: relative; width: 100%;}
+div#header div#headerContent{height: 124px; margin: 0px auto; position: relative; max-width: 960px;}
+div#header div#headerContent img#logo{cursor: pointer; left: 10px; position: relative; top: 11px;}
+div#header div#headerContent input#txtSearch{height:32px; width:125px; color:#999; font-size:14px; padding:0 10px; /*left: 470px; position: absolute; top: 46px;*/}
 #btnTopNavSearch{cursor: pointer; position: absolute;  width: 35px; /*height: 33px; left: 617px; top: 47px; */ }
-div#container div#header div#headerContent div#headerFreeShipping{background: url(images/header-free-shipping.png); height: 54px; /*left: 730px; position: absolute;*/ width: 220px; top: 20px;}
-div#container div#header div#headerContent div#headerFreeShipping img{left: -20px; position: relative; top: -10px;}
-div#container div#header div#headerContent a#btnSocialFacebook{cursor: pointer; left: 10px; position: relative; top: 21px;}
-div#container div#header div#headerContent a#btnSocialTwitter{cursor: pointer; left: 20px; position: relative; top: 21px;}
-div#container div#header div#headerContent a#btnSocialYoutube{cursor: pointer; left: 30px; position: relative; top: 21px;}				
-div#container div#header div#headerContent a#btnSocialMail{cursor: pointer; left: 40px; position: relative; top: 21px;}
-div#container div#footer{background: url(images/background-footer.png); height: 358px; width: 100%;}
-div#container div#footer div#footerContent{height: 358px; margin: 0px auto; max-width: 960px;}
-div#container div#footer div#footerContent div#footerLinks{height: 290px; max-width: 960px;}	
-div#container div#footer div#footerContent div#footerLinks > ul{float: left; padding-right: 52px; margin-top:60px; width: 150px;}
-div#container div#footer div#footerContent div#footerLinks > ul li{color: #FFFFFF; font-size: 14px; list-style: none;}		
-div#container div#footer div#footerContent div#footerLinks > ul li:not(:first-child){padding-top:8px;}			
-div#container div#footer div#footerContent div#footerLinks > ul li a{color: #FFFFFF; text-decoration: none;}
-div#container div#footer div#footerContent div#footerLinks > ul li a:hover{text-decoration: underline;}
-div#container div#footer div#footerContent div#footerLinks > ul li:first-child, div#container div#footer div#footerContent div#footerSubscribe table tr td:first-child
+div#header div#headerContent div#headerFreeShipping{background: url(images/header-free-shipping.png); height: 54px; /*left: 730px; position: absolute;*/ width: 220px; top: 20px;}
+div#header div#headerContent div#headerFreeShipping img{left: -20px; position: relative; top: -10px;}
+div#header div#headerContent a#btnSocialFacebook{cursor: pointer; left: 10px; position: relative; top: 21px;}
+div#header div#headerContent a#btnSocialTwitter{cursor: pointer; left: 20px; position: relative; top: 21px;}
+div#header div#headerContent a#btnSocialYoutube{cursor: pointer; left: 30px; position: relative; top: 21px;}				
+div#header div#headerContent a#btnSocialMail{cursor: pointer; left: 40px; position: relative; top: 21px;}
+div#footer{background: url(images/background-footer.png); height: 358px; width: 100%;}
+div#footer div#footerContent{height: 358px; margin: 0px auto; max-width: 960px;}
+div#footer div#footerContent div#footerLinks{height: 290px; max-width: 960px;}	
+div#footer div#footerContent div#footerLinks > ul{float: left; padding-right: 52px; margin-top:60px; width: 150px;}
+div#footer div#footerContent div#footerLinks > ul li{color: #FFFFFF; font-size: 14px; list-style: none;}		
+div#footer div#footerContent div#footerLinks > ul li:not(:first-child){padding-top:8px;}			
+div#footer div#footerContent div#footerLinks > ul li a{color: #FFFFFF; text-decoration: none;}
+div#footer div#footerContent div#footerLinks > ul li a:hover{text-decoration: underline;}
+div#footer div#footerContent div#footerLinks > ul li:first-child, div#footer div#footerContent div#footerSubscribe table tr td:first-child
 {color: #666666; font-family:'Conv_BebasNeue',Sans-Serif; font-size: 30px;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe{float: left; position: relative; top:60px;}						
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table{}					
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td{}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td{padding-top:6px;}						
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input{height:35px; width:177px; padding:0 10px; color:#999999;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe{cursor: pointer; margin:4px 0 0;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage{left:1px; opacity: 1; position: absolute; top: 9px; width: 312px; z-index: 1000;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin{left: 280px; position: absolute; top: 10px; z-index: 1001;}							
-div#container div#footer div#footerContent div#copyright{color: #FFFFFF; max-width: 960px;}
-div#container div#footer div#footerContent div#copyright p{font-family: Helvetica; font-size: 12px; margin-top: 27px; text-align: center;}
-div#container div#footer div#footerContent div#copyright p a{font-weight: bold; text-decoration: none;}					
-div#container div#footer div#footerContent div#copyright p a:hover{text-decoration: underline;}					
-div#container div#footer div#footerContent div#copyright p a:visited{color: #FFFFFF;}							
-div#container div#footer div#footerContent div#copyright{height: 68px; max-width: 960px;}
-div#container div.nav{background: url(images/background-nav.png) repeat-x; height: 50px; position: relative; width: 100%; -moz-box-shadow:1px 1px 5px 1px #222222; -webkit-box-shadow: 1px 1px 5px 1px #222222; box-shadow:1px 1px 5px 1px #222222; float:left;}
-div#container div.nav div.navContent{height:50px; margin:0px auto; position: relative; max-width: 960px;}
-div#container div.nav div.navContent > ul{height: 50px; margin: 0px auto; max-width: 850px; padding:0px;}
-div#container div.nav div.navContent > ul > li{float: left; height: 50px; list-style: none; overflow: show; padding-left: 20px; padding-right: 20px; line-height:16px;}				
-div#container div.nav div.navContent > ul > li > a{color:#FFFFFF; font-family:'Conv_BebasNeue'; font-size:23px; position:relative; text-decoration: none; top: 18px;}
-.no-fontface div#container div.nav div.navContent > ul > li > a{font-family: Arial, Helvetica, sans-serif; font-size: 14px;}
-div#container div.nav div.navContent > ul > li > a:hover{}
-div#container div.nav div.navContent ul li div.subMenu{background-color:#FFFFFF; display:none; height:0px; left:25px; position:absolute; top:50px; max-width:905px; z-index:2000; -moz-box-shadow:0px 1px 5px 1px #222222; -webkit-box-shadow:0x 1px 5px 1px #222222; box-shadow:0px 1px 5px 1px #222222;}
-div#container div.nav div.navContent ul li div.subMenu > div.dropDownListHolder{height: 100%; position: relative; width: 100%;}						
-div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *{cursor: default; position: relative;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul{float: left; list-style-position: inside; list-style-type: disc; padding: 20px 15px 20px 18px; z-index: 2002;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+div#footer div#footerContent div#footerLinks div#footerSubscribe{float: left; position: relative; top:60px;}						
+div#footer div#footerContent div#footerLinks div#footerSubscribe table{}					
+div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td{}
+div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td{padding-top:6px;}						
+div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input{height:35px; width:177px; padding:0 10px; color:#999999;}
+div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe{cursor: pointer; margin:4px 0 0;}
+div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage{left:1px; opacity: 1; position: absolute; top: 9px; width: 312px; z-index: 1000;}
+div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin{left: 280px; position: absolute; top: 10px; z-index: 1001;}							
+div#footer div#footerContent div#copyright{color: #FFFFFF; max-width: 960px;}
+div#footer div#footerContent div#copyright p{font-family: Helvetica; font-size: 12px; margin-top: 27px; text-align: center;}
+div#footer div#footerContent div#copyright p a{font-weight: bold; text-decoration: none;}					
+div#footer div#footerContent div#copyright p a:hover{text-decoration: underline;}					
+div#footer div#footerContent div#copyright p a:visited{color: #FFFFFF;}							
+div#footer div#footerContent div#copyright{height: 40px; max-width: 960px;}
+div.nav{background: url(images/background-nav.png) repeat-x; height: 50px; position: relative; width: 100%; -moz-box-shadow:1px 1px 5px 1px #222222; -webkit-box-shadow: 1px 1px 5px 1px #222222; box-shadow:1px 1px 5px 1px #222222; float:left; z-index:1;}
+div.nav div.navContent{height:50px; margin:0px auto; position: relative; max-width: 960px;}
+div.nav div.navContent > ul{height: 50px; margin: 0px auto; max-width: 1020px; padding:0px;}
+div.nav div.navContent > ul > li{
+	 float: left;
+    height: 50px;
+    line-height: 16px;
+    list-style: none outside none;
+    padding-left: 38px;
+    padding-right: 40px;
+    text-align: center;
+}
+div.nav div.navContent > ul > li:hover{
+	border: 3px inset #9A0000 !important;
+    border-radius: 0 0 0 0;
+	height:43px;
+
+	background: #790000; /* Old browsers */
+	background: -moz-linear-gradient(top,  #790000 0%, #bb0000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#790000), color-stop(100%,#bb0000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #790000 0%,#bb0000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #790000 0%,#bb0000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #790000 0%,#bb0000 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #790000 0%,#bb0000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#790000', endColorstr='#bb0000',GradientType=0 ); /* IE6-9 */
+	
+}
+div.nav div.navContent > ul > li > a{color:#FFFFFF; font-family:'Conv_BebasNeue'; font-size:23px; position:relative; text-decoration: none; top: 18px;}
+.no-fontface div.nav div.navContent > ul > li > a{font-family: Arial, Helvetica, sans-serif; font-size: 14px;}
+div.nav div.navContent ul li div.subMenu{background-color:#FFFFFF; display:none; height:0px; left:25px; position:absolute; top:50px; max-width:905px; z-index:2000; -moz-box-shadow:0px 1px 5px 1px #222222; -webkit-box-shadow:0x 1px 5px 1px #222222; box-shadow:0px 1px 5px 1px #222222;}
+div.nav div.navContent ul li div.subMenu > div.dropDownListHolder{height: 100%; position: relative; width: 100%;}						
+div.nav div.navContent ul li div.subMenu ul, div.nav div.navContent ul li div.subMenu ul *{cursor: default; position: relative;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul{float: left; list-style-position: inside; list-style-type: disc; padding: 20px 15px 20px 18px; z-index: 2002;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
 {color: #770000; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; font-size: 12px;}					
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li{font-size:18px; list-style-type: none;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before{content: "» ";}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child{color:#000000; font-family:'Conv_BebasNeue',Sans-Serif; font-size:18px; list-style: none; margin-bottom:7px;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a{cursor: pointer; text-decoration: none;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover{text-decoration: underline;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li{font-size:18px; list-style-type: none;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before{content: "» ";}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child{color:#000000; font-family:'Conv_BebasNeue',Sans-Serif; font-size:18px; list-style: none; margin-bottom:7px;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a{cursor: pointer; text-decoration: none;}
+div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover{text-decoration: underline;}
 div.dropDownListHolder > a{bottom: 0px; clear: both; display: none; position: absolute; right: 0px; z-index: 2001;}
 
 /*.boxP{display: block; margin: 0 auto;  padding: 10px; position: relative; width:100%;}
@@ -284,14 +306,14 @@ and override using classes or id's as needed.
 PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
-#container{ max-width:1000px; margin:0px auto;}
+.container{ max-width:1000px; margin:0px auto;}
 .prodViewerContainer{width:938px; margin:20px auto 28px;}
 .breadAndAddThisContainer{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 
 /* primary image and thumbnails */
 .imageContainer	{width:10%; padding-right:24px;}
 .prodViewerContainer .prodThumbs div{}
-.prodViewerContainer .prodThumbs div img{display:none;}
+.prodViewerContainer .prodThumbs div img{display:block;}
 .prodSummaryContainer{width:382px;}
 .prodSummaryContainer h1{ font-size:18px; margin-bottom:14px;}
 .basePrice span{ font-size:10px; color:#000000;}
@@ -826,6 +848,13 @@ ul.categoryList div.thumbContainer img {
     margin-top: 1px;
     width: 136px;
 }
+.caroufredsel_wrapper
+{
+	margin: 0px auto;
+	overflow: hidden;
+	width:auto !important;
+}
+
 ul.categoryList li div.catName {
     background: url("images/background-homepage-category-list-name.png") repeat scroll 0 0 transparent;
     border: 1px solid #FFFFFF;
@@ -846,12 +875,7 @@ ul.categoryList li div.catName span {
     position: relative;
     top: 16px;
 }
-.caroufredsel_wrapper
-{
-	margin: 0px auto;
-	overflow: hidden;
-	width:auto !important;
-}
+
 
 .caroufredsel_wrapper div.ccItem
 {
@@ -1187,7 +1211,7 @@ div.catCarousel2 h2
 .socialicona{margin:0 0 0 35px; padding:0px; float:left;} 
 
 @media (min-width: 768px) and (max-width: 1024px)  { 
-#container {width:96%;}
+.container {width:96%;}
 .caroufredsel_wrapper div.ccItem {padding-left:0px;margin-left:-5px;}
 .sortby {margin:0 0 0 2px;}
 .Account {width:600px;margin-left:-20px;}
@@ -1197,19 +1221,19 @@ div.catCarousel2 h2
 
 /*ipad*/
 @media  only screen and (min-width: 768px) and (max-width: 979px)  and (orientation:portrait) {
-#container {width:99%;}
+.container {width:99%;}
 .headert1{margin:11px 0 0 -179px ;width:290px;}
 .headert2{margin:41px 28px 0 27px;}
 .headert3{margin:10px 0 0 29px;}
-div#container div.nav div.navContent > ul > li > a {font-size:20px;}
-div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
+div.nav div.navContent > ul > li > a {font-size:20px;}
+div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
 .midmain {margin-left:18px;}
 .featuredCategories div.catNavContent p:not(:last-child) {width:195px;}
 .caroufredsel_wrapper div.ccItem {padding-left:5px;}
 .productList > li{width:216px;}
-div#container div#topNav div#topNavContent p:not(:last-child){ /*{padding-right:11px;*/}
+div#topNav div#topNavContent p:not(:last-child){ /*{padding-right:11px;*/}
 .fl {padding:8px 21px 0 0}
-div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
+div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
 .featuredCategories img.btnViewAllCategories {margin-right:180px;}
 #resultsProductListContainer {width:500px!important;}
 .sortby {margin:20px 0 0 2px; width:215px;}
@@ -1222,14 +1246,14 @@ div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18
 #footer {display:none;}
 .headert2{display:none;}
 .headert3{display:none;}
-div#container div#topNav {display:none;}
+div#topNav {display:none;}
 }
 
 /*iphone used*/
 @media only screen and (max-width: 479px) {
-#container {width:99%;}
-div#container div#topNav {display:none;}
-div#container div.nav div.navContent > ul > li > a {display:none;}
+.container {width:99%;}
+div#topNav {display:none;}
+div.nav div.navContent > ul > li > a {display:none;}
 .midmain {margin-left:40px;}
 .featuredCategories div.catNavContent p.currentCat {margin-left:2px!important;font-size:12px!important;}
 .featuredCategories div.catNavContent p:not(:last-child) { font-size:12px!important; margin-left:-21px;width:100px;}
@@ -1420,7 +1444,7 @@ div ul .filterSearchResults3{
 .layeredSearch label{
 	color:black;
 }
-div#container div#footer{
+div.container div#footer{
 	float:left;
 }
 .productList{
@@ -1568,7 +1592,7 @@ div#container div#footer{
 .select2Buttons ul.select-buttons li:first-child{
 	display:none;
 }
-.div#container div.nav div.navContent > ul > li{
+.div.container div.nav div.navContent > ul > li{
 	padding-left: 30px;
     padding-right: 30px;
 }
@@ -1675,7 +1699,7 @@ fieldset.filterSliderImage div.ui-slider a.ui-slider-handle{
 	background: linear-gradient(to bottom,  rgba(187,0,0,1) 0%,rgba(121,0,0,1) 100%) !important; /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bb0000', endColorstr='#790000',GradientType=0 ) !important; /* IE6-9 */
 }
-div#container div.nav div.navContent > ul > li{
+div.container div.nav div.navContent > ul > li{
 	padding-left: 30px;
     padding-right: 25px;
 }
@@ -1717,13 +1741,43 @@ div#container div.nav div.navContent > ul > li{
 .RightPcol .marginBottom{
 	border-bottom:none;
 }
+.prodThumbsNormalMode div.pointer{
+	float: left;
+    margin-left: 35px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
 .prodThumbsPP{
-	bottom: 0;
+}
+.prodThumbsNormalMode{
+	height: 71px !important;
+	width:300px !important;
+    margin: 0;
+    padding: 0;
+}
+.prodThumbsNormalMode li{
+}
+.imageCaroCont{
+    float: left;
+    height: 71px;
     position: absolute;
     width: 100%;
-	height: 70px;
+	bottom:0;
 	background-color:rgb(2, 2, 2);
 	background-color: rgba(10, 10, 10, 0.7);
+}
+.imageCaroCont div.caroufredsel_wrapper{
+	margin:0 !important;
+}
+.thumbPagePrev{
+	position: absolute;
+    top: 0;
+	left:0;
+}
+.thumbPageNext{
+	position: absolute;
+    right: 0;
+    top: 0;
 }
 .prodThumbsPP ul{
 	list-style:none;
@@ -1736,8 +1790,7 @@ div#container div.nav div.navContent > ul > li{
 }
 .imageInnerCont{
 	position:relative;
-	height: 410px;
-    position: relative;
+	height: 300px;
 }
 
 /*Begin carousel code for product page*/
@@ -1796,7 +1849,7 @@ div#container div.nav div.navContent > ul > li{
 }
 .prodPageCarouselContent{
 	height: 500px !important;
-    width: 1020px !important;
+    width: 985px !important;
 }
 #recentlyViewedItemsContainer{
 	height: 500px;
@@ -1816,12 +1869,12 @@ div#container div.nav div.navContent > ul > li{
 }
 .prodlistRelatedContainer{
 	height: 500px;
-    width: 1020px;
+    width: 985px;
 	overflow:hidden;
 }
-.prodlistRelatedContainer div{
+.prodlistRelatedContainer div.displayNone{
 	height: 500px;
-    width: 1020px;
+    width: 985px;
 }
 .prodlistRelatedContainer h1{
 	color: red;
@@ -1836,10 +1889,9 @@ div#container div.nav div.navContent > ul > li{
 }
 .placeholderCaroCat{
 	height: 500px;
-    width: 1020px;
+    width: 985px;
 }
-.caroufredsel_wrapper{
-}
+
 .MagicZoomPlus img{
 	width:300px !important;
 	height:340px !important;
@@ -1918,7 +1970,7 @@ div#container div.nav div.navContent > ul > li{
     width: 225px;
 	position:relative;
 	float:left;
-	margin-left:10px;
+	margin-left:136px;
 }
 #homeProdSearchFresh li.searchResultsProduct{
 	float:left;
@@ -2019,7 +2071,7 @@ div#container div.nav div.navContent > ul > li{
     width: 225px;
 	position:relative;
 	float:left;
-	margin-left:10px;
+	margin-left:136px;
 }
 #homeProdSearchPreorder li.searchResultsProduct{
 	float:left;

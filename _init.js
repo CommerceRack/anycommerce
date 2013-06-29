@@ -22,7 +22,7 @@ app.rq.push(['extension',0,'store_toywars','extensions/_store_toywars.js']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
 //app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
-app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']);
+//app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']);
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
@@ -360,6 +360,10 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		auto : false
 	});
 	}
+	carouselPPContent = foo2;
+	setTimeout(carouselPPContent, 2000);
+	
+	
 	
 	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL
 	$(".nextPPCaro").click(function() {
@@ -388,8 +392,25 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		$(this).css("opacity","1");
 	});		
 	
-	carouselPPContent = foo2;
-	setTimeout(carouselPPContent, 2000);
+	
+	/*
+	var carouselImageSlider;
+	function foo3(){ $(".prodThumbsNormalMode").carouFredSel
+	({
+		width   : 300,
+		height	: 71,
+		items   : 3,
+		scroll: 1,
+		auto : false,
+		next: ".thumbPageNext",
+		prev: ".thumbPagePrev"
+	});
+	}
+	
+	carouselImageSlider = foo3;
+	setTimeout(carouselImageSlider, 2000);
+	
+	*/
 	}]);
 	
 app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {	
@@ -488,7 +509,7 @@ app.u.appInitComplete = function(P)	{
 app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
 var $container = $('#recentlyViewedItemsContainer');
 $container.show();
-$("ul",$container).empty(); //empty product list
+//$("ul",$container).empty(); //empty product list
 $container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
 }]);
 
