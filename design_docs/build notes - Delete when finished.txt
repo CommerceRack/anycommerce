@@ -13,7 +13,6 @@ all pages:
 header:
 
 Footer:
-- Check ALL links.
 
 homepage:
 - Need feedback on last specialty item list. 
@@ -52,6 +51,7 @@ ROUND 2:
 
 all pages:
 - Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
+- All links will need to be updated once filtered search is implemented so that they link to the appropriate new cat pages.
 
 header: 
 - revert top nav links to categories( see document named top nav cats - link types with link data in designs folder).
