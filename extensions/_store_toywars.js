@@ -44,18 +44,10 @@ var store_toywars = function() {
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-				},
-			onError : function()	{
-//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
-				}
-			},
-
-			startExtension : {
-				onSuccess : function() {
-					app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 						//make a call to get a search
 						var $context = $(app.u.jqSelector('#',P.parentID));
-						var _tag = {"callback" : "productElasticSearchList", "extension":"_store_toywars", "$context" : $context, "datapointer":"ProdPageElastic"};
+						var _tag = {"callback" : "productElasticSearchList", "extension":"store_toywars", "$context" : $context, "datapointer":"ProdPageElastic"};
 						
 						
 						/*if(app.model.fetchData(_tag.datapointer)){
@@ -69,6 +61,14 @@ var store_toywars = function() {
 							//}
 						//callback will call anycontent and append to product
 						}]);
+				},
+			onError : function()	{
+//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
+				}
+			},
+
+			startExtension : {
+				onSuccess : function() {
 				},
 				onError : function (){
 				}

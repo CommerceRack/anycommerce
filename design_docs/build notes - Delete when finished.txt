@@ -2,9 +2,13 @@ Requests for support/implementation:
 - Update limited edition pog so that the title returned is: Choose Limited Edition Number . Talk to TIm about making this change.
 - Need Erich to build a flex field for new products that is data-bound to the is_fresh attribute. Index of "whats_new" . If this index is not used, change the code in _store_toywars to reflect this proper index value.
 
+dev questions:
+JT:
+- Hot spots feature in magic zoom. Haven't tried using it yet but do you think its possible to use it within the framework?
+
 all pages:
 - Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
-- Tes for browser compatibility and fix by Monday.
+- Test for browser compatibility and fix by Monday.
 
 header:
 
@@ -18,7 +22,6 @@ Category:
 
 
 product:
-- Add new items search list to the placeholder list in the bottom list navigator.
 
 
 product lists:
@@ -38,12 +41,14 @@ search:
 
 
 cart:
-- Done albeit an occassional bug in which the cart is not being initialized. Discuss and correct Thursday.
 
 checkout:
 
 product lists:
 - Add span tags to product lists.
+
+bugs:
+- Occasionally the cart is not being initialized. No idea what is causing the issue as of yet.
 
 
 
