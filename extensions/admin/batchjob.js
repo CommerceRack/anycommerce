@@ -134,16 +134,29 @@ var admin_batchJob = function() {
 							
 							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
 //google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
-app.u.dump(" -> app.data[rd.datapointer]['@BODY'][0].length: "+app.data[rd.datapointer]['@BODY'][0].length);
-app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datapointer]['@HEAD'][0].length);
+//								app.u.dump(" -> app.data[rd.datapointer]['@BODY'][0].length: "+app.data[rd.datapointer]['@BODY'][0].length);
+//								app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datapointer]['@HEAD'][0].length);
 								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'].length)	{
 //@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
 									for(var i = 0; i < L; i += 1)	{
 										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
 										}
 
-									var $expBtn = $("<button \/>").text('Export Page to CSV').button().on('click',function(){
-										$('.google-visualization-table-table').toCSV();
+									var $expBtn = $("<button \/>").text('Export to CSV').button().addClass('floatRight').on('click',function(){
+//										$('.google-visualization-table-table').toCSV();  //exports just the page in focus.
+										var L = app.data[rd.datapointer]['@BODY'].length;
+										var csv = "";
+										for(var i = 0; i < L; i += 1)	{
+											csv += $.map(app.data[rd.datapointer]['@BODY'][i],function(val){
+												return '"'+((val == null) ? '' : val)+'"'; //don't return 'null' into report.
+												})+"\n"
+											}
+										
+										app.ext.admin.u.fileDownloadInModal({
+											'skipDecode':true,
+											'filename':app.data[rd.datapointer].title+'.csv',
+											'mime_type':'text/csv',
+											'body':csv});
 										}).appendTo($target);
 
 
