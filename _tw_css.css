@@ -287,7 +287,7 @@ and override using classes or id's as needed.
 .productList h4, .categoryList h4{font-size:1em;}
 .categoryList h5{font-size:.9em;}
 .categoryList h6{font-size:.85em;}
-.productList h6 .cents{ font-size:11px; vertical-align:super;}
+.productList h6 .cents{ font-size:11px; vertical-align:text-top !important;}
 .prodViewerAddToCartForm button{ border:none !important;}
 
 /*.prodViewerContainer .prodThumbs div button .floatRight pointer quickView displayNone{display:none;}*/
@@ -785,12 +785,6 @@ CHECKOUT
     position: relative;
     width: 100%;
 }
-.featuredCategories div.catNavContent {
-    height: 62px;
-    margin: 0 auto;
-    position: relative;
-    /*width: 500px;*/
-}
 .featuredCategories div.catNavContent p.navCats {
     color: #FFFFFF;
     float: left;
@@ -808,7 +802,21 @@ CHECKOUT
     position: relative;
     top: 16px;
 }
+.featuredCategories div.companyNavContent p.currentCat {
+    color: #FFFFFF;
+    float: left;
+    font-family: 'Conv_BebasNeue';
+    font-size: 24px;
+    position: relative;
+    top: 16px;
+}
 .featuredCategories div.catNavContent p:not(:last-child) {
+    /*padding-right: 18px;*/
+    width: 300px;
+	 font-family: 'Conv_BebasNeue';
+	
+}
+.featuredCategories div.companyNavContent p:not(:last-child) {
     /*padding-right: 18px;*/
     width: 300px;
 	 font-family: 'Conv_BebasNeue';
@@ -1879,8 +1887,8 @@ div.container div.nav div.navContent > ul > li{
 .prodlistRelatedContainer h1{
 	color: red;
     height: 500px;
-    line-height: 360px;
-    text-align: center;
+    line-height: 450px;
+    padding-left:90px;
     width: 1020px;
 }
 .prodlistRelatedContainer ul{
@@ -1894,6 +1902,8 @@ div.container div.nav div.navContent > ul > li{
 .placeholderCaroCat ul{
 	height: 500px;
     width: 985px;
+	margin:0;
+	padding:0;
 }
 
 .MagicZoomPlus img{
@@ -1908,7 +1918,19 @@ div.container div.nav div.navContent > ul > li{
 	height:62px !important;
 	width:1700px !important;
 }
+.featuredCategories div.companyNavContent{
+	height:62px !important;
+	width:1700px !important;
+}
 .featuredCategories div.catNavContent p.currentCat{
+	width:20%;
+	text-align:center;
+}
+.featuredCategories div.catNavContent p.currentCat{
+	width:20%;
+	text-align:center;
+}
+.featuredCategories div.companyNavContent p.currentCat{
 	width:20%;
 	text-align:center;
 }
@@ -1928,6 +1950,40 @@ div.container div.nav div.navContent > ul > li{
 }
 #homeProdSearchBestSellers li.searchResultsProduct{
 	float:left;
+}
+.elasticlist div ul li.searchResultsProduct{
+	background-color: white;
+    float: left;
+    height: 235px;
+    list-style: none outside none;
+    margin-bottom: 19px;
+    margin-right: 10px;
+    width: 213px;
+	font-size:12px;
+}
+.elasticlist div ul li.searchResultsProduct div.pointer h5{
+	float: left;
+    margin: 0 0 0 5px;
+    min-height: 46px;
+    padding: 5px 7px 0 0;
+    text-align: left;
+    width: 130px;
+	font-size:12px;
+}
+.elasticlist div ul li.searchResultsProduct div.pointer h6{
+	float: left;
+    font-size: 16px;
+    padding: 5px 0 0;
+    width: 60px;
+}
+.elasticlist div ul li.searchResultsProduct div.moreDetails img{
+	 float: right;
+    margin-right: 10px;
+    margin-top: 0;
+}
+.elasticlist div ul li.searchResultsProduct div.pointer h6 span.cents{
+	font-size: 10px;
+    vertical-align: text-top !important;
 }
 .hotItemsNext{
 	bottom: 89px;

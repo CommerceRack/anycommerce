@@ -251,6 +251,54 @@ app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 
 app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+	
+	
+	//**COMPANY PAGE BOTTOM CATEGORY CAROUSEL**
+	var carouselBottomCats;
+	function foo1(){ $(".companyCarousel").carouFredSel({
+			auto : false,
+			items   : 1,
+			scroll: 1
+	});}
+	carouselBottomCats = foo1;
+	setTimeout(carouselBottomCats, 2000);
+	
+	var carouselBottomCatTitles;
+	function foo2(){ $(".companyNavContent").carouFredSel({
+			auto : false,
+			items   : 3,
+			height: 63,
+			scroll: 1
+	});}
+	carouselBottomCatTitles = foo2;
+	setTimeout(carouselBottomCatTitles, 2000);
+	
+	//SCROLLING FUNCTION FOR BOTTOM CAROUSEL
+	$(".btnCatNext").click(function() {
+    	$(".companyNavContent").trigger("next", 1);
+		$(".companyCarousel").trigger("next", 1);
+    });
+	$(".btnCatBack").click(function() {
+    	$(".companyNavContent").trigger("prev", 1);
+		$(".companyCarousel").trigger("prev", 1);
+    });
+	
+	$(".btnCatBack").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$(".btnCatNext").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$(".btnCatBack").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});	
+	$(".btnCatNext").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});		
 }]);
 
 app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {

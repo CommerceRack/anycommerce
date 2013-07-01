@@ -1,13 +1,13 @@
 Requests for support/implementation:
 - Update limited edition pog so that the title returned is: Choose Limited Edition Number . Talk to TIm about making this change.
-- Need Erich to build a flex field for new products that is data-bound to the is_fresh attribute. Index of "whats_new" . If this index is not used, change the code in _store_toywars to reflect this proper index value.
 
 dev questions:
 JT:
 - Hot spots feature in magic zoom. Haven't tried using it yet but do you think its possible to use it within the framework?
 
+
+
 all pages:
-- Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
 - Test for browser compatibility and fix by Monday.
 
 header:
@@ -29,6 +29,7 @@ Company:
 - all links to customer page need to be made as most links are dead.
 
 Customer:
+- Get testing account from Michael tomorrow to place a test order and view/fix the customer page.
 - Cannot view links yet as no testing account has been made.
 
 search:
@@ -38,7 +39,6 @@ cart:
 checkout:
 
 product lists:
-- Add span tags to product lists.
 
 bugs:
 - Occasionally the cart is not being initialized. No idea what is causing the issue as of yet.
@@ -49,6 +49,9 @@ bugs:
 
 
 ROUND 2:
+
+all pages:
+- Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
 
 header: 
 - revert top nav links to categories( see document named top nav cats - link types with link data in designs folder).
@@ -62,6 +65,7 @@ product:
 - and a what's this pop up that explains the above pog IF it is sowing for that product.
 - Build checks to make sure product variations have a value selection made to add to cart.
 - fix magic zoom issue.
+- Add span tags to product lists.
 
 search:
 - reactivate filtered search and restlye to fit.

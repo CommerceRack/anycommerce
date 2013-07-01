@@ -54,7 +54,7 @@ var store_toywars = function() {
 							app.u.handleCallback(_tag);
 							}
 						else {*/
-							var obj = {'filter':{'term':{'whats_new':'1'}}};
+							var obj = {'filter':{'term':{'tags':'IS_BESTSELLER'}}};
 							obj = app.ext.store_search.u.buildElasticRaw(obj);
 							obj.size = 12;
 							app.ext.store_search.calls.appPublicSearch.init(obj, _tag);
