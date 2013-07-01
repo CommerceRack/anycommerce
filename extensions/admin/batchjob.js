@@ -145,12 +145,16 @@ var admin_batchJob = function() {
 									var $expBtn = $("<button \/>").text('Export to CSV').button().addClass('floatRight').on('click',function(){
 //										$('.google-visualization-table-table').toCSV();  //exports just the page in focus.
 										var L = app.data[rd.datapointer]['@BODY'].length;
-										var csv = "";
+										//first row of CSV is the headers.
+										var csv = $.map(app.data[rd.datapointer]['@HEAD'],function(val){
+												return '"'+val.name+'"';
+												})
+
 										for(var i = 0; i < L; i += 1)	{
-											csv += $.map(app.data[rd.datapointer]['@BODY'][i],function(val){
+											csv += "\n"+$.map(app.data[rd.datapointer]['@BODY'][i],function(val){
 //												return '"'+((val == null) ? '' : escape(val))+'"';
-												return '"'+((val == null) ? '' : val.replace(/"/g,'“'))+'"'; //don't return 'null' into report.
-												})+"\n"
+												return '"'+((val == null) ? '' : val.replace(/"/g,'""'))+'"'; //don't return 'null' into report.
+												})
 											}
 										
 										app.ext.admin.u.fileDownloadInModal({
