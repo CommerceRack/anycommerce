@@ -20,15 +20,9 @@ homepage:
 
 Category:
 
-
 product:
 
-
 product lists:
-	search list:
-	- Change buy now button image to details button since it directs to product page, not adds to cart.
-
-
 
 Company:
 - Needs content for almost all pages.
@@ -38,7 +32,6 @@ Customer:
 - Cannot view links yet as no testing account has been made.
 
 search:
-
 
 cart:
 
