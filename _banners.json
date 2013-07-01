@@ -6,10 +6,10 @@
 		"searchLink":{"KEYWORDS":"Nike","fields":["prod_mfg"]}
 	},
 	{
-		"src":"banners/2012/sports_world_brands_banner_2.png",
-		"alt":"SportsWorldChicago Has ALL Your Favorite Brands!",
+		"src":"stanleycupchampions/chicago_blackhawks_win_banner.png",
+		"alt":"Chicago Blachkawks 2013 Stanley Cup Champions Apparel and Gifts",
 		"title":"",
-		"catLink":""
+		"catLink":".chicago-sports-team-apparel.chicago-blackhawks-apparel.stanley_cup_playoffs"
 	},
 	{
 		"src":"banners/2013/blackhawkshop_2013_stanley_cup_banner.jpg",
@@ -18,10 +18,10 @@
 		"catLink":".chicago-sports-team-apparel.chicago-blackhawks-apparel"
 	},
 	{
-		"src":"banners/custom_shirt_shop_2.jpg",
-		"alt":"Custom Apparel Shop",
+		"src":"stanleycupchampions/chicago_blackhawks_win_banner.png",
+		"alt":"Chicago Blachkawks 2013 Stanley Cup Champions Apparel and Gifts",
 		"title":"",
-		"catLink":".new-arrivals.z_custom_design_studio"
+		"catLink":".chicago-sports-team-apparel.chicago-blackhawks-apparel.stanley_cup_playoffs"
 	},
 	{
 		"src":"banners/2012/institutional_clothing_homepage_banner.png",
