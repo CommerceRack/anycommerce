@@ -1158,28 +1158,6 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
 				}
 			}, //adminProductManagementCategoryList
-		adminProductUpdate : {
-			init : function(pid,attribs,_tag)	{
-				var r = 0;
-				if(pid && !$.isEmptyObject(attribs))	{
-					this.dispatch(pid,attribs,_tag)
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminProductUpdate, either pid ["+pid+"] not set of attribs is empty.");
-					app.u.dump(attribs);
-					}
-				return r;
-				},
-			dispatch : function(pid,attribs,_tag)	{
-				var obj = {};
-				obj._cmd = "adminProductUpdate";
-				obj._tag = _tag || {};
-				obj.pid = pid;
-				obj['%attribs'] = attribs;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminProductUpdate
 
 		adminSupplierCreate	: {
 			
@@ -4369,7 +4347,13 @@ for a category, each sku added or removed is a separate request.
 					var attribObj = {};
 					attribObj[attribute] = list;
 					app.model.destroy('appProductGet|'+sku); //remove product from memory and localStorage
-					app.ext.admin.calls.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+//					app.ext.admin.calls.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+					app.model.addDispatchToQ({
+						'pid':sku,
+						'%attribs':attribObj,
+						'_cmd': 'adminProductUpdate',
+						'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
+						},'immutable');					
 					app.calls.appProductGet.init(sku,{},'immutable');
 					}
 				else if (findertype == 'NAVCAT')	{

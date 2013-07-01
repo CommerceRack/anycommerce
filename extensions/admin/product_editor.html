@@ -1749,17 +1749,20 @@ time.
 	<td class='column3' data-app-role='variationSettingsContainer'>
 <!-- high level settings -->
 	<fieldset class='stdPadding'>
+	
+		<input type='hidden' name='id' value='' data-bind="var: variation(id); format:popVal;" />
+	
 		<legend>Variation Settings</legend>
 
 		<label>
 			<span>Prompt</span>
-			<input type='text' name='PROMPT' data-bind="var: variation(prompt); format:popVal;" />
+			<input type='text' name='prompt' data-bind="var: variation(prompt); format:popVal;" />
 			<span class='toolTip' title="This is what your users will be displayed e.g. Size, Color, Preference.">?</span>
 		</label>
 	
 		<label>
 			<span>Hint <span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span></span>
-			<textarea name='GHINT' data-bind="var: variation(ghint); format:popVal;" class='fullWidth'></textarea>
+			<textarea name='ghint' data-bind="var: variation(ghint); format:popVal;" class='fullWidth'></textarea>
 		</label>
 
 		<div data-bind="var:variation(inv); format:showIfSet;" class='displayNone'>
@@ -1788,7 +1791,7 @@ time.
 <div data-app-role='variationsTypeSpecificsContainer' class='stdPadding'></div>
 
 <div class='buttonset clearfix'>
-<button class='floatRight'>Save Changes</button>
+<button class='floatRight' data-app-event='admin_prodEdit|variationAdminProductMacroExec'>Save Changes</button>
 </div>
 
 	</td>
@@ -1833,22 +1836,22 @@ time.
 
 	<label>
 		<span>Maximum length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
 		<span>Default text</span>
-		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
+		<input type="text" value="" name="default" data-bind='var: variation(default); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;'>
+		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;'>
+		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
 	</label>
 
 </fieldset>
@@ -1868,22 +1871,22 @@ time.
 
 	<label>
 		<span>Maximum length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
 		<span>Default text</span>
-		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
+		<input type="text" value="25 char max" name="default" data-bind='var: variation(default); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;'>
+		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;'>
+		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
 	</label>
 
 </fieldset>
@@ -1893,22 +1896,22 @@ time.
 
 	<label>
 		<span>Maximum Length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="MAXLENGTH" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
 		<span>Default Text</span>
-		<input type="text" value="25 char max" name="DEFAULT" data-bind='var: variation(default); format:popVal;' />
+		<input type="text" value="25 char max" name="default" data-bind='var: variation(default); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Minimum Number</span>
-		<input size="10" name="MIN" value="3" type="number" data-bind='var: variation(min); format:popVal;' />
+		<input size="10" name="min" value="3" type="number" data-bind='var: variation(min); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Maximum Number</span>
-		<input type="number" value="8" name="MAX" size="10" data-bind='var: variation(max); format:popVal;' />
+		<input type="number" value="8" name="max" size="10" data-bind='var: variation(max); format:popVal;' />
 	</label>
 
 </fieldset>
@@ -1919,37 +1922,37 @@ time.
 	<legend>Textarea Settings</legend>
 	<label>
 		<span>Rows</span>
-		<input type="textbox" name="ROWS" size="3" value="" data-bind='var: variation(rows); format:popVal;' />
+		<input type="textbox" name="rows" size="3" value="" data-bind='var: variation(rows); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Columns</span>
-		<input type="textbox" name="COLS" size="3" value="" data-bind='var: variation(cols); format:popVal;' />
+		<input type="textbox" name="cols" size="3" value="" data-bind='var: variation(cols); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Maximum length</span>
-		<input type="textbox" name="MAXLENGTH" size="4" value="" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type="textbox" name="maxlength" size="4" value="" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
 		<span>Default text</span>
-		<textarea name="DEFAULT" cols="40" rows="4" data-bind='var: variation(default); format:popVal;' /></textarea>
+		<textarea name="default" cols="40" rows="4" data-bind='var: variation(default); format:popVal;' /></textarea>
 	</label>
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_CHAR" data-bind='var: variation(fee_char); format:popVal;' />
+		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="FEE_WORD" data-bind='var: variation(fee_word); format:popVal;' />
+		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per line: </span>
-		$<input type="number" value="" step='.01' min='0' size="6" name="FEE_LINE" data-bind='var: variation(fee_line); format:popVal;' />
+		$<input type="number" value="" step='.01' min='0' size="6" name="fee_line" data-bind='var: variation(fee_line); format:popVal;' />
 	</label>
 </fieldset>
 
@@ -1959,7 +1962,7 @@ time.
 
 	<label>
 		<span>Readonly text/HTML</span>
-		<textarea name="DEFAULT" class='fullWidth' rows="20" data-bind="var:variations(default); format:popVal;"></textarea>
+		<textarea name="default" class='fullWidth' rows="20" data-bind="var:variations(default); format:popVal;"></textarea>
 	</label>
 	<p class='hint'>
 	The Readonly type simply outputs the text in the box above to the customers browser. You can use the readonly type to display messages to customers.
@@ -2001,19 +2004,19 @@ time.
 	<legend>Calendar Settings</legend>
 	<label>
 		<span>Add a rush fee of</span>
-		<input type="number" step='.01' value="" name="FEE_RUSH" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
+		<input type="number" step='.01' value="" name="fee_rush" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
 		for orders within
-		<input type='number' step='1' value='' name='RUSH_DAYS' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
+		<input type='number' step='1' value='' name='rush_days' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
 	</label>
 	
 	<label>
 		<span>Rush prompt</span>
-		<input type="text" value="" name="RUSH_PROMPT" data-bind="var: variation(rush_prompt); format:popVal;" />
+		<input type="text" value="" name="rush_prompt" data-bind="var: variation(rush_prompt); format:popVal;" />
 		<span class='toolTip' title="In addition to showing up on the product page, this will be displayed on the cart and checkout pages as well as the invoice.">?</span>
 	</label>
 	<label>
 		<span>Rush message</span>
-		<textarea name="RUSH_MSG" data-bind="var: variation(rush_msg); format:popVal;"></textarea>
+		<textarea name="rush_msg" data-bind="var: variation(rush_msg); format:popVal;"></textarea>
 	</label>
 </fieldset>
 

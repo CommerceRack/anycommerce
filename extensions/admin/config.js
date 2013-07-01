@@ -101,7 +101,7 @@ var admin_config = function() {
 			
 			
 			showPluginManager : function($target)	{
-				$target.showLoading({'message':'Fetching Your Integration Data'});
+				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
 
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',

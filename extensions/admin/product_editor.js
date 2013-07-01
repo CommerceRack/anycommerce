@@ -648,7 +648,15 @@ var admin_prodEdit = function() {
 					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
 						$panel.showLoading({'message':'Updating product '+pid});
-						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
+//						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
+
+						app.model.addDispatchToQ({
+							'pid':pid,
+							'%attribs':formJSON,
+							'_cmd': 'adminProductUpdate',
+							'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
+							},'immutable');	
+
 						app.model.destroy('appProductGet|'+pid);
 						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
 							$panel.hideLoading();
@@ -693,7 +701,26 @@ var admin_prodEdit = function() {
 					app.model.dispatchThis("mutable");
 					});
 				}, //variationSearchByIDExec
-			
+			variationAdminProductMacroExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.variationAdminProductMacroExec').on('click.variationAdminProductMacroExec',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form'),
+					sfo = {'_cmd':'adminSOGUpdate'},
+					variationtype = $btn.closest('.variationEditorContainer').data('variationtype'),
+					variationID = $("[name='id']").val();
+					//destructive update, so merge new data over old (which preserves old/unchanged).
+					sfo['%sog'] = $.extend(true,{},app.data.adminSOGComplete['%SOGS'][variationID],$form.serializeJSON({'cb':true}));
+					app.u.dump(" -> variations" );app.u.dump(sfo);
+					app.model.destroy("adminSOGComplete"); // !!! MOVE THIS TO CALLBACK OR CALL FAIL WILL NUKE AND save will stop working.
+					app.model.addDispatchToQ(sfo,'immutable'); app.model.dispatchThis('immutable');
+					
+//					$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
+//						var $data = $(this).data();
+//						sfo['%SOGS']['@options'] = {}
+//						});
+					});
+				},
 			variationSettingsToggle : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-triangle-w"},text: false});
 				var type = $btn.closest('.variationEditorContainer').data('variationtype');
