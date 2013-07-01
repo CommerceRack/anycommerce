@@ -670,6 +670,30 @@ var admin_prodEdit = function() {
 					});
 				},
 			
+			variationSearchByIDExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.off('click.variationSearchByIDExec').on('click.variationSearchByIDExec',function(){
+					app.ext.admin_prodEdit.u.prepContentArea4Results();
+					$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
+					var varID = $btn.closest('tr').data('id');
+					app.model.addDispatchToQ({
+						"mode":"elastic-native",
+						"size":250,
+						"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":varID}}]},
+						"_cmd":"appPublicSearch",
+						"_tag" : {
+							'callback':'handleElasticResults',
+							'extension':'store_search',
+							'datapointer' : 'appPublicSearch|variation|'+varID,
+							'templateID':'productListTemplateTableResults',
+							'list':$('#prodEditorResultsTbody')
+							},
+						"type":"product"
+						},"mutable");
+					app.model.dispatchThis("mutable");
+					});
+				}, //variationSearchByIDExec
+			
 			variationSettingsToggle : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-triangle-w"},text: false});
 				var type = $btn.closest('.variationEditorContainer').data('variationtype');
@@ -685,9 +709,37 @@ var admin_prodEdit = function() {
 						$btn.button('option','icons',{primary: "ui-icon-circle-triangle-w"})
 						}
 					});
-				},
+				}, //variationSettingsToggle
+// !!! NOT DONE
+			variationRemoveConfirm : function($btn)	{
+//				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.variationRemoveConfirm').on('click.variationRemoveConfirm',function(event){
+					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data();
 
-
+					app.ext.admin.i.dialogConfirmRemove({
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Deleting Variation"});
+							app.model.addDispatchToQ({'_cmd':'adminVariationMacro','@updates':["DOSOMETHING"],'_tag':{'callback':function(rd){
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$D.dialog('close');
+									$('#globalMessaging').anymessage(app.u.successMsgObject('The variation has been removed.'));
+									$tr.empty().remove(); //removes row for list.
+									}
+								}
+							}
+						},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable'); //update coupon list in memory.
+						app.model.dispatchThis('immutable');
+						}});
+					})
+				}, //variationRemoveConfirm
 //clicked when editing a 'select' or 'radio' based option type. resets and populates inputs so optin can be edited.
 			variationOptionUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -706,7 +758,7 @@ var admin_prodEdit = function() {
 							);
 					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
 					})
-				},
+				}, //variationOptionUpdateShow
 
 //executed when the 'add new option' button is clicked within a select or radio style variation group.
 //The code below is very similar to variationOptionUpdateShow. Once the save is in place, see about merging these if reasonable.
@@ -727,7 +779,7 @@ var admin_prodEdit = function() {
 							);
 					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
 					})
-				},
+				}, //variationOptionAddShow
 
 			variationUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -740,8 +792,8 @@ var admin_prodEdit = function() {
 						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, btn mode ["+$btn.data('variationmode')+"] either not set or invalid (only 'store' and 'product' are valid).","gMessage":true});
 						}
 					});
-				},
-			
+				}, //variationUpdateShow
+
 			variationHandleTypeSelect : function($ele)	{
 				$ele.off('click.variationHandleTypeSelect').on('click.variationHandleTypeSelect',function(){
 					app.u.dump('click triggered');
@@ -757,6 +809,7 @@ var admin_prodEdit = function() {
 						}
 					});
 				}, //variationHandleTypeSelect
+
 			variationHandleInventoryChange : function($cb)	{
 				$cb.off('change.variationHandleInventoryChange').on('change.variationHandleInventoryChange',function(){
 					if($cb.is(":checked"))	{
@@ -767,6 +820,7 @@ var admin_prodEdit = function() {
 						}
 					});
 				}, //variationHandleInventoryChange
+
 			variationsCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.variationsCreateShow').on('click.variationsCreateShow',function(){

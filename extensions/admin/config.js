@@ -98,8 +98,33 @@ var admin_config = function() {
 
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
+			
+			
+			showPluginManager : function($target)	{
+				$target.showLoading({'message':'Fetching Your Integration Data'});
+
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigDetail',
+					'plugins':1,
+					'_tag':{
+						'callback': function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$target.anymessage({'message':rd});
+								}
+							else	{
+								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
+								$("[data-app-role='slimLeftNav']",$target).accordion();
+								}
+							},
+						'datapointer':'adminConfigDetail|plugins'
+					}
+				},'mutable');
+				app.model.dispatchThis('mutable');
+
+				},
+			
 			showPaymentManager : function($target)	{
-				$target.showLoading({'message':'Fetching your Active Payment Methods'});
+				$target.showLoading({'message':'Fetching Your Active Payment Methods'});
 				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
 				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){

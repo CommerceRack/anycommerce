@@ -3864,6 +3864,11 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!pluginManager')	{
+					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				
+				//
 				else if(path == '#!domainConfigPanel')	{app.ext.admin.a.showDomainConfig();}
 
 				else if(path == '#!campaignManager')	{

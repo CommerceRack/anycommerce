@@ -2404,7 +2404,9 @@ var $r = app.templates[templateID].clone(); //clone is always used so original i
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
 if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 //	app.u.dump(' -> eleAttr is a string.');
-	$r.attr('id',app.u.makeSafeHTMLId(eleAttr))  
+// ** 201324 -> attempting to get rid of this makeSafe function. jqSelector on the other side should be enough.
+	$r.attr('id',eleAttr)
+//	$r.attr('id',app.u.makeSafeHTMLId(eleAttr)) 
 	}
 //NOTE - eventually, we want to get rid of this check and just use the .data at the bottom.
 else if(typeof eleAttr == 'object')	{

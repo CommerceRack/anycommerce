@@ -372,6 +372,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Test</a>
 	<ul>
+		<li><a href='#' onClick='app.model.addDispatchToQ({"mode":"elastic-native","size":250,"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":"AC"}}]},"_cmd":"appPublicSearch","type":"product"},"mutable"); app.model.dispatchThis("mutable"); return false;'>elastic-native</a></li>	
 		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
 		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
