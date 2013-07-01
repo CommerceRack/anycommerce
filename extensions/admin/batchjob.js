@@ -149,7 +149,7 @@ var admin_batchJob = function() {
 										for(var i = 0; i < L; i += 1)	{
 											csv += $.map(app.data[rd.datapointer]['@BODY'][i],function(val){
 //												return '"'+((val == null) ? '' : escape(val))+'"';
-												return '"'+((val == null) ? '' : val.replace(/"/g,'/"'))+'"'; //don't return 'null' into report.
+												return '"'+((val == null) ? '' : val.replace(/"/g,'\"'))+'"'; //don't return 'null' into report.
 												})+"\n"
 											}
 										
