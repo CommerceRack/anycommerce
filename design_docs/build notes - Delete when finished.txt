@@ -1,5 +1,6 @@
 Requests for support/implementation:
 - Update limited edition pog so that the title returned is: Choose Limited Edition Number . Talk to TIm about making this change.
+- Need Erich to build a flex field for new products that is data-bound to the is_fresh attribute. Index of "whats_new" . If this index is not used, change the code in _store_toywars to reflect this proper index value.
 
 all pages:
 - Add a function for ALL elastic searches. If no results are returned, set an app.u.dump that states that no results were returned.
@@ -17,7 +18,13 @@ Category:
 
 
 product:
-- find out last category for bottom carousel.
+- Add new items search list to the placeholder list in the bottom list navigator.
+
+
+product lists:
+	search list:
+	- Change buy now button image to details button since it directs to product page, not adds to cart.
+
 
 
 Company:

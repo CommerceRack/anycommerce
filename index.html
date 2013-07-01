@@ -677,6 +677,13 @@ div#container div.nav div.navContent > ul > li:hover{background: url(images/back
 COMMONLY EDITED TEMPLATES
 ############################
 -->
+
+<!--Any Content custom templates-->
+<div id="prodPageElasticTemplate">
+	<ul data-bind="useParentData:true; format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsProdTemp;' class='listStyleNone fluidList clearfix noPadOrMargin productList'";></ul>
+</div>
+
+
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
@@ -1102,10 +1109,10 @@ this will likely become more flexible in the future. ###
         <div class="ppCarousel">
             <div class="prodPageCaroTitleCont">
                 <div class="prodPageCarouselTitles">
-                	<h2>Placeholder</h2>
+                	<h2>Hot New Items</h2>
                     <h2>Recently Viewed Items</h2>
                     <h2>Suggested Items</h2>
-                    <h2>Placeholder</h2>
+                    <h2>Hot New Items</h2>
                     <h2>Recently Viewed Items</h2>
                     <h2>Suggested Items</h2>
                 </div>
@@ -1126,6 +1133,7 @@ this will likely become more flexible in the future. ###
                         <h1>NO RELATED PRODUCTS FOR THIS ITEM. CHECK BACK LATER!</h1>
                     </div>
                     <div class="placeholderCaroCat">
+                    	<div class="elasticlist"></div>
                     </div>
                 </div>
             </div>

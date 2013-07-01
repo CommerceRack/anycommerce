@@ -1891,6 +1891,10 @@ div.container div.nav div.navContent > ul > li{
 	height: 500px;
     width: 985px;
 }
+.placeholderCaroCat ul{
+	height: 500px;
+    width: 985px;
+}
 
 .MagicZoomPlus img{
 	width:300px !important;

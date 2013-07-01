@@ -52,10 +52,39 @@ var store_toywars = function() {
 
 			startExtension : {
 				onSuccess : function() {
+					app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+						//make a call to get a search
+						var $context = $(app.u.jqSelector('#',P.parentID));
+						var _tag = {"callback" : "productElasticSearchList", "extension":"_store_toywars", "$context" : $context, "datapointer":"ProdPageElastic"};
+						
+						
+						/*if(app.model.fetchData(_tag.datapointer)){
+							app.u.handleCallback(_tag);
+							}
+						else {*/
+							var obj = {'filter':{'term':{'whats_new':'1'}}};
+							obj = app.ext.store_search.u.buildElasticRaw(obj);
+							obj.size = 12;
+							app.ext.store_search.calls.appPublicSearch.init(obj, _tag);
+							//}
+						//callback will call anycontent and append to product
+						}]);
 				},
 				onError : function (){
 				}
-			}
+			},
+			
+			productElasticSearchList : {
+				onSuccess : function(responseData){
+					//alert("hello");
+					//app.u.dump(responseData, "debug");
+					
+					$('.elasticlist', responseData.$context).anycontent({"templateID":"prodPageElasticTemplate","datapointer":"ProdPageElastic"});
+					//alert($('.elasticlist', responseData.$context).html());
+					},
+				onError : function(){
+					}
+				}
 		}, //callbacks
 
 ////////////////////////////////////   Actions    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
