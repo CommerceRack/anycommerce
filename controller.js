@@ -2404,9 +2404,7 @@ var $r = app.templates[templateID].clone(); //clone is always used so original i
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
 if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 //	app.u.dump(' -> eleAttr is a string.');
-// ** 201324 -> attempting to get rid of this makeSafe function. jqSelector on the other side should be enough.
-	$r.attr('id',eleAttr)
-//	$r.attr('id',app.u.makeSafeHTMLId(eleAttr)) 
+	$r.attr('id',app.u.makeSafeHTMLId(eleAttr)) 
 	}
 //NOTE - eventually, we want to get rid of this check and just use the .data at the bottom.
 else if(typeof eleAttr == 'object')	{
@@ -2431,7 +2429,9 @@ else if(typeof eleAttr == 'object')	{
 		$r.data(eleAttr);
 		}
 // * 201324 -> absence of eleAttr check caused JS error
-	if(eleAttr && eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
+// ** 201324 -> attempting to get rid of this makeSafe function. jqSelector on the selector side should handle these.
+//	if(eleAttr && eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
+	if(eleAttr && eleAttr.id)	{$r.attr('id',eleAttr.id)} //override the id with a safe id, if set.
 	}
 //app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
 return this.handleTranslation($r,data);
@@ -2463,7 +2463,6 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				
 			if(templateID && app.templates[templateID])	{
 				r = app.templates[templateID].clone();
-				
 				if(typeof eleAttr == 'string')	{r.attr('id',app.u.makeSafeHTMLId(eleAttr))}
 				else if(typeof eleAttr == 'object')	{
 //an attibute will be set for each. {data-pid:PID} would output data-pid='PID'

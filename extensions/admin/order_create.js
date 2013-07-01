@@ -1314,7 +1314,6 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				},
 
 
-
 //generate the list of existing addresses (for users that are logged in )
 //appends addresses to a fieldset based on TYPE (bill or ship)
 
