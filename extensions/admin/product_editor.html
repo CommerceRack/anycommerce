@@ -55,7 +55,7 @@
 	</ul>
 	</li>
 	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Variations (alpha)</a></li>
+	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Variations (beta)</a></li>
 	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
@@ -589,9 +589,10 @@ This HTML Editor option will be removed altogether in the future.
 	</table>
 	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix ui-widget-buttonbar">
 	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	<button data-app-event="admin_prodEdit|configOptions">Config Options</button>
-	<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly'>Web Page Editor</button>
-	<button data-app-event="admin_prodEdit|viewProductOnWebsite">Preview</button>
+	<button data-app-event="admin_prodEdit|configOptions" class='floatLeft marginRight'>Config Options</button>
+	<button data-app-event="admin_prodEdit|productVariationsManagerShow" class='floatLeft marginRight'>Variations (alpha)</button>
+	<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly floatLeft marginRight'>Web Page Editor</button>
+	<button data-app-event="admin_prodEdit|viewProductOnWebsite" class='floatLeft marginRight'>Preview</button>
 	</div>
 	</fieldset>
 	</form>
@@ -1751,6 +1752,8 @@ time.
 	<fieldset class='stdPadding'>
 	
 		<input type='hidden' name='id' value='' data-bind="var: variation(id); format:popVal;" />
+		<input type='hidden' name='type' value='' data-bind="var: variation(type); format:popVal;" />
+		<input type='hidden' name='inv' value='0' data-bind="var: variation(inv); format:popVal;" />
 	
 		<legend>Variation Settings</legend>
 
@@ -2064,7 +2067,8 @@ time.
 		<th></th>
 	</tr>
 	</thead>
-	<tbody data-app-role="variationsOptionsTbody" data-bind="var:variations(@options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
+<!-- sogs return @options, product return options. nice. -->	
+	<tbody data-app-role="variationsOptionsTbody" data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
 	
 	</tbody>
 	</table>
@@ -2095,22 +2099,22 @@ time.
 		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" />
 	</label>
 	
-	<label>
+	<label class='displayNone invOnly'>
 		<span>Weight modifier</span>
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" />
 	</label>
 	
-	<label>
+	<label class='displayNone invOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" />
 	</label>
 	
-	<label>
+	<label class='displayNone invOnly'>
 		<span>Assembly</span>
 		<input type="textbox" name="asm" value="" data-bind="var: variation(asm); format:popVal;" />
 	</label>
 	
-	<label>
+	<div class='displayNone marginBottom label  imgOnly'>
 		<span>Image <a data-app-event="admin_prodEdit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
 
 		<img width="70" height="70" src="/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
@@ -2118,7 +2122,7 @@ time.
 		<input type='text' name='img' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
 
 
-	</label>
+	</div>
 
 
 	<label>
@@ -2144,3 +2148,79 @@ time.
 	</td>
 </tr>
 </table>
+
+
+
+
+
+
+<div id='productVariationManager' class='ui-widget'>
+	<div class='ui-widget-header ui-corner-top clearfix stdPadding'>
+		<h3 class='floatRight' data-bind="var:variation(PID); format:text; pretext:Product: ;"></h3>
+		<h1>Product Variation Manager</h1>
+	</div>
+	<section class='ui-widget-content stdPadding ui-corner-bottom'>
+		<div class='buttonset ui-corner-all ui-widget-content smallPadding alignRight marginBottom clearfix'>
+			<button>Save Changes</button>
+		</div>
+		<table>
+		<tr>
+			<td>
+			<div class='marginRight' data-app-role='productVariationManagerProductContainer'>
+		<h2>Product Variations</h2>
+		<table class='gridTable fullWidth marginTop'>
+		<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Name/Prompt</th>
+			<th>Type</th>
+			<th># Options</th>
+			<th>Code</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: variations(@variations); format: processList; loadsTemplate:productVariationManagerProductRowTemplate;"></tbody>
+		</table>
+			</div>
+			</td>
+			<td>
+			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
+		<h2>Store Variations</h2>
+		<table class='gridTable fullWidth marginTop'>
+		<thead>
+		<tr>
+			<th>Name/Prompt</th>
+			<th>Type</th>
+			<th>Code</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: variations(%SOGS); format: processList; loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
+		</table>
+			</div>
+			</td>
+		</tr>
+		</table>
+	</section>
+</div>
+
+
+<table>
+
+<tr id='productVariationManagerStoreRowTemplate'>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td data-bind="var: variation(type); format:text;"></td>
+	<td data-bind="var: variation(id); format:text;"></td>
+	<td><button title="Add store option group to product">Add To Product</button></td>
+</tr>
+
+<tr id='productVariationManagerProductRowTemplate'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td><button data-app-event='admin_prodEdit|variationUpdateShow' data-variationmode='product'>Edit Variations</button><button>Remove Confirm</button></td>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td data-bind="var: variation(type); format:text;"></td>
+	<td data-bind="var: variation(options.length); format:text;"></td>
+	<td data-bind="var: variation(id); format:text;"></td>
+</tr>
+
+</td>

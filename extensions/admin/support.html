@@ -168,6 +168,16 @@
 	
 	<div class='labelsAsBreaks alignedLabels alignedInputs'>
 	<button data-app-event="admin_support|showFileAttachmentModal" class='marginBottom'>Add File(s) To Ticket</button><!-- intentionally outside the form. form is emptied on update -->
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Filename</th>
+		<th>Added</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;"></tbody>
+	</table>
+
 	<form>
 	<fieldset>
 		<legend>Provide Additional Information:</legend>
@@ -177,9 +187,6 @@
 	</form>
 	</div>
 
-	<table>
-	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;"></tbody>
-	</table>
 
 </div>
 
