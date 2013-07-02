@@ -33,6 +33,7 @@ var auth_google_sso = function() {
 			
 				obj = obj || {};
 				obj.auth = 'google';
+				obj.create = '1';
 				
 				this.dispatch(obj,_tag);
 				return 1;
