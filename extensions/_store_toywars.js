@@ -205,6 +205,11 @@ var store_toywars = function() {
 
 
 		u : {
+			
+			createBuyer : function($form){
+				var obj = $form.serializeJSON();
+				app.u.dump(obj);
+			}
 				
 			}, //u
 

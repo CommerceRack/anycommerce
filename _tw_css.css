@@ -81,8 +81,8 @@ div#topNav div#topNavContent p a{color: #FFFFFF;}
 div#header{background: url(images/background-header.png) repeat-x; height: 124px; position: relative; width: 100%;}
 div#header div#headerContent{height: 124px; margin: 0px auto; position: relative; max-width: 960px;}
 div#header div#headerContent img#logo{cursor: pointer; left: 10px; position: relative; top: 11px;}
-div#header div#headerContent input#txtSearch{height:32px; width:125px; color:#999; font-size:14px; padding:0 10px; /*left: 470px; position: absolute; top: 46px;*/}
-#btnTopNavSearch{cursor: pointer; position: absolute;  width: 35px; /*height: 33px; left: 617px; top: 47px; */ }
+div#header div#headerContent input#txtSearch{height:34px; width:125px; color:#999; font-size:14px; padding:0 10px; float:left; border:none; /*left: 470px; position: absolute; top: 46px;*/}
+#btnTopNavSearch{cursor: pointer; position: absolute;  width: 35px; float:left; /*height: 33px; left: 617px; top: 47px; */ }
 div#header div#headerContent div#headerFreeShipping{background: url(images/header-free-shipping.png); height: 54px; /*left: 730px; position: absolute;*/ width: 220px; top: 20px;}
 div#header div#headerContent div#headerFreeShipping img{left: -20px; position: relative; top: -10px;}
 div#header div#headerContent a#btnSocialFacebook{cursor: pointer; left: 10px; position: relative; top: 21px;}
@@ -463,7 +463,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
 .CRMButtonMenu	{margin:0; padding:12px 0 0; width:191px; margin-bottom:0px;text-align:center;}
-.CRMButtonMenu a{ color:#770000; font-size:12px; }
+.CRMButtonMenu a{ color:#770000; font-size:12px; float:left;}
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
@@ -1628,10 +1628,11 @@ div.container div#footer{
     height: 60px;
     left: 1;
     padding-right: 0;
+	margin-right:2px;
     padding-top: 7px;
     position: absolute;
     text-align: right;
-    width: 620px;
+    width: 619px;
     z-index: 9;
 	background-color:rgb(2, 2, 2);
 	background-color: rgba(10, 10, 10, 0.7);
@@ -2203,6 +2204,27 @@ div.container div.nav div.navContent > ul > li{
     width: 74px;
     z-index: 2;
 	position:absolute;
+}
+
+div.catNav div.caroufredsel_wrapper{
+	width:1020px !important;
+}
+div#slideshowContainer div.caroufredsel_wrapper{
+	width:620px !important;
+}
+.passwordInput{
+	margin-bottom: 10px;
+    margin-left: 45px;
+}
+.passwordInput b{
+}
+.passwordInput input{
+	border: 1px solid #7F7F7F;
+    box-shadow: 0 1px 2px #000000 inset;
+    height: 30px;
+    margin: 0 9px;
+    padding: 0 9px;
+    width: 253px;
 }
 
 

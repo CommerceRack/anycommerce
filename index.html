@@ -1398,11 +1398,13 @@ subscribeListsArticle is used for authenticated buyers
 		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
 	</div>
 <div class="Account" >
-<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
+<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
+<input type="hidden" name="vendor" value="toywars"/>
 <h1>WELCOME, FIRST-TIMERS!</h1><input type='hidden' name='form' value='wholesale' />
 <div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
-<span class="field">Middle Initial</span> <input name='firstname' type='text' size='3' class='textmname' />
+<!--<span class="field">Middle Initial</span> <input name='firstname' type='text' size='3' class='textmname' />-->
 <b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
+<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required="required" /></div>
 <div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
 <input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
 <div class="fieldM"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textcity'/> 	<b>State</b> <input name='region' type='text' size='5' placeholder='State' class='textfstate' /> <b>Zip</b> <input name='postal' type='text' size='10' placeholder='00000-0000' class='textfzip'/></div>
