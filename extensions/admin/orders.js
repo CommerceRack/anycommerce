@@ -1716,6 +1716,7 @@ $('.editable',$container).each(function(){
 					if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].customer && app.data['adminOrderDetail|'+orderID].customer.cid)	{
 						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer: '+app.data['adminOrderDetail|'+orderID].customer.cid});
 						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':app.data['adminOrderDetail|'+orderID].customer.cid});
+						$D.dialog('open');
 						}
 					else	{
 						app.u.throwGMessage("in admin_orders.buttonActions.orderCustomerEdit, unable to determine orderID ["+orderID+"]");
