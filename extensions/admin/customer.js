@@ -1695,12 +1695,32 @@ app.model.dispatchThis('immutable');
 				}, //showOrgChooser
 			
 //not in use yet. will show wallet details.
-			showWalletDetail : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-check"},text: false});
-
-				$btn.off('click.showWalletDetail').on('click.showWalletDetail',function(event){
+			adminCustomerWalletPeekShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-info"},text: false});
+				$btn.off('click.adminCustomerWalletPeekShow').on('click.adminCustomerWalletPeekShow',function(event){
 					event.preventDefault();
-					});				
+						var $D = app.ext.admin.i.dialogCreate({'title':'Wallet Peek','showLoading':false});
+						$D.dialog('open');
+						$D.showLoading({"message":'Fetching Wallet Details'});
+app.model.addDispatchToQ({
+	'_cmd':'adminCustomerWalletPeek',
+	'CID' : $btn.closest("[data-cid]").data('cid'),
+	'SECUREID' : $btn.closest('tr').data('wi'),
+	'_tag':	{
+		'datapointer' : 'adminCustomerWalletPeek',
+		'callback':function(rd) {
+			$D.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$D.anymessage({'message':rd});
+				}
+			else	{
+				//success content goes here.
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+					});
 				} //showWalletDetail
 
 
