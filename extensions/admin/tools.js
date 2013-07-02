@@ -67,6 +67,26 @@ var admin_tools = function() {
 //				$("input",$picker).each(function(){});
 				},
 			
+			showPrivateFiles : function($target)	{
+
+				$target.empty();
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Private Files',
+					'className' : 'privatefiles', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['Created','Filename','Type','Size','Expiration','Creator'],
+					'tbodyDatabind' : "var: users(@FILES); format:processList; loadsTemplate:privatefilesRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminPrivateSearch',
+						'_tag' : {
+							'datapointer':'adminPrivateSearch'
+							}
+						}
+					});
+				app.model.dispatchThis('mutable');
+
+
+				
+				},
 			showciEngineAgentManager : function($target)	{
 				
 				$target.empty();
