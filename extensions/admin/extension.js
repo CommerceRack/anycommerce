@@ -1467,27 +1467,7 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			}, //adminTicketCreate
-		adminTicketDetail : {
-			init : function(ticketid,_tag,Q)	{
-				var r = 0;
-				if(ticketid)	{
-					this.dispatch(ticketid,_tag,Q);
-					}
-				else	{
-					r = 0;
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketDetail, no ticketID passed","gMessage":true});
-					}
-				return r;
-				},
-			dispatch : function(ticketid,_tag,Q)	{
-				obj = {};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTicketDetail|"+ticketid;
-				obj._cmd = "adminTicketDetail";
-				obj.ticketid = ticketid;
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminTicketDetail
+
 
 // @updates holds the macros.
 // CLOSE -> no params

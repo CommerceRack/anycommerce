@@ -405,6 +405,26 @@ var admin_support = function() {
 					});
 				}, //execTicketUpdate
 
+//executed when the download button for a file is clicked.
+			ticketFileDownloadExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: false});
+				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
+					$('#supportContent').showLoading({'message':'Fetching Download'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminTicketFileGet',
+						'ticketid' : $btn.closest("[data-ticketid]").data('ticketid'),
+						'remote' : $btn.closest('tr').data('remote'),
+						'base64' : true,
+						'_tag':	{
+							'callback':'fileDownloadInModal',
+							'extension':'admin',
+							'jqObj' : $('#supportContent')
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					})
+				},
+
 			execHelpDetailEdit : function($btn)	{
 				$btn.button();
 				$btn.off('click.execHelpDetailEdit').on('click.execHelpDetailEdit',function(){
@@ -541,26 +561,33 @@ app.model.dispatchThis('mutable');
 			showTicketLastUpdate : function($ele)	{
 				if($ele.text().charAt(0) == '0')	{} //value will be 00:00: etc if no update has occured.
 				else	{
+					$ele.addClass('lookLikeLink');
 					$ele.off('click.showTicketLastUpdate').on('click.showTicketLastUpdate',function(){
 						var $tr = $ele.closest('tr'),
 						ticketID = $tr.data('id');
-						
-						$ele.addClass('lookLikeLink');
+
 						$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
-						app.ext.admin.calls.adminTicketDetail.init(ticketID,{'callback':function(rd){
-							$tr.closest('tbody').hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
-								if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
-									$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
-									}
-								else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
-								}
-							}},'mutable');
-						app.model.dispatchThis('mutable');
+app.model.addDispatchToQ({
+	'_cmd':'adminTicketDetail',
+	'ticketid':ticketID,
+	'_tag':	{
+		'datapointer' : 'adminTicketDetail|'+ticketID,
+		'callback':function(rd){
+			$tr.closest('tbody').hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$('#globalMessaging').anymessage({'message':rd});
+				}
+			else	{
+				$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
+				if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
+					$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
+					}
+				else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
 						});
 					}
 				}, //showTicketLastUpdate
@@ -603,19 +630,25 @@ app.model.dispatchThis('mutable');
 						
 						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
 						
-						app.ext.admin.calls.adminTicketDetail.init(ticketID,{
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									app.u.throwMessage(rd);
-									}
-								else	{		
-									$panel.anycontent({'datapointer':rd.datapointer});
-									app.u.handleAppEvents($panel);
+						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminTicketDetail',
+							'ticketid':ticketID,
+							'_tag':	{
+								'datapointer' : 'adminTicketDetail|'+ticketID,
+								'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										app.u.throwMessage(rd);
+										}
+									else	{		
+										$panel.anycontent({'data':$.extend(true,{},app.data[rd.datapointer],app.data['adminTicketFileList|'+ticketID])});
+										app.u.handleAppEvents($panel);
+										}
 									}
 								}
 							},'mutable');
-							$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
-							app.model.dispatchThis('mutable');
+						app.model.dispatchThis('mutable');
+						$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
 
 
 						}
