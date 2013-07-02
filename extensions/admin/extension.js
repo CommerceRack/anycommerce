@@ -3702,18 +3702,29 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 //used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.
 // .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
+//ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
 			handleSaveButtonByEditedClass : function($context)	{
 				var $button = $("[data-app-role='saveButton']",$context);
 				app.u.dump(" -> button.length: "+$button.length);
 				if($('.edited',$context).length)	{
 					$('.numChanges',$button).text($('.edited',$context).length);
+					$button.addClass('ui-state-highlight');
 					if($button.hasClass('ui-button'))	{
 						$button.button("enable");
 						}
+					else	{
+						$button.attr('disabled','').removeAttr('disabled');
+						}
 					}
 				else	{
-					$('.numChanges',$button).text("")
-					$button.button("disable").removeClass('ui-state-highlight');
+					$('.numChanges',$button).text("");
+					$button.removeClass('ui-state-highlight');
+					if($button.hasClass('ui-button'))	{
+						$button.button("disable")
+						}
+					else	{
+						$button.attr('disabled','disabled');
+						}
 					}
 				},
 

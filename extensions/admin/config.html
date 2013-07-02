@@ -2730,9 +2730,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 		
 		<h4>Authentication</h4>
-		<ul data-plugintype='auth'>
-			<li data-plugin='facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
-			<li data-plugin='google' data-app-event="admin_config|pluginUpdateShow">Google</li>
+		<ul>
+			<li data-plugin='auth_facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
+			<li data-plugin='auth_google' data-app-event="admin_config|pluginUpdateShow">Google</li>
 		</ul>
 	
 		<h4>Cloud Services</h4>
@@ -2741,9 +2741,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		</ul>
 		
 		<h4>Communications</h4>
-		<ul data-plugintype='platform'>
-			<li data-plugin='android' data-app-event="admin_config|pluginUpdateShow">Android</li>
-			<li data-plugin='appleios' data-app-event="admin_config|pluginUpdateShow">iOS/Apple</li>
+		<ul>
+			<li data-plugin='platform_android' data-app-event="admin_config|pluginUpdateShow">Android</li>
+			<li data-plugin='platform_appleios' data-app-event="admin_config|pluginUpdateShow">Apple/iOS</li>
 		</ul>
 		
 		<h4>Infrastructure</h4>
@@ -2791,6 +2791,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 <fieldset id='pluginTemplate_auth_google'>
+	<input type='hidden' name='plugin' value='auth_google' />
 	<label>
 		<input name='enable' type='checkbox' class='applyAnycb' />
 		Enable
@@ -2809,6 +2810,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 </fieldset>
 
 <fieldset id='pluginTemplate_auth_facebook'>
+	<input type='hidden' name='plugin' value='auth_facebook' />
 	<label>
 		<input name='enable' type='checkbox' class='applyAnycb' />
 		Enable
@@ -2816,12 +2818,12 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 	<label>
 		<span>App ID</span>
-		<input type='text' name='clientid' value='' data-bind="var: plugin(appid); format:popVal;" />
+		<input type='text' name='appid' value='' data-bind="var: plugin(appid); format:popVal;" />
 	</label>
 	
 	<label>
 		<span>App secret</span>
-		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~appsecret); format:popVal;" />
+		<input type='text' name='~appsecret' value='' data-bind="var: plugin(~appsecret); format:popVal;" />
 	</label>
 	
 </fieldset>
@@ -2830,6 +2832,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 <fieldset id='pluginTemplate_platform_android'>
+	<input type='hidden' name='plugin' value='platform_android' />
 	<label>
 		<input name='enable' type='checkbox' class='applyAnycb' />
 		Enable
@@ -2849,5 +2852,6 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 <fieldset id='pluginTemplate_platform_appleios'>
+	<input type='hidden' name='plugin' value='platform_appleios' />
 Coming Soon	
 </fieldset>

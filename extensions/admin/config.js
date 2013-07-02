@@ -128,15 +128,16 @@ var admin_config = function() {
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
 				
-				if($target instanceof jQuery && vars.plugin && vars.plugintype)	{
+				if($target instanceof jQuery && vars.plugin)	{
 //					app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
-					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugintype+'_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin,vars.plugintype)});
+					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin)});
 					$('.applyAnycb',$target).anycb();
 					$target.parent().find('.buttonset').show();
+//					app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
 					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set or vars.plugintype ["+vars.plugintype+"] not set.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set.","gMessage":true});
 					}
 				},
 			
@@ -601,13 +602,13 @@ $D.dialog('open');
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		u : {
 
-			getPluginData : function(plugin,plugintype)	{
+			getPluginData : function(plugin)	{
 				var r = {}; //what is returned.
-				if(plugin && plugintype)	{
+				if(plugin)	{
 					if(app.data['adminConfigDetail|plugins'] && app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
 						var L = app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
 						for(var i = 0; i < L; i += 1)	{
-							if(app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugintype+'_'+plugin)	{
+							if(app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugin)	{
 								r = app.data['adminConfigDetail|plugins']['@PLUGINS'][i];
 								break; //match! exit early.
 								}
@@ -618,8 +619,9 @@ $D.dialog('open');
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, either plugin ["+plugin+"] or plugintype not set ["+plugintype+"]","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, plugin ["+plugin+"] not set.","gMessage":true});
 					}
+					
 				return r;
 				}, //getPluginData
 
@@ -1424,9 +1426,20 @@ else {
 				},
 
 			pluginUpdateExec : function($btn)	{
-				
+				$btn.button();
 				$btn.off('click.pluginUpdateExec').on('click.pluginUpdateExec',function(event){
 					event.preventDefault();
+					var $form = $btn.closest('form');
+					app.model.addDispatchToQ({
+	'_cmd':'adminConfigMacro',
+	'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+	'_tag':	{
+		'callback':'showMessaging',
+		'message' : "Your changes have been saved.",
+		'jqObj' : $form
+		}
+	},'immutable');
+app.model.dispatchThis('immutable');
 					});
 				},
 
@@ -1434,7 +1447,7 @@ else {
 				$ele.addClass('lookLikeLink');
 				$ele.off('click.pluginUpdateShow').on('click.pluginUpdateShow',function(event){
 					event.preventDefault();
-					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin'),'plugintype':$ele.closest('ul').data('plugintype')})
+					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
 					})
 				}
 			} //e [app Events]
