@@ -1,0 +1,25 @@
+{
+	"_version":201318,
+	"_start":"createBuyer",
+	"_inputs":[
+		{ "required":1,"var":"email","type":"text","label":"Email" },
+		{ "required":1,"var":"firstname","type":"text","label":"Purchasing Contact Firstname" },
+		{ "required":1,"var":"lastname","type":"text","label":"Purchasing Contact Lastname" },
+		{ "required":1,"var":"address1","type":"text","label":"Purchasing Contact Address1" },
+		{ "required":0,"var":"address2","type":"text","label":"Purchasing Contact Address2" },
+		{ "required":1,"var":"city","type":"text","label":"Purchasing Contact City" },
+		{ "required":1,"var":"region","type":"text","label":"Purchasing Contact Region/State" },
+		{ "required":1,"var":"postal","type":"text","label":"Purchasing Contact Postal/Zip" },
+		{ "required":1,"var":"country","type":"text","label":"Purchasing Contact Country" },
+		{ "required":1,"var":"phone","type":"text","label":"Purchasing Contact Phone" },
+		{ "required":1,"var":"password","type":"text","label":"Password" }
+	],
+	 
+
+	"createBuyer": [
+		"SET?firstname=$firstname&lastname=$lastname",
+		"PASSWORDRESET?password=$password",
+		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=BILL&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
+		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=SHIP&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
+	]
+}
