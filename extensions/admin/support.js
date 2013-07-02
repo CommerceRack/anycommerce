@@ -409,6 +409,7 @@ var admin_support = function() {
 			ticketFileDownloadExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: false});
 				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
+					event.preventDefault();
 					$('#supportContent').showLoading({'message':'Fetching Download'});
 					app.model.addDispatchToQ({
 						'_cmd':'adminTicketFileGet',

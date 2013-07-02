@@ -1232,11 +1232,32 @@ var tabs = [
 				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+pathParams.VERB.toLowerCase(),{})); //load the page template.
 				app.ext.admin_medialib.u.convertFormToJQFU('#csvUploadToBatchForm','csvUploadToBatch');
 				app.ext.admin.u.uiHandleNavTabs(tabs);
+				app.u.handleAppEvents($target);
 				}
 
-			} //u
+			}, //u
 
+		e : {
+			
+			adminCSVExportRewritesExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
+				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
+$btn.parent().showLoading({"message":"Building URL Rewrite File"});
+app.model.addDispatchToQ({
+	'_cmd':'adminCSVExport',
+	'export' : 'REWRITES',
+	'_tag':	{
+		'callback':'fileDownloadInModal',
+		'extension':'admin',
+		'jqObj' : $btn.parent()
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
 
+					});
+				}
+			
+			}
 
 		} //r object.
 	return r;
