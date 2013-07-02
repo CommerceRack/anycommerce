@@ -1777,6 +1777,36 @@ time.
 	</fieldset>
 
 
+	<fieldset class='displayNone' data-app-role='variationImgInputs'>
+
+		<label>
+			<span>Thumbnail width</span>
+			<input type="number" min='25' step='1' value="" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
+		</label>
+		
+		<label>
+			<span>Thumbnail height</span>
+			<input type="number" min='25' step='1' value="" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
+		</label>
+		
+		<label>
+			<input type="checkbox" name="zoom"  data-bind="var: variation(height); format:popVal;" />
+			Enable click to zoom
+		</label>
+		
+		<label>
+			<span>Image type</span>
+			<select name="img_type" data-bind="var: variation(img_type); format:popVal;">
+				<option value="other">Other</option>
+				<option value="swatch">Color Swatch</option>
+				<option value="sku_image">SKU Image</option>
+			</select>
+		</label>
+
+
+	</fieldset>
+
+
 	</td>
 
 <!-- show this only for select/radio style editor. allows left side of editor to be minimized so there's more room for dataTable. -->
@@ -1791,7 +1821,7 @@ time.
 <div data-app-role='variationsTypeSpecificsContainer' class='stdPadding'></div>
 
 <div class='buttonset clearfix'>
-<button class='floatRight' data-app-event='admin_prodEdit|variationAdminProductMacroExec'>Save Changes</button>
+<button class='floatRight' data-app-event='admin_prodEdit|variationAdminProductMacroExec' data-app-role='saveButton'>Save Changes</button>
 </div>
 
 	</td>
@@ -1984,19 +2014,13 @@ time.
 
 <fieldset id='variationsEditor_imgselect'>
 	<legend>Image Select Settings</legend>
-	will need image WxH inputs.
-	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
-	
-	</div>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'></div>
 </fieldset>
 
 
 <fieldset id='variationsEditor_imggrid'>
 	<legend>Image Grid Settings</legend>
-	will need image WxH inputs.
-	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
-	
-	</div>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'></div>
 </fieldset>
 
 
@@ -2087,8 +2111,13 @@ time.
 	</label>
 	
 	<label>
-		<span>Image</span>
-		Something will sometimes need to go somewhere around here.
+		<span>Image <a data-app-event="admin_prodEdit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
+
+		<img width="70" height="70" src="/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+		
+		<input type='text' name='img' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+
+
 	</label>
 
 
@@ -2108,7 +2137,7 @@ time.
 	<td data-bind="var:option(p); format:text;"></td>
 	<td data-bind="var:option(w); format:text;"></td>
 	<td data-bind="var:option(asm); format:text;"></td>
-	<td data-bind="var:option(id); format:text;"></td>
+	<td data-bind="var:option(v); format:text;"></td>
 	<td class='alignRight'>
 	<button data-app-event="admin|tagRowForRemove">delete</button>
 	<button data-app-event="admin_prodEdit|variationOptionUpdateShow">edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->

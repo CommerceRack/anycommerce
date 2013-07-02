@@ -509,6 +509,7 @@ setTimeout(function(){
 						if(mediaData.eleSelector.indexOf('#') == -1)	{
 							app.u.dump(" -> # some dumbass called medialib but used selector \'"+mediaData.eleSelector+"\'! i will *attempt* to fix it.");
 							correctedSelector = app.u.jqSelector('#',mediaData.eleSelector);
+							app.u.dump(" -> correctedSelector.length: "+$(correctedSelector).length);
 							}
 //						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);

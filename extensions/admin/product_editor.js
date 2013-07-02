@@ -258,7 +258,7 @@ var admin_prodEdit = function() {
 
 
 		showStoreVariationsManager : function($target)	{
-			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
+//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
 			if($target && $target instanceof jQuery)	{
 				var _tag = {
 					'datapointer' : 'adminSOGComplete',
@@ -309,12 +309,20 @@ var admin_prodEdit = function() {
 						$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 						})
 					}
+				
+				if(varObj.type == 'imgselect' || varObj.type == 'imggrid')	{
+					$("[data-app-role='variationImgInputs']",$r).removeClass('displayNone');
+					}
+				else	{
+					$("[data-app-role='variationImgInputs']",$r).empty().remove();
+					}
+				
 				}
 			else	{
 				$r.anymessage({"message":"In admin_prodEdit.a.getVariationEditor, either mode ["+mode+"] was blank, varOjb was empty ["+$.isEmptyObject(varObj)+"] or mode was set to product and PID ["+PID+"] was empty.","gMessage":true});
 				}
 			return $r;
-			}
+			} //getVariationEditor
 		
 		},
 
@@ -344,7 +352,7 @@ var admin_prodEdit = function() {
 
 			}
 		
-		},
+		}, //renderFormats
 
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -371,7 +379,7 @@ var admin_prodEdit = function() {
 						})
 					})
 				}
-			},
+			}, //handleProductListTab
 
 //app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
 		getPanelContents : function(pid,panelid)	{
@@ -482,7 +490,8 @@ var admin_prodEdit = function() {
 					}
 				}});
 			app.model.dispatchThis('immutable');
-			},
+			}, //handleCreateNewProduct
+
 //clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
 		prepContentArea4Results : function(){
 			
@@ -494,7 +503,7 @@ var admin_prodEdit = function() {
 			$table.append($("<tbody \/>",{'id':'prodEditorResultsTbody'}));
 			$container.empty().append($table);
 			$table.anytable();
-			},
+			}, //prepContentArea4Results
 		
 		handleProductKeywordSearch : function(obj)	{
 			if(obj && obj.KEYWORDS)	{
@@ -507,13 +516,26 @@ var admin_prodEdit = function() {
 				//keywords are required.
 				app.u.dump("Oops. no keywords specified.");
 				}
-			},
+			}, //handleProductKeywordSearch
 		
 		variationTypeIsSelectBased : function(type)	{
 			var r = false;
 			if(type == 'select' || type == 'radio' || type == 'attribs' || type == 'imgselect' || type == 'imggrid')	{r = true}
 			return r;
-			}
+			}, //variationTypeIsSelectBased
+
+//the data for a sog edit is stored in 'data' for the option in the table row.  Of course, a lot of other stuff is stored there, so this whitelists the data.
+		getSanitizedSogData : function(data)	{
+			var r = {}; //what is returned.
+			var whitelist = ['v','prompt','w','p','asm','html','img']
+			for(index in whitelist)	{
+				if(data[whitelist[index]])	{
+					r[whitelist[index]] = data[whitelist[index]]
+					}
+				}
+			return r;
+			} //getSanitizedSogData
+
 		}, //u
 
 //e is for 'events'. This are used in handleAppEvents.
@@ -544,7 +566,7 @@ var admin_prodEdit = function() {
 					});
 
 				
-				},
+				}, //showProductEditor
 			
 			"configOptions" : function($t)	{
 				$t.button();
@@ -554,7 +576,8 @@ var admin_prodEdit = function() {
 					if(pid)	{navigateTo('/biz/product/options2/index.cgi?product='+pid);}
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
 					});
-				},
+				}, //configOptions
+
 			"enterSyndicationSpecifics" : function($t)	{
 				$t.button().addClass('smallButton');
 				$t.off('click.configOptions').on('click.configOptions',function(event){
@@ -564,7 +587,7 @@ var admin_prodEdit = function() {
 					if(pid && syndicateTo)	{navigateTo("/biz/product/definition.cgi?_PRODUCT="+pid+"&amp;_DOCID="+syndicateTo+".listing",{dialog:true});}
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
 					});
-				},
+				}, //enterSyndicationSpecifics
 
 //not currently in use. planned for when html4/5, wiki and text editors are available.
 			"textareaEditorMode" : function($t)	{
@@ -605,7 +628,7 @@ var admin_prodEdit = function() {
 							}
 						});
 					});
-				},
+				}, //textareaEditorMode
 
 			"viewProductOnWebsite" : function($t)	{
 				$t.button();
@@ -615,7 +638,7 @@ var admin_prodEdit = function() {
 					if(pid)	{window.open("http://"+app.vars.domain+"/product/"+pid+"/")}
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
 					});
-				},
+				}, //viewProductOnWebsite
 
 			"webPageEditor" : function($t)	{
 				$t.button();
@@ -625,7 +648,7 @@ var admin_prodEdit = function() {
 					if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
 					});
-				},
+				}, //webPageEditor
 
 			"serializeAndAdminProductUpdate" : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
@@ -682,7 +705,7 @@ var admin_prodEdit = function() {
 						app.u.dump(formJSON);
 						}
 					});
-				},
+				}, //serializeAndAdminProductUpdate
 			
 			variationSearchByIDExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
@@ -707,6 +730,7 @@ var admin_prodEdit = function() {
 					app.model.dispatchThis("mutable");
 					});
 				}, //variationSearchByIDExec
+
 			variationAdminProductMacroExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.variationAdminProductMacroExec').on('click.variationAdminProductMacroExec',function(event){
@@ -717,16 +741,38 @@ var admin_prodEdit = function() {
 					variationID = $("[name='id']").val();
 					//destructive update, so merge new data over old (which preserves old/unchanged).
 					sfo['%sog'] = $.extend(true,{},app.data.adminSOGComplete['%SOGS'][variationID],$form.serializeJSON({'cb':true}));
-					app.u.dump(" -> variations" );app.u.dump(sfo);
-					app.model.destroy("adminSOGComplete"); // !!! MOVE THIS TO CALLBACK OR CALL FAIL WILL NUKE AND save will stop working.
-					app.model.addDispatchToQ(sfo,'immutable'); app.model.dispatchThis('immutable');
-					
-//					$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
-//						var $data = $(this).data();
-//						sfo['%SOGS']['@options'] = {}
-//						});
+
+					$form.showLoading({"message":"Saving Changes To Variations"});
+
+					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationtype))	{
+						sfo['%sog']['@options'] = new Array(); //clear existing. that way deleted don't carry over.
+						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
+							if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
+							else	{
+								sfo['%sog']['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data()));
+								}
+							});						
+						}
+
+					sfo._tag = {
+						callback : function(rd){
+$form.hideLoading();
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anymessage(app.u.successMsgObject('Your changes have been saved'));
+	}
+							}
+						}
+//					app.u.dump(" -> variations" );app.u.dump(sfo);
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag':{'datapointer':'adminSOGComplete'}},'immutable');
+					app.model.dispatchThis('immutable');
+
 					});
-				},
+				}, //variationAdminProductMacroExec
+
 			variationSettingsToggle : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-triangle-w"},text: false});
 				var type = $btn.closest('.variationEditorContainer').data('variationtype');
@@ -743,6 +789,7 @@ var admin_prodEdit = function() {
 						}
 					});
 				}, //variationSettingsToggle
+
 // !!! NOT DONE
 			variationRemoveConfirm : function($btn)	{
 //				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
@@ -777,37 +824,57 @@ var admin_prodEdit = function() {
 			variationOptionUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
-					var $optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"); //used for setting context
+					var
+						$optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
+						$saveButton = $btn.closest('form').find("[data-app-role='saveButton']");
+					
+					$saveButton.button('disable'); //can't save changes while option editor is open. 'prompt' input name is also in variation settings. will save over it.
 					$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
 						.empty()
 						.anycontent({'templateID':'optionEditorInputsTemplate','data':$btn.closest('tr').data()})
 						.append($("<div class='buttonset alignRight' \/>")
 							.append($("<button>Cancel Changes<\/button>").button().on('click',function(){
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+								$saveButton.button('enable');
 								}))
 							.append("<button data-app-event='admin_config|dataTableAddExec'>Update Option<\/button>").on('click.closeEditor',function(){
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+								$saveButton.button('enable');
 								})
 							);
 					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
 					})
 				}, //variationOptionUpdateShow
 
+			variationOptionImgLibShow : function($ele)	{
+				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
+					event.preventDefault();
+					var $context = $ele.closest('fieldset');
+					mediaLibrary($("[data-app-role='variationImg']",$context),$("[name='img']",$context),'Choose Dropship Logo');
+					});
+				},
+
 //executed when the 'add new option' button is clicked within a select or radio style variation group.
 //The code below is very similar to variationOptionUpdateShow. Once the save is in place, see about merging these if reasonable.
 			variationOptionAddShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 				$btn.off('click.variationOptionAddShow').on('click.variationOptionAddShow',function(){
-					var $optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"); //used for setting context
+					var
+						$optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
+						$saveButton = $btn.closest('form').find("[data-app-role='saveButton']");
+
+					$saveButton.button('disable');
 					$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
 						.empty()
 						.anycontent({'templateID':'optionEditorInputsTemplate','data':{'guid':app.u.guidGenerator()}}) //a guid is passed to populate that form input. required for editing a non-saved option
 						.append($("<div class='buttonset alignRight' \/>")
 							.append($("<button>Cancel<\/button>").button().on('click',function(){
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+								$saveButton.button('enable');
 								}))
 							.append("<button data-app-event='admin_config|dataTableAddExec'>Add Option</button>").on('click.closeEditor',function(){
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+								$saveButton.button('enable');
 								})
 							);
 					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
