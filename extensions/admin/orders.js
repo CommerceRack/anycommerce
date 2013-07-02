@@ -1086,12 +1086,18 @@ else	{
 		handleOrderListTab : function(process)	{
 //			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
 			var $target = $('#orderListTab');
-			
+			var $table = $('#orderListTable');
 			if($target.length)	{
 				//tab already exists. don't create a duplicate.
 				}
 			else	{
-				$('#orderListTable').stickytab({'tabtext':'order results','tabID':'productListTab'});
+				$table.stickytab({'tabtext':'order results','tabID':'productListTab'});
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+				$('button, a',$table).each(function(){
+					$(this).off('close.stickytab').on('click.closeStickytab',function(){
+						$table.stickytab('close');
+						})
+					})
 				}
 			},
 

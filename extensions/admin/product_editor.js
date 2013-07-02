@@ -363,7 +363,13 @@ var admin_prodEdit = function() {
 				//tab is already present, just update the contents.
 				}
 			else	{
-				$table.stickytab({'tabtext':'product results','tabID':'productListTab'})
+				$table.stickytab({'tabtext':'product results','tabID':'productListTab'});
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+				$('button, a',$table).each(function(){
+					$(this).off('close.stickytab').on('click.closeStickytab',function(){
+						$table.stickytab('close');
+						})
+					})
 				}
 			},
 

@@ -1262,7 +1262,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			var 
 				$sticky = $("<div \/>").css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
 				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
-				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode ui-widget ui-widget-content ui-corner-right");
+				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode detailMode ui-widget ui-widget-content ui-corner-right");
 
 			this._addTabEvents($stickytab);
 			$stickytab.append("<div class='ui-widget-stickytab-tab-text'>"+this.options.tabtext+"</div>");

@@ -52,6 +52,11 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.j
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.js']);
 
 
+//used in campaigns. probably get used more. allows for time selection in datepicker.
+
+app.rq.push(['css',1,app.vars.baseURL+'resources/jquery-ui-timepicker-addon.css']);
+app.rq.push(['script',1,app.vars.baseURL+'resources/jquery-ui-timepicker-addon.js']);
+
 //right now, used in ebay category chooser. Likely to be used more in the future.
 //app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.xsltransform.20071214.js']); //must be loaded after sarissa is done.
 //app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/sarissa.0.9.9.6.js']);

@@ -141,13 +141,15 @@ if(data)	{
 //generate template instance and get some content in front of user. will be blocked by loading till template data available.
 	$("<div \/>").anycontent({'templateID':'caimpaignUpdateTemplate','data':data}).appendTo($target);
 	
-	$('.applyDatepicker',$target).datepicker({
+	$('.applyDatetimepicker',$target).datetimepicker({
 		changeMonth: true,
 		changeYear: true,
 		minDate : 0, //can't start before today.
-		dateFormat : 'yymmddhhmm00'
+		dateFormat : 'yymmdd',
+		timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
+		stepMinute : 5
 		});
-
+	$('.ui_tpicker_second').hide(); //don't show second chooser, but have it so the seconds are added to the input.
 
 var $picker = $("[data-app-role='pickerContainer']:first",$target);
 $picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
@@ -657,7 +659,14 @@ else	{
 			adminCampaignUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
-					$btn.closest('table').stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
+					var $table = $btn.closest('table');
+					$table.stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+					$('button, a',$table).each(function(){
+						$(this).off('close.stickytab').on('click.closeStickytab',function(){
+							$table.stickytab('close');
+							})
+						})
 					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data('campaignid'));
 					})
 				},
@@ -668,25 +677,30 @@ else	{
 app.u.dump("BEGIN adminCampaignUpdateExec click event");
 var $form = $btn.closest('form');
 if(app.u.validateForm($form))	{
-	var sfo = $form.serializeJSON({'cb':true});
-	var HTML = sfo.HTML;
-	delete sfo.html; //sanitize SFO/update of html, which is updated w/ a different call.
+
+	var
+		HTML = $("[name='HTML']",$form).val(),
+		campaignID = $("[name='CAMPAIGNID']").val();
+
 	
 //update the campaign.
-	app.model.addDispatchToQ($.extend(true,{},sfo,{
+	app.model.addDispatchToQ($.extend(true,{},$("[data-app-role='campaignSettings']",$form).serializeJSON({'cb':true}),{
 		'_cmd':'adminCampaignUpdate',
+		'CAMPAIGNID' : campaignID,
+		'RECIPIENTS' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
 		'_tag':	{
 			'callback':'showMessaging',
-			'message' : 'Your campaign changes have been saved.',
+			'message' : 'Your campaign settings changes have been saved.',
 			jqObj : $form
 			}
 		}),'immutable');
 	app.model.addDispatchToQ({
 		'_cmd':'adminCampaignTemplateInstall',
-		'CAMPAIGNID' : sfo.CAMPAIGNID,
+		'CAMPAIGNID' : campaignID,
+		'PROJECTID' : "$SYSTEM", //!!! placeholder. needs to come from templateDetail
 		'_tag':	{
 			'callback':'showMessaging',
-			'message' : 'your changes have been saved.',
+			'message' : 'Your template changes have been saved.',
 			jqObj : $form
 			}
 		},'immutable');
@@ -705,7 +719,43 @@ else	{
 
 					})
 				},
+			adminCampaignSendConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: true});
+				$btn.off('click.adminCampaignSendConfirm').on('click.adminCampaignSendConfirm',function(event){
+					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data();
 
+					app.ext.admin.i.dialogConfirmRemove({
+						"title" : "Start Campaign: "+data.campaignid,
+						"removeButtonText" : "Start Campaign",
+						"message" : "Please confirm that you want to start the campaign: "+data.campaignid+" from domain <b>"+app.vars.domain+"<\/b>. There is no undo for this action.",
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Sending Campaign "+data.campaignid});
+							app.model.addDispatchToQ({
+								'_cmd':'adminCampaignMacro',
+								'CAMPAIGNID': data.campaignid,
+								'@updates' : ["CPGSTART"],
+								'_tag':	{
+									'callback':function(rd){
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										$D.dialog('close');
+										app.ext.admin_customer.a.showCampaignManager(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+										}
+									}
+								}
+							},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						});
+					});
+				
+				}, //adminCampaignSendConfirm
 			adminCampaignRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.adminCampaignRemoveConfirm').on('click.adminCampaignRemoveConfirm',function(event){

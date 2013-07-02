@@ -1039,19 +1039,19 @@ The checkbox below does not work.
 <table>
 <tr id='campaignResultsRowTemplate'>
 	<td data-bind="var: campaign(CAMPAIGNID); format:text;"></td>
-	<td data-bind="var: campaign(SUBJECT); format:text;" class='hideInMinimalMode'></td>
-	<td data-bind="var: campaign(STATUS); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: campaign(SUBJECT); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(STATUS); format:text;" class='hideInDetailMode'></td>
 	<td>
 icons for fb, twit, etc.
 	</td>
-	<td data-bind="var: campaign(QUEUE_MODE); format:text;" class='hideInMinimalMode'></td>
-	<td data-bind="var: campaign(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
-	<td data-bind="var: campaign(EXPIRES_TS); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: campaign(QUEUE_MODE); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(EXPIRES_TS); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-		<button class='hideInMinimalMode' data-app-event='admin_customer|adminCampaignRemoveConfirm'>delete</button>
-		<button class='hideInMinimalMode'>clone</button>
-		<button data-app-event="admin_customer|adminCampaignUpdateShow">edit</button>
-		<button class='hideInMinimalMode'>send</button>
+		<button class='hideInDetailMode' data-app-event='admin_customer|adminCampaignRemoveConfirm'>Delete</button>
+<!--		<button class='hideInDetailMode'>clone</button> -->
+		<button data-app-event="admin_customer|adminCampaignSendConfirm" class='hideInDetailMode'>Start</button>
+		<button data-app-event="admin_customer|adminCampaignUpdateShow">Edit</button>
 		<!-- these need to be in the editor, not here:
 		send test,
 		select recipients
@@ -1090,20 +1090,25 @@ icons for fb, twit, etc.
 </div>
 
 
+
+
+
+
 <div id='caimpaignUpdateTemplate' class='campaignEditor ui-widget ui-widget-content ui-corner-all stdPadding'>
 
 <form action='#' onsubmit="return false" class='labelsAsBreaks' data-cb_tf='true'>
+<input name='CAMPAIGNID' type='hidden' value='' data-bind="var: campaign(CAMPAIGNID); format:popVal;" />
+
 
 <div class='marginBottom'>
 	<button class='floatRight' data-app-event="admin_customer|adminCampaignUpdateExec">Save Campaign</button>
 	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
 </div>
 
-<input name='CAMPAIGNID' type='hidden' value='' data-bind="var: campaign(CAMPAIGNID); format:popVal;" />
 <table class='fullWidth campaignEditorTable'>
 <tr>
 	<td class='threeColumn valignTop'>
-	<fieldset>
+	<fieldset data-app-role='campaignSettings'>
 		<legend>Campaign Settings</legend>
 
 
@@ -1134,11 +1139,11 @@ icons for fb, twit, etc.
 
 <label>
 	<span>Start time</span>
-	<input type='text' name='STARTTIME' class='applyDatepicker' data-bind="var: campaign(STARTTIME); format:popVal;" />
+	<input type='text' name='STARTTIME' class='applyDatetimepicker' data-bind="var: campaign(STARTTIME); format:popVal;" />
 </label>
 <label>
 	<span>Expires</span>
-	<input type='text' name='EXPIRETIME' class='applyDatepicker' data-bind="var: campaign(EXPIRETIME); format:popVal;" />
+	<input type='text' name='EXPIRETIME' class='applyDatetimepicker' data-bind="var: campaign(EXPIRETIME); format:popVal;" />
 </label>
 
 
@@ -1168,15 +1173,6 @@ icons for fb, twit, etc.
 
 <fieldset>
 	<legend>Campaign Content</legend>
-<label>
-	<span>Subject</span>
-	<input type='text' name='SUBJECT' value='' data-bind="var: campaign(SUBJECT); format:popVal;" />
-</label><!--
-<label>
-	<span>Title</span>
-	<input type='text' name='TITLE' value='' data-bind="var: campaign(TITLE); format:popVal;" />
-</label>
--->
 
 <textarea class='marginBottom fullWidth' data-app-role='htmlEditor' name='HTML' rows='20'></textarea>
 
