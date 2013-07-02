@@ -113,6 +113,7 @@ var admin_config = function() {
 								}
 							else	{
 								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
+								app.u.handleAppEvents($target);
 								$("[data-app-role='slimLeftNav']",$target).accordion();
 								}
 							},
@@ -122,6 +123,23 @@ var admin_config = function() {
 				app.model.dispatchThis('mutable');
 
 				},
+			
+			
+			showPlugin : function($target,vars)	{
+				vars = vars || {};
+				
+				if($target instanceof jQuery && vars.plugin && vars.plugintype)	{
+//					app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
+					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugintype+'_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin,vars.plugintype)});
+					$('.applyAnycb',$target).anycb();
+					$target.parent().find('.buttonset').show();
+					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set or vars.plugintype ["+vars.plugintype+"] not set.","gMessage":true});
+					}
+				},
+			
 			
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching Your Active Payment Methods'});
@@ -582,6 +600,28 @@ $D.dialog('open');
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		u : {
+
+			getPluginData : function(plugin,plugintype)	{
+				var r = {}; //what is returned.
+				if(plugin && plugintype)	{
+					if(app.data['adminConfigDetail|plugins'] && app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
+						var L = app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
+						for(var i = 0; i < L; i += 1)	{
+							if(app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugintype+'_'+plugin)	{
+								r = app.data['adminConfigDetail|plugins']['@PLUGINS'][i];
+								break; //match! exit early.
+								}
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, app.data['adminConfigDetail|plugins'] or app.data['adminConfigDetail|plugins']['@PLUGINS'] are empty and are required.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, either plugin ["+plugin+"] or plugintype not set ["+plugintype+"]","gMessage":true});
+					}
+				return r;
+				}, //getPluginData
 
 			getPaymentByTender : function(tender)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
@@ -1381,6 +1421,21 @@ else {
 	}
 
 					});
+				},
+
+			pluginUpdateExec : function($btn)	{
+				
+				$btn.off('click.pluginUpdateExec').on('click.pluginUpdateExec',function(event){
+					event.preventDefault();
+					});
+				},
+
+			pluginUpdateShow : function($ele)	{
+				$ele.addClass('lookLikeLink');
+				$ele.off('click.pluginUpdateShow').on('click.pluginUpdateShow',function(event){
+					event.preventDefault();
+					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin'),'plugintype':$ele.closest('ul').data('plugintype')})
+					})
 				}
 			} //e [app Events]
 		} //r object.

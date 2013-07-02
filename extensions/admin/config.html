@@ -2730,8 +2730,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 		
 		<h4>Authentication</h4>
-		<ul>
-			<li>Coming soon</li>
+		<ul data-plugintype='auth'>
+			<li data-plugin='facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
+			<li data-plugin='google' data-app-event="admin_config|pluginUpdateShow">Google</li>
 		</ul>
 	
 		<h4>Cloud Services</h4>
@@ -2740,8 +2741,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		</ul>
 		
 		<h4>Communications</h4>
-		<ul>
-			<li>Coming soon</li>
+		<ul data-plugintype='platform'>
+			<li data-plugin='android' data-app-event="admin_config|pluginUpdateShow">Android</li>
+			<li data-plugin='appleios' data-app-event="admin_config|pluginUpdateShow">iOS/Apple</li>
 		</ul>
 		
 		<h4>Infrastructure</h4>
@@ -2768,8 +2770,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
 			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-event="admin_config|shipmethodRemoveExec">Delete Method</button>
-				<button data-app-event="admin_config|shipmethodAddUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+				<button data-app-event="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
 			<div data-app-role='slimLeftContent'>
@@ -2786,3 +2787,67 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 </div>
+
+
+
+<fieldset id='pluginTemplate_auth_google'>
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb' />
+		Enable
+	</label>
+
+	<label>
+		<span>Client ID</span>
+		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Client secret</span>
+		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+	</label>
+	
+</fieldset>
+
+<fieldset id='pluginTemplate_auth_facebook'>
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb' />
+		Enable
+	</label>
+
+	<label>
+		<span>App ID</span>
+		<input type='text' name='clientid' value='' data-bind="var: plugin(appid); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>App secret</span>
+		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~appsecret); format:popVal;" />
+	</label>
+	
+</fieldset>
+
+
+
+
+<fieldset id='pluginTemplate_platform_android'>
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb' />
+		Enable
+	</label>
+
+	<label>
+		<span>Client ID</span>
+		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Client secret</span>
+		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+	</label>
+	
+</fieldset>
+
+
+<fieldset id='pluginTemplate_platform_appleios'>
+Coming Soon	
+</fieldset>
