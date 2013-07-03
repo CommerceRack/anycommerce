@@ -1,0 +1,23 @@
+[
+	{ "type":"legend","content":"Account Creation Form" },
+	{ "type":"hint","content":"Please fill out the fields below to create a customer account. Fields with a * next to them are required." },
+	{ "ignore":0,"id":"company","type":"text","label":"Company Name" },
+	{ "ignore":0,"required":1,"id":"email","type":"text","label":"Email","customer":"INFO.EMAIL" },
+	{ "ignore":0,"required":1,"id":"firstname","type":"text","label":"Purchasing Contact Firstname","customer":"INFO.firstname" },
+	{ "ignore":0,"required":1,"id":"lastname","type":"text","label":"Purchasing Contact Lastname","customer":"INFO.lastname" },
+	{ "ignore":0,"required":1,"id":"address1","type":"text","label":"Company Address 1","customer":"WS.ws_address1" },
+	{ "ignore":0,"required":1,"id":"address2","type":"text","label":"Company Address 2","customer":"WS.ws_address2" },
+	{ "ignore":0,"required":1,"id":"city","type":"text","label":"Company City","customer":"WS.ws_city" },
+	{ "ignore":0,"required":1,"id":"state","type":"text","label":"Company State","customer":"WS.ws_state" },
+	{ "ignore":0,"required":1,"id":"zip","type":"text","label":"Company Zip","customer":"WS.ws_zip" },
+	{ "ignore":0,"id":"ar_contact","type":"text","label":"AR Contact","customer":"WS.BILLING_CONTACT" },
+	{ "ignore":0,"id":"ar_phone","type":"text","label":"AR Phone","customer":"WS.BILLING_PHONE" },
+	{ "ignore":0,"id":"order_volume","type":"text","label":"Anticipated Order Volume","customer":"META.volume" },
+	{ "ignore":1,"id":"credit_reference1","type":"text","label":"Credit Reference #1","customer":"META.reference1" },
+	{ "ignore":1,"id":"credit_reference2","type":"text","label":"Credit Reference #2","customer":"META.reference2" },
+	{ "ignore":1,"id":"credit_reference3","type":"text","label":"Credit Reference #3","customer":"META.reference3" },
+	{ "ignore":0,"required":1,"id":"resaleid","type":"text","label":"State Resale Permit","customer":"WS.RESALE_PERMIT" },
+	{ "ignore":0,"id":"ein","type":"text","label":"Company EIN/Tax ID","customer":"WS.RESALE_PERMIT" },
+	{ "ignore":1,"id":"credit_limit","type":"text","label":"Requested Credit Limit","customer":"META.requested_limit" },
+	{ "type":"submit","label":"Create Account" }
+]

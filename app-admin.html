@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201312.b",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201320.h",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -43,9 +43,9 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 
-<link rel="stylesheet" type="text/css" href="extensions/admin/jquery-ui-1.9.2.custom.min.css" />
-<link rel="STYLESHEET" type="text/css" href="extensions/admin/standard.css" /><!-- legacy compat css. goal is to be rid of this file -->
-<link rel="STYLESHEET" type="text/css" href="extensions/admin/styles.css" /><!-- lots of UI specific styles. load early to avoid popping -->
+<link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.9.2.custom.min.css" />
+<link rel="STYLESHEET" type="text/css" href="app-admin/standard.css" /><!-- legacy compat css. goal is to be rid of this file -->
+<link rel="STYLESHEET" type="text/css" href="app-admin/styles.css" /><!-- lots of UI specific styles. load early to avoid popping -->
 
 
 
@@ -54,8 +54,15 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <!-- not much is going to run without these two. load em early -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+
+<script src="jquery-1.8.2.min.js"></script>
+<script src="jquery-ui-1.9.1.custom.min.js"></script> -->
+
 
 <script type="text/javascript" src="loadscript.js"></script>
 
@@ -71,7 +78,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 </head>
-<body class="control">
+<body class="control" onLoad="jQuery('#appversion').text(app.vars.release);">
 <!-- this div handles getting content to appear below the fixed header -->
 
 
@@ -90,9 +97,28 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 </div>
 
 
+
+
+	
+<div id='appPasswordRecover' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
+	
+	<div class='alignCenter'>
+<form>
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+	<legend>Password Recovery</legend>
+	<label>Login: <input type='text' name='login' value='' required='required' ></label>
+	<button data-app-event='admin|execPasswordRecover'>Recover Password</button>
+</fieldset>
+</form>
+	</div>
+
+</div>
+
+
+
 <div id='appLogin' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
-	<div class='logo alignCenter'><a href="/index.html"><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+	<div class='logo alignCenter'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 
 	<div class='appMessaging'></div>
 
@@ -104,10 +130,12 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
 			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
 			
+	
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
+<!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
-			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><b><a href='/app/201308/admin.html'> &#187; Use previous version</a></b></div>
+			<label class='hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
+			<div class="hint"><b><a href='/app/201318/app-admin.html'> &#187; Use previous version</a></b></div>
 
 		</fieldset>
 		</form>
@@ -120,9 +148,6 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 		</div>
-		<script type="text/javascript">
-		jQuery("#appversion").text(app.vars.release);
-		</script>
 	</div>
 </div>
 
@@ -130,7 +155,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 	
 
 <div id='createAccountContainer' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
-	<div class='logo alignCenter'><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
+	<div class='logo alignCenter'><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
 	<form action='#'>
 	<fieldset class='authNewAccountCreate labelsAsBreaks alignedInputs alignedLabels'>
 		<legend>Create Account</legend>
@@ -160,9 +185,10 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 	<div id='mastHead'>
 	
 		<div class='headerTop'>
-			<div class='logo pointer alignCenter' onClick="navigateTo('#!dashboard');" title='home'><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
+			<div class='logo pointer alignCenter' onClick="navigateTo('#!dashboard');" title='home'><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
 			<div class='menu floatRight'>
 				<span class='pointer lookLikeLink showForZoovyOnly' onClick="return navigateTo('/biz/downloads/index.cgi');" title='Use our windows clients for managing orders and product'>Downloads</span>
+				| <span class='pointer lookLikeLink' onClick="showUI('#!help',{'tab':'support'})">Help</span>
 				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!taskManager');" title='view and edit your task list'>Tasks</span>
 				| <span class='pointer lookLikeLink' onClick="app.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
 			</div>
@@ -172,7 +198,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			</div>
 			
 		</div>
-	
+
 		<div class='mhTabsContainer'>
 		<ul class='showIcons navIcons'>
 			<li class='toggleArrow alignCenter' onClick="app.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
@@ -185,14 +211,24 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='reportsTab' onClick="navigateTo('#:reports');"><span class='text'>Reports</span><span class='icon'></span></li>
 			<li class='kpiTab' onClick="navigateTo('#:kpi');"><span class='text'>KPI</span><span class='icon'></span></li>
 			<li class='utilitiesTab' onClick="navigateTo('#:utilities');"><span class='text'>Utilities</span><span class='icon'></span></li>
-			<li class='supportTab' onClick="navigateTo('/biz/support/index.cgi');"><span class='text'>Support</span><span class='icon'></span></li>
-<!--			<li class='messagesTab' onClick="navigateTo('#:messages');"><span class='text'>Messages</span><span class='messageCount'></span></li>-->
+<!--			<li class='supportTab' onClick="navigateTo('/biz/support/index.cgi');"><span class='text'>Support</span><span class='icon'></span></li> -->
+			<li class='supportTab' onClick="navigateTo('#!support',{'tab':'support'});"><span class='text'>Support</span><span class='icon'></span></li>
+			<li class='messagesTab' onClick="app.ext.admin.u.toggleMessagePane();"><span class='text'>Messages</span><span class='messageCount'></span></li>
 		</ul>
-		<div id='messagesContent' class='displayNone'></div>
+		<div id='messagesContent' class='displayNone'>
+			<button onClick="app.ext.admin.u.toggleMessagePane();" class='floatRight' id='closePanelButton'>Close Message Panel</button>
+			<div class='messagesList'>
+			<table>
+			<tbody data-app-role='messagesContainer'></tbody>
+			</table>
+			</div>
+			
+			<div class='messageDetail'></div>
+		</div>
 		</div>
 		<div id='navTabs'></div>
 		<div id='breadcrumb'></div>
-	</div>
+	</div><!-- /mastHead -->
 	
 	<div class='positionRelative pageContentContainer'>
 	
@@ -210,23 +246,13 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<div id='reportsContent' class='displayNone tabContent' data-section='reports'></div>
 		<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
 		<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
-		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'>
-			<section id='launchpadTiles'>
-
-			</section>
-<!--
-				<li class='tileAdmin'><span class='tilename'>Admin</span></li>
-				<li class='tileDomainAdd' onClick="navigateTo('/biz/setup/domain/index.cgi?VERB=NEW');"><span class='tilename'>Add a New Domain</span></li>
-				<li class='tileProjectAdd'><span class='tilename'>Add a Project</span></li>
-				<li class='tileHelp' onClick="app.ext.admin.a.showHelpInterface($('#setupContent'));"><span class='tilename'>A little help here please?</span></li>
-				<li class='tileZoovyLive'></li>
-				<li class='tileZoovyCommunity' onClick="window.open('https://plus.google.com/communities/108928399105730273026');"></li>
--->
-		</div>
+		<div id='supportContent' class='displayNone tabContent' data-section='support'></div><!-- used for new support app -->
+		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'></div>
 		<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
-	
+
 	</div>
 
+	<div id='mastFoot'></div><!-- if a footer is ever introduced, put it here for launchpad compatibility. -->
 </div><!-- /appView -->
 
 
@@ -330,26 +356,35 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <ul class='debugMenu'>
 	<li><a href='#'>Tools</a>
 	<ul>
-		<li><a href='#' onClick="app.ext.admin.u.selectivelyNukeLocalStorage();">Selectively Clear LocalStorage (keep login &amp; preferences)</a></li>
-		<li><a href='#' onClick="localStorage.clear();">Clear LocalStorage for domain</a></li>
+		<li><a href='#' onClick="app.ext.admin.u.selectivelyNukeLocalStorage(); return false;">Selectively Clear LocalStorage (keep login &amp; preferences)</a></li>
+		<li><a href='#' onClick="localStorage.clear(); return false;">Clear LocalStorage for domain</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<li><a href='#' onClick="navigateTo('#!launchpad');">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!batchManager');">batchjobs</a></li>
-		<li><a href='#' onClick="navigateTo('#!supplierManager');">Supplier Manager</a></li>
-		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showHelpInterface($('#setupContent'));">showHelpInterface (in setup)</a></li>
+		<li><a href='#' onClick="app.ext.admin.a.showPicker(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')); return false;">showPicker</a>
+		<li><a href='#' onClick="app.ext.admin_config.a.showRulesBuilderInModal({'mode':'shipping','provider':'FLEX:LOCAL_CANADA_1369228546','table':'RULES'}); return false;">showRulesBuilderInModal</a></li>
+		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
+		<li><a href='#' onClick="navigateTo('#!giftcardManager'); return false;">giftcardManager</a></li>
+		<li><a href='#' onClick="navigateTo('#!reviewsManager'); return false;">showReviewsManager</a></li>
+		
+		<li><a href='#' onClick="navigateTo('#!supplierManager'); return false;">Supplier Manager</a></li>
+		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Test</a>
 	<ul>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminUIExecuteCGI','uri':'/biz/syndication/buycom/index.cgi'},'mutable'); app.model.dispatchThis('mutable');">UIExecCGI addDispatchToQ</a></li>
-		<li><a href='#' onClick="app.ext.admin.calls.adminUIExecuteCGI.init('/biz/syndication/buycom/index.cgi'); app.model.dispatchThis('mutable');">adminUIExecuteCGI call</a></li>
-		<li><a href='#' onClick="app.u.throwMessage('Something Wicked This Way Comes');">throwMessage</a></li>
+
+
+		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
+		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
+
+		<li><a href='#' onClick="app.model.destroy('adminConfigDetail'); app.ext.admin.calls.adminConfigDetail.init({'inventory':true},{},'mutable'); app.model.dispatchThis('mutable');">adminConfigDetail</a></li>
+
+		
+	
 	</ul>
 	</li>	
 </ul>
@@ -362,6 +397,9 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
 
 -->
+
+<!-- app.model.addDispatchToQ(obj,q); -->
+
 
 
 </div>

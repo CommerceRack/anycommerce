@@ -1,8 +1,8 @@
 /*
 
 
-   Magic Zoom Plus v4.5.10 
-   Copyright 2013 Magic Toolbox
+   Magic Zoom Plus v4.0.29 
+   Copyright 2012 Magic Toolbox
    Buy a license: www.magictoolbox.com/magiczoomplus/
    License agreement: http://www.magictoolbox.com/license/
 
@@ -15,10 +15,6 @@
     display: inline-block;
     cursor: url(graphics/zoomin.cur), pointer;
     outline: 0 !important;
-    font-size: 0 !important;
-    line-height: 100% !important;
-    direction: ltr;
-    max-width: 100%;
 }
 
 /* Style of the small image */
@@ -27,20 +23,7 @@
     margin: 0 !important;
     outline: 0 !important;
     padding: 0 !important;
-    width: 100%;
-    height: auto;
 }
-
-.MagicZoomPlus > img {
-    max-width: 100%;
-}
-.MagicZoomPlus.magic-for-ie8 img {
-    max-width: none !important;
-}
-.MagicZoomPlus.magic-for-ie7 > img {
-    width: auto;
-}
-
 
 /* Style of the span inside the small image link */
 .MagicZoomPlus span {
@@ -71,9 +54,6 @@
 .MagicZoomBigImageCont {
     background: #ffffff;
     border: 1px solid #999;
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    transition: none !important;
 }
 
 .MagicZoomBigImageCont img {
@@ -139,9 +119,6 @@ border: 1px solid red;
     cursor: url(graphics/zoomout.cur), pointer;
     outline: 0;
     padding: 0;
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    transition: none !important;
 }
 
 .MagicThumb-expanded img {
@@ -191,12 +168,6 @@ border: 1px solid red;
     max-width: none !important;
     height: auto !important;
     width: auto !important;
-}
-
-.MagicThumb-background {
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    transition: none !important;
 }
 
 .magic-temporary-img img {

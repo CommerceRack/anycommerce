@@ -376,6 +376,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	<div class='leftCol'>
+	<h2>Transaction History</h2>
 	<table class='gridTable marginBottom'>
 	<thead>
 	<tr>
@@ -516,8 +517,10 @@ The following templates are used in the 'order detail' modal/view.
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>	
 	
-	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
-	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td>
+<!--	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td> -->
+	<td data-bind="format:orderEditQtyInput; extension:admin_orders; useParentData:true;"></td>
+	<td data-bind="format:orderEditPriceInput; extension:admin_orders; useParentData:true;"></td>
+<!--	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td> -->
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
 	<td><button data-app-event="admin_orders|orderItemRemove">Remove From Order</button></td>
@@ -589,7 +592,7 @@ The following templates are used both in the order editor AND in quickview.
 </div>
 
 <div id='orderTrackingHistoryContainerTemplate'>
-	<table class='gridTable'>
+	<table class='gridTable' data-app-role='trackingInformation'>
 	<thead>
 	<tr>
 		<th>Date</th>
@@ -649,7 +652,7 @@ used in legacy compat mode (and probably full app mode as well)
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 <label>
 	<span>Message source:</span>
-	<select name='MSGID' data-bind="var: admin_orders(@MSGS); format: emailMessagesListOptions; extension:admin_orders;" data-app-event="admin_orders|orderEmailCustomChangeSource">
+	<select name='MSGID' data-bind="var: admin_orders(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
 		<option value='BLANK'>blank</option>
 	</select>
 </label>

@@ -200,7 +200,7 @@ A special translate template for product so that reviews can be merged into the 
 				},
 //error needs to clear parent or we end up with orphans (especially in UI finder).
 			onError : function(responseData,uuid)	{
-				responseData.persistant = true; //throwMessage will NOT hide error. better for these to be pervasive to keep merchant fixing broken things.
+				responseData.persistent = true; //throwMessage will NOT hide error. better for these to be pervasive to keep merchant fixing broken things.
 				var $parent = $('#'+responseData['_rtag'].parentID)
 				$parent.empty().removeClass('loadingBG');
 				app.u.throwMessage(responseData,uuid);
@@ -358,7 +358,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
 				
 //can't build a prodlist without product.				
-				if(obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
+				if(obj && obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
 
 					var L = obj.csv.length;
 
@@ -474,7 +474,7 @@ if no parentID is set, then this function gets the data into memory for later us
 							"withVariations":plObj.withVariations,
 							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
-							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {});  //tagObj not passed if parentID not set. 
+							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {}, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
 				if(numRequests > 0)	{app.model.dispatchThis()}

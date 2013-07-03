@@ -1,7 +1,169 @@
 
+<!--
+////////////////  ORGANIZATION  \\\\\\\\\\\\\\\\\\
+-->
 
 
-<div id='wholesaleSupplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
+<div id='organizationManagerPageTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button data-app-event='admin_wholesale|showOrganizationCreate' class='floatRight'>New Organization</button>
+			</div>
+			<h3 class='heading'>Organization Manager</h3>
+		</div>
+		<div class='ui-state-default smallPadding alignRight'>
+		<form action='#' onSubmit='return false'>
+			<select name='searchby'>
+				<option value='CONTACT'>contact</option>
+				<option value='DOMAIN'>domain</option>
+				<option value='COMPANY'>company</option>
+				<option value='EMAIL'>email</option>
+				<option value='ORGID'>organization id</option>
+				<option value='PHONE' selected="selected">phone</option>
+				<option value='ACCOUNT_MANAGER'>account manager</option>
+			</select>
+			<input type='search' name='keywords' size='20' />
+			<label class='marginRight'><input type='checkbox' name="IS_LOCKED" />locked only</label>
+			<button data-app-event='admin_wholesale|execOrganizationSearch'>Search</button>
+		</form>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<div class="dualModeListMessaging marginBottom">Please use the search above to find the organization(s) you are looking for.</div>
+		<table class='gridTable fullWidth displayNone marginBottom' data-app-role='dualModeResultsTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th data-anytable-nosort='true'></th>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Company</th>
+			<th class='alignLeft'>Domain</th>
+			<th class='alignLeft'>Email</th>
+			<th class='alignLeft'>Account Manager</th>
+			<th class='alignLeft'>Billing Phone</th>
+			<th class='alignLeft'>Billing Contact</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerOrgRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
+		</div>
+	</section>
+</div>
+
+
+
+<table>
+<tr id='organizationManagerOrgRowTemplate'>
+	<td><span data-bind="var: organization(IS_LOCKED); format:showIfSet;" class='displayNone'><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></span></td>
+	<td data-bind="var: organization(ORGID); format:text;"></td>
+	<td data-bind="var: organization(COMPANY); format:text;"></td>
+	<td data-bind="var: organization(DOMAIN); format:text;"></td>
+	<td data-bind="var: organization(EMAIL); format:text;"></td>
+	<td data-bind="var: organization(ACCOUNT_MANAGER); format:text;"></td>
+	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
+	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin_wholesale|execOrganizationRemove">remove</button>
+		<button data-app-event="admin_wholesale|showOrganizationUpdate">edit</button>
+	</td>
+</tr>
+
+
+
+
+
+</table>
+
+
+
+<div id='organizationManagerOrgCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer'>
+
+<form action='#' onSubmit='return false'>
+
+<fieldset class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
+	<legend>Organization Information</legend>
+	
+	<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
+	<div class='label'><input type='text' placeholder='last name' name='lastname' value='' data-bind='var: org(ORG.lastname); format:popVal;'  /></div>
+
+	<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(ORG.company); format:popVal;'  /></div>
+	<div class='label'><input type='text' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div><!-- do NOT use url as input type, only the domain is desired -->
+	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;' onKeyPress='return app.u.numbersOnly(event);'  /></div><!-- phone is numbers only -->
+	<div class='label'><input type='text' name='address1' placeholder='address'  value='' data-bind='var: org(ORG.address1); format:popVal;'  /></div>
+	<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(ORG.address2); format:popVal;' /></div>
+	<div class='label'><input type='text' name='city' placeholder='city'  value='' data-bind='var: org(ORG.city); format:popVal;' /></div>
+	<div class='label'><input type='text' name='region' placeholder='state/region'  size='5' value='' data-bind='var: org(ORG.region); format:popVal;' maxlength='20' /></div>
+
+	<!-- postal not required for international. don't add it. -->
+	<div class='label'><input type='text'  name='postal' placeholder='zip/postal code'  size='14' value='' data-bind='var: org(ORG.postal); format:popVal;' maxlength='10' /></div>
+
+	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;'></select></div>
+
+</fieldset>
+
+<fieldset class='alignedInputs floatLeft labelsAsBreaks threeColumn'>
+	<legend>Billing</legend>
+	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
+	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return app.u.numbersOnly(event);' /></div>
+	<div class='label'>
+		<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+	</div>
+	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
+	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popCheckbox;' />Allow Resale</label>
+	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popCheckbox;' />Is Locked</label>
+	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
+</fieldset>
+
+<div class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
+	<fieldset class='marginBottom'>
+		<legend>Company Logo</legend>
+		<img width="160" height="70" src="/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+		<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
+		<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+	</fieldset>
+	
+	<fieldset class='marginTop'>
+		<legend>Account Information</legend>
+		<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
+		<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
+		<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
+	</fieldset>
+</div>
+
+<div class='clearfix'></div>
+
+<div class='buttonset clearfix marginTop alignRight'></div><!-- buttons will be automatically added to this by buttonset class -->
+
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--
+////////////////  SUPPLIER  \\\\\\\\\\\\\\\\\\
+-->
+
+
+
+<div id='supplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
 
 	<section class='soloModeListContainer'>
 		<div class='ui-widget-header ui-corner-top'>
@@ -15,7 +177,7 @@
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 			<div class='soloModeListMessaging marginBottom'></div>
 			<div class='soloModeListContent' data-app-role='soloModeContentContainer'>
-			<table app-data-role='wholesaleSupplierList' class='fullWidth gridTable'>
+			<table data-app-role='supplierList' class='fullWidth gridTable'>
 			<thead>
 			<tr>
 				<th class='alignLeft'>Name</th>
@@ -25,7 +187,7 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:wholesaleSupplierListTemplate;"></tbody>
+			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;"></tbody>
 			</table>
 				
 			</div>
@@ -38,7 +200,7 @@
 
 <!-- used in the list mode for each supplier -->
 <table>
-<tr id='wholesaleSupplierListTemplate'>
+<tr id='supplierListItemTemplate'>
 	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
 	<td data-bind="var:supplier(FORMAT); format:text;" hideInMinimalMode></td>
@@ -49,16 +211,77 @@
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierItemList'>Products</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierOrderList'>Orders</button>
 	</td>
-	
 </tr>
+
+<tr id='supplierOrderListItemTemplate'>
+	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
+	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
+	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
+	<td data-bind="var:order(STATUS); format:text;"></td>
+	<td data-bind="var:order(CREATED_TS); format:text;"></td>
+	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
+	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
+</tr>
+<tr id='supplierItemListItemTemplate'>
+	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
+	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
+	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
+	<td data-bind="var:order(STATUS); format:text;"></td>
+	<td data-bind="var:order(CREATED_TS); format:text;"></td>
+	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
+	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
+</tr>
+
+
 </table>
+
+
+<div id='supplierOrderListTemplate'>
+
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th data-anytable-nosort='true'></th>
+	<th class='alignLeft'>Order ID</th>
+	<th class='alignLeft'>Supplier Order ID</th>
+	<th class='alignLeft'>Status</th>
+	<th class='alignLeft'>Created</th>
+	<th class='alignLeft'>Dispatched</th>
+	<th class='alignLeft'>Confirmed</th>
+</tr>
+</thead>
+<tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListItemTemplate;">
+</tbody>
+</table>
+
+</div>
+
+<div id='supplierItemListTemplate'>
+
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th data-anytable-nosort='true'></th>
+	<th class='alignLeft'>Order ID</th>
+	<th class='alignLeft'>Supplier Order ID</th>
+	<th class='alignLeft'>Status</th>
+	<th class='alignLeft'>Created</th>
+	<th class='alignLeft'>Dispatched</th>
+	<th class='alignLeft'>Confirmed</th>
+</tr>
+</thead>
+<tbody data-bind="var:orders(@PRODUCT); format:processList; loadsTemplate:supplierItemListItemTemplate;">
+</tbody>
+</table>
+
+</div>
 
 
 
 
 <!-- template for adding a new supplier -->
 
-<div id='wholesaleSupplierAddTemplate'>
+<div id='supplierAddTemplate'>
 
 <form action='#' autocomplete="on">
 <fieldset class='labelsAsBreaks'>
@@ -87,13 +310,13 @@
 
 
 
-<div id='wholesaleSupplierUpdateTemplate' class='clearfix'>
+<div id='supplierUpdateTemplate' class='clearfix'>
 
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		
-		<button class='floatRight'>Order List</button>
-		<button class='floatRight'>Product List</button>
+		<button class='floatRight' data-app-event='admin_wholesale|showSupplierOrderList'>Order List</button>
+		<button class='floatRight' data-app-event='admin_wholesale|showSupplierItemList'>Product List</button>
 		<button class='floatRight'>Add Product</button>
 		
 		<h2 class='floatLeft ui-widget-header-padding'>
@@ -193,7 +416,7 @@
 	<fieldset>
 <label>
 	<span>Connector:</span>
-	<select name='SHIP_CONNECTOR' data-app-event='admin_wholesale|showConnectorFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
+	<select name='SHIP_CONNECTOR' data-app-event='admin_wholesale|showSiblingFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
 		<option value='NONE'>None</option>
 		<option value='GENERIC'>Generic</option>
 	</select />
@@ -396,4 +619,92 @@
 	</div><!-- end column 2 -->
 
 </form>
+</div>
+
+
+
+
+
+
+<!--
+////////////////  WAREHOUSE  \\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='warehouseAddUpdateTemplate'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<!-- inputs for _cmd and _tag are added in JS, based on whether we are in update or add mode -->
+
+<fieldset>
+	<label>
+		<span>Warehouse Title:</span>
+		<input type="text" value="" name="WAREHOUSE_TITLE" maxlength="41" size="41" data-bind='var:warehouse(WAREHOUSE_TITLE); format:popVal;' />
+	</label>
+	<label>
+		<span>Warehouse Code:</span>
+		<input type="text" value="" name="CODE" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' data-bind='var:warehouse(WAREHOUSE_CODE); format:popVal;' />
+		<span class='toolTip' title="A 3 digit code consisting of letters A-Z and 0-9. Warehouse code will usually be the three digit code for the nearest airport.">?</span>
+	</label>
+	
+	<label>
+		<span>City:</span>
+		<input type="text" value="" name="WAREHOUSE_CITY" maxlength="31" size="31" data-bind='var:warehouse(WAREHOUSE_CITY); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>State:</span>
+		<input type="text" value="" name="WAREHOUSE_STATE" maxlength="31" size="31" data-minlength='2' data-bind='var:warehouse(WAREHOUSE_STATE); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Zip:</span>
+		<input type="text" value="" name="WAREHOUSE_ZIP" maxlength="5" size="5" data-bind='var:warehouse(WAREHOUSE_ZIP); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Shipping Latency (in Days):</span>
+		<input type="number" value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" min='0' step='1' data-bind='var:warehouse(SHIPPING_LATENCY_IN_DAYS); format:popVal;' />
+		<span class='toolTip' title="The maximum number of days before an order is processed.">?</span>
+	</label>
+	
+	<label>
+		<span>Shipping Cutoff Hour:</span>
+		<input type="number" value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" min='0' step='1' max="24" data-bind='var:warehouse(SHIPPING_CUTOFF_HOUR_PST); format:popVal;' />
+		<span class='toolTip' title="Use 24 hour format, PST time zone (ex: '16' is 4:00pm PST).">?</span>
+	</label>
+
+</fieldset>
+
+<button data-app-event="admin|processForm">Save</button>
+
+
+</form>
+
+
+
+<table>
+<tr id='warehouseResultsRowTemplate'>
+	<td data-bind="var: warehouse(ID); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_STATE); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(WAREHOUSE_ZIP); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(SHIPPING_CUTOFF_HOUR_PST); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(SHIPPING_LATENCY_IN_DAYS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+<button data-app-event="admin_wholesale|warehouseRemoveConfirm">Remove</button>
+<button data-app-event="admin_wholesale|warehouseDetailDMIPanel">Edit</button>
+	</td>
+</tr>
+
+
+
+
+
+</table>
+
+
+
 </div>

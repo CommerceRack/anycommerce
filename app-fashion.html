@@ -20,18 +20,23 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201312.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201320.r",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
+	"checkoutAuthMode" : "active", //can be passive, active or required
 	"baseURL":"",
-	"testURL":"http://www.sporks.zoovy.com/"
+	"testURL":"http://ylh.zoovy.com/" //put your domain here. you can then test locally in firefox.
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
-if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL;
-	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+if(document.location.protocol == 'file:')	{
+	app.vars.baseURL  = "";
 	}
+else	{
+	app.vars.baseURL = document.location.protocol+"//"+document.domain+"/";
+	}
+document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+
 </script>
 
 
@@ -41,13 +46,17 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="app-fashion.css" />
-<link rel="stylesheet" type="text/css" href="app-fashion/jquery-ui-1.10.0.custom.css" />
+<link rel="stylesheet" type="text/css" href="app-fashion/jquery-ui-1.10.2.custom.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
-
+<!--
+<script src="resources/webrtc_adapter.js"></script>
+<script src="resources/webrtc_core.js"></script>
+<script src="resources/webrtc_jsapi.min.js"></script>
+-->
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 </script>
@@ -55,16 +64,17 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
 </head>
 
-<body>	
+<body>
+
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-	<div class='logo'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></div>
+	<div class='logo'><!-- PUT YOUR LOGO HERE --></div>
 	<div id="loader" class='alignCenter'>
 		<h3>Loading Your Shopping Experience</h3>
 
 		<div class='alignCenter'>
-		<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br />
 		</div>
 		<div id='appPreViewProgressText'>0% Complete</div>
 	</div>
@@ -77,39 +87,39 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
 <!-- HEADER -->
     
-    <div id='header'>
+    <div id='header' class='clearfix'>
     	<div class='topNav'>
 
             <div class='floatRight'>
-<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>SHOPPING BAG</b></a>  |            	
-<a href='#!company?show=contact' class='bindByAnchor'><b>CONTACT US</b></a>  | 
-<a href='#!company?show=faq' class='bindByAnchor'><b>FAQ</b></a>
+<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>shopping bag</b></a>  |            	
+<a href='#!company?show=contact' class='bindByAnchor'>Contact</a>  | 
+<a href='#!company?show=faq' class='bindByAnchor'>Help</a>
             </div>
 
 			
-			<div class='floatLeft hideIfLoggedIn marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome Guest. Click here to log in</div>
-			<div class='floatLeft hideIfLoggedOut marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome Back <span class='username'></span>. Click here for account details</div>
+			<div class='floatLeft hideIfLoggedIn marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome guest. Click here to log in</div>
+			<div class='floatLeft hideIfLoggedOut marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome back <span class='username'></span>. Click here for account details</div>
 		    
     	</div>
         
         <div class='logoSearchContainer clearfix'>
-        	<div id='logo'><a href='#!homepage' class='bindByAnchor'><img id='logo' src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></a></div>
+        	<div id='logo' onClick="showContent('homepage');" class='logo pointer'></div>
         	<div class='searchBarContainer'>
 				<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
 					<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault" placeholder="Find it here..." id="searchBar"/>
-					<input class="search pointer" type="submit" value="SEARCH" id="searchButton" />
+					<input class="search pointer" type="submit" value="Search" id="searchButton" />
    		    	</form>
-			</div>	
+			</div>
         </div>
         
 
         <div class='mainNavContainer'>
 		<ul class='topLinks'>
-			<li><a href='#' onClick='handleCategoryMenu(); return false;'>BROWSE</a></li>
-			<li><a href='#!search?TAG=IS_BESTSELLER' class='bindByAnchor'>WHAT'S HOT</a></li>
-			<li><a href='#!search?TAG=IS_NEWARRIVAL' class='bindByAnchor'>NEW ARRIVALS</a></li>
-			<li><a href='#!search?TAG=IS_SALE' class='bindByAnchor'>ON SALE</a></li>
-			<li><a href='#!search?TAG=IS_CLEARANCE' class='bindByAnchor'>CLEARANCE</a></li>
+			<li><a href='#' onClick='handleCategoryMenu(); return false;'>Browse</a></li>
+			<li><a href='#!search?TAG=IS_BESTSELLER' class='bindByAnchor'>What's Hot</a></li>
+			<li><a href='#!search?TAG=IS_NEWARRIVAL' class='bindByAnchor'>New Arrivals</a></li>
+			<li><a href='#!search?TAG=IS_SALE' class='bindByAnchor'>On Sale</a></li>
+			<li><a href='#!search?TAG=IS_CLEARANCE' class='bindByAnchor'>Clearance</a></li>
 		</ul>
 		<div id='browseMenuContent' class='displayNone'>
 			<ul id='tier1categories' class='columnify'></ul>
@@ -125,12 +135,12 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     
     <!-- WHERE THE MAGIC HAPPENS -->
 	<div id='globalMessaging' class='appMessaging'></div>
-    <div id='mainContentArea'></div>
+    <div id='mainContentArea' class='marginBottom clearfix'></div>
     
 	
 	<!-- FOOTER -->
     <div class='footerNewsletter'>
-		<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+		<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 			<div id='upToDate' class=' floatLeft marginLeft marginTop marginRight'>Join and Save!</div>
 			<div class='floatLeft marginRight marginTop '>
 			<input type='text'  maxlength='50' size='30' name='fullname' class='footerFormFrm' placeholder='Full Name' />
@@ -139,62 +149,66 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 			<input type='email'  maxlength='50' size='30' name='login' class='footerFormFrm' placeholder='E-mail Address' />
 			</div>
 			<div class='floatLeft marginRight marginTop '>
-			<input type='submit' value='SIGN UP!' id='footerSignUpButton'>
+			<input type='submit' value='Sign Up!' id='footerSignUpButton'>
 			</div>
 		</form>
 	</div>	
 
-    <div id='footerLinks'>
+    <div id='footerLinks' class='clearfix'>
 	    <div id='categories' class="bottomLinkListContainer">
     		<ul class='bottomLinkList'>
                	<li class='listHead'>SHOP</li>
-		        	<!-- place holder links, will need to replace safe.name later -->                
-                    <li><a href='#' class='footerLinkStyle bindByAnchor'>Browse By Category</a></li>
-                    <li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's Hot</a></li>
-                    <li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New Arrivals</a></li>
-                    <li><a href='#!search?TAG=IS_SALE' class='footerLinkStyle bindByAnchor'>Sale</a></li>
-                    <li><a href='#!search?TAG=IS_CLEARANCE' class='footerLinkStyle bindByAnchor'>Clearance</a></li>
-                </ul>    
+		        	<!-- place holder links, will need to replace safe.name later -->  
+				<li><a href='#top' class='footerLinkStyle' onClick="handleCategoryMenu('show');">Browse by category</a></li>
+				<li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's hot</a></li>
+				<li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New arrivals</a></li>
+				<li><a href='#!search?TAG=IS_SALE' class='footerLinkStyle bindByAnchor'>Sale</a></li>
+				<li><a href='#!search?TAG=IS_CLEARANCE' class='footerLinkStyle bindByAnchor'>Clearance</a></li>
+			</ul>    
 		</div>
         <div id='help' class="bottomLinkListContainer">
         	<ul class='bottomLinkList'>
             	<li class='listHead'>HELP</li>
-                	<li><a href='#!company?show=about' class='footerLinkStyle bindByAnchor'>About</a></li>
-                    <li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact Us</a></li>
-                    <li><a href='#!company?show=faq' class='footerLinkStyle bindByAnchor'>FAQ</a></li>
-                    <li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping Policy</a></li>
-                    <li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return Policy</a></li>
-                    <li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment Policy</a></li>
-                    <li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy Policy</a></li>
+				<li><a href='#!company?show=about' class='footerLinkStyle bindByAnchor'>About</a></li>
+				<li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact us</a></li>
+				<li><a href='#!company?show=faq' class='footerLinkStyle bindByAnchor'>FAQ</a></li>
+				<li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping policy</a></li>
+				<li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return policy</a></li>
+				<li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment policy</a></li>
+				<li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy policy</a></li>
             </ul>
 		</div>
         <div id='myaccount' class="bottomLinkListContainer">
             <ul class='bottomLinkList'>
                 <li class='listHead'>MY ACCOUNT</li>
-                <li><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create An Acount</a></li>
-                <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Sign In</a></li>
-                <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Change Password</a></li>
-                <li><a href='#!customer?show=lists' class='footerLinkStyle bindByAnchor'>Wishlist Items</a></li>
-                <li><a href='#!customer?show=orders' class='footerLinkStyle bindByAnchor'>Order Tracking</a></li>
+                <li class='hideIfLoggedIn'><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create account</a></li>
+                <li class='hideIfLoggedIn'><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Sign In</a></li>
+                <li class='hideIfLoggedOut'><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>My account</a></li>
+                <li class='hideIfLoggedOut'><a href='#!customer?show=changepassword' class='footerLinkStyle bindByAnchor'>Change password</a></li>
+                <li><a href='#!customer?show=lists' class='footerLinkStyle bindByAnchor'>Wishlist</a></li>
+                <li><a href='#!customer?show=orders' class='footerLinkStyle bindByAnchor'>Order tracking</a></li>
             </ul>
         </div>
+<!--
+uncomment and set links
         <div id='morefashion' class="bottomLinkListContainer">
             <ul class='bottomLinkList'>
                 <li class='listHead'>MORE FASHION</li>
-               	<!-- place holder links, will need to later -->
-				<li><a href='#' class='footerLinkStyle'>Blog</a></li>
+				<li><a href='#' target='_blank' class='footerLinkStyle'>Blog</a></li>
 				<li><a href='#' class='footerLinkStyle'>Tutorials</a></li>
 				<li><a href='#' class='footerLinkStyle'>Tips and Tricks</a></li>
 				
-				<li><a href='http://www.youtube.com/' class='footerLinkStyle'>You Tube</a></li>
-				<li><a href='https://www.facebook.com/' class='footerLinkStyle'>Facebook</a></li>
-				<li><a href='https://twitter.com/' class='footerLinkStyle'>Twitter</a></li>
+				<li><a  target='_blank' href='http://www.youtube.com/' class='footerLinkStyle'>You Tube</a></li>
+				<li><a  target='_blank' href='https://www.facebook.com/' class='footerLinkStyle'>Facebook</a></li>
+				<li><a  target='_blank' href='https://twitter.com/' class='footerLinkStyle'>Twitter</a></li>
             </ul>
         </div>
+		-->
     </div>
         
-    <div id='footerInformation'>
-        <a>2012 All Rights Reserved. eCommerce by</a> Zoovy
+    <div id='footerInformation' class='clearfix'>
+<div class='floatLeft'>Copyright &copy; 2012 All Rights Reserved.</div>
+<div class='floatRight'><a href='http://www.zoovy.com' target="_blank">eCommerce by Zoovy</a></div>
     </div>
 
 
@@ -240,15 +254,15 @@ COMMONLY EDITED TEMPLATES
 <div id='homepageTemplate' class='homeTemplate'>
 	<div class='mainBannerContainer clearfix'>
 		
-		<div class='mainBannerGraphic'><img src='app-fashion/fall_collection-703x294.jpg' width='703' height='294' alt='' /></div>
+		<div class='mainBannerGraphic pointer' onClick="showContent('search',{'TAG':'IS_NEWARRIVAL'});"><img src='app-fashion/new_arrivals-703x294.jpg' width='703' height='294' alt='' /></div>
 		
 		<div class='mainBannerNewsletter'>
 		
 			<div id='scoop'>GET THE SCOOP ON</div>
 			<div id='latest'>THE LATEST IN FASHION</div>
 				   
-			<div class='headerNewsletterSignUpContainer'>              
-				<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+			<div class='headerNewsletterSignUpContainer marginBottom'>              
+				<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 					<fieldset class='borderNone noPadOrMargin'>
 						<div>
 							<input type='text'  maxlength='50' size='30' name='fullname' class='headerSubscribeFrm' placeholder='Full Name' />
@@ -264,15 +278,15 @@ COMMONLY EDITED TEMPLATES
 				</form>
 			</div>
 			
-			<div id='followUs'>
-				<img src='app-fashion/FollowUs.png'>
+			<div class='socialIcons clearfix '>
+
+<div id='followUs'><img src='app-fashion/followus-190x11.png' width='190' height='11' alt='follow us...'></div>
+<div class='socialIconContainer'>
+	<div class='facebookIcon'><img src='app-fashion/facebook-32x32.png' width='32' height='32' alt='Facebook' ></div>
+	<div class='twitterIcon'><img src='app-fashion/twitter-32x32.png' width='32' height='32' alt='twitter' ></div>
+	<div class='youtubeIcon'><img src='app-fashion/youtube-32x32.png' width='32' height='32' alt='youtube' ></div>
+</div>
 			</div>
-			<div class='socialIconContainer'>
-				<a href='https://www.facebook.com/'><div id='facebook'><img src='app-fashion/facebook.png'></div></a>
-				<a href='https://twitter.com/'><div id='twitter'><img src='app-fashion/twitter.png'></div></a>
-				<a href='http://www.youtube.com/'><div id='youtube'><img src='app-fashion/youtube.png'></div></a>
-				<a href='http://www.tumblr.com'><div id='tumbler'><img src='app-fashion/tumblr.png'></div></a>
-			</div> 
 			
 		</div>
 				
@@ -282,11 +296,11 @@ COMMONLY EDITED TEMPLATES
 	<section id='newArrivals'>
 		
 		<div class='listHeader'>
-		<a href="#" onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'});" class='floatRight'>See all New Arrivals</a>
-		<h2>New Arrivals</h2>
+		<a href="#" onClick="return showContent('search',{'TAG':'IS_SALE'});" class='floatRight'>See all Sale Items</a>
+		<h2>Now On Sale</h2>
 		</div>
 		
-	<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul id='homeProdSearchSale' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_SALE"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	
 
@@ -330,7 +344,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
-
+	<div class='clearfix alignRight'><a href='#top'>back to top</a></div>
 </div>
 
 
@@ -344,7 +358,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <li id='categoryListTemplate' class='catListItem pointer' onClick="showContent('category',{'navcat':$(this).attr('data-catsafeid')});">
 	<div class='catContainer'>
 		<div class='catName' data-bind='var: category(pretty); format:catText; extension: myRIA;'></div>
-		<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='190' height='190' />
+		<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='190' height='190' alt='' />
 	</div>	
 </li>
 
@@ -365,12 +379,14 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
-	<div class=' prodContainer' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+	<div class='prodContainer' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
-<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-<div class='prodThumbContainer pointer'>
-	<h4 class='prodName' data-bind='var: product(zoovy:prod_name); format:text;'></h4>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' />
+<div class='imageAndTags'>
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div class='prodThumbContainer pointer'>
+		<h4 class='prodName' data-bind='var: product(zoovy:prod_name); format:text;'></h4>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' alt='' />
+	</div>
 </div>
 <div class='priceDetail hideInMinimalMode'>
 	<div class='price'>
@@ -385,18 +401,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 
 
-
-
-
-
-
-
 <li id='productListTemplateBuyerList' class='loadingBG clearfix' >
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
 
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
-				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' alt='' />
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 
 <button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
@@ -445,7 +455,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 <tr id='productListTemplateATC'>
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' alt='' />
 	</td>
 
 	<td>
@@ -455,8 +465,8 @@ container ul should have lineItemProdlist class on it instead of productList
 		
 		<h6 data-bind='var:product(pid); format:text; pretext: sku: ;'></h6>
 		<h6 data-bind='var:product(zoovy:prod_mfg); format:text; pretext: by: ;'></h6>
-		<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
 	</hgroup>
+	<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
 	</td>
 	<td>
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
@@ -481,9 +491,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResults' class='loadingBG productListItem searchResultsProduct' >
 	<div class=' prodContainer' onClick="app.ext.myRIA.a.handleProdPreview($(this).closest('li').attr('data-pid'));">
 
-<div class='prodThumbContainer pointer'>
-	<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+<div class='imageAndTags'>
+	<div data-bind="var: product(tags); format:addTagSpans;" class='tagsContainer hideInMinimalMode'></div>
+	<div class='prodThumbContainer pointer'>
+		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' alt='' />
+	</div>
 </div>
 <div class='priceDetail hideInMinimalMode'>
 	<div class='price' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></div>
@@ -498,9 +511,11 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResultsNoPreview' class='loadingBG productListItem ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer prodContainer'>
 
-<div class='prodThumbContainer'>
-	<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+<div class='imageAndTags'>
+	<div class='prodThumbContainer pointer'>
+		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' alt='' />
+	</div>
 </div>
 <div class='priceDetail'>
 	<div class='price' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></div>
@@ -556,7 +571,9 @@ this will likely become more flexible in the future. ###
 <div>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div class='image1'>
 	<a href='blank.gif' data-bind='var: product(zoovy:prod_image1); format:imageURL2Href; h:; w:;' data-gallery="gallery"  ><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' /></a>
+	</div>
 
 </div>
 
@@ -584,7 +601,7 @@ this will likely become more flexible in the future. ###
 
 	<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
 
-	<table class='marginBottom fullWidth gridTable' app-data-role='childrenSiblingsContainer'>
+	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
 		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
 	</table>
 
@@ -660,7 +677,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodVideo'>
-		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodAccessories'>
@@ -727,15 +744,14 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<input type='submit' value='Add to Cart' class='addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 
-	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 
 	</td>
 	
 	<td class='imageContainer'>
 <div>
 
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' alt='' /></div>
 
 </div>
 
@@ -940,8 +956,8 @@ if you change these, you should move them above this comment so that when you (o
 	<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
-<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
+<!-- before restoring this, test cuz news form on left was causing some conflicts
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
 		<li><a href='#customer?show=myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders'>Order History</a></li>
@@ -986,8 +1002,8 @@ subscribeListsArticle is used for authenticated buyers
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
 </div>
-
-<div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
+<br>
+<div class='shipAddressContainer clearfix' data-app-role='addressContainer' data-app-addresstype='ship'>
 	<div class='marginBottom'>
 		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
@@ -1456,17 +1472,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
 	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
-		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
+		<span data-bind="var: address(bill/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(bill/lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(bill_address1);format:text;"  title='address'></div>
-		<div data-bind="var: address(bill_address2);format:text;"  title='address 2'></div>
+		<div data-bind="var: address(bill/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(bill/address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(bill_city);format:text;"  title='city'></span>,
-		<span data-bind="var: address(bill_region);format:text;"  title='state'></span>.
-		<span data-bind="var: address(bill_postal);format:text;"  title='zip'></span>
-		<div data-bind="var: address(bill_countrycode);format:text;" title='country'></div>
+		<span data-bind="var: address(bill/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(bill/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(bill/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(bill/countrycode);format:text;" title='country'></div>
 
 	</div>
 
@@ -1477,17 +1493,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
 	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
-		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>
+		<span data-bind="var: address(ship/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(ship/lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(ship_address1);format:text;"  title='address'></div>
-		<div data-bind="var: address(ship_address2);format:text;"  title='address 2'></div>
+		<div data-bind="var: address(ship/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(ship/address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(ship_city);format:text;"  title='city'></span>,
-		<span data-bind="var: address(ship_region);format:text;"  title='state'></span>.
-		<span data-bind="var: address(ship_postal);format:text;"  title='zip'></span>
-		<div data-bind="var: address(ship_countrycode);format:text;" title='country'></div>
+		<span data-bind="var: address(ship/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(ship/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(ship/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(ship/countrycode);format:text;" title='country'></div>
 
 	</div>
 
@@ -1496,7 +1512,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
-<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
+<table class='orderContentsTable fullWidth' data-app-role='invoiceContainer' id='invoiceTemplate'>
 <tr>
 	<td colspan='2'>
 <div class='floatRight'>
@@ -1511,11 +1527,7 @@ The 'data-action' attribute is used to assign an onclick.
 <tr>
 	<td>
 <hgroup class='marginBottom'>
-<!-- print icon -->
-
-
-<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
-
+<h3 class='orderID' data-bind='var:order(order/our/orderid);format:text;'></h3>
 <h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
 <h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 </hgroup>
@@ -1554,7 +1566,9 @@ The 'data-action' attribute is used to assign an onclick.
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<table  class='listStyleNone lineItemProdlist fullWidth'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
 	</td>
 </tr>
 </table>
@@ -1669,6 +1683,11 @@ The 'data-action' attribute is used to assign an onclick.
 	</li>
 </ul>
 	</td>
+	
+	
+	<td>
+	<input type='text' onBlur="app.model.destroy($(this).val()); $(this).val('');" placeholder='destroy' />
+	</td>
 </tr>
 </table>
 
@@ -1676,7 +1695,40 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
+
+
+
+<!-- this is for video -->
+
+<div id="container" ondblclick="enterFullScreen()"> 
+  <div id="card">
+  <table><tr>
+  	<td width='50%'>
+    <div id="local">
+      <video width="100%" height="100%" id="localVideo" autoplay muted="true"/>
+    </div>
+	</td>
+	<td width='50%'>
+    <div id="remote">
+      <video width="100%" height="100%" id="remoteVideo" autoplay>
+      </video>
+      <div id="mini">
+        <video width="100%" height="100%" id="miniVideo" autoplay muted="true"/>
+      </div>
+    </div>
+	</td>
+</tr></table>
+  </div>
+  <div id="footer">
+  </div>
+</div>
+
+
+
+
 <script type='text/javascript'>
+
+
 function handleCategoryMenu(state)	{
 //	app.u.dump("BEGIN handleCategoryMenu. state: "+state);
 	var $cmc = $('#browseMenuContent'); //category menu content
@@ -1702,6 +1754,8 @@ function handleCategoryMenu(state)	{
 		}
 	}
 </script>
+
+
 
 
 

@@ -8,15 +8,18 @@
 	</hgroup>
 
 	<div data-bind="var: batchjob(started); format:unix2mdy; showtime:1; pretext:Started: ;"></div>
-	<div><span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span> <span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span></div>
+	<div>
+		<span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span>
+		<span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span>
+	</div>
 
 	<p class='marginBottom' data-bind="var: batchjob(status_msg); format:text;"></p>
 
 
 	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
-	<button data-btn-action="adminBatchJobCleanup" class='displayNone' data-bind="var: batchjob(status); format:cleanUpButton; extension:admin_batchJob;">Clean Up/Remove</button>
+	<button data-app-event="admin_batchJob|execBatchCleanup">Clean Up/Remove</button>
 
-	<p>This panel will not update automatically. Please go to reports &#187; Batch Jobs for status</p>
+	<p>This panel will not update automatically. Please go to the <a href="#" onClick="navigateTo('#!batchManager'); if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')}; return false">Batch Job Manager</a> for status</p>
 
 </section>
 
@@ -34,15 +37,17 @@
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth' >
+		<table class='gridTable fullWidth marginBottom' >
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
-			<th>ID</th>
-			<th>Job Name</th>
-			<th>Job Type</th>
-			<th>User</th> <!--  class='hideInDetailMode' -->
-			<th>Created</th>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Job Name</th>
+			<th class='hideInMinimalMode alignLeft'>Job Type</th>
+			<th class='hideInMinimalMode alignLeft'>User</th>
+			<th class='hideInMinimalMode alignLeft'>Created</th>
+			<th>Status</th>
+			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
 		<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
@@ -56,10 +61,15 @@
 <tr id='batchJobRowTemplate'>
 	<td data-bind="var: user(ID); format:text;"></td>
 	<td data-bind="var: user(TITLE); format:text;"></td>
-	<td data-bind="var: user(JOB_TYPE); format:text;"></td>
-	<td data-bind="var: user(LUSERNAME); format:text;"></td>
-	<td data-bind="var: user(CREATED_TS); format:text;"></td>
-	<td>loading gfx</td>
-	<td><button data-app-event="admin_batchJob|showJobDetail">Details</button>
+	<td data-bind="var: user(JOB_TYPE); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: user(LUSERNAME); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: user(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: user(STATUS); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button>
+		<button data-app-event="admin_batchJob|execBatchCleanup" class='displayNone'>Delete</button>
+		<button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button>
+	</td>
+	
 </tr>
 </table>

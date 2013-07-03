@@ -9,11 +9,8 @@ bin/
 /utilities/proxy/node_modules/
 tmp/
 proxy/
-<<<<<<< HEAD
-=======
 *extensions/_notes/
 extensions/_notes/dwsync.xml
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 *_notes/
 *.tmp
 *.bak

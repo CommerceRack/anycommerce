@@ -29,7 +29,6 @@ var store_product = function() {
 
 
 
-
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 
 
@@ -183,8 +182,7 @@ addToCart : function (pid,$form){
 			
 //No work to do if there are no sogs. 
 			if(sogJSON)	{
-				app.u.dump('got into the pogs-are-present validation');
-				app.u.dump(sogJSON);
+	//			app.u.dump('got into the pogs-are-present validation');
 				for(var i = 0; i < sogJSON.length; i++)	{
 					pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
 					pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.

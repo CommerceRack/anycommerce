@@ -56,7 +56,7 @@ var prodlist_infinite = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
 				return true;  //currently, there are no config or extension dependencies, so just return true. may change later.
 //unbind this from window anytime a category page is left.
 //NOTE! if infinite prodlist is used on other pages, remove run this on that template as well.
@@ -135,7 +135,9 @@ It is run once, executed by the renderFormat.
 //also need a list of product (csv)
 				if($tag && bindData.csv)	{
 //					app.u.dump(" -> required parameters exist. Proceed...");
+					
 					bindData.csv = app.ext.store_prodlist.u.cleanUpProductList(bindData.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
+					app.u.dump(" -> bindData.csv after cleanup: "); app.u.dump(bindData.csv);
 					this.addProductToPage($tag);
 					}
 				else	{

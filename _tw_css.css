@@ -2227,7 +2227,13 @@ div#slideshowContainer div.caroufredsel_wrapper{
     padding: 0 9px;
     width: 253px;
 }
-
+.accountCreateContainer{
+	float:left;
+	clear:left;
+}
+#mainContentArea_customer div.mainColumn{
+	width:94%;
+}
 
 
 

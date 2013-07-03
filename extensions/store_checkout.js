@@ -341,7 +341,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 			PO : function(vars)	{
 				var errors = new Array(); // what is returned. an array of the payment fields that are not correct. 
-				if(vars.PO){} else	{errors.push("PO")}
+				if(vars['payment/PO']){}
+				else	{errors.push("payment/PO")}
 				return (errors.length) ? errors : false;
 				}
 			

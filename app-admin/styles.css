@@ -1,0 +1,1417 @@
+@font-face	{
+	font-family: barcode3of9;
+	src: url('resources/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
+body {line-height: 1;} /* helps to reduce some errant whitespace issues */
+
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+
+img {border:0px;}
+
+
+/*
+items that are floated may cause their containers to 'shrink'. apply this class to the container
+class can also be applied to a 1 item per row list.
+*/
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+
+.valignTop	{vertical-align:top;}
+.valignMiddle	{vertical-align:middle;}
+
+
+.displayNone,
+.labelsAsBreaks label.displayNone,
+.labelsAsBreaks .label.displayNone,
+.debug,
+.showForZoovyOnly,
+.showForAnyCommerceOnly,
+.detailMode .hideInDetailMode,
+.minimalMode .hideInMinimalMode 	{display:none;}
+
+.isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+
+/* for use on lists where no bullets, indents, etc are needed. add on ul */
+/* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
+
+
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+
+
+.ui-accordion .ui-accordion-header	{padding-left:30px;}
+
+a, .lookLikeLink	{cursor:pointer; color:#7398a5;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
+.pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
+
+
+.opacity50	{
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */
+	-moz-opacity: 0.5; /* Netscape */
+	-khtml-opacity: 0.5; /* Safari 1.x */
+	opacity: 0.5;	/* Good browsers */
+	}
+
+
+/* text styling */
+
+
+
+.barcode	{font-family: barcode3of9 !important;}
+/*section or page header. There should only be one of these per page and it should be at the very top.*/
+h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
+
+/* used for the heading of section of text blocks each with it's own sub heading.
+must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
+h2	{font-size: 1.3em; margin: 0px 0px 6px 0px;}
+
+/* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
+should be followed by a P , TABLE or LIST. */
+h3	{font-size: 1.2em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+/* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
+h4	{font-size: 1.1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+/* if you want to display a hint or tip, give it the hint class */
+
+
+.hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
+
+
+
+
+
+
+
+
+/* some positioning classes */
+
+.positionRelative	{position:relative;}
+.positionAbsolute	{position:absolute;}
+.positionTop	{top:0;}
+.positionRight	{right:0;}
+.positionLeft	{left:0;}
+.positionBottom	{bottom:0;}
+
+
+/*
+Generic text styles
+*/
+.lineThrough	{text-decoration:line-through}
+.uppercase	{text-transform:uppercase;}
+.spacedLetters	{letter-spacing:.6em;}
+/* apply this class to a pre tag and whitespace formatting will be supporting, but word wraping will occur */
+.preformatted {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	display:block; 
+	white-space: pre-wrap;  
+	white-space: -moz-pre-wrap; 
+	white-space: -pre-wrap; 
+	white-space: -o-pre-wrap; 
+	word-wrap: break-word; 
+	width:100%; overflow:visible; /* formatting caused scroll bars for a few px */
+	font-family:Tahoma, Geneva, sans-serif; /* have to redeclare for pre default */
+	}
+
+
+/* use these to indicate severity, where red is the highest alert state and green is the 'everything is dandy' state. */
+.red		{color:#660000;}
+.orange	{color:#F60;}
+.yellow	{color:#CC0;}
+.blue	{color:#000066;}
+.green	{color:#006600;}
+
+.smallTxt,
+.ui-widget select.smallTxt	{font-size:.75em;}
+
+
+
+/* some tooltip styling */
+.toolTip	{color:#F60;} /* add the tooltip class to whatever element is having tooltip applied to it. */
+.ui-tooltip	{font-size:.85em; line-height:1.3em;}
+
+
+
+/*
+some global padding and margins.
+As often as practical, use margin or padding of 12px; this will give the UI a consistent look and feel.
+If more is needed, jump up in increments of 12.
+If less is needed, use increments of 4
+*/
+
+.noPadOrMargin	{padding:0; margin:0;}
+
+
+/*
+MARGIN CLASSES
+some standard margins that can be used for spacing between elements.
+In general, rule of thumb would be to apply bottom margin to stacked elements, not top. That way if the element order changes, there's no alignment issues on top.
+if extra spacing is needed between two elements, add a leftmargin to the right element and rightmargin to the left element. doubles the margin.
+using these shared margins will help make the UI more consistent.
+*/
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px;}
+
+.paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
+
+.stdMargin	{margin:12px;}
+.stdPadding	{padding:12px;}
+.smallPadding	{padding:4px !important;}
+.ui-widget-header-padding	{padding:3px 6px !important;}
+section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
+
+.ui-corner-none	{
+	-webkit-border-radius: 0px;
+	border-radius: 0px; 	
+	}
+
+/* 
+LIST CLASSES
+apply liststylenone and nopadormargin to the UL to get an inline list.
+if you want the list responsive, apply the .fluidList class. 
+ -> In this case, you want a separate class to specify height and width of each LI to maintain a grid. ex: .mediaLib li	{...}
+*/
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
+
+
+.minHeight100	{min-height:100px;} /* apply onto elements that will have showloading run on them if they're empty.
+
+
+/* some generic styles for tables */
+
+/* use paddedTable when you have a table where you need some small spacing between each td col and row */
+.paddedTable td, .paddedTable th, .paddedTable tf	{padding:2px 10px 2px 0;}
+
+/* for non-datagrid tables. ex: setup page. */
+table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
+
+table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}
+iframe.noBorders	{overflow:hidden; border:none;}
+
+iframe.ad-300x250	{height:250px;}
+
+/*
+Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set.
+*/
+.gridTable	{background:#cccccc; border-spacing:0 1px;}
+.gridTable td, .gridTable th, .gridTable tf	{padding:2px 10px 2px 2px; vertical-align:top;}
+.gridTable tr:nth-child(odd)	{background:#ffffff;}
+.gridTable tr:nth-child(even)	{background:#f0f0f0;}
+
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+
+.gridTable th, .gridTable .tf	{background:#cccccc;}
+
+.gridTable tr.alert {background:#ffc8c8;}
+.gridTable tr.warning {background:#fbf9dc;}
+
+
+
+
+
+
+
+
+/* a global 'handle' class for now. for consistency. 
+later if more variety is needed, we can either create exceptions or more rules to handle all cases.
+*/
+.finderProdlistContainer .handle	{position: absolute; right: 0; top: 0; bottom: 0;background: #f8f8f8; padding:14px 6px 0 6px;}
+.handle { padding:6px; cursor:pointer; }
+
+.simpleListItem .removeProd, .simpleListItem .handle	{padding-top:3px;} /* less padding on top because lineitem is shorter (no image) */
+
+
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:30px; min-width:115px;}
+li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
+
+.wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
+
+
+/* This gets applied to the parent containers around each tabs content area.  */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.showInTabContent	{display:none !important;}
+.tabContent .showInTabContent	{display:inline-block !important; }
+
+/* multipage controls */
+
+
+/* a border is added via another class on the mpheader, so this strips off all but the bottom */
+.mpControls	{clear:both; display:block; padding:3px; position:relative; margin-bottom:6px; z-index:600;}
+.mpControls span.ui-state-active	{padding: 2px 3px;}
+.finderProdlistContainer .mpControls	{border:0; border-bottom-width:1px; line-height:24px;}
+
+
+/* use this in combo with ui-widget, ui-corner-all and ui-widget-content to create a horizontal bar of buttons with a container around them. */
+.ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
+.ui-widget-buttonbar button	{margin:0 2px;}
+
+.ui-widget fieldset	{border:0;}
+.ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
+
+/* used for the wiki header 1 & 2 */
+.ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h4	{font-size:1.2em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h5	{font-size:1.1em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h6	{font-size:1em; font-weight:bold; margin: 0; padding: 0;}
+
+#headerSearchFrm	{float:right;}
+#headerSearchFrm legend {display:none;}
+#headerSearchFrm fieldset	{text-align:right}
+#headerKeywordsInput	{width:350px;}
+
+
+
+
+
+
+
+
+
+/*
+some jquery ui overrides/corrections
+*/
+
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
+
+/* if the ul has a fixed width on it, the li's, set to 100%, can flow outside the container. */
+li.ui-menu-item	{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;	
+	}
+
+li.ui-menu-item .ui-state-focus	{color:#ffffff;}
+
+button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very short. */
+
+
+
+
+
+
+
+/*
+
+STICKY TABS
+
+*/
+
+
+#stickytabs	{
+	position:fixed;
+	left:0;
+	top:120px;
+	width:40px;
+	height:300px;
+	z-index:500;
+	}
+
+#stickytabs .positionRelative	{width:400px;}
+/* positioning and text rotation was barfing. so only the span within the tab is rotated */
+#stickytabs .stickytab	{
+	position:absolute; cursor:pointer; z-index:510; 
+	text-align:center;
+	width:19px;
+	height:100px;
+	top:10px;
+	right:-30px; /* positioning takes into account there's some padding */
+	text-indent:6px;
+	}
+
+#stickytabs .stickytab .sticktabText	{
+	white-space: nowrap;
+	margin:auto;
+	display:block; /* block required for rotation, at least in FF.  */
+	-webkit-transform: rotate(90deg);/* Safari */
+	-moz-transform: rotate(90deg);/* Firefox */
+	-ms-transform: rotate(90deg);/* IE */
+	-o-transform: rotate(90deg);/* Opera */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	/* Internet Explorer */	
+	}
+#stickytabs .stickycontent	{font-size:.75em; overflow:auto; width:400px; height:300px;}
+
+
+/*
+
+ICON LIBRARY
+
+*/
+
+
+
+
+@font-face {
+	font-family: "iconFont";
+	src: url('fonts/iconFont.eot');
+	src: url('fonts/iconFont.eot?#iefix') format('embedded-opentype'), url('fonts/iconFont.svg#iconFont') format('svg'), url('fonts/iconFont.woff') format('woff'), url('fonts/iconFont.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	}
+/* launchpad.css references this font too. change there if font-family changes */
+.iconFont	{
+	font-family: "iconFont";
+	font-weight: normal;
+	font-style: normal;
+	}
+
+
+.focon-home:before {content: "\e000";}
+.focon-newspaper:before {content: "\e001";}
+.focon-pencil:before {content: "\e002";}
+.focon-droplet:before {content: "\e003";}
+.focon-pictures:before {content: "\e004";}
+.focon-camera:before {content: "\e005";}
+.focon-music:before {content: "\e006";}
+.focon-film:before {content: "\e007";}
+.focon-camera-2:before {content: "\e008";}
+.focon-spades:before {content: "\e009";}
+.focon-clubs:before {content: "\e00a";}
+.focon-diamonds:before {content: "\e00b";}
+.focon-broadcast:before {content: "\e00c";}
+.focon-mic:before {content: "\e00d";}
+.focon-book:before {content: "\e00e";}
+.focon-file:before {content: "\e00f";}
+.focon-new:before {content: "\e010";}
+.focon-copy:before {content: "\e011";}
+.focon-folder:before {content: "\e012";}
+.focon-folder-2:before {content: "\e013";}
+.focon-tag:before {content: "\e014";}
+.focon-cart:before {content: "\e015";}
+.focon-basket:before {content: "\e016";}
+.focon-calculate:before {content: "\e017";}
+.focon-support:before {content: "\e018";}
+.focon-phone:before {content: "\e019";}
+.focon-mail:before {content: "\e01a";}
+.focon-location:before {content: "\e01b";}
+.focon-compass:before {content: "\e01c";}
+.focon-history:before {content: "\e01d";}
+.focon-clock:before {content: "\e01e";}
+.focon-bell:before {content: "\e01f";}
+.focon-calendar:before {content: "\e020";}
+.focon-printer:before {content: "\e021";}
+.focon-mouse:before {content: "\e022";}
+.focon-screen:before {content: "\e023";}
+.focon-laptop:before {content: "\e024";}
+.focon-mobile:before {content: "\e025";}
+.focon-cabinet:before {content: "\e026";}
+.focon-drawer:before {content: "\e027";}
+.focon-drawer-2:before {content: "\e028";}
+.focon-box:before {content: "\e029";}
+.focon-box-add:before {content: "\e02a";}
+.focon-box-remove:before {content: "\e02b";}
+.focon-download:before {content: "\e02c";}
+.focon-upload:before {content: "\e02d";}
+.focon-database:before {content: "\e02e";}
+.focon-flip:before {content: "\e02f";}
+.focon-flip-2:before {content: "\e030";}
+.focon-undo:before {content: "\e031";}
+.focon-redo:before {content: "\e032";}
+.focon-forward:before {content: "\e033";}
+.focon-reply:before {content: "\e034";}
+.focon-reply-2:before {content: "\e035";}
+.focon-comments:before {content: "\e036";}
+.focon-comments-2:before {content: "\e037";}
+.focon-comments-3:before {content: "\e038";}
+.focon-comments-4:before {content: "\e039";}
+.focon-comments-5:before {content: "\e03a";}
+.focon-user:before {content: "\e03b";}
+.focon-user-2:before {content: "\e03c";}
+.focon-user-3:before {content: "\e03d";}
+.focon-busy:before {content: "\e03e";}
+.focon-loading:before {content: "\e03f";}
+.focon-loading-2:before {content: "\e040";}
+.focon-search:before {content: "\e041";}
+.focon-zoom-in:before {content: "\e042";}
+.focon-zoom-out:before {content: "\e043";}
+.focon-key:before {content: "\e044";}
+.focon-key-2:before {content: "\e045";}
+.focon-locked:before {content: "\e046";}
+.focon-unlocked:before {content: "\e047";}
+.focon-wrench:before {content: "\e048";}
+.focon-equalizer:before {content: "\e049";}
+.focon-cog:before {content: "\e04a";}
+.focon-pie:before {content: "\e04b";}
+.focon-bars:before {content: "\e04c";}
+.focon-stats-up:before {content: "\e04d";}
+.focon-gift:before {content: "\e04e";}
+.focon-trophy:before {content: "\e04f";}
+.focon-diamond:before {content: "\e050";}
+.focon-coffee:before {content: "\e051";}
+.focon-rocket:before {content: "\e052";}
+.focon-meter-slow:before {content: "\e053";}
+.focon-meter-medium:before {content: "\e054";}
+.focon-meter-fast:before {content: "\e055";}
+.focon-dashboard:before {content: "\e056";}
+.focon-fire:before {content: "\e057";}
+.focon-lab:before {content: "\e058";}
+.focon-remove:before {content: "\e059";}
+.focon-briefcase:before {content: "\e05a";}
+.focon-briefcase-2:before {content: "\e05b";}
+.focon-cars:before {content: "\e05c";}
+.focon-bus:before {content: "\e05d";}
+.focon-cube:before {content: "\e05e";}
+.focon-cube-2:before {content: "\e05f";}
+.focon-puzzle:before {content: "\e060";}
+.focon-glasses:before {content: "\e061";}
+.focon-glasses-2:before {content: "\e062";}
+.focon-accessibility:before {content: "\e063";}
+.focon-accessibility-2:before {content: "\e064";}
+.focon-target:before {content: "\e065";}
+.focon-target-2:before {content: "\e066";}
+.focon-lightning:before {content: "\e067";}
+.focon-power:before {content: "\e068";}
+.focon-power-2:before {content: "\e069";}
+.focon-clipboard:before {content: "\e06a";}
+.focon-clipboard-2:before {content: "\e06b";}
+.focon-playlist:before {content: "\e06c";}
+.focon-grid-view:before {content: "\e06d";}
+.focon-tree-view:before {content: "\e06e";}
+.focon-cloud:before {content: "\e06f";}
+.focon-cloud-2:before {content: "\e070";}
+.focon-download-2:before {content: "\e071";}
+.focon-upload-2:before {content: "\e072";}
+.focon-upload-3:before {content: "\e073";}
+.focon-link:before {content: "\e074";}
+.focon-link-2:before {content: "\e075";}
+.focon-flag:before {content: "\e076";}
+.focon-flag-2:before {content: "\e077";}
+.focon-attachment:before {content: "\e078";}
+.focon-eye:before {content: "\e079";}
+.focon-bookmark:before {content: "\e07a";}
+.focon-bookmark-2:before {content: "\e07b";}
+.focon-star:before {content: "\e07c";}
+.focon-star-2:before {content: "\e07d";}
+.focon-star-3:before {content: "\e07e";}
+.focon-heart:before {content: "\e07f";}
+.focon-heart-2:before {content: "\e080";}
+.focon-thumbs-up:before {content: "\e081";}
+.focon-thumbs-down:before {content: "\e082";}
+.focon-plus:before {content: "\e083";}
+.focon-minus:before {content: "\e084";}
+.focon-help:before {content: "\e085";}
+.focon-help-2:before {content: "\e086";}
+.focon-blocked:before {content: "\e087";}
+.focon-cancel:before {content: "\e088";}
+.focon-cancel-2:before {content: "\e089";}
+.focon-checkmark:before {content: "\e08a";}
+.focon-minus-2:before {content: "\e08b";}
+.focon-plus-2:before {content: "\e08c";}
+.focon-enter:before {content: "\e08d";}
+.focon-exit:before {content: "\e08e";}
+.focon-loop:before {content: "\e08f";}
+.focon-arrow-up-left:before {content: "\e090";}
+.focon-arrow-up:before {content: "\e091";}
+.focon-arrow-up-right:before {content: "\e092";}
+.focon-arrow-right:before {content: "\e093";}
+.focon-arrow-down-right:before {content: "\e094";}
+.focon-arrow-down:before {content: "\e095";}
+.focon-arrow-down-left:before {content: "\e096";}
+.focon-arrow-left:before {content: "\e097";}
+.focon-arrow-up-2:before {content: "\e098";}
+.focon-arrow-right-2:before {content: "\e099";}
+.focon-arrow-down-2:before {content: "\e09a";}
+.focon-arrow-left-2:before {content: "\e09b";}
+.focon-arrow-up-3:before {content: "\e09c";}
+.focon-arrow-right-3:before {content: "\e09d";}
+.focon-arrow-down-3:before {content: "\e09e";}
+.focon-arrow-left-3:before {content: "\e09f";}
+.focon-menu:before {content: "\e0a0";}
+.focon-enter-2:before {content: "\e0a1";}
+.focon-backspace:before {content: "\e0a2";}
+.focon-backspace-2:before {content: "\e0a3";}
+.focon-tab:before {content: "\e0a4";}
+.focon-tab-2:before {content: "\e0a5";}
+.focon-checkbox:before {content: "\e0a6";}
+.focon-checkbox-unchecked:before {content: "\e0a7";}
+.focon-checkbox-partial:before {content: "\e0a8";}
+.focon-radio-checked:before {content: "\e0a9";}
+.focon-radio-unchecked:before {content: "\e0aa";}
+.focon-font:before {content: "\e0ab";}
+.focon-paragraph-left:before {content: "\e0ac";}
+.focon-paragraph-center:before {content: "\e0ad";}
+.focon-paragraph-right:before {content: "\e0ae";}
+.focon-paragraph-justify:before {content: "\e0af";}
+.focon-left-to-right:before {content: "\e0b0";}
+.focon-right-to-left:before {content: "\e0b1";}
+.focon-share:before {content: "\e0b2";}
+.focon-new-tab:before {content: "\e0b3";}
+.focon-new-tab-2:before {content: "\e0b4";}
+.focon-embed:before {content: "\e0b5";}
+.focon-code:before {content: "\e0b6";}
+.focon-bluetooth:before {content: "\e0b7";}
+.focon-share-2:before {content: "\e0b8";}
+.focon-share-3:before {content: "\e0b9";}
+.focon-mail-2:before {content: "\e0ba";}
+.focon-google:before {content: "\e0bb";}
+.focon-google-plus:before {content: "\e0bc";}
+.focon-google-drive:before {content: "\e0bd";}
+.focon-facebook:before {content: "\e0be";}
+.focon-instagram:before {content: "\e0bf";}
+.focon-twitter:before {content: "\e0c0";}
+.focon-feed:before {content: "\e0c1";}
+.focon-youtube:before {content: "\e0c2";}
+.focon-vimeo:before {content: "\e0c3";}
+.focon-flickr:before {content: "\e0c4";}
+.focon-picassa:before {content: "\e0c5";}
+.focon-dribbble:before {content: "\e0c6";}
+.focon-deviantart:before {content: "\e0c7";}
+.focon-github:before {content: "\e0c8";}
+.focon-github-2:before {content: "\e0c9";}
+.focon-github-3:before {content: "\e0ca";}
+.focon-github-4:before {content: "\e0cb";}
+.focon-github-5:before {content: "\e0cc";}
+.focon-git:before {content: "\e0cd";}
+.focon-github-6:before {content: "\e0ce";}
+.focon-wordpress:before {content: "\e0cf";}
+.focon-joomla:before {content: "\e0d0";}
+.focon-blogger:before {content: "\e0d1";}
+.focon-tumblr:before {content: "\e0d2";}
+.focon-yahoo:before {content: "\e0d3";}
+.focon-amazon:before {content: "\e0d4";}
+.focon-tux:before {content: "\e0d5";}
+.focon-apple:before {content: "\e0d6";}
+.focon-finder:before {content: "\e0d7";}
+.focon-android:before {content: "\e0d8";}
+.focon-windows:before {content: "\e0d9";}
+.focon-soundcloud:before {content: "\e0da";}
+.focon-skype:before {content: "\e0db";}
+.focon-reddit:before {content: "\e0dc";}
+.focon-linkedin:before {content: "\e0dd";}
+.focon-lastfm:before {content: "\e0de";}
+.focon-delicious:before {content: "\e0df";}
+.focon-stumbleupon:before {content: "\e0e0";}
+.focon-pinterest:before {content: "\e0e1";}
+.focon-xing:before {content: "\e0e2";}
+.focon-flattr:before {content: "\e0e3";}
+.focon-foursquare:before {content: "\e0e4";}
+.focon-paypal:before {content: "\e0e5";}
+.focon-yelp:before {content: "\e0e6";}
+.focon-libreoffice:before {content: "\e0e7";}
+.focon-file-pdf:before {content: "\e0e8";}
+.focon-file-openoffice:before {content: "\e0e9";}
+.focon-file-word:before {content: "\e0ea";}
+.focon-file-excel:before {content: "\e0eb";}
+.focon-file-powerpoint:before {content: "\e0ec";}
+.focon-file-zip:before {content: "\e0ed";}
+.focon-file-xml:before {content: "\e0ee";}
+.focon-file-css:before {content: "\e0ef";}
+.focon-html5:before {content: "\e0f0";}
+.focon-html5-2:before {content: "\e0f1";}
+.focon-css3:before {content: "\e0f2";}
+.focon-chrome:before {content: "\e0f3";}
+.focon-firefox:before {content: "\e0f4";}
+.focon-IE:before {content: "\e0f5";}
+.focon-opera:before {content: "\e0f6";}
+.focon-safari:before {content: "\e0f7";}
+.focon-IcoMoon:before {content: "\e0f8";}
+.focon-sunrise:before {content: "\e0f9";}
+.focon-sun:before {content: "\e0fa";}
+.focon-moon:before {content: "\e0fb";}
+.focon-sun-2:before {content: "\e0fc";}
+.focon-windy:before {content: "\e0fd";}
+.focon-wind:before {content: "\e0fe";}
+.focon-snowflake:before {content: "\e0ff";}
+.focon-cloudy:before {content: "\e100";}
+.focon-cloud-3:before {content: "\e101";}
+.focon-weather:before {content: "\e102";}
+.focon-weather-2:before {content: "\e103";}
+.focon-weather-3:before {content: "\e104";}
+.focon-lines:before {content: "\e105";}
+.focon-cloud-4:before {content: "\e106";}
+.focon-lightning-2:before {content: "\e107";}
+.focon-lightning-3:before {content: "\e108";}
+.focon-rainy:before {content: "\e109";}
+.focon-rainy-2:before {content: "\e10a";}
+.focon-windy-2:before {content: "\e10b";}
+.focon-windy-3:before {content: "\e10c";}
+.focon-snowy:before {content: "\e10d";}
+.focon-snowy-2:before {content: "\e10e";}
+.focon-snowy-3:before {content: "\e10f";}
+.focon-weather-4:before {content: "\e110";}
+.focon-cloudy-2:before {content: "\e111";}
+.focon-cloud-5:before {content: "\e112";}
+.focon-lightning-4:before {content: "\e113";}
+.focon-sun-3:before {content: "\e114";}
+.focon-moon-2:before {content: "\e115";}
+.focon-cloudy-3:before {content: "\e116";}
+.focon-cloud-6:before {content: "\e117";}
+.focon-cloud-7:before {content: "\e118";}
+.focon-lightning-5:before {content: "\e119";}
+.focon-rainy-3:before {content: "\e11a";}
+.focon-rainy-4:before {content: "\e11b";}
+.focon-windy-4:before {content: "\e11c";}
+.focon-windy-5:before {content: "\e11d";}
+.focon-snowy-4:before {content: "\e11e";}
+.focon-snowy-5:before {content: "\e11f";}
+.focon-weather-5:before {content: "\e120";}
+.focon-cloudy-4:before {content: "\e121";}
+.focon-lightning-6:before {content: "\e122";}
+.focon-thermometer:before {content: "\e123";}
+.focon-compass-2:before {content: "\e124";}
+.focon-none:before {content: "\e125";}
+.focon-Celsius:before {content: "\e126";}
+.focon-Fahrenheit:before {content: "\e127";}
+.focon-forrst:before {content: "\e128";}
+.focon-headphones:before {content: "\e129";}
+.focon-bug:before {content: "\e12a";}
+.focon-cart-2:before {content: "\e12b";}
+.focon-earth:before {content: "\e12c";}
+.focon-battery:before {content: "\e12d";}
+.focon-list:before {content: "\e12e";}
+.focon-grid:before {content: "\e12f";}
+.focon-alarm:before {content: "\e130";}
+.focon-location-2:before {content: "\e131";}
+.focon-pointer:before {content: "\e132";}
+.focon-diary:before {content: "\e133";}
+.focon-eye-2:before {content: "\e134";}
+.focon-console:before {content: "\e135";}
+.focon-location-3:before {content: "\e136";}
+.focon-move:before {content: "\e137";}
+.focon-gift-2:before {content: "\e138";}
+.focon-monitor:before {content: "\e139";}
+.focon-mobile-2:before {content: "\e13a";}
+.focon-switch:before {content: "\e13b";}
+.focon-star-4:before {content: "\e13c";}
+.focon-address-book:before {content: "\e13d";}
+.focon-shit:before {content: "\e13e";}
+.focon-cone:before {content: "\e13f";}
+.focon-credit-card:before {content: "\e140";}
+.focon-type:before {content: "\e141";}
+.focon-volume:before {content: "\e142";}
+.focon-volume-2:before {content: "\e143";}
+.focon-locked-2:before {content: "\e144";}
+.focon-warning:before {content: "\e145";}
+.focon-info:before {content: "\e146";}
+.focon-filter:before {content: "\e147";}
+.focon-bookmark-3:before {content: "\e148";}
+.focon-bookmark-4:before {content: "\e149";}
+.focon-stats:before {content: "\e14a";}
+.focon-compass-3:before {content: "\e14b";}
+.focon-keyboard:before {content: "\e14c";}
+.focon-award-fill:before {content: "\e14d";}
+.focon-award-stroke:before {content: "\e14e";}
+.focon-beaker-alt:before {content: "\e14f";}
+.focon-beaker:before {content: "\e150";}
+.focon-move-vertical:before {content: "\e151";}
+.focon-move-horizontal:before {content: "\e153";}
+.focon-steering-wheel:before {content: "\e152";}
+.focon-volume-3:before {content: "\e154";}
+.focon-volume-mute:before {content: "\e155";}
+.focon-play:before {content: "\e156";}
+.focon-pause:before {content: "\e157";}
+.focon-stop:before {content: "\e158";}
+.focon-eject:before {content: "\e159";}
+.focon-first:before {content: "\e15a";}
+.focon-last:before {content: "\e15b";}
+.focon-play-alt:before {content: "\e15c";}
+.focon-battery-empty:before {content: "\e15d";}
+.focon-battery-half:before {content: "\e15e";}
+.focon-battery-full:before {content: "\e15f";}
+.focon-battery-charging:before {content: "\e160";}
+.focon-left-quote:before {content: "\e161";}
+.focon-right-quote:before {content: "\e162";}
+.focon-left-quote-alt:before {content: "\e163";}
+.focon-right-quote-alt:before {content: "\e164";}
+.focon-smiley:before {content: "\e165";}
+.focon-umbrella:before {content: "\e166";}
+.focon-info-2:before {content: "\e167";}
+.focon-chart-alt:before {content: "\e168";}
+.focon-save:before {content: "\e169";}
+
+
+
+
+/* css for a three column layout. will be used on dashboard and in customer editor. */
+
+
+
+/* two column panel layout. used in reports too. */
+.twoColumn{  
+	width:48%;  
+	min-height:200px;  
+	float:left;  
+	}  
+
+.twoColumn.column2 {float:right;}
+
+.twoColumn .placeholder{  
+	background: #ffffff;  
+	}  
+
+.threeColumn	{width:31%; margin:0 1%;}
+
+/* for a three column layout, where two columns are Narrow and one is Wide (NW) */
+.nwColumnN	{width:19%;}
+.nwColumnW	{width:60%;}
+
+
+
+
+/* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
+
+
+
+/* Pure CSS3 Multi Level Drop Down Navigation Menu */
+/*             http://www.bloggermint.com/demos/darknavmenu/#            */
+
+
+/* menu container */
+.ddUlMenu ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier1 menu behavior */
+.ddUlMenu ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier 1 menu link style (ok to change this). will affect tier2 also */
+.ddUlMenu ul li a {
+	float: left;
+	text-decoration:none;
+	padding:0 12px;
+	cursor:pointer;
+	}
+
+
+.ddUlMenu li ul {
+	background:#efefef;
+	left: -999em;
+	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
+	position: absolute;
+	width: 160px;
+	z-index: 9999;
+	border:1px solid #cccccc;
+	}
+
+.ddUlMenu li:hover ul {
+	left: auto;
+	}
+
+/* tier 2 nav */
+.ddUlMenu li ul li	{cursor:pointer;} /* click is likely binded to li, so make it all a cursor */
+.ddUlMenu li ul a {
+	background: none;
+	line-height:24px;
+	font-weight:normal; font-size:.8em;
+	display:block;
+	border: 0 none;
+	width: 160px;
+	}
+	
+
+/*
+
+########################################################
+
+HEADER
+
+########################################################
+
+*/
+
+
+#mastHead	{position:relative; min-width:700px;}
+#mastHead .logo	{float:left; margin-left:12px; margin-top:5px;}
+#mastHead .menu	{float:right; margin-right:12px; white-space: nowrap;}
+#mastHead .menu span	{display:inline;}
+#mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
+
+#mastHead .partition:before	{content:"prt: ";}
+
+/*
+the row with the logo and text links
+
+NOTE - the overflow hidden on headerTop and the display inlineblock/width are to solve an errant spacing issue appearin between the two elments using these classes.
+*/
+.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656; overflow:hidden;}
+.mhTabsContainer	{
+	position:relative; display:inline-block; width:100%;
+	background:#757779;
+	}
+
+
+
+.mhTabsContainer ul	{width:100%; padding:0; margin:0; display:inline-block; position:relative; z-index:100; float:left;}
+.mhTabsContainer li	{display:block; float:left; list-style:none;border-right:1px solid #ededed; width:8%; padding:1px 4px 0 4px; margin:0; font-size:.75em; position:relative; color:#ffffff; cursor:pointer;}
+.mhTabsContainer li:last-child	{border-right:0px;}
+.mhTabsContainer li:hover	{background:#7398a5;}
+.mhTabsContainer li.active, #navTabs	{background:#c0d2d8; color:#565656;}
+#navTabs a	{color: #333333;}
+.mhTabsContainer .toggleArrow	{width:1%;}
+
+.mhTabsContainer ul.navIcons	{max-width:1150px;} /* as the browser gets very wide, the icon/tabs don't look as good stretched out. cap em */
+.mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
+.mhTabsContainer ul.showIcons li	{height:55px;}
+.mhTabsContainer ul.hideIcons .icon	{display:none;}
+.mhTabsContainer ul.hideIcons li	{height:20px;}
+
+.mhTabsContainer .text	{position:relative; z-index:10;}
+.mhTabsContainer .icon	{background-image:url(images/tab_sprites-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
+.mhTabsContainer .productsTab .icon	{background-position: -110px 0;}
+.mhTabsContainer .ordersTab .icon	{background-position: -165px 0;}
+.mhTabsContainer .crmTab .icon	{background-position: -220px 0;}
+.mhTabsContainer .syndicationTab .icon	{background-position: -275px 0;}
+.mhTabsContainer .reportsTab .icon	{background-position: -330px 0;}
+.mhTabsContainer .kpiTab .icon	{background-position: -385px 0;}
+.mhTabsContainer .utilitiesTab .icon	{background-position: -440px 0;}
+.mhTabsContainer .supportTab .icon	{background-position: -495px 0;}
+
+
+.mhTabsContainer .setupTab.active .icon	{background-position: 0px -55px;} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab.active .icon	{background-position: -55px -55px;}
+.mhTabsContainer .productsTab.active .icon	{background-position: -110px -55px;}
+.mhTabsContainer .ordersTab.active .icon	{background-position: -165px -55px;}
+.mhTabsContainer .crmTab.active .icon	{background-position: -220px -55px;}
+.mhTabsContainer .syndicationTab.active .icon	{background-position: -275px -55px;}
+.mhTabsContainer .reportsTab.active .icon	{background-position: -330px -55px;}
+.mhTabsContainer .kpiTab.active .icon	{background-position: -385px -55px;}
+.mhTabsContainer .utilitiesTab.active .icon	{background-position: -440px -55px;}
+.mhTabsContainer .supportTab.active .icon	{background-position: -495px -55px;}
+
+
+.mhTabsContainer .messageCount	{
+	color:#ffffff; font-size:12px; font-weight:normal; line-height:18px;
+	display:none; /* off by default. will be turned on by app when messages are present */
+	position:absolute; top:-2px; right:-3px;
+	z-index:110;
+	height:20px; width:20px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	text-align:center;
+	border:1px solid #ffffff;
+	-webkit-box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+background: rgb(153,0,0); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(153,0,0,1) 0%, rgba(204,0,0,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(153,0,0,1)), color-stop(100%,rgba(204,0,0,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#990000', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
+
+	}
+
+#navTabs	{text-align:center; font-size:.75em; line-height:1.7em;}
+#navTabs a	{padding:0px 12px; text-decoration:none;}
+#navTabs a:hover	{text-decoration:underline;}
+
+#breadcrumb	{border-bottom:1px solid #ededed; font-size:.8em; text-indent:12px;}
+
+.mhTabsContainer li.messagesTab:hover, #messagesContent, .mhTabsContainer li.messagesTabActive	{background:#565656 !important;}
+#messagesContent	{position:absolute; top:65px; left:17px; right:17px; min-height:300px; z-index:99; color:#ffffff; padding:12px;}
+#messagesContent a, #messagesContent .lookLikeLink	{color:#0CF;}
+
+#messagesContent .messagesList	{float:left; width:30%; overflow:auto; height:300px; padding-right:12px; font-size:.75em;}
+#messagesContent .messageDetail	{float:right; width:60%; margin-right:3%;}
+
+
+@media screen and (max-width: 1000px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
+	}
+
+
+.pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
+
+
+
+
+/*
+
+########################################################
+
+LOGIN and preView
+
+########################################################
+
+*/
+
+
+#appPreView, #appLogin, #createAccountContainer, #appPasswordRecover	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
+
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+
+
+#appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
+
+
+
+/*
+
+########################################################
+
+FINDER
+
+########################################################
+
+*/
+
+
+/*
+any div that is going to be the container for a product finder should have this class.
+the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
+*/
+
+.finderContainer	{width:100%; margin:12px 0;}
+.finderContainer .ui-widget-header	{padding:4px;}
+
+
+.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
+.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+
+#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
+
+/*
+used in the template for a product finder.
+use only variable widths, so that the finder expands proportionally depending
+on it's container element.
+*/
+.finderTable	{width:96%; margin:0 auto;}
+.finderTable	td {padding:6px; width:50%;}
+
+
+
+/* for product lists in a finder. */
+
+/* scrolly-div for product lists */
+.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
+
+/*
+parent element for list (either ol or ul)
+min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
+*/
+.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
+
+/*
+a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
+the right padding is to accomodate the handle and removeProd elements.
+ */
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
+.finderProdlist li:hover	{border-color: #cccccc;}
+
+.finderProdlist .prodThumb	{float:left; margin-right:12px;}
+.finderProdlist .pid	{font-size:.8em}
+.finderProdlist .prodName	{margin-right:55px;}
+
+
+/*
+styles for lists that are selectable
+a background on the target element may require an implicit override here.
+*/
+.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def !important ;}
+.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
+
+/* if a list is selectable and sortable, add an element with a handle class */
+.ui-selecting .handle { background: #ddd; }
+.ui-selected .handle { background: #cde; }
+
+
+.finderResults	{z-index:100;}
+.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
+
+/* the remove feature is only available on the target side */
+.finderResults .removeProd	{display:none;}
+
+
+
+/*
+
+####################
+
+Collapseable panel (product editor, domains)
+
+####################
+
+
+note - the parent 'stackedPanels' was to compensate for legacy/compatability content class clashing.
+*/
+
+.stackedPanels .panelContents	{border-top: none; min-height:100px;} /* panels are collapsed by default. when opened, need min-height for loading while content is obtained */
+.stackedPanels .panelHeader	{margin-top:12px; padding:3px 12px;}
+.stackedPanels .panelHeader span	{float:left; margin-right:6px;}
+
+.stackedPanels	.panelContents fieldset	{border:none; margin:0; padding:10px;} /* add a little padding inside the panel */
+
+
+
+
+
+
+
+/*
+
+########################################################
+
+
+Messaging Styles
+
+########################################################
+
+*/
+.appMessage	{margin-bottom:12px;}
+.appMessage .stdMargin {padding:5px;}
+
+.appMessage .ui-icon	{float:left; margin-right:12px;}
+
+/* some messages have a red bg. add a white circle around the icon in these cases. */
+.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
+
+
+.ui-state-success	{background:#c3e6c2; border:#abc8aa 1px solid;}
+.ui-state-success .ui-icon-check, .ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
+.ui-state-success p	{padding-top:7px;} /* top padding aligns text w/ middle of icon */
+
+
+
+/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+.appMessage .appMessageTxt	{float:left;}
+
+.ui-state-z-message	{border:1px solid #666666; background:#efefef; color:#333333;}
+
+.ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
+.ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
+
+.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center !important; width:29px; height:29px;}
+
+.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat !important; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
+.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
+.ui-icon-z-youerr	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+
+
+/*
+
+########################################################
+
+
+SHARED CLASSES FOR INLINE EDITING
+
+########################################################
+
+*/
+
+
+
+.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
+/*
+added to an editable element once edit is enabled.
+inline block and width are added so that elements that are empty will be more obviously editable.
+be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
+the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
+*/
+.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px; min-height:12px;} 
+.editEnabled input	{border:0; padding:0; margin:0;}
+.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
+.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
+
+.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
+a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
+
+
+
+
+/*
+
+########################################################
+
+
+PAGE STYLES
+
+########################################################
+
+*/
+
+
+
+/* styles for csv import pages */
+/* this was a horrible idea. at some point, these should be removed */
+.page section	{display:block; padding:0; margin:0 0 24px 0}
+.page section.displayNone	{display:none;}
+.page fieldset	{border:none; padding:0; margin-bottom:12px;}
+
+
+/*
+
+########################################################
+
+
+DEBUGGER
+
+########################################################
+
+*/
+
+#debugPanel	{position:fixed; bottom:100px; left:-15px; width:125px; padding-left:25px; display:none;}
+#debugPanel .debugMenu ul	{width:250px;}
+#debugPanel h5 {margin:4px 0;}
+#debugPanel h6 {margin:4px 0;}
+
+
+/*
+
+########################################################
+
+
+STYLES FOR SPECIFIC UI LAYOUTS (dualMode, soloMode, slimLeft, etc)
+
+########################################################
+
+*/
+
+
+/* these are the styles added AFTER the shared dualMode function was created */
+h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0; padding:0; text-indent:12px;} /* the text header */
+.dualModeListThead th	{text-align:left; padding:2px 4px;} /* the table headers */
+
+.dualModeListControls	{padding:0 12px; line-height:25px; height:25px;}
+
+
+.dualModeDetail	{float:right; display:none;} /* the container for the detail column. */
+
+/* end global dualmode classes */
+
+
+.dualModeListContainer .heading, 
+.soloModeListContainer .heading, 
+.slimLeftContentSection .heading	{text-indent:12px; line-height:35px;}
+
+
+.dualModeListContainer .buttonSet,
+.soloModeListContainer .buttonSet,
+.slimLeftContentSection .buttonSet	{float:right; vertical-align:middle; margin:3px;}
+
+
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .ui-widget-header div.buttonset	{min-height:35px;} /* this is set so when in minimal mode, if only floating buttons are present, the header doesn't collapse */
+.dualModeListContainer .formRow	{min-height:30px; line-height:30px;}
+
+.dualModeListContainer.detailMode	{font-size:.80em;} /* shrink list text in detail mode */
+
+
+
+.slimLeftNav	{float: left; width:20%;}
+.slimLeftContentSection	{float: right; width:75%;}
+.slimLeftContent	{min-height:250px;} /* minheight here for showLoading */
+
+
+.slimLeftNav .roundedList li:first-child	{
+	-moz-border-radius-topleft:8px;-webkit-border-top-left-radius:8px;-khtml-border-top-left-radius:8px;border-top-left-radius:8px;
+	-moz-border-radius-topright:8px;-webkit-border-top-right-radius:8px;-khtml-border-top-right-radius:8px;border-top-right-radius:8px;
+	}
+
+.slimLeftNav .roundedList li:last-child	{
+	-moz-border-radius-bottomleft:8px;-webkit-border-bottom-left-radius:8px;-khtml-border-bottom-left-radius:8px;border-bottom-left-radius:8px;
+	-moz-border-radius-bottomright:8px;-webkit-border-bottom-right-radius:8px;-khtml-border-bottom-right-radius:8px;border-bottom-right-radius:8px;
+	}
+
+
+
+.slimLeftNav .roundedList li, .slimLeftNav .paddedList li	{margin-bottom:3px; padding:3px 6px;}
+
+/*
+
+########################################################
+
+
+SHARED FORM STYLES
+
+########################################################
+
+*/
+
+
+/*
+for use in forms where the label is the row container.
+put the prompt into a span
+<label><span>prompt</span>input</label>
+*/
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
+
+/* 
+within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
+add floatleft to each label inside the div
+see shipping panel in product editor for example
+*/
+
+.labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
+.labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
+
+/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+.alignedLabels label span:first-of-type	{width:30%;}
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=url],
+.alignedInputs input[type=password],
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+
+.alignedInputs input[type=number], 
+.alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
+
+
+
+
+
+
+/* landing page (aka recent news) */
+
+/* .pageLanding .ui-widget-content	{max-height:400px; overflow:auto; min-height:75px;} /* if/when browsers support it, check out  overflow-style */
+
+.pageLanding .ui-anypanel-header .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
+
+/* three column panel layout (homepage) */
+#dashboardColumn1	{width:65%; float:left;}
+#dashboardColumn2	{width:33%; float:right;}
+
+#dashboardColumn2 .varImage	{max-width:300px; width:100%;}
+
+.recentNewsContainer	{height:450px; overflow:auto;}
+.recentNewsContainer article	{margin-bottom:24px;}
+
+/* achievements page */
+table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-collapse: collapse;}
+.achievementList td	{vertical-align:top;border-bottom:1px solid #efefef; padding:6px 12px;}
+.achievementList p	{font-size:1em; margin:0px;}
+.achievementList h3	{font-size:1.5em; font-weight:normal; font-family: 'PT Sans', sans-serif;}
+
+
+/* ebay reports page */
+.ebayListingsReportPage fieldset.oneThird	{width:30%}
+
+
+
+/*
+
+#########################
+
+help documentation styles (aka webdoc)
+
+#########################
+*/
+
+
+/* asides are used for click by click, caution and hints.
+ex of cbc, hint and caution: search 'product' and open 'product edit'
+*/
+
+.helpDetail aside	{padding:12px; margin:12px 0;}
+.helpDetail aside div	{background:#fff; padding:12px;}
+.helpDetail aside div li	{margin-left:30px; list-style: none; margin-bottom:6px;}
+.helpDetail aside h6	{padding-bottom:12px; font-size:1.5em;}
+
+
+.helpDetail aside.cbc	{background:#C0D2D8;}
+.helpDetail aside.cbc h6:before {content: "\e132"; font-family:iconFont; padding-right:3px;}
+
+.helpDetail aside.hint	{background:#efefef;}
+.helpDetail aside.hint h6:before {content: "\e044"; font-family:iconFont; padding-right:3px;}
+
+
+
+
+.helpDetail aside.caution	{background:#fe5252;}
+.helpDetail aside.caution h6	{color:#ffffff;}
+.helpDetail aside.caution h6:before {content: "\e145"; font-family:iconFont; padding-right:6px;}
+
+
+.helpDetail .ui-widget-content h1	{margin:0 0 24px 0; font-size:1.5em; color:#000000;} /* document title */
+.helpDetail .ui-widget-content h2	{margin:0 0 12px 0; font-size:1.3em; color:#333333;} /* title for each article (used to be SECTION) */
+.helpDetail .ui-widget-content h3	{margin:0 0 12px 0; font-size:1.1em; color:#666666;} /* title for each section (used to be SUBSECTION) */
+
+.helpDetail article {margin-bottom:24px; } /* divides each section */
+.helpDetail article, .helpDetail .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
+
+
+
+
+/*
+REPORTING -> KPI
+*/
+ul.kpiSortable	{width:250px; min-height:200px; max-height:250px; overflow:auto; list-style:none; margin:0; padding:0;}
+ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
+ul.kpiSortable li:last-child	{border-bottom:0;}
+.KPIGraphBuilder	{margin:50px;}
+
+.kpiGraphContainer .graph	{
+	width:90%;
+	height:250px;
+	margin:0 auto 12px auto; padding-bottom:12px; border-bottom:1px dashed #ccc;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	}
+
+
+
+/*
+http://codepad.co/s/7cca38#select
+some pad (more or less)specific styles.
+*/
+
+@media screen and (max-width: 800px) {
+	.twoColumn{  
+		width:100%;
+		clear:both;
+		}  
+	
+	.twoColumn.column2 {clear:both;}
+
+	}

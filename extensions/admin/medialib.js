@@ -351,7 +351,7 @@ setTimeout(function(){
 // the delete below is a fairly benign delete. report errors, but no need updated the entire files list again, just remove the line from the dom.
 // errors will get reported and, if the file doesn't delete, it'll always be here next time for deletion.
 				for(var i = 0; i < L; i += 1)	{
-					$ul.append($("<li>").html("[ <a href='#' onClick=\"app.ext.admin_medialib.calls.adminPublicFileDelete.init('"+data[i].file+"',{},'passive');  $(this).parent().empty().remove(); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
+					$ul.append($("<li>").html("[ <a href='#' onClick=\"app.ext.admin_medialib.calls.adminPublicFileDelete.init('"+data[i].file+"',{},'passive');  $(this).parent().empty().remove(); app.model.destroy('adminPublicFileList'); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
 					}
 				 $('#publicFilesList').empty().removeClass('loadingBG').append($ul.children());
 				},
@@ -453,7 +453,7 @@ setTimeout(function(){
 	//also, because this is passed into the media library as a string, the string or object distinction is done here and passed in with different keys.
 	//selector is passed instead of ID to be more versatile. The mediaLib itself may end up using a class.
 					if(typeof strOrObj == 'object')	{
-						if(strOrObj.attr('id'))	{P.eleSelector = app.u.jqSelector('#',strOrObj.attr('id'))}
+						if(strOrObj.attr('id'))	{P.eleSelector = strOrObj.attr('id')} //save as unencoded string. encode it when using as jquery selector 
 						else	{
 							P.eleSelector = 'input_'+app.u.guidGenerator();
 							strOrObj.attr('id',P.eleSelector);
@@ -467,19 +467,24 @@ setTimeout(function(){
 					}
 				}, //uiShowMediaLib
 
+
+
+
+
+
 //This is what's executed when a file in the media library is selected.
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
-
+//				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
 				var newFilename = (set2Blank === true) ? '' : fileInfo.path; //set2Blank
 				var $medialib = $('#mediaModal');
 				$medialib.showLoading();
 				var mediaData = $medialib.data();
-				// app.u.dump("mediaData: "); app.u.dump(mediaData);
-				// app.u.dump("fileInfo: "); app.u.dump(fileInfo);
+//				app.u.dump("mediaData: "); app.u.dump(mediaData);
+//				app.u.dump("fileInfo: "); app.u.dump(fileInfo);
 				var error = false;
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
 //eleSelector just updates some form on the page.
@@ -489,7 +494,7 @@ setTimeout(function(){
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 						var $image = $(mediaData.imageID);
-						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
+//						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
 							'alt':fileInfo.Name
@@ -497,13 +502,22 @@ setTimeout(function(){
 						}
 //update form element
 					if(mediaData.eleSelector){
-						// app.u.dump("took selector route");
-						$(mediaData.eleSelector).val(newFilename);
+//						app.u.dump("took selector route. selector: "+mediaData.eleSelector);
+// ** 201318 -> the eleSelector on a few elements I tested had no #, so they weren't working right.
+//however, didn't want to assume it was broken everywhere so a check was added.
+						var correctedSelector = mediaData.eleSelector;
+						if(mediaData.eleSelector.indexOf('#') == -1)	{
+							app.u.dump(" -> # some dumbass called medialib but used selector \'"+mediaData.eleSelector+"\'! i will *attempt* to fix it.");
+							correctedSelector = app.u.jqSelector('#',mediaData.eleSelector);
+							}
+//						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
+//						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);
+						$(correctedSelector).val(newFilename);
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
 					else	{
-						// app.u.dump("took mode route");
+//						app.u.dump("took mode route");
 						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':newFilename},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
 						}
@@ -516,6 +530,11 @@ setTimeout(function(){
 					} //something is amiss. required params not avail.
 				$medialib.hideLoading();
 				}, //selectThisMedia
+
+
+
+
+
 
 			showFoldersFor : function(P)	{
 				if(P.targetID && P.templateID)	{
@@ -768,6 +787,8 @@ if(selector && mode)	{
 			},
 		'publicFileUpload' : function(data,textStatus)	{
 //			app.u.dump("Got to csvUploadToBatch success.");
+//* 201320 -> the adminPublicFileList is slow, so on upload, we do not reload content. The destroy below will remove the data from localStorage so a merchant can exit publick files and return to see their updated list.
+			app.model.destroy('adminPublicFileList');
 			app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
 			app.model.dispatchThis('immutable');
 			},

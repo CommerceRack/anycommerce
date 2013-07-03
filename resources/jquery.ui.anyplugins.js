@@ -17,6 +17,18 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 */
 
 
+// ** 201318 -> replacement for obsolete .browser() function.
+//.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
+// Figure out what browser is being used
+if(typeof typeof jQuery.browser == 'undefined')	{
+	jQuery.browser = {
+		version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+		safari: /webkit/.test( userAgent ),
+		opera: /opera/.test( userAgent ),
+		msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
+		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
+		}
+	}
 
 
 /*
@@ -38,6 +50,10 @@ For the list of available params, see the 'options' object below.
 
 */
 
+
+
+
+
 (function($) {
 	$.widget("ui.anymessage",{
 		options : {
@@ -45,7 +61,7 @@ For the list of available params, see the 'options' object below.
 			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
-			persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+			persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 			},
 
 		_init : function(){
@@ -53,8 +69,8 @@ For the list of available params, see the 'options' object below.
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-
-			o.messageElementID = 'msg_'+app.u.guidGenerator(); //a unique ID applied to the container of the message. used for animating.
+//a unique ID applied to the container of the message. used for animating and for checking if element is still on the DOM during close.
+			o.messageElementID = 'msg_'+app.u.guidGenerator();
 			
 //the content is in an array because otherwise adding multiple messages to one selector causes them to share properties, which is not a desired behavior.
 			if(typeof self.outputArr == 'object')	{}
@@ -68,9 +84,23 @@ For the list of available params, see the 'options' object below.
 			self.outputArr[i].append(self._getFormattedMessage(i));
 			$t.prepend(self.outputArr[i]); //
 
-			if(o.persistant)	{} //message is persistant. do nothing.
-			else	{this.ts = setTimeout(function(){$t.anymessage('close');},10000);} //auto close message after a short duration.
-			
+			if(o.persistent)	{} //message is persistent. do nothing.
+//message should auto-close. However, it is possible for a message to already have been removed by an 'empty', so verify it is still on the DOM or an error could result.
+// ** 201318 -> bug fix. jquery error if close method run on element that wasn't already instantiated as anymessage, such as an element already removed from DOM.
+// ** ++ auto close bugfix.  The appropriate message is passed to the close function so that when the timeout executes it does not close all the messages in the container
+			else	{this.ts = setTimeout(function(){
+				if($('#'+o.messageElementID).length)	{$t.anymessage('close',$('#'+o.messageElementID));} 
+				},10000);} //auto close message after a short duration.
+// ** 201318 side effects bug- reset options after displaying the message to provide defaults for the next message --mc
+//EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistent true, message 2 does not set persistent.  
+//Message 2 is set to persistent because the defaults have been overwritten on the container
+			this.options = {
+				message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
+				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
+				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+				persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
+				}
 			}, //_init
 
 		_setOption : function(option,value)	{
@@ -127,7 +157,16 @@ For the list of available params, see the 'options' object below.
 //				app.u.dump(" -> msg format is _msgs.");
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 1; i <= msg['_msgs']; i += 1)	{
-						$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
+						if(msg['_msg_'+i+'_txt'])	{
+							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type'] || "" ).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id'] || "no id set"+"]"));
+							}
+						else if(msg['_msg_'+i+'_txt'] === null)	{
+							//null will only be value if a successful API request went through and the repsonse message was specifically set to null, so we can ignore it.  below, 'blanks' are handled.
+							app.u.dump("CAUTION! response (_msg_"+i+"_tx) contained a null msg text. This is likely a normal part of the response.");
+							}
+						else	{
+							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type'] || "" ).text("Uh Oh! An error occured by _msg_"+i+"_txt is blank.  How odd."));
+							}
 						}
 					}
 				else if(msg.errid)	{
@@ -137,7 +176,7 @@ For the list of available params, see the 'options' object below.
 					if(msg.errtype == 'iseerr')	{
 //					app.u.dump(" -> msg IS iseerr.");
 
-					o.persistant = true; //iseErr should be persistant
+					o.persistent = true; //iseErr should be persistent
 					this.outputArr[instance].addClass('ui-state-error');
 //					$('button',this.outputArr[instance]).button('disable'); //I don't think we want to disable the ability to close this, we just don't want it to auto-close.
 
@@ -153,6 +192,16 @@ For the list of available params, see the 'options' object below.
 						$r.append(msgDetails);
 						}
 					}
+//the validate order request returns a list of issues.
+				else if(msg['@RESPONSES'])	{
+					var L = msg['@RESPONSES'].length;
+//					console.dir("Got to @issues, length: "+L);
+					$r = $("<ul \/>"); //adds a left margin to make multiple messages all align.
+					for(var i = 0; i < L; i += 1)	{
+						$r.append("<li>"+msg['@RESPONSES'][i].type+": "+msg['@RESPONSES'][i].msg+"<\/li>");
+						}
+					}
+
 //the validate order request returns a list of issues.
 				else if(msg['@issues'])	{
 					var L = msg['@issues'].length;
@@ -247,10 +296,12 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-			
-			if($t.attr('widget') == 'anytabs')	{} //id has already been set as tabs.
+// * 201320 -> changed attr from widget to data-widget-anytabs. widget isn't a valid attribute plus no conducive to multiple widgets on one element.
+			if($t.attr('data-widget-anytabs'))	{
+				app.u.dump("data-widget-anytabs -> already enabled.");
+				} //element has already been set as tabs.
 			else	{
-				$t.attr('widget','anytabs')
+				$t.attr('data-widget-anytabs',true)
 				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
 				self.tabs = $("ul",$t).first();
 	
@@ -294,6 +345,8 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 		_addEvent2Tabs : function()	{
 			var self = this;
+// * 201318 -> more efficient selector and only 1 loop
+/*
 			this.tabs.find('li').each(function(){
 				$(this).off('click.anytab').on('click.anytab',function(){
 					self.reveal($(this));
@@ -304,6 +357,16 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					event.preventDefault();
 					});
 				});
+*/
+			$('a',this.tabs).each(function(){
+				$(this).on('click.anytabs',function(event){
+//					app.u.dump('tab clicked!');
+					self.reveal($(this).parent());
+					event.preventDefault();
+					return false;
+					});
+				});
+
 			},
 
 		_addClasses2Tabs : function()	{
@@ -336,7 +399,8 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				else	{$tab = '#'+$tab}
 				$('a',this.element).each(function(){
 					if($(this).attr('href') == $tab)	{
-						$(this).trigger('click'); //will re-execute this function with $tab as object.
+// * 201218 -> more targeted click name to reduce likelyhood of unintentional nuking of event
+						$(this).trigger('click.anytabs'); //will re-execute this function with $tab as object.
 						return false; //breaks out of each loop.
 						}
 					});
@@ -356,11 +420,12 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 //clear the message entirely. run after a close. removes element from DOM.
 		destroy : function(){
-			this.element.empty();
+			this.element.intervaledEmpty(500,true);
 			this.element.removeClass("ui-tabs");
 			this.element.removeClass("ui-widget");
 			this.element.removeClass("ui-widget-anytabs");
-			this.element.attr("widget","");
+			this.element.data("widget-anytabs","");
+			this.element.attr("data-widget-anytabs","").removeAttr('data-widget-anytabs');
 			}
 		}); // create the widget
 })(jQuery); 
@@ -407,7 +472,6 @@ either templateID or (data or datapointer) are required.
 // the 'or' portion will attemplate to add a template if the ID is on the DOM.
 
 //			app.u.dump("anycontent params: "); app.u.dump(o);
-
 			if(o.templateID && (app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
 //				app.u.dump(" -> passed template check.");
 				self._anyContent();
@@ -418,7 +482,7 @@ either templateID or (data or datapointer) are required.
 				}
 			else	{
 				$t.anymessage({
-					persistant : true,
+					persistent : true,
 					gMessage : true,
 					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in app.data "});
 				}
@@ -443,16 +507,20 @@ either templateID or (data or datapointer) are required.
 				}
 			else if(o.templateID && o.data)	{
 //				app.u.dump(" -> template and data present. transmogrify.");
+//				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
+//				app.u.dump(" -> hideLoading has run.");
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+//				app.u.dump(" -> transmogrified");
 				this.element.data('isTranslated',true);
+//				app.u.dump(" -> data.isTranslated set to true.");
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
 //				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				if(o.showLoading)	{
-					this.element.showLoading(o.showLoadingMessage);
+					this.element.showLoading({'message':o.showLoadingMessage});
 					}
 				}
 //if just translating because the template has already been rendered
@@ -477,6 +545,7 @@ either templateID or (data or datapointer) are required.
 			},
 
 		_addNewTemplate : function()	{
+
 			var r = false; //what's returned. true if able to create template.
 			var $tmp = $(app.u.jqSelector('#',this.options.templateID));
 			if($tmp.length > 0)	{
@@ -484,6 +553,7 @@ either templateID or (data or datapointer) are required.
 				r = true;
 				}
 			else{} //do nothing. Error will get thrown later.
+			return r;
 			},
 
 //clear the message entirely. run after a close. removes element from DOM.
@@ -602,43 +672,53 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 (function($) {
 	$.widget("ui.anytable",{
 		options : {
+			inverse : false
 			},
 		_init : function(){
 			this._styleHeader();
-			var $table = this.element;
+			var
+				$table = this.element,
+				o = this.options;
+			
+	
 			$('th',$table).each(function(){
 
 var th = $(this),
-thIndex = th.index(),
-inverse = false;
+thIndex = th.index();
 
-th.click(function(){
-	$table.find('td').filter(function(){
-		return $(this).index() === thIndex;
-		}).sortElements(function(a, b){
-			var r;
-			var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
-			var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
-			if(numA && numB)	{
-//				console.log('is a number');
-				r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
-				}
-			else	{
-				r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
-				}
-			return r
-			},function(){
-		// parentNode is the element we want to move
-		return this.parentNode; 
+// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
+if(th.data('anytable-nosort'))	{} //sorting is disabled on this column. good for columns that only have buttons.
+else	{
+	th.on('click.anytablesort',function(){
+		$table.find('td').filter(function(){
+			return $(this).index() === thIndex;
+			}).sortElements(function(a, b){
+				var r;
+				var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
+				var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
+				if(numA && numB)	{
+	//				console.log('is a number');
+					r = numA > numB ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					}
+				else	{
+					r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					}
+				return r
+				},function(){
+			// parentNode is the element we want to move
+			return this.parentNode; 
+			});
+		o.inverse = !o.inverse;
 		});
-	inverse = !inverse;
-});
+	}
+
 				}); //ends 'each'
 			}, //_init
 
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
-			switch (option)	{
+// * 201320 -> the code below isn't necessary (from the copy/paste used to create widget
+/*			switch (option)	{
 				case 'state':
 					(value === 'close') ? this.close() : this.open(); //the open/close function will change the options.state val as well.
 					break;
@@ -654,20 +734,29 @@ th.click(function(){
 					console.log(" -> option: "+option);
 					break;
 				}
-			}, //_setOption
+*/			}, //_setOption
 
 		_styleHeader : function()	{
 			var $table = this.element;
-			$('th',$table)
-//				.attr("title",'click here to sort this column')
-				.css({'borderLeft':'none','borderTop':'none','borderBottom':'none'})
-				.addClass('ui-state-default').css('cursor','pointer')
-				.click(function(){
-					$('th',$table).removeClass('ui-state-active');
-					$(this).addClass('ui-state-active')
-					})
-				.mouseover(function(){$(this).addClass('ui-state-hover')})
-				.mouseout(function(){$(this).removeClass('ui-state-hover')}); // 
+			$('th',$table).each(function(){
+				var $th = $(this);
+
+// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
+				$th.css({'borderLeft':'none','borderTop':'none','borderBottom':'none'})
+				.addClass('ui-state-default')
+				if($th.data('anytable-nosort'))	{} //sorting is disabled on this column. style accordingly.
+				else	{
+					$th
+					.css('cursor','pointer')
+					.on('click.anytablestyle',function(){
+						$('th',$table).removeClass('ui-state-active');
+						$th.addClass('ui-state-active')
+						})
+					.mouseover(function(){$th.addClass('ui-state-hover')})
+					.mouseout(function(){$th.removeClass('ui-state-hover')}); // 
+					}
+				})
+
 			},
 
 		destroy : function(){
@@ -699,31 +788,43 @@ and it'll turn the cb into an ios-esque on/off switch.
 (function($) {
 	$.widget("ui.anycb",{
 		options : {
+			text : {
+				on : 'on',
+				off : 'off'
+				}
 			},
 		_init : function(){
 			var self = this,
 			$label;
 			
 			if(self.element.is('label'))	{$label = self.element}
-			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label')}
+			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label');}
 			else	{}
 			
-			
+		
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			else if($.browser && $.browser.msie && Number($.browser.version.substring(0, 1)) <= 8)	{} //ie 8 not supported. didn't link binding.
 			else if($label.length)	{
+//				app.u.dump(" -> anycbifying. is label: "+$label.is('label'));
 				var $input = $("input",$label).first(),
-				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
+				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left','float':'left'}),
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
 	
-				$label.data('anycb',true);
+				$label.data('anycb',true).css({'min-height':'20px','cursor':'pointer'}); // allows for plugin to check if it's already been run on this element.
 				self.span = $span; //global (within instance) for easy reference.
+//				self.input = $input;//global (within instance) for easy reference.
+
+				$label.contents().filter(function() {
+					return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
+					}).wrap("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>"); //wrap around just the text. text().wrap() didn't work. don't use inline-block or ie8 doesn't work.
 
 				$input.hide();
 				$container.append($span);
 				$label.prepend($container);
-				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
-		
-				$input.on('change.anycb',function(){
+				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
+//				app.u.dump('got here');
+				$input.on('click.anycb',function(){
+//					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
 					});
@@ -734,14 +835,18 @@ and it'll turn the cb into an ios-esque on/off switch.
 
 			}, //_init
 		_turnOn : function()	{
-			this.span.text('on');
+//			app.u.dump(' -> anycb set to on');
+			this.span.text(this.options.text.on);
 			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
 			this.span.animate({'left':-1},'fast');
+//			this.input.prop('checked',true);
 			},
 		_turnOff : function()	{
-			this.span.text('off');
+//			app.u.dump(' -> anycb set to off');
+			this.span.text(this.options.text.off);
 			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
 			this.span.animate({'left': 24},'fast');
+//			this.input.prop('checked',false);
 			},
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
@@ -836,8 +941,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 				self._handleButtons($header);
 			
 				$content = self._anyContent();
-
-				if($content.length)	{$content.appendTo($t);} //content generated via template of some kind.
+//* 201320 -> if _anyContent returned false, this caused a js error.
+				if($content && $content.length)	{$content.appendTo($t);} //content generated via template of some kind.
 				else if(o.title)	{$content = $t.children(":first");} //no content yet, title specified. use first child.
 				else	{$content = $t.children(":nth-child(2)");} //no content. first child is title. second child is content.
 				
@@ -878,7 +983,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 				}
 			},
-
+// !!! update this to use anycontent.
 		_anyContent : function()	{
 			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
@@ -988,7 +1093,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 //			app.u.dump(" -> this.options.persistent: "+this.options.persistent);
 //			app.u.dump(" -> value: "+value);
 			if(this.options.persistent && value)	{
-//				app.u.dump("GOT HERE!!!!!!!!!!!! ")
 				if(this.options.extension && this.options.name)	{
 					var settings = {};
 					settings[this.options.name] = {'state':value};
@@ -999,7 +1103,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					r = true;
 					}
 				else	{
-					app.u.dump("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistant.",'warn');
+					app.u.dump("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistent.",'warn');
 					}
 				}
 			return r;
@@ -1014,7 +1118,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			sm = this.options.settingsMenu;
 
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
-			for(index in sm)	{
+			for(var index in sm)	{
 				$("<li \/>").addClass('ui-state-default').on('click',sm[index]).on('click.closeMenu',function(){
 					$ul.menu( "collapse" ); //close the menu.
 					}).hover(function(){$(this).addClass('ui-state-hover')},function(){$(this).removeClass('ui-state-hover')}).text(index).appendTo($ul);
@@ -1037,42 +1141,224 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 
 
-/* will convert a tbody into a csv */
 
+
+
+
+/*
+// * 201318 -> new plugin: stickytabs
+run this on an element already on the DOM that has content in it, such as a table.  
+stickytabs will create a new container and, in an animated fashion, move the contents of the selector into the new container.
+The new container will have a tab on it and, shortly after the contents are moved, will 'close' by collapsing the content offscreen so only the tab remains.
+clicking the tab will toggle the tab contents into/out of view.
+tab will be 'fixed' so it retains position during scrolling (for browsers that support fixed positioning)
+
+supported methods include: open, close, toggle and destroy.
+supported options include tabID (given to the container), tabtext (what appears in the tab itself) and tabclass (the class applied to the tab)
+
+*/
+
+(function($) {
+	
+	$.widget("ui.stickytab",{
+		options : {
+			tabID : '',
+			tabtext : 'unnamed tab', //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+			tabclass : 'ui-state-default' //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
+			},
+
+		_init : function(){
+//			console.log('init sticktab');
+			var self = this,
+			o = self.options, //shortcut
+			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			
+			if($t.data('isstickytab'))	{
+				//already in a stickytab. do nothing.
+				}
+			else	{
+				$t.data('isstickytab',true);
+//add an id if one doesn't already exist.
+				if($t.attr('id'))	{}
+				else	{
+					$t.attr({'id':(o.tabID || 'stickytab_'+app.u.guidGenerator())}); //the ID goes onto the element this is run on.  allows for methods to easily be run later.
+					}
+				
+				var 
+					$tabContainer = this._handleContainer(),
+					$sticky = this._buildSticky(),
+					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
+	
+				this.sticky = $sticky; //global reference to container for easy access.
+	
+				$sticky.appendTo($tabContainer);
+				this._moveAnimate();
+	//			$('.ui-widget-stickytab-content',$sticky).append(this.element);
+				
+				//elements must be added to dom prior to obtaining width().
+				//the width and height on the tab needs to be fixed based on text length so that rotation works properly.
+				//only the text is rotated, not the container.
+				$('.ui-widget-stickytab-tab',$sticky).height($stickytabText.width()).width(24).css('right',($stickytabText.parent().width() * -1));
+	//rotate the tab text.
+				$stickytabText.css({
+					'-webkit-transform': 'rotate(90deg)', //chrome and safari
+					'-moz-transform': 'rotate(90deg)', //firefox 3.5-15
+					'-ms-transform': 'rotate(90deg)', //IE9
+					'-o-transform':'rotate(90deg)', // Opera 10.50-12.00 
+					'transform': 'rotate(90deg)', // Firefox 16+, IE 10+, Opera 12.10+
+					'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	// IE 7 & 8
+					});
+	//shrinks tab after a moments time.  This provides a good visual indicator the tab was added but uses little real-estate.
+				setTimeout(function(){
+					self.close();
+					},1500);
+				
+				}
+
+			
+			}, //_init
+
+//if no sticktabs container exists, create one. if more control is desired over location, create a sticktabs element in your html and css to position as desired.
+		_handleContainer : function()	{
+//			console.log('building container');
+			var $container = $('#stickytabs');
+			if($container.length)	{} //container is already defined. do nothing.
+			else	{
+				$container = $("<div \/>",{'id':'stickytabs'}).css({
+					'position':'fixed',
+					'left':0,
+					'top':'120px',
+					'width':'25px', // ** 201320 -> changed from 120 to 25 to solve a z-index issue. probably a typo to begin with.
+					'height':'300px',
+					'z-index':500
+					}).appendTo('body');
+				}
+			return $container;
+			},
+
+//moves the contents into the tab content and animates it for an added visual indicator of what just happened.
+		_moveAnimate : function(){
+				var element = this.element; 
+				var newParent= $('.ui-widget-stickytab-content',this.sticky);
+				var oldOffset = element.offset();
+				element.appendTo(newParent);
+				var newOffset = element.offset();
+		
+				var temp = element.clone().appendTo('body');
+				temp    .css('position', 'absolute')
+						.css('left', oldOffset.left)
+						.css('top', oldOffset.top)
+						.css('zIndex', 1000);
+				element.hide();
+				temp.animate( {'top': newOffset.top, 'left':newOffset.left}, 'slow', function(){
+				   element.show();
+				   temp.remove();
+				});
+			},
+//builds the tab and content container.
+		_buildSticky : function()	{
+//			console.log('building sticktab');
+			var 
+				$sticky = $("<div \/>").css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
+				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
+				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode ui-widget ui-widget-content ui-corner-right");
+
+			this._addTabEvents($stickytab);
+			$stickytab.append("<div class='ui-widget-stickytab-tab-text'>"+this.options.tabtext+"</div>");
+			$sticky.append($stickytab).append($stickyContent);
+			return $sticky;
+			},
+		_addTabEvents : function($stickytab)	{
+			var self = this;
+			$stickytab.on('click.stickytab',function(){
+				console.log(self.sticky.position().left);
+				if(self.sticky.position().left >= 0)	{
+					self.close();
+					}
+				else	{
+					self.open();
+					}
+				});
+			},
+		toggle : function()	{
+			$('.ui-widget-stickytab-tab',this.sticky).trigger('click.stickytab');
+			},
+		open : function()	{
+			console.log('open tab');
+			if(this.sticky.position().left != 0)	{
+				this.sticky.animate({left: 0}, 'slow');
+				}
+			else	{} //already open.
+			},
+		close : function()	{
+			console.log('close tab');
+			this.sticky.animate({left: -(this.sticky.outerWidth())}, 'slow');
+			},
+		destroy : function()	{
+			this.sticky.empty().remove();
+			},
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}
+		}); // create the widget
+})(jQuery);
+
+
+
+
+$.fn.intervaledEmpty = function(interval, remove){
+	interval = interval || 1000;
+	if($(this).children().length > 0){
+		var i = 0;
+		$(this).children().each(function(){
+			$(this).detach();
+			setTimeout(function(){$(this).intervaledEmpty(interval, true);},interval*i);
+			i++;
+			});
+		}
+	if(remove){
+		$(this).remove();
+		}
+	return this;
+	}
+
+
+
+
+
+
+
+/* will convert a tbody into a csv */
+// for whatever reason, having this chuck of code not last is causing issues. leave it at bottom.
 jQuery.fn.toCSV = function() {
 	var data = $(this).first(); //Only one table
 	var csvData = [];
 	var tmpArr = [];
 	var tmpStr = '';
 	data.find("tr").each(function() {
-	if($(this).find("th").length) {
-		$(this).find("th").each(function() {
-		tmpStr = $(this).text().replace(/"/g, '""');
-		tmpArr.push('"' + tmpStr + '"');
-		});
-		csvData.push(tmpArr);
-		}
-	else {
-          tmpArr = [];
-          $(this).find("td").each(function() {
-             $(this).find("td").each(function() {
-                if($(this).text().match(/^-{0,1}\d*\.{0,1}\d+$/)) {
-                    tmpArr.push(parseFloat($(this).text()));
-                } else {
-                    tmpStr = $(this).text().replace(/"/g, '""');
-                    tmpArr.push('"' + tmpStr + '"');
-                }
-            });
-          });
-          csvData.push(tmpArr.join(','));
-      }
-  });
-  var output = csvData.join('\n');
-  var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
-  window.open(uri);
-}
-
-
+	  if($(this).find("th").length) {
+		  $(this).find("th").each(function() {
+			tmpStr = $(this).text().replace(/"/g, '""');
+			tmpArr.push('"' + tmpStr + '"');
+		  });
+		  csvData.push(tmpArr);
+	  } else {
+		  tmpArr = [];
+			 $(this).find("td").each(function() {
+				  if($(this).text().match(/^-{0,1}\d*\.{0,1}\d+$/)) {
+					  tmpArr.push(parseFloat($(this).text()));
+				  } else {
+					  tmpStr = $(this).text().replace(/"/g, '""');
+					  tmpArr.push('"' + tmpStr + '"');
+				  }
+			 });
+		  csvData.push(tmpArr.join(','));
+	  }
+	});
+	var output = csvData.join('\n');
+	var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
+	window.open(uri);
+	}
 
 
 

@@ -1,24 +1,9 @@
-body,html{font-size:100%; background:#B7A58B; margin:0px; padding:0px; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;}
+body,html	{font-size:100%;}
 
-@font-face{font-family:'Anton'; font-style:normal; font-weight:400; src:local('Anton'), url(http://themes.googleusercontent.com/static/fonts/anton/v3/tilmJBBU81h1G7ZsdY3Hmw.woff) format('woff');}
-@font-face{font-family:'Conv_BebasNeue'; src: url('fonts/BebasNeue.eot'); src: url('fonts/BebasNeue.otf'); src: local('☺'), url('fonts/BebasNeue.woff') format('woff'), url('fonts/BebasNeue.ttf') format('truetype'), url('fonts/BebasNeue.svg') format('svg'); font-weight:normal; font-style:normal;}
-@font-face{font-family:'Conv_HelveticaNeueLTPro-Roman'; src:url('fonts/HelveticaNeueLTPro-Roman.eot'); src: local('☺'), url('fonts/HelveticaNeueLTPro-Roman.woff') format('woff'), url('fonts/HelveticaNeueLTPro-Roman.ttf') format('truetype'), url('fonts/HelveticaNeueLTPro-Roman.svg') format('svg'); font-weight: normal; font-style: normal;}
-#appTemplates{display:none;} /* container for all templates. should be hidden */
-progress, progress[role]{-moz-appearance: none; background-size: auto auto; border: medium none;}
-progress[role]:after{background-image: none;}
-progress[role] strong{display: none;}
-progress, progress[role][aria-valuenow]{background: none repeat scroll 0 0 #938269 !important;}
-progress{color: #BD0000;}
-progress::-moz-progress-bar{background: none repeat scroll 0 0 #BD0000;}
-progress[aria-valuenow]:before {background: none repeat scroll 0 0 #BD0000;}
-div#appPreView {margin: 100px auto; padding: 20px; width:80%;}
-div#appPreView table {margin: 0 auto;}
-div#appPreView table div#loader {text-align: center; color: #63503B; font-size: 12px;}
-div#appPreView table div#loader span {color:#63503B; font-size: 12px;}
-div#appPreView h3{ font-size:12px; color:#63503B;}
-div#appPreView table div#loader > div{-moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; height: 31px;}
-div#appPreView table div#loader > div > div.alignCenter{border-color: #494134 #655948 #C4BAAD; border-style: solid; border-width: 1px; height: 29px; width: 457px;}
-div#appPreView table div#loader > div.alignCenter > progress{border-color: #352820 #352820 #c7baaa #352820; border-style: solid; border-width: 2px; height: 27px; width: 455px;}
+#appTemplates {display:none;} /* container for all templates. should be hidden */
+
+#appPreView	{width:550px; margin:0 auto;}
+
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
@@ -26,202 +11,176 @@ loadingBG classname is removed once template is rendered.
 note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
 note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
 */
-
-#modalCart{background:#b7a58b;}
-.loadingBG{background-image:url(loading.gif) !important; background-repeat:no-repeat !important; background-position:center center; min-height:100px !important; min-width:100px;}
-li.loadingBG, .wait{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
-span.wait{display:inline-block;}
+.loadingBG	{background-image:url(loading.gif) !important; background-repeat: no-repeat !important; background-position: center center; min-height:100px !important; min-width:100px;}
+li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
+span.wait	{display:inline-block;}
 
 /******* global styles - added for cross-browser uniformity or usability ******/
 
-img{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
-button{display:inline-block; margin:0; padding:0; cursor:pointer !important;}
-p{margin-bottom:12px;}
-table{border-collapse:collapse; border-spacing:0;}
-td{vertical-align:top;}
-td.valignMiddle{vertical-align: middle;}
+img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
+p	{margin-bottom:12px;}
+
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	}
+td	{vertical-align:top;}
+td.valignMiddle	{vertical-align: middle;}
+
+
 
 /* feel free to delete these or override in your own .css file */
-h1, h2, h3, h4, h5, h6{padding:0; margin:0; font-family:}
-p{margin:0 0 12px 0;}
+h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
+p	{margin:0 0 12px 0;}
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
-input:focus{outline:none;}
-input.numberInput{width:50px}
-button:focus{outline:none;}
-.zform_number{width:50px;}
+input:focus {
+	outline:none;
+	}
+
+input.numberInput	{width:50px}
+
+button:focus	{outline:none;}
+
+.zform_number	{width:50px;}
 
 /*
 classes used on menus that are toggled on/off. wrap offMenu around the default buttons and onMenu around buttons that get turned on.
 for example, in /customer/myaccount, a 'change' button is displayed (wrapped in offMenu) for each address. onClick, 'onMenu' is toggled on, revealing save and cancel
 and offMenu is toggle off, hiding the change button.
 */
-.onMenu{display:none;}
-.offMenu{}
-.loginHide a{font-size:12px; color:#fff; /*font-weight:bold;*/ text-transform:uppercase;}
-.cb{clear:both;}
-.bindByAnchor{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
-#mainContentArea{background:#b7a58b;}
-.sliderM{max-width:948px; margin:70px auto 20px;}
-.bannerS{width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
-.rightB{float:left; max-width:300px; box-shadow:0px 0px 9px #000;}
-.rightB img{width:100%;} 
-#couponCode{height:15px; width:124px; margin:0 -6px 0 0; padding:2px 6px;}
-#addCouponBtn{background:none !important; border:none !important; margin:-2px 0 0 0px;}
-div#container{margin:0px auto; position:relative; max-width:1020px;}
-div#container div#topNav{background: url(images/background-top-nav.png) repeat-x; height: 30px; position: relative; width: 100%;}
-div#container div#topNav div#topNavContent{color: #FFFFFF; font-family: Helvetica; height: 30px; margin: 0px auto; position: relative; max-width: 960px;}
-div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p{float:left; position: relative;}
-div#container div#topNav div#topNavContent img{margin-top: 7px; padding-right: 11px;}
-div#container div#topNav div#topNavContent img:first-child{margin-left: 12px;}
-div#container div#topNav div#topNavContent p{color: #FFFFFF; font-family: Helvetica; font-size: 12px; margin-top: 8px;}
-div#container div#topNav div#topNavContent p:not(:last-child){padding-right: 51px;}
-div#container div#topNav div#topNavContent p a{color: #FFFFFF;}
-div#container div#header{background: url(images/background-header.png) repeat-x; height: 124px; position: relative; width: 100%;}
-div#container div#header div#headerContent{height: 124px; margin: 0px auto; position: relative; max-width: 960px;}
-div#container div#header div#headerContent img#logo{cursor: pointer; left: 10px; position: relative; top: 11px;}
-div#container div#header div#headerContent input#txtSearch{height:32px; width:125px; color:#999; font-size:14px; padding:0 10px; /*left: 470px; position: absolute; top: 46px;*/}
-#btnTopNavSearch{cursor: pointer; position: absolute;  width: 35px; /*height: 33px; left: 617px; top: 47px; */ }
-div#container div#header div#headerContent div#headerFreeShipping{background: url(images/header-free-shipping.png); height: 54px; /*left: 730px; position: absolute;*/ width: 220px; top: 20px;}
-div#container div#header div#headerContent div#headerFreeShipping img{left: -20px; position: relative; top: -10px;}
-div#container div#header div#headerContent a#btnSocialFacebook{cursor: pointer; left: 10px; position: relative; top: 21px;}
-div#container div#header div#headerContent a#btnSocialTwitter{cursor: pointer; left: 20px; position: relative; top: 21px;}
-div#container div#header div#headerContent a#btnSocialYoutube{cursor: pointer; left: 30px; position: relative; top: 21px;}				
-div#container div#header div#headerContent a#btnSocialMail{cursor: pointer; left: 40px; position: relative; top: 21px;}
-div#container div#footer{background: url(images/background-footer.png); height: 358px; width: 100%;}
-div#container div#footer div#footerContent{height: 358px; margin: 0px auto; max-width: 960px;}
-div#container div#footer div#footerContent div#footerLinks{height: 290px; max-width: 960px;}	
-div#container div#footer div#footerContent div#footerLinks > ul{float: left; padding-right: 52px; margin-top:60px; width: 150px;}
-div#container div#footer div#footerContent div#footerLinks > ul li{color: #FFFFFF; font-size: 14px; list-style: none;}		
-div#container div#footer div#footerContent div#footerLinks > ul li:not(:first-child){padding-top:8px;}			
-div#container div#footer div#footerContent div#footerLinks > ul li a{color: #FFFFFF; text-decoration: none;}
-div#container div#footer div#footerContent div#footerLinks > ul li a:hover{text-decoration: underline;}
-div#container div#footer div#footerContent div#footerLinks > ul li:first-child, div#container div#footer div#footerContent div#footerSubscribe table tr td:first-child
-{color: #666666; font-family:'Conv_BebasNeue',Sans-Serif; font-size: 30px;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe{float: left; position: relative; top:60px;}						
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table{}					
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td{}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td{padding-top:6px;}						
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input{height:35px; width:177px; padding:0 10px; color:#999999;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe{cursor: pointer; margin:4px 0 0;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage{left:1px; opacity: 1; position: absolute; top: 9px; width: 312px; z-index: 1000;}
-div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin{left: 280px; position: absolute; top: 10px; z-index: 1001;}							
-div#container div#footer div#footerContent div#copyright{color: #FFFFFF; max-width: 960px;}
-div#container div#footer div#footerContent div#copyright p{font-family: Helvetica; font-size: 12px; margin-top: 27px; text-align: center;}
-div#container div#footer div#footerContent div#copyright p a{font-weight: bold; text-decoration: none;}					
-div#container div#footer div#footerContent div#copyright p a:hover{text-decoration: underline;}					
-div#container div#footer div#footerContent div#copyright p a:visited{color: #FFFFFF;}							
-div#container div#footer div#footerContent div#copyright{height: 68px; max-width: 960px;}
-div#container div.nav{background: url(images/background-nav.png) repeat-x; height: 50px; position: relative; width: 100%; -moz-box-shadow:1px 1px 5px 1px #222222; -webkit-box-shadow: 1px 1px 5px 1px #222222; box-shadow:1px 1px 5px 1px #222222; float:left;}
-div#container div.nav div.navContent{height:50px; margin:0px auto; position: relative; max-width: 960px;}
-div#container div.nav div.navContent > ul{height: 50px; margin: 0px auto; max-width: 850px; padding:0px;}
-div#container div.nav div.navContent > ul > li{float: left; height: 50px; list-style: none; overflow: show; padding-left: 20px; padding-right: 20px; line-height:16px;}				
-div#container div.nav div.navContent > ul > li > a{color:#FFFFFF; font-family:'Conv_BebasNeue'; font-size:23px; position:relative; text-decoration: none; top: 18px;}
-.no-fontface div#container div.nav div.navContent > ul > li > a{font-family: Arial, Helvetica, sans-serif; font-size: 14px;}
-div#container div.nav div.navContent > ul > li > a:hover{}
-div#container div.nav div.navContent ul li div.subMenu{background-color:#FFFFFF; display:none; height:0px; left:25px; position:absolute; top:50px; max-width:905px; z-index:2000; -moz-box-shadow:0px 1px 5px 1px #222222; -webkit-box-shadow:0x 1px 5px 1px #222222; box-shadow:0px 1px 5px 1px #222222;}
-div#container div.nav div.navContent ul li div.subMenu > div.dropDownListHolder{height: 100%; position: relative; width: 100%;}						
-div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *{cursor: default; position: relative;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul{float: left; list-style-position: inside; list-style-type: disc; padding: 20px 15px 20px 18px; z-index: 2002;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
-{color: #770000; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; font-size: 12px;}					
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li{font-size:18px; list-style-type: none;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before{content: "» ";}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child{color:#000000; font-family:'Conv_BebasNeue',Sans-Serif; font-size:18px; list-style: none; margin-bottom:7px;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a{cursor: pointer; text-decoration: none;}
-div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover{text-decoration: underline;}
-div.dropDownListHolder > a{bottom: 0px; clear: both; display: none; position: absolute; right: 0px; z-index: 2001;}
+.onMenu	{display:none;}
+.offMenu	{}
 
-/*.boxP{display: block; margin: 0 auto;  padding: 10px; position: relative; width:100%;}
-.boxP:after{background:#ff0000; position:absolute;bottom: 0;content: "";left: 0;opacity: 0.7;right: 0;top: 0;z-index: -1;}*/
-/*some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
 
-.sortby{ margin:0px 0 0 30px; padding:0px;float: left; background:#ffffff; width:220px; list-style:none;}
-.sortby li{ line-height:25px; padding:0 0 0 30px;}
-.sortby li a{ font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; color:#000000; font-size:14px; text-decoration:none; font-weight:bold;}
-.sortby li a span{ font-size:12px; font-weight:normal; color:#707070;}
-.sortby h2{ background: url(images/leftbg.gif) repeat-x; font-size:18px; color:#fff;font-family:'Conv_BebasNeue',Sans-Serif; padding:3px 20px;}
+.bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
+
+
+
+
+/* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
+
+
 
 /******* positioning *******/
 
-.floatLeft{float:left;}
-.floatRight{float:right;}
-.alignCenter{text-align:center;}
-.alignLeft{text-align:left;}
-.alignRight{text-align:right;}
-.center{margin:0 auto;}
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+
+.alignCenter	{text-align:center;}
+.alignLeft	{text-align:left;}
+.alignRight	{text-align:right;}
+
+.center	{margin:0 auto;}
+
 
 /****** aesthetics/usability ******/
 
 /* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
-.disabled{cursor:crosshair !important;	filter: alpha(opacity=50);	opacity:0.5;}
-.formValidationError, .zwarn{color:#cc0000;} /* applied to errors displayed in form validation or generic warnings */
-.pointer{cursor:pointer;}
-/* used when an element needs to start of hidden. this is used frequently. */
+.disabled	{
+	cursor:crosshair !important;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+.formValidationError, .zwarn	{color:#cc0000;} /* applied to errors displayed in form validation or generic warnings */
+.pointer	{cursor:pointer;}
 
-.displayNone{display:none;}
-.lineThrough{text-decoration:line-through}
-.underline{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
-.borderNone{border:none;}
-.clearfix{clear:both;}
-.clearfix:after{content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+/* used when an element needs to start of hidden. this is used frequently. */
+.displayNone	{display:none;}
+
+.lineThrough	{text-decoration:line-through}
+.underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
+.borderNone	{border:none;}
+
+.clearfix	{clear:both;}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
 	
 /* added to a piece of text once it becomed editable */
-.editable{} /* put this on any editable field. */
-.editEnabled{border:1px solid #ffcc00; min-width:25px; min-height:22px; width:200px; display:inline-block; padding:2px; margin-bottom:2px;} /* added to any editable field once editor is enabled. */
-.edited{border:1px solid #390;} /* added if a field is changed */
-.marginLeft{margin-left:12px;}
-.marginRight{margin-right:12px;}
-.marginTop{margin-top:12px;}
-.marginBottom{margin-bottom:12px;}
-.stdMargin{margin:12px;}
-.headerPadding{padding: 3px 6px;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
-.fullWidth{width:100%;}
-.buyerLoggedIn .hideIfLoggedIn{display:none;}
-.hideIfLoggedOut{display:none;}
+.editable	{} /* put this on any editable field. */
+.editEnabled	{border:1px solid #ffcc00; min-width:25px; min-height:22px; width:200px; display:inline-block; padding:2px; margin-bottom:2px;} /* added to any editable field once editor is enabled. */
+.edited		{border:1px solid #390;} /* added if a field is changed */
+
+
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px;}
+.stdMargin	{margin:12px;}
+.headerPadding	{padding: 3px 6px;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
+.stdPadding	{padding:12px;}
+.fullWidth	{width:100%;}
+
+
+
+
+.buyerLoggedIn .hideIfLoggedIn	{display:none;}
+
+.hideIfLoggedOut	{display:none;}
+
 .buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
-.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut{display: inline;} /* ensures inline on span elements */
+.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
+
+
+
+
 
 /****** APP specific styles ******/
 
 
 /* messaging css. some error css is defined in the jqueryui styles */
 
-.appMessage P{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
-.zMessage{margin:6px; 0}
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+
 .appMessage	{margin-bottom:12px; position:relative;}
-.appMessage .stdMargin{padding:5px;}
-.appMessage .ui-button{position:absolute; top:-3px; right:-3px; z-index:100;}
-.appMessage .ui-icon{float:left; margin-right:12px;}
+.appMessage .stdMargin {padding:5px;}
+.appMessage .ui-button	{position:absolute; top:-3px; right:-3px; z-index:100;}
+.appMessage .ui-icon	{float:left; margin-right:12px;}
 
 /* some messages have a red bg. add a white circle around the icon in these cases. */
-.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon{background-color:#ffffff; -webkit-border-radius: 4px;	border-radius: 4px;}
+.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
 
-/*.appMessage .ui-icon-alert{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+.appMessage .appMessageTxt	{float:left;}
 
-.appMessage .appMessageTxt{float:left;}
-.ui-state-success, .ui-state-statusupdate{border:1px solid #aecdae; background:#dff6df; color:#333333;}
-.ui-state-warning{border:1px solid #f58d48; background:#ffdfc9; color:#333333;}
+.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae !important; background:#e3f6e3 !important; color:#333333 !important;}
+.ui-state-warning	{border:1px solid #f58d48 !important; background:#ffdfc9 !important; color:#333333 !important;}
+
+
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
-.appAccordianesque .ui-accordion-header{padding:3px 24px;}
-#companyNav h1{font-size:30px; font-family:'Conv_BebasNeue',Sans-Serif; color:#770000; margin-bottom:15px;}
-#companyNav ul{background:#c9bca8; width:161px; padding:30px; line-height:13px;}
+.appAccordianesque .ui-accordion-header {padding:3px 24px;}
+
+
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
-.mainColumn	{font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; margin-left:30px; margin-right:30px; padding-top:18px;}
-.mainColumn h1{font-family:'Conv_BebasNeue',Sans-Serif; font-size:36px; font-weight:normal;}
-.sideline{float:right; width:20%; margin:24px 50px 24px;}
-.sideline a{padding:5px 0; text-decoration:underline; display:block; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; color:#000000; font-size:14px;}
-.sideline a:hover{text-decoration:none;}
+.mainColumn	{width:75%;}
+.sideline	{float:right; width:20%; margin:0 0 24px 0px;}
+.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
- /* recommend at least 5px vert padding for mobile/pad */
- 
+
+
+
 /* app nav */
 
 #appNav {position:relative; height:1px; overflow:visible; z-index:99;}
 #appNav .prodDetailPrevItemButton	{position:absolute; top:20px; left:-10px;}
 #appNav .prodDetailNextItemButton	{position:absolute; top:20px; right:-10px;}
+
+
 
 /***************************************************
 
@@ -231,214 +190,87 @@ and override using classes or id's as needed.
 
 ***************************************************/
 
-.listStyleNone, .listStyleNone li{list-style:none;} /* apply to a ul or ol */
-.noPadOrMargin{padding:0; margin:0;}
-.fluidList li{float:left; margin:12px; padding:0; display:inline-block;}
-.quickView{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
+.quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-/*.productList > li	{width:150px; height:250px; position:relative;}*/
+.productList > li	{width:150px; height:250px; position:relative;}
+.lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
-.lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} 
+.lineItemProdlist .prodThumb	{margin-right:12px;}
 
-/* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
-.lineItemProdlist .prodThumb{margin:10px 20px; width:100px; height:100px;}
-.lineItemProdlist button{margin:0 20px 0 0;}
-.categoryList > li{width:150px; height:200px;}
-#cartStuffList{margin: -10px 0 0 -10px;width: 756px;}
-#cartStuffList li{ background:#c9bca8;}
-#cartStuffList li h4{ font-size:14px;}
-.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0; font-size:12px;} /* h4 - h6 are used in default templates for name, price, etc */
+.categoryList > li	{width:150px; height:200px;}
 
-.midmain{ margin:0px auto; max-width:948px;}
-.midmain .productList li{font-size:.8em;border: 2px solid #FFFFFF; box-shadow: 1px 1px 5px 1px #222222; background:#fff; height: 225px; margin-left: 0; margin-right: 20px; position: relative; text-align: center; max-width:213px;}
-.midmain .productList li img.prodThumb{ width:213px;}
-.midmain .prodThumbContainer{ width:215px !important;}
-.productList li, .categoryList li{font-size:.8em;}
-.productList h5{ min-height:50px; width:180px; margin:10px auto 0;}
-.productList h6{font-size:18px; width:100px; float:left;}
-#carCat1 h6, #carCat2 h6, #carCat3 h6, #carCat4 h6, #carCat5 h6, #carCat6 h6, #carCat7 h6, #carCat8 h6{ padding:0 0 0 15px;}
-#carCat1 .moreDetails, #carCat2 .moreDetails, #carCat3 .moreDetails, #carCat4 .moreDetails, #carCat5 .moreDetails, #carCat6 .moreDetails{ float:right; margin:0 8px 10px 0;}
-.productList h4, .categoryList h4{font-size:1em;}
-.categoryList h5{font-size:.9em;}
-.categoryList h6{font-size:.85em;}
-.productList h6 .cents{ font-size:11px; vertical-align:super;}
-.prodViewerAddToCartForm button{ border:none !important;}
+.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
 
-/*.prodViewerContainer .prodThumbs div button .floatRight pointer quickView displayNone{display:none;}*/
+.productList li, .categoryList li	{font-size:.8em;}
+
+.productList h4, .categoryList h4	{font-size:1em;}
+.productList h5, .categoryList h5	{font-size:.9em;}
+.productList h6, .categoryList h6	{font-size:.85em;}
+
+
 /* multpage header for lists (product list) - most styling handled by jqueryUI */
 
-.mpControls{padding:2px 6px;}
+.mpControls	{padding:2px 6px;}
+
+
+
 
 /* used for the picture slider mouse over effect in some product lists */
 
-.slideMe{position:absolute; top:0px;}
-.slideMe, .slideMe li{list-style:none; margin:0; padding:0;}
-.slideMe li{float:left; margin-right:2px; border:0;}
+.slideMe	{position:absolute; top:0px;}
+.slideMe, .slideMe li	{list-style:none; margin:0; padding:0;}
+.slideMe li	{float:left; margin-right:2px; border:0;}
+
+
+
+
+
+/* for variations */
+
+.variation	{margin-bottom:6px;} /* class applied to div containing a variation group */
+.pogType_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
+
+
+
 
 /***************************************************
 
 PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
-#container{ max-width:1000px; margin:0px auto;}
-.prodViewerContainer{width:938px; margin:20px auto 28px;}
-.breadAndAddThisContainer{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
+
+.prodViewerContainer	{width:100%;}
+
+.breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 
 /* primary image and thumbnails */
 .imageContainer	{width:10%; padding-right:24px;}
-.prodViewerContainer .prodThumbs div{}
-.prodViewerContainer .prodThumbs div img{display:none;}
-.prodSummaryContainer{width:382px;}
-.prodSummaryContainer h1{ font-size:18px; margin-bottom:14px;}
-.basePrice span{ font-size:10px; color:#000000;}
-.RightPcol{background:#fff; padding:20px; width:180px;}
-.RightPcol h4{float:right; text-align:center;font-size:18px; padding:0 16px 0 0; font-weight:bold;}
-.RightPcol h5{float:left;text-align:center;font-size:18px; color:#999999; text-decoration:line-through;}
-.RightPcol .prodMSRP span{font-size:10px; color:#999999;}
-.RightPcol .cents{ vertical-align:super;margin: 2px 0 0;position: absolute;}
-.RightPcol .marginBottom{border-bottom:1px solid #CCCCCC; padding:0 0 15px;}
-.tabbedProductContent .prodReviewsTab{display:block;} /* reviews tab always shows up */
-.tabContent{font-size:12px;}
-.bottomP{ margin:100px 0 0 0px; line-height:25px; padding:0px; font-size:12px; list-style:none;}
-.bottomP img{ margin:5px 10px 0 0;}
-.protitle{margin:20px 0 0 0;}
-.protitle ul{ margin:0px; padding:0px; list-style:none;}
-.protitle ul li{ margin:0px; padding:13px 20px; font-size:12px; color:#000; border-bottom:#cccccc solid 1px;}
-.protitle ul li img{ float:left;}
-.ui-widget-header{background: url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50% #cccccc !important; border:1px solid #AAAAAA !important; color:#000 !important; font-weight: bold;}
-#footerSubscribe #subscribeFrm div{position:absolute; margin:0 0 0 -40px; width:260px; font-size:14px !important;}
-.ui-state-default .ui-icon { background-image: url(images/ui-icons_222222_256x240.png) !important;}
-.CreatAccount{}
-.CreatAccount #gotAccount1{background: url(images/box-got-account.png) no-repeat; height:280px; width:300px; float:right;}
-#gotAccount1 p{font-size:12px; color:#fff; padding:7px 0 0; text-align:center; width:240px;}
-#gotAccount1 p a{ color:#fff;}
-#gotAccount1 h1{font-size:36px; padding:10px 0 0; text-align:center;  font-family: 'Conv_BebasNeue'; color:#fff;}
-div#gotAccount1 img{
-left:30px; position:absolute; top:186px;}
-div#gotAccount1 input{font-family: Helvetica; font-size: 12px; height: 24px; width: 237px; margin:0 0 20px;}
-div#gotAccount1 input#modalLoginLogin{left:30px; top: 80px;}
-div#gotAccount1 input#modalLoginPassword{left:30px; top:132px;}
-div#gotAccount1 span#lblLoginPassword{font-family: Helvetica; font-size: 12px; left: 32px; position: absolute; top: 138px;}
-.loginShow a{ color:#fff;}
-#loginFormForModal{ background:#b7a58b;}
-.Account{ width:622px; background:url(images/createbg.jpg) no-repeat; margin-bottom:20px; float:left;}
-.Account h1{ text-align:center; padding:10px 0 30px 0; color:#fff;}
-.Account b{ font-weight:bold; font-size:12px;}
-.fieldM{ margin:0px auto; padding:0px 0 10px; width:570px;}
-.textf{ width:232px; height:26px; border:#cccccc solid 1px; margin:0 0 8px !important; padding:0 9px;}
-.field{ width:72px; font-weight:bold; font-size:12px; text-align:right; display:inline-block;}
-.textfname{ width:100px; height:30px; border:1px solid #7F7F7F; margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfmiddle{ width:12px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textflast{ width:116px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfadd{ width:253px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfadd1{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textcity{ width:112px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:inset 0 1px 2px #000000;}
-.textfstate{ width:62px; height:30px; border:1px solid #7F7F7F;margin:0 14px 0 7px; padding:0 3px; box-shadow:0 1px 2px #000000 inset;}
-.textfzip{ width:148px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfcountry{ width:245px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:3px; box-shadow:0 1px 2px #000000 inset;}
-.textfmail{ width:142px; height:30px; border:1px solid #7F7F7F;margin:0 26px 0 7px !important; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfphone{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfpass{ width:142px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.textfcpass{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
-.stayup{ padding:0 0 0 70px;}
-.createButton{ margin:54px 0 40px 178px; border:0px; background:none}
-#gotAccount
-{
-	background: url(images/box-got-account.png) no-repeat;
-	height: 280px;
-	left: 337px;
-	position: absolute;
-	width: 300px;
-}
-#gotAccount p{ font-size:12px; color:#fff; padding:7px 0 0; text-align:center; width:240px;}
-#gotAccount p a{ color:#fff;}
-#gotAccount h1, #createAccount h1{ font-size:36px; padding:10px 0 0; text-align:center;  font-family: 'Conv_BebasNeue'; color:#fff;}
-	div#gotAccount img
-	{
-		left: 30px;
-		position: absolute;
-		top: 186px;
-	}
-		div#gotAccount input
-		{
-			font-family: Helvetica;
-			font-size: 12px;
-			height: 24px;
-			width: 237px;
-			margin:0 0 20px;
-		}
-	div#gotAccount input#modalLoginLogin
-	{
-		left: 30px;
-		top: 80px;
-	}
-	div#gotAccount input#modalLoginPassword
-	{
-		left: 30px;
-		top: 132px;
-	}
-	div#gotAccount span#lblLoginPassword
-	{
-		font-family: Helvetica;
-		font-size: 12px;
-		left: 32px;
-		position: absolute;
-		top: 138px;
-	}
-	
-	div#createAccount
-{
-	background: url(images/box-create-account.png) no-repeat;
-	height: 281px;
-	position: relative;
-	width: 300px;
-}
-	div#createAccount img
-	{
-		position: absolute;
-		left: 30px;
-		top: 187px;
-	}
-	div#createAccount p
-	{
-		font-family: Helvetica;
-		position: absolute;
-	}
-	div#createAccount p:first-child
-	{
-		color: #FFFFFF;
-		font-size: 22px;
-		left: 77px;
-		top: 20px;
-	}
-	div#createAccount p:not(:first-child)
-	{
-		color: #000000;
-		font-size: 14px;
-		left: 24px;
-		top: 87px;
-		width: 254px;
-	}
-	
+.prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+
+
+.prodSummaryContainer	{width:90%;}
+
+
+.tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
+
 /*
 the child list and loading graphic should only show up IF the product is a parent.
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
 */
 .grpType_PARENT	{display:block; margin-bottom:12px;}
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
-.addcart{background: url("images/buynow.png") no-repeat !important;
-    border: 0 none !important;
-    height: 40px;
-    text-indent: -10000px;
-	margin:-40px 2px 0 0; float:right;
-    width: 106px;}
-.prodViewerAddToCartForm	{margin-bottom:-7px;}
-.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
-.prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
-.CRMButtonMenu	{margin:0; padding:12px 0 0; width:191px; margin-bottom:0px;text-align:center;}
-.CRMButtonMenu a{ color:#770000; font-size:12px; }
+.prodViewerAddToCartForm	{margin-bottom:24px;}
+.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
+.variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
+
+.CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
+
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
@@ -446,7 +278,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
 
-.reviewSprite	{background: url(images/qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; } /* display none hides the reviews for the 'zero' reviews graphic */
+.reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:none;} /* display none hides the reviews for the 'zero' reviews graphic */
 .review_1, .review_2, .review_3, .review_4, .review_5, .review_6, .review_7, .review_8, .review_9, .review_10	{display:inline-block;} /* show 1/2 - 10 stars */
 .review_1 	{background-position:0 -29px;}
 .review_2	{background-position:0 -61px;}
@@ -459,7 +291,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .review_9	{background-position:0 -271px;}
 .review_10	{background-position:0 -302px;}
 
-.prodlist .review_0	{display:block;} /* hide the stars for items with no reviews */
+.prodlist .review_0	{display:none;} /* hide the stars for items with no reviews */
 
 
 /****** REVIEW LIST - on product detail page, used for product reviews. ******/
@@ -516,7 +348,7 @@ CUSTOMER PAGES
 
 
 /****** LOGIN MODAL ******/
-#loginFormForModal fieldset	{border:0; margin:30px 0 0 16px;}
+#loginFormForModal fieldset	{border:0}
 .loginOption fieldset div	{margin-bottom:12px;}
 .loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
 .loginOption label:after	{margin-right:12px; content:":"}
@@ -526,7 +358,7 @@ CUSTOMER PAGES
 #subscribeFormContainer .userInfo div	{margin-bottom:6px;}
 #subscribeFormContainer li	{list-style:none;}
 #subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
-.subscriberLists label	{width:300px;}
+.subscribeListItem	{display:block; height:30px;}
 
 
 /****** ORDER HISTORY AND INVOICE ******/
@@ -558,7 +390,7 @@ SEARCH RESULTS PAGE
 
 .resultsHeader	{position:relative; padding:3px 6px;}
 .resultsMenuContainer	{position:absolute; top:1px; left:3px;}
-/*.resultsMenuContainer .resultsMenu	{margin:615px 4px 24px 86px; position:absolute; width:100px; background:none; border:none;}*/ /* used for sorting and pagination menus */
+.resultsMenuContainer .resultsMenu	{margin:3px 12px 0 0px;} /* used for sorting and pagination menus */
 .resultsMenuContainer ul.ui-menu ul	{z-index:10000; width:150px;}
 
 .resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
@@ -580,18 +412,14 @@ HELP PAGES
 ***************************************************/
 
 /***** CONTACT US ******/
-#contactForm {float:left; width:300px; margin: 0 0 12px 0px;}
-#contactForm fieldset	{border:1px solid #cccccc; padding:0px;}
-#contactForm div	{margin-bottom:10px}
+#contactForm {float:right; margin: 0 0 12px 12px;}
+#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
+#contactForm div	{margin-bottom:5px}
 #contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
-#contactForm input, #contactForm textarea	{width:280px; height:30px; border:1px solid #A49C92; -moz-box-shadow:    0 1px 3px #555555 inset;
-   -webkit-box-shadow: 0 1px 3px #555555 inset;box-shadow:0 1px 3px #555555 inset; padding:0 10px; color:#999999;}
-#contactForm textarea	{height:135px; padding:10px;}
-#contactContent{ font-size:12px; line-height:20px; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; padding:0 0 0 350px;}
-#contactContent strong{ font-size:14px;}
-#contactContent a{color:#770000;}
-.titlebT{ font-size:12px; margin:10px 0 0 0px;}
-#contactFormMessaging{ margin:10px 0;}
+#contactForm input, #contactForm textarea	{width:145px;}
+#contactForm textarea	{height:125px;}
+
+
 
 /**** FAQ *****/
 .faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
@@ -611,52 +439,17 @@ CART
 
 
 ***************************************************/
-.cartSummaryTotalsContainer{ background:#fff !important;}
-.cartSummaryTotalsContainer .ui-widget-content{ background:none !important;border-radius:0px !important; border:0px !important;}
-.cartSummaryTotalsContainer .orderBalanceDue{font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; text-align:center; font-size:36px; color:#000; font-weight: bold;}
-.cartSummaryTotalsContainer h2	{margin:0; font-family: 'Conv_BebasNeue';font-size: 18px; background:none !important; border-radius:0px !important; border:none !important;padding:10px 12px 0; color:#770000 !important; text-align:center;} /* header */
+
+.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
 .cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
-.cartZipCodeContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #cccccc;}
-.cartAltButtonsContainer{border-bottom:0px solid #cccccc;}
-.cartStuffContainer	{width:77%; vertical-align:top; padding-right:20px;}
-.cartSummaryTotalsContainer {width:23%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
+.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
+
+.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
+.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
 
 .checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
-td.cartStuffContainer .right {
-    background-color: #897C68;
-    float: right;
-    margin-top: 20px;
-    position: relative;
-    width: 200px;
-}
-td.cartStuffContainer .right p{ font-size:18px; color:#770000; margin:30px 0 0 30px;}
-td.cartStuffContainer .right ul{margin-left: 0px;margin-top: 13px;padding-bottom: 30px; padding-left:30px;}
-td.cartStuffContainer .right ul li{list-style: none outside none; padding-bottom: 5px;}
-td.cartStuffContainer .right ul li a{color: #000000;font-family: Helvetica;font-size: 12px; text-decoration: underline;}
-.checkoutFormContainer{ margin:20px 0 0 0;}
-.checkoutFormContainer fieldset{ background:#c9bca8; border:#333 solid 1px; font-size: 15px;padding: 10px 0 15px 20px;}
-.checkoutFormContainer .panelContent input{ border:1px solid #90908F; padding:4px; width:200px; margin-bottom:10px;}
-.checkoutFormContainer .panelContent select{ border:1px solid #90908F; padding:4px; margin-bottom:10px;}
-.headerPadding input{ width:auto !important;}
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-    background: url("images/ui-bg_glass_100_f6f6f6_1x400.png") repeat-x scroll 50% 50% #F6F6F6;
-    border: 1px solid #90908F !important;
-    color: #CC0000 !important;
-    font-weight: bold;
-}
-.ui-button-text-only .ui-button-text {
-    padding: 2px 10px !important;
-}
-.checkoutFormContainer .ui-widget-header{ background: url(images/bgbutton.gif) repeat-x !important; color:#fff !important; font-size:15px; padding:3px 12px; border:#790000 solid 1px !important;}
-td.cartStuffContainer .left {
-    font-family: Helvetica;
-    font-size: 12px;
-    margin-top: 20px;
-    width: 435px;
-}
-td.cartStuffContainer .left span{ font-weight:bold; font-size:15px;}
-.cartShipMethods, .cartZipCodeContainer{margin:12px 0;}
-.cartSummary{ margin:0 0 0px;}
+
+.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
 
 .cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
 
@@ -681,10 +474,12 @@ CHECKOUT
 
 .addressList address	{float:left; margin:0 12px 12px 0;}
 
+.creditCardCVVIcon	{display:inline-block !important;}
 
+.checkoutFormContainer input, checkoutFormContainer select	{margin:2px 6px 2px 0;}
+.checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
 
-
-
+.headerPadding label	{padding:2px 6px;}
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */
 /*             http://www.bloggermint.com/demos/darknavmenu/#            */
@@ -742,572 +537,3 @@ CHECKOUT
 
 
 .debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
-
-
-/*added by vilas */
-
-.featuredCategories {
-    background: url("images/background-featured-categories.png") repeat scroll 0 0 transparent;
-    clear: both;
-    position: relative;
-    text-align: center;
-}
-
-.featuredCategories div.catNav {
-    background: url("images/background-homepage-category-navigation.png") repeat-x scroll 0 0 transparent;
-    box-shadow: 1px 1px 5px 1px #222222;
-    height: 62px;
-    position: relative;
-    width: 100%;
-}
-.featuredCategories div.catNavContent {
-    height: 62px;
-    margin: 0 auto;
-    position: relative;
-    /*width: 500px;*/
-}
-.featuredCategories div.catNavContent p.navCats {
-    color: #FFFFFF;
-    float: left;
-    font-family: 'Conv_BebasNeue';
-    font-size: 20px;
-    padding-right: 18px;
-    position: relative;
-    top: 22px;
-}
-.featuredCategories div.catNavContent p.currentCat {
-    color: #FFFFFF;
-    float: left;
-    font-family: 'Conv_BebasNeue';
-    font-size: 24px;
-    position: relative;
-    top: 16px;
-}
-.featuredCategories div.catNavContent p:not(:last-child) {
-    /*padding-right: 18px;*/
-    width: 300px;
-	 font-family: 'Conv_BebasNeue';
-	
-}
-.featuredCategories div.catNavContent img.catButton {
-    cursor: pointer;
-    float: left;
-    padding-right: 18px;
-    position: relative;
-    top: 14px;
-}
-.featuredCategories img.btnViewAllCategories {
-    cursor: pointer;
-    padding-bottom: 30px;
-    padding-top: 8px;
-}
-ul.categoryList {
-    margin: 0 auto;
-    mix-width: 960px;
-}
-ul.categoryList li {
-    background-color: #FFFFFF;
-    border: 1px solid #FFFFFF;
-    box-shadow: 1px 1px 5px 1px #222222;
-    height: 138px;
-    margin-left: 0;
-    margin-right: 20px;
-    position: relative;
-    width: 138px;
-}
-ul.categoryList div.thumbContainer {
-    text-align: center;
-}
-ul.categoryList div.thumbContainer img {
-    height: 93px;
-    margin-top: 1px;
-    width: 136px;
-}
-ul.categoryList li div.catName {
-    background: url("images/background-homepage-category-list-name.png") repeat scroll 0 0 transparent;
-    border: 1px solid #FFFFFF;
-    bottom: 0;
-    color: #000000;
-    height: 41px;
-    left: 0;
-    line-height: 12px;
-    overflow: hidden;
-    position: absolute;
-    text-align: center;
-    width: 136px;
-}
-ul.categoryList li div.catName span {
-    font-family: Helvetica;
-    font-size: 14px;
-    font-weight: bold;
-    position: relative;
-    top: 16px;
-}
-.caroufredsel_wrapper
-{
-	margin: 0px auto;
-	overflow: hidden;
-	width:auto !important;
-}
-
-.caroufredsel_wrapper div.ccItem
-{
-	float: left;
-	height: auto;
-	overflow: hidden;
-	
-}
-
-.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ width:948px; margin:0px auto; padding:10px 0 0 9px;}
-
-div.catCarousel h2
-{
-	margin-top: 10px;
-	display:none;
-}
-div.catCarousel2 h2
-{
-	margin-top: 10px;
-	display:none;
-}
-.caroufredsel_wrapper div.ccItem1
-{
-	float: left;
-	height: auto;
-	overflow: hidden;
-	padding-left:9px;
-	/*width: 970px;*/
-	max-width: 977px !Important;
-}
-.caroufredsel_wrapper div.ccItem1 #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{width:948px; margin:0px auto; padding:10px 0 0 9px;}
-.productList > li {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border: 0px solid #FFFFFF;
-    /*box-shadow: 1px 1px 5px 1px #222222;*/
-    font-size: 0.8em;
-    /*height: 216px;*/
-    /*margin-left: 0;*/
-    /*margin-right: 20px;*/
-    position: relative;
-    text-align:left;
-    width: 213px;
-	margin-top:11px;
-}
-.featuredCategories1 {
-    background: url("images/background-featured-categories.png") repeat scroll 0 0 transparent;
-    clear: both;
-    position: relative;
-    text-align: center;
-}
-
-.featuredCategories1 div.catNav {
-    background: url("images/background-homepage-category-navigation.png") repeat-x scroll 0 0 transparent;
-    box-shadow: 1px 1px 5px 1px #222222;
-    height: 62px;
-    position: relative;
-    width: 100%;
-}
-.featuredCategories1 div.catNavContent {
-    height: 62px;
-    margin: 0 auto;
-    position: relative;
-    /*width: 500px;*/
-}
-.featuredCategories1 div.catNavContent p.navCats {
-    color: #FFFFFF;
-    float: left;
-    font-family: 'Conv_BebasNeue';
-    font-size: 20px;
-    padding-right: 18px;
-    position: relative;
-    top: 22px;
-}
-.featuredCategories1 div.catNavContent p.currentCat {
-    color: #FFFFFF;
-    float: left;
-    font-family: 'Conv_BebasNeue';
-    font-size: 24px;
-    position: relative;
-    top: 16px;
-}
-.featuredCategories1 div.catNavContent p:not(:last-child) {
-    /*padding-right: 18px;*/
-    width: 300px;
-	 font-family: 'Conv_BebasNeue';
-	
-}
-.featuredCategories1 div.catNavContent img.catButton {
-    cursor: pointer;
-    float: left;
-    padding-right: 18px;
-    position: relative;
-    top: 14px;
-}
-.featuredCategories1 img.btnViewAllCategories {
-    cursor: pointer;
-    padding-bottom: 30px;
-    padding-top: 8px;
-}
-
-/*.productList > li button{display:none;}*/
-#resultsProductListContainer{}
-#resultsProductListContainer li{width:216px; min-height:225px;}
-#resultsProductListContainer h6{ margin:0 0 15px 20px;}
-
-.loginShow {display:none;}
-
-.buyerLoggedIn span.loginShow {display:inline-block;}
-
-.buyerLoggedIn .loginHide {display:none;}
-
-.hideIfLoggedIn{display:block;}
-.fl{float:left;font-size: 12px;padding: 8px 50px 0 0;}
-
-.ui-widget-overlay ui-front{opacity:0;}
-
-.prodlistRelatedContainer .prodViewerAddToCartForm button{ display:none;}
-.prodlistRelatedContainer h5{ font-size:12px; width:210px !important; min-height:auto !important;}
-.prodlistRelatedContainer .price{display:none;}
-
-.ui-menu .ui-menu-item a{display: inline;
-    margin: 0;
-    padding: 0;
-    width: 100%;}
-	.ui-menu .ui-menu-item{display:inline; width:100%;}
-	
-.ui-state-default.nextPageButton{background:url(images/next-arrow.gif)no-repeat; height:35px; width:41px;}
-.ui-state-default.prevPageButton{background:url(images/prev_arrow.gif)no-repeat; height:35px; width:41px;}
-.ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only nextbutton{background:url(images/next-arrow.gif)}
-
-
-.ad-thumbs ul li{height:76px; margin-top:10px;}
-/*.ad-thumbs ul li h5{display:none;}
-.ad-thumbs ul li h6{display:none;}
-.ad-thumbs ul li .hideInMinimalMode pointer moreDetails{display:none;}*/
-.ad-thumbs ul li .prodThumbContainer{height:100px;}
-.ad-thumbs ul li .prodThumbContainer img{height:76px; width:100px; margin-top:6px;}
-	
-.ad-thumbs ul li h3{}
-.ad-thumbs ul li h6.ad-description-title{font-size:15px; margin-bottom:20px; margin-top:20px;}
-.ad-thumbs ul li .ad-description{background: none repeat scroll 0 0 #FFFFFF; height: 150px;margin-top:-327px;position: absolute;right: -55px; width: 200px; border:7px solid #1c1c1c;}
-
-#my-dropdown{background:#fff; border:1px solid #9e9e9e;padding:2px; -webkit-appearance: none;
-  -moz-appearance: none;  appearance: none; z-index:0;}
-  
-.my-dropdown{background:#fff;border:1px solid #9e9e9e; padding:2px; -webkit-appearance: none;
-  -moz-appearance: none;  appearance: none; z-index:0;}
-
-#my-dropdown option{ text-align:left;}
-/*.checkoutFormContainer .panelContent select{background: url("images/select-arrow.png") no-repeat scroll right center transparent; text-indent:20px; -webkit-appearance: none;
-  -moz-appearance: none;  appearance: none; z-index:0;}
-  */
- .savelater{text-align:center; color:#FF0000; text-decoration:none;}
- .popup {
-    overflow:hidden;
-    position:absolute;
-    width:600px;
-    z-index:1000;
-	background:#FFFFFF;
-}
-.a2a_img a2a_img_text a2a_i_a2a{display:none;}
-.a2a_default_style .a2a_img, .a2a_default_style .a2a_dd{float:right; width:100px; height:55px;}
-#a2apage_lockerz_grab{display:none;}
-#a2apage_myspace {display:none;}
-#a2apage_digg{display:none;}
-#a2apage_find_container{display:none;}
-#a2apage_reddit{display:none;}
-#a2apage_stumbleupon{display:none;}
-#a2apage_delicious{display:none;}
-#a2apage_google_bookmarks{display:none;}
-#a2apage_powered_by{display:none;}
-#a2apage_live{display:none;}
-#a2apage_aol_mail{display:none;}
-#a2apage_any_email{display:none;}
-#a2apage_email_client{display:none;}
-#a2apage_vodpod{display:none;}
-#a2apage_yahoo_bookmarks{display:none;}
-#a2apage_bebo{display:none;}
-#a2apage_mister_wong{display:none;}
-#a2apage_wordpress{display:none;}
-#a2apage_google_reader{display:none;}
-#a2apage_orkut{display:none;}
-#a2apage_xing{display:none;}
-#a2apage_buffer{display:none;}
-#a2apage_buffer{display:none;}
-#a2apage_evernote{display:none;}
-#a2apage_netvibes_share{display:none;}
-#a2apage_strands{display:none;}
-#a2apage_posterous{display:none;}
-#a2apage_business_exchange{display:none;}
-#a2apage_arto{display:none;}
-#a2apage_tipd{display:none;}
-#a2apage_smaknews{display:none;}
-#a2apage_plurk{display:none;}
-#a2apage_plurk{display:none;}
-#a2apage_aim{display:none;}
-#a2apage_yahoo_messenger{display:none;}
-#a2apage_identi_ca{display:none;}
-#a2apage_mozillaca{display:none;}
-#a2apage_blogger_post{display:none;}
-#a2apage_typepad_post{display:none;}
-#a2apage_box_net{display:none;}
-#a2apage_kindle_it{display:none;}
-#a2apage_pinterest{display:none;}
-#a2apage_netlog{display:none;}
-#a2apage_technorati_favorites{display:none;}
-#a2apage_citeulike{display:none;}
-#a2apage_jumptags{display:none;}
-#a2apage_hemidemi{display:none;}
-#a2apage_funp{display:none;}
-#a2apage_instapaper{display:none;}
-#a2apage_phonefavs{display:none;}
-#a2apage_xerpi{display:none;}
-#a2apage_netvouz{display:none;}
-#a2apage_wink{display:none;}
-#a2apage_diigo{display:none;}
-#a2apage_bibsonomy{display:none;}
-#a2apage_blogmarks{display:none;}
-#a2apage_tailrank{display:none;}
-#a2apage_startaid{display:none;}
-#a2apage_kledy{display:none;}
-#a2apage_khabbr{display:none;}
-#a2apage_meneame{display:none;}
-#a2apage_yoolink{display:none;}
-#a2apage_bookmarks_fr{display:none;}
-#a2apage_technotizie{display:none;}
-#a2apage_newsvine{display:none;}
-#a2apage_multiply{display:none;}
-#a2apage_friendfeed{display:none;}
-#a2apage_plaxo_pulse{display:none;}
-#a2apage_ping{display:none;}
-#a2apage_squidoo{display:none;}
-#a2apage_protopage_bookmarks{display:none;}
-#a2apage_blinklist{display:none;}
-#a2apage_faves{display:none;}
-#a2apage_yigg{display:none;}
-#a2apage_webnews{display:none;}
-#a2apage_segnalo{display:none;}
-#a2apage_pusha{display:none;}
-#a2apage_youmob{display:none;}
-#a2apage_slashdot{display:none;}
-#a2apage_fark{display:none;}
-#a2apage_allvoices{display:none;}
-#a2apage_jamespot{display:none;}
-#a2apage_imera_brazil{display:none;}
-#a2apage_twiddla{display:none;}
-#a2apage_linkagogo{display:none;}
-#a2apage_unalog{display:none;}
-#a2apage_hugg{display:none;}
-#a2apage_diglog{display:none;}
-#a2apage_nowpublic{display:none;}
-#a2apage_tumblr{display:none;}
-#a2apage_livejournal{display:none;}
-#a2apage_current{display:none;}
-#a2apage_hellotxt{display:none;}
-#a2apage_spurl{display:none;}
-#a2apage_yample{display:none;}
-#a2apage_oneview{display:none;}
-#a2apage_linkatopia{display:none;}
-#a2apage_simpy{display:none;}
-#a2apage_linkedin{display:none;}
-#a2apage_buddymarks{display:none;}
-#a2apage_ask_com_mystuff{display:none;}
-#a2apage_viadeo{display:none;}
-#a2apage_maple{display:none;}
-#a2apage_wists{display:none;}
-#a2apage_connotea{display:none;}
-#a2apage_backflip{display:none;}
-#a2apage_mylinkvault{display:none;}
-#a2apage_sitejot{display:none;}
-#a2apage_sphinn{display:none;}
-#a2apage_dzone{display:none;}
-#a2apage_care2_news{display:none;}
-#a2apage_hyves{display:none;}
-#a2apage_sphere{display:none;}
-#a2apage_bitty_browser{display:none;}
-#a2apage_gabbr{display:none;}
-#a2apage_symbaloo_feeds{display:none;}
-#a2apage_tagza{display:none;}
-#a2apage_folkd{display:none;}
-#a2apage_newstrust{display:none;}
-#a2apage_amazon_wish_list{display:none;}
-#a2apage_printfriendly{display:none;}
-#a2apage_read_it_later{display:none;}
-#a2apage_tuenti{display:none;}
-#a2apage_email{display:none;}
-#a2apage_rediff{display:none;}
-
-
-.a2apage_wide a2a_wide{display:none;opacity:0;}
-
-#slideshowContainer{
-	height:340px;
-	position: relative;
-	overflow:hidden;
-	margin:0 0 10px 10px;
-}
-#wideSlideshow{
-	position:absolute;
-}
-#slideshowNav{
-	position:absolute;
-	right:10px;
-	bottom: 10px;
-	text-align: right;
-	z-index:9;
-}
-#slideshowNav a {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #C0B3AD;
-    border-radius: 2px 2px 2px 2px;
-    color: #635F5C;
-    display: inline-block;
-    font-size: 0.9em;
-    margin: 0 8px;
-    padding: 1px 8px;
-    text-decoration: none;
-}
-#slideshowNav a:hover, #slideshowNav a.activeSlide {
-    background: none repeat scroll 0 0 #A29688;
-    border-color: #C0B3AD;
-    color: #EBDED5;
-}
-#slideshowNav a:focus {
-    outline: medium none;
-}
-
-/***** NEW STYLESHEET *****/
-
-.headert1{margin:11px 0 0 10px; padding:0px; float:left; cursor:pointer;}
-.headert2{margin:41px 0 0 156px; padding:0px; float:left;}
-.headert3{margin:15px 0 0 113px; padding:0px; float:left;}
-.socialicona{margin:0 0 0 35px; padding:0px; float:left;} 
-
-@media (min-width: 768px) and (max-width: 1024px)  { 
-#container {width:96%;}
-.caroufredsel_wrapper div.ccItem {padding-left:0px;margin-left:-5px;}
-.sortby {margin:0 0 0 2px;}
-.Account {width:600px;margin-left:-20px;}
-.featuredCategories div.catNavContent p:not(:last-child){width:290px;}
-.productList > li{width:214px;}
-}
-
-/*ipad*/
-@media  only screen and (min-width: 768px) and (max-width: 979px)  and (orientation:portrait) {
-#container {width:99%;}
-.headert1{margin:11px 0 0 -179px ;width:290px;}
-.headert2{margin:41px 28px 0 27px;}
-.headert3{margin:10px 0 0 29px;}
-div#container div.nav div.navContent > ul > li > a {font-size:20px;}
-div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
-.midmain {margin-left:18px;}
-.featuredCategories div.catNavContent p:not(:last-child) {width:195px;}
-.caroufredsel_wrapper div.ccItem {padding-left:5px;}
-.productList > li{width:216px;}
-div#container div#topNav div#topNavContent p:not(:last-child){ /*{padding-right:11px;*/}
-.fl {padding:8px 21px 0 0}
-div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
-.featuredCategories img.btnViewAllCategories {margin-right:180px;}
-#resultsProductListContainer {width:500px!important;}
-.sortby {margin:20px 0 0 2px; width:215px;}
-}
-
-
-/*Samsung Big Phone*/
-@media only screen and (min-width: 480px) and (max-width: 767px) {
-.headert1 {margin:-50px 0 0 20px;}
-#footer {display:none;}
-.headert2{display:none;}
-.headert3{display:none;}
-div#container div#topNav {display:none;}
-}
-
-/*iphone used*/
-@media only screen and (max-width: 479px) {
-#container {width:99%;}
-div#container div#topNav {display:none;}
-div#container div.nav div.navContent > ul > li > a {display:none;}
-.midmain {margin-left:40px;}
-.featuredCategories div.catNavContent p.currentCat {margin-left:2px!important;font-size:12px!important;}
-.featuredCategories div.catNavContent p:not(:last-child) { font-size:12px!important; margin-left:-21px;width:100px;}
-.productList > li{width:220px;}
-.featuredCategories div.catNavContent img.catButton {padding-right:0px; margin-left:0px!important;}
-.headert1 img {width:250px!important;}
-.headert2{display:none;}
-.headert3{display:none;}
-.sliderM {display:none;}
-
- }
-
-
-
-.dropDownListHolder img{width:100%;}
-
-
-/* Layered/filtered Search */
-
-label.break	{display:block; margin-bottom:2px;}
-.layeredSearch	{color:#ffffff;}
-.layeredSearch legend	{
-	font-size:16px; 
-	font-weight:bold;
-	font-family: 'Neuton', serif;
-	color:#6F290F;
-	}
-.layeredSearch label{
-	font-size:12px;
-	color:#6F290F;
-}
-.layeredSearch fieldset	{margin-bottom:12px;}
-
-.woodType{
-	
-}
-.kingHeight{
-	
-}
-.resetButton{
-	width:100px;
-	height:30px;
-	margin-left: 50px;
-	margin-bottom: 10px;
-	border:none;
-	border-radius:4px;
-	color:white;
-	background: rgb(164,134,114); /* Old browsers */
-	background: -moz-linear-gradient(top,  rgba(164,134,114,1) 0%, rgba(119,80,50,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(164,134,114,1)), color-stop(100%,rgba(119,80,50,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a48672', endColorstr='#775032',GradientType=0 ); /* IE6-9 */
-}
-div .slider-range a:nth-of-type(1){
-	background-image:url(images/arrow_circle_green_right.png) !important;
-}
-
-div .slider-range a:nth-of-type(2){
-	background-image:url(images/arrow_circle_green_left.png) !important;
-}
-.layeredSearch input{
-	color:#6F290F;
-}
-
-div ul .filterSearchResults3{
-	height: 330px;
-	width: 220px;
-}
-.catBrowseSidebar{
-	width:200px;
-	background-color:#B29F6B;
-	float:left;
-	border-radius:5px;
-	
-}
-.catBrowseSidebar a{
-	color:#ffffff;
-	font-size:16px;
-	font-family: 'Neuton', serif;
-	text-decoration:none;
-} 

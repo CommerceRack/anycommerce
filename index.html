@@ -9,24 +9,36 @@
 <meta property="og:type" content="" id='ogType' >
 <meta property="og:image" content="" id='ogImage' >
 <meta property="og:description" content="" id='ogDescription' >
+
+
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
+
+
+
 <script type="text/javascript">
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
+
 var app = {vars:{
-	"release":"20130701181000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201320.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
+	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
-if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "/";
-	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+if(document.location.protocol == 'file:')	{
+	app.vars.baseURL  = "";
 	}
+else	{
+	app.vars.baseURL = document.location.protocol+"//"+document.domain+"/";
+	}
+document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 </script>
+
+
 <!--
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
@@ -34,6 +46,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="_tw_css.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
@@ -919,7 +932,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
-	<div class='pointer'>
+	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
 		<div class='prodThumbContainer' style="height:120px; text-align:center; margin-top:2px;">
 			<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
@@ -1618,7 +1631,7 @@ So the cart template should contain these two elements and the extension should 
         <span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
-        <img src="images/amazon.gif" width="160" height="30" > 
+        <!--<img src="images/amazon.gif" width="160" height="30" >--> 
 	</div>
 </section>
 		</div>
@@ -1890,7 +1903,9 @@ The 'data-action' attribute is used to assign an onclick.
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<table  class='listStyleNone lineItemProdlist'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
 	</td>
 </tr>
 </table>

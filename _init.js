@@ -3,7 +3,7 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
+app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 
@@ -19,6 +19,8 @@ app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js'
 app.rq.push(['extension',0,'store_toywars','extensions/_store_toywars.js','startExtension']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+//app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
+//app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
 //app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);

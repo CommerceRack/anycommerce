@@ -114,6 +114,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 			 }, //cartItemUpdate
 
 //cmdObj - see http://www.zoovy.com/webdoc/?VERB=DOC&DOCID=51609 for details.
+//Q not an option. MUST always be immutable.
 		cartPaymentQ : 	{
 			init : function(cmdObj,_tag)	{
 //make sure id is set for inserts.
@@ -157,6 +158,25 @@ a callback was also added which just executes this call, so that checkout COULD 
 			},//cartOrderCreate
 
 
+		cartPaypalSetExpressCheckout : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj = obj || {};
+				obj._tag = _tag || {};
+				var parentID = obj._tag.parentID || '';
+				obj._cmd = "cartPaypalSetExpressCheckout";
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout";
+				
+				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
+				
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //cartPaypalSetExpressCheckout	
+
 /*
 
 THESE STILL NEED LOVE
@@ -186,24 +206,6 @@ left them be to provide guidance later.
 				}
 			}, //cartGoogleCheckoutURL	
 
-		cartPaypalSetExpressCheckout : {
-			init : function()	{
-				var getBuyerAddress = 0;
-				if(app.ext.cco.u.taxShouldGetRecalculated())
-					getBuyerAddress = 1;
-				this.dispatch(getBuyerAddress);
-				return 1;
-				},
-			dispatch : function(getBuyerAddress)	{
-				var _tag = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"orderCreate"}
-				app.model.addDispatchToQ({
-					"_cmd":"cartPaypalSetExpressCheckout",
-					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
-					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout",
-					"getBuyerAddress":getBuyerAddress,'_tag':_tag
-					},'immutable');
-				}
-			}, //cartPaypalSetExpressCheckout	
 
 		cartAmazonPaymentURL : {
 			init : function()	{
@@ -262,17 +264,6 @@ left them be to provide guidance later.
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on checkout page.
 				app.u.throwMessage(responseData,uuid);
 				}
-			},
-
-		handleCartPaypalSetECResponse : {
-			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN cco.callbacks.handleCartPaypalSetECResponse.onSuccess');
-				window.location = app.data[tagObj.datapointer].URL
-				},
-			onError : function(responseData,uuid)	{
-				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on cart page.
-				app.u.throwMessage(responseData,uuid);
-				}
 			}
 		}, //callbacks
 
@@ -327,37 +318,87 @@ left them be to provide guidance later.
 //NOTE TO SELF:
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
-			buildPaymentQ : function()	{
-//				app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var payby = $('input:radio[name="want/payby"]:checked').val()
+			buildPaymentQ : function($form)	{
+				app.u.dump("BEGIN cco.u.buildPaymentQ");
+				var sfo = $form.serializeJSON() || {},
+				payby = sfo["want/payby"];
 				app.u.dump(" -> payby: "+payby);
-				if(payby.indexOf('WALLET') == 0)	{
-					app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
-//					app.u.dump(app.ext.cco.u.getWalletByID (payby));
+				if(payby)	{
+					if(payby.indexOf('WALLET') == 0)	{
+						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
+						}
+					else if(payby == 'CREDIT')	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
+						}				
+					else if(payby == 'PO')	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":sfo['payment/PO']});
+						}				
+					else if(payby == 'ECHECK')	{
+						app.ext.cco.calls.cartPaymentQ.init({
+	"cmd":"insert",
+	"TN":"ECHECK",
+	"EA":sfo['payment/EA'],
+	"ER":sfo['payment/ER'],
+	"EN":sfo['payment/EN'],
+	"EB":sfo['payment/EB'],
+	"ES":sfo['payment/ES'],
+	"EI":sfo['payment/EI']
+							});
+						}
+					else	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
+						}
 					}
-				else if(payby == 'CREDIT')	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
-					}				
-				else if(payby == 'PO')	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
-					}				
-				else if(payby == 'ECHECK')	{
-					app.ext.cco.calls.cartPaymentQ.init({
-"cmd":"insert",
-"TN":"ECHECK",
-"EA":$('#paymentea').val(),
-"ER":$('#paymenter').val(),
-"EN":$('#paymenten').val(),
-"EB":$('#paymenteb').val(),
-"ES":$('#paymentes').val(),
-"EI":$('#paymentei').val()
-						});
-					}
-				else	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
-					}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
+						}
 				},
 
+
+			paymentMethodsIncludesGiftcard : function(datapointer)	{
+				var r = false;
+				if(app.data[datapointer] && app.data[datapointer]['@methods'] && app.data[datapointer]['@methods'].length)	{
+					var payMethods = app.data[datapointer]['@methods'],
+					L = app.data[datapointer]['@methods'].length;
+
+					for(var i = 0; i < L; i += 1)	{
+						if(payMethods[i].id.indexOf('GIFTCARD:') === 0)	{
+							r = true;
+							break;
+							}
+						}
+					}
+				else	{
+					//app.data.datapointer is empty
+					}
+				return r;
+				},
+
+
+//A simple check to make sure that all the required inputs are populated for a given address.  
+//returns boolean
+//this is used in checkout for pre-existing addresses, to make sure they're complete.
+			verifyAddressIsComplete : function(addressType,addressID)	{
+				var r = true;
+				if(addressType && addressID)	{
+					var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID);
+					if(!addrObj[addressType+'/address1'])	{r = false}
+					else if(!addrObj[addressType+'/city'])	{r = false}
+					else if(!addrObj[addressType+'/countrycode'])	{r = false}
+					else	{}
+	//we're returning boolean, so if we already a false, no need to verify further. if true, make sure postal and region are set for US
+					if(r == true && addrObj[addressType+'/countrycode'] == 'US')	{
+						if(!addrObj[addressType+'/postal'])	{r = false}
+						else if(!addrObj[addressType+'/region'])	{r = false}
+						else	{}
+						}
+					}
+				else	{
+					r = false;
+					$('#globalMessaging').anymessage({'message':'In cco.u.verifyAddressIsComplete, either addressType ['+addressType+'] or addressID ['+addressID+'] not set','gMessage':true});
+					}
+				return r;
+				},
 
 //pass in either 'bill' or 'ship' to determine if any predefined addresses for that type exist.
 //buyerAddressList data should already have been retrieved by the time this is executed.
@@ -395,7 +436,7 @@ left them be to provide guidance later.
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
 //according to B, there will be only 1 paypal tender in the paymentQ.
 			aValidPaypalTenderIsPresent : function()	{
-				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
+//				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					return (Math.round(+new Date(PQI.TIMESTAMP)) > +new Date()) ? true : false;
 					});
@@ -405,12 +446,13 @@ once paypalEC has been approved by paypal, a lot of form fields lock down, but t
 payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this if value returned is > 0.
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
-			nukePayPalEC : function() {
+			nukePayPalEC : function(_tag) {
 //				app.u.dump("BEGIN cco.u.nukePayPalEC");
 				app.ext.orderCreate.vars['payment-pt'] = null;
 				app.ext.orderCreate.vars['payment-pi'] = null;
+				app.calls.cartSet.init({'want/payby':""}); //adds dispatches.
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
-					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
+					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
 
@@ -421,27 +463,35 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
 //				app.u.dump("BEGIN cco.u.modifyPaymentQbyTender");
-				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
-				var r = new Array(); //what is returned if someFunction returns anything.
+				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
+				r = new Array(), //what is returned if someFunction returns anything.
+				returned; //what is returned by this function.
+				
 				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
-//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
-					var L = app.data.cartDetail['@PAYMENTQ'].length;
-//					app.u.dump(" -> paymentQ.length: "+L);
-					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
-						if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
-							inc += 1;
-							if(typeof someFunction == 'function')	{
-								r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
+					if(app.data.cartDetail['@PAYMENTQ'].length)	{
+	//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
+						var L = app.data.cartDetail['@PAYMENTQ'].length;
+	//					app.u.dump(" -> paymentQ.length: "+L);
+						for(var i = 0; i < L; i += 1)	{
+	//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
+							if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
+								inc += 1;
+								if(typeof someFunction == 'function')	{
+									r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
+									}
 								}
 							}
+						returned = (typeof someFunction == 'function') ? r : inc;
 						}
+					else	{
+						returned = inc;
+						} //paymentQ is empty. no error or warning.
 					}
 				else	{
 					app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
 					}
 //				app.u.dump(" -> num tender matches: "+r);
-				return (typeof someFunction == 'function') ? r : inc;
+				return returned;
 				},
 			
 			getAddrObjByID : function(type,id)	{
@@ -502,9 +552,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 	//expiration is less of a concern
 					case 'CREDIT':
+
 						tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' class=' creditCard' value='";
 						if(data['payment/CC']){tmp += data['payment/CC']}
-						tmp += "' onKeyPress='return app.u.numbersOnly(event);' required='required' /><\/label><\/div>";
+						tmp += "' onKeyPress='' required='required' /><\/label><\/div>";
 						
 						tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
 						tmp += app.u.getCCExpMonths(data['payment/MM']);
@@ -513,7 +564,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						
 						tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
 						if(data['payment/CV']){tmp += data['payment/CV']}
-						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 						
 						if(isAdmin === true)	{
 							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
@@ -543,32 +594,47 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						break;
 	
 					case 'PO':
-						tmp += "<div title='PO Number'><input type='text' size='30' placeholder='po number' required='required' name='payment/PO' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
-						if(data['payment/PO'])
-								tmp += data['payment/PO'];
-						tmp += "' /><\/div>";
+						tmp = $("<div \/>",{'title':'PO Number'});
+
+						var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':'payment/PO','placeholder':'PO Number'}).addClass('purchaseOrder');
+						if(data['payment/PO'])	{$input.val(data['payment/PO'])}
+						$input.appendTo(tmp);
 						if(isAdmin === true)	{
-							tmp += payStatusCB;
+							tmp.append(payStatusCB);
 							}
 						break;
 	
 					case 'ECHECK':
-						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
+						var echeckFields = {
+							"payment/EA" : "Account #",
+							"payment/ER" : "Routing #",
+							"payment/EN" : "Account Name",
+							"payment/EB" : "Bank Name",
+							"payment/ES" : "Bank State",
+							"payment/EI" : "Check #"
+							}
+						tmp = $("<div \/>");
 						for(var key in echeckFields) {
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
 //The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							tmp += "<div title='"+echeckFields[key]+"'><input type='text' required='required' size='30' name='"+key+"' placeholder='"+echeckFields[key].toLowerCase()+"' class=' echeck'  value='";
-//if the value for this field is set in the data object (cart or invoice), set it here.
-							if(data[key])
-								tmp += data[key];
-							tmp += "' /><\/div>";
+							var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':key,'placeholder':echeckFields[key].toLowerCase()}).addClass('echeck');
+							if(data[key])	{$input.val(data[key])}
+							$("<div \/>",{'title':echeckFields[key]}).append($input).appendTo(tmp);
 							}
 						break;
 					default:
 //if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
 						$o = false; //return false if there is no supplemental fields
 					}
-				if($o)	{$o.append(tmp)} //put the li contents into the ul for return.
+				if($o)	{
+					$o.append(tmp);
+//set events to save values to memory. this will ensure data repopulates as panels get reloaded in 1PC.
+					$('input, select',$o).each(function(){
+						$(this).off('change.save').on('change.save',function(){
+							data[$(this).attr('name')] = $(this).val();
+							});
+						});
+					} //put the li contents into the ul for return.
 				return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);
@@ -618,6 +684,71 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					app.u.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
 					}
 				},
+//run this just prior to creating an order.
+//will clean up cart object.
+			sanitizeAndUpdateCart : function($form,_tag)	{
+				if($form)	{
+					_tag = _tag || {};
+					var formObj = $form.serializeJSON();
+//po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
+					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
+						formObj['want/po_number'] = formObj['want/reference_number'];
+						}
+// to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
+					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
+						var addr = app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+						for(var index in addr)	{
+							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
+								if(fromAddr == toAddr)	{
+									formObj[index] = addr[index];
+									}
+								else	{
+									formObj[index.replace(fromAddr+'/',toAddr+'/')] = addr[index]; //when copying bill to ship, change index accordingly.
+									}
+								}
+							}
+						}
+
+//if a shortcut is selected, save the address info into the cart.
+					if(formObj['bill/shortcut'])	{
+						populateAddressFromShortcut('bill','bill');
+						}
+
+//if a shortcut is selected, save the address info into the cart.
+					if(formObj['ship/shortcut'])	{
+						populateAddressFromShortcut('ship','ship');
+						}
+//if ship to billing address is enabled, copy the billing address into the shipping fields.
+					else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
+						populateAddressFromShortcut('bill','ship');	
+						}
+//bill to ship, but no short cut (not logged in)
+					else if(formObj['want/bill_to_ship'])	{
+						for(var index in formObj)	{
+//copy billing fields into shipping. not email tho.
+							if(index.indexOf('bill/') == 0 && index != 'bill/email')	{ 
+								formObj[index.replace('bill/','ship/')] = formObj[index]
+								}
+							}
+						}
+//regularize checkbox data.
+					if(formObj['want/bill_to_ship'] == 'ON')	{formObj['want/bill_to_ship'] = 1} 
+					if(formObj['want/create_customer'] == 'ON')	{formObj['want/create_customer'] = 1}
+
+//these aren't valid checkout field. used only for some logic processing.
+					delete formObj['want/reference_number'];
+					delete formObj['want/bill_to_ship_cb'];
+//cc and cv should never go. They're added as part of cartPaymentQ
+					delete formObj['payment/cc'];
+					delete formObj['payment/cv'];
+/* these fields are in checkout/order create but not 'supported' fields. don't send them */				
+					delete formObj['giftcard'];
+					delete formObj['want/bill_to_ship_cb'];
+					delete formObj['coupon'];	
+
+					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
+					}
+				} //sanitizeAndUpdateCart
 
 
 

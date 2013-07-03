@@ -356,7 +356,6 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 						app.u.dump(" -> change sort order");
 					
 						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
-						
 						query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = 0;
 						query.sort = [{'base_price':{'order':'asc'}}];
@@ -370,8 +369,6 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 				
 				return $sort;
 				}, //buildSortMenu
-				
-				
 			
 			getAlternativeQueries : function(keywords,tagObj)	{
 				var keywordsArray = new Array();
@@ -396,7 +393,6 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 				var r = '';
 				for(var i = 0; i < a.length; i +=1)	{
 					r += a[i]+' ';
-
 					}
 //				app.u.dump("permArrayToString = "+r);
 				return r;

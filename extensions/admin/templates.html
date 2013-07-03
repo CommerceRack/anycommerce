@@ -1,5 +1,28 @@
 
 
+<table>
+<tr id='messageListTemplate'>
+	<td class='valignTop'>ICON</td>
+	<td class='valignTop'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:truncText; numCharacters: 75;"></p>
+	<button data-app-event='admin|showMessageDetail'>Details</button>
+	</td>
+	<td class='valignTop'>
+	<button data-app-event='admin|execMessageClear' class='smallButton'>Clear this message</button>
+	</td>
+</tr>
+</table>
+
+
+<div id='messageDetailTemplate'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:text;"></p>
+	<hr />
+	More actions/buttons based on message type.
+</div>
+
+
 <!--
 
 ########################################################
@@ -283,7 +306,10 @@ SETUP PAGE TEMPLATE
 <tr>
 
 	<td width="33%" valign="top">
-	
+
+			
+			
+
 	<div id="manage" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Manage Apps/Website</h3>
@@ -293,13 +319,39 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/domain/index.cgi'); return false;" title="/biz/setup/domain/index.cgi">Domain Hosting</a><br />
 			<div class="helper">Register and Link Domains.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/projects/index.cgi'); return false;" title="/biz/setup/projects/index.cgi">App Hosting</a><br />
+			<a href="#" onClick="navigateTo('#!projects'); return false;">App Hosting </a><br />
 			<div class="helper">Manage Hosted Application Projects</div>
+
+
+			
+			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
+			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
+			<div class="helper">
+			- <a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Upload New Image</a><br />
+			- <a href="#" onClick="navigateTo('/biz/setup/customfiles/index.cgi'); return false;" title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br />
+			</div>
+
+			
+			
+			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds</a><br />
+			<div class="helper">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
+		</div>
+	</div><!-- /manage -->
+
+
+
+
+	
+	<div id="vstore" class='ui-widget marginBottom' class='showForZoovyOnly'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>vStore</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
 			<div class="helper">Put in Logo, Address, Policies, etc.</div>
 
-			<div class='showForZoovyOnly'>
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi'); return false;" title="/biz/setup/builder/index.cgi">Site Builder</a><br />
 			<div class="helper">Build the content for your storefront.  Select page layouts and add product to categories and lists.</div>
 				
@@ -317,44 +369,54 @@ SETUP PAGE TEMPLATE
 				
 				- <a href="#" onClick="navigateTo('/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT">Edit Email Messages</a><br />
 				<div class="helper">Customize the emails that are sent to customers.</div>
-			</div>			
+
 			
-			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
-			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
-			<div class="helper">
-			- <a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Upload New Image</a><br />
-			- <a href="#" onClick="navigateTo('/biz/setup/customfiles/index.cgi'); return false;" title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br />
-			</div>
-			
+			<div >
 			<a href="#" onClick="navigateTo('/biz/setup/navcats/index.cgi'); return false;" title="/biz/setup/navcats/index.cgi">Categories &amp; Lists</a><br />
 			<div class="helper">Build your store category tree or add product lists.</div>
-			
-			<div class='showForZoovyOnly'>
+			</div>
+						
+			<div >
 			<a href="#" onClick="navigateTo('/biz/setup/analytics/index.cgi'); return false;" title="/biz/setup/analytics/index.cgi">Analytics &amp; Plugins</a><br />
 			<div class="helper">Integrate approved 3rd party applications with your site.</div>
 			</div>
+
+
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
+			<div class="helper">Specify what info is optional/required during checkout.</div>
 			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
+			<div class="helper">Configure what options customers have when they login to their accounts on your store.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/rss/index.cgi'); return false;" title="/biz/setup/rss/index.cgi">RSS Feeds</a><br />
-			<div class="helper">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
-		</div>
-	</div><!-- /manage -->
+			<div >
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
+			<div class="helper">Customize System Messages used throughout the site</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
+			<div class="helper">Customize Checkout Messaging used during checkout.</div>
+			</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
+			<div class="helper">Configure which languages and currencies are available.</div>
 
-	
-	<div id="market" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Integrated Marketplaces</h3>
-		</div>
 
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;" title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
-			<div class="helper">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/search/index.cgi'); return false;" title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
+			<div class="helper">Create custom searchable indexes of your product database.</div>
 
-			<a href="#" onClick="navigateTo('/biz/syndication/amazon/index.cgi'); return false;" title="/biz/syndication/amazon/index.cgi">Amazon Configuration</a><br />
-			<div class="helper">Manage Amazon Tokens and learn more about Zoovy's integration.</div>
+			<div >
+			<a href="#" onClick="navigateTo('/biz/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
+			<div class="helper">Manage feature bundles installed on this account.</div>
+			</div>
+			<div >
+			<a href="#" onClick="navigateTo('/biz/setup/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/setup/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
+			<div class="helper">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
+			</div>
 		</div>
-	</div><!-- /market -->
-	
+	</div><!-- /utility -->
+
+
+
 	</td>
 
 
@@ -366,53 +428,26 @@ SETUP PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/shipping/index.cgi'); return false;" title="/biz/setup/shipping/index.cgi">Shipping</a><br />
+			<a href="#" onClick="navigateTo('#!shippingManager'); return false;">Shipping</a><br />
 			<div class="helper">Determine how shipping will be calculated for your products.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/payment/index.cgi'); return false;" title="/biz/setup/payment/index.cgi">Payment Methods</a><br />
+			<a href="#" onClick="navigateTo('#!paymentManager'); return false;">Payment Methods</a><br />
 			<div class="helper">Configure which payment methods you will accept from customers.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/tax/index.cgi'); return false;" title="/biz/setup/tax/index.cgi">Sales Tax</a><br />
+			<a href="#" onClick="navigateTo('#!taxConfig'); return false;">Sales Tax</a><br />
 			<div class="helper">Configure state and local tax collection amounts.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/promotions/index.cgi'); return false;" title="/biz/setup/promotions/index.cgi">Coupons/Promotions</a><br />
 			<div class="helper">Create discounts for special purchases</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
-			<div class="helper">Specify what info is optional/required during checkout.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
-			<div class="helper">Configure what options customers have when they login to their accounts on your store.</div>
-			
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
-			<div class="helper">Customize System Messages used throughout the site</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
-			<div class="helper">Customize Checkout Messaging used during checkout.</div>
-			</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
-			<div class="helper">Configure which languages and currencies are available.</div>
+<!--
 			
 			<a href="#" onClick="navigateTo('/biz/crm/index.cgi?VERB=CONFIG'); return false;" title="/biz/crm/index.cgi?VERB=CONFIG">CRM Behaviors</a><br />
 			<div class="helper">Configure preferences in the CRM area.</div>
-		</div>
+-->		</div>
 	</div><!-- /properties -->
 	
-	<div id="utility" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Utility Features</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;" title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
-			<div class="helper">Import data from a variety of formats.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/search/index.cgi'); return false;" title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
-			<div class="helper">Create custom searchable indexes of your product database.</div>
-		</div>
-	</div><!-- /utility -->
+
 	</td>
 
 	<td width="33%" valign="top">
@@ -422,7 +457,8 @@ SETUP PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" title="/biz/setup/account/index.cgi">Contact Information</a><br />
+			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" >Contact Information</a><br />
+<!--			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br /> -->
 			<div class="helper">Change Administrative/Billing Information</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/global/index.cgi'); return false;" title="/biz/setup/global/index.cgi">Global Settings</a><br />
@@ -437,10 +473,7 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a><br />
 			<div class="helper">You should change your password every 60 days.</div>
 			
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
-			<div class="helper">Manage feature bundles installed on this account.</div>
-			</div>
+
 			
 			<a href="#" onClick="navigateTo('/biz/setup/billing/index.cgi'); return false;" title="/biz/setup/billing/index.cgi">Billing History</a><br />
 			<div class="helper">View your billing history, update payment information.</div>
@@ -459,16 +492,13 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/private/index.cgi'); return false;" title="/biz/setup/private/index.cgi">Private Files</a><br />
 			<div class="helper">Private files include diagnostic logs, reports, and ticket attachments.</div>
 			
-			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/index.cgi" >Developer SDK</a><br />
+			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a><br />
 			<div class="helper">Use this to easily custom integrations or apps</div>
 			
-			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki/index.cgi" >Dev Wiki</a><br />
+			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a><br />
 			<div class="helper">Learn more about what is possible, and what is included in the SDK.</div>
 
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/setup/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/setup/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
-			<div class="helper">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
-			</div>
+
 			
 		</div>
 	</div><!-- /developer -->
@@ -483,339 +513,172 @@ SETUP PAGE TEMPLATE
 
 
 
+<div id='pageTemplateSites'>
 
-<div id='pageTemplateSetupAppchooser' class='page pageSetup pageSetupAppchooser clearfix'>
-
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='avalanche' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Avalanche</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_avalanche/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
-			<div >
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-			</div>
-		</div>
+	
+	<div class='betaWarning ui-widget ui-widget-content ui-corner-all smallPadding marginBottom clearfix'>
+	<p>This section has been updated as of 201320. If you experience issues please logout and click the previous version link, then come back to this page to make your changes.</p>
 	</div>
-
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='shadow' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Shadow</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_shadow/preview.jpg' width='280' height='200' alt='shadow' /></div>
-			<div>
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-			</div>
-		</div>
-	</div>
-
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='crispnclean' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Crisp &amp; Clean</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_crispnclean/preview.jpg' width='280' height='200' alt='crisp n clean' /></div>
-			<div>
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-			</div>
-		</div>
+	
+	<div data-app-role='sitesTabContainer'>
+	<ul>
+		<li><a href='#domains' onClick='return false'>Domains</a></li>
+		<li><a href='#partitions' onClick='return false'>Partitions</a></li>
+		<li><a href='#debug' onClick='return false'>Debug</a></li>
+	</ul>
+	
+	<section data-anytab-content='domains' class='clearfix'>
+		<table class='gridTable fullWidth'>
+		<thead>
+		<tr>
+			<th class='alignLeft'>Logo</th>
+			<th class='alignLeft'>Domain</th>
+			<th>Partition</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+		
+		</tbody>
+		</table>
+	</section>
+	
+	<section data-anytab-content='partitions' class='clearfix'>
+		<table class='gridTable fullWidth'>
+		<thead>
+		<tr>
+			<th>#/PRT</th>
+			<th>Name</th>
+			<th>Segmented Customers</th>
+			<th>Segmented Navcats</th>
+	</tr>
+		</thead>
+		<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:partitionListTemplate;">
+		
+		</tbody>
+		</table>
+	</section>
+	
+	<section data-anytab-content='debug' class='clearfix'>
+	Coming Soon
+	</section>
+	
 	</div>
 
 </div>
 
-
-
-
-
-
-
-<!--
-########################
-
-
-SYNDICATION PAGE TEMPLATE
-
-
-########################
--->
-
-
-
-
-<div id='pageSyndicationTemplate' class='page pageSyndication'>
-
-
-<table class='noPadOrMargin fullWidth stdCellSpacing'>
-<tbody>
-<tr>
-
-	<td width="33%" valign="top">
-	
-	<div id="manage" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Recommended Marketplaces</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom clearfix alignCenter'>
-
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/googlebase/index.cgi'); return false;" href="#/biz/syndication/googlebase/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/googletrustedstores.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/googlebase/index.cgi'); return false;" href="#/biz/syndication/googlebase/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51724" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/ebay/index.cgi'); return false;" href="#/biz/syndication/ebay/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/ebay; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/ebay/index.cgi'); return false;" href="#/biz/syndication/ebay/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50380" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/amazon/index.cgi'); return false;" href="#/biz/syndication/amazon/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/amazon_serve_large; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/amazon/index.cgi'); return false;" href="#/biz/syndication/amazon/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50391" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/doba/index.cgi'); return false;" href="#/biz/syndication/doba/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/doba; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/doba/index.cgi'); return false;" href="#/biz/syndication/doba/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51368" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/buycom/index.cgi'); return false;" href="#/biz/syndication/buycom/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/buycom; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/buycom/index.cgi'); return false;" href="#/biz/syndication/buycom/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50917" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/bestbuy/index.cgi'); return false;" href="#/biz/syndication/bestbuy/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/bestbuy; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/bestbuy/index.cgi'); return false;" href="#/biz/syndication/bestbuy/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50917" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/wishpot/index.cgi'); return false;" href="#/biz/syndication/wishpot/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/wishpot; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/wishpot/index.cgi'); return false;" href="#/biz/syndication/wishpot/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51424" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/sears/index.cgi'); return false;" href="#/biz/syndication/sears/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/sears; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/sears/index.cgi'); return false;" href="#/biz/syndication/sears/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51583" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/newegg/index.cgi'); return false;" href="#/biz/syndication/newegg/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/newegg.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/newegg/index.cgi'); return false;" href="#/biz/syndication/newegg/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51624" target="webdoc">More Info</a>
-	</div>
-
-
-
-		</div>
-	</div><!-- /manage -->
-
-	
-	</td>
-
-
-	<td width="33%" valign="top">
-
-	<div id="properties" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Recommended CPC</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom clearfix alignCenter'>
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/shoppingcom/index.cgi'); return false;" href="#/biz/syndication/shoppingcom/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/shopping; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/shoppingcom/index.cgi'); return false;" href="#/biz/syndication/shoppingcom/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50538" target="webdoc">More Info</a>		
-	</div>
-
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/bizrate/index.cgi'); return false;" href="#/biz/syndication/bizrate/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/shopzilla; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/bizrate/index.cgi'); return false;" href="#/biz/syndication/bizrate/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50374" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/pricegrabber/index.cgi'); return false;" href="#/biz/syndication/pricegrabber/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/pricegrabber; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/pricegrabber/index.cgi'); return false;" href="#/biz/syndication/pricegrabber/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50379" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/amazonpa/index.cgi'); return false;" href="#/biz/syndication/amazonpa/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/amazonpa; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/amazonpa/index.cgi'); return false;" href="#/biz/syndication/amazonpa/index.cgi">Settings</a> |
-	<a href="http://webdoc.zoovy.com/doc-51478" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/nextag/index.cgi'); return false;" href="#/biz/syndication/nextag/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/nextag; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/nextag/index.cgi'); return false;" href="#/biz/syndication/nextag/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50594" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/bing/index.cgi'); return false;" href="#/biz/syndication/bing/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/bing; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/bing/index.cgi'); return false;" href="#/biz/syndication/bing/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50918" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/imshopping/index.cgi'); return false;" href="#/biz/syndication/imshopping/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/imshopping; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/imshopping/index.cgi'); return false;" href="#/biz/syndication/imshopping/index.cgi">Settings</a> |
-	<a href="http://webdoc.zoovy.com/doc-51488" target="webdoc">More Info</a>		
-	</div>
-
-
-
-
-
-		</div>
-	</div><!-- /properties -->
-
-	</td>
-
-	<td width="33%" valign="top">
-	<div id="account" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>More Integrations</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom clearfix alignCenter'>
-
-
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/CJ/index.cgi'); return false;" href="#/biz/syndication/CJ/index.cgi"><img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/commissionjunction; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/CJ/index.cgi'); return false;" href="#/biz/syndication/CJ/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51002" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/thefind/index.cgi'); return false;" href="#/biz/syndication/thefind/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/thefind; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/thefind/index.cgi'); return false;" href="#/biz/syndication/thefind/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51538" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/pronto/index.cgi'); return false;" href="#/biz/syndication/pronto/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/pronto; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/pronto/index.cgi'); return false;" href="#/biz/syndication/pronto/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51461" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/buysafeshopping/index.cgi'); return false;" href="#/biz/syndication/buysafeshopping/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/buysafe; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/buysafeshopping/index.cgi'); return false;" href="#/biz/syndication/buysafeshopping/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-50732" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/shareasale/index.cgi'); return false;" href="#/biz/syndication/shareasale/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/shareasale.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/shareasale/index.cgi'); return false;" href="#/biz/syndication/shareasale/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51488" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/become/index.cgi'); return false;" href="#/biz/syndication/become/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/become.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/become/index.cgi'); return false;" href="#/biz/syndication/become/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51554" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/smarter/index.cgi'); return false;" href="#/biz/syndication/smarter/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/smarter.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/smarter/index.cgi'); return false;" href="#/biz/syndication/smarter/index.cgi">Settings</a> | 
-	<a href="http://webdoc.zoovy.com/doc-51555" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/dijipop/index.cgi'); return false;" href="#/biz/syndication/dijipop/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/dijipop.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/dijipop/index.cgi'); return false;" href="#/biz/syndication/dijipop/index.cgi">Settings</a> |
-	<a href="http://webdoc.zoovy.com/doc-51556" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/linkshare/index.cgi'); return false;" href="#/biz/syndication/linkshare/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/linkshare.png/index.cgi; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/linkshare/index.cgi'); return false;" href="#/biz/syndication/linkshare/index.cgi">Settings</a> |
-	<a href="http://webdoc.zoovy.com/doc-51557" target="webdoc">More Info</a>		
-	</div>
-		
-
-	<div class='marginBottom'>	
-	<a onClick="navigateTo('/biz/syndication/custom/index.cgi'); return false;" href="#/biz/syndication/custom/index.cgi">
-	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/custom; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
-	<a onClick="navigateTo('/biz/syndication/custom/index.cgi'); return false;" href="#/biz/syndication/custom/index.cgi">Settings</a> |
-	<a href="http://webdoc.zoovy.com/doc-51245" target="webdoc">More Info</a>		
-	</div>
-
-
-
-		</div>
-	</div><!-- /account -->
-
+<table>
+
+<tr id='domainListTemplate'>
+	<td><img src='blank.gif' class='prodThumb' data-bind='var: domain(logo); format:imageURL;' width='150' height='50' /></td>
+	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: domain(prt); format:text; hideZero:false;" class='alignCenter'></td>
+	<td class='alignRight'>
+		<button data-app-event="admin|domainPutInFocus">use domain</button>
+		<button data-app-event="admin|domainView">view store</button>
+<!--		<button data-app-event="admin|domainEdit">edit</button> -->
+		<button data-app-event="admin|domainSettings">settings</button>
 	</td>
 </tr>
-</tbody>
+
+<tr id='partitionListTemplate'>
+	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: partition(name); format:text;"></td>
+	<td data-bind="var: domain(p_customers); format:text; hideZero:false;" class='alignCenter'></td>
+	<td data-bind="var: domain(p_navcats); format:text; hideZero:false;" class='alignCenter'></td>
+</tr>
+
 </table>
 
 
+<div id='pageTemplateSetupAppchooser' class='page pageSetup pageSetupAppchooser clearfix'>
+	<h1>Choose a Project</h1>
+	<div class='ui-widget ui-widget-content ui-corner-all stdPadding marginBottom alignCenter'>
+		<ul class='alignCenter noPadOrMargin listStyleNone clearfix'>
+			
+			<li class='floatLeft marginRight ui-state-active ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='fashion'>
+			<img src='app-fashion/preview-120x120.jpg' width='120' height='100' alt='Fashion' />
+			<div>Fashion</div>
+			</li>
+			
+			<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='mobile'>
+			<img src='app-mobile/preview-120x120.jpg' width='120' height='100' alt='mobile' />
+			<div>Mobile</div>
+			</li>
+			
+			<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='b2b'>
+			<img src='app-b2b/preview-120x120.jpg' width='120' height='100' alt='Shadow' />
+			<div>B 2 B</div>
+			</li>
+
+		</ul>
+	</div>	
+	
+	<div class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel'>
+
+		<section id='details_fashion' data-app-role='appPreviewPanel'  data-appid='fashion' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>Fashion</h2>
+			</div>
+			<div class='clearfix'>
+<img src='app-fashion/preview-374x500.jpg' width='374' height='500' alt='Fashion' class='floatLeft marginRight' />
+<p>Fashion is intended for apparel and jewelry sellers, however it could be easily adopted for any industry.</p>
+<p>The main navigation bar, homepage banner and homepage product lists rely heavily on product tagging, specifically new arrivals, best sellers, sale and clearance items.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
+		<section id='details_mobile' data-app-role='appPreviewPanel' class='displayNone' data-appid='mobile' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>Mobile</h2>
+			</div>
+			<div class='clearfix'>
+<img src='app-mobile/preview-193x500.jpg' width='193' height='500' alt='Mobile' class='floatLeft marginRight' />
+<p>Mobile is intended for all sellers, for use on their mobile domain. The site is responsive, so it will work on a variety of screen resolutions and devices.</p>
+<p>The homepage product lists rely heavily on product tagging, specifically new arrivals and best sellers. The various pages (product and category) are designed for a smaller screen size.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
+		<section id='details_b2b' data-app-role='appPreviewPanel' class='displayNone' data-appid='b2b' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>B2B</h2>
+			</div>
+			<div class='clearfix'>
+<img src='app-b2b/preview-500x486.jpg' width='500' height='486' alt='b2b' class='floatLeft marginRight' />
+<p>B2B is indended for business to business sellers.  It's a no-frills website that offers the buyer the ability to purchase directly from the category page and in bulk.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
+	</div>
+
 </div>
+
+
+
+
 
 
 
@@ -853,8 +716,9 @@ UTILITIES PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager (beta)</a><br />
-		<a href="#" onClick="navigateTo('/biz/manage/customer/index.cgi'); return false;">Customer Manager</a>
+		
+		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager</a><br />
+<!-- 		<a href="#" onClick="navigateTo('/biz/manage/customer/index.cgi'); return false;">Customer Manager</a> -->
 		<div class="helper">Find or create a customer record for your website.</div>
 		
 		<a href="#" onClick="navigateTo('/biz/manage/giftcard/index.cgi'); return false;">GiftCard Manager</a>
@@ -871,7 +735,23 @@ UTILITIES PAGE TEMPLATE
 		
 		</div>
 	</div>
-	
+
+
+	<div id="tools" class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Tools</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
+			<div class="helper">A list of recently run batches, including reports and syndication 'publishes'.</div>
+			
+						
+			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;" title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
+			<div class="helper">Import data from a variety of formats.</div>
+		</div>
+	</div>
+
+
 	</td>
 	
 	<td width="33%" valign="top">
@@ -879,8 +759,12 @@ UTILITIES PAGE TEMPLATE
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Wholesale &amp; Warehouse</h3>
 		</div>
-		
+
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		
+		<a href="#" onClick="navigateTo('#!organizationManager'); return false;">Organization Manager</a>
+		<div class="helper">Create / Manage Organizations for wholesale/b2b/resale.</div>
+
 		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain Management</a>
 		<div class="helper">Track inventory, pricing and orders with your suppliers.</div>
 		
@@ -943,10 +827,7 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('/biz/syndication/sitemap/index.cgi'); return false;">Static Google SiteMap</a><br />
 		<div class="helper">Configure nightly generation of a static sitemap file.</div>
 	
-		<a href="#" onClick="navigateTo('/biz/manage/debugger/index.cgi'); return false;">Website Debugger</a><br />
-		<div class="helper">Website Debugger</div>
-	
-		<a href="#" onClick="navigateTo('/biz/manage/custom/zephyrsports.cgi'); return false;">Custom Inventory Lookup</a>
+		<a href="#" onClick="navigateTo('/biz/manage/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
 		<div class="helper"></div>
 	
 		<a href="#" onClick="navigateTo('/biz/manage/support/index.cgi'); return false;">Tech Support Utils</a>
@@ -1162,81 +1043,6 @@ PRODUCT TAB
 ########################################################
 
 
-WEBDOC
-
-########################################################
-
-
--->
-
-<div id='helpDocumentTemplate'>
-	<p class='helper'>hint: you can shrink or expand this window and continue to browse the interface</p>
-	<div data-bind="var: help(body); format:text;"></div>
-</div>
-
-<table>
-<tr id='helpSearchResultsTemplate' onClick="app.ext.admin.u.showHelpInDialog($(this).data('docid'));" class='pointer'>
-	<td data-bind='var: help(title); format:text;'></td>
-	<td class='hideInDetailMode'>
-	<p data-bind='var: help(summary); format:text;'></p>
-	<div data-bind='var: help(docid); format:text;'></div>
-	</td>
-	<td data-bind='var: help(score); format:text;'></td>
-</tr>
-</table>
-
-<div id='helpPageTemplate' class='page pageHelp' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-		
-			<div class='buttonSet'>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</div>
-			
-			<form class='searchBar floatRight' action='#' data-app-role='helpSearch'>
-				<input type='search' name='keywords'  />
-				<button data-app-event='admin|helpSearch'>Search</button>
-			</form>
-			
-			
-			<h3 class='heading'>Documentation</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		
-		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the docs you are looking for.</div>
-		
-		<table class='gridTable fullWidth displayNone' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th>title</th>
-			<th class='hideInDetailMode'>Summary/id</th>
-			<th>Relevance</th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
-</div>
-
-
-
-
-
-
-
-
-
-<!--
-
-########################################################
-
-
 ACHIEVEMENTS
 
 ########################################################
@@ -1284,3 +1090,452 @@ ACHIEVEMENTS
 </table>
 </div>
 
+
+
+
+<!--
+//////////////////////////  EMAIL TOOL \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='mailToolTemplate'>
+<form action='#'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+<label>
+	<span>Message source:</span>
+	<select name='MSGID' data-bind="var: emailList(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
+		<option value='BLANK'>blank</option>
+	</select>
+</label>
+
+<label>
+	<span>Subject:</span>
+	<input type='text' name='SUBJECT' required='required' maxlength="100" />
+</label>
+
+<label>
+	<span>Message:</span>
+	<textarea name='BODY' rows='10' required='required'></textarea>
+</label>
+</fieldset>
+
+
+<fieldset class='updateSystemMessageContainer marginBottom'>
+<label>
+	<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
+	Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
+</label>
+</fieldset>
+
+<button data-app-event="admin|execMailToolSend">send email</button>
+
+</form>
+</div>
+
+
+
+
+
+<!--
+//////////////////////////  PROJECTS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+
+<table>
+<tr id='projectsListTemplate'>
+	<td data-bind="var: projects(ID); format:text;"></td>
+	<td data-bind="var: projects(TITLE); format:text;"></td>
+	<td data-bind="var: projects(TYPE); format:text;"></td>
+	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
+	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
+	<button data-app-event='admin|projectUpdateShow'>View Details</button><!-- this will eventually be 'edit' -->
+	</td>
+</tr>
+</table>
+
+
+<div id='projectDetailTemplate' class='labelsAsBreaks'>
+
+	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
+	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
+	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
+	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
+	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
+	<div class='label' data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
+	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
+	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+
+</div>
+
+
+<div id='projectCreateTemplate'>
+
+<form onSubmit='return false'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+	<label>
+	<span>Project title</span>
+	<input type="text" name="title" required='required' />
+	<span class='toolTip' title="ex: domain.com master">?</span>
+	</label>
+
+
+	<label>
+	<span>Project type</span>
+	<select name="type" >
+		<option value="APP">Shopping App (index.html)</option>
+<!--		<option value="VSTORE">Legacy vStore Project (beta)</option> -->
+		<option value="ADMIN">Hosted Admin App (beta)</option>
+		<option value="CHECKOUT">Checkout Intercept (beta)</option>
+		<option value="DSS">Decision Support System (beta)</option>
+	</select>
+	</label>
+
+
+	<label>
+	<span>GitHub repo</span>
+	<input type="url" name="repo" maxlength="128" required='required' />
+	</label>
+	<p class="hint">ex: http://github.com/yourname/project.git<br />
+	At this time only GITHUB hosted projects with public http urls are supported.
+	</p>
+
+	<label>
+	<span>GitHub branch</span>
+	<input type="text" name="branch"maxlength="20" />
+	</label>
+	
+<!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
+	<div class='buttonset'>
+		<button data-app-event="admin|projectCreateExec">Save</button>
+	</div>
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+<!--
+//////////////////////////  RSS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='rssPageTemplate' class='page pageRss' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	
+	<div class='betaWarning ui-widget ui-widget-content ui-corner-all smallPadding marginBottom clearfix'>
+	<p>This section has been updated as of 201320. If you experience issues please logout and click the previous version link, then come back to this page to make your changes.</p>
+	</div>
+	
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>
+			</div>
+			<h3 class='heading'>RSS Feeds</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<div class="dualModeListMessaging marginBottom"></div>
+		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Title</th>
+			<th class='alignLeft hideInMinimalMode'>Status</th>
+			<th class='alignLeft hideInMinimalMode'>Profile</th>
+			<th class='alignLeft hideInMinimalMode'>Schedule</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
+		</div>
+	</section>
+</div>
+
+
+<table>
+<tr id='rssListTemplate'>
+	<td data-bind="var: projects(ID); format:text;"></td>
+	<td data-bind="var: projects(NAME); format:text;"></td>
+	<td data-bind="var: projects(STATUS); format:text;"></td>
+	<td data-bind="var: projects(PROFILE); format:text;"></td>
+	<td data-bind="var: projects(SCHEDULE); format:text;"></td>
+	<td class='alignRight'>
+	<button data-app-event="admin|adminRSSRemove">Delete Feed</button>
+<!--	<button >Clone Feed</button>-->
+	<button data-app-event="admin|adminRSSUpdateShow">Edit Feed</button>
+	</td>
+</tr>
+</table>
+
+<div id='rssAddUpdateTemplate'>
+
+<form onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+<fieldset>
+	<legend>General Properties</legend>
+	<label>
+		<span>Domain/Profile:</span>
+		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsFromList; text:id; value:id;" />
+			<option></option>
+		</select>
+	</label>
+
+	<label>
+		<span>Feed Campaign Code</span>
+		<input type="text" maxlength="6" size="6" name="CPG" value="" data-bind="var: rss(CPG); format: popVal;" />
+		<span class="toolTip" title="A unique 6 digit code to identify this campaign. (leave blank to auto generate). Once set, this code can not be changed.">?</span>
+		
+	</label>
+	<label>
+		<span>Image WxH</span>
+		<input type="number" step='1' min='1' name="image_w" required='required' value="75" size='4' data-bind="var: rss(image_w); format: popVal;" /> x
+		<input type="number" step='1' min='1' name="image_h" required='required' value="75" size='4' data-bind="var: rss(image_h); format: popVal;" /> 
+	</label>
+
+	<label>
+		<span>Feed Title</span>
+		<input type="text" name="feed_title" value="" required='required'  data-bind="var: rss(feed_title); format: popVal;" />
+		<span class="toolTip" title="The name of this feed, included in the feed">?</span>
+	</label>
+	
+	<label>
+		<span>Feed Link</span>
+			<input type="url" name="feed_link" value="" data-bind="var: rss(feed_link); format: popVal;" />
+			<span class="toolTip" title="The URL to your store, or for this promotion.">?</span>
+	</label>
+	<label>
+		<span>Feed Translation</span>
+		<select name="translation"  data-bind="var: rss(translation); format: popVal;">
+			<option value="RAW">Raw (No Formatting)</option>
+			<option value="WIKISTRIP">Strip WIKI</option>
+			<option value="WIKISTRIP">Strip HTML</option>
+			<option value="WIKI2HTML">WIKI -&gt; HTML</option>
+			<option value="WIKI2HTMLIMG">WIKI -&gt; Enhanced HTML (Images and Buy Buttons)</option>
+<!--			<option value="LEGACYV1">Legacy1 (pre 8/14/09 format)</option> -->
+		</select>
+	</label>
+
+	<label>
+		<input type="checkbox" name="feed_link_override" data-bind="var: rss(feed_link_override); format: popCheckbox;" /> Feed Link Override
+		<span class="toolTip" title="Enable this to use the Feed Link instead of individual product links in the feed.">?</span>
+	</label>
+
+	<label>
+		<span>Feed Subject/Category</span>
+		<input type="text" name="feed_subject" value="" data-bind="var: rss(feed_subject); format: popVal;" />
+		<span class="toolTip" title="A dmoz category, or other taxonomy/navigation to help spiders categorize this feed."></span>
+	</label>
+
+	<label>
+		<span>Source List:</span>
+		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsFromList;">
+			<option></option>
+		</select>
+		<span class="toolTip" title="The list from which this RSS feed is built (where the product come from).">?</span>
+	</label>
+
+</fieldset>
+
+<fieldset>
+	<legend>Promotion Settings</legend>
+	
+	<label>
+		<span>Pricing Schedule:</span>
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
+			<option>none</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Max Products to Include</span>
+		<select name="max_products" data-bind="var: rss(max_products); format: popVal;">
+			<option value="-1">unlimited</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+			<option value="25">25</option>
+		</select>
+		<span class="toolTip" title="The maximum number of products included in the feed at one time.">?</span>
+	</label>
+
+	<label>
+		<span>Cycle Interval (minutes)</span>
+		<select name="cycle_interval" data-bind="var: rss(cycle_interval); format: popVal;">
+			<option value="-1">Never</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+			<option value="25">25</option>
+			<option value="30">30</option>
+			<option value="60">60</option>
+			<option value="120">120</option>
+			<option value="360">360</option>
+			<option value="1440">1440</option>
+		</select>
+		<span class="toolTip" title="How often the products from the list are changed.">?</span>
+	</label>
+</fieldset>
+
+<!-- save button is added within the function that uses this template. That way the save vs update buttons can easily have their own click actions. -->
+<div class='buttonbar clearfix'></div>
+
+
+</form>
+
+</div>
+
+
+
+
+
+
+
+<!--
+//////////////////////////  DUAL MODE TEMPLATE (Generic) \\\\\\\\\\\\\\\\\\\\\\\\\
+Change no classes or roles.
+search tags: DMI
+-->
+
+
+
+<div id='dualModeTemplate' class='dualModeContainer' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetail' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeList' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='floatRight smallPadding' data-app-role='dualModeListButtons'>
+			<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
+			</div>
+			
+			<h1 class='dualModeHeader' data-app-role='dualModeListHeader'><!-- title will go here --></h1>
+		</div>
+		<div class='ui-state-default dualModeListControls' data-app-role='dualModeListControls'>
+		<!-- forms can go here (search) -->
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='dualModeListMessaging marginBottom'></div>
+			<div class='dualModeListContent' data-app-role='dualModeContent'>
+				<table class='gridTable fullWidth dualModeListTable' data-app-role='dualModeListTable'>
+					<thead class='dualModeListThead' data-app-role='dualModeListThead'>
+						<tr></tr>
+					</thead>
+					<tbody class='dualModeListTbody' data-app-role='dualModeListTbody'></tbody>
+				</table>
+			</div>
+
+		</div>
+	</section>
+</div>
+
+
+
+
+
+
+<!--
+
+########################################################
+
+
+PRODUCT PICKER
+
+########################################################
+
+data-contentloaded is used to determine if dynamic content has already been loaded. so on the static inputs (all, from list, csv), that attribute is already set.
+-->
+
+
+<div id='pickerTemplate'>
+	<div data-app-role='accordionContainer' class='labelsAsBreaks'>
+
+		<h6 data-pickmethod='SELECTALL'>All</h6>
+		<div data-contentloaded='true'>
+		<label><input type='checkbox' name='SELECTALL' data-app-event='admin|lockAccordionIfChecked' /> Select all Product</label>
+		<p class='note'>If checked, all other menus will be disabled</p>
+		</div>
+
+		<h6  data-pickmethod='LIST'>From List</h6>
+		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
+
+		<h6 data-pickmethod='RANGE'>From Range</h6>
+		<div class='labelsAsBreaks' data-contentloaded='true'>
+<p class='hint'>NOTE: Products are sorted alphanumerically (e.g. 1, 100, 101, 2, 3, 4, 40, 41, 42, A123, B001)</p>
+<label><input name="RSTART" type="text" placeholder='first product' /></label>
+<label><input name="REND" type="text" placeholder='last product'></label>
+		</div>
+
+
+		<h6 data-pickmethod='NAVCAT'>By Category</h6>
+		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
+
+		<h6 data-pickmethod='PROFILE'>By Profile</h6>
+		<div></div>
+
+		<h6 data-pickmethod='SUPPLIER'>By Supplier</h6>
+		<div data-bind="var: list(@SUPPLIERS); format: processList; loadsTemplate:pickerSupplierRowTemplate;"></div>
+		
+		<h6 data-pickmethod='MCAT'>By Management Category</h6>
+		<div data-bind="var: list(%CATEGORIES); format: manCatsList; extension:admin_prodEdit; loadsTemplate:pickerManCatsRowTemplate;"></div>
+		
+		<h6 data-pickmethod='CUSTOM'>By CSV Upload</h6>
+		<div data-contentloaded='true'>
+<textarea NAME='PRODUCTS' rows='10' class='fullWidth'></textarea>
+		</div>
+		
+	</div>
+
+</div>
+
+
+<label id='pickerPathsRowTemplate'>
+	<input type='checkbox' name='' data-bind="var:list(value); format:assignAttribute; attribute:name;" /><span data-bind="var: list(value); format:text;"></span></label>
+</label>
+<label id='pickerSupplierRowTemplate'>
+	<input type='checkbox' name='' data-bind="var:list(CODE); format:assignAttribute; attribute:name;" /><span data-bind="var: list(NAME); format:text;"></span></label>
+</label>
+<label id='pickerManCatsRowTemplate'>
+	<input type='checkbox' name='' data-bind="var:list(MCID); format:assignAttribute; attribute:name;" /><span data-bind="var: list(MCID); format:text;"></span></label>
+</label>

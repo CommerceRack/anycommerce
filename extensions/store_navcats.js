@@ -66,6 +66,8 @@ obj.PATH = .cat.safe.id
 */
 		appPageGet : {
 			init : function(obj,tagObj,Q)	{
+//				app.u.dump("BEGIN store_navcats.calls.appPageGet.init");
+//				app.u.dump(" -> @get: "); app.u.dump(obj['@get']);
 				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 				obj['_tag'].datapointer = 'appPageGet|'+obj.PATH;  //no local storage of this. ### need to explore solutions.
 				var r = 0;
@@ -73,14 +75,17 @@ obj.PATH = .cat.safe.id
 				if(app.model.fetchData('appPageGet|'+obj.PATH) == false)	{
 					hasAllLocal = false;
 					}
-				else	{
+				else if(app.data['appPageGet|'+obj.PATH] && app.data['appPageGet|'+obj.PATH]['%page'])	{
 					var L = obj['@get'].length;
 					for(var i = 0; i < L; i += 1)	{
 						if(!app.data['appPageGet|'+obj.PATH]['%page'][obj['@get'][i]])	{
 							hasAllLocal = false;
 							break; //once we know 1 piece of data is missing, just get all of it.
 							}
-						}
+						}					
+					}
+				else	{
+					hasAllLocal = false;
 					}
 				if(hasAllLocal)	{
 					app.u.handleCallback(tagObj);

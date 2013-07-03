@@ -248,14 +248,14 @@ renderOptionIMGSELECT: function(pog) {
 renderOptionRADIO: function(pog)	{
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>");
+	var $parentDiv = $("<span \/>").addClass('labelsAsBreaks');
 	
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
     var i = 0;
     var len = pog['options'].length;
 	while (i < len) {
-		$parentDiv.append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt']).wrap($("<label \/>")));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']})).append(pog['options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -463,14 +463,14 @@ renderOption: function(pog,pid) {
 	var pogid = pog.id;
 
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").addClass("zform_div").addClass("pogType_"+pog.type);
+	var $formFieldDiv = $("<div>").addClass("variation variation_"+pog.type+" variation_"+pogid);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;
 
 
 //create the label (prompt) for the form input and make it a child of the newly created div.
-	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).text(pog.prompt);
+	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).addClass("label_"+pog.type).text(pog.prompt);
 
 	$formFieldDiv.append($formFieldLabel);
 	
@@ -1136,13 +1136,47 @@ the rest of the code below that is for backward compatibility with IE7... and ma
 
 if(typeof jQuery === 'function')	{
 //will serialize a form into JSON
-	jQuery.fn.serializeJSON=function() {
+/*	jQuery.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];
 			});
 		return json;
 		};
+*/
+//the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
+// ** 201320 -> serializeJSON now supports an options object.  set cb:true to get a more rational way of managing checkboxes.
+// 				the serialized object will have any cb set to 1 or 0 based on whether it's checked. That means unchecked items WILL get serialized.
+$.fn.serializeJSON = function(options){
+	var json = {}
+	var $form = $(this);
+	options = options || {}
+	options.cb = options.cb || false;
+
+	$form.find('input, select, textarea, datalist, keygen, output').each(function(){
+		var val;
+		if(!this.name){return}; //early exit if name not set, which is required.
+
+		if ('radio' === this.type) {
+			if(json[this.name]) { return; } //value already set, exit early.
+			json[this.name] = this.checked ? this.value : '';
+			}
+		else if ('checkbox' === this.type) {
+			if(options.cb)	{
+				if (this.checked) {json[this.name] = '1';}
+				else {json[this.name] = '0';}
+				}
+			else	{
+				if (this.checked) {json[this.name] = 'on';} //must be lowercase. that's the html default and what the old cgi's are looking for.
+				}
+//			else	{json[this.name] = 0;}
+			}
+		else {
+			json[this.name] = this.value;
+			}
+		})
+		return json;
+		}
 	}
 
 

@@ -138,7 +138,7 @@ var admin_prodEdit = function() {
 			if($modal.length < 1)	{
 				$modal = $("<div>").attr({'id':'createProductDialog','title':'Create a New Product'});
 				$modal.appendTo('body');
-				$modal.dialog({width:500,height:500,modal:true,autoOpen:false});
+				$modal.dialog({width:600,height:500,modal:true,autoOpen:false});
 				}
 			$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
 			$modal.dialog('open');
@@ -263,7 +263,30 @@ var admin_prodEdit = function() {
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-	renderFormats : {},
+	renderFormats : {
+//Management categories (mancats) is an array where the key is the category ID and the value is a list of product.
+//This function sorts the list alphabetically and puts the key, product and lenght into an associative array before running it through the translates.
+//
+//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
+//uses a loadsTemplate Parameter on the data-bind to format each row.
+
+		manCatsList : function($tag,data)	{
+
+				var cats = Object.keys(data.value).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+//				app.u.dump(cats);
+				for(var index in cats)	{
+					if(cats[index])	{
+						app.u.dump(" -> index: "+cats[index]);
+						app.u.dump(" -> data.value[index]: "+data.value[cats[index]]);
+						var obj = {'MCID':cats[index], 'product_count' : data.value[cats[index]].length, '@product' : data.value[cats[index]]}
+						$o = app.renderFunctions.transmogrify({'mcid':index},data.bindData.loadsTemplate,obj);
+						$tag.append($o);
+						}
+					}
+
+			}
+		
+		},
 
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -273,7 +296,7 @@ var admin_prodEdit = function() {
 
 
 		handleProductListTab : function(process)	{
-			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
+//			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
 			var $target = $('#productListTab');
 			if($target.length)	{
 //init should be run when the extension is loaded. adds click events and whatnot.
@@ -407,11 +430,38 @@ var admin_prodEdit = function() {
 			}, //showProductTab 
 
 
-		handleCreateNewProduct : function(P)	{
-			var pid = P.pid;
-			delete P.pid;
-//				app.u.dump("Here comes the P ["+pid+"]: "); app.u.dump(P);
-			app.ext.admin.calls.adminProductCreate.init(pid,P,{'callback':'showMessaging','message':'Created!','parentID':'prodCreateMessaging'});
+		handleCreateNewProduct : function(vars)	{
+			var pid = vars.pid;
+			delete vars.pid;
+			$target = $('#createProductDialog');
+			$target.showLoading({'message':'Creating product '+pid});
+			app.ext.admin.calls.adminProductCreate.init(pid,vars,{'callback':function(rd){
+				$target.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					app.u.throwMessage(rd);
+					}
+				else	{
+					$target.empty();
+					$target.append("<p>Thank you, "+pid+" has now been created. What would you like to do next?<\/p>");
+					
+					$("<button \/>").text('Edit '+pid).button().on('click',function(){
+						app.ext.admin_prodEdit.a.showPanelsFor(pid);
+						$target.dialog('close');
+						}).appendTo($target);
+
+					$("<button \/>").text('Add another product').button().on('click',function(){
+						app.ext.admin_prodEdit.a.showCreateProductDialog();
+						}).appendTo($target);
+					
+					$("<button \/>").text('Close Window').button().on('click',function(){
+						$target.dialog('close');
+						}).appendTo($target);
+
+
+
+					
+					}
+				}});
 			app.model.dispatchThis('immutable');
 			},
 //clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.

@@ -3,7 +3,7 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
-app.rq.push(['extension',0,'orderCreate','extensions/checkout_mobile/extension.js']);
+app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 
@@ -16,6 +16,7 @@ app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
@@ -49,8 +50,14 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	}]);
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
-app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
-
+//app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
+/*
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	if(app.data.cartDetail && app.data.cartDetail.ship && app.data.cartDetail.ship.postal)	{
+		app.ext.myRIA.u.fetchTimeInTransit($(app.u.jqSelector('#',P.parentID)),new Array(P.pid));
+		}
+	}]);
+*/
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
 app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
@@ -144,3 +151,9 @@ app.u.appInitComplete = function(P)	{
 $(document).ready(function(){
 	app.u.handleRQ(0)
 	});
+
+
+
+
+
+
