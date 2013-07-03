@@ -288,7 +288,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 		appCartExists : {
 			init : function(cartid,_tag)	{
 //					app.u.dump('BEGIN app.calls.appCartExists');
-//				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
+				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
 				this.dispatch(cartid,_tag);
 				return 1;
 				},
