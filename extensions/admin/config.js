@@ -141,6 +141,22 @@ var admin_config = function() {
 					}
 				},
 			
+			showGlobalSettings : function($target)	{
+				$target.empty();
+				var $div = $("<div \/>").appendTo($target);
+				$div.showLoading({"message":"Fetching Global Settings"});
+				app.model.addDispatchToQ({
+	'_cmd':'adminConfigDetail',
+	'order' : true, 'wms' : true, 'inventory' : true,
+	'_tag':	{
+		'datapointer' : 'adminConfigDetail|General',
+		'callback':'anycontent',
+		'templateID':'globalSettingsTemplate',
+		'jqObj' : $div
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+				},
 			
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching Your Active Payment Methods'});
@@ -681,47 +697,20 @@ $D.dialog('open');
 //this is used in conjunction w/ admin.a.processForm.
 //in the form, set _tag/macrobuilder='extension/name' where name is the name of the function in mb. should be same or derive from macro cmd.
 		macrobuilders : {
-			
-			"GLOBAL/ACCOUNT" : function(sfo)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminConfigMacro',
-					'_tag':sfo._tag,
-					'@updates':new Array()
-					}; 
-				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
-				delete sfo._macrobuilder;
-				newSfo['@updates'].push("GLOBAL/ACCOUNT?"+$.param(sfo));
-//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
-				return newSfo;
-				},
 
-			"COUPON/INSERT" : function(sfo)	{
+			
+			"adminConfigMacro" : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminConfigMacro',
 					'_tag':sfo._tag,
 					'@updates':new Array()
-					}; 
+					};
+				
 				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
 				delete sfo._macrobuilder;
-				newSfo['@updates'].push("COUPON/INSERT?"+$.param(sfo));
-//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
-				return newSfo;
-				},
-			"COUPON/UPDATE" : function(sfo)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminConfigMacro',
-					'_tag':sfo._tag,
-					'@updates':new Array()
-					}; 
-				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
-				delete sfo._macrobuilder;
-				newSfo['@updates'].push("COUPON/UPDATE?"+$.param(sfo));
+				newSfo['@updates'].push(newSfo._tag.macrocmd+"?"+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}
@@ -749,7 +738,7 @@ $D.dialog('open');
 						
 					$panel.attr('data-couponcode',couponCode);
 					$('form',$panel)
-						.append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/UPDATE' /><input type='hidden' name='_tag/extension' value='admin' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />")
+						.append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/extension' value='admin' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>")
 					 	.find(".applyDatepicker").datepicker({
 							changeMonth: true,
 							changeYear: true,
@@ -773,7 +762,7 @@ $D.dialog('open');
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|COUPON/INSERT' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' \/>");
 					$("[data-app-event='admin_config|ruleBuilderShow']",$D).hide(); //hide rule builder till after coupon is saved.
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
