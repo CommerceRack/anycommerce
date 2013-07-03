@@ -144,16 +144,22 @@
 			var indicatorLeft = overlay_left_pos;
 			
 			if ( settings.marginLeft ) {
-				indicatorLeft += parseInt(settings.marginTop);
-			}
+				indicatorLeft += parseInt(settings.marginLeft);
+				}
 			
 			
 			//
 			// set horizontal position
 			//
-	
+//	app.u.dump(" -> settings:"); app.u.dump(settings);
+//app.u.dump("$overlayDiv.outerWidth(): "+$overlayDiv.outerWidth());
+//app.u.dump("$loadingDiv.outerWidth(): "+$loadingDiv.outerWidth());
+//app.u.dump("indicatorLeft: "+indicatorLeft);
+//app.u.dump("jt left: "+(parseInt(($overlayDiv.outerWidth() - $loadingDiv.outerWidth()) / 2)))
+
 			if ( settings.hPos.toString().toLowerCase() == 'center' ) {
-				$loadingDiv.css('left', (indicatorLeft + (($overlayDiv.outerWidth() - parseInt($loadingDiv.outerWidth())) / 2)).toString()  + 'px');
+//				$loadingDiv.css('left', (indicatorLeft + (($overlayDiv.outerWidth() - parseInt($loadingDiv.outerWidth())) / 2)).toString()  + 'px');
+				$loadingDiv.css('left', (parseInt(($overlayDiv.outerWidth() - $loadingDiv.outerWidth()) / 2)).toString()  + 'px');
 				}
 			else if ( settings.hPos.toString().toLowerCase() == 'left' ) {
 				$loadingDiv.css('left',0);
