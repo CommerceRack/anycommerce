@@ -1034,6 +1034,9 @@ $D.dialog('open');
 								$tr.appendTo($dataTbody);
 								}
 							app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
+// * 201324 -> after add/save, clear the inputs for the next entry.
+							$('input, textarea, select',$container).val(""); //clear inputs.
+							$(':checkbox',$container).prop('checked',false);
 							}
 						else	{
 							app.u.dump("form did not validate");

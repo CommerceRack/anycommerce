@@ -1581,6 +1581,22 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				}, //amazonMWSLinkTo
 
+//clicked when editing an option for a 'select' type. resets and populates inputs so option can be edited.
+			amazonThesaurasEdit : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+
+				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
+					var $tr = $btn.closest('tr');
+//guid is required for 'edit' and dataTable.
+					if($tr.data('guid'))	{} //already has a guid, do nothing.
+					else	{$tr.attr('data-guid',app.u.guidGenerator())} 
+					
+					$btn.closest('fieldset').find('input, textarea').val("");
+					$btn.closest('fieldset').find("[data-app-role='thesaurusDataTableInputs']").anycontent({'data':$tr.data()}).find(':checkbox').anycb('update');
+					})
+				}, //variationOptionUpdateShow
+
+
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
@@ -1604,7 +1620,7 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					}
 				handleCB();
 				$cb.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
-					app.u.dump("GOT HERE");
+//					app.u.dump("GOT HERE");
 					handleCB();
 					});
 				}, //hideInputsByCheckbox

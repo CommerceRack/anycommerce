@@ -272,7 +272,7 @@
 <fieldset>
 
 	<label>
-		<span>Product:</span>
+		<span>Product</span>
 		<input type="text" name="PID" value="" />
 	</label>
 	<p class="hint">HINT: Leave this field blank to debug "all products".</p>
@@ -355,7 +355,7 @@
 	</div>
 
 	<label>
-		<span>Pricing Schedule:</span>
+		<span>Pricing Schedule</span>
 		<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 			<option value=''>none</option>
 		</select>
@@ -418,7 +418,7 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 	<label><input type="checkbox" class='applyAnycb'  value="on" name="ignore_validation" data-bind="var: mkt(ignore_validation); format:popVal;" /> Skip recommended validation logic</label>
 
 	<label>
-		<span>Pricing Schedule:</span>
+		<span>Pricing Schedule</span>
 		<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 			<option value=''>none</option>
 		</select>
@@ -472,7 +472,7 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
 
 
 	<label>
-		<span>Pricing Schedule:</span>
+		<span>Pricing Schedule</span>
 		<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 			<option value=''>none</option>
 		</select>
@@ -599,7 +599,7 @@ These settings *MUST* match the settings in your Buy.com account.
 </label>
 		
 <label>
-	<span>Pricing Schedule:</span>
+	<span>Pricing Schedule</span>
 	<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 		<option value=''>none</option>
 	</select>
@@ -918,7 +918,7 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 <fieldset class='clearfix'>
 	<legend>Thesaurus</legend>
 
-	<table data-app-role='dataTable' class='floatLeft marginRight gridTable'>
+	<table data-app-role='dataTable' class='floatLeft marginRight gridTable marginTop'>
 	<thead>
 	<tr>
 		<th>Name</th>
@@ -927,6 +927,7 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 		<th>Audience</th>
 		<th>Gift Wrap</th>
 		<th>Gift Message</th>
+		<th></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: mkt(@THESAURII); format:processList; loadsTemplate:amazonThesauriiRowTemplate;">
@@ -935,44 +936,44 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 	</table>
 
 
-<div class='floatLeft'>
-
+<div class='floatLeft' data-app-role='thesaurusDataTableInputs'>
+	<input type='hidden' name='guid' value='' data-bind="var: thesaurus(guid); format:popVal;"  />
 	<label>
-		<span>Name:</span>
+		<span>Name</span>
 		<input type="text" size="20" value="" name="name" class='skipTrack'  data-bind="var: thesaurus(name); format:popVal;" />
 	</label>
 
 	<label>
-		<span>Item Type:</span>
+		<span>Item Type</span>
 		<input type="text" size="20" value="" name="itemtype" class='skipTrack'  data-bind="var: thesaurus(itemtype); format:popVal;" /> [1 max]
 	</label>
 
 	<label>
-		<input type="checkbox" class='applyAnycb' name='isgiftwrapavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftwrapavailable); format:popVal;" />
-		Is Gift Wrap Available:
+		<input type="checkbox" name='isgiftwrapavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftwrapavailable); format:popVal; hideZero:false;" />
+		Is Gift Wrap Available
 	</label>
 
 	<label>
-		<input type="checkbox" class='applyAnycb' name='isgiftmessageavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftmessageavailable); format:popVal;" />
-		Is Gift Message Available:
+		<input type="checkbox" name='isgiftmessageavailable'  class='applyAnycb skipTrack' data-bind="var: thesaurus(isgiftmessageavailable); format:popVal; hideZero:false;" />
+		Is Gift Message Available
 	</label>
 	
 	<label>
-		<span>Subject Content:</span>
+		<span>Subject Content</span>
 		<input type="text" size="20" value="" name="subjectcontent"  class='skipTrack' data-bind="var: thesaurus(subjectcontent); format:popVal;" />
 	</label>
 
 	<label>
-		<span>Target Audience:</span>
+		<span>Target Audience</span>
 		<input type="text" size="20" value="" name="targetaudience"  class='skipTrack' data-bind="var: thesaurus(targetaudience); format:popVal;" />
 	</label>
 
 	<label>
-		<span>Search Terms (250 chars max):</span>
+		<span>Search Terms (250 chars max)</span>
 		<textarea rows="5" name="search_terms" maxlength='250' class='skipTrack' data-bind="var: thesaurus(search_terms); format:popVal;" /></textarea>
 	</label>
 
-	<button data-app-event="admin_config|dataTableAddExec">Add</button>
+	<button data-app-event="admin_config|dataTableAddExec">Add/Update</button>
 </div>
 
 </fieldset>
@@ -1026,7 +1027,7 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 	<legend>MWS Token</legend>
 
 	<label>
-		<span>Pricing Schedule:</span>
+		<span>Pricing Schedule</span>
 		<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 			<option value=''>none</option>
 		</select>
@@ -1045,7 +1046,10 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 	<td data-bind="var:mkt(targetaudience); format:text;"></td>
 	<td data-bind="var:mkt(isgiftwrapavailable); format:text;"></td>
 	<td data-bind="var:mkt(isgiftmessageavailable); format:text;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td>
+	<button data-app-event='admin_syndication|amazonThesaurasEdit'>Edit Thesaurus</button>
+	<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
+	</td>
 </tr>
 </table>
 
@@ -1065,7 +1069,7 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 </label>
 <p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
 <label>
-	<span>Pricing Schedule:</span>
+	<span>Pricing Schedule</span>
 	<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 		<option value=''>none</option>
 	</select>
@@ -1094,7 +1098,7 @@ SOMETHING SHOULD GO HERE!!!
 	<input type="text" value="" name="merchantid" required='required' data-bind="var: mkt(merchantid); format:popVal;" />
 </label>
 <label>
-	<span>Pricing Schedule:</span>
+	<span>Pricing Schedule</span>
 	<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:id; value:id;">
 		<option value=''>none</option>
 	</select>
@@ -1804,7 +1808,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 	
 			<label>
-				<span>AK+HI add:</span>
+				<span>AK+HI add</span>
 				<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
 			</label>
 	

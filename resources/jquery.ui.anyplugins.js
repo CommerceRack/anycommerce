@@ -810,6 +810,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left'}),
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
 	
+				this.$input = $input;
 				$label.data('anycb',true).css({'min-height':'20px','cursor':'pointer'}); // allows for plugin to check if it's already been run on this element.
 				self.span = $span; //global (within instance) for easy reference.
 //				self.input = $input;//global (within instance) for easy reference.
@@ -823,7 +824,8 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$label.prepend($container);
 				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 //				app.u.dump('got here');
-				$input.on('click.anycb',function(){
+// * 201324 -> changed from click to change. 'supposedly' this listens for programatic changes. I think that's a lie.
+				$input.on('change.anycb',function(){
 //					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
@@ -847,6 +849,11 @@ and it'll turn the cb into an ios-esque on/off switch.
 			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
 			this.span.animate({'left': 24},'fast');
 //			this.input.prop('checked',false);
+			},
+//if a checkbox is generated and 'checked' w/ js
+		update : function()	{
+//			app.u.dump(' -> running update on: '+this.$input.attr('name')+' and checked: '+this.$input.is(':checked'));
+			this.$input.is(':checked') ? this._turnOn() : this._turnOff(); //set default
 			},
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.

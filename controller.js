@@ -2955,14 +2955,16 @@ $tmp.empty().remove();
 //for use on inputs.
 //populates val() with the value
 // ** 201324 -> rather than having separate renderFormats for different input types, this can now be used for all.
+//				cb needs to use 'prop' not 'attr'. That is the right way to do it.
 		popVal : function($tag,data){
 			if($tag.is(':checkbox'))	{
+//				app.u.dump(" -> popVal, is checkbox. value: "+data.value+" and number: "+Number(data.value));
 				if(Number(data.value) === 0)	{
-					$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
+					$tag.prop('checked',false); //have to handle unchecking in case checked=checked when template created.
 					}
 				else	{
 //the value here could be checked, on or some other string. if the value is set (and we won't get this far if it isn't), check the box.
-					$tag.attr('checked',true);
+					$tag.prop('checked',true);
 					}
 				}
 			else if($tag.is(':radio'))	{
