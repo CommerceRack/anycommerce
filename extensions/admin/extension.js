@@ -3679,6 +3679,28 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				},
 
 
+//used in ebay and campaign to generate toolbar for html editor.
+//buttons is optional. if passed, should be an array. [{'css':'','text':'','action':function(){}},{'css':'','text':'','action':function(){}}]
+			buildToolbarForEditor : function(buttons)	{
+				buttons = buttons || [];
+				var r = new Array(); //what is returned. an array that gets turned into buttons in the html editor.
+				r.push("html");
+				r.push("bold", "italic","strikethrough");
+				r.push("p","h1", "h2", "h3", "h4", "h5", "h6");
+				r.push("orderedList","unorderedList","|","indent","outdent");
+				r.push("horizontalrule");
+				r.push("justifyleft","justifycenter","justifyright");
+				r.push("link", "unlink");
+				var L = buttons.length;
+				if(L)	{
+					r.push("|");
+					for(var i = 0; i < L; i += 1)	{
+						r.push(buttons[i])
+						}
+					}
+				return r;
+				},
+
 
 
 //used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.

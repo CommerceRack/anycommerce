@@ -411,102 +411,11 @@ var admin_syndication = function() {
 								$("<button>Cancel<\/button>").addClass('floatRight marginRight').button().on('click',function(){
 									$D.dialog('close');
 									}).appendTo($D);
+
+								app.u.dump(app.ext.admin_syndication.u.getEBAYToolbarButtons());
 								$textarea.htmlarea({
-    // Override/Specify the Toolbar buttons to show
-toolbar: [
-	["html"],
-	["bold", "italic","strikethrough"],
-	["p","h1", "h2", "h3", "h4", "h5", "h6"],
-	["orderedList","unorderedList","|","indent","outdent"],
-	["horizontalrule"],
-	["justifyleft","justifycenter","justifyright"],
-	["link", "unlink"],
-	[
-		{
-			// The CSS class used to style the <a> tag of the toolbar button
-			css: 'imageadd',
-
-			// The text to use as the <a> tags "Alt" attribute value
-			text: 'Upload New Image to Profile',
-
-			// The callback function to execute when the toolbar button is clicked
-			action: function (btn) {
-				var $D = $("<div \/>");
-				$D.dialog({
-					'modal':true,
-					'width':500,
-					height : 500,
-					'autoOpen' : false
-					});
-				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
-				$D.dialog('open');
-				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
-				
-				// 'this' = jHtmlArea object
-				// 'btn' = jQuery object that represents the <a> ("anchor") tag for the toolbar button
-
-				// Take some action or do something here
-			}
-		},
-		{
-			// The CSS class used to style the <a> tag of the toolbar button
-			css: 'image',
-
-			// The text to use as the <a> tags "Alt" attribute value
-			text: 'Place Image',
-
-			// The callback function to execute when the toolbar button is clicked
-			action: function (btn) {
-				var 
-					$D = $('#ebayTemplateEditorImageListModal'),
-					profile = $('#ebayTemplateEditor').data('profile'),
-					jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
-				if($D.length)	{
-					$D.empty(); //clear contents
-					}
-				else	{
-					$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
-					$D.dialog({
-						'title' : 'Select Media',
-						'modal':true,
-						'width':'60%',
-						'autoOpen' : false
-						});
-					}
-//				$D.append("<div>Use the inputs below to resize the graphic<\/div>");
-//				$D.append("<label>width: <input name='width' type='number' step='1' /><\/label>");
-//				$D.append("<label>height: <input name='height' type='number' step='1' /><\/label>");
-				$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
-				$D.dialog('open');
-				$D.showLoading({'message':'Updating File List'});
-				app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						//success content goes here.
-						var L = app.data[rd.datapointer]['@images'].length;
-//need a 'path' set for the data-bind to render.
-						for(var i = 0; i < L; i += 1)	{
-							app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
-							}
-						$D.anycontent({'datapointer':rd.datapointer});
-						app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
-						$D.imagegallery({
-							selector: 'a[data-gallery="gallery"]',
-							show: 'fade',
-							hide: 'fade',
-							fullscreen: false,
-							slideshow: false
-							});
-						$D.dialog("option", "position", "center");
-						}
-					}},'mutable');
-				app.model.dispatchThis('mutable');
-				}
-			}
-		]
-	]
+    								// Override/Specify the Toolbar buttons to show
+									toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_syndication.u.getEBAYToolbarButtons())
 									});
 								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
 								}
@@ -1073,8 +982,74 @@ else	{
 				else	{
 					$ETC.anymessage({"message":"","gMessage":true});
 					}
-				} //handleEBAYTemplateSelect
+				}, //handleEBAYTemplateSelect
+			getEBAYToolbarButtons : function()	{
 
+return [{
+			css : 'imageadd',
+			'text' : 'Upload New Image to Profile',
+			action: function (btn) {
+				var $D = $("<div \/>");
+				$D.dialog({
+					'modal':true,
+					'width':500,
+					height : 500,
+					'autoOpen' : false
+					});
+				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
+				$D.dialog('open');
+				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
+				}
+			}	,	{
+			css: 'image',
+			text: 'Place Image',
+			action: function (btn) {
+				var 
+					$D = $('#ebayTemplateEditorImageListModal'),
+					profile = $('#ebayTemplateEditor').data('profile'),
+					jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
+				if($D.length)	{
+					$D.empty(); //clear contents
+					}
+				else	{
+					$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
+					$D.dialog({
+						'title' : 'Select Media',
+						'modal':true,
+						'width':'60%',
+						'autoOpen' : false
+						});
+					}
+				$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
+				$D.dialog('open');
+				$D.showLoading({'message':'Updating File List'});
+				app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						//success content goes here.
+						var L = app.data[rd.datapointer]['@images'].length;
+//need a 'path' set for the data-bind to render.
+						for(var i = 0; i < L; i += 1)	{
+							app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
+							}
+						$D.anycontent({'datapointer':rd.datapointer});
+						app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
+						$D.imagegallery({
+							selector: 'a[data-gallery="gallery"]',
+							show: 'fade',
+							hide: 'fade',
+							fullscreen: false,
+							slideshow: false
+							});
+						$D.dialog("option", "position", "center");
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			}]
+				}
 
 			}, //u [utilities]
 

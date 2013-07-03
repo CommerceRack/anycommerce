@@ -171,7 +171,11 @@ $picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate',
 					//success content goes here.
 					var $textarea = $("[data-app-role='htmlEditor']",$target);
 					$textarea.val(app.data[rd.datapointer].body)
-					$textarea.htmlarea();
+					$textarea.htmlarea({
+						// Override/Specify the Toolbar buttons to show
+						// see app.ext.admin_syndication.u.getEBAYToolbarButtons() for addl button examples.
+						toolbar: app.ext.admin.u.buildToolbarForEditor()
+						});
 					app.u.handleAppEvents($target);
 					}
 				}
@@ -697,9 +701,9 @@ if(app.u.validateForm($form))	{
 			}
 		}),'immutable');
 	app.model.addDispatchToQ({
-		'_cmd':'adminCampaignTemplateInstall',
+		'_cmd':'adminCampaignFileSave',
+		'FILENAME' : 'index.html',
 		'CAMPAIGNID' : campaignID,
-		'PROJECTID' : "$SYSTEM", //!!! placeholder. needs to come from templateDetail
 		'_tag':	{
 			'callback':'showMessaging',
 			'message' : 'Your template changes have been saved.',
