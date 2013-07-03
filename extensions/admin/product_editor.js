@@ -47,7 +47,6 @@ var admin_prodEdit = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
 //				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor. odd. this function doesn't exist. commented out by JT on 2012-11-27
 				window.editProduct = app.ext.admin_prodEdit.a.showPanelsFor;
-				app.ext.admin_prodEdit.u.handleProductListTab('init');
 				return r;
 				},
 			onError : function()	{
@@ -398,15 +397,23 @@ app.model.dispatchThis('mutable');
 
 
 		handleProductListTab : function(process)	{
-			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
+			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
 			var
 				$target = $('#productListTab'),
 				$table = $('#prodEditorResultsTable')
 
 			if($target.length)	{
-				//tab is already present, just update the contents.
+				app.u.dump('sticky tab already exists');
+				if(process == 'activate')	{}
+				else if(process == 'deactivate'){
+					app.u.dump(' -> destroy stickytab');
+					$table.stickytab('destroy');
+					}
+				else	{} //unknown process
+
+				
 				}
-			else	{
+			else if(process == 'activate')	{
 				$table.stickytab({'tabtext':'product results','tabID':'productListTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 				$('button, a',$table).each(function(){
@@ -414,6 +421,10 @@ app.model.dispatchThis('mutable');
 						$table.stickytab('close');
 						})
 					})
+
+				}
+			else	{
+				//do nothing. process is unknown OR de-activate and sticktab not active yet.
 				}
 			}, //handleProductListTab
 

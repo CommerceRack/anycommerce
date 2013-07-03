@@ -1172,7 +1172,8 @@ supported options include tabID (given to the container), tabtext (what appears 
 //			console.log('init sticktab');
 			var self = this,
 			o = self.options, //shortcut
-			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			$t = self.element, //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			guid = app.u.guidGenerator()
 			
 			if($t.data('isstickytab'))	{
 				//already in a stickytab. do nothing.
@@ -1182,7 +1183,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 //add an id if one doesn't already exist.
 				if($t.attr('id'))	{}
 				else	{
-					$t.attr({'id':(o.tabID || 'stickytab_'+app.u.guidGenerator())}); //the ID goes onto the element this is run on.  allows for methods to easily be run later.
+					$t.attr({'id':(o.tabID) ? 'stickycontents_'+o.tabID : 'stickycontents_'+guid}); //the ID goes onto the element this is run on.  allows for methods to easily be run later.
 					}
 				
 				var 
@@ -1191,7 +1192,8 @@ supported options include tabID (given to the container), tabtext (what appears 
 					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
 	
 				this.sticky = $sticky; //global reference to container for easy access.
-	
+//* 202324  -> tabid wasn't getting applied to tab.
+				$sticky.attr({'id':(o.tabID) ? o.tabID : 'stickytab_'+guid});
 				$sticky.appendTo($tabContainer);
 				this._moveAnimate();
 	//			$('.ui-widget-stickytab-content',$sticky).append(this.element);
@@ -1296,6 +1298,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			this.sticky.animate({left: -(this.sticky.outerWidth())}, 'slow');
 			},
 		destroy : function()	{
+			app.u.dump(" -> stickytab destroy called. this.sticky.id: "+this.sticky.attr('id'));
 			this.sticky.empty().remove();
 			},
 		_setOption : function(option,value)	{
