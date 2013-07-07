@@ -3495,7 +3495,13 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 
+
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
 
 
 		u : {
@@ -3859,6 +3865,11 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 				else if(path == '#!globalSettings')	{
 					app.ext.admin_config.a.showGlobalSettings($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+
+
+				else if(path == '#!partitionManager')	{
+					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 
 				else if(path == '#!privatefiles')	{
@@ -5360,7 +5371,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 
+
+
+
+
 //////////////////////////////////// EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
 
 
 
@@ -5383,7 +5402,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
 						}
 					});
-				},
+				}, //openDialog
 			
 //used in conjuction with the new interface (i) functions.
 			processForm : function($btn,vars)	{

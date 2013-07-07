@@ -181,6 +181,90 @@
 
 
 <!--
+////////////////////// PARTITIONS \\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+<table>
+<tr id='partitionManagerRowTemplate'>
+	<td data-bind='var:prts(id); format:text;'></td>
+	<td data-bind='var:prts(name); format:text;'></td>
+	<td data-bind='var:prts(profile); format:text;'></td>
+	<td data-bind='var:prts(p_customers); format:text;'></td>
+	<td data-bind='var:prts(p_navcats); format:text;'></td>
+	<td data-bind='var:prts(language); format:text;'></td>
+	<td data-bind='var:prts(currency); format:text;'></td>
+</tr>
+</table>
+
+
+<div id='partitionCreateTemplate'>
+<h1>NOT DONE YET.</h1>
+
+
+
+<form action='#' onsubmit="return false;">
+
+<fieldset>
+
+	<label>
+		<span>Name</span>
+		<input type="text" name="name" />
+	</label>
+
+	<label>
+		<span>Mapped profile</span>
+		<select name="PROFILE"></select>
+	</label>
+	<p class="hint">NOTE: each partition must have a unique profile, profiles in use will not appear in the list.</p>
+	
+	<label>
+		<input type="checkbox" name="p_navcats"> Use independent Navigation categories and pages
+	</label>
+	
+	<label>
+		<input type="checkbox" name="p_customers"> Use independent customer database.
+	</label>
+	
+	<label>
+		<input type="checkbox" checked='checked' disabled="disabled"> Use independent checkout, shipping, payment and tax settings
+	</label>
+		
+	
+</fieldset>
+<!--
+			<tr><td colspan="2">[X] Partitioned System Messages</td></tr>
+			<tr><td colspan="2">[X] Partitioned Payment Settings</td></tr>
+			<tr><td colspan="2"></td></tr>
+			<tr><td colspan="2">_NA_ <i>Planned: Partitioned Users Access</i></td></tr>
+			<tr><td colspan="2">_NA_ <i>Planned: Partitioned API Integration</i></td></tr>
+			<tr><td colspan="2">_NA_ <i>Planned: Partitioned Image Database</i></td></tr>
+			<tr><td colspan="2">_NA_ <i>Planned: Partitioned Product Database</i></td></tr>
+-->
+<h6>Some things to remember:</h6>
+<ul>
+	<li>Partitioned Data must be managed separately.</li>
+	<li>Partitions are permanent.</li>
+	<li>Any changes to a partition once it has been created will result in billable charges.</li>
+	<li>Non-partitioned settings are shared with the default profile (and are NOT configurable by partitioned users).</li>
+	<li>Additional monthly fees apply for each unique data partition. </li>
+	<li>If system messages are partitioned, it will require one unique set of messages per language (when multiple languages are implemented).</li>
+</ul>
+
+
+
+</form>
+</div>
+
+
+
+
+
+
+
+
+<!--
 /////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\
 
 The main portion of the rule builder interface is built w/  app.ext.admin.i.DMICreate
@@ -2986,3 +3070,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<input type='hidden' name='plugin' value='platform_appleios' />
 Coming Soon	
 </fieldset>
+
+
+
+
+

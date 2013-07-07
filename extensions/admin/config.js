@@ -146,16 +146,16 @@ var admin_config = function() {
 				var $div = $("<div \/>").appendTo($target);
 				$div.showLoading({"message":"Fetching Global Settings"});
 				app.model.addDispatchToQ({
-	'_cmd':'adminConfigDetail',
-	'order' : true, 'wms' : true, 'inventory' : true,
-	'_tag':	{
-		'datapointer' : 'adminConfigDetail|General',
-		'callback':'anycontent',
-		'templateID':'globalSettingsTemplate',
-		'jqObj' : $div
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+					'_cmd':'adminConfigDetail',
+					'order' : true, 'wms' : true, 'inventory' : true,
+					'_tag':	{
+						'datapointer' : 'adminConfigDetail|General',
+						'callback':'anycontent',
+						'templateID':'globalSettingsTemplate',
+						'jqObj' : $div
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				},
 			
 			showPaymentManager : function($target)	{
@@ -470,6 +470,27 @@ else	{
 
 				},//showCouponManager
 
+				
+			showPartitionManager : function($target)	{
+				$target.empty();
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Partition Manager', //left off because the interface is in a tab.
+					'className' : 'partitionManager',
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Partition List<\/button>",
+						"<button data-app-event='admin_config|partitionCreateShow'>Add Partition<\/button>"
+						],
+					'thead' : ['ID','Name','Profile','Customers','Navcats','Language','Currency'],
+					'tbodyDatabind' : "var: users(@PRTS); format:processList; loadsTemplate:partitionManagerRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminConfigDetail',
+						'prts' : true,
+						'_tag' : {'datapointer' : 'adminConfigDetail|prts'}
+						}
+					});
+				app.model.dispatchThis();
+
+				},//showCouponManager
 
 //will open the rules builder in a modal.
 //vars.rulesmode is REQUIRED.  should be set to shipping or coupons.
@@ -615,7 +636,17 @@ $D.dialog('open');
 			
 			}, //renderFormats
 
+
+
+
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
+
+
 		u : {
 
 			getPluginData : function(plugin)	{
@@ -940,6 +971,21 @@ $D.dialog('open');
 					else	{} //validateForm handles error display
 					});
 				}, //shippingGeneralUpdateExec
+
+			partitionCreateShow : function($btn)	{
+
+				$btn.button();
+				$btn.off('click.couponCreateShow').on('click.couponCreateShow',function(event){
+
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Partition',
+						'templateID':'partitionCreateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+					});
+				},	//couponCreateShow
 
 			paymentMethodUpdateExec : function($btn)	{
 				$btn.button();
