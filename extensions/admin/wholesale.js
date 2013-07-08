@@ -267,7 +267,9 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
-
+			'ZONE-CREATE-LOCATIONS' : function(sfo)	{
+				die()
+				},
 			'WAREHOUSE-UPDATE' : function(sfo)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
 				sfo = sfo || {};
@@ -341,8 +343,6 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					});
 				},
 
-
-
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
@@ -354,16 +354,14 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						'panelID' : 'warehouse_'+CODE,
 						'header' : 'Edit Warehouse: '+CODE,
 						'data' : app.data.adminWarehouseList['@WAREHOUSES'][$btn.closest('tr').data('obj_index')],
-						'handleAppEvents' : true
+						'handleAppEvents' : false
 						});
 					$("[name='CODE']",$panel).closest('label').hide(); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
 					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-					
-					//app.model.addDispatchToQ({'WID':WID,'_cmd':'adminWarehouseDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
-					//app.model.dispatchThis('mutable');
+//					$('.buttonset',$panel).prepend("<button data-app-event='admin_wholesale|warehouseZoneCreateShow'>Add Zone<\/button>");
+					app.u.handleAppEvents($panel);
 					});
 				},
-
 
 			warehouseRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
@@ -389,6 +387,24 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 					});
 				}, //execTicketClose
+
+			warehouseZoneCreateShow : function($btn,vars)	{
+				$btn.button();
+				$btn.off('click.warehouseZoneCreateShow').on('click.warehouseZoneCreateShow',function(event){
+					event.preventDefault();
+					
+					var CODE = $btn.closest('form').find("[name='CODE']").val();
+					
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Zone For Warehouse '+CODE,
+						'templateID':'warehouseZoneCreateUpdateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='CODE' value='"+CODE+"' \/><input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE-LOCATIONS'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The zone has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
+					});
+				},
 
 
 //executed within the create new supplier form. actually creates the new supplier.

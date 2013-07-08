@@ -479,7 +479,7 @@ renderOption: function(pog,pid) {
 //	$displayObject.append($formFieldDiv);   /// NOTE the form ID on this should probably be auto-generated from the element ID.
 
     if (this.handlers["pogid."+pogid]) {
-      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");
+      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");  // this[this.handlers["pogid."+pogid]](pog)
       }
     else if (this.handlers["type."+pog.type]) {
       $optionObj = eval("this."+this.handlers["type."+pog.type]+"(pog)");
