@@ -473,13 +473,16 @@ to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/
 <h2>Export navigation categories</h2>
 
 
-<label>Additional headers: <input type="textbox" name="headers" id='navcatExportHeader'></label>
+<label>Additional headers: <input type="text" name="headers" id='navcatExportHeader'></label>
 <div class="hint">
 Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
 However any field that is stored in page namespace can be accessed.
 </div>
 
-<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE&'+app.ext.admin.u.uiCompatAuthKVP()+'&headers='+$('#navcatExportHeader').val());"  class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button data-app-event='admin_medialib|adminCSVExportRewritesExec' class='ui-button ui-state-default ui-corner-all'>Export URL Rewrites</button>
+
+
+
 
 
 </section>

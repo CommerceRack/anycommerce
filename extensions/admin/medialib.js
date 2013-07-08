@@ -1255,6 +1255,24 @@ app.model.addDispatchToQ({
 app.model.dispatchThis('mutable');
 
 					});
+				},		
+			adminCSVExportNavcatsExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
+				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
+$btn.parent().showLoading({"message":"Building Category File"});
+app.model.addDispatchToQ({
+	'_cmd':'adminCSVExport',
+	'export' : 'CATEGORY',
+	'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
+	'_tag':	{
+		'callback':'fileDownloadInModal',
+		'extension':'admin',
+		'jqObj' : $btn.parent()
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+					});
 				}
 			
 			}

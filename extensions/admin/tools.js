@@ -128,12 +128,13 @@ var admin_tools = function() {
 				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
-
+//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				if(Number(sfo.SELECTALL) === 1)	{
 					r = 'all'
 					}
 				else	{
 					function handleIt(type)	{
+//						app.u.dump(" -> handle it for "+type);
 						if(Number(sfo[index]) === 1)	{
 							r += index.replace('+','=')+"\n"; // input name is navcat+.something, so simply changing + to = makes it macroesque-ready.
 							}
@@ -160,7 +161,7 @@ var admin_tools = function() {
 						r += "csv?"+sfo.csv.replace(/\n/,"")+"\n";
 						}
 					}
-				app.u.dump(" -> r: "+r)
+				app.u.dump(" -> r: "+r);
 				return r;
 				},
 
@@ -237,7 +238,8 @@ var admin_tools = function() {
 			
 			powerToolBatchJobExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(){
+				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(event){
+					event.preventDefault();
 					app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
 						obj = {

@@ -272,6 +272,13 @@ var admin_syndication = function() {
 				$target.anycontent({'templateID':'pageSyndicationTemplate',data:{}});
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
 				app.u.handleAppEvents($target);
+
+
+				
+				app.ext.admin_reports.u.getChartData($("#syndicationSummaryChartOne",$target).show().addClass("graphType_pie"),{"function":"sum","graph":"pie","period":"days.7","grpby":"none","dataColumns":"dynamic","column":"gms","ddataset":"MARKETS","datasetGrp":"","title":"7 Day Gross Sales Summary by Integrations","collection":"collection/graph location","@datasets":["MARKETS"],"_cmd":"adminKPIDBDataQuery"});
+				app.model.dispatchThis('mutable');
+
+
 				}, //showSyndication
 
 			showAmzRegisterModal : function(){
