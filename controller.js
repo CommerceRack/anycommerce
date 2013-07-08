@@ -1244,7 +1244,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			}, //loadCSSFile
 
 
-
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
@@ -1256,6 +1255,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
+//don't auto-pass context. will be harder for event delegation
 					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
 						extension = $ele.data('app-event').split("|")[0],
