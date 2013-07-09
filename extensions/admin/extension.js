@@ -5108,7 +5108,29 @@ else	{
 
 				
 				},
-				
+//used on an array of objects. [{some:value},{some:othervalue}]
+//in ex above, pass in 'some and 'other value' and 1 will be returned.
+		getIndexInArrayByObjValue : function(array,objkey,objvalue)	{
+//			app.u.dump("BEGIN admin.u.getIndexInArrayByObjValue");
+			var r = false;  //what is returned. the variation index if a match is found.
+			if(array && objkey && objvalue)	{
+//				app.u.dump(" -> all required params are present.");
+				var L = array.length;
+				for(var i = 0; i < L; i+=1)	{
+					if(array[i][objkey] == objvalue)	{
+						r = i;
+						break; //exit early once a match is found.
+						}
+					}
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.getProductVariationByID, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
+				}
+//			app.u.dump(" -> getIndexInArrayByObjValue r:"+r);
+			return r;
+			},			
+			
+			
 			getValueByKeyFromArray : function(obj,key,value)	{
 //				app.u.dump("BEGIN admin.u.getValueByKeyFromArray");
 //				app.u.dump("key: "+key);
@@ -5309,9 +5331,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars.message = vars.message || "Are you sure you want to remove this? There is no undo for this action."
 				vars.title = vars.title || "Please Confirm";
 				vars.removeButtonText = vars.removeButtonText || "Remove";
-				
+				var $D;
 				if(typeof vars.removeFunction == 'function')	{
-					var $D = this.dialogCreate(vars)
+					$D = this.dialogCreate(vars)
 					$D.append("<p>"+vars.message+"<\/p>");
 					$D.dialog("option", "width", 300);
 					$D.dialog({ buttons: [
@@ -5325,7 +5347,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				else	{
 					
 					}
-				
+				return $D;
 				}, //dialogConfirmRemove
 
 //used for creating a disposable dialog. returns dialog.
