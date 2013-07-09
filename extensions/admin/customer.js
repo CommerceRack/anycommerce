@@ -752,7 +752,7 @@ else	{
 										}
 									else	{
 										$D.dialog('close');
-										app.ext.admin_customer.a.showCampaignManager(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+										app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 										}
 									}
 								}
