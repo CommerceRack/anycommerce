@@ -1245,10 +1245,13 @@ var tabs = [
 $btn.parent().showLoading({"message":"Building URL Rewrite File"});
 app.model.addDispatchToQ({
 	'_cmd':'adminCSVExport',
+	'base64' : 1,
 	'export' : 'REWRITES',
 	'_tag':	{
 		'callback':'fileDownloadInModal',
 		'extension':'admin',
+		'filename' : 'rewrites.csv',
+		'datapointer':'adminCSVExport|REWRITE',
 		'jqObj' : $btn.parent()
 		}
 	},'mutable');
@@ -1263,10 +1266,13 @@ $btn.parent().showLoading({"message":"Building Category File"});
 app.model.addDispatchToQ({
 	'_cmd':'adminCSVExport',
 	'export' : 'CATEGORY',
+	'base64' : 1,
 	'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
 	'_tag':	{
 		'callback':'fileDownloadInModal',
+		'datapointer':'adminCSVExport|CATEGORY',
 		'extension':'admin',
+		'filename' : 'categories.csv',
 		'jqObj' : $btn.parent()
 		}
 	},'mutable');

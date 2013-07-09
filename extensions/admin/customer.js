@@ -704,6 +704,7 @@ if(app.u.validateForm($form))	{
 		'_cmd':'adminCampaignFileSave',
 		'FILENAME' : 'index.html',
 		'CAMPAIGNID' : campaignID,
+		'body' : HTML,
 		'_tag':	{
 			'callback':'showMessaging',
 			'message' : 'Your template changes have been saved.',
@@ -1719,6 +1720,9 @@ app.model.addDispatchToQ({
 				}
 			else	{
 				//success content goes here.
+				$D.append("<div>CC: "+app.data[rd.datapointer].CC+"<\/div>");
+				$D.append("<div>MM: "+app.data[rd.datapointer].MM+"<\/div>");
+				$D.append("<div>YY: "+app.data[rd.datapointer].YY+"<\/div>");
 				}
 			}
 		}

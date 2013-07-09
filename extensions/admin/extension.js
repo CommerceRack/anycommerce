@@ -2303,7 +2303,12 @@ Function does NOT dispatch.
 
 		fileDownloadInModal : {
 			onSuccess : function(_rtag)	{
-				app.ext.admin.u.fileDownloadInModal({'filename':app.data[_rtag.datapointer].FILENAME,'mime_type':app.data[_rtag.datapointer]._rtag.mime_type,'body':app.data[_rtag.datapointer].body});
+				app.ext.admin.u.fileDownloadInModal({
+					'filename':app.data[_rtag.datapointer].FILENAME || _rtag.filename,
+					'mime_type':app.data[_rtag.datapointer].MIMETYPE,
+					'body':app.data[_rtag.datapointer].body,
+					'skipDecode':_rtag.skipDecode || false
+					});
 				if(_rtag.jqObj && _rtag.jqObj instanceof jQuery)	{
 					_rtag.jqObj.hideLoading();
 					}
@@ -3651,11 +3656,15 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 	//				var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(app.data[_rtag.datapointer].body);
 	//				var $a = $('<a>',{'download':app.data[_rtag.datapointer].FILENAME || 'file',"href":uri}).text('download me');
 	
-	//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
+//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
 //content returned on an API call will be base 64 encoded. app-generated content (report csv's) will not.
-					var base64 = (vars.skipDecode) ? vars.body : atob(vars.body);
-					var bb = new Blob(new Array(base64), {type: vars.MIME_TYPE});
-					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+app.u.dump("vars.skipdecode: "+vars.skipDecode);
+
+					var
+						base64 = (vars.skipDecode) ? vars.body : atob(vars.body),
+						bb = new Blob(new Array(base64), {type: vars.MIME_TYPE}),
+						$a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+
 					$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
 						var a = this;
 						a.textContent = 'Downloaded';

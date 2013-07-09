@@ -406,7 +406,7 @@ var admin_support = function() {
 				}, //execTicketUpdate
 
 //executed when the download button for a file is clicked.
-			ticketFileDownloadExec : function($btn)	{
+			adminTicketFileGetExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: false});
 				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
 					event.preventDefault();
@@ -415,9 +415,10 @@ var admin_support = function() {
 						'_cmd':'adminTicketFileGet',
 						'ticketid' : $btn.closest("[data-ticketid]").data('ticketid'),
 						'remote' : $btn.closest('tr').data('remote'),
-						'base64' : true,
+						'base64' : 1,
 						'_tag':	{
 							'callback':'fileDownloadInModal',
+							'datapointer':'adminTicketFileGet',
 							'extension':'admin',
 							'jqObj' : $('#supportContent')
 							}
