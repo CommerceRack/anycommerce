@@ -333,7 +333,7 @@ var admin_syndication = function() {
 						'width':'90%',
 						close: function(event, ui)	{
 							$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-							}, //will remove from dom on close
+							},
 						open : function(event,ui)	{
 							$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
 							}
@@ -361,8 +361,11 @@ var admin_syndication = function() {
 							else	{
 //								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
 //The save changes and save template buttons have a right margin to compensate for the 99% on the iframe. a 100% on the iframe sometimes cause a horizontal scrollbar to appear in the modal.
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','99%').val(app.data[rd.datapointer]['body']);
+								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','75%').val(app.ext.admin_syndication.u.preprocessEBAYTemplate(app.data[rd.datapointer]['body']));
+								var $objectInspector = $("<div style='width:20%;'><h4 class='ui-widget-header smallPadding ui-corner-top'>Object Inspector<\/h4><div class='ui-widget-content ui-corner-bottom stdPadding'><\/div><\/div>",{'id':'templateKey'}).addClass('floatRight ui-widget');
+								$D.append($objectInspector);
 								$D.append($textarea);
+								
 								var $templateInput = $("<input name='template' id='templateName' value='' class='marginRight floatRight' placeholder='template name' \/>");
 								var $templateButton = $("<button>Save As New Template<\/button>").addClass('ui-state-active floatRight smallButton marginRight').button().on('click',function(){
 									var templateName = $('#templateName').val();
@@ -419,12 +422,51 @@ var admin_syndication = function() {
 									$D.dialog('close');
 									}).appendTo($D);
 
-								app.u.dump(app.ext.admin_syndication.u.getEBAYToolbarButtons());
+//								app.u.dump(app.ext.admin_syndication.u.getEBAYToolbarButtons());
 								$textarea.htmlarea({
     								// Override/Specify the Toolbar buttons to show
 									toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_syndication.u.getEBAYToolbarButtons())
 									});
 								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
+// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+$('iframe',$D).contents().find('body').on('click',function(e){
+	var $target = $(e.target);
+	app.u.dump(" -> $target.id: "+$target.attr('id'));
+	if( $target.data('object'))	{
+		var data = $target.data(), r = ""
+		for(index in data)	{
+			r += index+": "+data[index]+"<br>";
+			}
+		$('.ui-widget-content',$objectInspector).empty().append(r)
+		}
+	else	{
+		$('.ui-widget-content',$objectInspector).empty().append("This object is not dynamic.")
+		}
+	});
+
+/*								$('iframe',$D).contents().find('body').on('click',function(e){
+									var $target = $(e.target);
+									app.u.dump(" -> element ID: "+$target.attr('id'));
+									if($target.data('tipificated'))	{app.u.dump(" -> already tipificated")} //tooltip already added.
+									else if($target.data('object'))	{
+										app.u.dump(" -> adding tooltip")
+										$target.tooltip({
+											content: function() {
+												var data = $target.data(), r = ""
+												for(index in data)	{
+													r += index+": "+data[index]+"<br>";
+													}
+												app.u.dump(r);
+												return r;
+												}
+											});
+										$target.data('tipificated',true);
+										}
+									else	{
+										app.u.dump(" -> not a data-object. no tipification needed.")
+										} //do nothing, not a KISS element.
+									})
+*/
 								}
 							}
 						}
@@ -686,6 +728,27 @@ else	{
 					$("[data-app-role='saveButton']",$form).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
 					}
 				
+				}, //handleDetailSaveButton
+
+			buildEBAYTemplateStyleSheet : function()	{
+				var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
+					+ "	.actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n"
+					+ "<\/style>\n</div>"
+				return r;
+				},
+
+			preprocessEBAYTemplate : function(template)	{
+				$template = $("<html>"); //need a parent container.
+				$template.append(template);
+				$("[data-object]",$template).each(function(){
+					var $ele = $(this);
+					if($ele.data('object') == 'product' && !$ele.hasClass('actbProductAttribute'))	{
+						$ele.addClass('actbProductAttribute')
+						}
+					})
+
+				$template.append(app.ext.admin_syndication.u.buildEBAYTemplateStyleSheet())
+				return $template.html();
 				},
 
 /*executed when an ebay store category is clicked.

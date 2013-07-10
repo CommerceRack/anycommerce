@@ -3670,9 +3670,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 //app.u.dump("vars.skipdecode: "+vars.skipDecode);
 
 					var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
-					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
-						app.u.dump(" -> filetype for download is an image.");
+//					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
 						// Use typed arrays to convert the binary data to a Blob
+						//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
 						var arraybuffer = new ArrayBuffer(file.length);
 						var L = file.length;
 						var view = new Uint8Array(arraybuffer);
@@ -3680,10 +3680,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 							view[i] = file.charCodeAt(i) & 0xff;
 							}
 						var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
-						}
-					else	{
-						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
-						}
+//						}
+//					else	{
+//						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
+//						}
 					
 					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
 
