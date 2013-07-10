@@ -488,12 +488,12 @@ app.model.dispatchThis('mutable');
 
 				}, //showEBAY
 		
-			showEBAYLaunchProfileEditor : function($target,profile)	{
-
+			showEBAYLaunchProfileEditor : function($target,profile,vars)	{
+				vars = vars || {};
 				if($target instanceof jQuery && profile)	{
 
 					var $profileContent = $("<div \/>").css('min-height','200').addClass('clearfix'); /* minheight is for showloading */
-	
+					if(vars.fromupgrade)	{$profileContent.addClass('conditionMet')}
 	//instead of applying anycontent to the tab itself, it's applied to a child element. avoids potential conflicts down the road.
 					$target.empty().append($profileContent);
 					$target.showLoading({'message':'Fetching launch profile details for '+profile});
@@ -529,6 +529,7 @@ app.model.dispatchThis('mutable');
 									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
 									$('.applyAnycb',$profileContent).anycb();
 									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
+									$('.toolTip').tooltip();
 									}
 								}
 							}
@@ -1323,6 +1324,7 @@ app.model.dispatchThis('immutable');
 					});
 				},
 
+
 			ebayLaunchProfileUpdateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.ebayLaunchProfileUpdateExec').on('click.ebayLaunchProfileUpdateExec',function(event){
@@ -1443,7 +1445,8 @@ delete sfo.free
 											}
 										else	{
 											$D.dialog('close');
-											app.ext.admin_syndication.a.showEBAY($btn.closest("[data-app-role='slimLeftContentSection']"));
+											app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile,{'fromupgrade':true});
+//											app.ext.admin_syndication.a.showEBAY($btn.closest("[data-app-role='slimLeftContentSection']"));
 											}
 										}
 									}
@@ -1591,21 +1594,68 @@ $btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',fun
 					});
 				}, //showDSTDetail
 
-			hideInputsByCheckbox : function($cb)	{
-				function handleCB()	{
-					if($cb.is(':checked'))	{
-						$('.toggleThis',$cb.closest('fieldset')).hide();
+
+			ebayServiceAddShow : function($btn)	{
+				$btn.button()
+				$btn.off('click.ebayHTMLEditorAddImage').on('click.ebayHTMLEditorAddImage',function(){
+					$btn.hide();
+					$btn.closest('fieldset').find("[data-app-role='addServiceInputs']").slideDown();
+					});
+				},
+
+			adminEBAYProfileZipDownloadExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminEBAYProfileZipDownload').on('click.adminEBAYProfileZipDownload',function(){
+					var profile = $btn.data('profile');
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file of the template. One moment please...'});
+					app.model.addDispatchToQ({
+						'_cmd' : 'adminEBAYProfileZipDownload',
+						'base64' : true,
+						'PROFILE' : profile,
+						'FILENAME' : profile+'.zip',
+						'_tag' : {
+							'callback':'fileDownloadInModal',
+							'extension':'admin',
+							'datapointer':'adminEBAYProfileZipDownload|'+profile,
+							'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
+							}
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+				},
+
+
+			ebayBuyerRequirementsToggle : function($ele)	{
+				function handleSelect()	{
+					if($ele.val() == 1)	{
+						$('.toggleThis',$ele.closest('fieldset')).show();
 						}
 					else	{
-						$('.toggleThis',$cb.closest('fieldset')).show();
+						$('.toggleThis',$ele.closest('fieldset')).hide();
+						}
+					}
+				handleSelect();
+				$ele.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+					handleSelect();
+					});
+				}, //ebayBuyerRequirementsToggle
+
+
+
+			ebayAutopayToggle : function($ele)	{
+				function handleCB()	{
+					if($ele.is(':checked'))	{
+						$("[data-app-role='eBayPaymentMethods']",$ele.closest('fieldset')).hide();
+						}
+					else	{
+						$("[data-app-role='eBayPaymentMethods']",$ele.closest('fieldset')).show();;
 						}
 					}
 				handleCB();
-				$cb.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
-//					app.u.dump("GOT HERE");
+				$ele.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
 					handleCB();
 					});
-				}, //hideInputsByCheckbox
+				}, //ebayBuyerRequirementsToggle
 
 			adminSyndicationMacroExec : function($btn)	{
 				$btn.button();

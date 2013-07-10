@@ -43,10 +43,13 @@ class can also be applied to a 1 item per row list.
 .debug,
 .showForZoovyOnly,
 .showForAnyCommerceOnly,
+.conditionalHide, /* a generic class used for hiding/unhiding based on when specific conditions are met */
 .detailMode .hideInDetailMode,
 .minimalMode .hideInMinimalMode 	{display:none;}
 
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+.conditionMet .conditionalHide	{display:block;}
+.conditionMet span.conditionalHide	{display:inline-block;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */

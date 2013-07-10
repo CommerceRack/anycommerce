@@ -1761,185 +1761,196 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			<div class='label' data-app-role='ebayTemplateConfigContainer'>
 				<span>Template</span>
 				<span data-bind='var:profile(%PROFILE.template_origin); format:text;' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
+				
 				<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
+				
 				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
+				
+				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipDownloadExec'>Download</button>
+				
+				<span class='warn conditionalHide'><b>Needs Review!</b> <span class='toolTip' title="Not every template upgrade goes smoothly. Take a look and see how your's went. There are tools available to assist you in making further changes to your template(s).">?</span></span>
 			</div>
 
+
+			<label>
+				<span>Note</span>
+				<textarea name='NOTE' value='' rows='10' placeholder="This is here for your use, to populate with hints or reminders about the profile." data-bind="var: profile(%PROFILE.NOTE); format:popVal;" />
+			</label>
+
+
 		</div>
 	</fieldset>
 	
-	
-	<fieldset data-panelname='eBayBestOffer'>
-		<legend>Best Offer</legend>
+
+	<fieldset data-panelname='eBayListingSettings'>
+		<legend>Listing Settings</legend>
 		<div class='clearfix'>
-		<label>
-			<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\BestOfferEnabled\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN); format:popVal;" />
-			Enable
-			<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
-		</label>
+			<label>
+				<span>Country</span>
+				<input type='text' name='Item\Country' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\Country); format:popVal;" />
+				<span class='toolTip' title="Set to a two character country code">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Cross border trade</span>
+				<input type='text' name='Item\CrossBorderTrade' data-bind="var: profile(%PROFILE.Item\CrossBorderTrade); format:popVal;" />
+				<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
+			</label>
+			
+			<label>
+				<span>Currency</span>
+				<select name='Item\Currency\@CURRENCY' data-bind="var: profile(%PROFILE.Item\Currency\@CURRENCY); format:popVal;">
+					<option value='USD'>USD</option>
+				</select>
+				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Dispatch Time Max</span>
+				<input type='number' step='1' size='5' name='Item\DispatchTimeMax' data-bind="var: profile(%PROFILE.Item\DispatchTimeMax); format:popVal;" />
+				<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
+			</label>
+			
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item\GetItFast\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\GetItFast\@BOOLEAN); format:popVal;" />
+				Get it fast
+				<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
+			</label>
+			
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\BestOfferEnabled\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN); format:popVal;" />
+				Enable best offer
+				<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
+			</label>			
+
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\PrivateListing\@BOOLEAN); format:popVal;" />
+				<span>Private listing</span>
+				<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
+			</label>
+			
+		
+			<label>
+				<input type="checkbox" class='applyAnycb' name='Item\AutoPay' data-app-event='admin_syndication|ebayAutopayToggle' data-bind="var: profile(%PROFILE.Item\AutoPay); format:popVal;" />
+				Autopay
+				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
+			</label>
+
+			<label data-app-role='eBayPaymentMethods'>
+				<span>Payment methods</span>
+				<select multiple='multiple'>
+					<option value='AmEx'>American Express</option>
+					<option value='CashInPerson'>Cash-in-person option</option>
+					<option value='CashOnPickup'>Payment on delivery</option>
+					<option value='CCAccepted'>Credit card</option>
+<!--					<option value='COD'>Cash on delivery</option> -->
+					<option value='Diners'>Diners</option>
+					<option value='Discover'>Discover</option>
+					<option value='IntegratedMerchantCreditCard'>Integrated merchant credit card</option>
+					<option value='LoanCheck'>Loan check</option>
+					<option value='MOCC'>Money order/cashiers check</option>
+					<option value='Moneybookers'>Moneybookers</option>
+					<option value='MoneyXferAccepted'>Direct transfer of money</option>
+					<option value='MoneyXferAcceptedInCheckout'>Direct transfer of money in checkout</option>
+					<option value='None'>None</option>
+					<option value='Other'>Other forms of payment</option>
+					<option value='OtherOnlinePayments'>All other online payments</option>
+					<option value='Paymate'>Paymate</option>
+					<option value='PaymentSeeDescription'>Payment See description</option>
+					<option value='PayOnPickup'>PayOnPickup</option>
+					<option value='PayPal'>PayPal</option>
+					<option value='PersonalCheck'>Personal check</option>
+					<option value='ProPay'>ProPay</option>
+					<option value='StandardPayment'>Standard payment</option>
+					<option value='VisaMC'>Visa/MC</option>
+				</select>
+<!--			http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html -->
+				<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
+			</label>
+			
+<p class='hint'>
+Not all payment types are available for all listing types.  See eBay for the compatibility list.<br />
+http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
+</p>
+
+			<label>
+				<span>Hit counter</span>
+				<select type='text' name='Item\HitCounter' data-bind="var: profile(%PROFILE.Item\HitCounter); format:popVal;" >
+					<option value='BasicStyle'>BasicStyle</option>
+					<option value='GreenLED'>GreenLED</option>
+					<option value='Hidden' selected='selected'>Hidden (faster)</option>
+					<option value='HiddenStyle'>HiddenStyle</option>
+					<option value='HonestyStyle'>HonestyStyle</option>
+					<option value='NoHitCounter'>NoHitCounter</option>
+					<option value='RetroStyle'>RetroStyle</option>
+				</select>
+				<span class='toolTip' title="Indicates whether an optional hit counter is displayed on the item's listing page and, if so, what type.">?</span>
+			</label>
+			
+			
+			<label>
+				<span>Listing enhancement</span>
+				<select type='text' name='Item\ListingEnhancement' data-bind="var: profile(%PROFILE.Item\ListingEnhancement); format:popVal;" multiple="multiple" >
+					<option value=''>none</option>
+					<option value='BoldTitle'>title for the item's listing in boldface type</option>
+					<option value='Border'>add a border around the listing's pictures</option>
+					<option value='Featured'>display prominently in the Featured Items section</option>
+					<option value='Highlight'>listing is highlighted in a different color in lists</option>
+					<option value='HomePageFeatured'>rotate into a special display on eBay's Home page</option>
+					<option value='ProPackBundle'>ProPack Bundle*</option>
+					<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
+					<option value='ValuePackBundle'>ValuePackBundle**</option>
+					<option value=''></option>
+					<option value=''></option>
+				</select>
+			</label>
+			<p class='hint'>
+			Selecting a value to listing enhancement will affect listing fees<br />
+			* eBay Motors only<br />
+			** Support for this feature varies by site and category.
+			</p>
+			
+			
+			
+			
+
+			<label>
+				<span>PayPal email address</span>
+				<input type='number' step='.01' max='2000' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
+				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
+			</label>
 		
 
-		</div>
+		
+			</div>
 	</fieldset>
-	
-	
-	<fieldset  data-panelname='eBayDomShipping'>
-		<legend>Domestic Shipping</legend>
-		<div class='clearfix'>
-			<table data-app-role='dataTable' class='gridTable fullWidth'>
-			<thead>
-			<tr>
-				<th>Service</th>
-				<th>Free</th>
-				<th>Pricing</th>
-				<th></th>
-			</tr>
-			</thead>
-				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: profile(%PROFILE.@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-			</tbody>
-			</table>
-			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
 
-			<label>
-				<span>Ship cost</span>
-				<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
-			</label>
-	
-			<label>
-				<span>Addl item cost</span>
-				<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
-			</label>
-	
-			<label>
-				<span>AK+HI add</span>
-				<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
-			</label>
-	
-			<label>
-				<span>Service</span>
-				<select name="service" class='skipTrack' >
-					<option value="ShippingMethodStandard">Standard Shipping</option>
-					<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
-					<option value="ePacketChina">ePacket delivery from China</option>
-					<option value="UPSGround">UPS Ground</option>
-					<option value="ShippingMethodExpress">Expedited Shipping</option>
-					<option value="USPSPriority">USPS Priority Mail</option>
-					<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
-					<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
-					<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
-					<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
-					<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
-					<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
-					<option value="USPSFirstClass">USPS First Class Package</option>
-					<option value="UPS3rdDay">UPS 3 Day Select</option>
-					<option value="UPS2ndDay">UPS 2nd Day Air</option>
-					<option value="Other">Economy Shipping</option>
-					<option value="USPSParcel">USPS Parcel Select</option>
-					<option value="USPSMedia">USPS Media Mail</option>
-					<option value="ShippingMethodOvernight">One-day Shipping</option>
-					<option value="USPSExpressMail">USPS Express Mail</option>
-					<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
-					<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
-					<option value="UPSNextDay">UPS Next Day Air Saver</option>
-					<option value="UPSNextDayAir">UPS Next Day Air</option>
-					<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
-					<option value="FedExExpressSaver">FedEx Express Saver</option>
-					<option value="FedEx2Day">FedEx 2Day</option>
-					<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
-					<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
-					<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
-					<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
-					<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
-					<option value="US_FedExIntlEconomy">FedEx International Economy</option>
-					<option value="Freight">Flat Priced Freight</option>
-					<option value="FreightShipping">Freight Shipping</option>
-					<option value="Pickup">Local Pickup</option>
-				</select>
-			</label>
-			
-	
-			<label>
-				<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
-			</label>
-			<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add Service</button></div><!-- needs to be within same fieldset as dataTable -->
-	
-		</div>
-	</fieldset>
-	
-	
-	<fieldset data-panelname='eBayIntShipping'>
-		<legend>International Shipping</legend>
-		<div class='clearfix'>
-			<table data-app-role='dataTable' class='gridTable fullWidth'>
-			<thead>
-			<tr>
-				<th>Service</th>
-				<th>Free</th>
-				<th>Pricing</th>
-				<th></th>
-			</tr>
-			</thead>
-				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: profile(%PROFILE.@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
-			</tbody>
-			</table>
-			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
-
-			<label>
-				<span>Ship cost</span>
-				<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
-			</label>
-	
-			<label>
-				<span>Addl item cost</span>
-				<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
-			</label>
-	
-			<label>
-				<span>Service</span>
-				<select name="service" class='skipTrack' >
-					<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
-					<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
-					<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
-					<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
-					<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
-					<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
-					<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
-					<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
-					<option value="USPSExpressMailInternational">USPS Express Mail International</option>
-					<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
-					<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
-					<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
-					<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
-					<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
-					<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
-					<option value="UPSStandardToCanada">UPS Standard To Canada</option>
-					<option value="FedExInternationalEconomy">FedEx International Economy</option>
-					<option value="FedExInternationalPriority">FedEx International Priority</option>
-					<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
-					<option value="StandardInternational">Standard Int'l Shipping</option>
-					<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
-					<option value="OtherInternational">Economy Int'l Shipping</option>
-					<option value="FreightShippingInternational">Freight Shipping</option>
-				</select>
-			</label>
-			
-	
-			<label>
-				<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
-			</label>
-			<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add Service</button></div><!-- needs to be within same fieldset as dataTable -->
-		</div>
-	</fieldset>
 	
 	
 	<fieldset data-panelname='eBayBuyerRequirements'>
 		<legend>Buyer Requirements</legend>
 		<div class='clearfix'>
+		
 			<label>
+				<select name='Item\DisableBuyerRequirements\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements\@BOOLEAN); format:popVal;" data-app-event='admin_syndication|ebayBuyerRequirementsToggle'>
+					<option value='0'>Disabled</option>
+					<option value='1'>Enabled</option>
+				</select>
+				Use buyer requirements, including My Ebay.<!-- ebay's field is disable, but we prefer enable, so 'off' is 1 to match their field values -->
+				<span class='toolTip' title="If enabled, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
+			</label>		
+		
+<!--		
+			<label>
+			
 				<input type="checkbox" class='applyAnycb' name='Item\DisableBuyerRequirements' data-bind="var: profile(%PROFILE.Item\DisableBuyerRequirements); format:popVal;" data-app-event='admin_syndication|hideInputsByCheckbox' />
 				Ignore all buyer requirements, including My Ebay.
 				<span class='toolTip' title="If on, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>
+-->
 			<div class='toggleThis'>
 				<label>
 					<span>Max # policy violations</span>
@@ -2061,6 +2072,163 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	
 </section>
 <section class='twoColumn column2'>
+
+
+	
+	<fieldset  data-panelname='eBayDomShipping'>
+		<legend>Domestic Shipping</legend>
+		<div class='clearfix'>
+			<table data-app-role='dataTable' class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>Service</th>
+				<th>Free</th>
+				<th>Pricing</th>
+				<th></th>
+			</tr>
+			</thead>
+				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: profile(%PROFILE.@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+			</tbody>
+			</table>
+			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
+			<div data-app-role='addServiceInputs' class='displayNone'>
+
+		
+				<label>
+					<span>Service</span>
+					<select name="service" class='skipTrack' >
+						<option value="ShippingMethodStandard">Standard Shipping</option>
+						<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
+						<option value="ePacketChina">ePacket delivery from China</option>
+						<option value="UPSGround">UPS Ground</option>
+						<option value="ShippingMethodExpress">Expedited Shipping</option>
+						<option value="USPSPriority">USPS Priority Mail</option>
+						<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
+						<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
+						<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
+						<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
+						<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
+						<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
+						<option value="USPSFirstClass">USPS First Class Package</option>
+						<option value="UPS3rdDay">UPS 3 Day Select</option>
+						<option value="UPS2ndDay">UPS 2nd Day Air</option>
+						<option value="Other">Economy Shipping</option>
+						<option value="USPSParcel">USPS Parcel Select</option>
+						<option value="USPSMedia">USPS Media Mail</option>
+						<option value="ShippingMethodOvernight">One-day Shipping</option>
+						<option value="USPSExpressMail">USPS Express Mail</option>
+						<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
+						<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
+						<option value="UPSNextDay">UPS Next Day Air Saver</option>
+						<option value="UPSNextDayAir">UPS Next Day Air</option>
+						<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
+						<option value="FedExExpressSaver">FedEx Express Saver</option>
+						<option value="FedEx2Day">FedEx 2Day</option>
+						<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
+						<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
+						<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
+						<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
+						<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
+						<option value="US_FedExIntlEconomy">FedEx International Economy</option>
+						<option value="Freight">Flat Priced Freight</option>
+						<option value="FreightShipping">Freight Shipping</option>
+						<option value="Pickup">Local Pickup</option>
+					</select>
+				</label>
+
+				<label>
+					<span>Ship cost</span>
+					<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+				</label>
+		
+				<label>
+					<span>Addl item cost</span>
+					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+				</label>
+		
+				<label>
+					<span>AK+HI add</span>
+					<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
+				</label>
+
+				
+		
+				<label>
+					<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
+				</label>
+				<div class='buttonset alignRight'><button data-app-event="admin_config|dataTableAddExec">Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
+			</div>
+			<div class='buttonset alignRight'><button data-app-event="admin_syndication|ebayServiceAddShow">Add Service</button></div>
+		</div>
+	</fieldset>
+	
+	
+	<fieldset data-panelname='eBayIntShipping'>
+		<legend>International Shipping</legend>
+		<div class='clearfix'>
+			<table data-app-role='dataTable' class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>Service</th>
+				<th>Free</th>
+				<th>Pricing</th>
+				<th></th>
+			</tr>
+			</thead>
+				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: profile(%PROFILE.@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+			</tbody>
+			</table>
+			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
+			<div data-app-role='addServiceInputs' class='displayNone'>
+				<label>
+					<span>Service</span>
+					<select name="service" class='skipTrack' >
+						<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
+						<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
+						<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
+						<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
+						<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
+						<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
+						<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
+						<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
+						<option value="USPSExpressMailInternational">USPS Express Mail International</option>
+						<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
+						<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
+						<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
+						<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
+						<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
+						<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
+						<option value="UPSStandardToCanada">UPS Standard To Canada</option>
+						<option value="FedExInternationalEconomy">FedEx International Economy</option>
+						<option value="FedExInternationalPriority">FedEx International Priority</option>
+						<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
+						<option value="StandardInternational">Standard Int'l Shipping</option>
+						<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
+						<option value="OtherInternational">Economy Int'l Shipping</option>
+						<option value="FreightShippingInternational">Freight Shipping</option>
+					</select>
+				</label>
+				<label>
+					<span>Ship cost</span>
+					<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+				</label>
+		
+				<label>
+					<span>Addl item cost</span>
+					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+				</label>
+
+				
+		
+				<label>
+					<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
+				</label>
+				<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
+			</div>
+			<div class='buttonset alignRight'><button data-app-event="admin_syndication|ebayServiceAddShow">Add Service</button></div>
+		</div>
+	</fieldset>
+
 	
 	<!--
 	<fieldset data-panelname='charity'>
@@ -2189,142 +2357,6 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	-->
 	
 	
-	<fieldset data-panelname='eBayListingSettings'>
-		<legend>Listing Settings</legend>
-		<div class='clearfix'>
-			<label>
-				<span>Country</span>
-				<input type='text' name='Item\Country' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\Country); format:popVal;" />
-				<span class='toolTip' title="Set to a two character country code">?</span>
-			</label>
-			
-			
-			<label>
-				<span>Cross border trade</span>
-				<input type='text' name='Item\CrossBorderTrade' data-bind="var: profile(%PROFILE.Item\CrossBorderTrade); format:popVal;" />
-				<span class='toolTip' title="Listing will be returned in the search results for other eBay sites. This feature is currently only supported by the US, UK, eBay Canada, and eBay Ireland sites. There is a small listing fee for each country specified as a Cross Border Trade country. ">?</span>
-			</label>
-			
-			<label>
-				<span>Currency</span>
-				<input type='text' name='Item\Currency\@CURRENCY' size='3' data-bind="var: profile(%PROFILE.Item\Currency\@CURRENCY); format:popVal;" />
-				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
-			</label>
-			
-			
-			<label>
-				<span>Dispatch Time Max</span>
-				<input type='number' step='1' size='5' name='Item\DispatchTimeMax' data-bind="var: profile(%PROFILE.Item\DispatchTimeMax); format:popVal;" />
-				<span class='toolTip' title="Specifies the maximum number of business days the seller commits to for preparing an item to be shipped after receiving a cleared payment. This time does not include the shipping time (the carrier's transit time). A value of 0 indicates same day handling for an item.  In this case, the seller's shipping commitment depends on the order cut off time set in the seller's user preferences.">?</span>
-			</label>
-			
-			
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\GetItFast\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\GetItFast\@BOOLEAN); format:popVal;" />
-				Get it fast
-				<span class='toolTip' title="Indicates whether the seller has committed to the GetItFast shipping rules for this listing.">?</span>
-			</label>
-			
-			
-			
-			<label>
-				<span>Hit counter</span>
-				<select type='text' name='Item\HitCounter' data-bind="var: profile(%PROFILE.Item\HitCounter); format:popVal;" >
-					<option value='BasicStyle'>BasicStyle</option>
-					<option value='GreenLED'>GreenLED</option>
-					<option value='Hidden' selected='selected'>Hidden (faster)</option>
-					<option value='HiddenStyle'>HiddenStyle</option>
-					<option value='HonestyStyle'>HonestyStyle</option>
-					<option value='NoHitCounter'>NoHitCounter</option>
-					<option value='RetroStyle'>RetroStyle</option>
-				</select>
-				<span class='toolTip' title="Indicates whether an optional hit counter is displayed on the item's listing page and, if so, what type.">?</span>
-			</label>
-			
-			
-			<label>
-				<span>Listing enhancement</span>
-				<select type='text' name='Item\ListingEnhancement' data-bind="var: profile(%PROFILE.Item\ListingEnhancement); format:popVal;" multiple="multiple" >
-					<option value=''>none</option>
-					<option value='BoldTitle'>title for the item's listing in boldface type</option>
-					<option value='Border'>add a border around the listing's pictures</option>
-					<option value='Featured'>display prominently in the Featured Items section</option>
-					<option value='Highlight'>listing is highlighted in a different color in lists</option>
-					<option value='HomePageFeatured'>rotate into a special display on eBay's Home page</option>
-					<option value='ProPackBundle'>ProPack Bundle*</option>
-					<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
-					<option value='ValuePackBundle'>ValuePackBundle**</option>
-					<option value=''></option>
-					<option value=''></option>
-				</select>
-			</label>
-			<p class='hint'>
-			Selecting a value to listing enhancement will affect listing fees<br />
-			* eBay Motors only<br />
-			** Support for this feature varies by site and category.
-			</p>
-			
-			
-			
-			
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\PrivateListing\@BOOLEAN); format:popVal;" />
-				<span>Private listing</span>
-				<span class='toolTip' title="The PrivateListing boolean field can be used by the seller in the Add/Relist/Revise family of calls to obscure item title, item ID, and item price from post-order Feedback comments left by buyers.">?</span>
-			</label>
-			
-			
-			
-			<label>
-				<span>Payment methods</span>
-				<select multiple='multiple'>
-					<option value='AmEx'>American Express</option>
-					<option value='CashInPerson'>Cash-in-person option</option>
-					<option value='CashOnPickup'>Payment on delivery</option>
-					<option value='CCAccepted'>Credit card</option>
-<!--					<option value='COD'>Cash on delivery</option> -->
-					<option value='Diners'>Diners</option>
-					<option value='Discover'>Discover</option>
-					<option value='IntegratedMerchantCreditCard'>Integrated merchant credit card</option>
-					<option value='LoanCheck'>Loan check</option>
-					<option value='MOCC'>Money order/cashiers check</option>
-					<option value='Moneybookers'>Moneybookers</option>
-					<option value='MoneyXferAccepted'>Direct transfer of money</option>
-					<option value='MoneyXferAcceptedInCheckout'>Direct transfer of money in checkout</option>
-					<option value='None'>None</option>
-					<option value='Other'>Other forms of payment</option>
-					<option value='OtherOnlinePayments'>All other online payments</option>
-					<option value='Paymate'>Paymate</option>
-					<option value='PaymentSeeDescription'>Payment See description</option>
-					<option value='PayOnPickup'>PayOnPickup</option>
-					<option value='PayPal'>PayPal</option>
-					<option value='PersonalCheck'>Personal check</option>
-					<option value='ProPay'>ProPay</option>
-					<option value='StandardPayment'>Standard payment</option>
-					<option value='VisaMC'>Visa/MC</option>
-				</select>
-<!--			http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html -->
-				<span class='toolTip' title="This integer value indicates the number of hours that a buyer has (after he/she commits to buy) to make a deposit to the seller as a down payment on a motor vehicle.">?</span>
-			</label>
-<p class='hint'>
-Not all payment types are available for all listing types.  See eBay for the compatibility list.<br />
-http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMethodCodeType.html
-</p>
-			<label>
-				<span>PayPal email address</span>
-				<input type='number' step='.01' max='2000' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
-				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
-			</label>
-		
-		
-			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\AutoPay\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\AutoPay\@BOOLEAN); format:popVal;" />
-				Autopay
-				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
-			</label>
-		
-			</div>
-	</fieldset>
 	
 	
 	<fieldset data-panelname='eBayReturnPolicy'>
