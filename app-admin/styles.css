@@ -1,6 +1,6 @@
 @font-face	{
 	font-family: barcode3of9;
-	src: url('resources/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	src: url('fonts/z3of9.ttf') /* will not work in IE9 w/out eot font file */
 	} 
 
 body {line-height: 1;} /* helps to reduce some errant whitespace issues */
