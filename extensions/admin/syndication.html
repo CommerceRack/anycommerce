@@ -2648,3 +2648,66 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<span data-bind="var:media(Name); format:text;" class='small' data-app-event="admin_syndication|ebayHTMLEditorAddImage"></span>
 	</li>
 </ul>
+
+
+
+
+
+
+
+<table id='ebayTemplateEditor'>
+<tr>
+	<td data-app-role="ebayTemplateEditorIframeContainer" class='valignTop width75'>
+		<textarea id='ebayTemplateHTMLTextarea' rows='10' class='fullWidth'></textarea>
+	</td>
+	<td class='valignTop width20'>
+	<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
+		<button data-app-event="admin_syndication|adminEBAYProfileSave">Save Changes</button>
+	</div>
+
+<section class='ui-widget marginBottom'>
+	<h4 class='smallPadding ui-widget-header ui-corner-top'>Object Inspector</h4>
+	<div class='ui-widget-content ui-corner-bottom stdPadding clearfix labelsAsBreaks small'>
+		<div data-app-role='templateObjectInspectorContent'></div>
+		<hr />
+
+<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightProductAttributes' checked='checked' data-objecttype='PRODUCT' />Product element highlight</label>
+<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightKISSAttributes' checked='checked' data-objecttype='KISS' />Wizard element highlight</label>
+	</div>
+</section>
+
+
+
+<section class='ui-widget marginBottom'>
+	<h4 class='smallPadding ui-widget-header ui-corner-top'>Wizard</h4>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+
+<progress><span></span>%</progress>
+
+progress bar of how many fields are KISS and how many are completed.
+look for hidden(ish) kiss inputs for template settings, like color.
+	</div>
+</section>
+
+
+<section class='ui-widget marginBottom'>
+	<h4 class='smallPadding ui-widget-header ui-corner-top'>Template Settings</h4>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+look for hidden(ish) kiss inputs for template settings, like color.
+	</div>
+</section>
+
+
+<section class='ui-widget marginBottom'>
+	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<p class='hint'>This will make a new template for use on other profiles</p>
+	<input name='template' id='templateName' value='' class='marginRight floatRight' placeholder='template name' />
+	<button data-app-event="admin_syndication|adminEBAYMacroSaveAsTemplateExec">Save As New Template</button>
+	</div>
+</section>
+
+	</td>
+</tr>
+</table>
+

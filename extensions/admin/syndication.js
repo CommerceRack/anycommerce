@@ -318,15 +318,18 @@ var admin_syndication = function() {
 				$D.dialog('open');
 				}, //showAmzRegisterModal
 
-// run when an ebay category is clicked that is a leaf, executed from the XSL file
+
+
+
 			showEBAYTemplateEditorInModal : function(profile)	{
-				var $D = $('#ebayTemplateEditor');
+				var $D = $('#templateEditor');
+				app.u.dump(" -> $D.length: "+$D.length);
 				if($D.length)	{
 					$D.removeData('profile');
 					$D.empty();
 					}
 				else	{
-					$D = $("<div \/>",{'id':'ebayTemplateEditor','title':'Edit Listing HTML'});
+					$D = $("<div \/>",{'id':'templateEditor','title':'Edit Listing HTML'});
 					$D.dialog({
 						'modal':true,
 						'autoOpen':false,
@@ -344,6 +347,7 @@ var admin_syndication = function() {
 
 				$D.data({'profile':profile}); //this ID is used in the media lib to get the profile. don't change it.
 				$D.dialog('option','height',($(window).height() - 100));
+				$D.anycontent({'templateID':'ebayTemplateEditor','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
 				$D.dialog('open');
 				$D.showLoading({"message":"Fetching template HTML"});
 
@@ -359,114 +363,49 @@ var admin_syndication = function() {
 								$D.anymessage({'message':rd})
 								}
 							else	{
-//								$D.anycontent({'templateID':'ebayTemplateEditorImageUpload','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs (there's a loadsTemplate in this template);
-//The save changes and save template buttons have a right margin to compensate for the 99% on the iframe. a 100% on the iframe sometimes cause a horizontal scrollbar to appear in the modal.
-								$textarea = $("<textarea id='ebayTemplateHTMLTextarea' rows='10' \/>").height($D.height() - 100).css('width','75%').val(app.ext.admin_syndication.u.preprocessEBAYTemplate(app.data[rd.datapointer]['body']));
-								var $objectInspector = $("<div style='width:20%;'><h4 class='ui-widget-header smallPadding ui-corner-top'>Object Inspector<\/h4><div class='ui-widget-content ui-corner-bottom stdPadding'><\/div><\/div>",{'id':'templateKey'}).addClass('floatRight ui-widget');
-								$D.append($objectInspector);
-								$D.append($textarea);
+
+								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
 								
-								var $templateInput = $("<input name='template' id='templateName' value='' class='marginRight floatRight' placeholder='template name' \/>");
-								var $templateButton = $("<button>Save As New Template<\/button>").addClass('ui-state-active floatRight smallButton marginRight').button().on('click',function(){
-									var templateName = $('#templateName').val();
-									if(templateName && templateName.length > 5)	{
-										$D.showLoading({'message':'Saving as new template: '+templateName});
-										app.model.addDispatchToQ({
-											'_cmd' : 'adminEBAYMacro',
-											'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
-											'_tag' : {
-												'callback' : function(responseData)	{
-													$D.hideLoading();
-													if(app.model.responseHasErrors(responseData)){
-														$D.anymessage({'message':responseData})
-														}
-													else	{
-														$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-														}
-													}
-												},
-											'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
-											},'mutable');
-										app.model.dispatchThis('mutable');
-										}
-									else	{
-										$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
-										}
-
-
-									});
-								$("<button>Save Changes<\/button>").addClass('floatRight ui-state-focus marginRight').button().on('click',function(){
-									$D.showLoading({'message':'Saving changes'});
-									app.model.addDispatchToQ({
-										'_cmd' : 'adminEBAYProfileFileSave',
-										'PROFILE' : profile,
-										'FILENAME' : 'index.html',
-										'_tag' : {
-											'callback' : function(responseData)	{
-												$D.hideLoading();
-												if(app.model.responseHasErrors(responseData)){
-													$D.anymessage({'message':responseData})
-													}
-												else	{
-													$D.dialog('close');
-													$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
-													}
-												}
-											},
-										'body' : $('.jHtmlArea iframe:first',$D).contents().find('html').html()
-										},'immutable');
-									app.model.dispatchThis('immutable');
-
-									}).appendTo($D);
-								$("<button>Cancel<\/button>").addClass('floatRight marginRight').button().on('click',function(){
-									$D.dialog('close');
-									}).appendTo($D);
-
 //								app.u.dump(app.ext.admin_syndication.u.getEBAYToolbarButtons());
-								$textarea.htmlarea({
-    								// Override/Specify the Toolbar buttons to show
-									toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_syndication.u.getEBAYToolbarButtons())
-									});
-								$('.ToolBar:first',$D).append($templateButton).append($templateInput); //put these into the toolbar on the right so they're out of the way.
-// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-$('iframe',$D).contents().find('body').on('click',function(e){
-	var $target = $(e.target);
-	app.u.dump(" -> $target.id: "+$target.attr('id'));
-	if( $target.data('object'))	{
-		var data = $target.data(), r = ""
-		for(index in data)	{
-			r += index+": "+data[index]+"<br>";
-			}
-		$('.ui-widget-content',$objectInspector).empty().append(r)
-		}
-	else	{
-		$('.ui-widget-content',$objectInspector).empty().append("This object is not dynamic.")
-		}
-	});
+								$("textarea:first",$D)
+									.height($D.height() - 100)
+									
+									.css('width','75%')
+									.val(app.ext.admin_syndication.u.preprocessEBAYTemplate(app.data[rd.datapointer]['body']))
+									.htmlarea({
+										// Override/Specify the Toolbar buttons to show
+										toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_syndication.u.getEBAYToolbarButtons())
+										});
+								
 
-/*								$('iframe',$D).contents().find('body').on('click',function(e){
+// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+var $iframeBody = $('iframe',$D).width($('td:first',$D).width() - 30).contents().find('body');
+app.ext.admin_syndication.u.handleWizardProgressBar($iframeBody,$('progressbar:first',$D));
+								$iframeBody.addClass('showHighlights_PRODUCT showHighlights_KISS').on('click',function(e){
 									var $target = $(e.target);
-									app.u.dump(" -> element ID: "+$target.attr('id'));
-									if($target.data('tipificated'))	{app.u.dump(" -> already tipificated")} //tooltip already added.
-									else if($target.data('object'))	{
-										app.u.dump(" -> adding tooltip")
-										$target.tooltip({
-											content: function() {
-												var data = $target.data(), r = ""
-												for(index in data)	{
-													r += index+": "+data[index]+"<br>";
-													}
-												app.u.dump(r);
-												return r;
-												}
-											});
-										$target.data('tipificated',true);
+									app.u.dump(" -> $target.id: "+$target.attr('id'));
+									var data = $target.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
+
+									if( $target.data('object'))	{
+										for(index in data)	{
+											r += "<li>"+index+": "+data[index]+"<\/li>";
+											}
 										}
 									else	{
-										app.u.dump(" -> not a data-object. no tipification needed.")
-										} //do nothing, not a KISS element.
-									})
-*/
+										r += "<li>This object is not dynamic<\/li>";
+										}
+									
+									r += "<li>tag type: "+$target.get(0).tagName+"<\/li>";
+
+									if($target.is('img'))	{
+										r += "<li>width: "+($target.attr('width') || $target.width())+"<\/li>";
+										r += "<li>height: "+($target.attr('height') || $target.height())+"<\/li>";
+										}
+
+									$objectInspector.empty().append(r)
+									r += "<\/ul>";
+									});
+								app.u.handleAppEvents($D);
 								}
 							}
 						}
@@ -730,20 +669,56 @@ else	{
 				
 				}, //handleDetailSaveButton
 
-			buildEBAYTemplateStyleSheet : function()	{
-				var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
-					+ "	.actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n"
-					+ "<\/style>\n</div>"
-				return r;
+			handleWizardProgressBar : function($iframeBody,$pbar)	{
+				if($iframeBody instanceof jQuery && $pbar instanceof jQuery)	{
+					var $kisses = $("[data-object='KISS']",$iframeBody).length;
+					$pbar.attr('max',$kisses.length);
+					var completedTasks = 0;
+					$kisses.each(function(){
+						if($(this).data('wizardificated'))	{
+							completedTasks++;
+							}
+						})
+					$pbar.val(completedTasks);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or pbar ["+$pbar instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+					}
 				},
 
+			buildEBAYTemplateStyleSheet : function()	{
+				var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
+					+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n"
+					+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc; padding:0px;}\n"
+					+ "	.showHighlights_KISS .wizardificated {background-color:#efefef; border:1px solid #0000cc; padding:0px;}\n"
+					+ "	.showHighlights_KISS .unwizardificated {background-color:#efefef; border:1px solid #cc0000; padding:0px;}\n"
+					+ "<\/style></div>"
+				return r;
+				},
+			postprocessEBAYTemplate : function(template)	{
+				$template = $("<html>"); //need a parent container.
+				$template.append(template);
+				$('#templateBuilderCSS',$template).empty().remove();
+				return $template.html();
+				},
 			preprocessEBAYTemplate : function(template)	{
 				$template = $("<html>"); //need a parent container.
 				$template.append(template);
 				$("[data-object]",$template).each(function(){
 					var $ele = $(this);
-					if($ele.data('object') == 'product' && !$ele.hasClass('actbProductAttribute'))	{
-						$ele.addClass('actbProductAttribute')
+					if($ele.data('object') == 'PRODUCT')	{
+						if($ele.is('a') && !$ele.hasClass('actbHref'))	{
+							$ele.addClass('actbHref');
+							}
+						else if(!$ele.is('a') && !$ele.hasClass('actbProductAttribute'))	{
+							$ele.addClass('actbProductAttribute')
+							}
+						else	{} //not an anchor and already has product attribute class.
+						}
+					else if($ele.data('object') == 'KISS')	{
+						if($ele.data('wizardificated') && !$ele.hasClass('wizardificated'))	{$ele.addClass('wizardificated')}
+						else if(!$ele.hasClass('unwizardificated'))	{$ele.addClass('unwizardificated')}
+						else	{} //class has already been added.
 						}
 					})
 
@@ -1054,6 +1029,7 @@ else	{
 					$ETC.anymessage({"message":"","gMessage":true});
 					}
 				}, //handleEBAYTemplateSelect
+
 			getEBAYToolbarButtons : function()	{
 
 return [{
@@ -1119,12 +1095,128 @@ return [{
 					}},'mutable');
 				app.model.dispatchThis('mutable');
 				}
+			},{
+			css : 'prodattributeadd',
+			'text' : 'Add a Product Attribute',
+			action: function (btn) {
+				var jhtml = this; //the jhtml object.
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Add Product Attribute'
+					});
+				$D.dialog('open');
+				$ul = $("<ul \/>");
+
+//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
+var arr = new Array("","","<span class='actbProductAttribute' data-attrib='zoovy:prod_detail' data-input-cols='80' data-input-data='product:zoovy:prod_detail' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Specifications (shared)' data-object='PRODUCT' id='PROD_DETAIL'></span>","");
+
+$("<li \/>").text('Product Name').on('click',function(){
+	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
+	$D.dialog('close');
+	}).appendTo($ul);
+
+$("<li \/>").text('Product Manufacturer').on('click',function(){
+	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
+	$D.dialog('close');
+	}).appendTo($ul);
+
+$("<li \/>").text('Product Description').on('click',function(){
+	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
+	$D.dialog('close');
+	}).appendTo($ul);
+
+$("<li \/>").text('Product Features').on('click',function(){
+	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
+	$D.dialog('close');
+	}).appendTo($ul);
+
+$("<li \/>").text('Product Image 5').on('click',function(){
+	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
+	$D.dialog('close');
+	}).appendTo($ul);
+$ul.appendTo($D);
+//
+
+				}
 			}]
 				}
 
 			}, //u [utilities]
 
 		e : {
+
+
+
+			adminEBAYMacroSaveAsTemplateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminEBAYMacroSaveAsTemplateExec').on('click.adminEBAYMacroSaveAsTemplateExec',function(){
+					var templateName = $('#templateName').val();
+					if(templateName && templateName.length > 5)	{
+						var $D = $btn.closest('.ui-dialog-content');
+						$D.showLoading({'message':'Saving as new template: '+templateName});
+						app.model.addDispatchToQ({
+							'_cmd' : 'adminEBAYMacro',
+							'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
+							'_tag' : {
+								'callback' : function(responseData)	{
+									$D.hideLoading();
+									if(app.model.responseHasErrors(responseData)){
+										$D.anymessage({'message':responseData})
+										}
+									else	{
+										$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
+										}
+									}
+								},
+							'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+							},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
+						}				
+					});
+				},
+			
+			adminEBAYProfileSave : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminEBAYMacroSaveAsTemplateExec').on('click.adminEBAYMacroSaveAsTemplateExec',function(){
+					var $D = $btn.closest('.ui-dialog-content');
+					$D.showLoading({'message':'Saving changes'});
+					app.model.addDispatchToQ({
+						'_cmd' : 'adminEBAYProfileFileSave',
+						'PROFILE' : $D.data('profile'),
+						'FILENAME' : 'index.html',
+						'_tag' : {
+							'callback' : function(responseData)	{
+								$D.hideLoading();
+								if(app.model.responseHasErrors(responseData)){
+									$D.anymessage({'message':responseData})
+									}
+								else	{
+									$D.dialog('close');
+									$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
+									}
+								}
+							},
+						'body' : app.ext.admin_syndication.u.postprocessEBAYTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+
+				},
+				
+			ebayTemplateElementHighlightToggle : function($cb)	{
+				$cb.anycb();
+				$cb.on('change',function(){
+					if($cb.is(':checked'))	{
+						$('iframe',$cb.closest('.ui-dialog-content')).contents().find('body').addClass('showHighlights_'+$cb.data('objecttype'));
+						}
+					else	{
+						$('iframe',$cb.closest('.ui-dialog-content')).contents().find('body').removeClass('showHighlights_'+$cb.data('objecttype'));
+						}
+					});
+				},
+			
 /*
 run when the 'save' button is pushed in the ebay category/item specifics modal.
 first, it does an adminEBAYCategory and passes the XSL and form contents. This is to get the most up to data XML that is returned by that call

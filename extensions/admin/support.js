@@ -16,11 +16,6 @@
 
 ************************************************************** */
 
-/*
-An extension for managing the media library in addition to ALL other file uploads,including, but not limited to: csv and zip.
-*/
-
-
 
 var admin_support = function() {
 	var theseTemplates = new Array('supportFileUploadTemplate','supportPageTemplate','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpPageTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
