@@ -3652,18 +3652,40 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				if(vars.mime_type && vars.body)	{
 					var filename = vars.filename || 'file';
 					const MIME_TYPE = vars.mime_type;
+	
+					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+					$D.dialog({
+						'modal' : true,
+						'width' : 300,
+						'height' : 200
+						});
+
 	// this worked, but not an ideal solution. we like blob better.
-	//				var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(app.data[_rtag.datapointer].body);
-	//				var $a = $('<a>',{'download':app.data[_rtag.datapointer].FILENAME || 'file',"href":uri}).text('download me');
+//			var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(vars.body);
+//			var $a = $('<a>',{'download':filename || 'file',"href":uri}).text('download me data style').appendTo($D);
+//			$("<br \/>").appendTo($D);
 	
 //if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
 //content returned on an API call will be base 64 encoded. app-generated content (report csv's) will not.
-app.u.dump("vars.skipdecode: "+vars.skipDecode);
+//app.u.dump("vars.skipdecode: "+vars.skipDecode);
 
-					var
-						base64 = (vars.skipDecode) ? vars.body : atob(vars.body),
-						bb = new Blob(new Array(base64), {type: vars.MIME_TYPE}),
-						$a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+					var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
+					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
+						app.u.dump(" -> filetype for download is an image.");
+						// Use typed arrays to convert the binary data to a Blob
+						var arraybuffer = new ArrayBuffer(file.length);
+						var L = file.length;
+						var view = new Uint8Array(arraybuffer);
+						for (var i=0; i < L; i++) {
+							view[i] = file.charCodeAt(i) & 0xff;
+							}
+						var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
+						}
+					else	{
+						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
+						}
+					
+					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
 
 					$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
 						var a = this;
@@ -3677,15 +3699,9 @@ app.u.dump("vars.skipdecode: "+vars.skipDecode);
 							$D.empty().remove(); //nuke dialog.
 							}, 1500);
 						});
-	
-					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
-					$a.appendTo($D);
-					$D.dialog({
-						'modal' : true,
-						'width' : 300,
-						'height' : 200
-						});
+
 					
+					$a.appendTo($D);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.fileDownloadInModal, either mime_type ["+vars.mime_type+"] or body ["+typeof vars.body+"] not passed.","gMessage":true});

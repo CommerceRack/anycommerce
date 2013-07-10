@@ -17,7 +17,7 @@ app.rq.push(['extension',1,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',1,'store_checkout','extensions/store_checkout.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
-app.rq.push(['extension',1,'admin_support','extensions/admin/support.js']); 
+app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',0,'admin_tools','extensions/admin/tools.js']); 
 app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
 app.rq.push(['extension',0,'admin_syndication','extensions/admin/syndication.js']); //needs to be in pass 0 for linkFrom (links from marketplaces)
