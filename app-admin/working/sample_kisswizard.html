@@ -1,0 +1,59 @@
+<!--
+
+The Pirate Code:
+
+Each fieldset represents one step in the wizard.
+Fieldsets can include more than one input, but these inputs should be related to one another on a macro level. (grouping shipping icons and shipping policy is ok, but don't group all policies together)
+If a fieldset includes more than one input, include a legend.
+
+styling:
+ buttons will have jqueryui button() applied to them.
+ apply class labelsAsBreaks to the fieldset to have labels treated as block elements.
+-->
+
+
+<!-- If this fieldset is dealing with a specific element within the template, specify the ID and the element will be opened in the object inspector when the fieldset is displayed. -->
+<fieldset data-wizard-element-id="LOGO">
+	<label>Company Logo</label>
+	<button onClick="kiss_inspect('LOGO'); kiss_medialib('LOGO');">Select Image</button>
+</fieldset>
+
+
+
+<fieldset class='labelsAsBreaks'>
+	<legend>Returns</legend>
+	<div><textarea onKeyUp="kiss_inspect('KISS_RETURN_POLICY'); kiss_implement('set-value',{'id':'KISS_RETURN_POLICY','$input':$(this)});" data-kiss-id="KISS_RETURN_POLICY" data-load-kiss-value='true' placeholder='Policy'></textarea></div>
+</fieldset>
+
+
+<fieldset class='labelsAsBreaks'>
+	<legend>Shipping</legend>
+
+	<div><textarea onKeyUp="kiss_inspect('KISS_SHIPPING_POLICY'); kiss_implement('set-value',{'id':'KISS_SHIPPING_POLICY','$input':$(this)});" placeholder='Policy'></textarea></div>
+
+
+	<label><input type='checkbox' name='fedex' onChange="kiss_inspect('KISS_SHIPPING_FEDEXLOGO'); if($(this).is(':checked')){
+		kiss_implement('show',{'id':'KISS_SHIPPING_FEDEXLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_FEDEXLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		}
+	else {
+		kiss_implement('hide',{'id':'KISS_SHIPPING_FEDEXLOGO'})
+		}" />Fedex Logo</label>
+
+	<label><input type='checkbox' name='ups' onChange="kiss_inspect('KISS_SHIPPING_UPSLOGO'); if($(this).is(':checked')){
+		kiss_implement('show',{'id':'KISS_SHIPPING_UPSLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		}
+	else {
+		kiss_implement('hide',{'id':'KISS_SHIPPING_UPSLOGO'})
+		}" />UPS Logo</label>
+
+	<label><input type='checkbox' name='usps' onChange="kiss_inspect('KISS_SHIPPING_USPSLOGO'); if($(this).is(':checked')){
+		kiss_implement('show',{'id':'KISS_SHIPPING_USPSLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		}
+	else {
+		kiss_implement('hide',{'id':'KISS_SHIPPING_USPSLOGO'})
+		}" />USPS Logo</label>
+	
+</fieldset>

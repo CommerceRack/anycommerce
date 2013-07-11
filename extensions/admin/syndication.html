@@ -2671,8 +2671,8 @@ The sandbox can be useful for developers who want to create test listings or pre
 		<div data-app-role='templateObjectInspectorContent'></div>
 		<hr />
 
-<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightProductAttributes' checked='checked' data-objecttype='PRODUCT' />Product element highlight</label>
-<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightKISSAttributes' checked='checked' data-objecttype='KISS' />Wizard element highlight</label>
+<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightProductAttributes' checked='checked' data-objecttype='PRODUCT' />Product element highlight <span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label>
+<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightKISSAttributes' checked='checked' data-objecttype='KISS' />Wizard element highlight <span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label>
 	</div>
 </section>
 
@@ -2682,27 +2682,31 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Wizard</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
 
-<progress><span></span>%</progress>
+<div data-app-role='wizardMessaging'></div>
 
-progress bar of how many fields are KISS and how many are completed.
-look for hidden(ish) kiss inputs for template settings, like color.
+<form id='wizardForm' action='#' onSubmit='return false;'>
+<button data-app-event='admin_syndication|ebayTemplateStartWizardExec'>Start Wizard</button>
+</form>
+
+
 	</div>
 </section>
 
 
+<!--
 <section class='ui-widget marginBottom'>
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Template Settings</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
 look for hidden(ish) kiss inputs for template settings, like color.
 	</div>
 </section>
-
+-->
 
 <section class='ui-widget marginBottom'>
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
 	<p class='hint'>This will make a new template for use on other profiles</p>
-	<input name='template' id='templateName' value='' class='marginRight floatRight' placeholder='template name' />
+	<input name='template' id='templateName' value='' placeholder='template name' />
 	<button data-app-event="admin_syndication|adminEBAYMacroSaveAsTemplateExec">Save As New Template</button>
 	</div>
 </section>

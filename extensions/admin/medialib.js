@@ -387,12 +387,16 @@ setTimeout(function(){
 
 //mode typically isn't needed. It is added to the ul containing the 'list' and when that list is run through the templating engine, mode can be used to change behaviors.
 //for instance, mode = 'manage' will turn off the 'select' icons and not add an onclick to the images.
+//if mode = kissTemplate, then in the 'selectThisMedia' phase, we'll look for image in the templateEditor iframe.
 				P.mode = P.mode || 'unset'
 				if($target.length)	{
 //this is where the contents for what media is currently selected go. Needs to be emptied each time so old contents don't show up.
 //also hidden by default. will be set to visible if populated (keep buttons from showing up)
 					$('#mediaLibraryFocusMediaDetails').empty().hide();
-
+//** 201324 -> bug fix. need these cleared each time so they don't carry over between uses.
+					$target.data('mode',"");
+					$target.data('pid',"");
+					$target.data('src',"");
 					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{
@@ -489,11 +493,13 @@ setTimeout(function(){
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
 //eleSelector just updates some form on the page.
 //mode requires an API call.
-
-				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src))	{
+//when in kissTemplate mode, we're just doing a straight image substitution, so eleSelector and src are NOT required.
+				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src || mediaData.mode == 'kissTemplate'))	{
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
-						var $image = $(mediaData.imageID);
+						var $image = (mediaData.mode == 'kissTemplate') ? $('iframe',$('#templateEditor')).contents().find(mediaData.imageID) : $(mediaData.imageID);
+						var oldSrc = $image.src;
+						app.u.dump(" -> $image.length: "+$image.length);
 //						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
@@ -517,10 +523,19 @@ setTimeout(function(){
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
-					else	{
+					else if(mediaData.src)	{
 //						app.u.dump("took mode route");
 						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':newFilename},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
+						}
+					else if(mediaData.mode == 'kissTemplate')	{
+						if($image.data('filepath'))	{$image.attr('data-oldfilepath',$image.data('filepath'))}
+						$image.attr({'data-wizardificated':'true','data-filepath':newFilename});  //must be attribute, not data, so it's preserved on save.
+						kiss_inspect(mediaData.imageID);  //update object inspector.
+						$medialib.dialog('close');// straight substitution, which occurs above.
+						}
+					else	{
+						//hhhmmm.. should never end up here. the 'if' to get into this block precludes any of the previous conditions not being met.
 						}
 					}
 				else	{

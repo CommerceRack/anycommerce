@@ -41,6 +41,7 @@ var admin_syndication = function() {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/syndication.html',theseTemplates);
+				app.ext.admin_syndication.u.declareKissTemplateFunctions(); //adds some global functions to the dom. shortcuts for template editing.
 				var ebayxsl = $.ajax(app.vars.baseURL+'extensions/admin/resources/syi_attributes.xsl',{
 					success : function(data,b,c)	{
 						app.ext.admin_syndication.vars.ebayXSL = c.responseText;
@@ -380,31 +381,8 @@ var admin_syndication = function() {
 
 // event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
 var $iframeBody = $('iframe',$D).width($('td:first',$D).width() - 30).contents().find('body');
-app.ext.admin_syndication.u.handleWizardProgressBar($iframeBody,$('progressbar:first',$D));
-								$iframeBody.addClass('showHighlights_PRODUCT showHighlights_KISS').on('click',function(e){
-									var $target = $(e.target);
-									app.u.dump(" -> $target.id: "+$target.attr('id'));
-									var data = $target.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
+app.ext.admin_syndication.u.handleWizardObjects($iframeBody,$objectInspector);
 
-									if( $target.data('object'))	{
-										for(index in data)	{
-											r += "<li>"+index+": "+data[index]+"<\/li>";
-											}
-										}
-									else	{
-										r += "<li>This object is not dynamic<\/li>";
-										}
-									
-									r += "<li>tag type: "+$target.get(0).tagName+"<\/li>";
-
-									if($target.is('img'))	{
-										r += "<li>width: "+($target.attr('width') || $target.width())+"<\/li>";
-										r += "<li>height: "+($target.attr('height') || $target.height())+"<\/li>";
-										}
-
-									$objectInspector.empty().append(r)
-									r += "<\/ul>";
-									});
 								app.u.handleAppEvents($D);
 								}
 							}
@@ -610,28 +588,75 @@ app.model.dispatchThis('mutable');
 				}, //showDSTDetails
 			
 			showTemplateChooserInModal : function(profile)	{
-if(profile)	{
-	var $D = app.ext.admin.i.dialogCreate({
-		'title' : 'eBay Template Chooser',
-		'templateID' : 'ebayTemplateChooserTemplate',
-		data : app.data.adminEBAYTemplateList
-		});
-	$D.attr('id','ebayTemplateChooser');
-	$D.data('profile',profile);
-	$D.dialog('open');
-	
-	$D.imagegallery({
-		selector: 'a[data-gallery="gallery"]',
-		show: 'fade',
-		hide: 'fade',
-		fullscreen: false,
-		slideshow: false
-		});
-	
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, no profile passed.","gMessage":true});
-	}
+				if(profile)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'eBay Template Chooser',
+						'templateID' : 'ebayTemplateChooserTemplate',
+						data : app.data.adminEBAYTemplateList
+						});
+					$D.attr('id','ebayTemplateChooser');
+					$D.data('profile',profile);
+					$D.dialog('open');
+					
+					$D.imagegallery({
+						selector: 'a[data-gallery="gallery"]',
+						show: 'fade',
+						hide: 'fade',
+						fullscreen: false,
+						slideshow: false
+						});
+					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, no profile passed.","gMessage":true});
+					}
+				},
+			
+			
+			initWizard : function()	{
+				var
+					$wizardForm = $('#wizardForm'),
+					$fieldsets = $('fieldset',$wizardForm),
+					$templateEditor = $('#templateEditor'), //referenced for context on multiple occasions.
+					$iframeBody = $('iframe',$templateEditor).contents().find('body');
+
+				$fieldsets.hide(); //hide all the fieldsets.
+				$('fieldset:first',$wizardForm).show(); //show just the first.
+				$wizardForm.closest('.ui-widget-content').addClass('positionRelative'); //necessary for button positioning.
+				
+				$('button',$fieldsets).button(); //applied to all buttons within fieldsets.
+				
+				//add the next/previous buttons.  The action on the button is controlled through a delegated event on the form itself.
+				$("<button data-button-action='previous'>Previous<\/button>").button({icons: {primary: "ui-icon-circle-triangle-w"},text: false}).css({'position':'absolute','top':'30px','left':'-20px'}).button('disable').appendTo($wizardForm);
+				$("<button data-button-action='next'>Next<\/button>").button({icons: {primary: "ui-icon-circle-triangle-e"},text: false}).css({'position':'absolute','top':'30px','right':'-20px'}).appendTo($wizardForm);
+				
+				$wizardForm.prepend("<div class='marginBottom alignCenter'><progress value='0' max='"+$fieldsets.length+"'></progress></div>");
+				
+				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
+				$wizardForm.on('click.wizard',function(e){
+					var $target = $(e.target); //the element that was clicked.
+					if($target.is('button') && $target.data('button-action'))	{
+						e.preventDefault(); //disable the default action.
+
+						app.ext.admin_syndication.u.handleWizardProgressBar($iframeBody,$('progress:first',$templateEditor));
+
+						$target.data('button-action') == 'previous' ? $('fieldset:visible',$wizardForm).hide().prev('fieldset').show() : $('fieldset:visible',$wizardForm).hide().next('fieldset').show();
+						
+//						app.u.dump("index of new visible fieldset: "+$('fieldset:visible',$wizardForm).index());
+						//SANITY -> index() starts at 1, not zero.
+						if($('fieldset:visible',$wizardForm).index() == 1)	{
+							$("[data-button-action='next']",$wizardForm).button('enable');
+							$("[data-button-action='previous']",$wizardForm).button('disable');
+							}
+						else if($('fieldset:visible',$wizardForm).index() >= $fieldsets.length)	{
+							$("[data-button-action='next']",$wizardForm).button('disable');
+							$("[data-button-action='previous']",$wizardForm).button('enable');
+							}
+						else	{
+							$("[data-button-action]").button('enable');
+							}
+						}
+					});
 				}
 			
 			}, //Actions
@@ -649,6 +674,115 @@ else	{
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+			declareKissTemplateFunctions : function()	{
+
+
+function getTarget(id,functionName){
+	var r = false
+	if(id)	{
+//		app.u.dump(" -> $('iframe',$('#templateEditor')).length: "+$('iframe',$('#templateEditor')).length);
+		var $target = $('iframe',$('#templateEditor')).contents().find(app.u.jqSelector('#',id));
+		if($target.length)	{
+			r = $target;
+			}
+		else	{
+			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'The element id ['+id+'] passed into '+functionName+' does not exist within the template. This is likely the result of an error in the wizard.js file.'});
+			}
+		}
+	else	{
+		$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'No element id passed into '+functionName+'. This is likely the result of an error in the wizard.js file.'});
+		}
+	return r;	
+	}
+
+//id is an element id within the wizard itself.
+window.kiss_inspect = function(id)	{
+	var $target = getTarget(id,'kiss_inspect');
+	if($target)	{
+		app.ext.admin_syndication.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+		}
+	else	{} //getTarget handles error display.
+	}
+
+window.kiss_medialib = function(id)	{
+	var $target = getTarget(id,'kiss_medialib');
+	if($target)	{
+		app.ext.admin_medialib.a.showMediaLib({
+			'imageID':app.u.jqSelector('#',id),
+			'mode':'kissTemplate'//,
+//			'src':$target.data('filepath') //doesn't work like we want. uses some legacy UI code.
+			}); //filepath is the path of currently selected image. oldfilepath may also be set.
+		}
+	else	{} //getTarget handles error display.
+	}
+
+window.kiss_implement = function(method,vars)	{
+	vars = vars || {};
+	
+	var methods = new Array("set-attribs","empty","hide","show","set-value");
+	
+	if(methods.indexOf(method) >= 0)	{
+		var $target = getTarget(vars.id,'kiss_implement');
+		if($target)	{
+
+switch(method)	{
+	case 'set-attribs':
+		$target.attr(vars.attribs)
+		break;
+
+	case 'set-value':
+		$target.html(vars['$input'].val())
+/*		if($target.data('input-type') == 'TEXTAREA' || $target.data('input-type') == 'TEXT')	{
+			$target.css({'background':'green'})
+			var $D = app.ext.admin.i.dialogCreate({
+				'title' : 'Set '+($target.data('label') || "Value")
+				});
+			if($target.data('input-type') == 'TEXTAREA')	{
+				$D.append("<textarea id='kissImplementAttribSet'>"+$target.text()+"<\/textarea>")
+				}
+			else	{
+				$D.append("<input type='text' id='kissImplementAttribSet' \/>");
+				}
+			$target.css({'background':'blue'})
+			
+			$("<button>Save<\/button>").button().on('click',function(event){
+				event.preventDefault();
+//				app.u.dump(" -> $target.length: "+$target.length); app.u.dump(" and instanceof jQuery: "); app.u.dump($target instanceof jQuery);
+				$target.css({'background':'red','font-weight':'bold'});
+//				$target.html($('#kissImplementAttribSet').val());
+				$D.dialog( "close" );
+				}).appendTo($D);
+			$D.dialog('open');
+			}
+*/		break;
+
+	case 'show':
+		$target.show();
+		break;
+	
+	case 'hide':
+		$target.hide();
+		break;
+	
+	case 'empty':
+		$target.empty();
+		break;
+	
+	default:
+		$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into kiss_implement passed validation but is not declared in switch.','gMessage':true});
+	}
+
+
+			}
+		else	{} //getTarget handles error display.
+		}
+	else	{
+		$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into kiss_implement. This is likely the result of an error in the wizard.js file.'});
+		}
+	}
+
+				},
 
 //this doesn't impact what the action on the button is, just whether or not the button is enabled/disabled and what class is applied.
 			handleDetailSaveButton : function($ele)	{
@@ -669,40 +803,61 @@ else	{
 				
 				}, //handleDetailSaveButton
 
+//updates the progress bar based on the number of 'kiss' data objects present in the template that have not been populated.
 			handleWizardProgressBar : function($iframeBody,$pbar)	{
+// !!! THIS IS BUNK.  this won't work right because a fieldset within the wizard may have four steps to be completed, not just one.
 				if($iframeBody instanceof jQuery && $pbar instanceof jQuery)	{
-					var $kisses = $("[data-object='KISS']",$iframeBody).length;
-					$pbar.attr('max',$kisses.length);
-					var completedTasks = 0;
-					$kisses.each(function(){
-						if($(this).data('wizardificated'))	{
-							completedTasks++;
-							}
-						})
-					$pbar.val(completedTasks);
+					var $kisses = $("[data-object='KISS']",$iframeBody);
+					if($kisses.length)	{
+						var completedTasks = 0;
+						$kisses.each(function(){
+							if($(this).data('wizardificated'))	{
+								completedTasks++;
+								}
+							})
+//						app.u.dump(" -> completedTasks: "+completedTasks);
+						$pbar.val(completedTasks);
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or pbar ["+$pbar instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
 					}
 				},
 
+
+			handleWizardObjects : function($iframeBody,$objectInspector)	{
+				if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
+					$iframeBody.addClass('showHighlights_PRODUCT showHighlights_KISS').on('click',function(e){
+						var $target = $(e.target);
+//						app.u.dump(" -> $target.id: "+$target.attr('id'));
+						app.ext.admin_syndication.u.ebayKISSInspectObject($target,$objectInspector); //updates object inspector when any element is clicked.
+						});
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+					}
+				},
+
+
 			buildEBAYTemplateStyleSheet : function()	{
 				var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
-					+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n"
-					+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc; padding:0px;}\n"
-					+ "	.showHighlights_KISS .wizardificated {background-color:#efefef; border:1px solid #0000cc; padding:0px;}\n"
-					+ "	.showHighlights_KISS .unwizardificated {background-color:#efefef; border:1px solid #cc0000; padding:0px;}\n"
+					+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n" //used on all non-href product elements
+					+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc; padding:0px;}\n" //used on product href elements.
+					+ "	.showHighlights_KISS .wizardificated {background-color:#e2eee1; border:1px dashed #bdd1bd; padding:0px;}\n"
+					+ "	.showHighlights_KISS .unwizardificated {background-color:#f0f5fb; border:1px dashed #b9d6fc; padding:0px;}\n"
 					+ "<\/style></div>"
 				return r;
 				},
+
 			postprocessEBAYTemplate : function(template)	{
-				$template = $("<html>"); //need a parent container.
+				var $template = $("<html>"); //need a parent container.
 				$template.append(template);
 				$('#templateBuilderCSS',$template).empty().remove();
 				return $template.html();
 				},
+
 			preprocessEBAYTemplate : function(template)	{
-				$template = $("<html>"); //need a parent container.
+				var $template = $("<html>"); //need a parent container.
 				$template.append(template);
 				$("[data-object]",$template).each(function(){
 					var $ele = $(this);
@@ -1030,6 +1185,36 @@ else	{
 					}
 				}, //handleEBAYTemplateSelect
 
+			ebayKISSInspectObject : function($object,$objectInspector)	{
+				if($object instanceof jQuery && $objectInspector instanceof jQuery)	{
+
+					var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
+
+					if(data.object)	{
+						for(index in data)	{
+							r += "<li>"+index+": "+data[index]+"<\/li>";
+							}
+						}
+					else	{
+						r += "<li>This object is not dynamic<\/li>";
+						}
+					
+					r += "<li>tag type: "+$object.get(0).tagName+"<\/li>";
+
+					if($object.is('img'))	{
+						r += "<li>width: "+($object.attr('width') || $object.width())+"<\/li>";
+						r += "<li>height: "+($object.attr('height') || $object.height())+"<\/li>";
+						}
+
+					$objectInspector.empty().append(r)
+					r += "<\/ul>";
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+					}
+				},
+
 			getEBAYToolbarButtons : function()	{
 
 return [{
@@ -1104,10 +1289,9 @@ return [{
 					'title' : 'Add Product Attribute'
 					});
 				$D.dialog('open');
-				$ul = $("<ul \/>");
+				$ul = $("<ul class='lookLikeLink' \/>");
 
 //eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
-var arr = new Array("","","<span class='actbProductAttribute' data-attrib='zoovy:prod_detail' data-input-cols='80' data-input-data='product:zoovy:prod_detail' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Specifications (shared)' data-object='PRODUCT' id='PROD_DETAIL'></span>","");
 
 $("<li \/>").text('Product Name').on('click',function(){
 	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
@@ -1134,7 +1318,6 @@ $("<li \/>").text('Product Image 5').on('click',function(){
 	$D.dialog('close');
 	}).appendTo($ul);
 $ul.appendTo($D);
-//
 
 				}
 			}]
@@ -1204,7 +1387,16 @@ $ul.appendTo($D);
 					});
 
 				},
+			ebayTemplateStartWizardExec : function($btn)	{
 				
+				$btn.button();
+				$btn.off('click.ebayTemplateStartWizardExec').on('click.ebayTemplateStartWizardExec',function(event){
+					event.preventDefault();
+					$('#wizardForm').load('app-admin/working/sample_kisswizard.html',function(){
+						app.ext.admin_syndication.a.initWizard();
+						});
+					});
+				},
 			ebayTemplateElementHighlightToggle : function($cb)	{
 				$cb.anycb();
 				$cb.on('change',function(){
@@ -1618,14 +1810,14 @@ delete sfo.free
 			
 			ebayAddCustomDetailShow : function($btn)	{
 
-$btn.button();
-$btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',function(){
-	var
-		$fieldset = $btn.closest('fieldset'),
-		numInputs = $('.inputContainer',$fieldset).length || 0;
-	
-	$btn.after("<div class='inputContainer marginTop'><input type='text' placeholder='Detail Title' value='' name='cs_name"+numInputs+"' class='marginRight' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+numInputs+"' \/><\/div>");
-	});
+				$btn.button();
+				$btn.off('click.ebayAddCustomDetailShow').on('click.ebayAddCustomDetailShow',function(){
+					var
+						$fieldset = $btn.closest('fieldset'),
+						numInputs = $('.inputContainer',$fieldset).length || 0;
+					
+					$btn.after("<div class='inputContainer marginTop'><input type='text' placeholder='Detail Title' value='' name='cs_name"+numInputs+"' class='marginRight' \/><input type='text' placeholder='Detail Value' value='' name='cs_value"+numInputs+"' \/><\/div>");
+					});
 
 				}, //ebayAddCustomDetailShow
 				
