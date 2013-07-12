@@ -699,10 +699,13 @@ function getTarget(id,functionName){
 //id is an element id within the wizard itself.
 window.kiss_inspect = function(id)	{
 	var $target = getTarget(id,'kiss_inspect');
+	r = null;
 	if($target)	{
 		app.ext.admin_syndication.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+		r = $target;
 		}
 	else	{} //getTarget handles error display.
+	return r;
 	}
 
 window.kiss_medialib = function(id)	{
@@ -841,10 +844,10 @@ switch(method)	{
 
 			buildEBAYTemplateStyleSheet : function()	{
 				var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
-					+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc; padding:6px;}\n" //used on all non-href product elements
-					+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc; padding:0px;}\n" //used on product href elements.
-					+ "	.showHighlights_KISS .wizardificated {background-color:#e2eee1; border:1px dashed #bdd1bd; padding:0px;}\n"
-					+ "	.showHighlights_KISS .unwizardificated {background-color:#f0f5fb; border:1px dashed #b9d6fc; padding:0px;}\n"
+					+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc;}\n" //used on all non-href product elements
+					+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc;}\n" //used on product href elements.
+					+ "	.showHighlights_KISS .wizardificated {background-color:#e2eee1; border:1px dashed #bdd1bd;}\n"
+					+ "	.showHighlights_KISS .unwizardificated {background-color:#f0f5fb; border:1px dashed #b9d6fc;}\n"
 					+ "<\/style></div>"
 				return r;
 				},

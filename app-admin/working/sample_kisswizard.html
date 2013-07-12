@@ -57,3 +57,20 @@ styling:
 		}" />USPS Logo</label>
 	
 </fieldset>
+
+
+
+<!--
+something that isn't onfocus tho.
+http://www.htmlgoodies.com/beyond/javascript/creating-custom-events-with-jquery.html
+maybe data-onfocus
+alternatively, if that can't be executed w/ jquery, explore using a hidden input within the fieldset with an onfocus. 
+-->
+<fieldset class='labelsAsBreaks' onFocus="$('#KISS_PAYMENT_POLICY_TEXTAREA').text(kiss_inspect('KISS_PAYMENT_POLICY').text());">
+	<legend>Payment</legend>
+
+	<div><textarea id='KISS_PAYMENT_POLICY_TEXTAREA' onKeyUp="kiss_inspect('KISS_PAYMENT_POLICY'); kiss_implement('set-value',{'id':'KISS_PAYMENT_POLICY','$input':$(this)});" placeholder='Policy'></textarea></div>
+
+	Add a slightly different approach to logos where there's one parent div and each logo is added as html (kiss_inspect(insert)).  
+	
+</fieldset>
