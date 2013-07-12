@@ -1510,13 +1510,16 @@ this will likely become more flexible in the future. ###
 <!--
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 -->
-<div class='positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div class='prodBigImageContainer positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodPageTagsContainer'></div>
 	<!--
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 	-->
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid;">
+	
+	<canvas class="prodPreviewer displayNone" width="296" height="296" data-bind="useParentData:true; format:assignPreviewerData; extension:jerseypreview;"></canvas>
+	
+	<a class="prodMainImage" data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='296' height='296' />
 	</a>
 </div>
@@ -1612,6 +1615,7 @@ this will likely become more flexible in the future. ###
 		<img class="pointer" width="98" height="25" src="img/prodPage/review-98x25.png" onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;' />
 		<img class="pointer" width="94" height="25" src="img/prodPage/printpage-94x25.png" onClick="app.u.printByElementID('productTemplate_'+app.u.makeSafeHTMLId($(this).parent().data('pid')));return false;" />
 		
+		<!--
 		<span data-bind='var:product(zoovy:prod_image8); format:showIfSetInline;' class="displayNone">
 		<span data-bind='var:product(user:prod_flashparams_jersey); format:showIfSetInline;' class="displayNone">
 		<span data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
@@ -1621,6 +1625,7 @@ this will likely become more flexible in the future. ###
 		</span>
 		</span>
 		</span>
+		-->
 	</div>
 	<div class="socialLinks"></div>
 

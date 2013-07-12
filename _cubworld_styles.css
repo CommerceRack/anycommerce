@@ -77,6 +77,16 @@ h1,h2,h3,h4,h5,h6{
 
 /****************************************************************
 
+FONTS FOR JERSEY PREVIEWER
+
+****************************************************************/
+@font-face {font-family: LHFFullBlock; src: url('extensions/jerseypreview/LHFFullBlock.ttf');}
+@font-face {font-family: LHFoldblockCONDBOLD; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.ttf');}
+@font-face {font-family: LHFoldblockCONDMED; src: url('extensions/jerseypreview/LHFoldblockCONDMED.ttf');}
+@font-face {font-family: LHFoldblockREGBOLD; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.ttf');}
+@font-face {font-family: LHFoldblockREGMED; src: url('extensions/jerseypreview/LHFoldblockREGMED.ttf');}
+/****************************************************************
+
 UTILITY CLASSES AND UNIVERSAL STYLES
 
 ****************************************************************/
@@ -156,6 +166,7 @@ li.productListItem:hover .prodName{color: #BE0000;}
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
+	z-index:2;
 }
 .prodPageTagsContainer span{
 	display: inline-block;
@@ -769,8 +780,15 @@ div:hover > h4.subCatTitle {
 PRODUCT STYLES
 
 ****************************************************************/
-.imageContainer img {border:1px solid #CDCDCD;}
-.prodBigImage{margin-bottom:4px;}
+.imageContainer img, canvas.prodPreviewer {border:1px solid #CDCDCD;}
+.prodBigImageContainer {padding-bottom:4px;}
+
+canvas.prodPreviewer {
+	position:absolute;
+	left:0px;
+	top:0px;
+	z-index: 1;
+}
 .prodTitle {
 	color: #404041;
     font: bold 17px Arial,Helvetica,sarif;
