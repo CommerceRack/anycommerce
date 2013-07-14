@@ -365,6 +365,14 @@ var admin_syndication = function() {
 								}
 							else	{
 
+								$("[data-app-role='templateObjectInspectorContainer']").anypanel({
+									'state' : 'persistant',
+									showClose : false, //set to false to disable close (X) button.
+									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+									extension : 'syndication', //used in conjunction w/ persist.
+									name : 'ebayTemplateEditorObjectInspector', //used in conjunction w/ persist.
+									persistent : true
+									});
 								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
 								
 //								app.u.dump(app.ext.admin_syndication.u.getEBAYToolbarButtons());
