@@ -20,13 +20,13 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 // ** 201318 -> replacement for obsolete .browser() function.
 //.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
 // Figure out what browser is being used
-if(typeof typeof jQuery.browser == 'undefined')	{
+if(typeof jQuery.browser == 'undefined')	{
 	jQuery.browser = {
-		version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
-		safari: /webkit/.test( userAgent ),
-		opera: /opera/.test( userAgent ),
-		msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
-		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
+		version: (navigator.userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+		safari: /webkit/.test( navigator.userAgent ),
+		opera: /opera/.test( navigator.userAgent ),
+		msie: /msie/.test( navigator.userAgent ) && !/opera/.test( navigator.userAgent ),
+		mozilla: /mozilla/.test( navigator.userAgent ) && !/(compatible|webkit)/.test( navigator.userAgent )
 		}
 	}
 
