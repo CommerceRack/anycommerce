@@ -311,9 +311,13 @@ $tag.one('click',function(event){
 						var pretty = app.u.isSet(app.data.cartDetail['@SHIPMETHODS'][i]['pretty']) ? app.data.cartDetail['@SHIPMETHODS'][i]['pretty'] : app.data.cartDetail['@SHIPMETHODS'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
 						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
 //only show amount if not blank.
-						if(app.data.cartDetail['@SHIPMETHODS'][i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartDetail['@SHIPMETHODS'][i].amount,' $',2,false)+"<\/span>";
+// * 201324 -> bug fix: amount not showing up if zero. feature: support for zeroText for zero amounts (ex: zeroText: Free!;)
+						if(Number(app.data.cartDetail['@SHIPMETHODS'][i].amount) >= 0)	{
+							o += "<span class='orderShipAmount'>";
+							o += (data.bindData.zeroText) ? data.bindData.zeroText : app.u.formatMoney(app.data.cartDetail['@SHIPMETHODS'][i].amount,' $',2,false);
+							o += "<\/span>"
 							}
+						else	{} //amount is undefined.
 						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
 					}
