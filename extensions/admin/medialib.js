@@ -822,6 +822,13 @@ if(selector && mode)	{
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
+		'ebayTemplateZipUpload' : function(data,textStatus)	{
+			app.u.dump("Got to ebayTemplateZipUpload success.");
+			app.u.dump(" -> data: "); app.u.dump(data);
+//			app.model.dispatchThis('immutable');
+			
+			},
+		
 		'ebayTemplateMediaUpload' : function(data,textStatus)	{
 			app.u.dump("Got to ebayTemplateMediaUpload success.");
 			var L = data.length;
@@ -853,7 +860,7 @@ if(selector && mode)	{
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
-		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
+		maxNumberOfFiles : (mode == 'csvUploadToBatch' || mode == 'ebayTemplateZipUpload') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
 			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 			successCallbacks[mode](data,textStatus);

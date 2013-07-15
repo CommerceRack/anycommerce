@@ -1585,6 +1585,21 @@ delete sfo.free
 					});
 				}, //adminEBAYProfileZipDownloadExec
 
+			adminEBAYProfileZipUploadExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminEBAYProfileZipUploadExec').on('click.adminEBAYProfileZipUploadExec',function(){
+					var profile = $btn.data('profile');
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'eBay Template Chooser',
+						'templateID' : 'ebayZipUploadTemplate',
+						data : {} //blank data because translation needs to occur (template calls another template)
+						});
+					$D.dialog('option','height','400')
+					$D.dialog('open');
+					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayZipUpload');
+					});
+				}, //adminEBAYProfileZipUploadExec
+
 
 			ebayBuyerRequirementsToggle : function($ele)	{
 				function handleSelect()	{
