@@ -81,10 +81,15 @@ FONTS FOR JERSEY PREVIEWER
 
 ****************************************************************/
 @font-face {font-family: LHFFullBlock; src: url('extensions/jerseypreview/LHFFullBlock.ttf');}
+.LHFFullBlock { font-family: LHFFullBlock;}
 @font-face {font-family: LHFoldblockCONDBOLD; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.ttf');}
+.LHFoldblockCONDBOLD { font-family: LHFoldblockCONDBOLD;}
 @font-face {font-family: LHFoldblockCONDMED; src: url('extensions/jerseypreview/LHFoldblockCONDMED.ttf');}
+.LHFoldblockCONDMED { font-family: LHFoldblockCONDMED;}
 @font-face {font-family: LHFoldblockREGBOLD; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.ttf');}
+.LHFoldblockREGBOLD { font-family: LHFoldblockREGBOLD;}
 @font-face {font-family: LHFoldblockREGMED; src: url('extensions/jerseypreview/LHFoldblockREGMED.ttf');}
+.LHFoldblockREGMED { font-family: LHFoldblockREGMED;}
 /****************************************************************
 
 UTILITY CLASSES AND UNIVERSAL STYLES

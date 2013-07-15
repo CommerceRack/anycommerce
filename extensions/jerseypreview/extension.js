@@ -32,7 +32,10 @@ var jerseypreview = function() {
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
-					var $context = app.u.jqSelector('#', P.parentID);
+					var $context = $(app.u.jqSelector('#', P.parentID));
+					if(app.ext.jerseypreview.vars.paramsByPID[P.pid]){
+						$context.append($("<div class=' "+app.ext.jerseypreview.vars.paramsByPID[P.pid].font+"'></div>"));
+						}
 					$('input[name=B5], input[name=B6]', $context).keyup(function(){
 						if($(this).data('timer')){
 							clearTimeout($(this).data('timer'));
