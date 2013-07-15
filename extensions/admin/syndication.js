@@ -366,7 +366,7 @@ var admin_syndication = function() {
 							else	{
 
 								$("[data-app-role='templateObjectInspectorContainer']").anypanel({
-									'state' : 'persistant',
+									'state' : 'collapse',
 									showClose : false, //set to false to disable close (X) button.
 									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
 									extension : 'syndication', //used in conjunction w/ persist.
@@ -622,11 +622,16 @@ app.model.dispatchThis('mutable');
 			
 			
 			initWizard : function()	{
+				var	$wizardForm = $('#wizardForm');
+//the success fieldset, which is last in the list.
+				$wizardForm.append("<fieldset class='wizardCompleted'>Congrats! You have completed the wizard for this template.<\/fieldset>");
+				
 				var
-					$wizardForm = $('#wizardForm'),
 					$fieldsets = $('fieldset',$wizardForm),
 					$templateEditor = $('#templateEditor'), //referenced for context on multiple occasions.
 					$iframeBody = $('iframe',$templateEditor).contents().find('body');
+
+				
 
 				$fieldsets.hide(); //hide all the fieldsets.
 				$('fieldset:first',$wizardForm).show(); //show just the first.
@@ -641,12 +646,12 @@ app.model.dispatchThis('mutable');
 				$wizardForm.prepend("<div class='marginBottom alignCenter'><progress value='0' max='"+$fieldsets.length+"'></progress></div>");
 				
 				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
-				$wizardForm.on('click.wizard',function(e){
+				$wizardForm.on('click.templatewizard',function(e){
 					var $target = $(e.target); //the element that was clicked.
 					if($target.is('button') && $target.data('button-action'))	{
 						e.preventDefault(); //disable the default action.
 
-						app.ext.admin_syndication.u.handleWizardProgressBar($iframeBody,$('progress:first',$templateEditor));
+						
 
 						$target.data('button-action') == 'previous' ? $('fieldset:visible',$wizardForm).hide().prev('fieldset').show() : $('fieldset:visible',$wizardForm).hide().next('fieldset').show();
 						
@@ -663,6 +668,8 @@ app.model.dispatchThis('mutable');
 						else	{
 							$("[data-button-action]").button('enable');
 							}
+						//last so last fieldset shows up as 100% complete.
+						app.ext.admin_syndication.u.handleWizardProgressBar($('progress:first',$templateEditor));
 						}
 					});
 				}
@@ -814,31 +821,24 @@ switch(method)	{
 				
 				}, //handleDetailSaveButton
 
-//updates the progress bar based on the number of 'kiss' data objects present in the template that have not been populated.
-			handleWizardProgressBar : function($iframeBody,$pbar)	{
-// !!! THIS IS BUNK.  this won't work right because a fieldset within the wizard may have four steps to be completed, not just one.
-				if($iframeBody instanceof jQuery && $pbar instanceof jQuery)	{
-					var $kisses = $("[data-object='KISS']",$iframeBody);
+//updates the progress bar based on the number of fieldsets and the index of the fieldset in view (yes, going backwards means progress bar regresses)
+			handleWizardProgressBar : function($pbar)	{
+				if($pbar instanceof jQuery)	{
+					var $kisses = $("fieldset",'#wizardForm');
 					if($kisses.length)	{
-						var completedTasks = 0;
-						$kisses.each(function(){
-							if($(this).data('wizardificated'))	{
-								completedTasks++;
-								}
-							})
-//						app.u.dump(" -> completedTasks: "+completedTasks);
-						$pbar.val(completedTasks);
+						$pbar.val($("fieldset:visible",'#wizardForm').index());
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or pbar ["+$pbar instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, pbar ["+$pbar instanceof jQuery+"] is not a valid jquery object.",'gMessage':true});
 					}
 				},
 
 
 			handleWizardObjects : function($iframeBody,$objectInspector)	{
 				if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
-					$iframeBody.addClass('showHighlights_PRODUCT showHighlights_KISS').on('click',function(e){
+					// .addClass('showHighlights_PRODUCT showHighlights_KISS') -> add to iframeBody to start w/ highlights on.
+					$iframeBody.on('click',function(e){
 						var $target = $(e.target);
 //						app.u.dump(" -> $target.id: "+$target.attr('id'));
 						app.ext.admin_syndication.u.ebayKISSInspectObject($target,$objectInspector); //updates object inspector when any element is clicked.
@@ -992,7 +992,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 					$('.appMessaging').anymessage({"message":"In admin.u.loadEBAYChildren, $li was either not passed, has no length or li.data('id') has no value. DEV: see console for details.","gMessage":true});
 					app.u.dump("What follows this is the $li value passed into loadEBAYChildren: "); app.u.dump($li);
 					}
-				},
+				}, //handleEBAYChild
 
 			buildEBAYCategoryPath : function(categoryid)	{
 				var r = false; // what is returned. either the path (as a string) or false if the path could not be generated.
@@ -1017,7 +1017,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 					app.u.dump("In admin_syndication.u.buildEBAYCategoryPath, unable to build category path. either categoryid ["+categoryid+"] not passed or ebay category data doesn't exist in memory.");
 					}
 				return r;
-				},
+				}, //buildEBAYCategoryPath
 
 			buildEBAYXSLCmd : function(categoryid,pid)	{
 				return {
@@ -1031,6 +1031,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						}
 					}
 				}, //buildEBAYXSLCmd
+				
 //for item specifics, can't just serialize the fieldset because the wikihash format wants the data formatted differently.
 // there are two inputs on each row, the value of 1 is the key and the value of the second is the value.			
 			buildItemSpecificsMacro : function()	{
