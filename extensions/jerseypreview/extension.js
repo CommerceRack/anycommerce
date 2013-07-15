@@ -33,8 +33,9 @@ var jerseypreview = function() {
 				r = true;
 				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
 					var $context = $(app.u.jqSelector('#', P.parentID));
-					if($('canvas.prodPreviewer', $context).data('preview-params').font){
-						$context.append($("<div class=' "+$('canvas.prodPreviewer', $context).data('preview-params').font+"'></div>"));
+					font = $('canvas.prodPreviewer', $context).data('preview-params').font
+					if(font){
+						$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
 						}
 					$('input[name=B5], input[name=B6]', $context).keyup(function(){
 						if($(this).data('timer')){
