@@ -265,19 +265,19 @@ var admin_medialib = function() {
 				
 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload.js']); 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.blueimp-gallery.min.js']); 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/blueimp-gallery.min.js']); 
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.blueimp-gallery.min.js']); 
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/blueimp-gallery.min.js']); 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/canvas-to-blob.js']);
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-meta.js']);
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-meta.js']);
 //here to solve a safari/chrome issue if these scripts load before fileupload.js
 //not a great solution. will have to come up with something better. callback?
 
 setTimeout(function(){
 	app.u.dump(" -> loading delayed media library resources...");
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif-map.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-ios.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-orientation.js']);
+//	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif.js']);
+//	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif-map.js']);
+//	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-ios.js']);
+//	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-orientation.js']);
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-process.js']);
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.iframe-transport.js']); 
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-image.js']);
