@@ -862,7 +862,7 @@ if(selector && mode)	{
 		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
 		maxNumberOfFiles : (mode == 'csvUploadToBatch' || mode == 'ebayTemplateZipUpload') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
-			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
+//			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 			successCallbacks[mode](data,textStatus);
 			}
 		});

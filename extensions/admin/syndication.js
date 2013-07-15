@@ -1596,7 +1596,7 @@ delete sfo.free
 						});
 					$D.dialog('option','height','400')
 					$D.dialog('open');
-					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayZipUpload');
+					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateZipUpload');
 					});
 				}, //adminEBAYProfileZipUploadExec
 
