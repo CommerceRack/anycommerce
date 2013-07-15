@@ -14,7 +14,7 @@
 
 (function ($) {
     'use strict';
-	console.log('got here !!!!!!!!!!!!!!');
+
     // Loads an image for a given File object.
     // Invokes the callback with an img or optional canvas
     // element (if supported by the browser) as parameter:
