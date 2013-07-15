@@ -34,8 +34,12 @@ var isFontFaceSupported = (function(){
       // IE supports EOT and has had EOT support since IE 5.
       // This is a proprietary standard (ATOW) and thus this off-spec,
       // proprietary test for it is acceptable. 
-    if (!(!/*@cc_on@if(@_jscript_version>=5)!@end@*/0)) fontret = true;
-
+    if (!(!/*@cc_on@if(@_jscript_version>=5)!@end@*/0)){
+		//fontret = true;
+		//SWC EDIT: we don't have .eot files for these fonts, only ttf,
+		//so this condition should throw false
+		fontret = false;
+	}
     else {
 
     // Create variables for dedicated @font-face test
