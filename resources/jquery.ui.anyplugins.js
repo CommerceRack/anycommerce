@@ -918,6 +918,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			extension : '', //used in conjunction w/ persist.
 			name : '', //used in conjunction w/ persist.
 			persistent : false, //if set to true and name AND extension set, will save to localStorage
+			persistentStateDefault : 'expand',
 			settingsMenu : {}
 			},
 		_init : function(){
@@ -1049,13 +1050,16 @@ Additional a settings button can be added which will contain a dropdown of selec
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
 			},
-
+// ** 201324 -> added means of setting a default for 'persistent' state so a panel could be closed if it has never been opened before.
 		_handleInitialState : function()	{
 			if(this.options.state == 'persistent' && this.options.name && this.options.extension)	{
 //				app.u.dump(" -> using persistent settings");
 				var settings = app.ext.admin.u.dpsGet(this.options.extension,'anypanel');
 				if(settings && settings[this.options.name])	{
 					this.options.state = settings[this.options.name].state; //if not defined, default to expand.
+					}
+				else if(this.options.persistentStateDefault == 'expand' || this.options.persistentStateDefault == ' collapse') {
+					this.options.state = this.options.persistentStateDefault;
 					}
 				else	{
 					this.options.state = 'expand';
