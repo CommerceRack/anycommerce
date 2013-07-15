@@ -83,8 +83,9 @@
             // widget (via file input selection, drag & drop or add API call).
             // See the basic file upload widget for more information:
             add: function (e, data) {
-//				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
-                var that = $(this).data('fileupload'),
+//				app.u.dump("jquery.fileupload-ui.js data.fileupload: "); app.u.dump($(this).data());
+// ** 201324 -> odd. var that = $(this).data('fileupload') stopped working. checked data and it's a different pointer.
+                var that = $(this).data('blueimpFileupload'),
                     options = that.options,
                     files = data.files;
                 $(this).fileupload('process', data).done(function () {
