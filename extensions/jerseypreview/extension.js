@@ -69,38 +69,20 @@ var jerseypreview = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+			//uses pid to grab from map in vars, adds img tag from img8
 			assignPreviewerData : function($tag, data){
 				if(data.value['%attribs'] && 
-					data.value['%attribs']['user:prod_flashparams_jersey'] && 
 					data.value['%attribs']['zoovy:prod_image8']){
-					//var obj = app.u.kvp2Array("font="+data.value['%attribs']['user:prod_flashparams_jersey']);
-					//obj.font = obj.font.split('.')[0];
-					var obj = {
-						font : data.value["%attribs"]["user:preview_font"] || "LHFoldblockCONDMED",
-						name : {
-							size : data.value["%attribs"]["user:preview_name_text_size"] || 30,
-							color : data.value["%attribs"]["user:preview_name_color"] || "28489B",
-							strokeColor : data.value["%attribs"]["user:preview_name_outline_color"] || "DB2321",
-							strokeThickness : data.value["%attribs"]["user:preview_name_outline_thickness"] || 1,
-							x : data.value["%attribs"]["user:preview_name_xloc"] || "-1",
-							y : data.value["%attribs"]["user:preview_name_yloc"] || 30
-							},
-						number : {
-							size : data.value["%attribs"]["user:preview_number_text_size"] || 85,
-							color : data.value["%attribs"]["user:preview_number_color"] || "28489B",
-							strokeColor : data.value["%attribs"]["user:preview_number_outline_color"] || "DB2321",
-							strokeThickness : data.value["%attribs"]["user:preview_number_outline_thickness"] || 3,
-							x : data.value["%attribs"]["user:preview_number_xloc"] || "-1",
-							y : data.value["%attribs"]["user:preview_number_yloc"] || 50
-							},
-						img : $(app.u.makeImage({
-							name : data.value['%attribs']['zoovy:prod_image8'],
-							w : $tag.attr('width'),
-							h : $tag.attr('height'),
-							b : "FFFFFF",
-							tag : 1
-							})).get(0)					
-						};
+					
+					var obj = app.ext.jerseypreview.vars.paramsByPID[data.value.pid];
+					obj.img = $(app.u.makeImage({
+						name : data.value['%attribs']['zoovy:prod_image8'],
+						w : $tag.attr('width'),
+						h : $tag.attr('height'),
+						b : "FFFFFF",
+						tag : 1
+						})).get(0);
+					
 					$tag.data('preview-params', obj);
 					}
 				else {
@@ -141,24 +123,28 @@ var jerseypreview = function() {
 						context.fillStyle = "#"+params.number.color;
 						context.strokeStyle = "#"+params.number.strokeColor;
 						context.lineWidth = params.number.strokeThickness;
+						context.textAlign = "center";
 						
-						textSize = context.measureText(number);
-						x = (params.number.x < 0 ? w/2 : params.number.x) - textSize.width/2;
+						x = w/2 + params.number.xOffset;
 						
 						context.fillText(number, x, params.number.y+params.number.size);
 						context.strokeText(number, x, params.number.y+params.number.size);
 						
 						//draw name to canvas
+						
 						context.font = params.name.size+"px "+params.font;
 						context.fillStyle = "#"+params.name.color;
 						context.strokeStyle = "#"+params.name.strokeColor;
 						context.lineWidth = params.name.strokeThickness;
 						
-						textSize = context.measureText(name);
-						x = (params.name.x < 0 ? w/2 : params.name.x) - textSize.width/2;
+						x = w/2 + params.name.xOffset;
+						this.drawTextAlongArc(context, name, x, params.name.y+params.name.radius, params.name.radius, params.name.charSize);
 						
-						context.fillText(name, x, params.name.y+params.name.size);
-						context.strokeText(name, x, params.name.y+params.name.size);
+						//textSize = context.measureText(name);
+						//x = (params.name.x < 0 ? w/2 : params.name.x) - textSize.width/2;
+						
+						//context.fillText(name, x, params.name.y+params.name.size);
+						//context.strokeText(name, x, params.name.y+params.name.size);
 						
 						if($canvas.hasClass('displayNone')){
 							$canvas.fadeIn();
@@ -173,7 +159,28 @@ var jerseypreview = function() {
 						//Nothing to update and canvas is already hidden.  Do nothing.
 						}
 					}
+				},
+			drawTextAlongArc : function(context, str, centerX, centerY, radius, charSize) {
+				var len = str.length, s;
+				context.save();
+				context.translate(centerX, centerY);
+				//angle is in radians (terms of pi) so string length times charSize is the length of the arc,
+				//divide by circumference for a percentage, multiply again by 2pi for rads- so just divide by radius
+				var angle = (str.length * charSize) / radius
+				
+				context.rotate(-1 * angle / 2);
+				context.rotate(-1 * (angle / len) / 2);
+				for(var n = 0; n < len; n++) {
+				  context.rotate(angle / len);
+				  context.save();
+				  context.translate(0, -1 * radius);
+				  s = str[n];
+				  context.fillText(s, 0, 0);
+				  context.strokeText(s, 0, 0);
+				  context.restore();
 				}
+				context.restore();
+			  }
 				
 			}, //u [utilities]
 
@@ -185,6 +192,29 @@ var jerseypreview = function() {
 		e : {
 			}, //e [app Events]
 		vars : {
+			paramsByPID : {
+				"974" : {
+					font : "LHFoldblockCONDMED",
+					name : {
+						size : 25,
+						charSize : 12,
+						radius : 190,
+						color : "28489B",
+						strokeColor : "DB2321",
+						strokeThickness : 1,
+						xOffset : -1,
+						y : 50
+						},
+					number : {
+						size : 65,
+						color : "28489B",
+						strokeColor : "DB2321",
+						strokeThickness : 3,
+						xOffset : -1,
+						y : 50
+						}					
+					}
+				}
 			}
 		} //r object.
 		
