@@ -118,8 +118,8 @@ var jerseypreview = function() {
 				//app.u.dump(name+" "+number);
 				var $canvas = $('canvas.prodPreviewer', $context);
 				if($canvas.length != 0){
-					var name = $('input[name=B5]', $context).val();
-					var number = $('input[name=B6]', $context).val();
+					var name = $('input[name=B5]', $context).val().toUpperCase();
+					var number = $('input[name=B6]', $context).val().toUpperCase();
 					if(name != "" && number != ""){
 						var context = $canvas.get(0).getContext('2d');
 						var params = $canvas.data('preview-params');
