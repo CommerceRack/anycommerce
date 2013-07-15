@@ -33,8 +33,8 @@ var jerseypreview = function() {
 				r = true;
 				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
 					var $context = $(app.u.jqSelector('#', P.parentID));
-					if(app.ext.jerseypreview.vars.paramsByPID[P.pid]){
-						$context.append($("<div class=' "+app.ext.jerseypreview.vars.paramsByPID[P.pid].font+"'></div>"));
+					if($('canvas.prodPreviewer', $context).data('preview-params').font){
+						$context.append($("<div class=' "+$('canvas.prodPreviewer', $context).data('preview-params').font+"'></div>"));
 						}
 					$('input[name=B5], input[name=B6]', $context).keyup(function(){
 						if($(this).data('timer')){
