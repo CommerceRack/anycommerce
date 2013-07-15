@@ -1764,7 +1764,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				
 				<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
 				
-				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileFileContents'>Edit</button>
+				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|showTemplateEditorInModal'>Edit</button>
 				
 				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipDownloadExec'>Download Zip</button>
 				
@@ -2595,7 +2595,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Upgrade Launch Profile</button>
-<!--	<button data-app-event='admin_syndication|adminEBAYProfileFileContents' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;'>Edit eBay Template</button> -->
+<!--	<button data-app-event='admin_syndication|showTemplateEditorInModal' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;'>Edit eBay Template</button> -->
 	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>Delete</button>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>Edit</button>
 	</td>
@@ -2631,87 +2631,8 @@ The sandbox can be useful for developers who want to create test listings or pre
 </ul>
 
 
-<!-- used in the ebay template editor -->
-<div id='ebayTemplateEditorImageUpload'>
-<form id="ebayTemplateEditorImageUpload" class='clearfix marginBottom'  name="ebayTemplateEditorImageUpload" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='filetype' value='IMAGES'>
-<!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload images for use in this profile</h1>
-<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
-</form>
-</div>
-
-
-<ul>
-	<li id='ebayTemplateEditorMediaFileTemplate' class='lookLikeLink small floatLeft stdMargin'>
-	<img src='blank.gif' data-bind='var: media(path); format:publicURL; extension:admin;' width='75' height='75' alt='' /><br />
-	<span data-bind="var:media(Name); format:text;" class='small' data-app-event="admin_syndication|ebayHTMLEditorAddImage"></span>
-	</li>
-</ul>
 
 
 
 
-
-
-
-<table id='ebayTemplateEditor'>
-<tr>
-	<td data-app-role="ebayTemplateEditorIframeContainer" class='valignTop width75'>
-		<textarea id='ebayTemplateHTMLTextarea' rows='10' class='fullWidth'></textarea>
-	</td>
-	<td class='valignTop width20'>
-	<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
-		<button data-app-event="admin_syndication|adminEBAYProfileSave">Save Changes</button>
-	</div>
-
-<section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
-	<h4>Object Inspector</h4> <!-- class='smallPadding ui-widget-header ui-corner-top' -->
-	<div class=' labelsAsBreaks small clearfix'><!-- ui-widget-content ui-corner-bottom stdPadding clearfix -->
-		<div data-app-role='templateObjectInspectorContent'></div>
-		<hr />
-
-<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product element highlight <span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label>
-<label><input data-app-event="admin_syndication|ebayTemplateElementHighlightToggle" type='checkbox' name='highlightKISSAttributes' data-objecttype='KISS' />Wizard element highlight <span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label>
-	</div>
-</section>
-
-
-
-<section class='ui-widget marginBottom'>
-	<h4 class='smallPadding ui-widget-header ui-corner-top'>Wizard</h4>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-
-<div data-app-role='wizardMessaging'></div>
-
-<form id='wizardForm' action='#' onSubmit='return false;'>
-<button data-app-event='admin_syndication|ebayTemplateStartWizardExec'>Start Wizard</button>
-</form>
-
-
-	</div>
-</section>
-
-
-<!--
-<section class='ui-widget marginBottom'>
-	<h4 class='smallPadding ui-widget-header ui-corner-top'>Template Settings</h4>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-look for hidden(ish) kiss inputs for template settings, like color.
-	</div>
-</section>
--->
-
-<section class='ui-widget marginBottom'>
-	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<p class='hint'>This will make a new template for use on other profiles</p>
-	<input name='template' id='templateName' value='' placeholder='template name' />
-	<button data-app-event="admin_syndication|adminEBAYMacroSaveAsTemplateExec">Save As New Template</button>
-	</div>
-</section>
-
-	</td>
-</tr>
-</table>
 
