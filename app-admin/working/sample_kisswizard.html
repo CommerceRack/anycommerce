@@ -20,40 +20,60 @@ styling:
 
 
 
-<fieldset class='labelsAsBreaks'>
+<fieldset class='labelsAsBreaks' data-onfocus="$('#KISS_RETURN_POLICY_TEXTAREA').val(kiss_inspect('KISS_RETURN_POLICY').html());">
 	<legend>Returns</legend>
-	<div><textarea onKeyUp="kiss_inspect('KISS_RETURN_POLICY'); kiss_implement('set-value',{'id':'KISS_RETURN_POLICY','$input':$(this)});" data-kiss-id="KISS_RETURN_POLICY" data-load-kiss-value='true' placeholder='Policy'></textarea></div>
+	<div><textarea onKeyUp="kiss_implement('set-value',{'id':'KISS_RETURN_POLICY','$input':$(this)});" id="KISS_RETURN_POLICY_TEXTAREA" placeholder='Policy'></textarea></div>
 </fieldset>
 
 
-<fieldset class='labelsAsBreaks'>
+<fieldset class='labelsAsBreaks'  data-onfocus="(function(){
+	$('#KISS_SHIPPING_POLICY_TEXTAREA').val(kiss_inspect('KISS_SHIPPING_POLICY').html());
+	if(kiss_inspect('KISS_SHIPPING_FEDEXLOGO').data('enabled'))	{ $('#KISS_SHIPPING_FEDEXLOGO_CB').prop('checked',true); }
+	if(kiss_inspect('KISS_SHIPPING_UPSLOGO').data('enabled'))	{$('#KISS_SHIPPING_UPSLOGO_CB').prop('checked',true)}
+	if(kiss_inspect('KISS_SHIPPING_USPSLOGO').data('enabled'))	{$('#KISS_SHIPPING_USPSLOGO_CB').prop('checked',true)}
+})()">
+
 	<legend>Shipping</legend>
 
-	<div><textarea onKeyUp="kiss_inspect('KISS_SHIPPING_POLICY'); kiss_implement('set-value',{'id':'KISS_SHIPPING_POLICY','$input':$(this)});" placeholder='Policy'></textarea></div>
+
+	<div><textarea id='KISS_SHIPPING_POLICY_TEXTAREA' onKeyUp="kiss_inspect('KISS_SHIPPING_POLICY'); kiss_implement('set-value',{'id':'KISS_SHIPPING_POLICY','$input':$(this)});
+	" placeholder='Policy'></textarea></div>
 
 
-	<label><input type='checkbox' name='fedex' onChange="kiss_inspect('KISS_SHIPPING_FEDEXLOGO'); if($(this).is(':checked')){
+	<label><input type='checkbox' name='fedex' id='KISS_SHIPPING_FEDEXLOGO_CB' onChange="kiss_inspect('KISS_SHIPPING_FEDEXLOGO'); if($(this).is(':checked')){
 		kiss_implement('show',{'id':'KISS_SHIPPING_FEDEXLOGO'});
-		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_FEDEXLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		kiss_implement('set-attribs',{
+			'id':'KISS_SHIPPING_FEDEXLOGO',
+			'type':'img',
+			'attribs':{
+				'data-enabled':true,
+				'height':'75',
+				'width':'75',
+				'src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'
+				}
+			});
 		}
 	else {
-		kiss_implement('hide',{'id':'KISS_SHIPPING_FEDEXLOGO'})
+		kiss_implement('hide',{'id':'KISS_SHIPPING_FEDEXLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_FEDEXLOGO','type':'img','attribs':{'data-enabled':true}});
 		}" />Fedex Logo</label>
 
-	<label><input type='checkbox' name='ups' onChange="kiss_inspect('KISS_SHIPPING_UPSLOGO'); if($(this).is(':checked')){
+	<label><input type='checkbox' name='ups' id='KISS_SHIPPING_UPSLOGO_CB' onChange="kiss_inspect('KISS_SHIPPING_UPSLOGO'); if($(this).is(':checked')){
 		kiss_implement('show',{'id':'KISS_SHIPPING_UPSLOGO'});
-		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'data-enabled':true,'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
 		}
 	else {
-		kiss_implement('hide',{'id':'KISS_SHIPPING_UPSLOGO'})
+		kiss_implement('hide',{'id':'KISS_SHIPPING_UPSLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'data-enabled':true}});
 		}" />UPS Logo</label>
 
-	<label><input type='checkbox' name='usps' onChange="kiss_inspect('KISS_SHIPPING_USPSLOGO'); if($(this).is(':checked')){
+	<label><input type='checkbox' name='usps' id='KISS_SHIPPING_USPSLOGO_CB' onChange="kiss_inspect('KISS_SHIPPING_USPSLOGO'); if($(this).is(':checked')){
 		kiss_implement('show',{'id':'KISS_SHIPPING_USPSLOGO'});
-		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'data-enabled':true,'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
 		}
 	else {
-		kiss_implement('hide',{'id':'KISS_SHIPPING_USPSLOGO'})
+		kiss_implement('hide',{'id':'KISS_SHIPPING_USPSLOGO'});
+		kiss_implement('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'data-enabled':true}});
 		}" />USPS Logo</label>
 	
 </fieldset>
@@ -66,11 +86,18 @@ http://www.htmlgoodies.com/beyond/javascript/creating-custom-events-with-jquery.
 maybe data-onfocus
 alternatively, if that can't be executed w/ jquery, explore using a hidden input within the fieldset with an onfocus. 
 -->
-<fieldset class='labelsAsBreaks' onFocus="$('#KISS_PAYMENT_POLICY_TEXTAREA').text(kiss_inspect('KISS_PAYMENT_POLICY').text());">
+<fieldset class='labelsAsBreaks' >
 	<legend>Payment</legend>
 
 	<div><textarea id='KISS_PAYMENT_POLICY_TEXTAREA' onKeyUp="kiss_inspect('KISS_PAYMENT_POLICY'); kiss_implement('set-value',{'id':'KISS_PAYMENT_POLICY','$input':$(this)});" placeholder='Policy'></textarea></div>
 
-	Add a slightly different approach to logos where there's one parent div and each logo is added as html (kiss_inspect(insert)).  
+
+	<label><input type='checkbox' name='mastercard' id='KISS_PAYMENT_MCLOGO_CB' onChange="if($(this).is(':checked')){
+		kiss_implement('append',{'id':'KISS_PAYMENT_ICONS','html':'<img src=http://africanbrains.net/wp-content/uploads/2013/06/mastercard_logo.jpg id=PAYMENT_MASTERCARD_LOGO width=75 height=75>'});
+		}
+	else {
+		kiss_inspect('PAYMENT_MASTERCARD_LOGO').empty().remove();
+		}" />mastercard Logo</label>
+
 	
 </fieldset>

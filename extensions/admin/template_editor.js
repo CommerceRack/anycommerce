@@ -96,40 +96,41 @@ else	{
 	$D.showLoading({"message":"Fetching template HTML"});
 
 	var callback = function(rd){
-				$D.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$D.anymessage({'message':rd})
-					}
-				else	{
+		$D.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$D.anymessage({'message':rd})
+			}
+		else	{
 	
-					$("[data-app-role='templateObjectInspectorContainer']").anypanel({
-						'state' : 'persistent',
-						showClose : false, //set to false to disable close (X) button.
-						wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-						extension : 'template_editor', //used in conjunction w/ persist.
-						name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-						persistentStateDefault : 'collapse',
-						persistent : true
-						});
-					var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
-					
+			$("[data-app-role='templateObjectInspectorContainer']").anypanel({
+				'state' : 'persistent',
+				showClose : false, //set to false to disable close (X) button.
+				wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+				extension : 'template_editor', //used in conjunction w/ persist.
+				name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+				persistentStateDefault : 'collapse',
+				persistent : true
+				});
+			var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
+			
 	//								app.u.dump(app.ext.admin_templateEditor.u.getEBAYToolbarButtons());
-					$("textarea:first",$D)
-						.height($D.height() - 100)
-						
-						.css('width','75%')
-						.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
-						.htmlarea({
-							// Override/Specify the Toolbar buttons to show
-							toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_templateEditor.u.getEBAYToolbarButtons())
-							});
-					
+			$("textarea:first",$D)
+				.height($D.height() - 100)
+				
+				.css('width','75%')
+				.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
+				.htmlarea({
+					// Override/Specify the Toolbar buttons to show
+					toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_templateEditor.u.getEBAYToolbarButtons())
+					});
+			
+		
+		// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+		var $iframeBody = $('iframe',$D).width($('td:first',$D).width() - 30).contents().find('body');
+		app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 	
-	// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-	var $iframeBody = $('iframe',$D).width($('td:first',$D).width() - 30).contents().find('body');
-	app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
-	
-					app.u.handleAppEvents($D);
+		app.u.handleAppEvents($D);
+		$('.toolTip',$D).tooltip();
 					}
 				}
 
@@ -162,14 +163,6 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] was blank or invalid.","gMessage":true});
 					}				
-				
-				
-
-				
-
-
-
-
 				
 				}, //showTemplateEditorInModal
 
@@ -208,13 +201,21 @@ else	{
 
 						$target.data('button-action') == 'previous' ? $('fieldset:visible',$wizardForm).hide().prev('fieldset').show() : $('fieldset:visible',$wizardForm).hide().next('fieldset').show();
 						
+						
+						var $focusFieldset = $('fieldset:visible',$wizardForm);
+						if($focusFieldset.data('onfocus'))	{
+//							$focusFieldset.data('onfocus')() //does not work.
+							setTimeout($focusFieldset.data('onfocus'),100); //works.
+//							eval($focusFieldset.data('onfocus')); //works.
+//							$focusFieldset.append("<script type='text/javascript'>"+$focusFieldset.data('onfocus')+"<\/script>"); //works.
+							}
 //						app.u.dump("index of new visible fieldset: "+$('fieldset:visible',$wizardForm).index());
 						//SANITY -> index() starts at 1, not zero.
-						if($('fieldset:visible',$wizardForm).index() == 1)	{
+						if($focusFieldset.index() == 1)	{
 							$("[data-button-action='next']",$wizardForm).button('enable');
 							$("[data-button-action='previous']",$wizardForm).button('disable');
 							}
-						else if($('fieldset:visible',$wizardForm).index() >= $fieldsets.length)	{
+						else if($focusFieldset.index() >= $fieldsets.length)	{
 							$("[data-button-action='next']",$wizardForm).button('disable');
 							$("[data-button-action='previous']",$wizardForm).button('enable');
 							}
@@ -298,7 +299,7 @@ else	{
 	window.kiss_implement = function(method,vars)	{
 		vars = vars || {};
 		
-		var methods = new Array("set-attribs","empty","hide","show","set-value");
+		var methods = new Array("set-attribs","empty","hide","show","set-value","append");
 		
 		if(methods.indexOf(method) >= 0)	{
 			var $target = getTarget(vars.id,'kiss_implement');
@@ -308,7 +309,9 @@ else	{
 		case 'set-attribs':
 			$target.attr(vars.attribs)
 			break;
-	
+		case 'append':
+			$target.append(vars.html)
+			break;
 		case 'set-value':
 			$target.html(vars['$input'].val())
 	/*		if($target.data('input-type') == 'TEXTAREA' || $target.data('input-type') == 'TEXT')	{
@@ -619,14 +622,17 @@ else	{
 					},
 
 				startWizardExec : function($btn)	{
-$btn.button();
-// !!! needs to look at meta tag within editor template and if not set, hide/disable panel/button.
-$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
-	event.preventDefault();
-	$('#wizardForm').load('app-admin/working/sample_kisswizard.html',function(){ //!!! needs to load the actual .html file !!!
-		app.ext.admin_templateEditor.a.initWizard();
-		});
-	});
+					$btn.button();
+					var $meta = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("meta[name='wizard']");
+					if($meta.length == 0)	{$btn.button('disable')}
+					else	{
+						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
+							event.preventDefault();
+							$('#wizardForm').load($meta.attr('content'),function(){ //'app-admin/working/sample_kisswizard.html'
+								app.ext.admin_templateEditor.a.initWizard();
+								});
+							});
+						}
 					},
 
 				templateHighlightToggle : function($cb)	{
