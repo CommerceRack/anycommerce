@@ -132,8 +132,9 @@ var jerseypreview = function() {
 												app.ext.jerseypreview.u.updatePreview($context);
 												}, 600));
 											});
-										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported";
-										app.ext.jerseypreview.u.assignPreviewerData($canvas, data, pid, app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"]);
+										data.imgsrc = app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"];
+										app.ext.jerseypreview.vars.paramsByPID[pid] = data;
+										app.ext.jerseypreview.u.assignPreviewerData($canvas, data, pid);
 										}
 									else {
 										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
@@ -181,9 +182,9 @@ var jerseypreview = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			assignPreviewerData : function($canvas, data, pid, image){
+			assignPreviewerData : function($canvas, data, pid){
 				data.img = $(app.u.makeImage({
-					name : image,
+					name : data.imgsrc,
 					w : $canvas.attr('width'),
 					h : $canvas.attr('height'),
 					b : "FFFFFF",
