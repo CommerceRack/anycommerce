@@ -1597,7 +1597,7 @@ delete sfo.free
 					$D.dialog('option','height','400');
 					$('form',$D).append("<input type='hidden' name='profile' value='"+profile+"' \/>");
 					$D.dialog('open');
-					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateZipUpload');
+					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');
 					});
 				}, //adminEBAYProfileZipUploadExec
 

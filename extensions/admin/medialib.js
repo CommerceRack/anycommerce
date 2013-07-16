@@ -822,8 +822,8 @@ if(selector && mode)	{
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
-		'ebayTemplateZipUpload' : function(data,textStatus)	{
-			app.u.dump("Got to ebayTemplateZipUpload success.");
+		'adminEBAYProfileFileUpload' : function(data,textStatus)	{
+			app.u.dump("Got to adminEBAYProfileFileUpload success.");
 			$selector.showLoading({"message":"uncompressing and distributing zip file. This may take a minute. You may safely close the 'eBay Template Zip File Upload' window (do not close the browser) and we will alert you when this has finished."});
 //			app.u.dump(" -> data: "); app.u.dump(data);
 			var
@@ -832,8 +832,9 @@ if(selector && mode)	{
 
 			for(var i = 0; i < L; i += 1)	{
 				app.model.addDispatchToQ({
-					'_cmd':'adminEBAYProfileZipUpload',
+					'_cmd':'adminEBAYProfileFileUpload',
 					'fileguid' : data[i].fileguid,
+					'FILENAME' : data[i].filename,
 					'PROFILE' : profile
 					},'mutable');
 
@@ -885,7 +886,7 @@ if(selector && mode)	{
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
-		maxNumberOfFiles : (mode == 'csvUploadToBatch' || mode == 'ebayTemplateZipUpload') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
+		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
 //			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 			successCallbacks[mode](data,textStatus);
