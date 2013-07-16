@@ -831,28 +831,26 @@ if(selector && mode)	{
 				profile = $("[name='profile']",$selector).val();
 
 			for(var i = 0; i < L; i += 1)	{
-app.model.addDispatchToQ({
-	'_cmd':'adminEBAYProfileZipUpload',
-	'fileguid' : data[i].fileguid,
-	'PROFILE' : profile
-	},'mutable');
+				app.model.addDispatchToQ({
+					'_cmd':'adminEBAYProfileZipUpload',
+					'fileguid' : data[i].fileguid,
+					'PROFILE' : profile
+					},'mutable');
 
-app.model.addDispatchToQ({
-	'_cmd':'ping',
-	'_tag':	{
-		'callback':function(rd)	{
-			if($selector.is(":visible"))	{$selector.hideLoading();}
-			else	{
-				alert("Your zip file upload has completed.");
 				}
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+			app.model.addDispatchToQ({
+				'_cmd':'ping',
+				'_tag':	{
+					'callback':function(rd)	{
+						if($selector.is(":visible"))	{$selector.hideLoading();}
+						else	{
+							alert("Your zip file upload has completed.");
+							}
+						}
+					}
+				},'mutable');
 
-app.model.dispatchThis('mutable');
-				}
-//			app.model.dispatchThis('immutable');
+			app.model.dispatchThis('mutable');
 			
 			},
 		
