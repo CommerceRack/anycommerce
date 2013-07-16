@@ -182,10 +182,16 @@ else	{
 				$fieldsets.hide(); //hide all the fieldsets.
 				var $firstFieldset = $('fieldset:first',$wizardForm);
 				$firstFieldset.show(); //show just the first.
-				if($firstFieldset.data('onfocus'))	{
-					setTimeout($firstFieldset.data('onfocus'),100); //works.
+				
+				function fieldsetVerifyAndExecOnfocus($fieldset)	{
+					if(window.magic.fieldset_verify($fieldset))	{
+						if($fieldset.data('onfocus'))	{
+							setTimeout($fieldset.data('onfocus'),100);
+							}
+						}
 					}
 				
+				fieldsetVerifyAndExecOnfocus($firstFieldset);
 				$wizardForm.closest('.ui-widget-content').addClass('positionRelative'); //necessary for button positioning.
 				
 				$('button',$fieldsets).button(); //applied to all buttons within fieldsets.
@@ -208,12 +214,14 @@ else	{
 						
 						
 						var $focusFieldset = $('fieldset:visible',$wizardForm);
-						if($focusFieldset.data('onfocus'))	{
+						fieldsetVerifyAndExecOnfocus($focusFieldset);
+
+//						if($focusFieldset.data('onfocus'))	{
 //							$focusFieldset.data('onfocus')() //does not work.
-							setTimeout($focusFieldset.data('onfocus'),100); //works.
+//							setTimeout($focusFieldset.data('onfocus'),100); //works.
 //							eval($focusFieldset.data('onfocus')); //works.
 //							$focusFieldset.append("<script type='text/javascript'>"+$focusFieldset.data('onfocus')+"<\/script>"); //works.
-							}
+//							}
 //						app.u.dump("index of new visible fieldset: "+$('fieldset:visible',$wizardForm).index());
 						//SANITY -> index() starts at 1, not zero.
 						if($focusFieldset.index() == 1)	{
@@ -260,6 +268,7 @@ else	{
 	
 	
 	function getTarget(selector,functionName){
+//		app.u.dump("getTarget selector: "+selector);
 		var r = false
 		if(selector)	{
 //jqSelector doesn't play well using : or [ as first param.
@@ -276,110 +285,118 @@ else	{
 			}
 		return r;	
 		}
-	
-	//selector is an element within the wizard itself.
-	window.kiss_inspect = function(selector)	{
-		var $target = getTarget(selector,'kiss_inspect');
-		r = null;
-		if($target)	{
-			app.ext.admin_templateEditor.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
-			r = $target;
-			}
-		else	{} //getTarget handles error display.
-		return r;
-		}
-	
-	window.kiss_medialib = function(ID)	{
-		var $target = getTarget(ID,'kiss_medialib');
-		if($target)	{
-			app.ext.admin_medialib.a.showMediaLib({
-				'imageID':app.u.jqSelector('#',ID.substring(1)),
-				'mode':'kissTemplate'//,
-	//			'src':$target.data('filepath') //doesn't work like we want. uses some legacy UI code.
-				}); //filepath is the path of currently selected image. oldfilepath may also be set.
-			}
-		else	{} //getTarget handles error display.
-		}
-	
-	window.kiss_verify = function(selector,$fieldset)	{
-		var r = 0;  //what is returned. zero if no matches or # of matches.
-		var fail = false;
-		app.u.dump(' -> kiss_verify selector is a '+typeof selector);
-		if(selector && $fieldset instanceof jQuery)	{
-			if(typeof selector === 'string')	{
-				var $target = getTarget(selector,'kiss_exists');
-				if($target)	{r = $target.length}
-				else {fail = true}
-				}
-			else if(typeof selector === 'object')	{
-				var L = selector.length;
-				for(var i = 0; i < L; i += 1)	{
-					var $target = getTarget(selector[i],'kiss_exists');
-					if($target)	{r += $target.length}
-					else	{fail = true; }
-					}
-				}
-			else	{
-				//invalid selector. throw error.
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] passed into kiss_exists.'});
-				}
-			if(fail)	{
-				app.u.dump(" -> a fail occurd in kiss_verify");
-				$('select, textarea, input',$fieldset).attr('disabled','disabled'); //unable to find all selectors, so disable entire panel.
-				$('button',$fieldset).button('disable');
-				} //do nothing,
-			}
-		else	{
-			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] or fieldset ['+($fieldset instanceof jQuery)+'] not passed into kiss_exists.'});
-			}
-		return r;
-		}
-	
-	window.kiss_modify = function(selector,method,vars)	{
-		vars = vars || {};
+	if(typeof window.magic === 'object')	{}
+	else	{
+		window.magic = {};
 		
-		var methods = new Array("set-attribs","empty","hide","show","set-value","append");
-		
-		if(methods.indexOf(method) >= 0)	{
-			var $target = getTarget(selector,'kiss_implement');
+		//selector is an element within the wizard itself.
+		window.magic.inspect = function(selector)	{
+			var $target = getTarget(selector,'magic.inspect');
+			r = null;
 			if($target)	{
-	
-				switch(method)	{
-					case 'set-attribs':
-						$target.attr(vars.attribs)
-						break;
-					case 'append':
-						$target.append(vars.html)
-						break;
-					case 'set-value':
-						$target.html(vars['$input'].val())
-						break;
-				
-					case 'show':
-						$target.show();
-						break;
-					
-					case 'hide':
-						$target.hide();
-						break;
-					
-					case 'empty':
-						$target.empty();
-						break;
-					
-					default:
-						$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into kiss_implement passed validation but is not declared in switch.','gMessage':true});
-					}
-	
-	
+				app.ext.admin_templateEditor.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+				r = $target;
+				}
+			else	{} //getTarget handles error display.
+			return r;
+			}
+		
+		window.magic.medialib = function(ID)	{
+			var $target = getTarget(ID,'magic.medialib');
+			if($target)	{
+				app.ext.admin_medialib.a.showMediaLib({
+					'imageID':app.u.jqSelector('#',ID.substring(1)),
+					'mode':'kissTemplate'//,
+		//			'src':$target.data('filepath') //doesn't work like we want. uses some legacy UI code.
+					}); //filepath is the path of currently selected image. oldfilepath may also be set.
 				}
 			else	{} //getTarget handles error display.
 			}
-		else	{
-			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into kiss_implement. This is likely the result of an error in the wizard.js file.'});
+
+//gets run when a fieldset in the wizard is loaded.  Will check the value on all fieldset inputs for data-target (which should be a selector) and will check to make sure it exists in the template itself.
+//if one failure occurs, the entire panel is locked. The user can still proceed forward and backward through the rest of the editor.
+		window.magic.fieldset_verify = function($fieldset)	{
+			app.u.dump("BEGIN fieldset_verify");
+			var numMatchedSelectors = 0;  //what is returned if pass is false. will increment w/ the length of each data-target.length
+			var pass = true;
+			if($fieldset instanceof jQuery)	{
+//				app.u.dump(" -> $('[data-target]',$fieldset).length: "+$("[data-target]",$fieldset).length);
+				$("[data-target]",$fieldset).each(function(){
+					var $target = getTarget($(this).data('target'),'magic.exists');
+					if($target)	{
+						numMatchedSelectors = $target.length;
+						}
+					else {
+						pass = false; //one mismatch triggers a fail.
+						}
+					});
+				if(pass)	{
+					if($fieldset.data('onfocus'))	{
+						setTimeout($fieldset.data('onfocus'),100);
+						}
+					} //woot! all elements are in the template.
+				else	{
+					app.u.dump(" -> a fail occurd in magic.verify");
+					$('select, textarea, input',$fieldset).attr('disabled','disabled'); //unable to find all selectors, so disable entire panel.
+					$('button',$fieldset).prop('disabled','disabled'); //expand later to check for ui-button and handle them differently.
+					} //do nothing,
+				}
+			else	{
+				pass = false;
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] or fieldset ['+($fieldset instanceof jQuery)+'] not passed into magic.exists.'});
+				}
+			app.u.dump(" -> verify pass: "+pass);
+			return (pass === true) ? 0 : r;
+			}
+		
+		window.magic.modify = function(selector,method,vars)	{
+			vars = vars || {};
+			
+			var methods = new Array("set-attribs","empty","hide","show","set-value","append");
+			
+			if(methods.indexOf(method) >= 0)	{
+				var $target = getTarget(selector,'magic.implement');
+				if($target)	{
+		
+					switch(method)	{
+						case 'set-attribs':
+							$target.attr(vars.attribs)
+							break;
+						case 'append':
+							$target.append(vars.html)
+							break;
+						case 'prepend':
+							$target.prepend(vars.html)
+							break;
+						case 'replace':
+							$target.html(vars.html)
+							break;
+					
+						case 'show':
+							$target.show();
+							break;
+						
+						case 'hide':
+							$target.hide();
+							break;
+						
+						case 'empty':
+							$target.empty();
+							break;
+						
+						default:
+							$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into magic.implement passed validation but is not declared in switch.','gMessage':true});
+						}
+		
+		
+					}
+				else	{} //getTarget handles error display.
+				}
+			else	{
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into magic.implement. This is likely the result of an error in the wizard.js file.'});
+				}
 			}
 		}
-	
 					},
 	
 //updates the progress bar based on the number of fieldsets and the index of the fieldset in view (yes, going backwards means progress bar regresses)

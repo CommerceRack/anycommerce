@@ -1765,6 +1765,7 @@ VALIDATION
 						}
 					else if($input.prop('type') == 'radio'){
 //keep a list of all required radios. only one entry per name.
+app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
 						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
 						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
@@ -1813,17 +1814,23 @@ VALIDATION
 						$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
 						}
 					
-					if(radios.length)	{
-						// !!! NOT DONE YET.
-						//check to see if the required radios have a value set. this list only contains radio input names that are required.
-						//if none are selected. add ui-state-error to each radio input of that name.
-						}
-					
 					if($input.hasClass('ui-state-error'))	{
 						app.u.dump(" -> "+$input.attr('name')+" did not validate. ishidden: "+$input.is(':hidden'));
 						}
 					
 					});
+				if(radios.length)	{
+					app.u.dump(" -> radios has length");
+					var L = radios.length;
+					for(var i = 0; i < L; i += 1)	{
+						if($("input:radio[name='"+radios[i]+"']:checked",$form).val())	{} //is selected.
+						else	{
+							$("input:radio[name='"+radios[i]+"']",$form).addClass('ui-state-error');
+							}
+						}
+					//check to see if the required radios have a value set. this list only contains radio input names that are required.
+					//if none are selected. add ui-state-error to each radio input of that name.
+					}
 				$form.hideLoading();
 				}
 			else	{
