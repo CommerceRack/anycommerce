@@ -1590,7 +1590,7 @@ delete sfo.free
 				$btn.off('click.adminEBAYProfileZipUploadExec').on('click.adminEBAYProfileZipUploadExec',function(){
 					var profile = $btn.data('profile');
 					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'eBay Template Chooser',
+						'title' : 'eBay Template Zip File Upload',
 						'templateID' : 'ebayZipUploadTemplate',
 						data : {} //blank data because translation needs to occur (template calls another template)
 						});

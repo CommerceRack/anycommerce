@@ -824,6 +824,7 @@ if(selector && mode)	{
 			},
 		'ebayTemplateZipUpload' : function(data,textStatus)	{
 			app.u.dump("Got to ebayTemplateZipUpload success.");
+			$selector.showLoading({"message":"uncompressing and distributing zip file. This may take a minute. You may safely close the 'eBay Template Zip File Upload' window (do not close the browser) and we will alert you when this has finished."});
 //			app.u.dump(" -> data: "); app.u.dump(data);
 			var
 				L = data.length,
@@ -835,6 +836,20 @@ app.model.addDispatchToQ({
 	'fileguid' : data[i].fileguid,
 	'PROFILE' : profile
 	},'mutable');
+
+app.model.addDispatchToQ({
+	'_cmd':'ping',
+	'_tag':	{
+		'callback':function(rd)	{
+			if($selector.is(":visible"))	{$selector.hideLoading();}
+			else	{
+				alert("Your zip file upload has completed.");
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
 app.model.dispatchThis('mutable');
 				}
 //			app.model.dispatchThis('immutable');
