@@ -253,39 +253,26 @@ var admin_medialib = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
-				
+
 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.js']); //
 
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/css/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
-				
-				
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload.js']); 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.blueimp-gallery.min.js']); 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/blueimp-gallery.min.js']); 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/canvas-to-blob.js']);
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-meta.js']);
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
 //here to solve a safari/chrome issue if these scripts load before fileupload.js
 //not a great solution. will have to come up with something better. callback?
-
 setTimeout(function(){
-	app.u.dump(" -> loading delayed media library resources...");
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-exif-map.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-ios.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.loadimage-1.9.0/js/load-image-orientation.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-process.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.iframe-transport.js']); 
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-image.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-audio.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-video.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-validate.js']);
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-8.6.0/js/jquery.fileupload-ui.js']);
-	},6000);
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/canvas-to-blob.min.js']); //
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-fp.js']); //The File Upload file processing plugin
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.js']); //The File Upload user interface plugin
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.iframe-transport.js']); //The Iframe Transport is required for browsers without support for XHR file uploads
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
+	},3000);
 
 
 //mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
