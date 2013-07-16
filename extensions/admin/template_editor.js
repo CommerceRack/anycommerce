@@ -170,7 +170,7 @@ else	{
 			initWizard : function()	{
 				var	$wizardForm = $('#wizardForm');
 //the success fieldset, which is last in the list.
-				$wizardForm.append("<fieldset class='wizardCompleted'>Congrats! You have completed the wizard for this template.<\/fieldset>");
+				$wizardForm.append("<fieldset class='wizardCompleted' class='displayNone'>Congrats! You have completed the wizard for this template.<\/fieldset>");
 				
 				var
 					$fieldsets = $('fieldset',$wizardForm),
@@ -660,11 +660,29 @@ else	{
 					var $meta = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("meta[name='wizard']");
 					if($meta.length == 0)	{$btn.button('disable')}
 					else	{
+						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
 						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
+							$btn.button('disable').hide();
 							event.preventDefault();
-							$('#wizardForm').load($meta.attr('content'),function(){ //'app-admin/working/sample_kisswizard.html'
-								app.ext.admin_templateEditor.a.initWizard();
-								});
+							$('#wizardForm').showLoading({"message":"Summoning Wizard..."});
+							app.model.addDispatchToQ({
+								'_cmd':'adminEBAYProfileFileContents',
+								'FILENAME':$meta.attr('content'),
+								'PROFILE': $('#templateEditor').data('profile'),
+								'_tag':	{
+									'datapointer' : 'adminEBAYProfileFileContents|'+$meta.attr('content'),
+									'callback':function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':rd});
+											}
+										else	{
+											$('#wizardForm').html(app.data[rd.datapointer].body)
+											app.ext.admin_templateEditor.a.initWizard();
+											}
+										}
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
 							});
 						}
 					},
