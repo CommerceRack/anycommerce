@@ -19,7 +19,7 @@
 <form class='labelsAsBreaks' action='#' onsubmit="return false;">
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
-<input type='hidden' name='_tag/macrocmd' value='GLOBAL/ORDER' />
+<input type='hidden' name='_tag/macrocmd' value='GLOBAL/ORDERID' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
 <fieldset class='marginBottom'>
@@ -27,7 +27,7 @@
 	<p>As a precaution, any time this page is loaded, the number you see on this page will be permanently lost - this is an intentional safety mechanism built to avoid duplicating order numbers.</p>
 	<label>
 		<span>Next Order #</span>
-		<input type="number" min='' step='1' value="" size="5" name="order_num" data-bind="var: config(%ORDER.sequence); format:popVal;" /><!-- use a custom render format and set min to whatever the value is -->
+		<input type="number" min='' step='1' value="" size="5" name="start" data-bind="var: config(%ORDER.sequence); format:popVal;" /><!-- ### use a custom render format and set min to whatever the value is -->
 		<input type="hidden" value="" name="hidden_order_num" data-bind="var: config(%ORDER.sequence); format:popVal;" />
 	</label>
 	<p class='hint'>
@@ -50,7 +50,7 @@
 <form class='labelsAsBreaks' action='#' onsubmit="return false;">
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
-<input type='hidden' name='_tag/macrocmd' value='GLOBAL/ORDER' />
+<input type='hidden' name='_tag/macrocmd' value='GLOBAL/INVENTORY' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
 
@@ -126,7 +126,7 @@
 	</section>
 	<section data-anytab-content='wms' class='clearfix'>
 
-<form class='labelsAsBreaks' action='#' onsubmit="return false;">
+<form class='labelsAsBreaks' action='#' onsubmit="return false;" data-cb_tf='true'>
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
 <input type='hidden' name='_tag/macrocmd' value='GLOBAL/WMS' />
@@ -148,7 +148,7 @@
 	</section>
 	<section data-anytab-content='erp' class='clearfix'>
 
-<form class='labelsAsBreaks' action='#' onsubmit="return false;">
+<form class='labelsAsBreaks' action='#' onsubmit="return false;" data-cb_tf='true'>
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
 <input type='hidden' name='_tag/macrocmd' value='GLOBAL/ERP' />
