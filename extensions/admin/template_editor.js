@@ -622,33 +622,39 @@ else	{
 					$btn.button();
 					$btn.off('click.adminSaveAsTemplateExec').on('click.adminSaveAsTemplateExec',function(){
 						var templateName = $('#templateName').val();
-						if(templateName && templateName.length > 5)	{
-							var $D = $btn.closest('.ui-dialog-content');
-							$D.showLoading({'message':'Saving as new template: '+templateName});
-							var mode = $('#templateEditor').data('mode');
-							if(mode == 'ebay')	{
-								app.model.addDispatchToQ({
-									'_cmd' : 'adminEBAYMacro',
-									'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
-									'_tag' : {
-										'callback' : function(responseData)	{
-											$D.hideLoading();
-											if(app.model.responseHasErrors(responseData)){
-												$D.anymessage({'message':responseData})
+						var profile = $('#templateEditor').data('profile');
+						if(templateName && templateName.length > 5 )	{
+							if(profile)	{
+								var $D = $btn.closest('.ui-dialog-content');
+								$D.showLoading({'message':'Saving as new template: '+templateName});
+								var mode = $('#templateEditor').data('mode');
+								if(mode == 'ebay')	{
+									app.model.addDispatchToQ({
+										'_cmd' : 'adminEBAYMacro',
+										'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
+										'_tag' : {
+											'callback' : function(responseData)	{
+												$D.hideLoading();
+												if(app.model.responseHasErrors(responseData)){
+													$D.anymessage({'message':responseData})
+													}
+												else	{
+													$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
+													}
 												}
-											else	{
-												$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-												}
-											}
-										},
-									'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
-									},'mutable');
+											},
+										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+										},'mutable');
+									}
+								else if(mode == 'campaign')	{}
+								else	{
+									$D.anymessage({"message":"In admin_templateEditor.e.adminSaveAsTemplateExec, mode ["+mode+"] was either invalid (must be ebay or campaign) or unable to ascertain value.","gMessage":true})
+									}
+								app.model.dispatchThis('mutable');
 								}
-							else if(mode == 'campaign')	{}
 							else	{
-								$D.anymessage({"message":"In admin_templateEditor.e.adminSaveAsTemplateExec, mode ["+mode+"] was either invalid (must be ebay or campaign) or unable to ascertain value.","gMessage":true})
+								$D.anymessage({"message":"In admin_templateEditor.e.adminSaveAsTemplateExec, unable to ascertain profile.",gMessage:true});
 								}
-							app.model.dispatchThis('mutable');
 							}
 						else	{
 							$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
