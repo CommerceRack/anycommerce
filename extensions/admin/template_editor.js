@@ -180,7 +180,12 @@ else	{
 				
 
 				$fieldsets.hide(); //hide all the fieldsets.
-				$('fieldset:first',$wizardForm).show(); //show just the first.
+				var $firstFieldset = $('fieldset:first',$wizardForm);
+				$firstFieldset.show(); //show just the first.
+				if($firstFieldset.data('onfocus'))	{
+					setTimeout($firstFieldset.data('onfocus'),100); //works.
+					}
+				
 				$wizardForm.closest('.ui-widget-content').addClass('positionRelative'); //necessary for button positioning.
 				
 				$('button',$fieldsets).button(); //applied to all buttons within fieldsets.
