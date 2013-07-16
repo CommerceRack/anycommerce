@@ -824,7 +824,7 @@ if(selector && mode)	{
 			},
 		'ebayTemplateZipUpload' : function(data,textStatus)	{
 			app.u.dump("Got to ebayTemplateZipUpload success.");
-			app.u.dump(" -> data: "); app.u.dump(data);
+//			app.u.dump(" -> data: "); app.u.dump(data);
 			var
 				L = data.length,
 				profile = $("[name='profile']",$selector).val();
