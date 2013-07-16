@@ -352,10 +352,10 @@ else	{
 		window.magic.modify = function(selector,method,vars)	{
 			vars = vars || {};
 			
-			var methods = new Array("set-attribs","empty","hide","show","set-value","append");
+			var methods = new Array("set-attribs","empty","hide","show","set-value","append","replace","prepend");
 			
 			if(methods.indexOf(method) >= 0)	{
-				var $target = getTarget(selector,'magic.implement');
+				var $target = getTarget(selector,'magic.modify');
 				if($target)	{
 		
 					switch(method)	{
@@ -368,6 +368,7 @@ else	{
 						case 'prepend':
 							$target.prepend(vars.html)
 							break;
+
 						case 'replace':
 							$target.html(vars.html)
 							break;
@@ -385,7 +386,7 @@ else	{
 							break;
 						
 						default:
-							$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into magic.implement passed validation but is not declared in switch.','gMessage':true});
+							$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into magic.modify passed validation but is not declared in switch.','gMessage':true});
 						}
 		
 		
@@ -393,7 +394,7 @@ else	{
 				else	{} //getTarget handles error display.
 				}
 			else	{
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into magic.implement. This is likely the result of an error in the wizard.js file.'});
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into magic.modify. This is likely the result of an error in the wizard.js file.'});
 				}
 			}
 		}
