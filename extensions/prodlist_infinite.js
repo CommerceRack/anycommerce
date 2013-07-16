@@ -201,6 +201,7 @@ It is run once, executed by the renderFormat.
 						}
 														//if you want this list inventory aware, do you check here and skip the append below.
 					$placeholder.before(app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+					$placeholder.remove();
 					}
 				else if(attempts < 50){
 					setTimeout(function(){
