@@ -261,7 +261,7 @@
                         .find('.progress-extended');
                 if (extendedProgressNode.length) {
                     extendedProgressNode.html(
-                        $this.data('fileupload')._renderExtendedProgress(data)
+                        $this.data('blueimpFileupload')._renderExtendedProgress(data)
                     );
                 }
                 globalProgressNode
