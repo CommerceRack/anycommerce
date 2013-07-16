@@ -343,10 +343,10 @@ else	{
 				}
 			else	{
 				pass = false;
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] or fieldset ['+($fieldset instanceof jQuery)+'] not passed into magic.exists.'});
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid fieldset ['+($fieldset instanceof jQuery)+'] not passed into magic.exists.'});
 				}
 			app.u.dump(" -> verify pass: "+pass);
-			return (pass === true) ? 0 : r;
+			return (pass === true) ? r : 0;
 			}
 		
 		window.magic.modify = function(selector,method,vars)	{
