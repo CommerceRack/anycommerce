@@ -5390,7 +5390,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
 //						app.u.dump('got into dialog.close - destroy.');
 						$(this).dialog('destroy');
-						$(this).empty().remove();
+						$(this).intervaledEmpty(1000,1);
 						}, //will remove from dom on close
 //'open' event will reposition modal to center upon open. handy for when content added between create and open.
 //timeout is to have it happen after content is populated.

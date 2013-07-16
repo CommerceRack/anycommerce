@@ -54,8 +54,8 @@
 		<li data-mktid="EBS">eBay Store</li>
 	</ul>
 	</li>
-	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Variations (beta)</a></li>
+<!--	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li> -->
+	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Global Variations</a></li>
 	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
@@ -589,8 +589,8 @@ This HTML Editor option will be removed altogether in the future.
 	</table>
 	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix ui-widget-buttonbar">
 	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	<button data-app-event="admin_prodEdit|configOptions" class='floatLeft marginRight'>Config Options</button>
-	<button data-app-event="admin_prodEdit|productVariationsManagerShow" class='floatLeft marginRight'>Variations (alpha)</button>
+<!--	<button data-app-event="admin_prodEdit|configOptions" class='floatLeft marginRight'>Config Options</button> -->
+	<button data-app-event="admin_prodEdit|productVariationsManagerShow" class='floatLeft marginRight'>Product Variations</button>
 	<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly floatLeft marginRight'>Web Page Editor</button>
 	<button data-app-event="admin_prodEdit|viewProductOnWebsite" class='floatLeft marginRight'>Preview</button>
 	</div>
@@ -1316,11 +1316,6 @@ time.
 
 
 
-<div id='variationManagerTemplate'>
-
-
-
-</div>
 
 <div id='variationCreateUpdateTemplate'>
 

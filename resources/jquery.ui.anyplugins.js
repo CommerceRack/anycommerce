@@ -1331,8 +1331,11 @@ $.fn.intervaledEmpty = function(interval, remove){
 			i++;
 			});
 		}
-	if(remove){
-		$(this).remove();
+	else	{
+// ** only remove in the last iteration, when there are no children, or this could still potentially lock up the browser.
+		if(remove){
+			$(this).remove();
+			}
 		}
 	return this;
 	}
