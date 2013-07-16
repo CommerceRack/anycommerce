@@ -1763,7 +1763,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				
 				<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipDownloadExec'>Download Zip</button>
 
-				<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipUploadExec'>Upload Zip</button>
+				<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipUploadExec'>Upload</button>
 				
 				
 				<span class='warn conditionalHide'><b>Needs Review!</b> <span class='toolTip' title="Not every template upgrade goes smoothly. Take a look and see how your's went. There are tools available to assist you in making further changes to your template(s).">?</span></span>
@@ -2643,7 +2643,8 @@ The sandbox can be useful for developers who want to create test listings or pre
 <form id="ebayZipUpload" class='clearfix marginBottom'  name="ebayZipUpload" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='ZIP'>
 <!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload a zipped template file</h1>
+<h1 class='floatLeft'>Upload individual files and/or a zip archive containing an entire template (images, html and all)</h1>
+
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
 </form>
 </div>
