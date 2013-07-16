@@ -2638,10 +2638,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN admin.callbacks.handleMessaging");
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
-					
+
 					var L = app.data[_rtag.datapointer]['@MSGS'].length,
 					$tbody = $("[data-app-role='messagesContainer']",'#messagesContent');
-					
+
 					for(var i = 0; i < L; i += 1)	{
 						$tbody.anycontent({
 							'templateID':'messageListTemplate',
@@ -3599,7 +3599,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				return page;
 				}, //whatPageToShow
 
-
+			
+			messageAdd : function()	{
+				
+				},
 			
 			updateMessageCount : function()	{
 				var messageCount = $("[data-app-role='messagesContainer']",'#messagesContent').children().length,

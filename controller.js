@@ -1745,6 +1745,7 @@ VALIDATION
 				
 				$('input, select, textarea',$form).each(function(){
 					var $input = $(this),
+					radios = new Array();
 					$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
@@ -1762,9 +1763,10 @@ VALIDATION
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						//indexOf instead of == means validation-rules (notice the plural) can be a comma seperated list
 						}
-//					else if($input.prop('type') == 'radio'){
-//						app.u.dump("IS A RADIO BUTTON");
-//						}
+					else if($input.prop('type') == 'radio'){
+//keep a list of all required radios. only one entry per name.
+						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
+						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						r = false;
 						$input.addClass('ui-state-error');
@@ -1809,6 +1811,12 @@ VALIDATION
 						}
 					else	{
 						$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
+						}
+					
+					if(radios.length)	{
+						// !!! NOT DONE YET.
+						//check to see if the required radios have a value set. this list only contains radio input names that are required.
+						//if none are selected. add ui-state-error to each radio input of that name.
 						}
 					
 					if($input.hasClass('ui-state-error'))	{

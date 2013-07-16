@@ -124,7 +124,6 @@ var admin_config = function() {
 
 				},
 			
-			
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
 				
@@ -147,7 +146,7 @@ var admin_config = function() {
 				$div.showLoading({"message":"Fetching Global Settings"});
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
-					'order' : true, 'wms' : true, 'inventory' : true,
+					'order' : true, 'wms' : true, 'erp' : true, 'inventory' : true,
 					'_tag':	{
 						'datapointer' : 'adminConfigDetail|General',
 						'callback':'anycontent',

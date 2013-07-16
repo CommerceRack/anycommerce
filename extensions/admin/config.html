@@ -83,29 +83,19 @@
 	<fieldset class='twoColumn column2'>
 		<legend>Inventory Behavior</legend>
 		
-		<h3>Notifications</h3>
+		<h4 class='marginTop'>Notifications</h4>
+		<label>
+		<span>Inventory Notifications</span>
+		<select name='inv_notify' data-bind="var:config(%INVENTORY.inv_notify); format:popVal;">
+			<option value='0'>None</option>
+			<option value='1'>Remove</option>
+			<option value='7'>Remove/add</option>
+			<option value='55'>Remove/add + restock</option>
+		</select>
+		</label>
+
 		
-		<label>
-		<input type="checkbox" name="inv_notify_1" data-bind="var:config(%INVENTORY.inv_notify_1); format:popVal;" class='applyAnycb' /> Item removed from website
-		</label>
-	
-		<label>
-		<input type="checkbox" name="inv_notify_2" data-bind="var:config(%INVENTORY.inv_notify_2); format:popVal;" class='applyAnycb' /> Item re-added to website
-		</label>
-	
-		<label>
-		<input type="checkbox" name="inv_notify_4" data-bind="var:config(%INVENTORY.inv_notify_4); format:popVal;" class='applyAnycb' /> Item re-added to website failed [RECOMMENDED]
-		</label>
-	
-		<label>
-		<input type="checkbox" name="inv_notify_16" data-bind="var:config(%INVENTORY.inv_notify_16); format:popVal;" class='applyAnycb' /> Item quantity met reorder level
-		</label>
-	
-		<label>
-		<input type="checkbox" name="inv_notify_32" data-bind="var:config(%INVENTORY.inv_notify_32); format:popVal;" class='applyAnycb' /> Item quantity below reorder level
-		</label>
-	
-		<h3>Out of Stock/Reserve Exceeded</h3>
+		<h4>Out of Stock/Reserve Exceeded</h4>
 		<label>
 		<input type="checkbox" name="inv_website_remove" data-bind="var:config(%INVENTORY.inv_website_remove); format:popVal;" class='applyAnycb' /> Remove from Website
 		</label>
@@ -125,7 +115,7 @@
 
 	</section>
 	<section data-anytab-content='wms' class='clearfix'>
-
+	<h3>Warehouse Management Solutions</h3>
 <form class='labelsAsBreaks' action='#' onsubmit="return false;" data-cb_tf='true'>
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
@@ -147,7 +137,7 @@
 
 	</section>
 	<section data-anytab-content='erp' class='clearfix'>
-
+	<h3>Enterprice Resource Planning</h3>
 <form class='labelsAsBreaks' action='#' onsubmit="return false;" data-cb_tf='true'>
 
 <input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
@@ -206,6 +196,12 @@
 
 <form action='#' onsubmit="return false;" class='labelsAsBreaks'>
 
+
+<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' />
+<input type='hidden' name='_tag/macrocmd' value='GLOBAL/PARTITIONCREATE' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Thank you, your partition has been created.' />
+
 <fieldset>
 
 	<label>
@@ -213,12 +209,15 @@
 		<input type="text" name="name" />
 	</label>
 
+<!--
 	<label>
 		<span>Mapped profile</span>
-		<select name="PROFILE"></select>
+		<select name="DOMAIN" >
+			<option value=''>none</option>
+		</select>
 	</label>
-	<p class="hint">NOTE: each partition must have a unique profile, profiles in use will not appear in the list.</p>
-	
+	<p class="hint">NOTE: mapping the partition to a domain is highly recommended.</p>
+-->	
 	<label>
 		<input type="checkbox" name="p_navcats"> Use independent Navigation categories and pages
 	</label>
@@ -251,9 +250,11 @@
 	<li>Additional monthly fees apply for each unique data partition. </li>
 	<li>If system messages are partitioned, it will require one unique set of messages per language (when multiple languages are implemented).</li>
 </ul>
-
-
-
+	
+	<div class='buttonset alignRight'>
+	<button data-app-event="admin|processForm">Create Partition</button>
+	</div>
+	
 </form>
 </div>
 

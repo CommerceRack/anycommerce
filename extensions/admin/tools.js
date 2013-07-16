@@ -168,7 +168,7 @@ var admin_tools = function() {
 //will return an array of macro-esque values
 //context could be the fieldset or the parent form.
 			pickerSelection2Array : function($context)	{
-				app.u.dump("BEGIN admin_tools.u.powerToolBatchJobExec");
+				app.u.dump("BEGIN admin_tools.u.pickerSelection2Array");
 				var r = new Array(); //what is returned. array w/ each entry formatted as: 'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
 				
@@ -215,14 +215,34 @@ var admin_tools = function() {
 					});
 				return r;
 				},
+
 			powertoolActions2KVP : function($tbody)	{
-				var r = new Array();
+				var r = "";
 				$('tr',$tbody).each(function(){
 					var
 						data = $(this).data(),
 						verb = data.verb;
+						
 					delete data.verb;
 					r += verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data);
+					switch(verb)
+						{
+						case 'replace':
+							r += '&replace-value='+encodeURIComponent(data.searchval);
+							r += '&replace-with='+encodeURIComponent(data.replaceval);
+						break;
+					
+						case 'add':
+						case 'set':
+						case 'copy':
+						case 'copyfrom':
+							r += '&'+verb+'-value='+encodeURIComponent(data[verb+'val']);
+							break;
+						default:
+					//the rest of the verbs don't have a value.
+						}
+					r += "\n";
+					
 					});
 				return r;
 				}
