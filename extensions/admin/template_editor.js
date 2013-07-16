@@ -117,7 +117,7 @@ else	{
 			$("textarea:first",$D)
 				.height($D.height() - 100)
 				
-				.css('width','75%')
+				.css('width','95%')
 				.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
 				.htmlarea({
 					// Override/Specify the Toolbar buttons to show
@@ -126,7 +126,7 @@ else	{
 			
 		
 		// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-		var $iframeBody = $('iframe',$D).width($('td:first',$D).width() - 30).contents().find('body');
+		var $iframeBody = $('iframe',$D).width('100%').contents().find('body');
 		app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 	
 		app.u.handleAppEvents($D);
@@ -572,7 +572,7 @@ else	{
 						'title' : 'Add Product Attribute'
 						});
 					$D.dialog('open');
-					$ul = $("<ul class='lookLikeLink' \/>");
+					$ul = $("<ul \/>");
 	
 	//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
 	
@@ -600,6 +600,7 @@ else	{
 		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
 		$D.dialog('close');
 		}).appendTo($ul);
+	$("li",$ul).addClass('lookLikeLink');
 	$ul.appendTo($D);
 	
 					}
