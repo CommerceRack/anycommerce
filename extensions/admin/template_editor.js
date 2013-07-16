@@ -36,7 +36,7 @@ var admin_templateEditor = function() {
 					var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 	//the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/template_editor.html',theseTemplates);
-					app.ext.admin_templateEditor.u.declareKissTemplateFunctions(); //adds some global functions to the dom. shortcuts for template editing.
+					app.ext.admin_templateEditor.u.declareMagicFunctions(); //adds some global functions to the dom. shortcuts for template editing.
 					return r;
 					},
 				onError : function()	{
@@ -264,7 +264,7 @@ else	{
 			u : {
 
 //adds some global functions for easy reference from the supporting html file for the wizard
-				declareKissTemplateFunctions : function()	{
+				declareMagicFunctions : function()	{
 	
 	
 	function getTarget(selector,functionName){
@@ -294,7 +294,7 @@ else	{
 			var $target = getTarget(selector,'magic.inspect');
 			r = null;
 			if($target)	{
-				app.ext.admin_templateEditor.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+				app.ext.admin_templateEditor.u.showObjectInInspector($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
 				r = $target;
 				}
 			else	{} //getTarget handles error display.
@@ -402,8 +402,8 @@ else	{
 //updates the progress bar based on the number of fieldsets and the index of the fieldset in view (yes, going backwards means progress bar regresses)
 				handleWizardProgressBar : function($pbar)	{
 					if($pbar instanceof jQuery)	{
-						var $kisses = $("fieldset",'#wizardForm');
-						if($kisses.length)	{
+						var $fieldsets = $("fieldset",'#wizardForm');
+						if($fieldsets.length)	{
 							$pbar.val($("fieldset:visible",'#wizardForm').index());
 							}
 						}
@@ -414,11 +414,10 @@ else	{
 
 				handleWizardObjects : function($iframeBody,$objectInspector)	{
 					if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
-						// .addClass('showHighlights_PRODUCT showHighlights_KISS') -> add to iframeBody to start w/ highlights on.
 						$iframeBody.on('click',function(e){
 							var $target = $(e.target);
 	//						app.u.dump(" -> $target.id: "+$target.attr('id'));
-							app.ext.admin_templateEditor.u.ebayKISSInspectObject($target,$objectInspector); //updates object inspector when any element is clicked.
+							app.ext.admin_templateEditor.u.showObjectInInspector($target,$objectInspector); //updates object inspector when any element is clicked.
 							});
 						}
 					else	{
@@ -468,7 +467,7 @@ else	{
 					return $template.html();
 					}, //preprocessTemplate
 
-				ebayKISSInspectObject : function($object,$objectInspector)	{
+				showObjectInInspector : function($object,$objectInspector)	{
 					if($object instanceof jQuery && $objectInspector instanceof jQuery)	{
 	
 						var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin'>";

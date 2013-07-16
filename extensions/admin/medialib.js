@@ -531,7 +531,7 @@ setTimeout(function(){
 					else if(mediaData.mode == 'kissTemplate')	{
 						if($image.data('filepath'))	{$image.attr('data-oldfilepath',$image.data('filepath'))}
 						$image.attr({'data-wizardificated':'true','data-filepath':newFilename});  //must be attribute, not data, so it's preserved on save.
-						kiss_inspect(mediaData.imageID);  //update object inspector.
+						magic.inspect(mediaData.imageID);  //update object inspector.
 						$medialib.dialog('close');// straight substitution, which occurs above.
 						}
 					else	{

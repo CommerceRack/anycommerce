@@ -57,9 +57,9 @@
                         parseInt(data.loaded / data.total * 100, 10)
                     ).end()
                     .find('.progress-extended').each(function () {
+						app.u.dump(" -> $this.data(): "); app.u.dump($this.data());
                         $(this).html(
-                            $this.data('blueimpFileupload')
-                                ._renderExtendedProgress(data)
+                            ($this.data('blueimpFileupload')) ? $this.data('blueimpFileupload')._renderExtendedProgress(data) : ""
                         );
                     });
             }
