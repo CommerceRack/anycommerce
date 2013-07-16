@@ -174,13 +174,9 @@ It is run once, executed by the renderFormat.
 						}
 					else	{
 						for(var i = 0; i < L; i += 1)	{
-var tmp = app.data['appProductGet|'+pageCSV[i]];
-if(typeof app.data['appReviewsList|'+pageCSV[i]] == 'object'  && app.data['appReviewsList|'+pageCSV[i]]['@reviews'].length)	{
-	tmp['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pageCSV[i]); //generates a summary object (total, average)
-	tmp['reviews']['@reviews'] = app.data['appReviewsList|'+pageCSV[i]]['@reviews']
-	}
-							//if you want this list inventory aware, do you check here and skip the append below.
-$tag.append(app.renderFunctions.transmogrify({'pid':pageCSV[i]},plObj.loadsTemplate,tmp));
+							var $placeholder = $('<span />');
+							$tag.append($placeholder);
+							app.ext.prodlist_infinite.u.insertProduct(pageCSV[i], plObj, $placeholder);
 							}
 						app.ext.prodlist_infinite.u.handleScroll($tag);
 						}				
@@ -195,7 +191,27 @@ $tag.append(app.renderFunctions.transmogrify({'pid':pageCSV[i]},plObj.loadsTempl
 					}
 
 				},
-
+			insertProduct : function(pid, plObj, $placeholder, attempts){
+				var data = app.data['appProductGet|'+pid];
+				attempts = attempts || 0;
+				if(data){
+					if(typeof app.data['appReviewsList|'+pid] == 'object'  && app.data['appReviewsList|'+pid]['@reviews'].length)	{
+						data['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
+						data['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
+						}
+														//if you want this list inventory aware, do you check here and skip the append below.
+					$placeholder.before(app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+					}
+				else if(attempts < 50){
+					setTimeout(function(){
+						app.ext.prodlist_infinite.u.insertProduct(pid, plObj, $placeholder, attempts+1);
+						}, 250);
+					}
+				else {
+					app.u.dump("-> prodlist_infinite FAILED TO INSERT PRODUCT: "+pid)
+					$placeholder.remove();
+					}
+				},
 			handleScroll : function($tag)	{
 var plObj = $tag.data();
 if(plObj.prodlist.csv.length <= plObj.prodlist.items_per_page)	{$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();} //do nothing. fewer than 1 page worth of items.
