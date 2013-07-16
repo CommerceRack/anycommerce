@@ -825,6 +825,18 @@ if(selector && mode)	{
 		'ebayTemplateZipUpload' : function(data,textStatus)	{
 			app.u.dump("Got to ebayTemplateZipUpload success.");
 			app.u.dump(" -> data: "); app.u.dump(data);
+			var
+				L = data.length,
+				profile = $("[name='profile']",$selector).val();
+
+			for(var i = 0; i < L; i += 1)	{
+app.model.addDispatchToQ({
+	'_cmd':'adminEBAYProfileZipUpload',
+	'fileguid' : data[i].fileguid,
+	'PROFILE' : profile
+	},'mutable');
+app.model.dispatchThis('mutable');
+				}
 //			app.model.dispatchThis('immutable');
 			
 			},
