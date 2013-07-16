@@ -107,20 +107,45 @@ var jerseypreview = function() {
 
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
+				app.rq.push(['templateFunction','productTemplate','onInits', function(P){
+					}]);
 				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
+					var pid = P.pid;
 					var $context = $(app.u.jqSelector('#', P.parentID));
-					font = $('canvas.prodPreviewer', $context).data('preview-params').font
-					if(font){
-						$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
+					var $canvas = $('canvas.prodPreviewer', $context);
+				
+					if(!app.ext.jerseypreview.vars.paramsByPID[pid]){
+						//In future update, run only for products marked as customizable?
+						$.getJSON("extensions/jerseypreview/products/"+pid+".json")
+							.done(function(data, textStatus, jqXHR){
+								isFontFaceSupported.ready(function(){
+									if(app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"]){
+										font = data.font;
+										if(font){
+											$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
+											}
+										$('input[name=B5], input[name=B6]', $context).keyup(function(){
+											if($(this).data('timer')){
+												clearTimeout($(this).data('timer'));
+												}
+											$(this).data('timer', setTimeout(function(){
+												app.ext.jerseypreview.u.updatePreview($context);
+												}, 600));
+											});
+										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported";
+										app.ext.jerseypreview.u.assignPreviewerData($canvas, data, pid, app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"]);
+										}
+									else {
+										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
+										}
+									});
+								})
+							.fail(function(datajqXHR, textStatus, errorThrown){
+								$canvas.remove();
+								app.ext.jerseypreview.vars.paramsByPID[pid] = "Not Supported";
+								//report failure?
+								});
 						}
-					$('input[name=B5], input[name=B6]', $context).keyup(function(){
-						if($(this).data('timer')){
-							clearTimeout($(this).data('timer'));
-							}
-						$(this).data('timer', setTimeout(function(){
-							app.ext.jerseypreview.u.updatePreview($context);
-							}, 600));
-						});
 					}]);
 				return r;
 				},
@@ -150,37 +175,23 @@ var jerseypreview = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			//uses pid to grab from map in vars, adds img tag from img8
-			assignPreviewerData : function($tag, data){
-				if(data.value['%attribs'] && 
-					data.value['%attribs']['zoovy:prod_image8']){
-					if(!isFontFaceSupported()){
-						var obj = app.ext.jerseypreview.vars.paramsByPID[data.value.pid];
-						obj.img = $(app.u.makeImage({
-							name : data.value['%attribs']['zoovy:prod_image8'],
-							w : $tag.attr('width'),
-							h : $tag.attr('height'),
-							b : "FFFFFF",
-							tag : 1
-							})).get(0);
-						
-						$tag.data('preview-params', obj);
-						}
-					else {
-						$tag.remove();
-						app.u.throwMessage("Please upgrade your browser to the latest version to use the Jersey Previewer!");
-						}
-					}
-				else {
-					//We are not needed here
-					$tag.remove();
-					}
-				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			assignPreviewerData : function($canvas, data, pid, image){
+				data.img = $(app.u.makeImage({
+					name : image,
+					w : $canvas.attr('width'),
+					h : $canvas.attr('height'),
+					b : "FFFFFF",
+					tag : 1
+					})).get(0);
+				
+				$canvas.data('preview-params', data);
+				},
 			updatePreview : function($context){
 				//app.u.dump(name+" "+number);
 				var $canvas = $('canvas.prodPreviewer', $context);
@@ -278,27 +289,7 @@ var jerseypreview = function() {
 			}, //e [app Events]
 		vars : {
 			paramsByPID : {
-				"974" : {
-					font : "LHFoldblockCONDMED",
-					name : {
-						size : 25,
-						charSize : 12,
-						radius : 190,
-						color : "28489B",
-						strokeColor : "DB2321",
-						strokeThickness : 1,
-						xOffset : -1,
-						y : 50
-						},
-					number : {
-						size : 65,
-						color : "28489B",
-						strokeColor : "DB2321",
-						strokeThickness : 3,
-						xOffset : -1,
-						y : 50
-						}					
-					}
+				
 				}
 			}
 		} //r object.
