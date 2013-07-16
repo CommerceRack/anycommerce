@@ -254,27 +254,27 @@ else	{
 				declareKissTemplateFunctions : function()	{
 	
 	
-	function getTarget(id,functionName){
+	function getTarget(selector,functionName){
 		var r = false
-		if(id)	{
-	//		app.u.dump(" -> $('iframe',$('#templateEditor')).length: "+$('iframe',$('#templateEditor')).length);
-			var $target = $('iframe',$('#templateEditor')).contents().find(app.u.jqSelector('#',id));
+		if(selector)	{
+//jqSelector doesn't play well using : or [ as first param.
+			var $target = $('iframe',$('#templateEditor')).contents().find((selector.indexOf('#') == 0 || selector.indexOf('.') == 0) ? app.u.jqSelector(selector.charAt(0),selector.substring(1)) : app.u.jqSelector("",selector));
 			if($target.length)	{
 				r = $target;
 				}
 			else	{
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'The element id ['+id+'] passed into '+functionName+' does not exist within the template. This is likely the result of an error in the wizard.js file.'});
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'The element selector ['+selector+'] passed into '+functionName+' does not exist within the template. This is likely the result of an error in the wizard.js file.'});
 				}
 			}
 		else	{
-			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'No element id passed into '+functionName+'. This is likely the result of an error in the wizard.js file.'});
+			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'No element selector passed into '+functionName+'. This is likely the result of an error in the wizard.js file.'});
 			}
 		return r;	
 		}
 	
-	//id is an element id within the wizard itself.
-	window.kiss_inspect = function(id)	{
-		var $target = getTarget(id,'kiss_inspect');
+	//selector is an element within the wizard itself.
+	window.kiss_inspect = function(selector)	{
+		var $target = getTarget(selector,'kiss_inspect');
 		r = null;
 		if($target)	{
 			app.ext.admin_templateEditor.u.ebayKISSInspectObject($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
@@ -284,11 +284,11 @@ else	{
 		return r;
 		}
 	
-	window.kiss_medialib = function(id)	{
-		var $target = getTarget(id,'kiss_medialib');
+	window.kiss_medialib = function(ID)	{
+		var $target = getTarget(ID,'kiss_medialib');
 		if($target)	{
 			app.ext.admin_medialib.a.showMediaLib({
-				'imageID':app.u.jqSelector('#',id),
+				'imageID':app.u.jqSelector('#',ID.substring(1)),
 				'mode':'kissTemplate'//,
 	//			'src':$target.data('filepath') //doesn't work like we want. uses some legacy UI code.
 				}); //filepath is the path of currently selected image. oldfilepath may also be set.
@@ -296,63 +296,75 @@ else	{
 		else	{} //getTarget handles error display.
 		}
 	
-	window.kiss_implement = function(method,vars)	{
+	window.kiss_verify = function(selector,$fieldset)	{
+		var r = 0;  //what is returned. zero if no matches or # of matches.
+		var fail = false;
+		app.u.dump(' -> kiss_verify selector is a '+typeof selector);
+		if(selector && $fieldset instanceof jQuery)	{
+			if(typeof selector === 'string')	{
+				var $target = getTarget(selector,'kiss_exists');
+				if($target)	{r = $target.length}
+				else {fail = true}
+				}
+			else if(typeof selector === 'object')	{
+				var L = selector.length;
+				for(var i = 0; i < L; i += 1)	{
+					var $target = getTarget(selector[i],'kiss_exists');
+					if($target)	{r += $target.length}
+					else	{fail = true; }
+					}
+				}
+			else	{
+				//invalid selector. throw error.
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] passed into kiss_exists.'});
+				}
+			if(fail)	{
+				app.u.dump(" -> a fail occurd in kiss_verify");
+				$('select, textarea, input',$fieldset).attr('disabled','disabled'); //unable to find all selectors, so disable entire panel.
+				$('button',$fieldset).button('disable');
+				} //do nothing,
+			}
+		else	{
+			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid element selector type ['+typeof selector+'] or fieldset ['+($fieldset instanceof jQuery)+'] not passed into kiss_exists.'});
+			}
+		return r;
+		}
+	
+	window.kiss_modify = function(selector,method,vars)	{
 		vars = vars || {};
 		
 		var methods = new Array("set-attribs","empty","hide","show","set-value","append");
 		
 		if(methods.indexOf(method) >= 0)	{
-			var $target = getTarget(vars.id,'kiss_implement');
+			var $target = getTarget(selector,'kiss_implement');
 			if($target)	{
 	
-	switch(method)	{
-		case 'set-attribs':
-			$target.attr(vars.attribs)
-			break;
-		case 'append':
-			$target.append(vars.html)
-			break;
-		case 'set-value':
-			$target.html(vars['$input'].val())
-	/*		if($target.data('input-type') == 'TEXTAREA' || $target.data('input-type') == 'TEXT')	{
-				$target.css({'background':'green'})
-				var $D = app.ext.admin.i.dialogCreate({
-					'title' : 'Set '+($target.data('label') || "Value")
-					});
-				if($target.data('input-type') == 'TEXTAREA')	{
-					$D.append("<textarea id='kissImplementAttribSet'>"+$target.text()+"<\/textarea>")
-					}
-				else	{
-					$D.append("<input type='text' id='kissImplementAttribSet' \/>");
-					}
-				$target.css({'background':'blue'})
+				switch(method)	{
+					case 'set-attribs':
+						$target.attr(vars.attribs)
+						break;
+					case 'append':
+						$target.append(vars.html)
+						break;
+					case 'set-value':
+						$target.html(vars['$input'].val())
+						break;
 				
-				$("<button>Save<\/button>").button().on('click',function(event){
-					event.preventDefault();
-	//				app.u.dump(" -> $target.length: "+$target.length); app.u.dump(" and instanceof jQuery: "); app.u.dump($target instanceof jQuery);
-					$target.css({'background':'red','font-weight':'bold'});
-	//				$target.html($('#kissImplementAttribSet').val());
-					$D.dialog( "close" );
-					}).appendTo($D);
-				$D.dialog('open');
-				}
-	*/		break;
-	
-		case 'show':
-			$target.show();
-			break;
-		
-		case 'hide':
-			$target.hide();
-			break;
-		
-		case 'empty':
-			$target.empty();
-			break;
-		
-		default:
-			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into kiss_implement passed validation but is not declared in switch.','gMessage':true});
-		}
+					case 'show':
+						$target.show();
+						break;
+					
+					case 'hide':
+						$target.hide();
+						break;
+					
+					case 'empty':
+						$target.empty();
+						break;
+					
+					default:
+						$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into kiss_implement passed validation but is not declared in switch.','gMessage':true});
+					}
 	
 	
 				}
