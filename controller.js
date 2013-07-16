@@ -3027,6 +3027,11 @@ $tmp.empty().remove();
 			else
 				o += data.value
 
+
+			if(data.bindData.valuePosttext)	{
+				o += data.bindData.valuePosttext;
+				}
+
 			$tag.attr(data.bindData.attribute,o);
 			}, //text
 

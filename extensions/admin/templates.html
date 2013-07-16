@@ -222,7 +222,7 @@ LANDING PAGE
 -->
 
 <article id='recentNewsItemTemplate'>
-	<div class='floatLeft marginRight marginBottom'><img src='blank.gif' data-bind="var: news(TOPIC); valuePretext:newsicons/; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="40"  /></div>
+	<div class='floatLeft marginRight marginBottom'><img src='blank.gif' data-bind="var: news(TOPIC); valuePosttext:.gif; valuePretext:app-admin/images/newsicons/; format: assignAttribute; attribute:src;" height="40" width="40"  /></div>
 	<h3 data-bind="var:news(TITLE); format:text;"></h3>
 	<h4 data-bind="var:news(SUBTITLE); format:text;"></h4>
 	<time data-bind="var:news(CREATED); format:text;"></time>
