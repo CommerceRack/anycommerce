@@ -33,7 +33,16 @@
 if(document.location.protocol != 'file:' && document.domain.indexOf('www') == -1 && document.domain == 'downlitebedding.com')	{
 	document.location = 'http://www.downlitebedding.com';
 	}
-var _gaq = _gaq || [];
+//var _gaq = _gaq || [];
+
+//ROI Revolution custom tracking code
+var _roiq = []; var _gaq = { push: function () { var a; for (a = 0; a < arguments.length; a++) { _roiq.push(arguments[a]) } } }; var _gat = { trackingObjects: {}, _createTracker: function (a, b) { return new _gat.Tracker(a, b) }, _getTracker: function (a) { return _gat._createTracker(a) }, _getTrackerByName: function (a) { var a = a || ""; if (_gat.trackingObjects.hasOwnProperty(a)) { return _gat.trackingObjects[a] } return _gat._createTracker("UA-XXXXX-X", a) }, _anonymizeIp: function () { _gaq.push("_gat._anonymizeIp") }, _forceSSL: function () { _gaq.push("_gat._forceSSL") }, _getPlugin: function () { _gaq.push("_gat._getPlugin") }, Tracker: function (a, g) { var c, h, e = ["_addDevId", "_addEventListener", "_addIgnoredOrganic", "_addIgnoredRef", "_addItem", "_addOrganic", "_addTrans", "_clearIgnoredOrganic", "_clearIgnoredRef", "_clearOrganic", "_clearTrans", "_clearXKey", "_clearXValue", "_cookiePathCopy", "_createEventTracker", "_createXObj", "_deleteCustomVar", "_get", "_getAccount", "_getClientInfo", "_getDetectFlash", "_getDetectTitle", "_getLinkerUrl", "_getLocalGifPath", "_getName", "_getPlugin", "_getServiceMode", "_getVersion", "_getVisitorCustomVar", "_getXKey", "_getXValue", "_initData", "_link", "_linkByPost", "_removeEventListener", "_sendXEvent", "_set", "_setAccount", "_setAllowAnchor", "_setAllowHash", "_setAllowLinker", "_setAutoTrackOutbound", "_setCampCIdKey", "_setCampContentKey", "_setCampIdKey", "_setCampMediumKey", "_setCampNOKey", "_setCampNameKey", "_setCampSourceKey", "_setCampTermKey", "_setCampaignCookieTimeout", "_setCampaignTrack", "_setClientInfo", "_setCookiePath", "_setCookiePersistence", "_setCookieTimeout", "_setCustomVar", "_setDetectFlash", "_setDetectTitle", "_setDomainName", "_setHrefExamineLimit", "_setLocalGifPath", "_setLocalRemoteServerMode", "_setLocalServerMode", "_setMaxCustomVariables", "_setNamespace", "_setPageGroup", "_setReferrerOverride", "_setRemoteServerMode", "_setSampleRate", "_setSessionCookieTimeout", "_setSessionTimeout", "_setSiteSpeedSampleRate", "_setTrackOutboundSubdomains", "_setTrans", "_setTransactionDelim", "_setVar", "_setVisitorCookieTimeout", "_setXKey", "_setXValue", "_trackEvent", "_trackPageLoadTime", "_trackPageview", "_trackSocial", "_trackTiming", "_trackTrans", "_visitCode"]; var b = g || ""; var f = a || "UA-XXXXX-X"; for (c = 0; c < e.length; c++) { h = e[c]; this[h] = d(h) } function d(i) { return function () { if (b) { i = b + "." + i } var j = Array.prototype.slice.call(arguments, 0); j.unshift(i); _roiq.push(j) } } _gat.trackingObjects[b] = this } };
+(function () {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ef2f3a1269f8e69bb8f5-121bf19270b99f2cbe905482a969bf97.ssl.cf2.rackcdn.com/gascript.js' : 'http://f2d288a3a0af8b29e975-121bf19270b99f2cbe905482a969bf97.r71.cf2.rackcdn.com/gascript.js');
+	var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(ga, s);
+})();
 _gaq.push(['_setAccount', 'UA-30870435-1']); //downlitebedding.com = UA-30870435-1    -2 is for .zoovy.com
 _gaq.push(['_trackPageview']);
 
