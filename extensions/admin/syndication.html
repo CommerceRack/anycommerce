@@ -1913,19 +1913,13 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 			* eBay Motors only<br />
 			** Support for this feature varies by site and category.
 			</p>
-			
-			
-			
-			
 
 			<label>
 				<span>PayPal email address</span>
-				<input type='number' step='.01' max='2000' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
+				<input type='email' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
 				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
 			</label>
-		
 
-		
 			</div>
 	</fieldset>
 
