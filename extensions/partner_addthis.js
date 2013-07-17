@@ -56,7 +56,7 @@ var partner_addthis = function() {
 					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
 						app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj);
 						}]);
-					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
+					app.rq.push(['templateFunction','productTemplate','onDeparts',function(infoObj){
 						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
 						}]);
 					return true;
