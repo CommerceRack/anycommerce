@@ -21,7 +21,8 @@ var admin_syndication = function() {
 	var theseTemplates = new Array(
 	'pageSyndicationTemplate',
 	'syndicationDetailTemplate',
-	'syndicationFilesRowTemplate'
+	'syndicationFilesRowTemplate',
+	'syndicationErrorsRowTemplate'
 	//all the DST specific templates are intentionally NOT included here. They'll get loaded as needed.
 	);
 	var r = {

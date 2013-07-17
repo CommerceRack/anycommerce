@@ -3120,9 +3120,15 @@ $tmp.empty().remove();
 // ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
 						if(data.value[i] && typeof data.value[i] === 'object')	{
 							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
-							if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
-							else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
-							$tag.append($o);
+							if($o instanceof jQuery)	{
+								if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
+								else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
+								$tag.append($o);
+								}
+							else	{
+								//well that's not good.
+								app.u.dump("$o:"); app.u.dump($o);
+								}
 							}
 						else	{
 							$o = app.renderFunctions.transmogrify({'value':data.value[i],'key':i},data.bindData.loadsTemplate,{'value':data.value[i],'key':i});
