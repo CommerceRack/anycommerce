@@ -1568,6 +1568,21 @@ delete sfo.free
 					});
 				}, //ebayBuyerRequirementsToggle
 
+			ebayReturnsToggle : function($ele)	{
+				function handleSelect()	{
+					if($ele.val() == 'ReturnsAccepted')	{
+						$('.toggleThis',$ele.closest('fieldset')).show();
+						}
+					else	{
+						$('.toggleThis',$ele.closest('fieldset')).hide();
+						}
+					}
+				handleSelect();
+				$ele.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+					handleSelect();
+					});
+				}, //ebayBuyerRequirementsToggle
+
 			ebayAutopayToggle : function($ele)	{
 				function handleCB()	{
 					if($ele.is(':checked'))	{
