@@ -2585,7 +2585,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 	</td>
 	<td data-bind="var: profile(EBAY_FEEDBACKSCORE); format:text; hideZero:false;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
-	<button title='Delete this token' data-app-event='admin_syndication|ebayTokenDeleteConfirm'>delete</button>
+	<button title='Delete this token' data-app-event='admin_syndication|ebayTokenDeleteConfirm'>Delete</button>
 	<button title="Refresh your eBay Store categories" data-app-event='admin_syndication|ebayRefreshStoreCategoriesExec'>refresh eBay Categories</button>
 	</td>
 </tr>
@@ -2595,12 +2595,11 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<td data-bind="var: profile(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
-	
-	<button data-app-event='admin_syndication|ebayLaunchProfileRefreshListingsExec' title='Refresh your eBay Listings'>Refresh Listings</button>
-	
-	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Upgrade Launch Profile</button>
+
 <!--	<button data-app-event='admin_syndication|showTemplateEditorInModal' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;'>Edit eBay Template</button> -->
 	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>Delete</button>
+	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Upgrade Launch Profile</button>
+	<button data-app-event='admin_syndication|ebayLaunchProfileRefreshListingsExec' title='Refresh your eBay Listings'>Refresh Listings</button>
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpdateShow'>Edit</button>
 	</td>
 </tr>
