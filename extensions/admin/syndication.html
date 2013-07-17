@@ -2096,6 +2096,15 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 	
 	<fieldset data-panelname='eBayContactInfo'>
 		<legend>Contact Information/Availability</legend>
+		
+		<div class='marginBottom'>
+			<label>
+				<span>Originating Zip</span>
+				<input type='text' name='origin_zip' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
+			</label>
+		</div>
+		
+		
 		<div class='clearfix'>
 			<label>
 				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN); format:popVal;" />
