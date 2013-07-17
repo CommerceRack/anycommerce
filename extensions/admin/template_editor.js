@@ -311,7 +311,10 @@ var admin_templateEditor = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
+				templateThumb : function($tag,data)	{
+					$tag.attr('src',"data:"+data.value[0].type+";base64,"+data.value[0].base64);
+					$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' data-gallery='gallery'>");
+					}
 			}, //renderFormats
 
 
@@ -597,7 +600,7 @@ var admin_templateEditor = function() {
 									app.model.addDispatchToQ({
 										'_cmd':'adminEBAYProfileUpdate',
 										'template_origin':vars.SUBDIR,
-										'PROFILE' : vars.PROFILE
+										'PROFILE' : $TC.data('profile')
 										},'immutable');
 									}
 								else if(mode == 'campaign')	{
@@ -709,35 +712,35 @@ var admin_templateEditor = function() {
 							$D.dialog('open');
 							$ul = $("<ul \/>");
 					
-					//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
-					
-					$("<li \/>").text('Product Name').on('click',function(){
-						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
-						$D.dialog('close');
-						}).appendTo($ul);
-					
-					$("<li \/>").text('Product Manufacturer').on('click',function(){
-						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
-						$D.dialog('close');
-						}).appendTo($ul);
-					
-					$("<li \/>").text('Product Description').on('click',function(){
-						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
-						$D.dialog('close');
-						}).appendTo($ul);
-					
-					$("<li \/>").text('Product Features').on('click',function(){
-						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
-						$D.dialog('close');
-						}).appendTo($ul);
-					
-					$("<li \/>").text('Product Image 5').on('click',function(){
-						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
-						$D.dialog('close');
-						}).appendTo($ul);
-					$("li",$ul).addClass('lookLikeLink');
-					$ul.appendTo($D);
-					
+//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
+							
+							$("<li \/>").text('Product Name').on('click',function(){
+								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
+								$D.dialog('close');
+								}).appendTo($ul);
+							
+							$("<li \/>").text('Product Manufacturer').on('click',function(){
+								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
+								$D.dialog('close');
+								}).appendTo($ul);
+							
+							$("<li \/>").text('Product Description').on('click',function(){
+								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
+								$D.dialog('close');
+								}).appendTo($ul);
+							
+							$("<li \/>").text('Product Features').on('click',function(){
+								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
+								$D.dialog('close');
+								}).appendTo($ul);
+							
+							$("<li \/>").text('Product Image 5').on('click',function(){
+								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5_CONTAINER'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5_HREF' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image 5' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
+								$D.dialog('close');
+								}).appendTo($ul);
+							$("li",$ul).addClass('lookLikeLink');
+							$ul.appendTo($D);
+							
 							}
 						}
 					} //getEditorButton_prodattributeadd
@@ -760,14 +763,12 @@ var admin_templateEditor = function() {
 							$D = $('#templateEditor');
 						const mode = $D.data('mode');
 						
-						
 						if(templateName && templateName.length > 5 )	{
 							if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
 								$D.showLoading({'message':'Saving as new template: '+templateName});
 								var dObj = {
-									'templatename' : templateName,
-									'SUBDIR' : $D.data('SUBDIR'),
-									'PROJECTID' : $D.data('PROJECTID'),
+									'SUBDIR' : templateName,
+//									'PROJECTID' : $D.data('PROJECTID'), //not passed cuz the user doesnt 'choose' the projectid. it'll be set to TEMPLATES
 									'_tag' : {
 										'callback' : function(responseData)	{
 											$D.hideLoading();
@@ -778,17 +779,19 @@ var admin_templateEditor = function() {
 												$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
 												}
 											}
-										},
-									'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
+										}
+//									'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
 									}
 								
 								if(mode == 'ebay')	{
-									dObj._cmd = 'adminEBAYProfileTemplateCopy';
+									dObj._cmd = 'adminEBAYTemplateCreateFrom';
 									dObj.PROFILE = $D.data('profile');
+									// !!! save original template prior to createFrom execution.
 									}
 								else if(mode == 'campaign')	{
-									dObj._cmd = 'adminCampaignTemplateCopy';
+									dObj._cmd = 'adminCampaignTemplateCreateFrom';
 									dObj.CAMPAIGNID = $D.data('campaignid');
+									// !!! save original template prior to createFrom execution.
 									}
 								else	{} //shouldn't ever get here.
 
@@ -811,6 +814,88 @@ var admin_templateEditor = function() {
 						app.ext.admin_templateEditor.u.handleTemplateSelect($ele.closest('li').data());
 						});
 					},
+				
+//used to upload a file (img, zip, .html, etc) into a profile or campaign.				
+				containerFileUploadShow : function($btn){
+
+					$btn.button();
+					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
+
+
+						const mode = $button.closest('[data-mode]').data('mode');
+
+						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Template File Upload',
+								'templateID' : 'templateFileUploadTemplate',
+								data : {} //blank data because translation needs to occur (template calls another template)
+								});
+
+							$D.dialog('option','height','400');
+							if(mode == 'ebay')	{
+								$('form',$D).append("<input type='hidden' name='profile' value='"+$D.data('profile')+"' \/>");
+								}
+							else if(mode == 'campaign')	{
+								$('form',$D).append("<input type='hidden' name='campaignid' value='"+$D.data('campaignid')+"' \/>");
+								}
+							$D.dialog('open');
+							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');
+							}
+						else	{
+							$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							}
+						});
+
+					},
+				
+// used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
+				containerZipDownloadExec : function($btn)	{
+					$btn.button();
+					$btn.off('click.containerZipDownloadExec').on('click.containerZipDownloadExec',function(){
+
+						var $D = $('#templateEditor');
+						const mode = $D.data('mode');
+
+						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+							
+							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
+							var dObj = {
+								'base64' : true,
+								
+								'_tag' : {
+									'callback':'fileDownloadInModal',
+									'extension':'admin',
+									'datapointer':'templateZipDownload',
+									'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
+									}
+								}
+							
+							if(mode == 'ebay')	{
+								dObj._cmd = 'adminEBAYProfileZipDownload';
+								dObj.FILENAME = $D.data('profile')+'.zip';
+								dObj.PROFILE = $D.data('profile');
+								}
+							else if(mode == 'campaign')	{
+								dObj._cmd = 'adminCampaignZipDownload';
+								dObj.FILENAME = $D.data('campaign')+'.zip';
+								dObj.CAMPAIGN = $D.data('campaign');
+								}
+							else	{}
+							
+							app.model.addDispatchToQ(dObj,'immutable');
+							app.model.dispatchThis('immutable');							
+							}
+						else	{
+							$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							}
+						
+					
+
+						});
+					}, //containerZipDownloadExec
+
+
+
 
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{

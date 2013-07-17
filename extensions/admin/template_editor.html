@@ -52,7 +52,7 @@
 look for hidden(ish) kiss inputs for template settings, like color.
 	</div>
 </section>
-
+-->
 <section class='ui-widget marginBottom'>
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
@@ -61,7 +61,7 @@ look for hidden(ish) kiss inputs for template settings, like color.
 	<button data-app-event="admin_templateEditor|adminSaveAsTemplateExec">Save As New Template</button>
 	</div>
 </section>
--->
+
 
 	</td>
 </tr>
@@ -83,12 +83,29 @@ look for hidden(ish) kiss inputs for template settings, like color.
 
 <ul>
 	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer'>
-	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS.0); format:graphicURL; extension:admin;' />
+	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;' />
 	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink' data-app-event='admin_templateEditor|templateChooserExec'></div>
 	</li>
 </ul>
 
+<!-- data:image/jpeg;base64, -->
 
+
+
+
+
+
+
+<!-- used in the ebay template editor -->
+<div id='templateFileUploadTemplate'>
+<form id="templateFileUpload" class='clearfix marginBottom'  name="templateFileUpload" action='#' method='post' enctype='multipart/form-data'>
+
+<!-- adds the file upload area, which is in the media library templates  -->
+<h1 class='floatLeft'>Upload individual files and/or a zip archive containing an entire template (images, html and all)</h1>
+
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
+</form>
+</div>
 
 
 
