@@ -1493,7 +1493,6 @@ delete sfo.free
 					})
 				}, //variationOptionUpdateShow
 
-
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
