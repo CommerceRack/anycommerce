@@ -1194,12 +1194,12 @@ app.model.dispatchThis('immutable');
 				}, //ebayLaunchProfileCreateShow
 
 			ebayLaunchProfileRefreshListingsExec : function($btn)	{
-				$btn.button();
+				$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
 				$btn.off('click.ebayLaunchProfileRefreshListingsExec').on('click.ebayLaunchProfileRefreshListingsExec',function(){
 
 					app.ext.admin_batchJob.a.adminBatchJobCreate({
 						'guid' : app.u.guidGenerator(),
-						'profile' : $("input[name='PROFILE']",$btn.closest('form')).val(),
+						'profile' : $btn.closest('tr').data('profile'),
 						'APP' : 'EBAY_UPDATE',
 						'function' : 'refresh'
 						});	

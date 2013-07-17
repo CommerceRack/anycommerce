@@ -1728,7 +1728,6 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 <div class='marginBottom clearfix ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<div class='floatRight'>
 <!--		<button>Delete</button> -->
-		<button data-app-event='admin_syndication|ebayLaunchProfileRefreshListingsExec'>Refresh Listings</button>
 		<button data-app-role='saveButton' data-app-event='admin_syndication|ebayLaunchProfileUpdateExec' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	<h1 data-bind='var: profile(%PROFILE.PROFILE); format:text; pretext: Edit Launch Profile: ;'></h1>
@@ -2596,6 +2595,9 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<td data-bind="var: profile(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: profile(MODIFIED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
+	
+	<button data-app-event='admin_syndication|ebayLaunchProfileRefreshListingsExec' title='Refresh your eBay Listings'>Refresh Listings</button>
+	
 	<button data-app-event='admin_syndication|ebayLaunchProfileUpgradeConfirm'>Upgrade Launch Profile</button>
 <!--	<button data-app-event='admin_syndication|showTemplateEditorInModal' data-bind='var:profile(PROFILE); format:assignAttribute; attribute:data-profile;'>Edit eBay Template</button> -->
 	<button data-app-event='admin_syndication|ebayLaunchProfileDeleteConfirm'>Delete</button>
