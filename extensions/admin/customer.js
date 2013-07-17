@@ -133,60 +133,32 @@ var admin_customer = function() {
 				app.u.dump("BEGING admin_customer.a.showCampaignEditor");
 				if($target && $target instanceof jQuery && CAMPAIGNID)	{
 
-$target.empty()
-var data = app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
-//app.u.dump(" -> campaign data:"); app.u.dump(data);
-if(data)	{
-	$target.showLoading({"message":"Fetching template contents"});
-//generate template instance and get some content in front of user. will be blocked by loading till template data available.
-	$("<div \/>").anycontent({'templateID':'caimpaignUpdateTemplate','data':data}).appendTo($target);
-	
-	$('.applyDatetimepicker',$target).datetimepicker({
-		changeMonth: true,
-		changeYear: true,
-		minDate : 0, //can't start before today.
-		dateFormat : 'yymmdd',
-		timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
-		stepMinute : 5
-		});
-	$('.ui_tpicker_second').hide(); //don't show second chooser, but have it so the seconds are added to the input.
-
-var $picker = $("[data-app-role='pickerContainer']:first",$target);
-$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
-
-
-
-	app.model.addDispatchToQ({
-		'_cmd':'adminCampaignFileContents',
-		'CAMPAIGNID' : CAMPAIGNID,
-		'FILENAME' : 'index.html',
-		'_tag':	{
-			'datapointer' : 'adminCampaignFileContents|'+CAMPAIGNID,
-			'callback':function(rd)	{
-				$target.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$target.anymessage({'message':rd});
-					}
-				else	{
-					//success content goes here.
-					var $textarea = $("[data-app-role='htmlEditor']",$target);
-					$textarea.val(app.data[rd.datapointer].body)
-					$textarea.htmlarea({
-						// Override/Specify the Toolbar buttons to show
-						// see app.ext.admin_syndication.u.getEBAYToolbarButtons() for addl button examples.
-						toolbar: app.ext.admin.u.buildToolbarForEditor()
-						});
+					$target.empty()
+					var data = app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
+					//app.u.dump(" -> campaign data:"); app.u.dump(data);
+					if(data)	{
+					
+					//generate template instance and get some content in front of user. will be blocked by loading till template data available.
+						$("<div \/>").anycontent({'templateID':'caimpaignUpdateTemplate','data':data}).appendTo($target);
+						
+						$('.applyDatetimepicker',$target).datetimepicker({
+							changeMonth: true,
+							changeYear: true,
+							minDate : 0, //can't start before today.
+							dateFormat : 'yymmdd',
+							timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
+							stepMinute : 5
+							});
+						$('.ui_tpicker_second').hide(); //don't show second chooser, but have it so the seconds are added to the input.
+					
+					var $picker = $("[data-app-role='pickerContainer']:first",$target);
+					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
 					app.u.handleAppEvents($target);
-					}
-				}
-			}
-		},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else if(data === false)	{
-	$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});
-	}
-else	{} //an error occured. getCampaignByCAMPAIGNID will handle displaying the error.
+						}
+					else if(data === false)	{
+						$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});
+						}
+					else	{} //an error occured. getCampaignByCAMPAIGNID will handle displaying the error.
 					
 					}
 				else	{
@@ -659,6 +631,14 @@ else	{
 					else	{} //validateForm handles error display.
 					});
 				},
+
+//opens the ebay template in an editor
+			showCampaignTemplateEditor : function($btn)	{
+				$btn.button();
+				$btn.off('click.showCampaignTemplateEditor').on('click.showCampaignTemplateEditor',function(){
+					app.ext.admin_templateEditor.a.showTemplateEditorInModal('campaign',{'campaignid':$btn.data('campaignid')})
+					})
+				}, //showTemplateEditorInModal
 
 //clicked from campaign list row.
 			adminCampaignUpdateShow : function($btn)	{

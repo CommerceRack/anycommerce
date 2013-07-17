@@ -486,6 +486,14 @@ either templateID or (data or datapointer) are required.
 					gMessage : true,
 					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in app.data "});
 				}
+// ** 201324 -> for the admin UI, need to make sure data is getting set.
+//always add the dataAttribs as 'data()'. that way they're available even if a failure occurs later.
+//applying theme as data() insteat of attr('data-** means case is preserved.
+			if(o.dataAttribs)	{
+				app.u.dump(" -> this.element.id: "+this.element.attr('id'));
+				this.element.data(o.dataAttribs);
+				}
+
 			}, //_init
 
 		_setOption : function(option,value)	{
@@ -541,6 +549,9 @@ either templateID or (data or datapointer) are required.
 				//should never get here. error handling handled in _init before this is called.
 				r = false;
 				}
+			
+
+			
 			return r;
 			},
 

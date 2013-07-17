@@ -1752,21 +1752,24 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
 				</select>
 			</label>
-		
+
 			<div class='label' data-app-role='ebayTemplateConfigContainer'>
 				<span>Template</span>
-				<span data-bind='var:profile(%PROFILE.template_origin); format:text;' data-app-role='ebayTemplateOrigin'  class='marginLeft marginRight'></span>
-			<br />
-				<button class='marginLeft' data-app-role='ebayTemplateChooseButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|ebayTemplateChooserShow'>Choose</button>
-				
-				<button data-app-role='ebayTemplateEditButton' data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|showTemplateEditorInModal'>Edit</button>
-				
-				<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipDownloadExec'>Download Zip</button>
-
-				<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipUploadExec'>Upload</button>
+				<span data-bind='var:profile(%PROFILE.template_origin); format:text;' data-app-role='templateOrigin'  class='marginLeft marginRight'></span>
+			
+				<div class='buttonset marginTop'  data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;'>
+			
+					<button data-app-role='ebayTemplateChooseButton' data-app-event='admin_templateEditor|templateChooserShow' data-mode='ebay'>Choose</button>
+					<button data-app-role='ebayTemplateEditButton' data-app-event='admin_templateEditor|templateEditorShow' data-mode='ebay'>Edit</button>
+					
+					<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipDownloadExec'>Download Zip</button>
+	
+					<button data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;' data-app-event='admin_syndication|adminEBAYProfileZipUploadExec'>Upload</button>
 				
 				
 				<span class='warn conditionalHide'><b>Needs Review!</b> <span class='toolTip' title="Not every template upgrade goes smoothly. Take a look and see how your's went. There are tools available to assist you in making further changes to your template(s).">?</span></span>
+				</div>
+			
 			</div>
 
 
@@ -2511,7 +2514,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 	<input type='hidden' name='DST' value='EBF' />
 	<label class='marginBottom'>
-		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(%PROFILE.enable); format:popVal;" />
+		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: profile(enable); format:popVal;" />
 		Is active
 	</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>

@@ -1099,7 +1099,7 @@ The checkbox below does not work.
 
 
 
-<div id='caimpaignUpdateTemplate' class='campaignEditor ui-widget ui-widget-content ui-corner-all stdPadding'>
+<div id='caimpaignUpdateTemplate' class='campaignEditor ui-widget ui-widget-content ui-corner-all stdPadding clearfix'>
 
 <form action='#' onsubmit="return false" class='labelsAsBreaks' data-cb_tf='true'>
 <input name='CAMPAIGNID' type='hidden' value='' data-bind="var: campaign(CAMPAIGNID); format:popVal;" />
@@ -1110,10 +1110,26 @@ The checkbox below does not work.
 	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
 </div>
 
-<table class='fullWidth campaignEditorTable'>
-<tr>
-	<td class='threeColumn valignTop'>
-	<fieldset data-app-role='campaignSettings'>
+	
+	<fieldset class='floatLeft threeColumn'>
+		<legend>Template</legend>
+		<div class='label' data-app-role='campaignTemplateConfigContainer'>
+			<span>Selected</span>
+			<span data-bind='var:campaign(template_origin); format:text;' data-app-role='templateOrigin'  class='marginLeft marginRight'></span>
+		</div>
+		
+		<div class='buttonset ui-widget-content smallPadding ui-corner-all' data-bind='var:profile(CAMPAIGNID); format:assignAttribute; attribute:data-campaignid;'>
+			<button data-app-event='admin_templateEditor|templateChooserShow' data-mode='campaign'>Choose</button>
+			<button data-app-event='admin_templateEditor|templateEditorShow' data-mode='campaign'>Edit</button>
+			<button>Download Zip</button>
+			<button>Upload</button>
+		</div>
+	
+	</fieldset>
+	
+	
+	
+	<fieldset data-app-role='campaignSettings' class='floatLeft threeColumn'>
 		<legend>Campaign Settings</legend>
 
 
@@ -1164,32 +1180,13 @@ The checkbox below does not work.
 
 	</fieldset>
 
-<fieldset>
-	<legend>Customer Selection</legend>
-	<div data-app-role='pickerContainer'>
+	<fieldset data-app-role='campaignCustomerSelector' class='floatLeft threeColumn'>
+		<legend>Customer Selection</legend>
+		<div data-app-role='pickerContainer'>
+		
+		</div>
 	
-	</div>
-
-</fieldset>
-
-	</td>
-
-	<td class='valignTop'>
-
-<fieldset>
-	<legend>Campaign Content</legend>
-
-<textarea class='marginBottom fullWidth' data-app-role='htmlEditor' name='HTML' rows='20'></textarea>
-
-</fieldset>
-
-
-
-
-
-	</td>
-</tr>
-</table>
+	</fieldset>
 
 </form>
 

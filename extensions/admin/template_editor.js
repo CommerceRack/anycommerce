@@ -59,102 +59,128 @@ var admin_templateEditor = function() {
 				
 				vars = vars || {};
 				if(mode == 'ebay' || mode == 'campaign')	{
-var $D = $('#templateEditor');
-if($D.length)	{
-	$D.removeData('profile');
-	$D.removeData('mode');
-	$D.empty();
-	}
-else	{
-	$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' Template'});
-	$D.dialog({
-		'modal':true,
-		'autoOpen':false,
-		'width':'90%',
-		close: function(event, ui)	{
-			$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-			},
-		open : function(event,ui)	{
-			$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
-			}
-		});
-	$D.dialog("option", "position", "center");
-	}					
+					var $D = $('#templateEditor');
+					if($D.length)	{
+						//template editor has been opened before. nuke the template vars so nothing carries over.
+						$D.removeData('profile');
+						$D.removeData('campaignid');
+						$D.removeData('mode');
+						$D.empty();
+						}
+					else	{
+						$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'});
+						$D.dialog({
+							'modal':true,
+							'autoOpen':false,
+							'width':'94%',
+							close: function(event, ui)	{
+								$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
+								},
+							open : function(event,ui)	{
+								$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
+								}
+							});
+						$D.dialog("option", "position", "center");
+						}					
+					
+					if(mode == 'ebay' && !vars.profile)	{
+						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is ebay but vars.profile was not set and is required.","gMessage":true});
+						} //error
+					else if(mode == 'campaign' && !vars.campaignid)	{
+						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
+						}
+					else	{
+						$D.data('mode',mode);
+						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
+						$D.dialog('option','height',($(window).height() - 100));
+						$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
+						$D.dialog('open');
+						$D.showLoading({"message":"Fetching template HTML"});
+					
+						var callback = function(rd){
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd})
+								}
+							else	{
+						
+								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
+									'state' : 'persistent',
+									showClose : false, //set to false to disable close (X) button.
+									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+									extension : 'template_editor', //used in conjunction w/ persist.
+									name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+									persistentStateDefault : 'collapse',
+									persistent : true
+									});
+								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
+								var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
+									"|", 
+									app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
+									app.ext.admin_templateEditor.u.getEditorButton_image()
+									]);
 
-if(mode == 'ebay' && !vars.profile)	{
-	$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is ebay but vars.profile was not set and is requird.","gMessage":true});
-	} //error
-else if(mode == 'campaign' && !vars.campaignID)	{
-	$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is requird.","gMessage":true});
-	}
-else	{
-	$D.data('mode',mode);
-	$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
-	$D.dialog('option','height',($(window).height() - 100));
-	$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
-	$D.dialog('open');
-	$D.showLoading({"message":"Fetching template HTML"});
+//handle some mode specifics.
+								if(mode == 'ebay')	{
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
+									$("[data-app-role='highlightContainer_product']",$D).show();
+									}
+								else if(mode == 'campaign')	{
+									$("[data-app-role='highlightContainer_buyer']",$D).show();
+									}
+//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
+						
+								$("textarea:first",$D)
+									.height($D.height() - 100)
+									
+									.css('width','95%')
+									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
+									.htmlarea({
+										// Override/Specify the Toolbar buttons to show
+										toolbar: toolbarButtons // 
+										});
+								
+							
+								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+								var $iframeBody = $('iframe',$D).width('100%').contents().find('body');
+								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
+							
+								app.u.handleAppEvents($D);
+								$('.toolTip',$D).tooltip();
+								}
+							}
+					
+						if(mode == 'ebay')	{
+							app.model.addDispatchToQ({
+								'_cmd':'adminEBAYProfileFileContents',
+								'PROFILE' : vars.profile,
+								'FILENAME' : 'index.html',
+								'_tag' : {
+									'datapointer' : 'adminEBAYProfileFileContents|'+vars.profile,
+									'callback' : callback
+									}
+								},'immutable');
+							}
+						else if(mode == 'campaign')	{
 
-	var callback = function(rd){
-		$D.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$D.anymessage({'message':rd})
-			}
-		else	{
-	
-			$("[data-app-role='templateObjectInspectorContainer']").anypanel({
-				'state' : 'persistent',
-				showClose : false, //set to false to disable close (X) button.
-				wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-				extension : 'template_editor', //used in conjunction w/ persist.
-				name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-				persistentStateDefault : 'collapse',
-				persistent : true
-				});
-			var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
-			
-	//								app.u.dump(app.ext.admin_templateEditor.u.getEBAYToolbarButtons());
-			$("textarea:first",$D)
-				.height($D.height() - 100)
-				
-				.css('width','95%')
-				.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
-				.htmlarea({
-					// Override/Specify the Toolbar buttons to show
-					toolbar: app.ext.admin.u.buildToolbarForEditor(app.ext.admin_templateEditor.u.getEBAYToolbarButtons())
-					});
-			
-		
-		// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-		var $iframeBody = $('iframe',$D).width('100%').contents().find('body');
-		app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
-	
-		app.u.handleAppEvents($D);
-		$('.toolTip',$D).tooltip();
-					}
-				}
+							app.model.addDispatchToQ({
+								'_cmd':'adminCampaignFileContents',
+								'CAMPAIGNID' : vars.campaignid,
+								'FILENAME' : 'index.html',
+								'_tag' : {
+									'datapointer' : 'adminCampaignFileContents|'+vars.campaignid,
+									'callback' : callback
+									}
+								},'immutable');
 
-	if(mode == 'ebay')	{
-		app.model.addDispatchToQ({
-			'_cmd':'adminEBAYProfileFileContents',
-			'PROFILE' : vars.profile,
-			'FILENAME' : 'index.html',
-			'_tag' : {
-				'datapointer' : 'adminEBAYProfileFileContents|'+vars.profile,
-				'callback' : callback
-				}
-			},'immutable');
-		
-		}
-	else if(mode == 'campaign')	{
-		// coming soon...
-		}
-	else	{
-		$D.anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] passed initial validation but failed at dispatch add.","gMessage":true});
-		} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
-
-	app.model.dispatchThis('immutable');
-	}
+							}
+						else	{
+							$D.anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] passed initial validation but failed at dispatch add.","gMessage":true});
+							} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
+					
+						app.model.dispatchThis('immutable');
+						}
 
 
 
@@ -166,6 +192,42 @@ else	{
 				
 				}, //showTemplateEditorInModal
 
+			showTemplateChooserInModal : function(vars)	{
+				vars = vars || {};				
+				if((vars.mode == 'campaign' && vars.campaignid) || (vars.mode == 'ebay' && vars.profile))	{
+
+					var dialogObject = {"templateID" : "templateChooserTemplate"};
+
+					if(vars.mode == 'campaign')	{
+						dialogObject.title = 'Campaign Template Chooser';
+						dialogObject.data = app.data.adminCampaignTemplateList;
+						dialogObject.dataAttribs = {'campaignid':vars.campaignid,'mode':vars.mode};
+						}
+					else if(vars.mode == 'ebay')	{
+						dialogObject.title = 'eBay Template Chooser';
+						dialogObject.data = app.data.adminEBAYTemplateList;
+						dialogObject.dataAttribs = {'profile':vars.profile,'mode':vars.mode};
+						}
+					else	{} //shouldn't get here.
+
+					var $D = app.ext.admin.i.dialogCreate(dialogObject); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
+					$D.attr('id','templateChooser');
+					$D.dialog('open');
+					
+					$D.imagegallery({
+						selector: 'a[data-gallery="gallery"]',
+						show: 'fade',
+						hide: 'fade',
+						fullscreen: false,
+						slideshow: false
+						});
+//					app.u.dump(" -> $D.data()"); app.u.dump($D.data());
+					app.u.handleAppEvents($D);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, either mode ["+mode+"] is invalid or based on mode, either profile or campaignid is not set.","gMessage":true});
+					}
+				}, //showTemplateChooserInModal
 
 			initWizard : function()	{
 				var	$wizardForm = $('#wizardForm');
@@ -498,115 +560,187 @@ else	{
 						}
 					},
 
-//returns an array that gets appended to the html editor toolbar.
-				getEBAYToolbarButtons : function()	{
-	
-	return [{
-				css : 'imageadd',
-				'text' : 'Upload New Image to Profile',
-				action: function (btn) {
-					var $D = $("<div \/>");
-					$D.dialog({
-						'modal':true,
-						'width':500,
-						height : 500,
-						'autoOpen' : false
-						});
-					$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
-					$D.dialog('open');
-					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
-					}
-				}	,	{
-				css: 'image',
-				text: 'Place Image',
-				action: function (btn) {
-					var 
-						$D = $('#ebayTemplateEditorImageListModal'),
-						profile = $('#templateEditor').data('profile'),
-						jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
-					if($D.length)	{
-						$D.empty(); //clear contents
-						}
-					else	{
-						$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
-						$D.dialog({
-							'title' : 'Select Media',
-							'modal':true,
-							'width':'60%',
-							'autoOpen' : false
-							});
-						}
-					$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
-					$D.dialog('open');
-					$D.showLoading({'message':'Updating File List'});
-					app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
+//Used to copy a template into a profile or campaign (or whatever as more get added).
+//vars needs to include SUBDIR and PROJECTID.  Vars is most likely passed from an li.data(), but doesn't have to be.
+				handleTemplateSelect : function(vars)	{
+					vars = vars || {};
+					var $TC = $('#templateChooser');
+					const mode = $TC.data('mode'); //should never get changed through this code.
+					
+					if(mode)	{
+						if((mode == 'campaign' && $TC.data('campaignid')) || (mode == 'ebay' && $TC.data('profile')))	{
+							if(vars.SUBDIR)	{
+								//all is well at this point. proceed.
+								$TC.showLoading({'message':'One moment please. Copying files into directory.'});
+								var dObj = {
+									_tag : {
+										'callback' : function(rd)	{
+											if(app.model.responseHasErrors(rd)){
+												$form.anymessage({'message':rd})
+												}
+											else	{
+												$TC.dialog('close');
+												$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the template "+vars.SUBDIR+" has been copied."));
+												$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
+												}
+											}
+										}	
+									}
+								
+								dObj.SUBDIR = vars.SUBDIR;
+								dObj.PROJECTID = vars.PROJECTID;
+								
+								
+								if(mode == 'ebay')	{
+									dObj._cmd = 'adminEBAYTemplateInstall';
+									dObj.PROFILE = $TC.data('profile');
+									app.model.addDispatchToQ({
+										'_cmd':'adminEBAYProfileUpdate',
+										'template_origin':vars.SUBDIR,
+										'PROFILE' : vars.PROFILE
+										},'immutable');
+									}
+								else if(mode == 'campaign')	{
+									dObj._cmd = 'adminCampaignTemplateInstall';
+									dObj.CAMPAIGNID = $TC.data('campaignid');
+									}
+								else	{} //should never get here.
+
+								app.model.addDispatchToQ(dObj,'immutable'); //app.model.dispatchThis('immutable');
+								app.model.dispatchThis('immutable');
+								}
+							else	{
+								$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, SUBDIR not passed in.","gMessage":true});
+								}
+							
 							}
 						else	{
-							//success content goes here.
-							var L = app.data[rd.datapointer]['@images'].length;
-	//need a 'path' set for the data-bind to render.
-							for(var i = 0; i < L; i += 1)	{
-								app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
-								}
-							$D.anycontent({'datapointer':rd.datapointer});
-							app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
-							$D.imagegallery({
-								selector: 'a[data-gallery="gallery"]',
-								show: 'fade',
-								hide: 'fade',
-								fullscreen: false,
-								slideshow: false
-								});
-							$D.dialog("option", "position", "center");
+							$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, either mode ["+mode+"] is invalid (must be ebay or campaign) or a supporting/required value (profile ["+$TC.data('profile')+"] for ebay or campaignid ["+$TC.data('campaignid')+"] for campaign) was unable to be ascertained. ","gMessage":true});
 							}
-						}},'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				},{
-				css : 'prodattributeadd',
-				'text' : 'Add a Product Attribute',
-				action: function (btn) {
-					var jhtml = this; //the jhtml object.
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Add Product Attribute'
-						});
-					$D.dialog('open');
-					$ul = $("<ul \/>");
+						}
+					else	{
+						$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, unable to determine 'mode' from #templateChooser.","gMessage":true});
+						}
+
+					}, //handleTemplateSelect
+				
+				getEditorButton_imageadd : function()	{
+					return {
+						css : 'imageadd',
+						'text' : 'Upload New Image to Profile',
+						action: function (btn) {
+							var $D = $("<div \/>");
+							$D.dialog({
+								'modal':true,
+								'width':500,
+								height : 500,
+								'autoOpen' : false
+								});
+							$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
+							$D.dialog('open');
+							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
+							}
+						}
+					}, //getEditorButton_imageadd
+					
+				getEditorButton_image : function()	{
+					return {
+						css: 'image',
+						text: 'Place Image',
+						action: function (btn) {
+							var 
+								$D = $('#ebayTemplateEditorImageListModal'),
+								profile = $('#templateEditor').data('profile'),
+								jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
+							if($D.length)	{
+								$D.empty(); //clear contents
+								}
+							else	{
+								$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
+								$D.dialog({
+									'title' : 'Select Media',
+									'modal':true,
+									'width':'60%',
+									'autoOpen' : false
+									});
+								}
+							$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
+							$D.dialog('open');
+							$D.showLoading({'message':'Updating File List'});
+							app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									var L = app.data[rd.datapointer]['@images'].length;
+			//need a 'path' set for the data-bind to render.
+									for(var i = 0; i < L; i += 1)	{
+										app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
+										}
+									$D.anycontent({'datapointer':rd.datapointer});
+									app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
+									$D.imagegallery({
+										selector: 'a[data-gallery="gallery"]',
+										show: 'fade',
+										hide: 'fade',
+										fullscreen: false,
+										slideshow: false
+										});
+									$D.dialog("option", "position", "center");
+									}
+								}},'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						}
+					}, //getEditorButton_image
+
+//returns an array that gets appended to the html editor toolbar.
+				getEditorButton_prodattributeadd : function()	{
 	
-	//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
-	
-	$("<li \/>").text('Product Name').on('click',function(){
-		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
-		$D.dialog('close');
-		}).appendTo($ul);
-	
-	$("<li \/>").text('Product Manufacturer').on('click',function(){
-		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
-		$D.dialog('close');
-		}).appendTo($ul);
-	
-	$("<li \/>").text('Product Description').on('click',function(){
-		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
-		$D.dialog('close');
-		}).appendTo($ul);
-	
-	$("<li \/>").text('Product Features').on('click',function(){
-		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
-		$D.dialog('close');
-		}).appendTo($ul);
-	
-	$("<li \/>").text('Product Image 5').on('click',function(){
-		jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
-		$D.dialog('close');
-		}).appendTo($ul);
-	$("li",$ul).addClass('lookLikeLink');
-	$ul.appendTo($D);
-	
-					}
-				}]
-					} //getEBAYToolbarButtons
+					return {
+						css : 'prodattributeadd',
+						'text' : 'Add a Product Attribute',
+						action: function (btn) {
+							var jhtml = this; //the jhtml object.
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Add Product Attribute'
+								});
+							$D.dialog('open');
+							$ul = $("<ul \/>");
+					
+					//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
+					
+					$("<li \/>").text('Product Name').on('click',function(){
+						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
+						$D.dialog('close');
+						}).appendTo($ul);
+					
+					$("<li \/>").text('Product Manufacturer').on('click',function(){
+						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
+						$D.dialog('close');
+						}).appendTo($ul);
+					
+					$("<li \/>").text('Product Description').on('click',function(){
+						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
+						$D.dialog('close');
+						}).appendTo($ul);
+					
+					$("<li \/>").text('Product Features').on('click',function(){
+						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
+						$D.dialog('close');
+						}).appendTo($ul);
+					
+					$("<li \/>").text('Product Image 5').on('click',function(){
+						jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
+						$D.dialog('close');
+						}).appendTo($ul);
+					$("li",$ul).addClass('lookLikeLink');
+					$ul.appendTo($D);
+					
+							}
+						}
+					} //getEditorButton_prodattributeadd
 
 			}, //u [utilities]
 
@@ -621,46 +755,99 @@ else	{
 				adminSaveAsTemplateExec : function($btn)	{
 					$btn.button();
 					$btn.off('click.adminSaveAsTemplateExec').on('click.adminSaveAsTemplateExec',function(){
-						var templateName = $('#templateName').val();
-						var profile = $('#templateEditor').data('profile');
+						var
+							templateName = $('#templateName').val(),
+							$D = $('#templateEditor');
+						const mode = $D.data('mode');
+						
+						
 						if(templateName && templateName.length > 5 )	{
-							if(profile)	{
-								var $D = $btn.closest('.ui-dialog-content');
+							if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
 								$D.showLoading({'message':'Saving as new template: '+templateName});
-								var mode = $('#templateEditor').data('mode');
-								if(mode == 'ebay')	{
-									app.model.addDispatchToQ({
-										'_cmd' : 'adminEBAYMacro',
-										'@updates' : ["PROFILE-SAVEAS-TEMPLATE?PROFILE="+profile+"&template="+templateName],
-										'_tag' : {
-											'callback' : function(responseData)	{
-												$D.hideLoading();
-												if(app.model.responseHasErrors(responseData)){
-													$D.anymessage({'message':responseData})
-													}
-												else	{
-													$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-													}
+								var dObj = {
+									'templatename' : templateName,
+									'SUBDIR' : $D.data('SUBDIR'),
+									'PROJECTID' : $D.data('PROJECTID'),
+									'_tag' : {
+										'callback' : function(responseData)	{
+											$D.hideLoading();
+											if(app.model.responseHasErrors(responseData)){
+												$D.anymessage({'message':responseData})
 												}
-											},
-										'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
-										},'mutable');
+											else	{
+												$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
+												}
+											}
+										},
+									'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
 									}
-								else if(mode == 'campaign')	{}
-								else	{
-									$D.anymessage({"message":"In admin_templateEditor.e.adminSaveAsTemplateExec, mode ["+mode+"] was either invalid (must be ebay or campaign) or unable to ascertain value.","gMessage":true})
+								
+								if(mode == 'ebay')	{
+									dObj._cmd = 'adminEBAYProfileTemplateCopy';
+									dObj.PROFILE = $D.data('profile');
 									}
-								app.model.dispatchThis('mutable');
+								else if(mode == 'campaign')	{
+									dObj._cmd = 'adminCampaignTemplateCopy';
+									dObj.CAMPAIGNID = $D.data('campaignid');
+									}
+								else	{} //shouldn't ever get here.
+
+								app.model.addDispatchToQ(dObj,'immutable');
+								app.model.dispatchThis('immutable');
 								}
 							else	{
-								$D.anymessage({"message":"In admin_templateEditor.e.adminSaveAsTemplateExec, unable to ascertain profile.",gMessage:true});
+								$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
 								}
 							}
 						else	{
 							$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
-							}				
+							}
 						});
 					},
+					
+//executed when a template is selected.
+				templateChooserExec : function($ele)	{
+					$ele.off('click.templateChooserShow').on('click.templateChooserShow',function(){
+						app.ext.admin_templateEditor.u.handleTemplateSelect($ele.closest('li').data());
+						});
+					},
+
+//opens the template chooser interface.
+				templateChooserShow : function($btn)	{
+					$btn.button();
+					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
+
+						if($btn.data('mode') == 'campaign')	{
+							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"campaign","campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
+							}
+						else if ($btn.data('mode') == 'ebay')	{
+							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"ebay","profile":$btn.closest("[data-profile]").data('profile')});
+							}
+						else	{
+							//invalid mode set.
+							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateChooserShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
+							}
+						
+						});
+					}, //templateChooserShow
+					
+				templateEditorShow : function($btn)	{
+					$btn.button();
+					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
+
+						if($btn.data('mode') == 'campaign')	{
+							app.ext.admin_templateEditor.a.showTemplateEditorInModal("campaign",{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
+							}
+						else if ($btn.data('mode') == 'ebay')	{
+							app.ext.admin_templateEditor.a.showTemplateEditorInModal("ebay",{"profile":$btn.closest("[data-profile]").data('profile')});
+							}
+						else	{
+							//invalid mode set.
+							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateEditorShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
+							}
+						
+						});
+					}, //templateEditorShow
 
 				startWizardExec : function($btn)	{
 					$btn.button();
@@ -709,27 +896,49 @@ else	{
 				adminTemplateSaveExec : function($btn)	{
 					$btn.button();
 					$btn.off('click.adminTemplateSaveExec').on('click.adminTemplateSaveExec',function(){
-						var $D = $btn.closest('.ui-dialog-content');
-						$D.showLoading({'message':'Saving changes'});
-						app.model.addDispatchToQ({
-							'_cmd' : 'adminEBAYProfileFileSave',
-							'PROFILE' : $D.data('profile'),
-							'FILENAME' : 'index.html',
-							'_tag' : {
-								'callback' : function(responseData)	{
-									$D.hideLoading();
-									if(app.model.responseHasErrors(responseData)){
-										$D.anymessage({'message':responseData})
+						
+						var $D = $('#templateEditor');
+						const mode = $D.data('mode');
+						
+						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+							$D.showLoading({'message':'Saving changes'});
+
+							var dObj = {
+								'FILENAME' : 'index.html',
+								'_tag' : {
+									'callback' : function(responseData)	{
+										$D.hideLoading();
+										if(app.model.responseHasErrors(responseData)){
+											$D.anymessage({'message':responseData})
+											}
+										else	{
+											$D.dialog('close');
+											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
+											}
 										}
-									else	{
-										$D.dialog('close');
-										$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
-										}
-									}
-								},
-							'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
-							},'immutable');
-						app.model.dispatchThis('immutable');
+									},
+								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
+								}
+
+							if(mode == 'ebay')	{
+								dObj._cmd = 'adminEBAYProfileFileSave';
+								dObj.PROFILE = $D.data('profile');
+								}
+							else if(mode == 'campaign')	{
+								dObj._cmd = 'adminCampaignFileSave';
+								dObj.CAMPAIGNID = $D.data('campaignid');
+								}
+							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
+	
+	
+							app.model.addDispatchToQ(dObj,'immutable');
+							app.model.dispatchThis('immutable');							
+							}
+						else	{
+							$D.anymessage({"message":"In admin_syndication.e.adminTemplateSaveExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							}
+						
+
 						});
 	
 					},

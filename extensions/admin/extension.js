@@ -3728,7 +3728,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				r.push("link", "unlink");
 				var L = buttons.length;
 				if(L)	{
-					r.push("|");
 					for(var i = 0; i < L; i += 1)	{
 						r.push(buttons[i])
 						}
@@ -5380,6 +5379,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 				var $D = $("<div \/>").attr('title',vars.title);
 				if(vars.anycontent && vars.templateID)	{
+//					app.u.dump(" -> vars: "); app.u.dump(vars);
 					$D.anycontent(vars);
 					}
 				$D.dialog({

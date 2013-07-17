@@ -513,32 +513,7 @@ app.model.dispatchThis('mutable');
 					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no DST or target specified.",'gMessage':true});
 					}
 				
-				}, //showDSTDetails
-			
-			showTemplateChooserInModal : function(profile)	{
-				if(profile)	{
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'eBay Template Chooser',
-						'templateID' : 'ebayTemplateChooserTemplate',
-						data : app.data.adminEBAYTemplateList
-						});
-					$D.attr('id','ebayTemplateChooser');
-					$D.data('profile',profile);
-					$D.dialog('open');
-					
-					$D.imagegallery({
-						selector: 'a[data-gallery="gallery"]',
-						show: 'fade',
-						hide: 'fade',
-						fullscreen: false,
-						slideshow: false
-						});
-					
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, no profile passed.","gMessage":true});
-					}
-				} //showTemplateChooserInModal
+				} //showDSTDetails
 			
 			}, //Actions
 
@@ -849,6 +824,7 @@ else	{
 					}
 				}, //getUpdatedEBAYAttributesForm
 
+// !!! delete this once the templateEditor code is all refactored.
 			handleEBAYTemplateSelect : function(vars)	{
 				vars = vars || {};
 				var $ETC = $('#ebayTemplateChooser'); 
@@ -863,7 +839,7 @@ else	{
 							else	{
 								$ETC.dialog('close');
 								$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the eBay template "+vars.SUBDIR+" has been copied into the profile "+vars.PROFILE+"."));
-								$('.pageSyndication:first').find("[data-app-role='ebayTemplateOrigin']:first").text(vars.SUBDIR);
+								$('.pageSyndication:first').find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
 								}
 							}
 						}
@@ -1231,23 +1207,6 @@ app.model.dispatchThis('immutable');
 					})
 				}, //ebayLaunchProfileRefreshListingsExec
 
-			ebayTemplateChooserShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.showTemplateChooserInModal').on('click.showTemplateChooserInModal',function(){
-					app.ext.admin_syndication.a.showTemplateChooserInModal($btn.data('profile'));
-					});
-				}, //ebayTemplateChooserShow
-
-			ebayTemplateChooserExec : function($ele)	{
-				$ele.off('click.ebayTemplateChooserExec').on('click.ebayTemplateChooserExec',function(){
-					var data = $ele.closest('li').data();
-					app.ext.admin_syndication.u.handleEBAYTemplateSelect({
-						SUBDIR : data.subdir,
-						PROFILE : $('#ebayTemplateChooser').data('profile'),
-						PROJECTID : data.projectid
-						});
-					})
-				}, //ebayTemplateChooserExec
 
 			ebayRefreshStoreCategoriesExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
@@ -1267,14 +1226,6 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebayRefreshStoreCategoriesExec
 
-//opens the ebay template in an editor
-			showTemplateEditorInModal : function($btn)	{
-				
-				$btn.button();
-				$btn.off('click.showTemplateEditorInModal').on('click.showTemplateEditorInModal',function(){
-					app.ext.admin_templateEditor.a.showTemplateEditorInModal('ebay',{'profile':$btn.data('profile')})
-					})
-				}, //showTemplateEditorInModal
 
 //executed on click in file chooser portion of the template editor (in jhtml toolbar add image)
 			ebayHTMLEditorAddImage : function($ele,vars)	{
@@ -1616,8 +1567,6 @@ delete sfo.free
 					handleSelect();
 					});
 				}, //ebayBuyerRequirementsToggle
-
-
 
 			ebayAutopayToggle : function($ele)	{
 				function handleCB()	{
