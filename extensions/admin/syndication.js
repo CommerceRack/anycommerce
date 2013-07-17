@@ -1268,12 +1268,15 @@ app.model.dispatchThis('immutable');
 										"cost" : data.cost,
 										"addcost" : data.addcost
 										}
+								
+								
 //international has no farcost (AK+HI)
 								if(type == 'dom')	{
 									obj.farcost = data.farcost
 									}
-								sfo['@ship_'+type+'services'].push(obj);
-								if(index >= 2)	{return false} //exit now. only 3 allowed.
+								
+								if(!$tr.hasClass("rowTaggedForRemove")) {sfo['@ship_'+type+'services'].push(obj);}
+								if(sfo['@ship_'+type+'services'].length >= 2)	{return false} //exit now. only 3 allowed.
 								})
 							}
 						}

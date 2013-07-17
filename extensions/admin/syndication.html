@@ -1887,8 +1887,6 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					<option value='ProPackBundle'>ProPack Bundle*</option>
 					<option value='ProPackPlusBundle'>ProPackPlus Bundle**</option>
 					<option value='ValuePackBundle'>ValuePackBundle**</option>
-					<option value=''></option>
-					<option value=''></option>
 				</select>
 			</label>
 			<p class='hint'>
@@ -2096,16 +2094,27 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 	
 	<fieldset data-panelname='eBayContactInfo'>
 		<legend>Contact Information/Availability</legend>
+
+		
+		
+		<div class='clearfix'>
+
 		
 		<div class='marginBottom'>
 			<label>
 				<span>Originating Zip</span>
-				<input type='text' name='origin_zip' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
+				<input type='text' name='origin_zip' required='required' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
+			</label>
+		</div>		
+		<div class='marginBottom'>
+			<label>
+				<span>Item Location</span>
+				<input type='text' name='Item.Location' required='required' data-bind="var: profile(%PROFILE.Item.Location); format:popVal;" />
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
 			</label>
 		</div>
-		
-		
-		<div class='clearfix'>
+
+
 			<label>
 				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN); format:popVal;" />
 				Anytime Hours
