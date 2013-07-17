@@ -1822,7 +1822,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 			
 			<label>
-				<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\BestOfferEnabled\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BestOfferDetails\BestOfferEnabled\@BOOLEAN); format:popVal;" />
 				Enable best offer
 				<span class='toolTip' title="This feature enables a buyer to make a lower-priced binding offer on that item.">?</span>
 			</label>			
@@ -1840,9 +1840,9 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
 			</label>
 
-			<label data-app-role='eBayPaymentMethods'>
+			<label data-app-role='eBayPaymentMethods' >
 				<span>Payment methods</span>
-				<select multiple='multiple'>
+				<select multiple='multiple' name='Item\PaymentMethods\@ARRAY' data-bind="var: profile(%PROFILE.Item\PaymentMethods\@ARRAY); format:popVal;">
 					<option value='AmEx'>American Express</option>
 					<option value='CashInPerson'>Cash-in-person option</option>
 					<option value='CashOnPickup'>Payment on delivery</option>
@@ -1894,7 +1894,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 			
 			<label>
 				<span>Listing enhancement</span>
-				<select type='text' name='Item\ListingEnhancement' data-bind="var: profile(%PROFILE.Item\ListingEnhancement); format:popVal;" multiple="multiple" >
+				<select type='text' name='Item\ListingEnhancement\@ARRAY' data-bind="var: profile(%PROFILE.Item\ListingEnhancement\@ARRAY); format:popVal;" multiple="multiple" >
 					<option value=''>none</option>
 					<option value='BoldTitle'>title for the item's listing in boldface type</option>
 					<option value='Border'>add a border around the listing's pictures</option>
@@ -2412,7 +2412,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		<legend>Seller Details</legend>
 		<div class='clearfix'>
 			<label>	
-				<input type="checkbox" class='applyAnycb' name='Item\PrivateListing\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\PrivateListing\@BOOLEAN); format:popVal;" />
+				<input type="checkbox" class='applyAnycb' name='Item\MotorsDealer\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\MotorsDealer\@BOOLEAN); format:popVal;" />
 				Motors Dealer
 				<span class='toolTip' title="Indicates if item is listed for sale by owner (FSBO) or listed by a dealer. Applies to eBay Motors Pro applications only.">?</span>
 			</label>

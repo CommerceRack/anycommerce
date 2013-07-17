@@ -2986,6 +2986,17 @@ $tmp.empty().remove();
 //with radio's the value passed will only match one of the radios in that group, so compare the two and if a match, check it.
 				if($tag.val() == data.value)	{$tag.attr('checked','checked')}
 				}
+			else if($tag.is('select') && $tag.attr('multiple') == 'multiple')	{
+//				app.u.dump("GOT HERE!!!!!!!!!!!!!!!!");
+				if(typeof data.value === 'object')	{
+//					app.u.dump(" -> value is an object.");
+					var L = data.value.length;
+					for(var i = 0; i < L; i += 1)	{
+//						app.u.dump(" -> data.value[i]: "+data.value[i]);
+						$('option[value="' + data.value[i] + '"]',$tag).prop('selected','selected');
+						}
+					}
+				}
 			else	{
 //for all other inputs and selects, simply setting the value will suffice.
 				$tag.val(data.value);
