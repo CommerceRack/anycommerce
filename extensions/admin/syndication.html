@@ -1906,20 +1906,46 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		
 		<div class='marginBottom'>
 			<label>
-				<span>Originating Zip</span>
-				<input type='text' name='origin_zip' required='required' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
+				<span>Originating zip</span>
+				<input type='text' name='Item\ShippingDetails\CalculatedShippingRate\OriginatingPostalCode' required='required' data-bind="var: profile(%PROFILE.Item\ShippingDetails\CalculatedShippingRate\OriginatingPostalCode); format:popVal;" />
 			</label>
 		</div>		
 		<div class='marginBottom'>
 			<label>
-				<span>Item Location</span>
+				<span>Item location</span>
 				<input type='text' name='Item\Location' required='required' data-bind="var: profile(%PROFILE.Item\Location); format:popVal;" />
 				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
 			</label>
-		</div>		
+		</div>
+		
+		
 		<div class='marginBottom'>
 			<label>
-				<span>Shipping Location</span>
+				<span>Insurance option</span>
+				<select name='Item\ShippingDetails\InsuranceDetails\InsuranceOption' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InsuranceDetails\InsuranceOption); format:popVal;">
+					<option value='NotOffered'>Not offered</option>
+					<option value='IncludedInShippingHandling'>Included in shipping/handling</option>
+					<option value='NotOfferedOnSite'>Not offered on site</option>
+					<option value='Optional'>Optional</option>
+					<option value='Required'>Required</option>
+				</select>
+				<span class='toolTip' title="Whether the seller offers shipping insurance and, if so, whether the insurance is optional or required. Applies to both flat and calculated shipping.">?</span>
+			</label>
+
+
+			<label>
+				<span>Insureance fee</span>
+				<input type='text' name='Item\ShippingDetails\InsuranceDetails\InsuranceFee@CURRENCY' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InsuranceDetails\InsuranceFee@CURRENCY); format:popVal;" />
+				<span class='toolTip' title="Cost of shipping insurance set by the seller. If the buyer bought more than one of this item, this is the insurance for just a single item.">?</span>
+			</label>
+			
+		</div>
+		
+		
+		
+		<div class='marginBottom'>
+			<label>
+				<span>Shipping location</span>
 				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
 					<option value='None'>None</option>
 					<option value='Americas'>N. and S. America</option>
@@ -1937,9 +1963,38 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 			</label>
 		</div>
 
+
+
+
+
 		<div class='marginBottom'>
 			<label>
-				<span>Shipping Location</span>
+				<span>Insurance option</span>
+				<select name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption); format:popVal;">
+					<option value='NotOffered'>Not offered</option>
+					<option value='IncludedInShippingHandling'>Included in shipping/handling</option>
+					<option value='Optional'>Optional</option>
+					<option value='Required'>Required</option>
+				</select>
+				<span class='toolTip' title="Whether the seller offers shipping insurance and, if so, whether the insurance is optional or required. Applies to both flat and calculated shipping.">?</span>
+			</label>
+
+
+			<label>
+				<span>Insureance fee</span>
+				<input type='text' name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY); format:popVal;" />
+				<span class='toolTip' title="Cost of shipping insurance set by the seller. If the buyer bought more than one of this item, this is the insurance for just a single item.">?</span>
+			</label>
+			
+		</div>
+
+
+
+
+
+		<div class='marginBottom'>
+			<label>
+				<span>International Shipping Location</span>
 				<select name='Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY); format:popVal;" multiple="multiple">
 					<option value='None'>None</option>
 					<option value='Americas'>N. and S. America</option>
