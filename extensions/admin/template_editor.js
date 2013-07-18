@@ -90,7 +90,7 @@ var admin_templateEditor = function() {
 						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
 						}
 					else	{
-						app.u.dump("GOT HERE!!!!!!!!!!!!!!");
+
 						$D.data('mode',mode);
 						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
 						$D.dialog('option','height',($(window).height() - 100));
@@ -148,7 +148,7 @@ var admin_templateEditor = function() {
 								
 							
 								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-								var $iframeBody = $('iframe',$D).width('100%').contents().find('body');
+								var $iframeBody = $('iframe',$D).css({'min-height':'400px','min-width':'500px'}).width('100%').contents().find('body');
 								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 							
 								app.u.handleAppEvents($D);

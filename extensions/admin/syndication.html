@@ -2084,29 +2084,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 
 		<h4>Shipping</h4>
 
-
-		<div class='marginBottom'>
-			<label>
-				<span>International Shipping Location</span>
-				<select name='Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY); format:popVal;" multiple="multiple">
-					<option value='None'>None</option>
-					<option value='Americas'>N. and S. America</option>
-					<option value='Asia'>Asia</option>
-					<option value='AU'>Australia</option>
-					<option value='MX'>Mexico</option>
-					<option value='CA'>Canada</option>
-					<option value='Worldwide'>Worldwide</option>
-					<option value='DE'>Germany</option>
-					<option value='Europe'>Europe</option>
-					<option value='GB'>United Kingdom</option>
-					<option value='JP'>Japan</option>
-				</select>
-				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
-			</label>
-		</div>
-
-
-		
+	
 			<table data-app-role='dataTable' class='gridTable fullWidth'>
 			<thead>
 			<tr>
@@ -2376,7 +2354,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 				</label>
 			
 				<label>
-					<span>Restocking fee</span>
+					<span>Returns within</span>
 					<select name='Item\ReturnPolicy\ReturnsWithinOption' data-bind="var: profile(%PROFILE.Item\ReturnPolicy\ReturnsWithinOption); format:popVal;">
 						<option></option>
 						<option value='Days_10'>10 days</option>
