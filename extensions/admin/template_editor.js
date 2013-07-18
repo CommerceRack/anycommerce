@@ -90,12 +90,17 @@ var admin_templateEditor = function() {
 						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
 						}
 					else	{
+						app.u.dump("GOT HERE!!!!!!!!!!!!!!");
 						$D.data('mode',mode);
 						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
 						$D.dialog('option','height',($(window).height() - 100));
 						$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
-						$D.dialog('open');
 						$D.showLoading({"message":"Fetching template HTML"});
+//must scroll to top of body/html first or issues with modal placement and lack of browser scrollbars.						
+						$('html, body').animate({scrollTop:0}, 'fast', function(){
+							$D.dialog('open');
+							});
+						
 					
 						var callback = function(rd){
 							$D.hideLoading();

@@ -1063,7 +1063,7 @@ delete sfo.free
 										$ul = $("<ul \/>"),
 										errs = app.data[rd.datapointer]['@MSGS'],
 										L = errs.length
-									
+
 									for(var i = 0; i < L; i += 1)	{
 										$ul.append("<li>"+errs[i]['!']+" "+errs[i]['+']+"<\/li>");
 										}
