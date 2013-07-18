@@ -1784,7 +1784,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Currency</span>
-				<select name='Item\Currency\@CURRENCY' data-bind="var: profile(%PROFILE.Item\Currency\@CURRENCY); format:popVal;">
+				<select name='Item\Currency' data-bind="var: profile(%PROFILE.Item\Currency); format:popVal;">
 					<option value='USD'>USD</option>
 				</select>
 				<span class='toolTip' title="Currency associated with the item's price information. 3-letter ISO 4217 currency code that corresponds to the site specified in the listing request">?</span>
@@ -1900,6 +1900,62 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 				<input type='email' name='Item\PayPalEmailAddress' data-bind="var: profile(%PROFILE.Item\PayPalEmailAddress); format:popVal;" />
 				<span class='toolTip' title="Valid PayPal email address for the PayPal account that the seller will use if they offer PayPal as a payment method for the listing.">?</span>
 			</label>
+
+
+
+		
+		<div class='marginBottom'>
+			<label>
+				<span>Originating Zip</span>
+				<input type='text' name='origin_zip' required='required' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
+			</label>
+		</div>		
+		<div class='marginBottom'>
+			<label>
+				<span>Item Location</span>
+				<input type='text' name='Item\Location' required='required' data-bind="var: profile(%PROFILE.Item\Location); format:popVal;" />
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
+			</label>
+		</div>		
+		<div class='marginBottom'>
+			<label>
+				<span>Shipping Location</span>
+				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
+					<option value='None'>None</option>
+					<option value='Americas'>N. and S. America</option>
+					<option value='Asia'>Asia</option>
+					<option value='AU'>Australia</option>
+					<option value='MX'>Mexico</option>
+					<option value='CA'>Canada</option>
+					<option value='Worldwide'>Worldwide</option>
+					<option value='DE'>Germany</option>
+					<option value='Europe'>Europe</option>
+					<option value='GB'>United Kingdom</option>
+					<option value='JP'>Japan</option>
+				</select>
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
+			</label>
+		</div>
+
+		<div class='marginBottom'>
+			<label>
+				<span>Shipping Location</span>
+				<select name='Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalShippingServiceOption\ShipToLocation\@ARRAY); format:popVal;" multiple="multiple">
+					<option value='None'>None</option>
+					<option value='Americas'>N. and S. America</option>
+					<option value='Asia'>Asia</option>
+					<option value='AU'>Australia</option>
+					<option value='MX'>Mexico</option>
+					<option value='CA'>Canada</option>
+					<option value='Worldwide'>Worldwide</option>
+					<option value='DE'>Germany</option>
+					<option value='Europe'>Europe</option>
+					<option value='GB'>United Kingdom</option>
+					<option value='JP'>Japan</option>
+				</select>
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
+			</label>
+		</div>
 
 			</div>
 	</fieldset>
@@ -2098,41 +2154,6 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		
 		
 		<div class='clearfix'>
-
-		
-		<div class='marginBottom'>
-			<label>
-				<span>Originating Zip</span>
-				<input type='text' name='origin_zip' required='required' data-bind="var: profile(%PROFILE.origin_zip); format:popVal;" />
-			</label>
-		</div>		
-		<div class='marginBottom'>
-			<label>
-				<span>Item Location</span>
-				<input type='text' name='Item\Location' required='required' data-bind="var: profile(%PROFILE.Item\Location); format:popVal;" />
-				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
-			</label>
-		</div>		
-		<div class='marginBottom'>
-			<label>
-				<span>Shipping Location</span>
-				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
-					<option value='None'>None</option>
-					<option value='Americas'>N. and S. America</option>
-					<option value='Asia'>Asia</option>
-					<option value='AU'>Australia</option>
-					<option value='MX'>Mexico</option>
-					<option value='CA'>Canada</option>
-					<option value='Worldwide'>Worldwide</option>
-					<option value='DE'>Germany</option>
-					<option value='Europe'>Europe</option>
-					<option value='GB'>United Kingdom</option>
-					<option value='JP'>Japan</option>
-				</select>
-				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
-			</label>
-		</div>
-
 
 			<label>
 				<input type="checkbox" class='applyAnycb' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1AnyTime\@BOOLEAN); format:popVal;" />

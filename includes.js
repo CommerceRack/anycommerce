@@ -1162,17 +1162,20 @@ $.fn.serializeJSON = function(options){
 			if(json[this.name]) { return; } //value already set, exit early.
 			json[this.name] = this.checked ? this.value : '';
 			}
-		else if('select-multiple' === this.type && this.value)	{
+		else if('select-multiple' === this.type)	{
+			if(!this.value)	{}
+			else	{
 //multiple select is saved as an array.  If you need it flattened, either write a param to change the behavior or flatten it outside.
-			var optionsArr = new Array(); // 'this' loses meaning in the option loop, so a var is created and set after.
-			$('option',$(this)).each(function(){
-				var $option = $(this);
-//				app.u.dump(" -> $option.prop('selected'): "+$option.prop('selected'));
-				if($option.prop('selected'))	{
-					optionsArr.push($option.val());
-					}
-				})
-			json[this.name] = optionsArr;
+				var optionsArr = new Array(); // 'this' loses meaning in the option loop, so a var is created and set after.
+				$('option',$(this)).each(function(){
+					var $option = $(this);
+	//				app.u.dump(" -> $option.prop('selected'): "+$option.prop('selected'));
+					if($option.prop('selected'))	{
+						optionsArr.push($option.val());
+						}
+					})
+				json[this.name] = optionsArr;
+				}
 			}
 		else if ('checkbox' === this.type) {
 			if(options.cb)	{
