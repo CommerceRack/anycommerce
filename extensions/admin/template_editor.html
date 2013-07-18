@@ -101,7 +101,7 @@ look for hidden(ish) kiss inputs for template settings, like color.
 <form id="templateFileUpload" class='clearfix marginBottom'  name="templateFileUpload" action='#' method='post' enctype='multipart/form-data'>
 
 <!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload individual files and/or a zip archive containing an entire template (images, html and all)</h1>
+<p>Upload individual files and/or a zip archive containing an entire template (images, html and all)</p>
 
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
 </form>
@@ -128,8 +128,8 @@ EBAY SPECIFIC TEMPLATES
 <form id="ebayTemplateEditorImageUpload" class='clearfix marginBottom'  name="ebayTemplateEditorImageUpload" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='IMAGES'>
 <!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload images for use in this profile</h1>
-<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
+<h1 class='floatLeft'>Upload images for use in this template</h1>
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='marginTop'></div>
 </form>
 </div>
 

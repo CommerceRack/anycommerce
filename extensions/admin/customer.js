@@ -641,10 +641,15 @@ else	{
 				}, //showTemplateEditorInModal
 
 //clicked from campaign list row.
-			adminCampaignUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
-					var $table = $btn.closest('table');
+			adminCampaignUpdateShow : function($ele)	{
+				if($ele.is('button'))	{
+					$ele.button({icons: {primary: "ui-icon-pencil"},text: false});
+					}
+				else	{
+					$ele.addClass('lookLikeLink');
+					}
+				$ele.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
+					var $table = $ele.closest('table');
 					$table.stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 					$('button, a',$table).each(function(){
@@ -652,7 +657,7 @@ else	{
 							$table.stickytab('close');
 							})
 						})
-					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data('campaignid'));
+					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 					})
 				},
 //clicked within the campaign editor.

@@ -1038,7 +1038,9 @@ The checkbox below does not work.
 
 <table>
 <tr id='campaignResultsRowTemplate'>
-	<td data-bind="var: campaign(CAMPAIGNID); format:text;"></td>
+	<td>
+	<span data-bind="var: campaign(CAMPAIGNID); format:text;" data-app-event="admin_customer|adminCampaignUpdateShow"></span>
+	</td>
 	<td data-bind="var: campaign(SUBJECT); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: campaign(STATUS); format:text;" class='hideInDetailMode'></td>
 	<td>
@@ -1105,7 +1107,7 @@ The checkbox below does not work.
 <input name='CAMPAIGNID' type='hidden' value='' data-bind="var: campaign(CAMPAIGNID); format:popVal;" />
 
 
-<div class='marginBottom'>
+<div class='marginBottom clearfix'>
 	<button class='floatRight' data-app-event="admin_customer|adminCampaignUpdateExec">Save Campaign</button>
 	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
 </div>

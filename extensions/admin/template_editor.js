@@ -822,9 +822,9 @@ var admin_templateEditor = function() {
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
 
 
-						const mode = $button.closest('[data-mode]').data('mode');
+						const mode = $btn.data('mode');
 
-						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+						if((mode == 'campaign' && $btn.closest("[data-campaignid]").data('campaignid')) || (mode == 'ebay' && $btn.closest("[data-profile]").data('profile')))	{
 							var $D = app.ext.admin.i.dialogCreate({
 								'title' : 'Template File Upload',
 								'templateID' : 'templateFileUploadTemplate',
@@ -853,15 +853,13 @@ var admin_templateEditor = function() {
 					$btn.button();
 					$btn.off('click.containerZipDownloadExec').on('click.containerZipDownloadExec',function(){
 
-						var $D = $('#templateEditor');
-						const mode = $D.data('mode');
+						const mode = $btn.data('mode');
 
-						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+						if((mode == 'campaign' && $btn.closest("[data-campaignid]").data('campaignid')) || (mode == 'ebay' && $btn.closest("[data-profile]").data('profile')))	{
 							
 							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
 							var dObj = {
 								'base64' : true,
-								
 								'_tag' : {
 									'callback':'fileDownloadInModal',
 									'extension':'admin',
@@ -871,14 +869,16 @@ var admin_templateEditor = function() {
 								}
 							
 							if(mode == 'ebay')	{
+								var profile = $btn.closest("[data-profile]").data('profile');
 								dObj._cmd = 'adminEBAYProfileZipDownload';
-								dObj.FILENAME = $D.data('profile')+'.zip';
-								dObj.PROFILE = $D.data('profile');
+								dObj.FILENAME = 'ebay_'+profile+'.zip';
+								dObj.PROFILE = profile;
 								}
 							else if(mode == 'campaign')	{
+								var campaignid =  $btn.closest("[data-campaignid]").data('campaignid')
 								dObj._cmd = 'adminCampaignZipDownload';
-								dObj.FILENAME = $D.data('campaign')+'.zip';
-								dObj.CAMPAIGN = $D.data('campaign');
+								dObj.FILENAME = "campaign_"+campaignid+'.zip';
+								dObj.CAMPAIGNID = campaignid;
 								}
 							else	{}
 							

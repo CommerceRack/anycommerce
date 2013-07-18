@@ -777,7 +777,7 @@ ICON LIBRARY
 	background: #ffffff;  
 	}  
 
-.threeColumn	{width:31%; margin:0 1%;}
+.threeColumn	{width:31%; margin:0 1%; padding:0;}
 
 /* for a three column layout, where two columns are Narrow and one is Wide (NW) */
 .nwColumnN	{width:19%;}
