@@ -2109,7 +2109,26 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		<div class='marginBottom'>
 			<label>
 				<span>Item Location</span>
-				<input type='text' name='Item.Location' required='required' data-bind="var: profile(%PROFILE.Item.Location); format:popVal;" />
+				<input type='text' name='Item\Location' required='required' data-bind="var: profile(%PROFILE.Item\Location); format:popVal;" />
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
+			</label>
+		</div>		
+		<div class='marginBottom'>
+			<label>
+				<span>Shipping Location</span>
+				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
+					<option value='None'>None</option>
+					<option value='Americas'>N. and S. America</option>
+					<option value='Asia'>Asia</option>
+					<option value='AU'>Australia</option>
+					<option value='MX'>Mexico</option>
+					<option value='CA'>Canada</option>
+					<option value='Worldwide'>Worldwide</option>
+					<option value='DE'>Germany</option>
+					<option value='Europe'>Europe</option>
+					<option value='GB'>United Kingdom</option>
+					<option value='JP'>Japan</option>
+				</select>
 				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
 			</label>
 		</div>
