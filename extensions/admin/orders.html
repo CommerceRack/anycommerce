@@ -249,7 +249,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice">Print Invoice</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip">Packing Slip</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderCustomerEdit">Edit Customer</button>
+<!--
+* 201324 -> changed to use new crm interface.
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderTicketCreate">Create CRM Ticket</button>
+-->
+	<button class='floatLeft hide4Native' data-app-event="admin_customer|appAdminTicketCreateShow" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Create CRM Ticket</button>
 	<div class='floatLeft hide4Native'>
 	<button data-app-event="admin_orders|orderEmailSend">Send Email</button>
 	<button data-app-event="admin_orders|orderEmailShowMessageList">Message List</button>

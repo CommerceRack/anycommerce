@@ -2056,7 +2056,7 @@ else	{
 
 				}, //orderEmailShowMessageList
 
-			"orderTicketCreate" : function($btn)	{
+/*			"orderTicketCreate" : function($btn)	{
 				$btn.button();
 				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){
 					event.preventDefault();
@@ -2070,7 +2070,7 @@ else	{
 						}
 					});
 				}, //orderTicketCreate
-
+*/
 			"orderListUpdateSelectAll" : function($btn)	{
 				$btn.button();
 				$btn.off('click.orderListUpdateSelectAll').on('click.orderListUpdateSelectAll',function(event){

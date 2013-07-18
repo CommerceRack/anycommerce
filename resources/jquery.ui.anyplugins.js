@@ -1025,6 +1025,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 			else if(o.templateID)	{
 				$content = app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs);
 				}
+			else if(o.dispatch)	{
+				app.model.addDispatchToQ(o.dispatch,o.Q);
+				app.model.dispatchThis(o.Q);
+				}
 			else	{
 				
 				}

@@ -447,6 +447,17 @@ JSON editor, which didn't work:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 <!--
 
 //////////////////   PRIVATE FILES  \\\\\\\\\\\\\\\\\\\\\
@@ -461,5 +472,280 @@ JSON editor, which didn't work:
 	<td data-bind="var: file(creator); format:text;"></td>
 </tr>
 </table>
+
+
+
+
+
+
+
+
+
+<!--
+
+//////////////////   PRODUCT EXPORT TO CSV  \\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='productExportToolTemplate'>
+
+<form action='#' onSubmit="return false" class='labelsAsBreaks' name='productExportToolForm'>
+<input type="hidden" value="0" name="JOBID" />
+
+
+<h1>Product Export Tool</h1>
+
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 1: Select Product</h3>
+		</div>
+		
+		<fieldset class='stdPadding ui-widget-content ui-corner-bottom' data-app-role='pickerContainer'></fieldset>
+	</div>
+
+	</td><!-- /step 1 -->
+	
+	<td class="valignTop nwColumnW">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 2: Configure Export</h3>
+		</div>
+	
+	<fieldset class='stdPadding ui-widget-content ui-corner-bottom'>
+	
+		<label>
+			<span>Attributes</span>
+			<select name='attribute_source' data-app-event='admin_tools|productExportAttributeSrcChange'>
+				<option value='all'>All</option>
+				<option value='specify'>Specify</option>
+			</select>
+		</label>	
+		
+		
+		<div class='toggleThis displayNone' data-app-role='exportToolAttributeListContainer'>
+			<label>Attribute list</label>
+			<textarea name="fields" class='fullWidth' rows="5"></textarea>
+			<p class='hint'>
+			To specify header fields, specify product attributes separated by commas or newslines, leave no whitespace e.g. "zoovy:prod_name,zoovy:base_price,zoovy:prod_image1" (without the quotes) - without specifying which fields you want to export you will be limited to 500 products per export.<br />
+			<strong>Advanced users</strong>: You can alternatively specify a map to generate a particular CSV file for a trading partner. Use multiple lines 
+			</p>
+		</div>
+
+		<label>
+			<span>Variations formatting</span>
+			<select name="pogs">
+				<option value="">ignore</option>
+				<option value="JSON">JSON</option>
+				<option value="XML">XML</option>
+			</select>
+			<span class='toolTip' title="Variations are the actual input fields (textboxes, checkboxes, drop-down lists), along with any associated options and price/weight modifiers if applicable. ">?</span>
+		</label>
+	
+		<label>
+			<span>Variation detail</span>
+			<select name="variations">
+				<option value="0" selected="">base products only (recommended)</option>
+				<option value="1">base products+variations</option>
+				<option value="2">variation level only</option>
+			</select>
+		</label>
+
+
+		<label><input type="checkbox" name="navcats" /> Export Navigation Categories</label>
+		
+		<label><input type="checkbox" name="categories" /> Export Management Categories</label>
+		
+		<label><input type="checkbox" name="imagelib" /> Export Image URLs rather than Image Library names (may break Excel) <span class='toolTip' title="Remember to use %IMGURL=zoovy:prod_image1 as your header to get the URL instead of the image name.">?</span></label>
+		
+		<label><input type="checkbox" name="stripcrlf" /> Strip Carriage Return/Line Feeds</label>
+		
+		<label><input type="checkbox" name="convertutfx" /> Attempt to convert UTFx data to HTML.</label>
+		
+		<label><input type="checkbox" name="produrls" /> Enable the %PRODUCTURL header.</label>
+		
+		<label><input type="checkbox" name="addtocart" /> Enable the %ADDTOCART header.</label>
+
+	</fieldset>
+	</div>
+	</td>
+
+
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 3: Start Export</h3>
+		</div>
+		<fieldset class='stdPadding ui-widget-content ui-corner-bottom'>
+			<button data-app-event="admin_tools|productExportBatchJobCreateExec">Just Do It!</button>
+		</fieldset>
+	</div>
+	</td>
+
+	
+</tr>
+</tbody>
+</table>
+</form>
+</div>
+
+
+
+
+
+
+
+<!-- ACCOUNT UTILITIES (formerly tech tools) -->
+
+
+
+
+<div id='accountUtilitiesTemplate' class='stdPadding ui-widget ui-widget-content ui-corner-all'>
+	<h1>Account Utilities</h1>
+	<p class="hint marginTop marginBottom">Please make sure all users are logged out of your account, and all sync processes are disabled while using utilities in this area. They are *very* resource intensive and can cause outages if concurrent use is attempted.</p>
+
+
+	<section class='marginTop marginBottom'>
+		<h2>Product/Inventory</h2>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_CLEANUP'}}); return false;">Product Cleanup</button></td>
+			<td class='valignTop small'>
+			Resets/Rebuilds Product Index, clears out deleted items, and source pid from zoovy:related_products, and zoovy:accessory_products. Removes unicode characters. 
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'INVENTORY_CLEANUP'}}); return false; ">Inventory Cleanup</button></td>
+			<td class='valignTop small'>
+			Removes orphan inventory records which are not associated with a sku, creates records w/0 qty for pids which don't have inv. records.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'INVENTORY_UPDATE_RESERVES'}}); return false; ">Inventory Update Reserves</button></td>
+			<td class='valignTop small'>
+			Removes orphaned inventory reservations / verifies reserves.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'IMAGE_REINDEX'}}); return false; ">Image Reindex</button></td>
+			<td class='valignTop small'>
+			Image Reindex
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'ELASTIC_REBUILD'}}); return false; ">Elastic Rebuild</button></td>
+			<td class='valignTop small'>
+			Elastic Search Rebuild (note: will be offline/unavailable during rebuild)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_SALESRANK'}}); return false; ">Update SalesRanks</button></td>
+			<td class='valignTop small'>
+			Goes through all products which have customer reviews and updates zoovy:prod_salesrank
+			<p class="warning">NOTE: sometimes design uses prod_salesrank to store other data like dates, doing this will destroy that data. Verify with customer this field is intended to store sales ranking data based on reviews prior to execution.</p>
+			</td>
+		</tr>	
+		</tbody>
+		</table>
+	</section><!-- /product/inventory -->
+
+
+	<section class='marginTop marginBottom'>
+		<h2>eBay</h2>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'EBAY_UPDATE','f':'end-all'}}); return false; ">Close All Listings</button></td>
+			<td class='valignTop small'>
+			Ends all active listings on eBay.
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /ebay -->
+
+
+	<section class='marginTop marginBottom'>
+		<h2>Reporting</h2>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'KPIBI_RESET'}}); return false; ">Reset KPIBI</button>
+			</td>
+			<td class='valignTop'>
+			Rebuilds all KPIBI data for the last year
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /reporting -->
+
+
+<h2 class='red'>BELOW HERE NOT DONE YET:</h2>
+
+	<section class='marginTop marginBottom'>
+		<h2>And More...</h2>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td class='valignTop'>
+			<button>Inventory Event Queue</button>
+			</td>
+			<td class='valignTop'>
+			A report of inventory events.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button>User Event Queue</button>
+			</td>
+			<td class='valignTop'>
+			A report of unprocessed user events - including inventory, crm, product, order events - create, paid, ship, cancel
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /reporting -->
+
+	<section class='marginTop marginBottom'>
+		<h2>Inspectors</h2>
+		<p>JT can build these these</p>
+		<label><span>Order</span><input type='text' name='orderid' /></label><button>Go</button>
+		<label><span>Product ID</span><input type='text' name='pid' /></label><button>Go</button>
+		<label><span>Cart ID</span><input type='text' name='cartid' /></label><button>Go</button>
+		<p>but probably not this one</p>
+		<label><span>Session ID</span><input type='text' name='cartid' /></label><button>Go</button>
+	</section>
+
+	<section class='marginTop marginBottom'>
+		<h2>Access Logs</h2>
+	
+	</section> 
+
+
+
+
+<h2>Desktop Client</h2>
+	<div class="hint">reset the changed to 0 (will cause orders to resync)</div>
+	From YYYYMMDDHHMMSS:<input type="textbox" value="" name="FROMYYYYMMDDHHMMSS" id="FROM" class='applyDatepicker'><br>
+	Till YYYYMMDDHHMMSS:<input type="textbox" value="" name="TILLYYYYMMDDHHMMSS" id="TILL" class='applyDatepicker'><br>
+	<button onclick="navigateTo('/biz/manage/support/index.cgi?VERB=RESET-ORDER-CHANGED&amp;FROM='+jQuery('#FROM').val()+'&amp;TILL='.jQuery('#TO').val());">Reset</button>
+
+</div>
 
 

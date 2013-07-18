@@ -86,6 +86,29 @@ var admin_wholesale = function() {
 					});
 				app.model.dispatchThis('mutable');
 				},
+
+			
+			showPriceSchedules : function($target)	{
+				$target.empty();
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Price Schedules',
+					'className' : 'priceSchedules',
+//add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
+						"<button data-app-event='admin_wholesale|priceScheduleCreateShow' data-title='Create a New Price Schedule'>Add New Schedule</button>"
+						],
+					'thead' : ['ID','Name','Currency','Discount',''],
+					'tbodyDatabind' : "var: users(@SCHEDULES); format:processList; loadsTemplate:priceScheduleResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminPriceScheduleList',
+						'_tag' : {
+							'datapointer':'adminPriceScheduleList'
+							}
+						}
+					});
+				app.model.dispatchThis('mutable');
+				},
 			
 			
 			showOrganizationManager : function($target)	{
@@ -213,7 +236,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				optParams = optParams || {}; //optional params dumped into app events. allows for parent form of editor to be passed into modal.
 				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
 				app.ext.admin.calls.adminWholesaleScheduleList.init({'callback':function(rd)	{
-					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of pricing schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
+					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of price schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
 					$wm.empty().dialog('open').anycontent({'templateID':'supplierAddTemplate','showLoading':false});
 					app.ext.admin.u.handleAppEvents($wm,optParams);
 					}},'mutable');
@@ -406,7 +429,6 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					});
 				},
 
-
 //executed within the create new supplier form. actually creates the new supplier.
 			execSupplierCreate : function($btn,obj)	{
 				$btn.button();
@@ -526,7 +548,6 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					}); //$btn.on
 				},
-
 
 //applied to 'create user' button. just opens the modal.
 			showSupplierCreate : function($btn)	{
@@ -686,7 +707,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					
 					});
-				},
+				}, //execOrganizationSearch
 
 			execOrganizationRemove : function($btn)	{
 				
@@ -725,7 +746,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						});
 					$D.dialog('open');
 					})
-				},
+				}, //execOrganizationRemove
 
 			execOrganizationUpdate : function($btn)	{
 				$btn.button();
@@ -757,7 +778,81 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
+				}, //execOrganizationUpdate
+
+			priceScheduleUpdateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.priceScheduleUpdateShow').on('click.priceScheduleUpdateShow',function(event){
+					event.preventDefault();
+					const SID = $btn.closest('tr').data('sid'); //schedule id
+					
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'priceScheduleUpdateTemplate',
+						'panelID' : 'schedule_'+SID,
+						'header' : 'Edit Price Schedule: '+SID,
+						'data' : $btn.closest('tr').data()
+						});
+					app.u.handleAppEvents($panel);
+					$(":checkbox",$panel).anycb();
+					app.model.dispatchThis('mutable');
+					});
+				}, //priceScheduleUpdateShow
+
+
+			priceScheduleCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.priceScheduleUpdateShow').on('click.priceScheduleUpdateShow',function(event){
+					event.preventDefault();
+					
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Schedule',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					
+					$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
+					
+					$("<button>Create Schedule<\/button>").button().on('click',function(){
+						app.model.addDispatchToQ({
+							'_cmd':'adminPriceScheduleCreate',
+							'SID': $(this).parent().find("[name='SID']").val(),
+							'_tag':	{
+								'callback':'showMessaging',
+								'jqObj' : $D,
+								'jqObjEmpty' : true,
+								'message' : 'Your price schedule has been created.'
+								}
+							},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
+						app.model.dispatchThis('immutable');
+						}).appendTo($D);
+					
+					$D.dialog('open');
+					});
 				},
+
+			priceScheduleRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.priceScheduleRemoveConfirm').on('click.priceScheduleRemoveConfirm',function(event){
+					event.preventDefault();
+					
+					var SID = $btn.closest('tr').data('sid');
+					var $D = app.ext.admin.i.dialogConfirmRemove({
+						'message':'Are you sure you want to delete schedule '+SID+'? There is no undo for this action.',
+						'removeButtonText' : 'Delete Price Schedule',
+						'removeFunction':function(vars,$modal){
+							var $panel = $(app.u.jqSelector('#','schedule_'+SID));
+							if($panel.length)	{
+								$panel.anypanel('destroy'); //make sure there is no editor for this schedule still open.
+								}
+							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleDelete','SID':CODE},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
+							app.model.dispatchThis('immutable');
+							$modal.dialog('close');
+							}
+						});
+					});
+				}, //execTicketClose
+
 
 			showOrganizationUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});

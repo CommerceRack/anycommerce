@@ -735,6 +735,161 @@
 
 
 
+
+<!-- PRICING SCHEDULES -->
+
+
+
+
+<table>
+<tr id='priceScheduleResultsRowTemplate'>
+	<td data-bind="var: schedule(SID); format:text;"></td>
+	<td data-bind="var: schedule(title); format:text;"></td>
+	<td data-bind="var: schedule(currency); format:text;"></td>
+	<td data-bind="var: schedule(discount_amount); format:text;"></td>
+	<td class='alignRight'>
+<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm">Remove</button>
+<button>Customers</button>
+<button data-app-event="admin_wholesale|priceScheduleUpdateShow">Edit</button>
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+<div id='priceScheduleUpdateTemplate'>
+<form action='#' onSubmit='return false' name='priceScheduleUpdate' class='labelsAsBreaks'>
+
+<input type='hidden' name='_cmd' value='adminPriceScheduleUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='The price schedule has been successfully updated.' />
+<input type="hidden" name="SID"  data-bind="var: schedule:(SID); format:popVal;" />
+
+	<fieldset class='marginBottom'>
+		<legend>Config</legend>
+		<div class='label'>
+			<span>Schedule ID</span>
+			<span data-bind="var: schedule:(SID); format:text;"></span>
+		</div>
+		
+		<label>
+			<span>Schedule title</span>
+			<input type="text" value="" name="title"  data-bind="var: schedule:(title); format:popVal;" />
+			<span class='toolTip' title="title are displayed publically in the customer account management - so choose carefully">?</span>
+		</label>
+	
+	</fieldset>
+	
+	<fieldset class='marginBottom'>
+		<legend>Price</legend>
+		<p class='hint'>
+		You will have the opportunity to enter a unique price and/or discount for each product that will affect the base price (but not options) - if you leave this field blank then the base price will be used.
+		</p>
+		
+		<label>DEFAULT PRICING FORMULA</label>
+<!--
+<input type="checkbox" name="chk_discount_default"> Default Pricing Formula: <input type="text" name="discount_amount" value="" size="20"> (only used if no unique formula is set)<br>
+<font color="red">Warning: Without a default pricing formula, the price of each item must be set individually. HINT: You probably don't want to do this. Try using "BASE"</font><br>
+-->
+		
+		
+		<label>
+			<input type="checkbox" name="chk_incomplete" data-bind="var: schedule(chk_incomplete); format:popVal; hideZero:false; defaultVal: 1;" />
+			Ignore/Disable Special pricing for incomplete items.
+		</label>
+		
+		<label>
+			<input type="checkbox" name="chk_rewards" data-bind="var: schedule(chk_rewards); format:popVal;" /> Allow participation in rewards program.
+		</label>
+		
+	</fieldset>
+
+
+	<fieldset class='marginBottom'>
+		<legend>Promotions</legend>
+		
+		<div class='label'><input type="radio" value="1" name="promotion_mode" data-bind="var: schedule(promotion_mode); format:popVal; hideZero:false; defaultVal: 1;" /> Use default store promotions. (RECOMMENDED)</div>
+		<div class='label'><input type="radio" value="0" name="promotion_mode" data-bind="var: schedule(promotion_mode); format:popVal;" /> Disable Promotions</div>
+		<p class='hint'>
+Promotions can selectively have different behaviors per schedule, based on the the rules logic within them.<br />
+Promotions and Coupons are DIFFERENT merchandising strategies. If you do not want a coupon to be enabled for one or more wholesale schedules you must Disable each coupon individually.
+		</p>
+	</fieldset>
+
+	<fieldset class='marginBottom'>
+		<legend>Shipping</legend>
+
+		<div class='label'><input type="radio" value="1" name="shiprule_mode"  data-bind="var: schedule(shiprule_mode); format:popVal; hideZero:false; defaultVal: 1;" /> Apply rules based on how they are configured. (RECOMMENDED)</div>
+		<div class='label'><input type="radio" value="0" name="shiprule_mode" data-bind="var: schedule(shiprule_mode); format:popVal;" /> Disable/Skip all shipping rules.</div>
+		<p class='hint'>You can configure shipping rules so they only apply to certain schedules.</p>
+		
+	</fieldset>
+
+
+	<fieldset class='marginBottom'>
+		<legend>Customer Access</legend>
+
+<label><input type="checkbox" name="chk_realtime_orders" data-bind="var: schedule(chk_realtime_orders); format:popVal; hideZero:false; defaultVal: 1;" /> Accept EDI/XML Orders from customers.</label>
+<label><input type="checkbox" name="chk_realtime_products" data-bind="var: schedule(chk_realtime_products); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML product download access.</label>
+<label><input type="checkbox" name="chk_realtime_inventory" data-bind="var: schedule(chk_realtime_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML inventory download access.</label>
+<label><input type="checkbox" name="chk_dropship_invoice" data-bind="var: schedule(chk_dropship_invoice); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to provide their own packing slip/invoice and logo information for dropship orders.</label>
+<label><input type="checkbox" name="chk_export_inventory" data-bind="var: schedule(chk_export_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to export/print out a complete inventory list.</label>
+<label><input type="checkbox" name="chk_inventory_ignore" data-bind="var: schedule(chk_inventory_ignore); format:popVal;" /> Ignore Inventory: Allow customers to purchase unlimited quantities.</label>
+		
+	
+	</fieldset>
+
+
+	<fieldset class='marginBottom'>
+		<legend>Internationalization</legend>
+		
+		<label>
+			<span>Currency</span>
+			<select name="currency">
+				<option value="">-</option>
+				<option value="USD">USD: US Dollars</option>
+				<option value="EUR">EUR: Euro</option>
+			</select>
+			<span class='toolTip' title="This feature allows you to specify an alternate price list in another currency. Not compatible with pricing formulas, fixed price promotions, or option based price modifiers.  We recommend naming these schedules CXXX where XXX is the currency code. for example CEUR (currency euro) or CCAD (currency canadian dollars).
+">?</span>
+		</label>
+		
+	</fieldset>
+	
+	<fieldset class='marginBottom'>
+		<legend>Message</legend>
+		
+		<textarea name="welcome_txt" rows="3" class='fullWidth' data-bind="var:schedule(welcome_txt); format:popVal;"></textarea>
+		<p class="hint">The welcome message is displayed in the customer portal for members of this pricing schedule.</p>
+	</fieldset>
+	
+	
+	
+	<button data-app-event='admin|processForm'>Save</button>
+
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div id='warehouseZoneCreateUpdateTemplate'>
 
 <form action='#' onSubmit="return false" class='labelsAsBreaks'>

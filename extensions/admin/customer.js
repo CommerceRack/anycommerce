@@ -942,7 +942,7 @@ app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
 					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({'templateID':'crmManagerTicketCreateTemplate','data':{}});
+					var $D = app.ext.admin.i.dialogCreate({'templateID':'crmManagerTicketCreateTemplate','data':{'orderid':$btn.data('orderid')}});
 					app.u.handleAppEvents($D);
 					$D.dialog('open');
 					});

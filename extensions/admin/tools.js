@@ -67,6 +67,25 @@ var admin_tools = function() {
 //				$("input",$picker).each(function(){});
 				},
 			
+			showProductExport : function($target)	{
+				$target.empty().anycontent({'templateID':'productExportToolTemplate','showLoading':false});
+				$(':checkbox',$target).anycb(); //run before picker added to dom so that picker isn't affected.
+
+				var $picker = $("[data-app-role='pickerContainer']:first",$target);
+				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+				
+				
+				$('.toolTip',$target).tooltip();
+				app.u.handleAppEvents($target);
+				},
+
+			showAccountUtilities : function($target)	{
+				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false});
+//need to apply datepicker to date inputs.
+				$('button',$target).button();
+				app.u.handleAppEvents($target);
+				},
+			
 			showPrivateFiles : function($target)	{
 
 				$target.empty();
@@ -314,6 +333,39 @@ var admin_tools = function() {
 					$radio.closest('tr').find('input').attr('disabled','').removeAttr('disabled').attr('required','required'); //enable input(s) related to this verb.
 					});
 				}, //powerToolVerbChange
+
+
+			productExportBatchJobCreateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.productExportBatchJobCreateExec').on('click.productExportBatchJobCreateExec',function(){
+					var $form = $btn.closest('form');
+					if($("[data-app-role='pickerContainer'] :checkbox:checked",$form).length)	{
+						var sfo = $form.serializeJSON({'cb':true});
+						if(sfo.attributes == 'specify' && !sfo.fields)	{
+							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
+							}
+						else	{
+							app.ext.admin_batchJob.a.adminBatchJobCreate({'verb':'EXPORT_REDIRECT','%vars':sfo,'guid':app.u.guidGenerator(),'type':'UTILITY'});
+							}
+						}
+					else	{
+						$form.anymessage({"message":"Please make at least one selection in 'Step 1'."});
+						}
+					})
+				},
+
+			productExportAttributeSrcChange : function($ele)	{
+				
+				$ele.off('change.productExportAttributeSrcChange').on('change.productExportAttributeSrcChange',function(){
+					if($ele.val() == 'all')	{
+						$ele.closest('fieldset').find("[data-app-role='exportToolAttributeListContainer']").hide();
+						}
+					else	{
+						$ele.closest('fieldset').find("[data-app-role='exportToolAttributeListContainer']").show();
+						}
+					})
+				
+				},
 
 			agentDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});

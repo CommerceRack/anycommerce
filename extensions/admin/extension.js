@@ -2285,9 +2285,19 @@ Function does NOT dispatch.
 					else if(!listpointer)	{
 						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, unable to ascertain listpointer.","gMessage":true});
 						}
+					else if(typeof data[listpointer] !== 'object')	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, data[listpointer] is NOT an object.","gMessage":true});
+						}
 					else 	{
 						//should never get here.
-						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, an unknown error occured.","gMessage":true});
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, an unknown error occured. DEV: see console for details.","gMessage":true});
+						app.u.dump("$DMI.length: "+$DMI.length);
+						app.u.dump("$DMI instanceof jQuery: "+($DMI instanceof jQuery));
+						app.u.dump("$tbody.length: "+$tbody.length);
+						app.u.dump("listpointer: "+listpointer);
+						app.u.dump("typeof data: "+typeof data);
+						app.u.dump("bindData: "); app.u.dump(bindData);
+//						app.u.dump("_rtag.jqObj"); app.u.dump(_rtag.jqObj);
 						}
 
 
@@ -3907,8 +3917,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!pluginManager')	{
 					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
-
-
 				else if(path == '#!campaignManager')	{
 					app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
@@ -3918,8 +3926,17 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!couponManager')	{
 					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!priceSchedules')	{
+					app.ext.admin_wholesale.a.showPriceSchedules($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!accountUtilities')	{
+					app.ext.admin_tools.a.showAccountUtilities($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if(path == '#!productPowerTool')	{
 					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!productExport')	{
+					app.ext.admin_tools.a.showProductExport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!warehouseManager')	{
 					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
