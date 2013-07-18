@@ -993,7 +993,110 @@ $ul.appendTo($D);
 
 				}
 			}]
+				},
+			
+			
+			
+			ebayProfileUpdateOrTest : function(mode,$form)	{
+
+
+if(mode == 'test' || mode == 'update')	{
+
+	var
+		CMD = (mode == 'test') ? 'adminEBAYProfileTest' : 'adminEBAYProfileUpdate',
+		$tab = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),
+		sfo = $form.serializeJSON({'cb':true});
+
+					$tab.showLoading({'message':(mode == 'test' ? 'Testing Launch Profile Settings' : 'Saving Launch Profile')});
+
+					//the domestic and international shipping sections use the 'data table' technology.
+					//their contents need formatted and saved to the serialized form object.
+					function setShipping(type)	{
+						//type needs to be 'dom' or 'int'
+						var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
+						if($shipping.length)	{
+							sfo['@ship_'+type+'services'] = new Array();
+							$shipping.each(function(index){
+								app.u.dump(" -> index: "+index);
+								var
+									$tr = $(this),
+									data = $tr.data();
+									obj = {
+										"service" : data.service,
+										"free" : data.free,
+										"cost" : data.cost,
+										"addcost" : data.addcost
+										}
+								
+								
+//international has no farcost (AK+HI)
+								if(type == 'dom')	{
+									obj.farcost = data.farcost
+									}
+								
+								if(!$tr.hasClass("rowTaggedForRemove")) {sfo['@ship_'+type+'services'].push(obj);}
+								if(sfo['@ship_'+type+'services'].length >= 2)	{return false} //exit now. only 3 allowed.
+								})
+							}
+						}
+					
+					setShipping('dom');
+					setShipping('int');
+//form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
+delete sfo.cost
+delete sfo.farcost
+delete sfo.service
+delete sfo.addcost
+delete sfo.free
+
+					sfo._cmd = CMD;
+					sfo._tag = {
+						'callback' : function(rd)	{
+							$tab.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								if(mode == 'test')	{
+									var
+										$D = $("<div \/>",{'title':'Profile '+sfo.PROFILE+' Error Report'}),
+										$ul = $("<ul \/>"),
+										errs = app.data[rd.datapointer]['@MSGS'],
+										L = errs.length
+									
+									for(var i = 0; i < L; i += 1)	{
+										$ul.append("<li>"+errs[i]['!']+" "+errs[i]['+']+"<\/li>");
+										}
+									$ul.appendTo($D);
+									$D.append("<p class='hint'>This window can remain open while you make your updates.<\/p>");
+									$D.dialog();
+									
+									}
+								else	{
+									app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
+									$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
+									}
+								}
+							}
+						}
+					if(mode == 'test')	{sfo._tag.datapointer = 'adminEBAYProfileTest'}
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.dispatchThis('immutable');
+
+
+
+
+
+	}
+else	{
+	$('#globalMessaging').anymessage({"message":"In admin_syndication.u.ebayProfileUpdateOrTest, mode ["+mode+"] is invalid (must be test or update).","gMessage":true});
+	}
+
+
+
 				}
+			
+			
 
 			}, //u [utilities]
 
@@ -1238,74 +1341,11 @@ app.model.dispatchThis('immutable');
 				},
 
 
-			ebayLaunchProfileUpdateExec : function($btn)	{
+			ebayLaunchProfileUpdateTestExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.ebayLaunchProfileUpdateExec').on('click.ebayLaunchProfileUpdateExec',function(event){
+				$btn.off('click.ebayLaunchProfileUpdateTestExec').on('click.ebayLaunchProfileUpdateTestExec',function(event){
 					event.preventDefault();
-					
-					var
-						$form = $btn.closest('form'),
-						$tab = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),
-						sfo = $form.serializeJSON({'cb':true});
-
-					$tab.showLoading({'message':'Saving Launch Profile'});
-
-					//the domestic and international shipping sections use the 'data table' technology.
-					//their contents need formatted and saved to the serialized form object.
-					function setShipping(type)	{
-						//type needs to be 'dom' or 'int'
-						var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
-						if($shipping.length)	{
-							sfo['@ship_'+type+'services'] = new Array();
-							$shipping.each(function(index){
-								app.u.dump(" -> index: "+index);
-								var
-									$tr = $(this),
-									data = $tr.data();
-									obj = {
-										"service" : data.service,
-										"free" : data.free,
-										"cost" : data.cost,
-										"addcost" : data.addcost
-										}
-								
-								
-//international has no farcost (AK+HI)
-								if(type == 'dom')	{
-									obj.farcost = data.farcost
-									}
-								
-								if(!$tr.hasClass("rowTaggedForRemove")) {sfo['@ship_'+type+'services'].push(obj);}
-								if(sfo['@ship_'+type+'services'].length >= 2)	{return false} //exit now. only 3 allowed.
-								})
-							}
-						}
-					
-					setShipping('dom');
-					setShipping('int');
-//form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
-delete sfo.cost
-delete sfo.farcost
-delete sfo.service
-delete sfo.addcost
-delete sfo.free
-
-					sfo._cmd = 'adminEBAYProfileUpdate';
-					sfo._tag = {
-						'callback' : function(rd)	{
-							$tab.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
-								$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
-								}
-							}
-						}
-					app.model.addDispatchToQ(sfo,'immutable');
-					app.model.dispatchThis('immutable');	
-
+					app.ext.admin_syndication.u.ebayProfileUpdateOrTest($btn.data('mode'),$btn.closest('form'))
 					});
 				}, //ebayLaunchProfileCreateUpdateExec
 
