@@ -6,7 +6,7 @@
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
-<h2>Recommended Marketplaces</h2>
+<h2>Marketplaces</h2>
 <div class='alignCenter'>
 
 	<div class='marginBottom pointer' data-mkt="GOO" data-app-event="admin_syndication|showDSTDetail">	
@@ -33,9 +33,6 @@
 	</div>
 
 
-	<div class='marginBottom pointer' data-mkt="WSH" data-app-event="admin_syndication|showDSTDetail">
-	<img  src="app-admin/images/marketplaces/wishpot.png" />
-	</div>
 		
 	<div class='marginBottom pointer' data-mkt="HSN" data-app-event="admin_syndication|showDSTDetail" >
 	<img height="40" width="150"  src="app-admin/images/marketplaces/hsn.png" />
@@ -53,7 +50,7 @@
 
 </div>
 
-<h2>Recommended CPC</h2>
+<h2>CPC Traffic</h2>
 <div class='alignCenter'>
 
 	<div class='marginBottom pointer' data-mkt="SHO" data-app-event="admin_syndication|showDSTDetail">
@@ -88,13 +85,16 @@
 
 </div>
 
-<h2>More Integrations</h2>
+<h2>Other</h2>
 <div class='alignCenter'>
 
 	<div class='marginBottom pointer' data-mkt="CJ" data-app-event="admin_syndication|showDSTDetail">
 <img height="40" width="150"  src="app-admin/images/marketplaces/commissionjunction.png" />
 	</div>
-		
+
+	<div class='marginBottom pointer' data-mkt="WSH" data-app-event="admin_syndication|showDSTDetail">
+	<img  src="app-admin/images/marketplaces/wishpot.png" />
+	</div>
 
 	<div class='marginBottom pointer' data-mkt="FND" data-app-event="admin_syndication|showDSTDetail">
 	<img height="40" width="150"  src="app-admin/images/marketplaces/thefind.png" />
@@ -1940,23 +1940,6 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		<legend>Domestic Shipping and Insurance</legend>
 		<div class='clearfix'>
 			<h4>Shipping</h4>
-			<label>
-				<span>Location</span>
-				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
-					<option value='None'>None</option>
-					<option value='Americas'>N. and S. America</option>
-					<option value='Asia'>Asia</option>
-					<option value='AU'>Australia</option>
-					<option value='MX'>Mexico</option>
-					<option value='CA'>Canada</option>
-					<option value='Worldwide'>Worldwide</option>
-					<option value='DE'>Germany</option>
-					<option value='Europe'>Europe</option>
-					<option value='GB'>United Kingdom</option>
-					<option value='JP'>Japan</option>
-				</select>
-				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
-			</label>
 		
 		
 		
@@ -2084,6 +2067,23 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 
 		<h4>Shipping</h4>
 
+			<label>
+				<span>Location</span>
+				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
+					<option value='None'>None</option>
+					<option value='Americas'>N. and S. America</option>
+					<option value='Asia'>Asia</option>
+					<option value='AU'>Australia</option>
+					<option value='MX'>Mexico</option>
+					<option value='CA'>Canada</option>
+					<option value='Worldwide'>Worldwide</option>
+					<option value='DE'>Germany</option>
+					<option value='Europe'>Europe</option>
+					<option value='GB'>United Kingdom</option>
+					<option value='JP'>Japan</option>
+				</select>
+				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
+			</label>
 	
 			<table data-app-role='dataTable' class='gridTable fullWidth'>
 			<thead>
@@ -2137,8 +2137,13 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
 				</label>
 
-				
-		
+				<label>
+					<span>Countries:</span>
+					<input type='textbox' name='shipto' size='25' class='skipTrack' />
+					<span class='toolTip' title="Enter a list of two digit ISO country codes in a comma
+					separated list, or leave blank for all supported
+					International Destinations">?</span>
+				</label>
 				<label>
 					<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 				</label>
