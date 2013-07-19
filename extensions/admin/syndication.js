@@ -401,7 +401,7 @@ app.model.dispatchThis('mutable');
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
 	
-									$('fieldset',$profileContent).each(function(){
+									$("[data-panelname]",$profileContent).each(function(){
 										var $fieldset = $(this);
 //										app.u.dump(" -> $fieldset.data('panelname'): "+$fieldset.data('panelname'));
 										$fieldset.anypanel({
