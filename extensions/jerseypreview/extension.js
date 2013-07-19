@@ -113,10 +113,14 @@ var jerseypreview = function() {
 										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
 										}
 									}
+								else {
+									app.u.throwMessage("Custom Jersey Previews are not available in your browser's version, sorry!");
+									app.ext.jerseypreview.vars.paramsByPID[pid] = "Font Face Not Supported";
+									}
 								})
 							.fail(function(datajqXHR, textStatus, errorThrown){
 								$canvas.remove();
-								app.ext.jerseypreview.vars.paramsByPID[pid] = "Not Supported";
+								app.ext.jerseypreview.vars.paramsByPID[pid] = "JSON failed to load";
 								app.u.dump("JSON failed to load");
 								//report failure?
 								});
