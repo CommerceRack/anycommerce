@@ -26,71 +26,40 @@
  */
 
 var isFontFaceSupported = (function(){
+var
+sheet, doc = document,
+head = doc.head || doc.getElementsByTagName('head')[0] || docElement,
+style = doc.createElement("style"),
+impl = doc.implementation || { hasFeature: function() { return false; } };
 
+style.type = 'text/css';
+head.insertBefore(style, head.firstChild);
+sheet = style.sheet || style.styleSheet;
 
-    var fontret,
-        fontfaceCheckDelay = 100;
+var supportAtRule = impl.hasFeature('CSS2', '') ?
+        function(rule) {
+            if (!(sheet && rule)) return false;
+            var result = false;
+            try {
+                sheet.insertRule(rule, 0);
+                result = !(/unknown/i).test(sheet.cssRules[0].cssText);
+                sheet.deleteRule(sheet.cssRules.length - 1);
+            } catch(e) { }
+            return result;
+        } :
+        function(rule) {
+            if (!(sheet && rule)) return false;
+            sheet.cssText = rule;
 
-      // IE supports EOT and has had EOT support since IE 5.
-      // This is a proprietary standard (ATOW) and thus this off-spec,
-      // proprietary test for it is acceptable. 
-    if (!(!/*@cc_on@if(@_jscript_version>=5)!@end@*/0)){
-		//fontret = true;
-		//SWC EDIT: we don't have .eot files for these fonts, only ttf,
-		//so this condition should throw false
-		fontret = false;
-	}
-    else {
+            return sheet.cssText.length !== 0 && !(/unknown/i).test(sheet.cssText) &&
+              sheet.cssText
+                    .replace(/\r+|\n+/g, '')
+                    .indexOf(rule.split(' ')[0]) === 0;
+        };
 
-    // Create variables for dedicated @font-face test
-      var doc = document, docElement = doc.documentElement,
-          st  = doc.createElement('style'),
-          spn = doc.createElement('span'),
-          wid, nwid, body = doc.body,
-          callback, isCallbackCalled;
-
-      // The following is a font, only containing the - character. Thanks Ethan Dunham.
-      st.textContent = "@font-face{font-family:testfont;src:url(data:font/opentype;base64,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)}";
-      doc.getElementsByTagName('head')[0].appendChild(st);
-
-
-      spn.setAttribute('style','font:99px _,serif;position:absolute;visibility:hidden');
-
-      if  (!body){
-        body = docElement.appendChild(doc.createElement('fontface'));
-      }
-
-      // the data-uri'd font only has the - character
-      spn.innerHTML = '-------';
-      spn.id        = 'fonttest';
-
-      body.appendChild(spn);
-      wid = spn.offsetWidth;
-
-      spn.style.font = '99px testfont,_,serif';
-
-      // needed for the CSSFontFaceRule false positives (ff3, chrome, op9)
-      fontret = wid !== spn.offsetWidth;
-
-      var delayedCheck = function(){
-        if (isCallbackCalled) return;
-        fontret = wid !== spn.offsetWidth;
-        callback && (isCallbackCalled = true) && callback(fontret);
-      }
-
-      addEventListener('load',delayedCheck,false);
-      setTimeout(delayedCheck,fontfaceCheckDelay);
-    }
-
-    function ret(){  return fontret || wid !== spn.offsetWidth; };
-
-    // allow for a callback
-    ret.ready = function(fn){
-      (isCallbackCalled || fontret) ? fn(fontret) : (callback = fn);
-    }
-
-    return ret;
+return supportAtRule('@font-face { font-family: "font"; src: "font.ttf"; }');
 })();
+
 
 
 var jerseypreview = function() {
@@ -110,21 +79,25 @@ var jerseypreview = function() {
 				app.rq.push(['templateFunction','productTemplate','onInits', function(P){
 					}]);
 				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
+					app.u.dump('Jersey Preview Oncompletes Running');
 					var pid = P.pid;
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					var $canvas = $('canvas.prodPreviewer', $context);
-				
+					app.u.dump(app.ext.jerseypreview.vars.paramsByPID[pid]);
 					if(!app.ext.jerseypreview.vars.paramsByPID[pid]){
 						//In future update, run only for products marked as customizable?
 						$.getJSON("extensions/jerseypreview/products/"+pid+".json")
 							.done(function(data, textStatus, jqXHR){
-								isFontFaceSupported.ready(function(){
+								app.u.dump("Checking font face support");
+								if(isFontFaceSupported){
+									app.u.dump("Font Face Supported");
 									if(app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"]){
 										font = data.font;
 										if(font){
 											$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
 											}
 										$('input[name=B5], input[name=B6]', $context).keyup(function(){
+											app.u.dump("keyup called");
 											if($(this).data('timer')){
 												clearTimeout($(this).data('timer'));
 												}
@@ -139,11 +112,12 @@ var jerseypreview = function() {
 									else {
 										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
 										}
-									});
+									}
 								})
 							.fail(function(datajqXHR, textStatus, errorThrown){
 								$canvas.remove();
 								app.ext.jerseypreview.vars.paramsByPID[pid] = "Not Supported";
+								app.u.dump("JSON failed to load");
 								//report failure?
 								});
 						}
