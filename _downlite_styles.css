@@ -4,3 +4,11 @@
 }
 
 .preflightInputContainer label {width: 100px;display:inline-block;}
+
+.ui-dialog {
+	z-index:10;
+}
+
+.hideTitleBarAndClose .ui-dialog-titlebar {
+	display: none;
+}

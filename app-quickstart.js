@@ -2602,7 +2602,7 @@ buyer to 'take with them' as they move between  pages.
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
 ///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));
-					if($dialog.dialog( "option", "modal" ))	{
+					if($dialog.dialog( "option", "modal" ) && !$dialog.dialog("option","noCloseModal"))	{
 						$dialog.dialog("close"); //close all modal windows.
 						}
 					});

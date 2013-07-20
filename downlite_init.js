@@ -57,7 +57,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 */
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
+//app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
 app.rq.push(['script',0,app.vars.baseURL+'cycle-2.9998.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
 
 
@@ -220,4 +220,31 @@ app.u.appInitComplete = function(P)	{
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
 	app.u.handleRQ(0);
+	
+	//Offer a mobile redirect
+	var uagent = navigator.userAgent.toLowerCase();
+	var promptmobile = false;
+	if (promptmobile ||
+		uagent.search("ipad") > -1 ||
+		uagent.search("iphone") > -1 ||
+		uagent.search("ipod") > -1 ||
+		uagent.search("android") > -1 ||
+		(uagent.search("webkit") > -1 && (uagent.search("series60") > -1 || uagent.search("symbian") > -1)) ||
+		uagent.search("windows ce") > -1 ||
+		uagent.search("palm") > -1 ){
+		
+		var $popup = $("<div><h3>It appears you are using a mobile device, would you like to use our mobile site?</h3><button class='yesbtn floatLeft'>Yes</button><button class='nobtn floatRight'>No</button></div>");
+		$('.yesbtn', $popup).on('click', function(){
+			window.location = "http://m.downlitebedding.com";
+			});
+		$('.nobtn', $popup).on('click', function(){
+			$popup.dialog('close');
+			});
+		$popup.dialog({
+			'title':'',
+			'dialogClass' : 'hideTitleBarAndClose',
+			'noCloseModal' : true,
+			'modal' : true
+			});
+		}
 	});
