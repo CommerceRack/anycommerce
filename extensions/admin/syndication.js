@@ -1011,7 +1011,7 @@ if(mode == 'test' || mode == 'update')	{
 
 					//the domestic and international shipping sections use the 'data table' technology.
 					//their contents need formatted and saved to the serialized form object.
-					function setShipping(type)	{
+					function setShippingServices(type)	{
 						//type needs to be 'dom' or 'int'
 						var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
 						if($shipping.length)	{
@@ -1040,8 +1040,8 @@ if(mode == 'test' || mode == 'update')	{
 							}
 						}
 					
-					setShipping('dom');
-					setShipping('int');
+					setShippingServices('dom');
+					setShippingServices('int');
 //form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
 delete sfo.cost
 delete sfo.farcost
@@ -1049,6 +1049,18 @@ delete sfo.service
 delete sfo.addcost
 delete sfo.free
 
+//if this field is disabled, all the disable fields need to be empty to avoid a fatal error.
+//app.u.dump(" -> sfo: "); app.u.dump(sfo); 
+//app.u.dump(" -> sfo['Item/\DisableBuyerRequirements/\@BOOLEAN']: "+sfo['Item/\DisableBuyerRequirements/\@BOOLEAN']);
+//app.u.dump(" -> sfo['Item\DisableBuyerRequirements\@BOOLEAN']: "+sfo['Item\DisableBuyerRequirements\@BOOLEAN']);
+/*if(sfo['Item/\DisableBuyerRequirements/\@BOOLEAN'] == 0)	{
+	for(index in sfo)	{
+		if(index.indexOf('Item\BuyerRequirementDetails') === 0)	{
+			delete sfo[index];
+			}
+		}
+	}
+*/
 					sfo._cmd = CMD;
 					sfo._tag = {
 						'callback' : function(rd)	{
