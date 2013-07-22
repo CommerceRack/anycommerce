@@ -1335,7 +1335,6 @@ supported options include tabID (given to the container), tabtext (what appears 
 
 
 
-
 $.fn.intervaledEmpty = function(interval, remove){
 	interval = interval || 1000;
 	if($(this).children().length > 0){

@@ -1049,20 +1049,22 @@ app.model.dispatchThis('mutable');
 			variationOptionAddShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 
-/*
-var varEditorData = $btn.closest(".variationEditorContainer");
-app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
 
-// !!! if MODE= product and this is a SOG not a POG, then disable the button.
+var varEditorData = $btn.closest(".variationEditorContainer").data();
+app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
+app.u.dump("varEditorData: "); app.u.dump(varEditorData);
+
+//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
 if(varEditorData.variationmode == 'product')	{
 	if(varEditorData.ispog)	{
 		
 		}
 	else	{
+		$btn.attr('title',"Can not add a new option because this is a store group.");
 		$btn.button('disable');
 		}
 	}
-*/
+
 				
 				$btn.off('click.variationOptionAddShow').on('click.variationOptionAddShow',function(){
 					var

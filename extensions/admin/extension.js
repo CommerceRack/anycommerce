@@ -5394,6 +5394,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars.anycontent = vars.anycontent || true; //default to runing anycontent. if no templateID specified, won't run.
 				vars.handleAppEvents = vars.handleAppEvents || true; //default to runing anycontent. if no templateID specified, won't run.
 
+
 				var $D = $("<div \/>").attr('title',vars.title);
 				if(vars.anycontent && vars.templateID)	{
 //					app.u.dump(" -> vars: "); app.u.dump(vars);
