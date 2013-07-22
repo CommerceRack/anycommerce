@@ -340,7 +340,8 @@ var admin_tools = function() {
 				$btn.off('click.productExportBatchJobCreateExec').on('click.productExportBatchJobCreateExec',function(){
 					var $form = $btn.closest('form');
 					if($("[data-app-role='pickerContainer'] :checkbox:checked",$form).length)	{
-						var sfo = $form.serializeJSON({'cb':true});
+						var sfo = $("[data-app-role='exportConfiguration']",$form).serializeJSON();
+						sfo.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
 						if(sfo.attributes == 'specify' && !sfo.fields)	{
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
