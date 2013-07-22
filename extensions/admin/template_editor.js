@@ -271,22 +271,23 @@ var admin_templateEditor = function() {
 				
 				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
 				$wizardForm.on('click.templatewizard',function(e){
-					app.u.dump("Click registered in the wizard panel");
+//					app.u.dump("Click registered in the wizard panel");
 					var $target = $(e.target); //the element that was clicked.
 					
-					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
-					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
+//					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
+//					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
+//					app.u.dump(" -> e.target.nodeNam: "+e.target.nodeNam);
 //in chrome, the click event is triggered on the child span of the button, not the button itself.
 					if(e.target.nodeName.toLowerCase() == 'span')	{
 						$target = $target.parent();
 						}
 					
 					if($target.is('button') && $target.data('button-action'))	{
-						app.u.dump(" -> click is on a button");
+//						app.u.dump(" -> click is on a button");
 						e.preventDefault(); //disable the default action.
 
 						
-						app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
+//						app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
 						$target.data('button-action') == 'previous' ? $('fieldset:visible',$wizardForm).hide().prev('fieldset').show() : $('fieldset:visible',$wizardForm).hide().next('fieldset').show();
 						
 						
