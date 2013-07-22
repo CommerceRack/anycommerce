@@ -1048,6 +1048,22 @@ app.model.dispatchThis('mutable');
 //The code below is very similar to variationOptionUpdateShow. Once the save is in place, see about merging these if reasonable.
 			variationOptionAddShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+
+/*
+var varEditorData = $btn.closest(".variationEditorContainer");
+app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
+
+// !!! if MODE= product and this is a SOG not a POG, then disable the button.
+if(varEditorData.variationmode == 'product')	{
+	if(varEditorData.ispog)	{
+		
+		}
+	else	{
+		$btn.button('disable');
+		}
+	}
+*/
+				
 				$btn.off('click.variationOptionAddShow').on('click.variationOptionAddShow',function(){
 					var
 						$optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
@@ -1186,33 +1202,33 @@ app.model.dispatchThis('mutable');
 						
 					app.u.dump(" -> mode: "+mode);
 					if(app.u.validateForm($form) && sfo.type)	{
-						
+						sfo.autoid = 1; //tells API to give this option a variation ID (next in sequence) and to assign id's to the options.
 						if(mode == 'store')	{
-sfo.v = '2'; //sog version.
-app.model.addDispatchToQ({
-	'_cmd':'adminSOGCreate',
-	'%sog' : sfo,
-	'_tag':	{
-		'datapointer' : 'adminSOGCreate',
-		callback : function(rd){
-			if(app.model.responseHasErrors(rd)){
-				$form.anymessage({'message':rd});
-				}
-			else	{
-				$btn.closest('.ui-dialog-content').dialog('close');
-				app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
-				$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
-				}
-			}
-		}
-	},'mutable');
-app.model.addDispatchToQ({
-	'_cmd':'adminSOGComplete',
-	'_tag':	{
-		'datapointer' : 'adminSOGComplete'
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+							sfo.v = '2'; //sog version.
+							app.model.addDispatchToQ({
+								'_cmd':'adminSOGCreate',
+								'%sog' : sfo,
+								'_tag':	{
+									'datapointer' : 'adminSOGCreate',
+									callback : function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$form.anymessage({'message':rd});
+											}
+										else	{
+											$btn.closest('.ui-dialog-content').dialog('close');
+											app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
+											$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
+											}
+										}
+									}
+								},'mutable');
+							app.model.addDispatchToQ({
+								'_cmd':'adminSOGComplete',
+								'_tag':	{
+									'datapointer' : 'adminSOGComplete'
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
 							}
 						else if(mode == 'product' && pid){
 							
@@ -1250,20 +1266,20 @@ app.model.dispatchThis('mutable');
 				$btn.off('click.productVariationsUpdateExec').on('click.productVariationsUpdateExec',function(){
 
 					var cmdObj = {
-							'_cmd' : 'adminProductOptionsUpdate',
-							'_tag' : {
-								'callback' : function(rd){
-									$container.hideLoading()
-									if(app.model.responseHasErrors(rd)){
-										$container.anymessage({'message':rd});
-										}
-									else	{
-										app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),cmdObj.pid);
-										}
+						'_cmd' : 'adminProductOptionsUpdate',
+						'_tag' : {
+							'callback' : function(rd){
+								$container.hideLoading()
+								if(app.model.responseHasErrors(rd)){
+									$container.anymessage({'message':rd});
 									}
-								},
-							'@pogs' : new Array()
-							};
+								else	{
+									app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),cmdObj.pid);
+									}
+								}
+							},
+						'@pogs' : new Array()
+						};
 						
 					var $container = $btn.closest("[data-app-role='productVariationManagerContainer']");
 					cmdObj.pid = $btn.closest("[data-pid]").data('pid');

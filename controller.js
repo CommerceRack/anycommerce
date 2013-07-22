@@ -1765,7 +1765,7 @@ VALIDATION
 						}
 					else if($input.prop('type') == 'radio'){
 //keep a list of all required radios. only one entry per name.
-app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
+//app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
 						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
 						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
