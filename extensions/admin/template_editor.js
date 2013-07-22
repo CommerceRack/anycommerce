@@ -132,13 +132,15 @@ var admin_templateEditor = function() {
 									$("[data-app-role='highlightContainer_product']",$D).show();
 									}
 								else if(mode == 'campaign')	{
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_android());
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_ios());
 									$("[data-app-role='highlightContainer_buyer']",$D).show();
 									}
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
 						
 								$("textarea:first",$D)
 									.height($D.height() - 100)
-									
 									.css('width','95%')
 									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
 									.htmlarea({
@@ -706,6 +708,27 @@ var admin_templateEditor = function() {
 							}
 						}
 					}, //getEditorButton_image
+
+
+
+				getEditorButton_ios : function(){
+					return {
+						css : 'iosinputsshow',
+						'text' : 'iOS Settings',
+						action: function (btn) {
+							var jhtml = this; //the jhtml object.
+							}
+						}
+					},
+				getEditorButton_android : function(){
+					return {
+						css : 'androidinputsshow',
+						'text' : 'Android Settings',
+						action: function (btn) {
+							var jhtml = this; //the jhtml object.
+							}
+						}
+					},
 
 //returns an array that gets appended to the html editor toolbar.
 				getEditorButton_prodattributeadd : function()	{

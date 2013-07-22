@@ -147,7 +147,7 @@ var admin_customer = function() {
 							minDate : 0, //can't start before today.
 							dateFormat : 'yymmdd',
 							timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
-							stepMinute : 5
+							stepMinute : 60
 							});
 						$('.ui_tpicker_second').hide(); //don't show second chooser, but have it so the seconds are added to the input.
 					

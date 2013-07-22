@@ -345,7 +345,7 @@ var admin_tools = function() {
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
 						else	{
-							app.ext.admin_batchJob.a.adminBatchJobCreate({'verb':'EXPORT_REDIRECT','%vars':sfo,'guid':app.u.guidGenerator(),'type':'UTILITY'});
+							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT'});
 							}
 						}
 					else	{

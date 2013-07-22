@@ -2493,32 +2493,32 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<tr>
 		<td>&nbsp;</td>
 		<td>CC Fees</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="CC_TRANSFEE" data-bind='var: payment(CC_TRANSFEE); format:popVal;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal;' /></td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="CC_TRANSFEE" data-bind='var: payment(CC_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_visa" data-bind='var: payment(cc_type_visa); format:popVal;'></td>
 		<td>Visa</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal;' /></td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_mc" data-bind='var: payment(cc_type_mc); format:popVal;'></td>
 		<td>Mastercard</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal;' /></td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_amex" data-bind='var: payment(cc_type_amex); format:popVal;'></td>
 		<td>American Express</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal;' /></td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_novus" data-bind='var: payment(cc_type_novus); format:popVal;'></td>
 		<td>Discover/Novus</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal;' /></td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	</tbody>
 	</table>
@@ -2604,7 +2604,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_paypalwp'>
 	<legend class='marginBottom'>PayPal Website Payments Setup</legend>
-	<label><span>PayPal Email Address</span><input type="email" value="" name="email" required='required' data-bind='var: payment(email); format:popVal;'></label>
+	<label><span>PayPal Email Address</span><input type="paypal_email" value="" name="email" required='required' data-bind='var: payment(paypal_email); format:popVal;'></label>
 </fieldset>
 
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_verisign'>
