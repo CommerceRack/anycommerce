@@ -402,7 +402,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 
 	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
 		delete app.globalAjax.requests[QID][pipeUUID];
-		app.model.handleResponse(d);
+		app.model.handleResponse(d,QID);
 			}
 		)
 	r = pipeUUID; //return the pipe uuid so that a request can be cancelled if need be.
@@ -521,14 +521,14 @@ set adjustAttempts to true to increment by 1.
 QID is the dispatchQ ID (either passive, mutable or immutable. required for the handleReQ function.
 	*/
 	
-		handleResponse : function(responseData)	{
+		handleResponse : function(responseData,QID)	{
 //			app.u.dump('BEGIN model.handleResponse.');
 			
 //if the request was not-pipelined or the 'parent' pipeline request contains errors, this would get executed.
 //the handlereq function manages the error handling as well.
 			if(responseData && !$.isEmptyObject(responseData))	{
 				var uuid = responseData['_uuid'];
-				var QID = this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
+				var QID = QID || this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
 //				app.u.dump(" -> responseData is set. UUID: "+uuid);
 //if the error is on the parent/piped request, no qid will be set.
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
