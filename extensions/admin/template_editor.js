@@ -273,6 +273,11 @@ var admin_templateEditor = function() {
 				$wizardForm.on('click.templatewizard',function(e){
 					app.u.dump("Click registered in the wizard panel");
 					var $target = $(e.target); //the element that was clicked.
+					
+					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
+					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
+					app.u.dump(target);
+					
 					if($target.is('button') && $target.data('button-action'))	{
 						app.u.dump(" -> click is on a button");
 						e.preventDefault(); //disable the default action.
