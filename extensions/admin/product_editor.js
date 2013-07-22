@@ -421,6 +421,14 @@ app.model.dispatchThis('mutable');
 						}
 					}
 
+			},
+		
+		bigListOptions : function($tag,data){
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				if(i > 0)	{$tag.append("\n")} //hard line separators but don't want orphan whitespace in textarea
+				$tag.append(data.value[i].prompt)
+				}
 			}
 		
 		}, //renderFormats
@@ -871,6 +879,16 @@ app.model.dispatchThis('mutable');
 								}
 							});						
 						}
+					else if(variationData.variationtype == 'biglist')	{
+						app.u.dump(" -> variation type IS biglist.");
+						var optionsArr = $("[name='biglist_contents']",$form).val().split("\n");
+						var L = optionsArr.length;
+						for(var i = 0; i < L; i += 1)	{
+							sfo['%sog']['@options'].push({'prompt':optionsArr[i]});
+							}
+//						app.u.dump(sfo);
+						}
+					else	{}
 
 // pog editor just applies changes in memory till master 'save' is done.
 					if(variationData.variationmode == 'product')	{

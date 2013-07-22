@@ -2008,6 +2008,21 @@ time.
 
 <fieldset id='variationsEditor_biglist'>
 	<legend>Big List Settings</legend>
+	
+	<p>A Big List is a dynamic, two level menu. A Big List may have a maximum of 1296 options. At this time - you may not have price and weight modifiers on Big Lists. </p>
+	<textarea rows="20" cols="50" name="biglist_contents" data-bind="var:variations(@options); format:bigListOptions; extension:admin_prodEdit;"></textarea>
+	<p>
+	<b>Example:</b><br />
+Drinks|Soda<br />
+Drinks|Beer<br />
+Drinks|Wine<br />
+<br />
+Snacks|Chips<br />
+Snacks|Pretzels<br />
+Snacks|Doughnuts<br />
+</p>
+<p>The list above would create a top level menu with two options: "Drinks" and "Snacks", If "Drinks" is selected the options would be "Soda", "Beer", and "Wine". If "Snacks" is selected the options would be "Chips", "Pretzels", "Doughnuts". </p>
+	
 </fieldset>
 
 
