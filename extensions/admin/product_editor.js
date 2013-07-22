@@ -1090,6 +1090,7 @@ app.model.dispatchThis('mutable');
 							}
 						else	{
 							app.u.dump(" -> this is an existing variation.");
+							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID));
 							data = app.data['appProductGet|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID)]
 							}
 

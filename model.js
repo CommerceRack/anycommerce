@@ -394,7 +394,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 			delete app.globalAjax.requests[QID][pipeUUID];
 			app.model.handleCancellations(Q,QID);
 			if(typeof jQuery().hideLoading == 'function'){
-				$(".loading-indicator-overlay").hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
+				$(".loading-indicator-overlay").parent().hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
 				}
 //			setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 			}
@@ -561,6 +561,9 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //still unable to determine Q. throw some generic error message along with response error.
 							app.u.dump("ERROR! a high level error occured and the Q ID was unable to be determined.");
 							app.u.throwMessage(responseData);
+							if(typeof jQuery().hideLoading == 'function'){
+								$(".loading-indicator-overlay").parent().hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
+								}
 							}
 						}
 					}

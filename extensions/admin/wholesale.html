@@ -166,38 +166,6 @@
 
 
 
-<div id='supplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
-
-	<section class='soloModeListContainer'>
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='floatRight smallPadding'>
-			<button class='floatRight marginLeft' data-app-event="admin_wholesale|showSupplierCreate">Add Supplier</button>
-			</div>
-			
-			<h3 class='heading'>Supplier Manager</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='soloModeListMessaging marginBottom'></div>
-			<div class='soloModeListContent' data-app-role='soloModeContentContainer'>
-			<table data-app-role='supplierList' class='fullWidth gridTable'>
-			<thead>
-			<tr>
-				<th class='alignLeft'>Name</th>
-				<th class='alignLeft'>ID</th>
-				<th class='alignLeft hideInMinimalMode'>Type</th>
-				<th class='alignLeft hideInMinimalMode'>Mode</th>
-				<th></th>
-			</tr>
-			</thead>
-			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;"></tbody>
-			</table>
-				
-			</div>
-		</div>
-	</section>
-</div>
-
 
 
 <!-- used in the list mode for each supplier -->
@@ -428,7 +396,7 @@
 			<fieldset>
 				<label>
 					<span>Connector:</span>
-					<select name='SHIP_CONNECTOR' data-app-event='admin_wholesale|showSiblingFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
+					<select name='SHIP_CONNECTOR' data-app-event='admin|showSiblingFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
 						<option value='NONE'>None</option>
 						<option value='GENERIC'>Generic</option>
 					</select />
@@ -461,7 +429,7 @@
 			<fieldset>
 				<label>
 					<span>Connector:</span>
-					<select name='INVENTORY_CONNECTOR' data-app-event='admin_wholesale|showConnectorFieldset' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;">
+					<select name='INVENTORY_CONNECTOR' data-app-event='admin|showSiblingFieldset' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;">
 						<option value='NONE'>None</option>
 						<option value='GENERIC'>Generic</option>
 					</select />
@@ -528,7 +496,7 @@
 				
 				<label>
 					<span>Connector: </span>
-					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-app-event='admin_wholesale|showConnectorFieldset'>
+					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-app-event='admin|showSiblingFieldset'>
 						<option value="NONE">None</option>
 						<option value="EMAIL">Email</option>
 						<option value="FTP">FTP</option>

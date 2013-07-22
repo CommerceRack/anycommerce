@@ -996,7 +996,9 @@ $ul.appendTo($D);
 				},
 			
 			
-			
+//executed when 'save' or 'test' is pushed in the ebay launch profile editor.
+//loads all the data from the form into a json object, including proper formatting of the data-tables for shipping services.
+//NOTE - 'update' is a destructive process in this case.
 			ebayProfileUpdateOrTest : function(mode,$form)	{
 
 
@@ -1049,18 +1051,16 @@ delete sfo.service
 delete sfo.addcost
 delete sfo.free
 
-//if this field is disabled, all the disable fields need to be empty to avoid a fatal error.
-//app.u.dump(" -> sfo: "); app.u.dump(sfo); 
-//app.u.dump(" -> sfo['Item/\DisableBuyerRequirements/\@BOOLEAN']: "+sfo['Item/\DisableBuyerRequirements/\@BOOLEAN']);
-//app.u.dump(" -> sfo['Item\DisableBuyerRequirements\@BOOLEAN']: "+sfo['Item\DisableBuyerRequirements\@BOOLEAN']);
-/*if(sfo['Item/\DisableBuyerRequirements/\@BOOLEAN'] == 0)	{
-	for(index in sfo)	{
-		if(index.indexOf('Item\BuyerRequirementDetails') === 0)	{
-			delete sfo[index];
-			}
-		}
-	}
-*/
+//app.u.dump('sfo["Item/\DisableBuyerRequirements/\@BOOLEAN"]: '+sfo["Item\DisableBuyerRequirements\@BOOLEAN"]); // app.u.dump(sfo);
+//if(sfo["Item\DisableBuyerRequirements\@BOOLEAN"] == 0)	{
+//app.u.dump("MATCH!!!!!!!!!!!!!!!!!!!!!!");
+//	for(index in sfo)	{
+//		if(index.indexOf('BuyerRequirementDetails') >= 0)	{
+//			delete sfo[index];
+//			}
+//		}
+//	}
+
 					sfo._cmd = CMD;
 					sfo._tag = {
 						'callback' : function(rd)	{

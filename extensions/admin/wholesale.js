@@ -123,7 +123,7 @@ var admin_wholesale = function() {
 					$('#globalMessaging').anymessage({'message':'In admin_wholesale.a.showOrganizationManager, $target either not specified or has not length.','gMessage':true});
 					}
 				
-				}, //showSupplierManager
+				}, //showOrganizationManager
 			
 			showOrganizationEditor : function($target,vars)	{
 				app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
@@ -156,21 +156,25 @@ var admin_wholesale = function() {
 				},
 			
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
-			showSupplierManager : function($smTarget)	{
-				$smTarget.showLoading({'message':'Fetching supplier list'});
-				
-				app.ext.admin.calls.adminSupplierList.init({'callback':function(rd){
-					$smTarget.hideLoading();
-					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
-					else	{
-						$smTarget.anycontent({'templateID':'supplierManagerTemplate','datapointer':rd.datapointer});
-						app.ext.admin.u.handleAppEvents($smTarget);
-						$("[data-app-role='supplierList']",$smTarget).anytable();
+			showSupplierManager : function($target)	{
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Supplier Manager',
+					'className' : 'supplierManager',
+//add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Supplier List<\/button>",
+						"<button class='floatRight marginLeft' data-app-event='admin_wholesale|showSupplierCreate'>Add Supplier</button>"
+						],
+					'thead' : ['Name','ID','Type','Mode',''],
+					'tbodyDatabind' : "var: users(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminSupplierList',
+						'_tag' : {
+							'datapointer':'adminSupplierList'
+							}
 						}
-					}},'mutable');
+					});
 				app.model.dispatchThis('mutable');
-				
-				
 				}, //showSupplierManager
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
@@ -567,7 +571,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$ele.off('click.showSupplierEditor').on('click.showSupplierEditor',function(){
 					var $row = $ele.closest('tr');
 					if($row.data('code'))	{
-						var $editorContainer = $ele.closest("[data-app-role='soloModeContentContainer']");
+						var $editorContainer = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
 						$editorContainer.empty();
 						app.ext.admin_wholesale.a.showSupplierEditor($editorContainer,$row.data('code'));
 						}
@@ -844,7 +848,8 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 							if($panel.length)	{
 								$panel.anypanel('destroy'); //make sure there is no editor for this schedule still open.
 								}
-							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleDelete','SID':CODE},'immutable');
+							$btn.closest("[data-app-role='dualModeContainer']").showLoading({"message":"Removing price schedule "+SID});
+							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleDelete','SID':SID},'immutable');
 							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
 							app.model.dispatchThis('immutable');
 							$modal.dialog('close');

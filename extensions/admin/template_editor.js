@@ -271,12 +271,14 @@ var admin_templateEditor = function() {
 				
 				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
 				$wizardForm.on('click.templatewizard',function(e){
+					app.u.dump("Click registered in the wizard panel");
 					var $target = $(e.target); //the element that was clicked.
 					if($target.is('button') && $target.data('button-action'))	{
+						app.u.dump(" -> click is on a button");
 						e.preventDefault(); //disable the default action.
 
 						
-
+						app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
 						$target.data('button-action') == 'previous' ? $('fieldset:visible',$wizardForm).hide().prev('fieldset').show() : $('fieldset:visible',$wizardForm).hide().next('fieldset').show();
 						
 						
