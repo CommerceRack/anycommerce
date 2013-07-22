@@ -911,9 +911,13 @@ $D.dialog('open');
 									$form.anymessage({'message':rd});
 									}
 								else	{
-									$form.empty().anymessage(app.u.successMsgObject('Activation successful!'));
+									$form.parent().empty();
+//* 201324 -> made parent empty, not just form, so all the 'you are about...' text goes away too. editor now opens as well.
+									app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$("[data-app-role='slimLeftContent']",$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"))))
+									$('#globalMessaging').anymessage(app.u.successMsgObject('Activation successful!'));
 									}
 								}},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','shipmethods':true,'_tag':{'datapointer' : 'adminConfigDetail|shipmethods|'+app.vars.partition}},'immutable');
 							app.model.dispatchThis('immutable');
 
 							}
