@@ -276,7 +276,7 @@ var admin_templateEditor = function() {
 					
 					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
 					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
-					app.u.dump(target);
+					app.u.dump(e.target);
 					
 					if($target.is('button') && $target.data('button-action'))	{
 						app.u.dump(" -> click is on a button");
