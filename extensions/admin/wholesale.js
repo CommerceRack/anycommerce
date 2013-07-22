@@ -849,7 +849,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 								$panel.anypanel('destroy'); //make sure there is no editor for this schedule still open.
 								}
 							$btn.closest("[data-app-role='dualModeContainer']").showLoading({"message":"Removing price schedule "+SID});
-							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleDelete','SID':SID},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleRemove','SID':SID},'immutable');
 							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
 							app.model.dispatchThis('immutable');
 							$modal.dialog('close');
