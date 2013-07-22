@@ -1051,16 +1051,15 @@ delete sfo.service
 delete sfo.addcost
 delete sfo.free
 
-//app.u.dump('sfo["Item/\DisableBuyerRequirements/\@BOOLEAN"]: '+sfo["Item\DisableBuyerRequirements\@BOOLEAN"]); // app.u.dump(sfo);
-//if(sfo["Item\DisableBuyerRequirements\@BOOLEAN"] == 0)	{
-//app.u.dump("MATCH!!!!!!!!!!!!!!!!!!!!!!");
-//	for(index in sfo)	{
-//		if(index.indexOf('BuyerRequirementDetails') >= 0)	{
-//			delete sfo[index];
-//			}
-//		}
-//	}
-
+//app.u.dump('sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"]: '+sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"]); app.u.dump(sfo);
+if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
+	for(index in sfo)	{
+		if(index.indexOf('BuyerRequirementDetails') >= 0)	{
+			delete sfo[index];
+			}
+		}
+	}
+app.u.dump(sfo);
 					sfo._cmd = CMD;
 					sfo._tag = {
 						'callback' : function(rd)	{
