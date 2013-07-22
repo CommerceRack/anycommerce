@@ -276,7 +276,10 @@ var admin_templateEditor = function() {
 					
 					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
 					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
-					app.u.dump(e.target);
+//in chrome, the click event is triggered on the child span of the button, not the button itself.
+					if(e.target.nodeName.toLowerCase() == 'span')	{
+						$target = $target.parent();
+						}
 					
 					if($target.is('button') && $target.data('button-action'))	{
 						app.u.dump(" -> click is on a button");
@@ -290,13 +293,6 @@ var admin_templateEditor = function() {
 						var $focusFieldset = $('fieldset:visible',$wizardForm);
 						fieldsetVerifyAndExecOnfocus($focusFieldset);
 
-//						if($focusFieldset.data('onfocus'))	{
-//							$focusFieldset.data('onfocus')() //does not work.
-//							setTimeout($focusFieldset.data('onfocus'),100); //works.
-//							eval($focusFieldset.data('onfocus')); //works.
-//							$focusFieldset.append("<script type='text/javascript'>"+$focusFieldset.data('onfocus')+"<\/script>"); //works.
-//							}
-//						app.u.dump("index of new visible fieldset: "+$('fieldset:visible',$wizardForm).index());
 						//SANITY -> index() starts at 1, not zero.
 						if($focusFieldset.index() == 1)	{
 							$("[data-button-action='next']",$wizardForm).button('enable');
