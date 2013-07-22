@@ -1821,12 +1821,22 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			<label>
 				<input type="checkbox" class='applyAnycb' name='Item\AutoPay' data-app-event='admin_syndication|ebayAutopayToggle' data-bind="var: profile(%PROFILE.Item\AutoPay); format:popVal;" />
 				Autopay
-				<span class='toolTip' title="If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
+				<span class='toolTip' title="(Recommend: Yes) If this feature is enabled for a listing, the buyer must pay immediately for the item through PayPal, and the buyer's funds are transferred instantly to the seller's PayPal account. The seller's item will remain available for purchase by other buyers until the buyer actually completes the payment.">?</span>
+			</label>
+
+			<label data-app-role='AutoPayPaymentMethods' >
+				<span>AutoPay requires PayPal payments</span>
+				<select disabled multiple='multiple' name='Item\PaymentMethods\@ARRAY' data-bind="var: profile(%PROFILE.Item\PaymentMethods\@ARRAY); format:popVal;">
+					<option selected value='PayPal'>PayPal</option>
+				</select>
 			</label>
 
 			<label data-app-role='eBayPaymentMethods' >
 				<span>Payment methods</span>
+				<!-- NOTE: PayPal is required and must be exclusive for Item\AutoPay = True -->
 				<select multiple='multiple' name='Item\PaymentMethods\@ARRAY' data-bind="var: profile(%PROFILE.Item\PaymentMethods\@ARRAY); format:popVal;">
+					<option value='PayPal'>PayPal</option>
+
 					<option value='AmEx'>American Express</option>
 					<option value='CashInPerson'>Cash-in-person option</option>
 					<option value='CashOnPickup'>Payment on delivery</option>
@@ -1846,7 +1856,6 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 					<option value='Paymate'>Paymate</option>
 					<option value='PaymentSeeDescription'>Payment See description</option>
 					<option value='PayOnPickup'>PayOnPickup</option>
-					<option value='PayPal'>PayPal</option>
 					<option value='PersonalCheck'>Personal check</option>
 					<option value='ProPay'>ProPay</option>
 					<option value='StandardPayment'>Standard payment</option>

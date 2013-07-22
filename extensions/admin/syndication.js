@@ -1642,9 +1642,11 @@ app.model.dispatchThis('immutable');
 				function handleCB()	{
 					if($ele.is(':checked'))	{
 						$("[data-app-role='eBayPaymentMethods']",$ele.closest('fieldset')).hide();
+						$("[data-app-role='AutoPayPaymentMethods']",$ele.closest('fieldset')).show();
 						}
 					else	{
-						$("[data-app-role='eBayPaymentMethods']",$ele.closest('fieldset')).show();;
+						$("[data-app-role='eBayPaymentMethods']",$ele.closest('fieldset')).show();
+						$("[data-app-role='AutoPayPaymentMethods']",$ele.closest('fieldset')).hide();
 						}
 					}
 				handleCB();
