@@ -289,11 +289,11 @@ var admin_prodEdit = function() {
 //PID is required for mode = product.
 //executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
 		getVariationEditor : function(mode, varObj, PID)	{
-			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
+//			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
 			varObj = varObj || {}; //defauilt to object to avoid JS error in error checking.
 			var $r = $("<div \/>").addClass('variationEditorContainer'); //what is returned. Either the editor or some error messaging.
 			if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
-				app.u.dump(" -> mode: "+mode);
+//				app.u.dump(" -> mode: "+mode);
 				
 				$r.data({
 					'variationtype':varObj.type,
@@ -631,11 +631,10 @@ app.model.dispatchThis('mutable');
 //the default option editor shows all the inputs.  Need to clear some out that are image or inventory specific.
 //executed from variationOptionUpdateShow and variationOptionAddShow
 		handleOptionEditorInputs : function($target,data)	{
-//			app.u.dump("BEGIN admin_prodEdit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
+			app.u.dump("BEGIN admin_prodEdit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
 			$("[name='html']",$target).val(unescape($("[name='html']",$target).val()))
-			if(data.inv)	{
-				$('.invOnly',$target).removeClass('displayNone');
-				}
+//an inventory-able option does not have price or weight modifiers. price and weight are set by STID in the inventory panel.
+			if(Number(data.inv))	{} else {$('.nonInvOnly',$target).removeClass('displayNone')}
 			if(data.type == 'imgselect' || data.type == 'imggrid')	{
 //				app.u.dump(" -> type is image based. show image inputs.");
 				$('.imgOnly',$target).removeClass('displayNone');
@@ -1050,20 +1049,20 @@ app.model.dispatchThis('mutable');
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 
 
-var varEditorData = $btn.closest(".variationEditorContainer").data();
-app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
-app.u.dump("varEditorData: "); app.u.dump(varEditorData);
-
-//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
-if(varEditorData.variationmode == 'product')	{
-	if(varEditorData.ispog)	{
-		
-		}
-	else	{
-		$btn.attr('title',"Can not add a new option because this is a store group.");
-		$btn.button('disable');
-		}
-	}
+				var varEditorData = $btn.closest(".variationEditorContainer").data();
+				//app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
+				//app.u.dump("varEditorData: "); app.u.dump(varEditorData);
+				
+				//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
+				if(varEditorData.variationmode == 'product')	{
+					if(varEditorData.ispog)	{
+						
+						}
+					else	{
+						$btn.attr('title',"Can not add a new option because this is a store group.");
+						$btn.button('disable');
+						}
+					}
 
 				
 				$btn.off('click.variationOptionAddShow').on('click.variationOptionAddShow',function(){
@@ -1105,7 +1104,7 @@ if(varEditorData.variationmode == 'product')	{
 				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
 					vars = vars || {};
 					
-					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
+//					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
 					
 					if($btn.data('variationmode') == 'store')	{
 						$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]));
@@ -1174,6 +1173,19 @@ if(varEditorData.variationmode == 'product')	{
 						}
 					});
 				}, //variationHandleInventoryChange
+
+			variationsBackToProductExec : function($btn)	{
+				$btn.button();
+				if($btn.data('pid'))	{
+					$btn.off('click.variationsBackToProductExec').on('click.variationsBackToProductExec',function(){
+						app.ext.admin_prodEdit.a.showPanelsFor($btn.data('pid'));
+						});
+					}
+				else	{
+					$btn.button('disable');
+					$btn.hide();
+					}
+				},
 
 			variationCreateShow : function($btn)	{
 				$btn.button();

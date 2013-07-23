@@ -2111,17 +2111,17 @@ Snacks|Doughnuts<br />
 		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" />
 	</label>
 	
-	<label class='displayNone invOnly'>
+	<label class='displayNone nonInvOnly'>
 		<span>Weight modifier</span>
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" />
 	</label>
 	
-	<label class='displayNone invOnly'>
+	<label class='displayNone nonInvOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" />
 	</label>
 	
-	<label class='displayNone invOnly'>
+	<label class='displayNone nonInvOnly'>
 		<span>Assembly</span>
 		<input type="textbox" name="asm" value="" data-bind="var: variation(asm); format:popVal;" />
 	</label>
@@ -2173,6 +2173,9 @@ Snacks|Doughnuts<br />
 	</div>
 	<section class='ui-widget-content stdPadding ui-corner-bottom' data-app-role='productVariationManagerContainer'>
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding alignRight marginBottom clearfix'>
+		
+		<button title="Return to Product." data-app-event="admin_prodEdit|productVariationsBackToProduct" data-bind="var:variation(PID); format:assignAttribute; attribute:data-pid;">Back to Product</button>
+		
 			<button title="Cancel any unsaved changes to these variations." data-app-event='admin_prodEdit|productVariationsManagerShow'>Cancel Changes</button>
 			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
 			<button title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
