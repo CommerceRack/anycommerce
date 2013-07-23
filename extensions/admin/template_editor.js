@@ -140,6 +140,8 @@ var admin_templateEditor = function() {
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
 						
 								$("textarea:first",$D)
+									.show()
+									.width('95%')
 									.height($D.height() - 100)
 									.css('width','95%')
 									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
@@ -150,7 +152,8 @@ var admin_templateEditor = function() {
 								
 							
 								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-								var $iframeBody = $('iframe',$D).css({'min-height':'400px','min-width':'500px'}).width('100%').contents().find('body');
+								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
+								var $iframeBody = $('iframe',$D).css({'min-height':'400px','min-width':'500px'}).width('97%').contents().find('body');
 								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 							
 								app.u.handleAppEvents($D);
