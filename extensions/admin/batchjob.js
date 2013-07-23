@@ -246,6 +246,31 @@ var admin_batchJob = function() {
 //btn hidden by default. no action needed.
 					}
 				},
+
+
+			showDownload : function($btn)	{
+				if($btn.closest('tr').data('batch_exec') == 'EXPORT' && $btn.closest('tr').data('status').indexOf('END-SUCCESS') >= 0)	{
+					$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}}).show();
+					$btn.off('click.showReport').on('click.showReport',function(event){
+						event.preventDefault();
+app.model.addDispatchToQ({
+	'_cmd':'adminBatchJobDownload',
+	'guid':$btn.closest('tr').data('guid'),
+	'base64' : '1',
+	'_tag':	{
+		'datapointer' : 'adminBatchJobDownload', //big dataset returned. only keep on in memory.
+		'callback' : 'fileDownloadInModal',
+		'extension' : 'admin'
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+						
+						});
+					}
+				else	{
+//btn hidden by default. no action needed.
+					}
+				},
 			
 			execBatchCleanup : function($btn)	{
 				var $row = $btn.closest('tr');

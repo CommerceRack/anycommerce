@@ -242,7 +242,7 @@ has to be within the fieldset to for data-table to work right.
 					<td colspan='3'>Strip WIKI</td>
 				</tr>
 				<tr>
-					<td><input type="radio" value="stripcrlf" name="verb"   data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td><input type="radio" value="stripcrlf" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
 					<td colspan='3'>Strip CR/LF</td>
 				</tr>
 				<tr>
@@ -530,7 +530,7 @@ JSON editor, which didn't work:
 		
 		<div class='toggleThis displayNone' data-app-role='exportToolAttributeListContainer'>
 			<label>Attribute list</label>
-			<textarea name="fields" class='fullWidth' rows="5"></textarea>
+			<textarea name="headers" class='fullWidth' rows="5"></textarea>
 			<p class='hint'>
 			To specify header fields, specify product attributes separated by commas or newslines, leave no whitespace e.g. "zoovy:prod_name,zoovy:base_price,zoovy:prod_image1" (without the quotes) - without specifying which fields you want to export you will be limited to 500 products per export.<br />
 			<strong>Advanced users</strong>: You can alternatively specify a map to generate a particular CSV file for a trading partner. Use multiple lines 
@@ -563,7 +563,7 @@ JSON editor, which didn't work:
 		
 		<label><input type="checkbox" name="imagelib" /> Export Image URLs rather than Image Library names (may break Excel) <span class='toolTip' title="Remember to use %IMGURL=zoovy:prod_image1 as your header to get the URL instead of the image name.">?</span></label>
 		
-		<label><input type="checkbox" name="stripcrlf" /> Strip Carriage Return/Line Feeds</label>
+		<label><input type="checkbox" name="stripcrlf" checked='checked' /> Strip Carriage Return/Line Feeds</label>
 		
 		<label><input type="checkbox" name="convertutfx" /> Attempt to convert UTFx data to HTML.</label>
 		

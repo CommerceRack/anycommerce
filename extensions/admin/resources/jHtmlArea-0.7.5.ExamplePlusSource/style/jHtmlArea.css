@@ -19,9 +19,19 @@ div.jHtmlArea .ToolBar ul li a.unlink { background-position: -80px 0; }
 div.jHtmlArea .ToolBar ul li a.orderedlist { background-position: -96px 0; }
 div.jHtmlArea .ToolBar ul li a.unorderedlist { background-position: -112px 0; }
 div.jHtmlArea .ToolBar ul li a.image { background-position: -128px 0; }
+
 /* * 201324 -> for adding an image to the media library */ 
 div.jHtmlArea .ToolBar ul li a.imageadd {background:url(image_add.png);}
 div.jHtmlArea .ToolBar ul li a.prodattributeadd {background:url(prodattributeadd.png);}
+
+/* * 201330 -> for platform inputs in a campaign editor */
+div.jHtmlArea .ToolBar ul li a.androidinputsshow {background:url(android.png);}
+div.jHtmlArea .ToolBar ul li a.iosinputsshow {background:url(ios.png);}
+div.jHtmlArea .ToolBar ul li a.styletagedit {background:url(css.png);}
+div.jHtmlArea .ToolBar ul li a.buyerattributeadd {background:url(buyerattributeadd.png);}
+
+
+
 div.jHtmlArea .ToolBar ul li a.cut { background-position: -144px 0; }
 div.jHtmlArea .ToolBar ul li a.copy { background-position: -160px 0; }
 div.jHtmlArea .ToolBar ul li a.paste { background-position: -176px 0; }

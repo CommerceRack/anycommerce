@@ -6,7 +6,8 @@
 	</td>
 	<td class='valignTop width20'>
 	<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
-		<button data-app-event="admin_templateEditor|adminTemplateSaveExec" class='ui-state-focus'>Save Changes</button>
+		<button data-app-event="admin_templateEditor|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
+		<button data-app-event="admin_templateEditor|adminTemplateSaveExec" class='ui-state-focus'>Save</button>
 	</div>
 
 <section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
@@ -19,9 +20,9 @@
 
 		<h5>Highlight Elements</h5>
 		<!-- labels are in divs because the .show() applies a display:inline class. -->
-		<div class='marginTop clearfix'><label data-app-role='highlightContainer_product' class='displayNone'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label></div>
+		<div class='marginTop clearfix ebay'><label data-app-role='highlightContainer_product'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label></div>
 		
-		<div class='clearfix'><label data-app-role='highlightContainer_buyer' class='displayNone'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightBuyerAttributes' data-objecttype='BUYER' />Buyer<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with buyer data. Any content added inside these areas is likely to be lost when the buyer data is added.">?</span></label></div>
+		<div class='clearfix campaign'><label data-app-role='highlightContainer_buyer'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightBuyerAttributes' data-objecttype='BUYER' />Buyer<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with buyer data. Any content added inside these areas is likely to be lost when the buyer data is added.">?</span></label></div>
 		
 		<div class='clearfix'><label data-app-role='highlightContainer_wizard'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightKISSAttributes' data-objecttype='KISS' />Wizard<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label></div>
 
@@ -45,14 +46,91 @@
 </section>
 
 
-<!--
-<section class='ui-widget marginBottom'>
-	<h4 class='smallPadding ui-widget-header ui-corner-top'>Template Settings</h4>
+
+<section class='ui-widget marginBottom campaign' data-app-role='templateEditorViewportChooser'>
+	<h4 class='smallPadding ui-widget-header ui-corner-top'>Viewport Size</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-look for hidden(ish) kiss inputs for template settings, like color.
+
+	<select name='viewport' class='small' data-app-event='admin_templateEditor|templateEditorIframeResizeExec'>
+		<option value='default'>default</option>
+		<optgroup label='Amazon'>
+			<option value='600x1024'>Kindle Fire 600x1024</option>
+			<option value='800x1280'>Fire HD 800x1280</option>
+		</optgroup>
+
+		<optgroup label='Apple'>
+			<option value='320x480'>iPhone, iPod Touch 320x480</option>
+			<option value='320x568' data-deviceclass='iphone5'>iPhone 5 320x568</option><!-- -19px for clock/battery bar -->
+			<option value='768x1024'>iPad/Mini 768x1024</option>
+		</optgroup>
+
+		<optgroup label='Asus'>
+			<option value='600x1024'>Eee 1000 600x1024</option>
+			<option value='600x960'>Google Nexus 7 600x960</option>
+		</optgroup>
+		
+		<optgroup label='Blackberry'>
+			<option value='480x800'>Torch 480x800</option>
+			<option value='480x640'>Bold Touch 9900 480x640</option>
+			<option value='480x360'>Curve 480x360</option>
+		</optgroup>
+		
+		<optgroup label='HTC'>
+			<option value='320x533'>Desire 320x533</option>
+			<option value='360x640'>One X 360x640</option>
+			<option value='480x640'>Touch Diamond 480x640</option>
+			<option value='480x800'>Touch HD 480x800</option>
+			<option value='540x960'>Sensation 540x960</option>
+		</optgroup>
+		
+		<optgroup label='LG Optimus'>
+			<option value='320x480'>One 320x480</option>
+			<option value='480x800'>3D 480x800</option>
+			<option value='720x1280'>4X HD 720x1280</option>
+		</optgroup>
+		
+		<optgroup label='Motorola'>
+			<option value='320x570'>Mobility Milestone 320x570</option>
+			<option value='360x640'>Mobility RAZR i 360x640</option>
+		</optgroup>
+		
+		<optgroup label='Nokia'>
+			<option value='480x640'>E6 480x640</option>
+			<option value='480x800'>Lumia 480x800</option>
+			<option value='768x1280'>Lumia 920 768x1280</option>
+		</optgroup>
+
+		<optgroup label='HP'>
+			<option value='768x1024'>HP TouchPad 768x1024</option>
+		</optgroup>
+		
+		<optgroup label='Samsung'>
+			<option value='320x480'>Galaxy Ace 320x480</option>
+			<option value='360x640'>Nexus 360x640</option>
+			<option value='480x800'>Galaxy S 480x800</option>
+			<option value='400x683'>Galaxy Tablet 400x683</option>
+		</optgroup>
+		
+		<optgroup label='Sharp'>
+			<option value='480x854'>SX862 480x854</option>
+			<option value='480x1024'>941SH 480x1024</option>
+			<option value='640x960'>IS03 640x960</option>
+		</optgroup>
+		
+		<optgroup label='Sony Ericsson'>
+			<option value='360x640'>Satio 360x640</option>
+			<option value='480x854'>U 480x854</option>
+			<option value='540x960'>P 540x960</option>
+		</optgroup>
+
+	</select>
+	
+	<button data-app-event='admin_templateEditor|templateEditorIframeRotateExec'>Rotate Orientation</button>
+	
+	<p class='hint'>This feature is available to give you an idea of what your message will look like on a specific device. There may be device-specific display differences. Also, the pixel density on phones is higher than a computer, so the phone around your content is enlarged to reflect this.</p>
 	</div>
 </section>
--->
+
 <section class='ui-widget marginBottom'>
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>

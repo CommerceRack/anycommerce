@@ -1322,7 +1322,27 @@ see shipping panel in product editor for example
 /* CAMPAIGN MANAGER */
 .campaignPlatformIcons span {float:left; margin-right:4px;}
 
+#templateEditor .ToolBar	{position:relative; z-index:15;}
+#templateEditor .templatePreviewContainer {position:relative;}
+#templateEditor .device{position:absolute; top:0; left:0;} /* applied to all the 'device' backgrounds. */
+/* device-specific class added to a 'device' div and also the parent container that holds both the iframe and the .device */
 
+#templateEditor .device	{z-index:10;}
+#templateEditor iframe	{border:0px; z-index:21; position:relative;}
+
+#templateEditor .iphone5 .device	{background:url(images/devices/iphone5.jpg) no-repeat; height:798px; width:385px;}
+#templateEditor .iphone5 .device.landscape	{top:-175px; left:180px;} /* correct device image placement */
+#templateEditor .iphone5 iframe.portrait	{top:90px; left:33px;}
+#templateEditor .iphone5 iframe.landscape	{top:33px; left:90px;}
+
+
+#templateEditor .templatePreviewContainer div.landscape	{
+	/* for firefox, safari, chrome, etc. */
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	/* for ie */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	
+	}
 
 /* landing page (aka recent news) */
 

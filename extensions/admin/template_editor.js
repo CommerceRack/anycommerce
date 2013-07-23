@@ -75,6 +75,10 @@ var admin_templateEditor = function() {
 							'width':'94%',
 							close: function(event, ui)	{
 								$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
+//if the css editor was opened, close it.
+								if($('#templateEditorCSSDialog').length && $('#templateEditorCSSDialog').hasClass('ui-dialog-content'))	{
+									$('#templateEditorCSSDialog').dialog('close');
+									}
 								},
 							open : function(event,ui)	{
 								$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
@@ -126,16 +130,21 @@ var admin_templateEditor = function() {
 									]);
 
 //handle some mode specifics.
+								$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
 								if(mode == 'ebay')	{
 									toolbarButtons.push("|");
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
-									$("[data-app-role='highlightContainer_product']",$D).show();
+									$(".ebay",$D).show();
 									}
 								else if(mode == 'campaign')	{
 									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
+									toolbarButtons.push("|");
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_android());
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_ios());
-									$("[data-app-role='highlightContainer_buyer']",$D).show();
+									$(".campaign",$D).show();
 									}
 								else	{}
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
@@ -154,7 +163,7 @@ var admin_templateEditor = function() {
 							
 								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
 								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
-								var $iframeBody = $('iframe',$D).css({'min-height':'400px','min-width':'500px'}).width('97%').contents().find('body');
+								var $iframeBody = $('iframe',$D).width('97%').contents().find('body');
 								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 							
 								app.u.handleAppEvents($D);
@@ -508,8 +517,10 @@ var admin_templateEditor = function() {
 
 				buildTemplateStyleSheet : function()	{
 					var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
-						+ "	.showHighlights_PRODUCT .actbProductAttribute {background-color:#efefef; border:1px dashed #cccccc;}\n" //used on all non-href product elements
-						+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc;}\n" //used on product href elements.
+						+ "	.showHighlights_PRODUCT .attributeContainer_PRODUCT {background-color:#efefef; border:1px dashed #cccccc;}\n" //used on all non-href product elements
+//						+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc;}\n" //used on product href elements.
+						+ "	.showHighlights_BUYER .attributeContainer_BUYER {background-color:#cee1cc; border:1px dashed #abc2a8;}\n" //used on all non-href product elements
+//						+ "	.showHighlights_BUYER .actbHref {background-color:#abc2a8; border:1px solid #abc2a8;}\n" //used on product href elements.
 						+ "	.showHighlights_KISS .wizardificated {background-color:#e2eee1; border:1px dashed #bdd1bd;}\n"
 						+ "	.showHighlights_KISS .unwizardificated {background-color:#f0f5fb; border:1px dashed #b9d6fc;}\n"
 						+ "<\/style></div>"
@@ -528,12 +539,9 @@ var admin_templateEditor = function() {
 					$template.append(template);
 					$("[data-object]",$template).each(function(){
 						var $ele = $(this);
-						if($ele.data('object') == 'PRODUCT')	{
-							if($ele.is('a') && !$ele.hasClass('actbHref'))	{
-								$ele.addClass('actbHref');
-								}
-							else if(!$ele.is('a') && !$ele.hasClass('actbProductAttribute'))	{
-								$ele.addClass('actbProductAttribute')
+						if($ele.data('object') == 'PRODUCT' || $ele.data('object') == 'BUYER')	{
+							if(!$ele.hasClass('attributeContainer_'+$ele.data('object')))	{
+								$ele.addClass('attributeContainer_'+$ele.data('object'))
 								}
 							else	{} //not an anchor and already has product attribute class.
 							}
@@ -715,24 +723,66 @@ var admin_templateEditor = function() {
 
 
 
+				getEditorButton_style : function(){
+					return {
+						css : 'styletagedit',
+						'text' : 'Style Tags',
+						action: function (btn) {
+							var jhtml = this; //the jhtml object.
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Add/Update CSS Classes'
+								});
+							$D.attr('id','templateEditorCSSDialog');
+
+							$D.dialog('option','width','500');
+//							$D.dialog('option','modal',false); warning - toggling between css editor as a dialog caused template iframe body to empty. odd.
+							
+							var $style = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("style:first");
+//templatebuildercss is not editable. it's what the app adds for highlighting classes and it is nuked on save.
+//if that's the first style on the page, append a new style tag to the head of the template for future use.
+							if($style.parent().attr('id') == 'templateBuilderCSS')	{
+								app.u.dump("First style tag is the templateBuilderCSS. Don't use it.");
+								$style = $("<style \/>"); 
+								$('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("head").append($style);
+								}
+
+							$("<textarea \/>").width('100%').height('350px').on('blur',function(){
+								$style.text($(this).val())
+								}).val($style.html()).appendTo($D);
+							$D.dialog('open');
+							}
+						}
+					}, //getEditorButton_style
+
 				getEditorButton_ios : function(){
 					return {
 						css : 'iosinputsshow',
 						'text' : 'iOS Settings',
 						action: function (btn) {
 							var jhtml = this; //the jhtml object.
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Add/Update iOS Settings'
+								});
+							$D.dialog('option','width','500');
+							$D.dialog('open');
 							}
 						}
-					},
+					}, //getEditorButton_ios
+
 				getEditorButton_android : function(){
 					return {
 						css : 'androidinputsshow',
 						'text' : 'Android Settings',
 						action: function (btn) {
 							var jhtml = this; //the jhtml object.
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Add/Update Android Settings'
+								});
+							$D.dialog('option','width','500');
+							$D.dialog('open');
 							}
 						}
-					},
+					}, //getEditorButton_android
 
 //returns an array that gets appended to the html editor toolbar.
 				getEditorButton_prodattributeadd : function()	{
@@ -746,40 +796,142 @@ var admin_templateEditor = function() {
 								'title' : 'Add Product Attribute'
 								});
 							$D.dialog('open');
-							$ul = $("<ul \/>");
-					
-//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
 							
-							$("<li \/>").text('Product Name').on('click',function(){
-								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
-								$D.dialog('close');
-								}).appendTo($ul);
-							
-							$("<li \/>").text('Product Manufacturer').on('click',function(){
-								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
-								$D.dialog('close');
-								}).appendTo($ul);
-							
-							$("<li \/>").text('Product Description').on('click',function(){
-								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
-								$D.dialog('close');
-								}).appendTo($ul);
-							
-							$("<li \/>").text('Product Features').on('click',function(){
-								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
-								$D.dialog('close');
-								}).appendTo($ul);
-							
-							$("<li \/>").text('Product Image 5').on('click',function(){
-								jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5_CONTAINER'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5_HREF' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image 5' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
-								$D.dialog('close');
-								}).appendTo($ul);
-							$("li",$ul).addClass('lookLikeLink');
-							$ul.appendTo($D);
-							
+							var attributes = [
+								{attribute: 'zoovy:prod_name', data : {'input-cols':'100','input-type':'TEXTBOX','label':'Name','object':'PRODUCT'},'id':'PROD_NAME'},
+								{attribute: 'zoovy:prod_mfg', data : {'input-cols':'50','input-type':'TEXTBOX','label':'Manufacturer','object':'PRODUCT'},'id':'PROD_MFG' },
+								{attribute: 'zoovy:prod_mfgid', data : {'input-cols':'50','input-type':'TEXTBOX','label':'Manufacturer\'s ID','object':'PRODUCT'},'id':'PROD_MFGID' },
+								{attribute:'zoovy:prod_desc', data : {'input-cols':'80','input-rows':'5','input-type':'TEXTAREA','label':'Description','object':'PRODUCT'},'id':'PROD_DESC' },
+								{attribute:'zoovy:prod_detail', data : {'input-cols':'80','input-rows':'5','input-type':'TEXTAREA','label':'Specifications','object':'PRODUCT'},'id':'PROD_DETAIL' },
+								{attribute:'zoovy:prod_features', data : {'input-cols':'80','input-rows':'5','input-type':'TEXTAREA','label':'Features','object':'PRODUCT'},'id':'PROD_FEATURES' },
+								]
+							//add ten images to the end of the attributes list.
+							for(var i = 1; i <= 10; i += 1)	{
+								attributes.push({attribute:'zoovy:prod_image'+i, data : {'label':'Image '+i,'object':'PRODUCT','format':'img'},'id':'PROD_IMAGE'+i });
+								}
+
+							app.ext.admin_templateEditor.u.appendAttributeListTo($D,jhtml,attributes);
 							}
 						}
-					} //getEditorButton_prodattributeadd
+					}, //getEditorButton_prodattributeadd
+//returns an array that gets appended to the html editor toolbar.
+				getEditorButton_buyerattributeadd : function()	{
+	
+					return {
+						css : 'buyerattributeadd',
+						'text' : 'Add a Buyer Attribute',
+						action: function (btn) {
+							var jhtml = this; //the jhtml object.
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Add Buyer Attribute'
+								});
+							$D.dialog('open');
+							
+							var attributes = [
+								{attribute: 'buyer:firstname', data : {'input-cols':'100','input-type':'TEXTBOX','label':'First name','object':'BUYER'},'id':'BUYER_FIRSTNAME'},
+								{attribute: 'buyer:email', data : {'input-cols':'50','input-type':'TEXTBOX','label':'Email address','object':'BUYER'},'id':'PROD_EMAIL' }
+								]
+
+							app.ext.admin_templateEditor.u.appendAttributeListTo($D,jhtml,attributes);
+							}
+						}
+					}, //getEditorButton_prodattributeadd
+				
+				appendAttributeListTo : function($D,jhtml,attributes)	{
+					var r = true; //set to false if error occurs. Otherwise true. I used to determine what is returned.
+					if($D && jhtml && attributes)	{
+						var $ul = $("<ul \/>");
+						var L = attributes.length;
+						for(var i = 0; i < L; i += 1)	{
+							$("<li \/>").addClass('lookLikeLink').text(attributes[i].data.label).data('attributeIndex',i).appendTo($ul);
+							}
+
+						$ul.appendTo($D);
+						$ul.on('click',function(e){
+							var $target = $(e.target); //the element that was clicked.
+	//								app.u.dump(" -> attributes[i]"); app.u.dump(attributes[$target.data('attributeIndex')]);
+							if(app.ext.admin_templateEditor.u.applyElementToTemplate(jhtml,attributes[$target.data('attributeIndex')]))	{
+								$D.dialog('close');
+								}
+							else	{
+								$D.anymessage({"message":"Uh Oh! Something went wrong. Please try that again or try again later. dev: see console for details."});
+								}
+							});
+						}
+					else if(!jhtml)	{
+						r = false;
+						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, jhtml was not defined and it is required.");
+						}
+					else	{
+						r = false;
+						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
+						}
+					return (r === true) ? $ul : false;
+					},
+				
+				applyElementToTemplate : function(jhtml,attObj){
+					var r = true; //what is returned. true or false if element inserted successfully.
+					if(jhtml && attObj && attObj.data && attObj.attribute && attObj.data.object && (attObj.data['input-type'] || attObj.data.format))	{
+						var html = ''; //html to be inserted into template.
+						
+						function data2Attribs(data)	{
+							var attribs = " ";
+							for(index in data)	{
+								attribs += index+"='"+data[index]+"' ";
+								}
+							return attribs;
+							}
+						
+						
+						if(attObj.data.format == 'img')	{
+							html = "<span class='attributeContainer_"+attObj.data.object+"' data-attrib='"+
+								attObj.attribute
+								+"' data-if='BLANK' data-object='"+attObj.data.object+"' data-then='REMOVE' id='"+
+								attObj.ID
+								+"_CONTAINER'><a data-attrib='"+
+								attObj.attribute
+								+"' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='"+attObj.data.object.toLowerCase()+":"+
+								attObj.attribute
+								+"' data-img-zoom='1' data-label='"+
+								attObj.data.label
+								+"' data-object='"+attObj.data.object+"' id='"+
+								attObj.ID
+								+"_HREF' width='200'><img data-attrib='"+
+								attObj.attribute
+								+"' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='"+attObj.data.object.toLowerCase()+":"+
+								attObj.attribute
+								+"' data-img-zoom='1' data-label='"+
+								attObj.data.label
+								+"' data-object='"+attObj.data.object+"' id='"+
+								attObj.ID
+								+"' src='placeholder-2.png' width='200'></a></span>"
+							}
+						else if(attObj.data['input-type'] == 'TEXTBOX' || attObj.data['input-type'] == 'TEXTAREA')	{
+							html = "<span class='attributeContainer_"+attObj.data.object+"' data-attrib='"+attObj.attribute+"' data-input-data='"+attObj.data.object.toLowerCase()+":"+attObj.attribute;
+							html += data2Attribs(attObj.data);
+							html += "id='"+attObj.ID+"'>"+attObj.data.label+" ";
+							if(attObj.data['input-type'] == 'TEXTAREA')	{
+								html += "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris metus tortor, tincidunt eu commodo ac, tristique eget magna. Ut ante ante, tempus id condimentum non, eleifend in tellus. Fusce vitae tellus vestibulum, dapibus turpis laoreet, dapibus enim. Vivamus in lorem aliquam, consequat enim nec, laoreet nulla. Proin sapien enim, ultrices at nunc id, dictum blandit sapien. Mauris sit amet arcu auctor, aliquam eros laoreet, venenatis erat. Nunc ut elementum nulla, at imperdiet turpis. Nulla nec nunc consequat, commodo dui id, varius lacus. Cras ultricies metus eu justo placerat bibendum. Duis non risus accumsan, vehicula leo non, feugiat odio. Nullam lacinia tempor enim suscipit auctor. Praesent nunc purus, sodales at rutrum vitae, blandit quis dolor. Etiam vehicula justo ac massa accumsan mollis in ut purus. Donec id sagittis sapien."
+								}
+							html += "</span>"
+							}
+						else	{
+							app.u.dump("In admin_templateEditor.u.applyElementToTemplate, either  data-type ["+attObj.data['input-type']+"] is invalid or data-format ["+attObj.data.format+"] is invalid. attObj:"); app.u.dump(attObj);
+							r = false;
+							}
+						
+						if(r)	{jhtml.pasteHTML(html)}
+						
+						}
+					else if(!jhtml)	{
+						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, jhtml was not defined and it is required.");
+						}
+					else	{
+						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
+						r = false;
+						}
+					return r;
+					}
 
 			}, //u [utilities]
 
@@ -931,7 +1083,54 @@ var admin_templateEditor = function() {
 					}, //containerZipDownloadExec
 
 
+				adminTemplateCampaignTestShow : function($btn)	{
+					$btn.button();
+					
+					$btn.off('click.adminTemplateCampaignTestShow').on('click.adminTemplateCampaignTestShow',function(){
+						var $D = app.ext.admin.i.dialogCreate({"title":"Send a Test Email for this Campaign"});
+						$("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
+						$("<button \/>").text('do something').appendTo($D);
+						$D.dialog('option','width','350');
+						$D.dialog('open');
+						});
+					
+					},
 
+				templateEditorIframeResizeExec : function($ele)	{
+					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));
+					$iframe.data('originalHeight',$iframe.height());
+					$iframe.parent().removeClass()
+					$iframe.parent().find('.device').remove(); //remove all css classes from parent, then any 'device' elements used for bg's 
+					$iframe.parent().addClass('templatePreviewContainer');
+					$ele.off('change.templateEditorIframeResizeExec').on('change.templateEditorIframeResizeExec',function(){
+						if($ele.val() == 'default')	{
+							$iframe.width('100%').height($iframe.data('originalHeight'));
+							$iframe.parent().addClass('default').append($("<div class='device default' \/>"));
+							}
+						else if($ele.val().indexOf('x') > -1)	{
+							$iframe.width($ele.val().split('x')[0]).height($ele.val().split('x')[1]);
+							var $option = $('option:selected',$ele);
+							if($option.data('deviceclass'))	{
+								$iframe.addClass('portrait').parent().addClass($option.data('deviceclass')).append($("<div class='device "+$option.data('deviceclass')+" portrait' \/>"));
+								}
+							}
+						else	{
+							$ele.parent().anymessage({'message':'An unknown size was selected.'});
+							}
+
+						});
+					},
+					
+				templateEditorIframeRotateExec : function($btn)	{
+					$btn.button();
+					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));
+					$btn.off('click.templateEditorIframeResizeExec').on('click.templateEditorIframeResizeExec',function(){
+//						app.u.dump("rotate click event triggered. iframe.length: "+$iframe.length);
+						var W = $iframe.width();
+						$iframe.width($iframe.height()).height(W);
+						$iframe.parent().find('.device ,iframe').toggleClass('portrait landscape');
+						});
+					},
 
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{
