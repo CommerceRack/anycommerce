@@ -137,6 +137,7 @@ var admin_templateEditor = function() {
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_ios());
 									$("[data-app-role='highlightContainer_buyer']",$D).show();
 									}
+								else	{}
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
 						
 								$("textarea:first",$D)
