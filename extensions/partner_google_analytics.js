@@ -89,7 +89,7 @@ app.ext.orderCreate.checkoutCompletes.push(function(P){
 			L = order['@ITEMS'].length, hasPreBack = 'N', discounts = 0;
 			
 			for(var i = 0; i < L; i += 1)	{
-				if(order['@ITEMS'].SKU.charAt(0) == '%')	{discounts += Number(order['@ITEMS'].extended)}
+				if(order['@ITEMS'][i].sku.charAt(0) == '%')	{discounts += Number(order['@ITEMS'][i].extended)}
 				}
 			
 			$("<span \/>",{'id':'gts-o-id'}).text(P.orderID).appendTo($div);
@@ -101,7 +101,7 @@ app.ext.orderCreate.checkoutCompletes.push(function(P){
 			$("<span \/>",{'id':'gts-o-discounts'}).text(discounts).appendTo($div);
 			$("<span \/>",{'id':'gts-o-shipping-total'}).text(order.sum.ship_total).appendTo($div);
 			$("<span \/>",{'id':'gts-o-tax-total'}).text(order.sum.tax_total).appendTo($div);
-			$("<span \/>",{'id':'gts-o-est-ship-date'}).text().appendTo($div); //!!! needs to be set.
+			//$("<span \/>",{'id':'gts-o-est-ship-date'}).text("").appendTo($div); //!!! needs to be set.
 			$("<span \/>",{'id':'gts-o-has-preorder'}).text(hasPreBack).appendTo($div); //set in loop above.
 			$("<span \/>",{'id':'gts-o-has-digital'}).text('N').appendTo($div);
 			
