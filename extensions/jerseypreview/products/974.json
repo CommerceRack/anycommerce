@@ -11,10 +11,10 @@
 		"y" : 50
 	},
 	"number" : {
-		"size" : 15,
+		"size" : 65,
 		"color" : "28489B",
 		"strokeColor" : "DB2321",
-		"strokeThickness" : 1,
+		"strokeThickness" : 3,
 		"xOffset" : -1,
 		"y" : 50
 	}
