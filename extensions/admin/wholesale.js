@@ -67,6 +67,7 @@ var admin_wholesale = function() {
 			
 			showWarehouseManager : function($target)	{
 				$target.empty();
+
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Warehouse Manager',
 					'className' : 'warehouseManager',

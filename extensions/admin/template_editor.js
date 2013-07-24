@@ -377,6 +377,28 @@ var admin_templateEditor = function() {
 	else	{
 		window.magic = {};
 		
+		window.magic.prodlist = function(selector,vars)	{
+			var $target = getTarget(selector,'magic.prodlist');
+			vars = vars || {};
+			var $D = app.ext.admin.i.dialogCreate({
+				'title' : 'Add/Update CSS Classes'
+				});
+			
+			$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
+			$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
+				app.model.addDispatchToQ({
+					'_cmd':'appProductSelect',
+					'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
+					'_tag':	{
+						'datapointer' : 'appProductSelect'
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				}}]});
+
+			$D.dialog('open');
+			}
+		
 		//selector is an element within the wizard itself.
 		window.magic.inspect = function(selector)	{
 			var $target = getTarget(selector,'magic.inspect');
@@ -600,8 +622,9 @@ var admin_templateEditor = function() {
 								var dObj = {
 									_tag : {
 										'callback' : function(rd)	{
+											$TC.hideLoading();
 											if(app.model.responseHasErrors(rd)){
-												$form.anymessage({'message':rd})
+												$TC.anymessage({'message':rd})
 												}
 											else	{
 												$TC.dialog('close');
@@ -1119,10 +1142,11 @@ var admin_templateEditor = function() {
 
 				adminTemplateCampaignTestShow : function($btn)	{
 					$btn.button();
-					
+
 					$btn.off('click.adminTemplateCampaignTestShow').on('click.adminTemplateCampaignTestShow',function(){
 						var $D = app.ext.admin.i.dialogCreate({"title":"Send a Test Email for this Campaign"});
 						var $input = $("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
+						
 						$D.dialog('option','width','350');
 						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
 							if(app.u.isValidEmail($input.val()))	{
@@ -1130,7 +1154,8 @@ var admin_templateEditor = function() {
 								app.model.addDispatchToQ({
 									'_cmd':'adminCampaignStart',
 									'test' : '1',
-									'email' : $input.val(),
+									'CAMPAIGNID' : $('#templateEditor').data('campaignid'),
+									'RECIPIENTS' : "emails="+$input.val()+"\n",
 									'_tag':	{
 										'callback':function(rd)	{
 											$D.hideLoading();
@@ -1231,6 +1256,8 @@ var admin_templateEditor = function() {
 				startWizardExec : function($btn)	{
 					$btn.button();
 					var $meta = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("meta[name='wizard']");
+					var editorData = $('#templateEditor').data(); 
+					
 					if($meta.length == 0)	{$btn.button('disable')}
 					else	{
 						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
@@ -1238,10 +1265,9 @@ var admin_templateEditor = function() {
 							$btn.button('disable').hide();
 							event.preventDefault();
 							$('#wizardForm').showLoading({"message":"Summoning Wizard..."});
-							app.model.addDispatchToQ({
-								'_cmd':'adminEBAYProfileFileContents',
+
+							var cmdObj = {
 								'FILENAME':$meta.attr('content'),
-								'PROFILE': $('#templateEditor').data('profile'),
 								'_tag':	{
 									'datapointer' : 'adminEBAYProfileFileContents|'+$meta.attr('content'),
 									'callback':function(rd){
@@ -1254,7 +1280,21 @@ var admin_templateEditor = function() {
 											}
 										}
 									}
-								},'mutable');
+								}
+
+							if(editorData.mode == 'ebay')	{
+								cmdObj._cmd = 'adminEBAYProfileFileContents'
+								cmdObj.PROFILE = editorData.profile
+								}
+							else if(editorData.mode == 'campaign')	{
+								cmdObj._cmd = 'adminCampaignFileContents'
+								cmdObj.CAMPAIGNID = editorData.campaignid
+								}
+							else	{
+								//throw error.
+								}
+
+							app.model.addDispatchToQ(cmdObj,'mutable');
 							app.model.dispatchThis('mutable');
 							});
 						}

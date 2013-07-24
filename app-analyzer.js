@@ -68,7 +68,7 @@ $('#profileSummary').anycontent({'templateID':'profileTemplate','dataAttribs':{i
 $('#tabs-1').append(app.ext.analyzer.u.objExplore(zGlobals));
 $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 
-					app.ext.analyzer.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'analyzer'});
+					app.ext.analyzer.calls.appResource.init('product_attribs_all.json',{'callback':'handleFlexedit','extension':'analyzer'});
 //request profile data (company name, logo, policies, etc)
 					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'analyzer'});
 					if(zGlobals && zGlobals.appSettings && zGlobals.appSettings.rootcat)	{

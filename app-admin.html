@@ -365,7 +365,27 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<!--  -->
+		<!-- privatefilelist supports 'type'. limit is also available. -->
+		
+		
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminConfigDetail/flexedit</a></li>
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json'},'mutable'); app.model.dispatchThis('mutable'); return false;">appResourceGet/flexedit</a></li>
+		
+
+<!--		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPlatformHealth'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPlatformHealth</a></li> -->
+
+<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPlatformLogList'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPlatformLogList</a></li>
+<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPlatformLogDownload','GUID':'@DISKUSAGE'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPlatformLogDownload</a></li><!-- no base 64 -->
+
+		
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminConfigDetail','tuning':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminConfigDetail -> tuning</a></li>
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'platformInfo','inventory-event-queue':'1','disk-usage':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">platformInfo</a></li>
+		
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPrivateFileList'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPrivateFileList</a></li>
+		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPrivateFileDownload','GUID':'04171F4A-6109-11E2-9AA2-3833EB1F','base64':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPrivateFileDownload</a></li>
+
+		
+		
 		<li><a href='#' onClick="app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),'BOB'); return false;">edit launch profile bob</a></li>
 		<li><a href='#' onClick="app.ext.admin_templateEditor.a.showTemplateEditorInModal('ebay',{'profile':'BOB'}); return false;">BOB template</a></li>
 		<li><a href='#' onClick="app.ext.admin_prodEdit.u.showProductEditor('',{'pid':'AUDIO'}); return false;">edit AUDIO</a></li>
