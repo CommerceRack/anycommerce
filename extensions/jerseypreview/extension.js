@@ -86,7 +86,7 @@ var jerseypreview = function() {
 					app.u.dump(app.ext.jerseypreview.vars.paramsByPID[pid]);
 					if(!app.ext.jerseypreview.vars.paramsByPID[pid]){
 						//In future update, run only for products marked as customizable?
-						$.getJSON("extensions/jerseypreview/products/"+pid+".json")
+						$.getJSON("extensions/jerseypreview/products/"+pid+".json?_="+(new Date().getTime()))
 							.done(function(data, textStatus, jqXHR){
 								app.u.dump("Checking font face support");
 								if(isFontFaceSupported){
