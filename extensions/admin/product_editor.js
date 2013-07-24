@@ -858,7 +858,7 @@ app.model.dispatchThis('mutable');
 //if guid is present, use it.  That means this was a pog just added to the product.
 						var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
 						$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
-						sfo['%sog'][index]['options'] = new Array();  //clear existing. that way deleted doesn't carry over.
+						sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
 						}
 					else	{
 						sfo._cmd ='adminSOGUpdate';
@@ -874,7 +874,7 @@ app.model.dispatchThis('mutable');
 						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
 							else	{
-								(variationData.variationmode == 'product') ? sfo['%sog'][index]['options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data())) : sfo['%sog']['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data()))
+								(variationData.variationmode == 'product') ? sfo['%sog'][index]['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data())) : sfo['%sog']['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data()))
 								}
 							});						
 						}
