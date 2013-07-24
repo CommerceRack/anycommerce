@@ -1095,16 +1095,12 @@ var admin_templateEditor = function() {
 								}
 							
 							if(mode == 'ebay')	{
-								var profile = $btn.closest("[data-profile]").data('profile');
 								dObj._cmd = 'adminEBAYProfileZipDownload';
-								dObj.FILENAME = 'ebay_'+profile+'.zip';
-								dObj.PROFILE = profile;
+								dObj.PROFILE = $btn.closest("[data-profile]").data('profile');
 								}
 							else if(mode == 'campaign')	{
-								var campaignid =  $btn.closest("[data-campaignid]").data('campaignid')
 								dObj._cmd = 'adminCampaignZipDownload';
-								dObj.FILENAME = "campaign_"+campaignid+'.zip';
-								dObj.CAMPAIGNID = campaignid;
+								dObj.CAMPAIGNID = $btn.closest("[data-campaignid]").data('campaignid');
 								}
 							else	{}
 							
@@ -1126,9 +1122,34 @@ var admin_templateEditor = function() {
 					
 					$btn.off('click.adminTemplateCampaignTestShow').on('click.adminTemplateCampaignTestShow',function(){
 						var $D = app.ext.admin.i.dialogCreate({"title":"Send a Test Email for this Campaign"});
-						$("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
-						$("<button \/>").text('do something').appendTo($D);
+						var $input = $("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
 						$D.dialog('option','width','350');
+						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
+							if(app.u.isValidEmail($input.val()))	{
+								$D.showLoading({'message':'Sending Test Email'});
+								app.model.addDispatchToQ({
+									'_cmd':'adminCampaignStart',
+									'test' : '1',
+									'email' : $input.val(),
+									'_tag':	{
+										'callback':function(rd)	{
+											$D.hideLoading();
+											if(app.model.responseHasErrors(rd)){
+												$D.anymessage({'message':rd});
+												}
+											else	{
+												$D.anymessage(app.u.successMsgObject('Test email has been sent'));
+												$D.dialog({ buttons: [ { text: "Close", click: function() {$D.dialog('close')}}]});
+												}
+											}
+										}
+									},'immutable');
+								app.model.dispatchThis('immutable');
+								}
+							else	{
+								$D.anymessage({'message':'Please enter a valid email address.'});
+								}
+						 } } ] });
 						$D.dialog('open');
 						});
 					
@@ -1158,7 +1179,7 @@ var admin_templateEditor = function() {
 
 						});
 					},
-					
+
 				templateEditorIframeRotateExec : function($btn)	{
 					$btn.button();
 					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));

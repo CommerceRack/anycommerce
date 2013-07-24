@@ -586,11 +586,13 @@ else	{
 						$form.showLoading({'message':'Creating Campaign...'});
 						var
 							sfo = $form.serializeJSON(),
-							CAMPAIGNID = sfo.CAMPAIGNID+"_"+app.u.unixNow(); //appending unix timestamp increases likelyhood that campaignID will be globally unique.
-						
+							date = new Date(),
+							month = date.getMonth() + 1,
+							CAMPAIGNID = sfo.CAMPAIGNID.toUpperCase()+"_"+date.getFullYear()+(month < 10 ? '0'+month : month)+date.getDate(); //appending unix timestamp increases likelyhood that campaignID will be globally unique. upper case will be enforced by the API
+
 						app.model.addDispatchToQ({
 							'_cmd':'adminCampaignCreate',
-							'CAMPAIGNID' : CAMPAIGNID,
+							'CAMPAIGNID' : CAMPAIGNID, 
 							'_tag':	{
 								'callback':function(rd){
 									if(app.model.responseHasErrors(rd)){
@@ -600,7 +602,7 @@ else	{
 									else	{
 										//Campaign was successfully created.  Handle the templating piece.
 										//call is daisy chained instead of pipelined in case the first call (create) fails.
-										app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag':{'datapointer' : 'adminCampaignList'}},'immutable');
+										app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag':{'datapointer' : 'adminCampaignList'}},'immutable'); //this is where all campaign data is, so need this refreshed.
 										app.model.addDispatchToQ({
 											'_cmd':'adminCampaignTemplateInstall',
 											'PROJECTID' : "$SYSTEM", //set by what template was selected. !!! needs to be loaded from select list option data. the option renderformat should add more info as data to each option.

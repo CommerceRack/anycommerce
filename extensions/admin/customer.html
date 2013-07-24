@@ -1076,7 +1076,7 @@ The checkbox below does not work.
 
 <label>
 	<span>Campaign ID</span>
-	<input type='text' name='CAMPAIGNID' value='' required='required' data-app-event='admin|alphaNumeric' maxlength='12' data-minlength='6' />
+	<input type='text' name='CAMPAIGNID' value='' required='required' data-app-event='admin|alphaNumeric' maxlength='11' data-minlength='6' />
 	<span class='toolTip' title="An 6-18 character alpha-numeric code that represents the campaign (ex: SUMMER13). Used as a reference point in lists and also in the URL's for image reference. This code can not be changed.">?</span>
 </label>
 
@@ -1217,7 +1217,7 @@ Coming Soon
 	
 		<h6 data-pickmethod='CUSTOMER_EMAIL'>By CSV Upload</h6>
 		<div data-contentloaded='true'>
-<textarea name='csv' rows='10' class='fullWidth'></textarea>
+<textarea name='csv' rows='10' class='fullWidth'></textarea><!-- passed as EMAILS+ -->
 		</div>
 		
 	</div>
@@ -1226,5 +1226,5 @@ Coming Soon
 
 
 <label id='pickerSubscriberListsRowTemplate' class='displayNone' data-bind="var: list(NAME); format:showIfSet;">
-	<input type='checkbox' name='' data-bind="var:list(ID); format:assignAttribute; attribute:name; valuePretext:SUBSCRIBERLIST+;" /><span data-bind="var: list(NAME); format:text;"></span>
+	<input type='checkbox' name='' data-bind="var:list(ID); format:assignAttribute; attribute:name; valuePretext:SUBLIST+;" /><span data-bind="var: list(NAME); format:text;"></span>
 </label>
