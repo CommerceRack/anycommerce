@@ -1108,6 +1108,7 @@ The checkbox below does not work.
 
 
 <div class='marginBottom clearfix'>
+
 	<button class='floatRight' data-app-event="admin_customer|adminCampaignUpdateExec">Save Campaign</button>
 	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
 </div>
@@ -1164,21 +1165,10 @@ The checkbox below does not work.
 	<span>Start time</span>
 	<input type='text' name='STARTTIME' class='applyDatetimepicker' data-bind="var: campaign(STARTTIME); format:popVal;" />
 </label>
-<label>
-	<span>Expires</span>
-	<input type='text' name='EXPIRETIME' class='applyDatetimepicker' data-bind="var: campaign(EXPIRETIME); format:popVal;" />
-</label>
 
 
-<label>
-	<span>Deck Position</span>
-	<select name='QUEUEMODE'>
-		<option value='FRONT'>Front</option>
-		<option value='BACK'>Back</option>
-		<option value='OVERWRITE'>Overwrite</option>
-	</select>
-	<span>? (need help here)</span>
-</label>
+
+
 
 	</fieldset>
 

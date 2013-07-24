@@ -142,8 +142,7 @@ var admin_templateEditor = function() {
 									toolbarButtons.push("|");
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
 									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_android());
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_ios());
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
 									$(".campaign",$D).show();
 									}
 								else	{}
@@ -754,35 +753,70 @@ var admin_templateEditor = function() {
 						}
 					}, //getEditorButton_style
 
-				getEditorButton_ios : function(){
+				getEditorButtonNativeApp : function(){
 					return {
-						css : 'iosinputsshow',
-						'text' : 'iOS Settings',
-						action: function (btn) {
-							var jhtml = this; //the jhtml object.
+						css : 'nativeappinputsshow',
+						'text' : 'Native App Settings',
+						action: function () {
+						
+							var $metaTags = app.ext.admin_templateEditor.u.pluckObjectFromTemplate('meta')
+							var data = {};
+
+//							app.u.dump(" -> $metaTags.length: "+$metaTags.length); app.u.dump($metaTags instanceof jQuery);
+							
+							$metaTags.each(function(){
+								data[$(this).attr('name')] = $(this).attr('content');
+								})
+
+//							app.u.dump("meta data: "); app.u.dump(data);
+
 							var $D = app.ext.admin.i.dialogCreate({
-								'title' : 'Add/Update iOS Settings'
+								'title' : 'Native App Settings (iOS and Android)',
+								'templateID' : 'nativeAppCampaignSettingsTemplate',
+								'data' : data
 								});
 							$D.dialog('option','width','500');
+							$D.dialog({ buttons: [
+								{ text: "Close", click: function() { $( this ).dialog( "close" ); } },
+								{ text: "Apply", click: function() {
+									var sfo = $('form',$D).serializeJSON();
+									var $templateHead = app.ext.admin_templateEditor.u.pluckObjectFromTemplate('head');
+//									app.u.dump(" -> sfo: "); app.u.dump(sfo);
+
+									$D.showLoading({"message":"Applying Changes"});
+									for(index in sfo)	{
+										var $meta = app.ext.admin_templateEditor.u.pluckObjectFromTemplate("meta[name='"+index+"']");
+										//update meta if it already exists.
+										if($meta.length)	{ //data is a list of meta tags that existed at the outset of this operation. if it's here, it exists as a meta in the template already.
+//											app.u.dump(" --> MATCH!");
+											$meta.attr('content',sfo[index]);
+											}
+										//add meta if it doesn't already exist.
+										else	{
+//											app.u.dump(" --> NO match!");
+											$templateHead.prepend("<meta name='"+index+"' content='"+sfo[index]+"' />");
+											}
+										}
+									$D.hideLoading();
+									$( this ).dialog( "close" );
+//									$D.anymessage(app.u.successMsgObject('Changes applied.'));
+									} } ] });
+
+						$('.applyDatetimepicker',$D).datetimepicker({
+							changeMonth: true,
+							changeYear: true,
+							minDate : 0, //can't start before today.
+							dateFormat : 'yymmdd',
+							timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
+							stepMinute : 60
+							});
+						$('.ui_tpicker_second',$D).hide(); //don't show second chooser, but have it so the seconds are added to the input.
+
 							$D.dialog('open');
 							}
 						}
 					}, //getEditorButton_ios
 
-				getEditorButton_android : function(){
-					return {
-						css : 'androidinputsshow',
-						'text' : 'Android Settings',
-						action: function (btn) {
-							var jhtml = this; //the jhtml object.
-							var $D = app.ext.admin.i.dialogCreate({
-								'title' : 'Add/Update Android Settings'
-								});
-							$D.dialog('option','width','500');
-							$D.dialog('open');
-							}
-						}
-					}, //getEditorButton_android
 
 //returns an array that gets appended to the html editor toolbar.
 				getEditorButton_prodattributeadd : function()	{
@@ -867,6 +901,10 @@ var admin_templateEditor = function() {
 						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
 						}
 					return (r === true) ? $ul : false;
+					},
+//this function does NOT escape the selector, so any selector that is a variable and needs escaping should be escaped before it's dumped in.
+				pluckObjectFromTemplate : function(selector)	{
+					return $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find(selector);
 					},
 				
 				applyElementToTemplate : function(jhtml,attObj){

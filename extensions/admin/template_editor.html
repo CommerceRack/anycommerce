@@ -166,7 +166,62 @@
 	</li>
 </ul>
 
-<!-- data:image/jpeg;base64, -->
+
+
+
+<div id='nativeAppCampaignSettingsTemplate'>
+<form class='labelsAsBreaks'>
+<fieldset>
+	<legend>App Settings</legend>
+<label>
+	<span>Deck position</span>
+	<select name='QUEUEMODE' data-bind="var:meta(QUEUEMODE); format:popVal;">
+		<option value='FRONT'>Front</option>
+		<option value='BACK'>Back</option>
+		<option value='OVERWRITE'>Overwrite</option>
+	</select>
+	<span class='toolTip' title="Determines where in the messaging queue on the device (phone or pad) this message will appear.">?</span>
+</label>
+
+	<label>
+		<span>Alert sound</span>
+		<select name='ALERTSOUND' data-bind="var:meta(ALERTSOUND); format:popVal;">
+			<option value='none'>None</option>
+			<option value='default'>Default</option>
+			<option value='custom'>Custom</option>
+		</select>
+	</label>
+
+</fieldset>
+
+<fieldset>
+	<legend>Expiration</legend>
+	<label>
+		<span>Date/Time</span>
+		<input type='text' name='EXPIRETIME' class='applyDatetimepicker' data-bind="var: campaign(EXPIRETIME); format:popVal;" />
+	</label>
+	<b>OR</b>
+	<label>
+		# Days
+		<input type='number' step='1' min='1' size='4' max='365' name='EXPIREDAYS' data-bind="var: campaign(EXPIREDAYS); format:popVal;" />
+		<span class='toolTip' title="The number of days this campaign is valid for.">?</span>
+	</label>
+	<p>Set either date/time OR # days</p>
+</fieldset>
+
+
+
+<fieldset>
+	<legend>Android Specific Settings</legend>
+	
+	<label>
+		<span>Geofencing</span>
+		<textarea rows='6' name='GEOFENCING' data-bind="var:meta(GEOFENCING); format:popVal;"></textarea>
+	</label>
+</fieldset>
+
+</form>
+</div>
 
 
 
@@ -174,7 +229,6 @@
 
 
 
-<!-- used in the ebay template editor -->
 <div id='templateFileUploadTemplate'>
 <form id="templateFileUpload" class='clearfix marginBottom'  name="templateFileUpload" action='#' method='post' enctype='multipart/form-data'>
 

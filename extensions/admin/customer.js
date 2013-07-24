@@ -149,7 +149,7 @@ var admin_customer = function() {
 							timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
 							stepMinute : 60
 							});
-						$('.ui_tpicker_second').hide(); //don't show second chooser, but have it so the seconds are added to the input.
+						$('.ui_tpicker_second',$target).hide(); //don't show second chooser, but have it so the seconds are added to the input.
 					
 					var $picker = $("[data-app-role='pickerContainer']:first",$target);
 					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
