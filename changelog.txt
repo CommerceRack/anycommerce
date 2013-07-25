@@ -6,6 +6,14 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+301330
+ADMIN
+ -> new options in customer search (schedule, account manager and account type)
+ -> new options in organization search (schedule, account type)
+ -> new interface for price schedules
+
+
+
 301324
 popCheckbox and popRadio are retired. popVal will now handle all input types. all files were updated.
  -> https://github.com/zoovy/AnyCommerce-Development/commit/877a5a382f629150aedfcaa9087b0f37d1667a92

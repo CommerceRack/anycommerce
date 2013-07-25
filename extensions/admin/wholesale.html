@@ -24,7 +24,10 @@
 				<option value='EMAIL'>email</option>
 				<option value='ORGID'>organization id</option>
 				<option value='PHONE' selected="selected">phone</option>
+				<option value='SCHEDULE'>schedule</option>
 				<option value='ACCOUNT_MANAGER'>account manager</option>
+				<option value='ACCOUNT_TYPE'>account type</option>
+
 			</select>
 			<input type='search' name='keywords' size='20' />
 			<label class='marginRight'><input type='checkbox' name="IS_LOCKED" />locked only</label>
@@ -716,9 +719,10 @@
 	<td data-bind="var: schedule(currency); format:text;"></td>
 	<td data-bind="var: schedule(discount_amount); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm">Remove</button>
-<button>Customers</button>
-<button data-app-event="admin_wholesale|priceScheduleUpdateShow">Edit</button>
+<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm">Remove Schedule</button>
+<button data-app-event="admin_customer|adminCustomerSearchShowUI" data-scope='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-searchfor;'>Customers</button>
+<button data-app-event="admin_wholesale|adminOrganizationSearchShowUI" data-searchby='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-keywords;'>Organizations</button>
+<button data-app-event="admin_wholesale|priceScheduleUpdateShow">Edit Schedule</button>
 	</td>
 </tr>
 

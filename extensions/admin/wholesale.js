@@ -112,13 +112,19 @@ var admin_wholesale = function() {
 				},
 			
 			
-			showOrganizationManager : function($target)	{
-				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
+			showOrganizationManager : function($target,vars)	{
+//				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
+				vars = vars || {};
 				app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable'); //need this for add and edit.
 				if($target && $target.length)	{
 					$target.empty();
 					$target.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
 					app.u.handleAppEvents($target);
+					if(vars.searchby && vars.keywords)	{
+						$("[name='searchby']",$target).val(vars.searchby);
+						$("[name='keywords']",$target).val(vars.keywords);
+						$("[data-app-event='admin_wholesale|execOrganizationSearch']",$target).trigger('click');
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_wholesale.a.showOrganizationManager, $target either not specified or has not length.','gMessage':true});
@@ -784,6 +790,23 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					app.model.dispatchThis('immutable');
 					});
 				}, //execOrganizationUpdate
+
+
+			adminOrganizationSearchShowUI : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-contact"},text: false});
+				if($btn.data('searchby') && $btn.data('keywords'))	{
+					$btn.attr('title','Search organizations by '+$btn.data('searchby').toLowerCase()+" for '"+$btn.data('keywords').toLowerCase()+"'");
+					$btn.off('click.adminOrganizationSearchShowUI').on('click.adminOrganizationSearchShowUI',function(event){
+						//later, maybe we add a data-stickytab to the button and, if true, closest table gets sticky.
+						app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'searchby':$btn.data('searchby'),'keywords':$btn.data('keywords')});
+						});
+					}
+				else	{
+					$btn.button('disable');
+					}
+				},
+
+
 
 			priceScheduleUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});

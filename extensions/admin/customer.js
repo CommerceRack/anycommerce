@@ -86,11 +86,17 @@ var admin_customer = function() {
 		a : {
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showCustomerManager : function() {
-				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
-				$tabContent.intervaledEmpty();
-				$tabContent.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
-				app.ext.admin.u.handleAppEvents($tabContent);
+			showCustomerManager : function($target,vars) {
+				vars = vars || {};
+				$target.intervaledEmpty();
+				$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
+				app.ext.admin.u.handleAppEvents($target);
+				if(vars.scope && vars.searchfor)	{
+					$("[name='scope']",$target).val(vars.scope);
+					$("[name='searchfor']",$target).val(vars.searchfor);
+					$("[data-app-event='admin_customer|execCustomerSearch']",$target).trigger('click');
+					}
+				
 				}, //showCustomerManager
 
 			showCRMManager : function($target)	{
@@ -1550,6 +1556,20 @@ app.model.dispatchThis('immutable');
 					$ele.parent().find("[data-app-event='admin_customer|execNoteCreate']").button('enable').addClass('ui-state-highlight');
 					});
 				}, //tagNoteButtonAsEnabled
+
+			adminCustomerSearchShowUI : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-person"},text: false});
+				if($btn.data('scope') && $btn.data('searchfor'))	{
+					$btn.attr('title','Search customers by '+$btn.data('scope').toLowerCase()+" for '"+$btn.data('searchfor').toLowerCase()+"'");
+					$btn.off('click.adminCustomerSearchShowUI').on('click.adminCustomerSearchShowUI',function(event){
+						//later, maybe we add a data-stickytab to the button and, if true, closest table gets sticky.
+						app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'scope':$btn.data('scope'),'searchfor':$btn.data('searchfor')});
+						});
+					}
+				else	{
+					$btn.button('disable');
+					}
+				},
 
 			showAddrUpdate : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});

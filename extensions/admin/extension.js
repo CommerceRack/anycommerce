@@ -3874,7 +3874,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					this.bringTabContentIntoFocus($('#utilitiesContent'));
 					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
 					}
-				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
+				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));}
 				else if(path == '#!variationsManager')	{
 //					app.u.dump("$target: "); app.u.dump($target);
 					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
