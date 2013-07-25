@@ -827,7 +827,7 @@ if you change these, you should move them above this comment so that when you (o
 			<h1>Change Password</h1>
 			<div id='changepasswordContainer'>
 
-<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword($(this),{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
 <fieldset class='borderNone'>
 
 <div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
