@@ -115,7 +115,7 @@ var admin_wholesale = function() {
 			showOrganizationManager : function($target,vars)	{
 //				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
 				vars = vars || {};
-				app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable'); //need this for add and edit.
+				app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for add and edit.
 				if($target && $target.length)	{
 					$target.empty();
 					$target.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
@@ -137,7 +137,7 @@ var admin_wholesale = function() {
 				if($target && vars && vars.orgID)	{
 					$target.empty();
 					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
-					app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+					app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
 					app.ext.admin.calls.adminCustomerOrganizationDetail.init(vars.orgID,{'callback':function(rd){
 						$target.hideLoading();
 						if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
@@ -246,7 +246,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				var $wm = $('#wholesaleModal'),
 				optParams = optParams || {}; //optional params dumped into app events. allows for parent form of editor to be passed into modal.
 				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
-				app.ext.admin.calls.adminWholesaleScheduleList.init({'callback':function(rd)	{
+				app.ext.admin.calls.adminPriceScheduleList.init({'callback':function(rd)	{
 					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of price schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
 					$wm.empty().dialog('open').anycontent({'templateID':'supplierAddTemplate','showLoading':false});
 					app.ext.admin.u.handleAppEvents($wm,optParams);
@@ -259,19 +259,19 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 		renderFormats : {
 			wholesaleScheduleSelect : function($tag,data)	{
-				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
-				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
+				if(!app.data.adminPriceScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
+				else if(!app.data.adminPriceScheduleList['@SCHEDULES'])	{
 					$tag.anymessage({'message':'You have not created any schedules yet.'})
 					}
 				else if(!data.value)	{$tag.anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
 				else	{
 					var $select = $("<select \/>",{'name':'SCHEDULE'}),
-					schedules =app.data.adminWholesaleScheduleList['@SCHEDULES'], //shortcut
-					L = app.data.adminWholesaleScheduleList['@SCHEDULES'].length
+					schedules =app.data.adminPriceScheduleList['@SCHEDULES'], //shortcut
+					L = app.data.adminPriceScheduleList['@SCHEDULES'].length
 					list = null;
 					$select.append($("<option \/>",{'value':''}).text('none'));
 					for(var i = 0; i < L; i += 1)	{
-						$select.append($("<option \/>",{'value':schedules[i].id}).text(schedules[i].id));
+						$select.append($("<option \/>",{'value':schedules[i].SID}).text(schedules[i].SID));
 						}
 					
 					$select.appendTo($tag);

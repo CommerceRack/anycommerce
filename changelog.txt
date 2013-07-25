@@ -11,6 +11,7 @@ ADMIN
  -> new options in customer search (schedule, account manager and account type)
  -> new options in organization search (schedule, account type)
  -> new interface for price schedules
+ -> everywhere schedule is referenced in the UI got updated (syndication, organizations, etc)
 
 
 

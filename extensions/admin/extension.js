@@ -1630,11 +1630,11 @@ if giftcard is on there, no paypal will appear.
 
 
 
-		adminWholesaleScheduleList : {
+		adminPriceScheduleList : {
 			init : function(_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
 				_tag = _tag || {};
-				_tag.datapointer = "adminWholesaleScheduleList";
+				_tag.datapointer = "adminPriceScheduleList";
 				if(app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
 					this.dispatch(_tag,q);
@@ -1645,9 +1645,9 @@ if giftcard is on there, no paypal will appear.
 				return r;
 				},
 			dispatch : function(_tag,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleList","_tag":_tag},q);	
+				app.model.addDispatchToQ({"_cmd":"adminPriceScheduleList","_tag":_tag},q);	
 				}
-			}, //adminWholesaleScheduleList
+			}, //adminPriceScheduleList
 		adminWholesaleScheduleDetail : {
 			init : function(scheduleID,_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
@@ -1665,7 +1665,7 @@ if giftcard is on there, no paypal will appear.
 			dispatch : function(scheduleID,_tag,q)	{
 				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleDetail","schedule":scheduleID,"_tag":_tag},q);	
 				}
-			}, //adminWholesaleScheduleList
+			}, //adminPriceScheduleList
 
 
 
@@ -5091,7 +5091,7 @@ just lose the back button feature.
 			fetchRSSDataSources : function(Q)	{
 				var numRequests = 0;
 				Q = Q || 'mutable';
-				numRequests += app.ext.admin.calls.adminWholesaleScheduleList.init({},Q); //need this for add and edit.
+				numRequests += app.ext.admin.calls.adminPriceScheduleList.init({},Q); //need this for add and edit.
 				numRequests += app.ext.admin.calls.adminDomainList.init({},Q); //need this for add and edit.
 				numRequests += app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{},Q); //need this for add and edit.
 				return numRequests;
@@ -5119,7 +5119,7 @@ var
 				}
 			}
 		
-		$target.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{'@lists':lists},app.data['adminDomainList'],app.data['adminWholesaleScheduleList'])});
+		$target.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{'@lists':lists},app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
 		if($button)	{
 			$('.buttonbar',$target).first().append($button)
 			}
@@ -6101,7 +6101,7 @@ else	{} //validateForm handles error display
 									}
 								else	{
 									//success content goes here.
-									$panel.anycontent({'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminWholesaleScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
+									$panel.anycontent({'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
 									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
 									$('.toolTip',$panel).tooltip();
 									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
@@ -6189,7 +6189,7 @@ var
 			}
 		else	{
 	
-			$D.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminWholesaleScheduleList'])});
+			$D.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
 			$('.buttonbar',$D).first().append($("<button \/>").attr('data-app-event','admin|adminRSSCreateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
 			$('.toolTip',$D).tooltip();
 			app.u.handleAppEvents($D,{'$dialog':$D});

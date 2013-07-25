@@ -134,7 +134,7 @@ var admin_syndication = function() {
 					
 					var $target = _rtag.jqObj; //shortcut
 //need both the data in the response and the wholesaleScheduleList for 'settings' page.
-					$target.anycontent({data: $.extend(true,{},app.data[_rtag.datapointer],app.data.adminWholesaleScheduleList),'templateID':_rtag.templateID});
+					$target.anycontent({data: $.extend(true,{},app.data[_rtag.datapointer],app.data.adminPriceScheduleList),'templateID':_rtag.templateID});
 
 					$('.toolTip',$target).tooltip();
 					$(':checkbox.applyAnycb',$target).anycb();
@@ -267,7 +267,7 @@ var admin_syndication = function() {
 				},
 
 			showSyndication : function($target)	{
-				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
+				app.ext.admin.calls.adminPriceScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
 
 				$target.empty();
@@ -433,7 +433,7 @@ app.model.dispatchThis('mutable');
 //shows the editor for a given marketplace, by DST code.
 			showDSTDetails : function(DST,$target)	{
 //				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
-				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
+				app.ext.admin.calls.adminPriceScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
 
 				if($target && DST)	{

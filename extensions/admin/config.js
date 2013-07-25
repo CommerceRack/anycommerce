@@ -551,7 +551,7 @@ $("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(
 
 if(vars.rulesmode == 'shipping')	{
 //need pricing schedules. This is for shipping.
-	var numDispatches = app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+	var numDispatches = app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
 //if making a request for the wholesale list, re-request shipmethods too. callback is on shipmethods
 	if(numDispatches)	{
 		app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
@@ -1295,7 +1295,7 @@ app.model.dispatchThis('immutable');
 						};
 						
 					if(vars.rulesmode == 'shipping')	{
-						DVars.data = $.extend(true,DVars.data,app.data['adminWholesaleScheduleList']);
+						DVars.data = $.extend(true,DVars.data,app.data['adminPriceScheduleList']);
 						DVars.templateID = 'rulesInputsTemplate_shipping';
 						}
 					else if(vars.rulesmode == 'coupons')	{
@@ -1426,7 +1426,7 @@ var
 
 if(vars.rulesmode)	{
 	if(vars.rulesmode == 'shipping')	{
-		data = $.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data());
+		data = $.extend(true,{},app.data['adminPriceScheduleList'],$btn.closest('tr').data());
 		var provider = $btn.closest("[data-provider]").data('provider');
 		panelID = 'ruleBuilder_'+data.provider;
 		header = 'Edit: '+data.name;

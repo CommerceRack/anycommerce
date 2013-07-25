@@ -221,7 +221,7 @@ var admin_customer = function() {
 // ** 201320 -> added support for partition to be passed in. allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
 						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || app.vars.partition},{},'mutable');
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
-//						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+//						app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
 // ** 201324 -> fetch a clean copy of the customer record when the editor is open.
 						app.model.destroy("adminCustomerDetail|"+obj.CID);
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
