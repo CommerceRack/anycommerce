@@ -463,13 +463,15 @@ JSON editor, which didn't work:
 //////////////////   PRIVATE FILES  \\\\\\\\\\\\\\\\\\\\\
 -->
 <table>
-<tr id='privatefilesRowTemplate'>
-	<td data-bind="var: file(created); format:text;"></td>
-	<td data-bind="var: file(filename); format:text;"></td>
-	<td data-bind="var: file(type); format:text;"></td>
-	<td data-bind="var: file(size); format:text;"></td>
-	<td data-bind="var: file(expires); format:text;"></td>
-	<td data-bind="var: file(creator); format:text;"></td>
+<tr id='privateFilesRowTemplate'>
+	<td data-bind="var: file(CREATED); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: file(FILENAME); format:text;"></td>
+	<td data-bind="var: file(FILETYPE); format:text;"></td>
+	<td data-bind="var: file(EXPIRES); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: file(CREATEDBY); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+	<button data-app-event="admin|tagRowForRemove">Delete</button>
+	<button data-app-event="admin_tools|adminPrivateFileDownloadExec">Download</button>
 </tr>
 </table>
 

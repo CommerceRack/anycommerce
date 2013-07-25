@@ -3752,7 +3752,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 //ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
 			handleSaveButtonByEditedClass : function($context)	{
 				var $button = $("[data-app-role='saveButton']",$context);
-				app.u.dump(" -> button.length: "+$button.length);
+//				app.u.dump(" -> button.length: "+$button.length);
 				if($('.edited',$context).length)	{
 					$('.numChanges',$button).text($('.edited',$context).length);
 					$button.addClass('ui-state-highlight');
@@ -3910,7 +3910,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 
-				else if(path == '#!privatefiles')	{
+				else if(path == '#!privateFiles')	{
 					app.ext.admin_tools.a.showPrivateFiles($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 
@@ -5522,7 +5522,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$btn.off('click.refreshDMI').on('click.refreshDMI',function(event){
 						event.preventDefault();
 						$DMI.showLoading({'message' : 'Refreshing list...' });
-						var cmdVars = $DMI.data('cmdVars');
+						
+						var cmdVars = {};
+						if($btn.data('serializeform'))	{
+							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
+							}
+						else	{
+							cmdVars = $DMI.data('cmdVars');
+							}
+
 						cmdVars._tag = cmdVars._tag || {};
 						cmdVars._tag.callback = 'DMIUpdateResults';
 						cmdVars._tag.extension = 'admin';
@@ -5835,7 +5843,7 @@ not in use
 					else	{
 //adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
 						$btn.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-							app.u.dump(" -> $(this).text(): "+$(this).text());
+//							app.u.dump(" -> $(this).text(): "+$(this).text());
 							$(this).button('disable')
 							}); //disable the other buttons
 						$btn.button('enable');

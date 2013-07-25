@@ -92,20 +92,22 @@ var admin_tools = function() {
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Private Files',
 					'className' : 'privatefiles', //applies a class on the DMI, which allows for css overriding for specific use cases.
-					'thead' : ['Created','Filename','Type','Size','Expiration','Creator'],
-					'tbodyDatabind' : "var: users(@FILES); format:processList; loadsTemplate:privatefilesRowTemplate;",
+					'thead' : ['Created','Filename','Type','Expiration','Creator',''],
+					'tbodyDatabind' : "var: users(@files); format:processList; loadsTemplate:privateFilesRowTemplate;",
+					'controls' : "<button data-app-event='admin_tools|adminPrivateFileRemoveConfirm' class='floatRight'>Delete Selected</button><form class='floatLeft'><label>Filter<\/label> <select name='type' class='marginLeft marginRight'><option value=''>none<\/option><option value='REPORT'>Report<\/option><option value='SYNDICATION'>Syndication<\/option><option value='CSV'>CSV<\/option><\/select><button data-app-event='admin|refreshDMI' data-serializeform='1'><\/button><\/form>",
 					'cmdVars' : {
-						'_cmd' : 'adminPrivateSearch',
+						'_cmd' : 'adminPrivateFileList',
+						'limit' : '50',
 						'_tag' : {
-							'datapointer':'adminPrivateSearch'
+							'datapointer':'adminPrivateFileList'
 							}
 						}
 					});
 				app.model.dispatchThis('mutable');
-
-
-				
 				},
+			
+
+			
 			showciEngineAgentManager : function($target)	{
 				
 				$target.empty();
@@ -411,7 +413,91 @@ var admin_tools = function() {
 
 					});
 				}, //agentCreateShow
+
+
 			
+			adminPrivateFileDownloadExec : function($btn)	{
+				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
+				$btn.off('click.adminPrivateFileDownloadExec').on('click.adminPrivateFileDownloadExec',function(event){
+					event.preventDefault();
+					app.model.addDispatchToQ({
+						'_cmd':'adminPrivateFileDownload',
+						'GUID':$btn.closest('tr').data('guid'),
+						'_tag':	{
+							'datapointer' : 'adminPrivateFileDownload', //big dataset returned. only keep on in memory.
+							'callback' : 'fileDownloadInModal',
+							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
+							'extension' : 'admin'
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
+
+
+			adminPrivateFileRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
+				$btn.off('click.adminPrivateFileRemoveConfirm').on('click.adminPrivateFileRemoveConfirm',function(event){
+					event.preventDefault();
+					var $rows = $btn.closest('.dualModeContainer').find("[data-app-role='dualModeListTbody'] tr.rowTaggedForRemove");
+					if($rows.length)	{
+
+						var $D = app.ext.admin.i.dialogConfirmRemove({
+							'message':'Are you sure you want to remove '+$rows.length+' file(s)? There is no undo for this action.',
+							'removeButtonText' : 'Remove',
+							'removeFunction':function(rd){
+								$D.parent().showLoading({"message":"Deleting "+$rows.length+" file(s)"});
+								$rows.each(function(){
+									app.model.addDispatchToQ({
+										'_cmd':'adminPrivateFileRemove',
+										'GUID':$(this).data('guid'),
+										'_tag':	{
+											'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
+											'callback' : function(rd){
+												if(app.model.responseHasErrors(rd)){
+													$D.anymessage({'message':rd});
+													}
+												else	{
+													//only report failures.
+													}
+												}
+											}
+										},'immutable');	
+										$(this).empty().remove(); //at the end so the dispatch can use data off of <tr>.							
+									});
+
+								app.model.addDispatchToQ({
+									'_cmd':'ping',
+									'_tag':	{
+										'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
+										'callback' : function(rd){
+											$D.parent().hideLoading();
+											$D.empty();
+											$D.dialog({ buttons: [ { text: "Close", click: function() { $( this ).dialog( "close" ); } } ] });
+											if(app.model.responseHasErrors(rd)){
+												$D.anymessage({'message':rd});
+												}
+											else	{
+												$D.anymessage({"message":"Removal process completed."});
+												//only report failures.
+												}
+											}
+										}
+									},'immutable');	
+		
+								app.model.dispatchThis('immutable');
+								
+								}
+							});	
+
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"Please tag at least one file for removal (click the trash can icon)."});
+						}
+					})
+				}, //agentRemoveConfirm,
+
+
 			agentRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.agentRemoveConfirm').on('click.agentRemoveConfirm',function(event){
