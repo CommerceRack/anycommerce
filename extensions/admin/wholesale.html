@@ -262,6 +262,12 @@
 <div id='supplierAddTemplate'>
 
 <form action='#' autocomplete="on">
+
+<input type='hidden' name='_cmd' value='adminSupplierCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Thank you, the supplier has been added.' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+
 <fieldset class='labelsAsBreaks'>
 	<legend>Add a New Supplier</legend>
 	
@@ -394,27 +400,20 @@
 		
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='shippingCalculations'>
 			<h2>Setup: Shipping Calculations</h2>
-			<div>
-		
 			<fieldset>
+
 				<label>
 					<span>Connector:</span>
-					<select name='SHIP_CONNECTOR' data-app-event='admin|showSiblingFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
-						<option value='NONE'>None</option>
-						<option value='GENERIC'>Generic</option>
+					<select name='SHIP_CONNECTOR' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;" data-panel-selector=".supplierShippingConnector">
+						<option value='NONE' data-show-panel='supplierShippingConnectorNone'>None</option>
+						<option value='GENERIC' data-show-panel='supplierShippingConnectorGeneric'>Generic</option>
 					</select />
 				</label>
+
+				<div data-panel-id='supplierShippingConnectorNone' class='supplierShippingConnector'>Will use your store configuration</div>
+				<div data-panel-id='supplierShippingConnectorGeneric' class='displayNone supplierShippingConnector'>LINK to something</div>
 		
 			</fieldset>
-		
-		
-		
-		<section data-app-role='connectorFieldsetContainer'>
-			<fieldset data-app-role='NONE' class='displayNone'>Will use your store configuration</fieldset>
-			<fieldset data-app-role='GENERIC' class='displayNone'>LINK to something</fieldset>
-		</section>
-		
-			</div>
 		</div>
 
 
@@ -427,51 +426,41 @@
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
 			<h2>Setup: Inventory Download</h2>
-			<div>
-		
+	
 			<fieldset>
 				<label>
 					<span>Connector:</span>
-					<select name='INVENTORY_CONNECTOR' data-app-event='admin|showSiblingFieldset' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;">
+					<select name='INVENTORY_CONNECTOR' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;" data-panel-selector=".supplierInventoryConnector" data-trigger='click'>
 						<option value='NONE'>None</option>
-						<option value='GENERIC'>Generic</option>
+						<option value='GENERIC' data-show-panel='supplierInventoryConnectorGeneric'>Generic</option>
 					</select />
 				</label>
-		
-			</fieldset>
-		
-		
-		
-		<section data-app-role='connectorFieldsetContainer'>
-			<fieldset data-app-role='NONE' class='displayNone'></fieldset>
-			<fieldset data-app-role='GENERIC' class='displayNone'>
-		
-				<label>
-					<span>FTP/HTTP URL</span>
-					<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" />
-				</label>
-				
-				<label>
-					<span>Import frequency</span>
-					<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;">
-						<option value='0'>Manual</option>
-						<option value='1'>Daily</option>
-					</select>
-				</label>
-				
-				<label>
-					<span>Inventory header</span>
-					<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"></textarea>
-				</label>
-				
-				<button>Start Import</button>
-		
-			</fieldset>
-		</section>
-		
-			</div>
-		</div>
 
+				<div data-panel-id='supplierInventoryConnectorGeneric' class='displayNone supplierInventoryConnector'>
+
+					<label>
+						<span>FTP/HTTP URL</span>
+						<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" />
+					</label>
+
+					<label>
+						<span>Import frequency</span>
+						<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;">
+							<option value='0'>Manual</option>
+							<option value='1'>Daily</option>
+						</select>
+					</label>
+					
+					<label>
+						<span>Inventory header</span>
+						<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"></textarea>
+					</label>
+					
+					<button>Start Import</button>
+				
+				</div>
+			</fieldset>
+		</div>
 
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='automaticOrdering'>

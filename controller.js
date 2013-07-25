@@ -3001,6 +3001,14 @@ $tmp.empty().remove();
 //for all other inputs and selects, simply setting the value will suffice.
 				$tag.val(data.value);
 				}
+			
+			if($tag.data('trigger'))	{
+				if($tag.is('select'))	{}
+				else	{
+					$tag.trigger($tag.data('trigger'))
+					}
+				}
+			
 			}, //text
 
 // * 201318 -> allows for data-bind on a radio input.

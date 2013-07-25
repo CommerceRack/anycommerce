@@ -3588,6 +3588,8 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 						}
 					}
 				app.model.dispatchThis('immutable');
+
+
 				}, //showHeader
 
 //used to determine what page to show when app inits and after the user changes the domain.

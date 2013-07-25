@@ -186,14 +186,16 @@ var admin_wholesale = function() {
 				}, //showSupplierManager
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
-				if($editorContainer && VENDORID)	{
+				if($editorContainer instanceof jQuery && VENDORID)	{
 					app.ext.admin.calls.adminSupplierDetail.init(VENDORID,{'callback':function(rd){
 
-if(app.model.responseHasErrors(rd)){$editorContainer.anymessage({'message':rd})}
+if(app.model.responseHasErrors(rd)){
+	$editorContainer.anymessage({'message':rd})
+	}
 else	{
 	$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
 	app.ext.admin.u.handleAppEvents($editorContainer);
-	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
+//	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
 	$("[type='checkbox']",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
 	
 //make into anypanels.
@@ -203,7 +205,7 @@ else	{
 		});
 
 //make inputs 'know' when they've been added and update the button.
-app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
+	app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 //make panels draggable
 	var sortCols = $('.twoColumn').sortable({  
@@ -226,7 +228,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 			}
 		});
 
-
+	app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$editorContainer));
 	}
 
 						}},'mutable');
@@ -238,21 +240,8 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				else	{
 					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or VENDORID ['+VENDORID+'] undefined','gMessage':true});
 					}
-				}, //showSupplierEditor
+				} //showSupplierEditor
 
-//optParams = optional paramaters that will be passed into the app events.
-//$context is used from the editor so that, on save, the list of suppliers is updated.
-//potentially allows for a custom callback if we ever need the add supplier button someplace else.
-			showSupplierCreateModal : function(optParams){
-				var $wm = $('#wholesaleModal'),
-				optParams = optParams || {}; //optional params dumped into app events. allows for parent form of editor to be passed into modal.
-				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
-				app.ext.admin.calls.adminPriceScheduleList.init({'callback':function(rd)	{
-					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of price schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
-					$wm.empty().dialog('open').anycontent({'templateID':'supplierAddTemplate','showLoading':false});
-					app.ext.admin.u.handleAppEvents($wm,optParams);
-					}},'mutable');
-				} //showSupplierCreateModal
 
 			}, //a [actions]
 
@@ -281,7 +270,10 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					}
 				} //wholesaleScheduleSelect
 			}, //renderFormats
-////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		
+		
+		
+////////////////////////////////////   MACROBUILDERS   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		macrobuilders : {
 			
@@ -566,7 +558,18 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$btn.button();
 				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
 					event.preventDefault();
-					app.ext.admin_wholesale.a.showSupplierCreateModal({"$context":$btn.closest("[data-app-role='supplierManager']").parent()});
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Supplier',
+						'templateID':'supplierAddTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+//They're here instead of in the form directly so that the form/template can be recycled for edit.
+					$('form',$D).first().append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+					app.u.handleAppEvents($D,{"$context":$btn.closest("[data-app-role='supplierManager']").parent()})
+
+//					app.ext.admin_wholesale.a.showSupplierCreateModal({"$context":$btn.closest("[data-app-role='supplierManager']").parent()});
 					})
 				}, //showSupplierCreate
 
@@ -973,7 +976,44 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					});
 				}
-			} //e [app Events]
+			}, //e [app Events]
+
+
+		u : {
+
+
+			handleFormConditionalDelegation : function($container)	{
+				
+				$container.on('click',function(e){
+					if(e.target.nodeName.toLowerCase() == 'option'){
+					   var $ele = $(e.target);
+/*
+panel-selector:
+on a select, set data-panel-selector=".someClass"
+on each option, set data-show-panel=""
+on each panel, which MUST be within the same form, set data-panel-id="" where the value matches the data-show-panel set in the option.
+so when the option with data-show-panel="supplierShippingConnectorGeneric" is selected, the panel with data-panel-id="supplierShippingConnectorGeneric" is displayed
+and all .someClass are hidden (value of data-panel-selector)
+
+*/
+						if($ele.parent('select').data('panel-selector'))    {
+							var	$form = $ele.closest('form'); //used for context.
+				
+							$($ele.parent('select').data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
+							if(!$ele.data('show-panel'))	{} //no panel defined. do nada
+							else if($ele.data('show-panel') && $("[data-panel-id='"+$ele.data('show-panel')+"']",$form).length)	{
+								$("[data-panel-id='"+$ele.data('show-panel')+"']",$form).show(); //panel defined and it exists. show it.
+								}
+							else	{
+								$form.anymessage({'message':"The option selected has a panel defined ["+$ele.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
+								}
+							}
+						}
+					});				
+				
+				}
+
+			}
 
 		} //r object.
 	return r;
