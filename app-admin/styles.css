@@ -185,8 +185,8 @@ using these shared margins will help make the UI more consistent.
 .paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
 
 .stdMargin	{margin:12px;}
-.stdPadding	{padding:12px;}
-.smallPadding	{padding:4px !important;}
+.stdPadding, .ui-widget .stdPadding	{padding:12px;}
+.smallPadding, .ui-widget .smallPadding	{padding:4px !important;}
 .ui-widget-header-padding	{padding:3px 6px !important;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
@@ -222,6 +222,7 @@ if you want the list responsive, apply the .fluidList class.
 
 /* for non-datagrid tables. ex: setup page. */
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
+td.width1	{width:1%;}
 
 table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}
 iframe.noBorders	{overflow:hidden; border:none;}
@@ -1461,6 +1462,11 @@ Account utilities / support tools
     display: inline-block;
     width: 250px;
 	}
+
+
+.flexeditMasterListContainer .hideInMasterList	{display:none;} /* these fields will become visible once dragged over to the enabled column */
+
+
 
 
 

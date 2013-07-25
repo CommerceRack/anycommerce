@@ -14,6 +14,8 @@ ADMIN
  -> everywhere schedule is referenced in the UI got updated (syndication, organizations, etc)
  -> new interface for account utilities (that interface formerly known as tech tools)
  	disk usage and inventory event queue are in the 'logs' section.
+ -> "Inventory Lookup" in utilities moved to 'vstore' in setup.
+ 
 
 
 301324

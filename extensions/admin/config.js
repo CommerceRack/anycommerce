@@ -1065,6 +1065,7 @@ $D.dialog('open');
 							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
 					
 					//if a row already exists with this guid, this is an UPDATE, not an ADD.
+							app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
 							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
 								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
 								}

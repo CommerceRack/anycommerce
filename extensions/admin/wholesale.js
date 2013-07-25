@@ -164,13 +164,14 @@ var admin_wholesale = function() {
 			
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
 			showSupplierManager : function($target)	{
+				app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for create and update.
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Supplier Manager',
 					'className' : 'supplierManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
 						"<button data-app-event='admin|refreshDMI'>Refresh Supplier List<\/button>",
-						"<button class='floatRight marginLeft' data-app-event='admin_wholesale|showSupplierCreate'>Add Supplier</button>"
+						"<button class='floatRight marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
 						],
 					'thead' : ['Name','ID','Type','Mode',''],
 					'tbodyDatabind' : "var: users(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;",
@@ -561,7 +562,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				},
 
 //applied to 'create user' button. just opens the modal.
-			showSupplierCreate : function($btn)	{
+			adminSupplierCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
 					event.preventDefault();

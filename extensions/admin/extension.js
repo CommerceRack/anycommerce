@@ -3914,6 +3914,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_tools.a.showPrivateFiles($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 
+				else if(path == '#!manageFlexedit')	{
+					app.ext.admin_tools.a.showManageFlexedit($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+
 				else if(path == '#!pluginManager')	{
 					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}

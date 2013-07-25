@@ -67,6 +67,47 @@ var admin_tools = function() {
 //				$("input",$picker).each(function(){});
 				},
 			
+			showManageFlexedit : function($target)	{
+				$target.empty();
+				$target.append($("<div \/>").anycontent({'templateID':'manageFlexeditTemplate',data:{}}));
+				
+				var $enabled = $("[data-app-role='flexeditEnabledListContainer']",$target);
+				$enabled.showLoading({'message':'Fetching your list of enabled fields'})
+				
+				var $master = $("[data-app-role='flexeditMasterListContainer']",$target);
+				$master.showLoading({'message':'Fetching list of popular fields'})
+
+				$('tbody',$enabled).sortable();
+
+				//the connection is one way for now.
+				$('tbody',$master).sortable({
+					connectWith: $('.connectMe',$target),
+					stop : function(event,ui)	{
+						//if the item ends up in the enabled list, change from left/right arrows to up/down. also tag row to denote it's new (for save later).
+						if($(ui.item).closest('tbody').hasClass('connectMe'))	{
+							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')})
+							}
+						}
+					});
+
+				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
+				app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
+					$master.hideLoading();
+					$('tr',$enabled).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						$master.anycontent({'datapointer':rd.datapointer});
+						app.u.handleAppEvents($master);
+						}
+					},'datapointer':'appResource|product_attribs_popular'}},'mutable');
+//				app.u.handleAppEvents($target);
+				app.model.dispatchThis('mutable');
+//manageFlexeditorTemplate
+
+				},
+			
 			showProductExport : function($target)	{
 				$target.empty().anycontent({'templateID':'productExportToolTemplate','showLoading':false});
 				$(':checkbox',$target).anycb(); //run before picker added to dom so that picker isn't affected.
@@ -527,6 +568,33 @@ var admin_tools = function() {
 				}, //agentCreateShow
 
 
+			flexeditAttributeCreateUpdateShow : function($btn)	{
+				
+				if($btn.data('mode') == 'update')	{
+					$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+					}
+				
+				$btn.button().off('click.flexeditAttributeUpdateShow').on('click.flexeditAttributeUpdateShow',function(){
+					var $inputContainer = $btn.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
+//need to make sure form input area is 'on screen'. scroll to it.
+					$('html, body').animate({
+						scrollTop: $inputContainer.offset().top
+						}, 1000);
+					
+					if($btn.data('mode') == 'update')	{
+						$inputContainer.show();
+						$inputContainer.anycontent({'data':$btn.closest('tr').data()})
+						}
+					else if($btn.data('mode') == 'create')	{
+						$('input, select',$inputContainer).val(''); //clear all the inputs
+						$inputContainer.show();
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"In admin_tools.e.flexeditAttributeAddUpdateShow, mode not valid. only create or update are accepted.","gMessage":true});
+						}
+					
+					});
+				},
 			
 			adminPrivateFileDownloadExec : function($btn)	{
 				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});

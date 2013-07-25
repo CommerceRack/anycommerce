@@ -352,7 +352,7 @@ SETUP PAGE TEMPLATE
 			
 			
 
-			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
+			<a href="#" onClick="navigateTo('/biz/vstore/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
 			<div class="helper">Put in Logo, Address, Policies, etc.</div>
 
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi'); return false;" title="/biz/setup/builder/index.cgi">Site Builder</a><br />
@@ -402,7 +402,9 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
 			<div class="helper">Configure which languages and currencies are available.</div>
 
-
+	
+			<a href="#" onClick="navigateTo('/biz/vstore/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
+			<div class="helper marginBottom"></div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/search/index.cgi'); return false;" title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
 			<div class="helper">Create custom searchable indexes of your product database.</div>
@@ -772,7 +774,8 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('#!organizationManager'); return false;">Organization Manager</a>
 		<div class="helper marginBottom">Create / Manage Organizations for wholesale/b2b/resale.</div>
 
-		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain Management</a>
+		<a href="#" onClick="navigateTo('#!supplierManager'); return false;">Supplier Management (alpha)</a>
+<!--		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain Management</a> -->
 		<div class="helper marginBottom">Track inventory, pricing and orders with your suppliers.</div>
 		
 <!--		<a href="#" onClick="navigateTo('/biz/manage/schedules/index.cgi'); return false;">Wholesale Pricing Schedules</a> -->
@@ -836,10 +839,10 @@ broke.
 		<div class="helper marginBottom">Manage the amount of disk space in use by your account.</div>	
 	
 		<a href="#" onClick="navigateTo('/biz/syndication/sitemap/index.cgi'); return false;">Static Google SiteMap</a><br />
-		<div class="helper marginBottom">Configure nightly generation of a static sitemap file.</div>
+		<div class="helper marginBottom">Configure nightly generation of a static sitemap file.</div>	
 	
-		<a href="#" onClick="navigateTo('/biz/manage/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
-		<div class="helper marginBottom"></div>
+		<a href="#" onClick="navigateTo('#!manageFlexedit'); return false;">Manage Flexedit Fields (alpha)</a><br />
+		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor.</div>
 	
 <!--		<a href="#" onClick="navigateTo('/biz/manage/support/index.cgi'); return false;">Tech Support Utils</a> -->
 		<a href="#" onClick="navigateTo('#!accountUtilities'); return false;">Tech Support Utils (beta)</a>

@@ -743,3 +743,76 @@ JSON editor, which didn't work:
 	<td><button data-app-event='admin_tools|adminPlatformLogDownloadExec'>download</button></td>
 </tr>
 </table>
+
+
+
+<div id='manageFlexeditTemplate'>
+<h1>Product Flexedit Manager</h1>
+	
+	<div class='ui-widget twoColumn'>
+		<h3  class='stdPadding ui-widget-header ui-corner-top'>Enabled Attributes</h3>
+		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
+			<fieldset>
+			<table data-app-role='dataTable' class=' fullWidth gridTable'>
+			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe'>
+			
+			</tbody>
+			</table>
+			
+			<div class='buttonset marginTop alignRight'>
+				<button data-app-event='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create'>Add Custom</button>
+				<button>Save Changes</button>
+			</div>
+
+
+			<div class='labelsAsBreaks displayNone' data-app-role='flexeditAttributeAddUpdateContainer'>
+				<label><span>Attribute ID </span><input name='id' value='' type='text' data-bind='var: flexedit(id); format:popVal;' /></label>
+				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
+				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
+				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
+				<label>
+					<span>Type</span>
+					<select name='type' data-bind='var: flexedit(type); format:popVal;'>
+						<option value='textbox'>Text (small block)</option>
+						<option value='textarea'>Text (big block)</option>
+						<option value='checkbox'>Checkbox</option>
+						<option value='number'>Number</option>
+					</select>
+				</label>
+				<button data-app-event="admin_config|dataTableAddExec">Add Attribute</button>
+			</div>
+			</fieldset>
+		</form>
+	</div>
+	
+	
+	<section class='ui-widget twoColumn column2'>
+		<h3 class='stdPadding ui-widget-header ui-corner-top'>Popular Attributes</h3>
+		<div class='ui-widget-content ui-corner-bottom stdPadding flexeditMasterListContainer' data-app-role='flexeditMasterListContainer'>
+			<p>To enable a new attribute, simply drag it to the 'enabled' list on the left</p>
+			<table class='fullWidth gridTable'>
+				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" >
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+
+</div>
+
+
+<table>
+<tr id='flexeditAttributeRowTemplate'>
+	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+	<td class='alignLeft'>
+		<div data-bind='var:flexedit(id); format:text;'></div>
+		<div data-bind='var:flexedit(title); defaultVar:flexedit(tag); format:text;'></div>
+	</td>
+	<td class='hideInMasterList alignRight'>
+		<button data-app-event="admin|tagRowForRemove" class='hideInMasterList'>Remove Field</button>
+		<button data-app-event='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList'>Update Attribute</button>
+	</td>
+</tr>
+
+</table>
