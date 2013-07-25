@@ -1499,8 +1499,8 @@ if(ps.indexOf('?') >= 1)	{
 					app.ext.myRIA.u.handleLoginActions();
 					}
 
-//				app.u.dump(" -> infoObj follows:");
-//				app.u.dump(infoObj);
+				app.u.dump(" -> infoObj follows:");
+				app.u.dump(infoObj);
 				app.ext.myRIA.a.showContent('',infoObj);
 				return infoObj //returning this saves some additional looking up in the appInit
 				},
