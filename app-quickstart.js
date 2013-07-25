@@ -1739,7 +1739,12 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage';
 					}
 //the url in the domain may or may not have a slash at the end. Check for both
-				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url || url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
+				else if(url == zGlobals.appSettings.http_app_url || 
+						url == zGlobals.appSettings.http_app_url.replace("http://","https://") || 
+						url+"/" == zGlobals.appSettings.http_app_url || 
+						url+"/" == zGlobals.appSettings.http_app_url.replace("http://","https://") || 
+						url == zGlobals.appSettings.https_app_url || 
+						url+"/" == zGlobals.appSettings.https_app_url)	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
