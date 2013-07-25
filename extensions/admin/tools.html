@@ -608,15 +608,29 @@ JSON editor, which didn't work:
 
 
 
-<div id='accountUtilitiesTemplate' class='stdPadding ui-widget ui-widget-content ui-corner-all'>
+<div id='accountUtilitiesTemplate' class='stdPadding ui-widget ui-widget-content ui-corner-all clearfix'>
 	<h1>Account Utilities</h1>
-	<p class="hint marginTop marginBottom">Please make sure all users are logged out of your account, and all sync processes are disabled while using utilities in this area. They are *very* resource intensive and can cause outages if concurrent use is attempted.</p>
+	<p class="hint marginTop marginBottom clearfix">Please make sure all users are logged out of your account, and all sync processes are disabled while using utilities in this area. They are *very* resource intensive and can cause outages if concurrent use is attempted.</p>
 
+	
+	<section class='floatRight marginBottom marginLeft' data-app-role='accountUtilityLogContainer'>
+		<h2>Logs</h2>
+	
+		<table class='gridTable applyAnytable marginTop'>
+		<thead>
+		<tr>
+			<th>Filename</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: tools(@LOGS); format:processList; loadsTemplate:accountUtilityLogRowTemplate;">		</tbody>
+		</table>
+	</section><!-- /reporting -->
 
 	<section class='marginTop marginBottom'>
 		<h2>Product/Inventory</h2>
 	
-		<table>
+		<table class='marginTop'>
 		<tbody>
 		<tr>
 			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_CLEANUP'}}); return false;">Product Cleanup</button></td>
@@ -655,7 +669,10 @@ JSON editor, which didn't work:
 			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_SALESRANK'}}); return false; ">Update SalesRanks</button></td>
 			<td class='valignTop small'>
 			Goes through all products which have customer reviews and updates zoovy:prod_salesrank
-			<p class="warning">NOTE: sometimes design uses prod_salesrank to store other data like dates, doing this will destroy that data. Verify with customer this field is intended to store sales ranking data based on reviews prior to execution.</p>
+			<p class="warning ui-corner-all stdPadding">Notice about Sales Rank:<br />
+			App based sites do not use salesrank for review summary, they build their own summary.<br />
+			For legacy, sometimes design used prod_salesrank to store other data like dates, doing this will destroy that data.<br />
+			Verify with customer this field is intended to store sales ranking data based on reviews prior to execution.</p>
 			</td>
 		</tr>	
 		</tbody>
@@ -666,7 +683,7 @@ JSON editor, which didn't work:
 	<section class='marginTop marginBottom'>
 		<h2>eBay</h2>
 	
-		<table>
+		<table class='marginTop'>
 		<tbody>
 		<tr>
 			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'EBAY_UPDATE','f':'end-all'}}); return false; ">Close All Listings</button></td>
@@ -682,7 +699,7 @@ JSON editor, which didn't work:
 	<section class='marginTop marginBottom'>
 		<h2>Reporting</h2>
 	
-		<table>
+		<table class='marginTop'>
 		<tbody>
 		<tr>
 			<td class='valignTop'>
@@ -697,50 +714,18 @@ JSON editor, which didn't work:
 	</section><!-- /reporting -->
 
 
-<h2 class='red'>BELOW HERE NOT DONE YET:</h2>
-
-	<section class='marginTop marginBottom'>
-		<h2>And More...</h2>
-	
-		<table>
-		<tbody>
-		<tr>
-			<td class='valignTop'>
-			<button>Inventory Event Queue</button>
-			</td>
-			<td class='valignTop'>
-			A report of inventory events.
-			</td>
-		</tr>
-		<tr>
-			<td class='valignTop'>
-			<button>User Event Queue</button>
-			</td>
-			<td class='valignTop'>
-			A report of unprocessed user events - including inventory, crm, product, order events - create, paid, ship, cancel
-			</td>
-		</tr>
-		</tbody>
-		</table>
-	</section><!-- /reporting -->
-
 	<section class='marginTop marginBottom'>
 		<h2>Inspectors</h2>
-		<p>JT can build these these</p>
-		<label><span>Order</span><input type='text' name='orderid' /></label><button>Go</button>
-		<label><span>Product ID</span><input type='text' name='pid' /></label><button>Go</button>
-		<label><span>Cart ID</span><input type='text' name='cartid' /></label><button>Go</button>
+		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
+		<form><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Go</button></form><!--
+		<form><label><span>Cart ID</span><input type='text' name='cartid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='cart'>Go</button></form>
 		<p>but probably not this one</p>
-		<label><span>Session ID</span><input type='text' name='cartid' /></label><button>Go</button>
+		<form><label><span>Session ID</span><input type='text' name='_cartid' class='marginLeft marginRight' /></label><button>Go</button></form>
+		-->
 	</section>
 
-	<section class='marginTop marginBottom'>
-		<h2>Access Logs</h2>
-	
-	</section> 
 
-
-
+<!--
 
 <h2>Desktop Client</h2>
 	<div class="hint">reset the changed to 0 (will cause orders to resync)</div>
@@ -750,4 +735,11 @@ JSON editor, which didn't work:
 
 </div>
 
+-->
 
+<table>
+<tr id='accountUtilityLogRowTemplate'>
+	<td data-bind="var: log(TITLE); format:text;"></td>
+	<td><button data-app-event='admin_tools|adminPlatformLogDownloadExec'>download</button></td>
+</tr>
+</table>

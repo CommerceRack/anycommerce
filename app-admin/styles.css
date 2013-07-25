@@ -1452,6 +1452,19 @@ ul.kpiSortable li:last-child	{border-bottom:0;}
 
 
 /*
+Account utilities / support tools
+*/
+
+.objectInspector .objectInspector li:nth-child(even)	{background-color:#efefef;}
+.objectInspector .objectInspector li:nth-child(even)	{background-color:#ffffff;}
+.objectInspector .prompt {
+    display: inline-block;
+    width: 250px;
+	}
+
+
+
+/*
 SYNDICATION
 wasn't enough css to justify a separate .css file. If this content grows, move to extensions/admin/syndication.css
 */

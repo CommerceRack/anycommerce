@@ -84,6 +84,16 @@ var admin_tools = function() {
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
 				app.u.handleAppEvents($target);
+
+				app.model.addDispatchToQ({
+					'_cmd':'adminPlatformLogList',
+					'_tag' : {
+						'callback':'anycontent',
+						'datapointer': 'adminPlatformLogList',
+						'jqObj' : $("[data-app-role='accountUtilityLogContainer']:first",$target)
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				},
 			
 			showPrivateFiles : function($target)	{
@@ -139,12 +149,46 @@ var admin_tools = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 
+			objExplore : function($tag,data)	{
+				$tag.append(app.ext.admin_tools.u.objExplore(objExplore));
+				}
+
+
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+			objExplore : function(obj)	{
+// 				app.u.dump("BEGIN analyzer.u.objExplore");
+				var keys = new Array();
+				for (var n in obj) {
+					keys.push(n);
+					}
+				keys.sort();
+				var L = keys.length;
+				var $ul = $("<ul \/>").addClass('objectInspector');
+
+				for(var i = 0; i < L; i += 1)	{
+					var $li = $('<li>');
+					var $value;
+					$('<span>').addClass('prompt').text(keys[i]).appendTo($li);
+					
+					if(typeof obj[keys[i]] == 'object')	{
+						$value = app.ext.admin_tools.u.objExplore(obj[keys[i]]);
+						}
+					else	{
+						$value = $('<span>').addClass('value').text(obj[keys[i]]);
+						}
+					$value.appendTo($li);
+					$li.appendTo($ul);
+					}
+
+				return $ul;
+				},
+			
 			pickerSelection2KVP : function($context)	{
 				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
@@ -225,6 +269,7 @@ var admin_tools = function() {
 				
 				return r;
 				},
+
 			powertoolActions2Array : function($tbody)	{
 				var r = new Array();
 				$('tr',$tbody).each(function(){
@@ -267,6 +312,7 @@ var admin_tools = function() {
 					});
 				return r;
 				}
+
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
@@ -276,6 +322,70 @@ var admin_tools = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
+			inspectorExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
+					event.preventDefault();
+					if(app.u.validateForm($btn.closest('form')))	{
+						var
+							cmdObj = $btn.closest('form').serializeJSON({'cb':true}),
+							valid = true;
+							
+							cmdObj._tag = {};
+							
+						if($btn.data('inspect') == 'order' && cmdObj.orderid)	{
+							cmdObj._cmd = "adminOrderDetail";
+							cmdObj._tag.datapointer = "adminOrderDetail|"+cmdObj.orderid;
+							}
+						else if($btn.data('inspect') == 'product' && cmdObj.pid)	{
+							cmdObj._cmd = "appProductGet";
+							cmdObj.withVariations = 1;
+							cmdObj.withInventory = 1;
+							cmdObj._tag.datapointer = "appProductGet|"+cmdObj.pid;
+							}
+						else if($btn.data('inspect') == 'cart' && cmdObj.cartid)	{
+							cmdObj._cmd = "cartDetail";
+							cmdObj._tag.datapointer = "cartDetail|"+cmdObj.cartid;
+							}
+						else	{
+							valid = false;
+							$('#globalMessaging').anymessage({"message":"In admin_tools.e.inspectExec, either inspect ["+$btn.data('inspect')+"] was invalid (only product, order and cart are valid) or inspect was valid, but was missing corresponding data (ex: inspect=order but no orderid specified in form);","gMessage":true});
+							}
+						
+						
+						if(valid)	{
+							var $D = app.ext.admin.i.dialogCreate({
+								'title':'Inspector'
+								})
+							$D.dialog('open');
+							cmdObj._tag.callback = function(rd)	{
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$D.anymessage({'message':rd});
+									}
+								else	{
+									//sanitize a little...
+									delete app.data[rd.datapointer]._rcmd;
+									delete app.data[rd.datapointer]._msgs;
+									delete app.data[rd.datapointer]._msg_1_id;
+									delete app.data[rd.datapointer]._msg_1_txt;
+									delete app.data[rd.datapointer]._msg_1_type;
+									delete app.data[rd.datapointer]._rtag;
+									delete app.data[rd.datapointer]._uuid;
+									delete app.data[rd.datapointer].ts
+									
+									$D.append(app.ext.admin_tools.u.objExplore(app.data[rd.datapointer]));
+									}
+								}
+							app.model.addDispatchToQ(cmdObj,'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						else	{} //error messaging already handled.
+						
+						}
+					else	{}
+					});
+				},
 			
 			powerToolBatchJobExec : function($btn)	{
 				$btn.button();
@@ -311,6 +421,7 @@ var admin_tools = function() {
 						}
 					});
 				}, //powerToolAttribChange
+
 			powerToolConditionalChange : function($ele)	{
 				$ele.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(){
 					var $fieldset = $ele.closest('fieldset');
@@ -322,6 +433,7 @@ var admin_tools = function() {
 						}
 					});
 				}, //powerToolConditionalChange
+
 			
 			powerToolVerbChange : function($radio)	{
 				$radio.off('click.powerToolVerbChange').on('click.powerToolVerbChange',function(){
@@ -425,6 +537,24 @@ var admin_tools = function() {
 						'GUID':$btn.closest('tr').data('guid'),
 						'_tag':	{
 							'datapointer' : 'adminPrivateFileDownload', //big dataset returned. only keep on in memory.
+							'callback' : 'fileDownloadInModal',
+							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
+							'extension' : 'admin'
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
+			
+			adminPlatformLogDownloadExec : function($btn)	{
+				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
+				$btn.off('click.adminPlatformLogDownloadExec').on('click.adminPlatformLogDownloadExec',function(event){
+					event.preventDefault();
+					app.model.addDispatchToQ({
+						'_cmd':'adminPlatformLogDownload',
+						'GUID':$btn.closest('tr').data('guid'),
+						'_tag':	{
+							'datapointer' : 'adminPlatformLogDownload', //big dataset returned. only keep on in memory.
 							'callback' : 'fileDownloadInModal',
 							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
 							'extension' : 'admin'
