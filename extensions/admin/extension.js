@@ -2267,11 +2267,13 @@ Function does NOT dispatch.
 						bindData = app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
 						listpointer = app.renderFunctions.parseDataVar(bindData['var']),
 						data = app.data[_rtag.datapointer]; //shortcut.
-	
+					app.u.dump('listpointer: '+listpointer);
+					app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
+					app.u.dump('data[listpointer]: '); app.u.dump(data[listpointer]);
 					$DMI.hideLoading();
 					$tbody.empty();
-					
-					if(listpointer && !$.isEmptyObject(data)  && data[listpointer] && data[listpointer].length)	{
+					//data[listpointer] check needs to be a !isemptyobject and NOT a .length check because value could be a hash OR an array.
+					if(listpointer && data && data[listpointer] && !$.isEmptyObject(data[listpointer]))	{
 						//no errors have occured and results are present.
 						$tbody.anycontent({'data':data});
 						app.u.handleAppEvents($tbody);
@@ -5482,7 +5484,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 //used in conjuction with the new interface (i) functions.
 			processForm : function($btn,vars)	{
 				$btn.button();
-				$btn.off('click.processForm').on('click.processForm',function(){
+				$btn.off('click.processForm').on('click.processForm',function(event){
+					event.preventDefault();
 //					app.u.dump("trying to process the form");
 					var $form = $btn.closest('form');
 					

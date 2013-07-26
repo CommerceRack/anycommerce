@@ -434,46 +434,34 @@ else	{
 				},
 
 //executed within the create new supplier form. actually creates the new supplier.
-			execSupplierCreate : function($btn,obj)	{
+			adminSupplierCreateExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.execSupplierCreate').on('click.execSupplierCreate',function(){
-					var $form = $btn.closest('form'),
-					formObj = $form.serializeJSON();
-					formObj.VENDORID = formObj.VENDORID.toUpperCase(); //codes are all uppercase.
+
+				$btn.off('click.adminSupplierCreateExec').on('click.adminSupplierCreateExec',function(event){
+					event.preventDefault();
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
+
 					if(app.u.validateForm($form))	{
-						$('body').showLoading({'message':'Adding new supplier '+formObj.VENDORID});
-						app.model.destroy('adminSupplierList');
+						$form.showLoading({'message':'Adding new supplier.'});
 
-//Attempt to create new user and update the modal w/ appropriate messaging.
-						app.ext.admin.calls.adminSupplierCreate(formObj,{'callback':function(rd){
-							$('body').hideLoading();
-							if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
-							else	{
-								$form.parent().empty().anymessage({'message':'Thank you, supplier '+formObj.VENDORID+' has been created.','iconClass':'ui-icon-z-success'})
-								}
-							}},'immutable');
-
-//if we have a context for the supplier manager, update the list of suppliers.
-						if(obj && obj['$context'])	{
-							app.ext.admin.calls.adminSupplierList({'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
-								else	{
-//refresh the entire manager. it won't re-request the supplier list, it'll use what's in memory.
-									obj['$context'].empty();
-									app.ext.admin_wholesale.a.showSupplierManager(obj['$context']);
-									}
-								}},'immutable');
-							}
-						
-						app.model.dispatchThis('immutable');
-						
+sfo._cmd = "adminSupplierCreate";
+sfo._tag = {
+	callback : 'showMessaging',
+	message : 'Thank you, supplier '+sfo.VENDORID+' has been created.',
+	jqObj : $form,
+	jqObjEmpty: true
+	}
+app.model.addDispatchToQ(sfo,'immutable');
+app.model.dispatchThis('immutable');
 						}
 					else	{
 						//validator handles errors.
 						}
 					});
 				
-				}, //execSupplierCreate
+				}, //adminSupplierCreateExec
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
 			execSupplierDelete : function($btn)	{
@@ -567,9 +555,8 @@ else	{
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
 					$('form',$D).first().append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+					app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$D));
 					app.u.handleAppEvents($D,{"$context":$btn.closest("[data-app-role='supplierManager']").parent()})
-
-//					app.ext.admin_wholesale.a.showSupplierCreateModal({"$context":$btn.closest("[data-app-role='supplierManager']").parent()});
 					})
 				}, //showSupplierCreate
 
@@ -984,9 +971,28 @@ else	{
 
 			handleFormConditionalDelegation : function($container)	{
 				
+				$container.on('keyup',function(e)	{
+					if(e.target.nodeName.toLowerCase() == 'input'){
+						var $input = $(e.target);
+						
+						if($input.data('input-format'))	{
+
+							if($input.data('input-format').indexOf('uppercase') > -1)	{
+								$input.val($input.val().toUpperCase());
+								}
+							
+							if($input.data('input-format').indexOf('alphanumeric') > -1)	{
+								$input.val($input.val().replace(/\W/g, ''));
+								}
+							
+							}
+						}
+					});
+				
 				$container.on('click',function(e){
+					var $ele = $(e.target);
+
 					if(e.target.nodeName.toLowerCase() == 'option'){
-					   var $ele = $(e.target);
 /*
 panel-selector:
 on a select, set data-panel-selector=".someClass"

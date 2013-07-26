@@ -272,7 +272,7 @@
 	<legend>Add a New Supplier</legend>
 	
 	<div class='label'>
-	<input placeholder='supplier id' type="text" name="CODE" value="" maxlength="6" data-min-length='6' size="6" data-app-event="admin|alphaNumeric" />
+	<input placeholder='supplier id' type="text" name="VENDORID" value="" maxlength="6" data-min-length='6' size="6" required='required' data-input-format="alphanumeric,uppercase" />
 	<span class='hint'>A unique 6 character alphanumeric code used for this supplier.</span>
 	</div>
 	
@@ -284,7 +284,7 @@
 	<div class='label'><input type="email" placeholder='email' maxlength="65" value="" name="EMAIL"  required='required' /></div>
 	<div class='label'><input type="text" placeholder='website' maxlength="65" value="" name="WEBSITE"  /></div>
 	
-	<div class='alignCenter'><button data-app-event='admin_wholesale|execSupplierCreate'>Add Supplier</button></div>
+	<div class='alignCenter'><button data-app-event='admin|processForm'>Add Supplier</button></div>
 </fieldset>
 </form>
 
