@@ -54,7 +54,7 @@ var admin_wholesale = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				app.u.dump('BEGIN admin_wholesale.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -187,55 +187,59 @@ var admin_wholesale = function() {
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
 				if($editorContainer instanceof jQuery && VENDORID)	{
-					app.ext.admin.calls.adminSupplierDetail.init(VENDORID,{'callback':function(rd){
+$editorContainer.showLoading({"message":"Fetching supplier details"});
+app.model.addDispatchToQ({
+	'_cmd':'adminSupplierDetail',
+	'VENDORID' : VENDORID,
+	'_tag':	{
+		'datapointer' : '',
+		'callback':function(rd)	{
+			$editorContainer.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$editorContainer.anymessage({'message':rd})
+				}
+			else	{
+				$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
+				app.ext.admin.u.handleAppEvents($editorContainer);
+				$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
+				
+			//make into anypanels.
+				$("div.panel",$editorContainer).each(function(){
+					var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
+					$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
+					});
+			
+			//make inputs 'know' when they've been added and update the button.
+				app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
+			
+			//make panels draggable
+				var sortCols = $('.twoColumn').sortable({  
+					connectWith: '.twoColumn',
+					handle: 'h2',
+					cursor: 'move',
+					placeholder: 'placeholder',
+					forcePlaceholderSize: true,
+					opacity: 0.4,
+			//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
+					stop: function(event, ui){
+						$(ui.item).find('h2').click();
+						var dataObj = new Array();
+						sortCols.each(function(){
+							var $col = $(this);
+							dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+							});
+						app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
+			//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+						}
+					});
+			
+				app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$editorContainer));
+				}
 
-if(app.model.responseHasErrors(rd)){
-	$editorContainer.anymessage({'message':rd})
-	}
-else	{
-	$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
-	app.ext.admin.u.handleAppEvents($editorContainer);
-//	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
-	$("[type='checkbox']",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
-	
-//make into anypanels.
-	$("div.panel",$editorContainer).each(function(){
-		var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
-		$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
-		});
-
-//make inputs 'know' when they've been added and update the button.
-	app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
-
-//make panels draggable
-	var sortCols = $('.twoColumn').sortable({  
-		connectWith: '.twoColumn',
-		handle: 'h2',
-		cursor: 'move',
-		placeholder: 'placeholder',
-		forcePlaceholderSize: true,
-		opacity: 0.4,
-//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
-		stop: function(event, ui){
-			$(ui.item).find('h2').click();
-			var dataObj = new Array();
-			sortCols.each(function(){
-				var $col = $(this);
-				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
-				});
-			app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
-//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 			}
-		});
-
-	app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$editorContainer));
-	}
-
-						}},'mutable');
-					app.model.dispatchThis('mutable');
-/*
-
-*/
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
 					}
 				else	{
 					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or VENDORID ['+VENDORID+'] undefined','gMessage':true});
@@ -312,24 +316,13 @@ else	{
 				newSfo['@updates'].push('WAREHOUSE-UPDATE?'+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
-				} //adminWarehouseMacroCreate
+				}, //adminWarehouseMacroCreate
 
-/*			
-			general : function($form)	{
+			
+			adminSupplierUpdate : function($form)	{
 				if($form)	{
 					var formObj = $form.serializeJSON(),
 					vendorID = $form.closest("[data-vendorid]").data('vendorid');
-					
-					$('input',$form).each(function(){
-						var $ele = $(this);
-						if($ele.is(':checkbox') && ($ele.is(':checked')))	{
-							formObj[$ele.attr('name')] = 1;
-							}
-						else if($ele.is(':checkbox'))	{ //if it isn't checked, it's disabled.
-							formObj[$ele.attr('name')] = 0;
-							}
-						else	{} //currently, only checkboxes need special treatment.
-						});
 					
 					if(vendorID)	{
 						macro = "COMPANYSET?"+decodeURIComponent($.param(formObj));
@@ -337,18 +330,14 @@ else	{
 						app.u.dump(macro);
 						}
 					else	{
-						$form.anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, unable to ascertain vendorID.','gMessage':true});
+						$form.anymessage({'message':'In admin_wholesale.e.adminSupplierUpdateExec, unable to ascertain vendorID.','gMessage':true});
 						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.macroBuilders.general, $form not set or not a jquery object.","gMessage":true})
 					}
-				},
-
-			shippingCalculations : function($form)	{
-				
-				},
-*/			}, //macroBuilders
+				}
+			}, //macroBuilders
 
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
 
@@ -443,7 +432,6 @@ else	{
 					
 					const VENDORID = $btn.closest('tr').data('code');
 					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
-
 					
 					var $D = app.ext.admin.i.dialogConfirmRemove({
 						'message':'Are you sure you want to delete vendor '+VENDORID+'? There is no undo for this action.',
@@ -459,48 +447,6 @@ else	{
 
 					}); //$btn.on
 				}, //adminSupplierRemoveExec
-
-			execSupplierUpdate : function($btn)	{
-				$btn.button();
-				$btn.button('disable');
-				$btn.off('click.execSupplierUpdate').on('click.execSupplierUpdate',function(){
-					var $form =  $btn.closest('form'),
-					panel = $form.closest('.panel').data('app-role');
-					
-					if($form && panel)	{
-		
-						var formObj = $form.serializeJSON(),
-						vendorID = $form.closest("[data-vendorid]").data('vendorid');
-						
-						$('input',$form).each(function(){
-							var $ele = $(this);
-							if($ele.is(':checkbox') && ($ele.is(':checked')))	{
-								formObj[$ele.attr('name')] = 1;
-								}
-							else if($ele.is(':checkbox'))	{ //if it isn't checked, it's disabled.
-								formObj[$ele.attr('name')] = 0;
-								}
-							else	{} //currently, only checkboxes need special treatment.
-							});
-						
-						if(vendorID)	{
-							macro = "COMPANYSET?"+decodeURIComponent($.param(formObj));
-		//						app.ext.admin.calls.adminSupplierUpdate.init(vendorID, [macro],{},'immutable');
-							app.u.dump(macro);
-							}
-						else	{
-							$form.anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, unable to ascertain vendorID.','gMessage':true});
-							}
-
-
-
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, either $form or panel not set.'});
-						}
-					
-					}); //$btn.on
-				},
 
 //applied to 'create user' button. just opens the modal.
 			adminSupplierCreateShow : function($btn)	{
@@ -575,39 +521,41 @@ else	{
 
 				}, //showSupplierItemList
 
-			showSupplierOrderList : function($btn)	{
+			adminSupplierOrderListShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
 					event.preventDefault();
-					var vendorID = $btn.closest("[data-code]").data('code');
+					const VENDORID = $btn.closest("[data-code]").data('code');
 					
-					if(vendorID)	{
-						app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':vendorID,'FILTER':'RECENT'},{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
-							else	{
-								var $D = $(app.u.jqSelector('#',rd.datapointer));
-								if($D.length)	{$D.empty();}
-								else	{
-									$D = $("<div \/>").attr({'title':"Order list for vendor "+vendorID,'id':rd.datapointer});
-									$D.appendTo('body');
-									$D.dialog({
-										width : '70%',
-										height : ($(window).height() / 2),
-										autoOpen: false
-										});
-									}
-								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierOrderListTemplate','showLoading':false});
-								$(".gridTable",$D).anytable();
-								$D.dialog('open');
-								}
-							}},'mutable');
-						app.model.dispatchThis('mutable');
+					if(VENDORID)	{
+
+var $D = app.ext.admin.i.dialogCreate({
+	'title':"Order list for vendor "+VENDORID
+	});
+$D.dialog('option','width','70%');
+$D.dialog('option','height',($(window).height() / 2));
+$D.dialog('open');
+
+
+app.model.addDispatchToQ({
+	'_cmd':'adminSupplierOrderList',
+	'VENDORID':VENDORID,
+	'FILTER':'RECENT',
+	'_tag':	{
+		'datapointer' : 'adminSupplierOrderList|'+VENDORID,
+		'callback': 'anycontent',
+		'templateID':'supplierOrderListTemplate',
+		'jqObj' : $D
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierOrderList, unable to determine vendorID.','gMessage':true})
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.adminSupplierOrderListShow, unable to determine vendorID.','gMessage':true})
 						}
 					});
-				},
+				}, //adminSupplierOrderListShow
 
 			showMediaLib4OrganizationLogo : function($ele)	{
 				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
@@ -615,7 +563,7 @@ else	{
 					var $context = $ele.closest('fieldset');
 					mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
 					});
-				},
+				}, //showMediaLib4OrganizationLogo
 
 
 			execOrganizationSearch : function($btn){

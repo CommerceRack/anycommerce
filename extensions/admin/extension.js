@@ -1185,97 +1185,6 @@ if giftcard is on there, no paypal will appear.
 			}, //adminSupplierItemList
 
 
-		adminSupplierOrderList : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.VENDORID && obj.FILTER)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminSupplierOrderList|"+obj.VENDORID+"|"+obj.FILTER;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierOrderList, either FILTER or VENDORID not passed in param object","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminSupplierOrderList";
-				obj._tag = _tag || {};
-				app.model.addDispatchToQ(obj,Q || mutable);
-				}
-			}, //adminSupplierOrderList
-
-		adminSupplierList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "adminSupplierList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : "adminSupplierList",_tag:_tag},Q || mutable);
-				}
-			}, //adminSupplierList
-
-//VENDORID = supplier id (CODE)
-		adminSupplierDetail : {
-			init : function(vendorid,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "adminSupplierDetail|"+vendorid;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(vendorid,_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(vendorid,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","VENDORID":vendorid,_tag:_tag},Q || mutable);
-				}
-			}, //adminSupplierList
-
-			
-// !!! not done. 
-		adminSupplierUpdate	: {
-			init : function(vendorid, updateObj,_tag,Q)	{
-				var r = 0;
-				if(vendorid && typeof updateObj == 'object')	{
-					r = 1;
-					this.dispatch(vendorid,updateObj,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierCreate, either vendorid ["+vendorid+"] or updateObj ["+typeof updateObj+"] not passed","gMessage":true});
-					}
-				return r;
-				},
-			
-			dispatch : function(vendorid,updateObj,_tag,Q){
-				obj._cmd = 'adminSupplierUpdate';
-				obj.VENDORID = vendorid;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminSupplierUpdate';
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			
-			}, //adminSupplierCreate
-
-
 		adminSyndicationDetail : {
 			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
@@ -2921,7 +2830,14 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 					app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
 					}
 				else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-					app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
+					_tag.datapointer = 'adminSupplierList'
+//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'immutable');
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
 					}
 				else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
 					app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');

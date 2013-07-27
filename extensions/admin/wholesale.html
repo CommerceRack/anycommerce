@@ -182,7 +182,7 @@
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierItemList'>Products</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierOrderList'>Orders</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierOrderListShow'>Orders</button>
 	</td>
 </tr>
 
@@ -214,7 +214,18 @@
 
 <div id='supplierOrderListTemplate'>
 
-<table class='gridTable fullWidth'>
+<h1>Recent Orders</h1>
+
+<div class='clearfix ui-state-focus ui-corner-top'>
+	<select name="update">
+		<option value="">action for selected orders</option>
+		<option value="CLOSE">Close</option>
+		<option value="ARCHIVE">Archive</option>
+		<option value="RESET">Reset to Closed / Resend</option>
+		<option value="APPROVE">Approve Hold Orders</option>
+	</select>
+</div>
+<table class='gridTable fullWidth applyAnytable'>
 <thead>
 <tr>
 	<th data-anytable-nosort='true'></th>
@@ -302,11 +313,20 @@
 
 
 <div id='supplierUpdateTemplate' class='clearfix'>
-<form autocomplete="on" action='#'>
+<form autocomplete="on" action='#' onsubmit="return false;">
+
+<input type='hidden' name='_cmd' value='adminSupplierUpdate' />
+<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='The vendor has been successfully updated.' />
+<input type="hidden" name="VENDOR" data-bind="var:supplier(CODE); format:popVal;" />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+
+
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
-		
-		<button class='floatRight' data-app-event='admin_wholesale|showSupplierOrderList'>Order List</button>
+		<button class='floatRight' data-app-event='admin|processForm' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierOrderListShow'>Order List</button>
 		<button class='floatRight' data-app-event='admin_wholesale|showSupplierItemList'>Product List</button>
 		<button class='floatRight'>Add Product</button>
 		
@@ -357,7 +377,7 @@
 				</label>
 				
 				<label>
-					<input name='ITEM_NOTES' type='checkbox' data-bind='var: supplier(ITEM_NOTES); format:popVal;' />
+					<input name='ITEM_NOTES' type='checkbox' class='applyAnycb' data-bind='var: supplier(ITEM_NOTES); format:popVal;' />
 					<span>Item notes:</span>
 				</label>
 				<div class='hint'>Choose to display supplier code / tracking info on invoice (under each Item)</div>
@@ -376,7 +396,7 @@
 				</label>
 		
 			</fieldset>
-			<button class='floatRight' data-app-event='admin_wholesale|execSupplierUpdate'>Save <span class='numChanges'></span> Changes</button>
+			
 			</div>
 		</div><!-- /general panel -->
 
@@ -400,6 +420,7 @@
 		
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='shippingCalculations'>
 			<h2>Setup: Shipping Calculations</h2>
+			<div>
 			<fieldset>
 
 				<label>
@@ -414,6 +435,7 @@
 				<div data-panel-id='supplierShippingConnectorGeneric' class='displayNone supplierShippingConnector'>LINK to something</div>
 		
 			</fieldset>
+			</div>
 		</div>
 
 
@@ -426,7 +448,7 @@
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
 			<h2>Setup: Inventory Download</h2>
-	
+			<div>
 			<fieldset>
 				<label>
 					<span>Connector:</span>
@@ -460,12 +482,13 @@
 				
 				</div>
 			</fieldset>
+			</div>
 		</div>
 
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='automaticOrdering'>
 			<h2>Setup: Automatic Ordering</h2>
-			
+
 			<div>
 			<fieldset>
 				<label><span>Order formatting:</span>
@@ -477,33 +500,33 @@
 				</select>
 				</label>
 				
-				<label><input type='checkbox' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popVal;" />Automatic Ordering</label>
+				<label><input type='checkbox' class='applyAnycb' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popVal;" />Automatic Ordering</label>
 				<div class='hint'>Orders will not be transmitted to the supplier until they are closed</div>
 				
-				<label><input type='checkbox' name='notes' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Include order notes</label>
-				<label><input type='checkbox' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popVal;" />Show cost field</label>
-				<label><input type='checkbox' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Hide zero quantity items</label>
-				<label><input type='checkbox' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popVal;" />Dispatch on create (off recommended)</label>
-				<label><input type='checkbox' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popVal;" />Transmit full order contents (off recommended)</label>
+				<label><input type='checkbox' class='applyAnycb' name='notes' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Include order notes</label>
+				<label><input type='checkbox' class='applyAnycb' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popVal;" />Show cost field</label>
+				<label><input type='checkbox' class='applyAnycb' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Hide zero quantity items</label>
+				<label><input type='checkbox' class='applyAnycb' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popVal;" />Dispatch on create (off recommended)</label>
+				<label><input type='checkbox' class='applyAnycb' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popVal;" />Transmit full order contents (off recommended)</label>
 				
 				<label>
 					<span>Connector: </span>
-					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-app-event='admin|showSiblingFieldset'>
-						<option value="NONE">None</option>
-						<option value="EMAIL">Email</option>
-						<option value="FTP">FTP</option>
-						<option value="API">API</option>
-						<option value="AMZSQS">Amazon SQS</option>
+					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-panel-selector=".supplierAutomaticOrderingConnector">
+						<option value="NONE" data-show-panel='supplierAutomaticOrderingNONE'>None</option>
+						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
+						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
+						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>API</option>
+						<option value="AMZSQS" data-show-panel='supplierAutomaticOrderingAMZSQS'>Amazon SQS</option>
 					</select>
 				</label>
 			</fieldset>
 		
 		<section data-app-role='connectorFieldsetContainer'>
 		
-			<fieldset data-app-role='NONE' class='displayNone'><!-- no extra fields for none at this time --></fieldset>
+			<fieldset data-panel-id='supplierAutomaticOrderingNONE' class='displayNone supplierAutomaticOrderingConnector'><!-- no extra fields for none at this time --></fieldset>
 			
 			
-			<fieldset data-app-role='EMAIL' class='displayNone'>
+			<fieldset data-panel-id='supplierAutomaticOrderingEMAIL' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>Email from:</span>
 					<input type='email' name='email_src' data-bind="var: supplier(%ORDER.email_src); format:popVal;" />
@@ -539,21 +562,21 @@
 				</label>
 			</fieldset>
 			
-			<fieldset data-app-role='FTP' class='displayNone'>
+			<fieldset data-panel-id='supplierAutomaticOrderingFTP' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>FTP URL:</span>
 					<input type='url' name='ftp_url' data-bind="var: supplier(%ORDER.ftp_url); format:popVal;" />
 				</label>
 			</fieldset>
 			
-			<fieldset data-app-role='API' class='displayNone'>
+			<fieldset data-panel-id='supplierAutomaticOrderingAPI' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>API URL:</span>
 					<input type='url' name='api_url' data-bind="var: supplier(%ORDER.api_url); format:popVal;" />
 				</label>
 			</fieldset>
 			
-			<fieldset data-app-role='AMZSQS' class='displayNone'>
+			<fieldset data-panel-id='supplierAutomaticOrderingAMZSQS' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>Amazon AWS access key</span>
 					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;" />
