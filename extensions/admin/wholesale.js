@@ -433,71 +433,32 @@ else	{
 					});
 				},
 
-//executed within the create new supplier form. actually creates the new supplier.
-			adminSupplierCreateExec : function($btn)	{
-				$btn.button();
-
-				$btn.off('click.adminSupplierCreateExec').on('click.adminSupplierCreateExec',function(event){
-					event.preventDefault();
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON();
-
-					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding new supplier.'});
-
-sfo._cmd = "adminSupplierCreate";
-sfo._tag = {
-	callback : 'showMessaging',
-	message : 'Thank you, supplier '+sfo.VENDORID+' has been created.',
-	jqObj : $form,
-	jqObjEmpty: true
-	}
-app.model.addDispatchToQ(sfo,'immutable');
-app.model.dispatchThis('immutable');
-						}
-					else	{
-						//validator handles errors.
-						}
-					});
-				
-				}, //adminSupplierCreateExec
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
-			execSupplierDelete : function($btn)	{
+			adminSupplierRemoveExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.execSupplierDelete').on('click.execSupplierDelete',function(){
-					var $wm = $('#wholesaleModal'),
-					$row = $btn.closest('tr');
+				$btn.off('click.adminSupplierRemoveExec').on('click.adminSupplierRemoveExec',function(event){
 
-					$wm.dialog('open');
-					$('.ui-dialog-title',$wm.parent()).text('Delete Supplier!');
-						
-					if($row.data('code'))	{
-						$wm.empty().html("<p class='clearfix marginBottom'>Are you sure you want to delete supplier $row.data('code')? there is no undo for this action.<\/p>");
-						$("<button \/>").text("Cancel").addClass('floatLeft').button().on('click',function(){$wm.dialog('Cancel')}).appendTo($wm);
-						$("<button \/>").text("Delete Supplier").addClass('floatLeft ui-state-error').button().on('click',function(){
-							
-							$('body').showLoading({"message":"Removing supplier and fetching updated supplier list"});
-							
-							app.ext.admin.calls.adminSupplierRemove($row.data('code'),{callback : function(rd){}},'immutable');
-							app.model.destroy('adminSupplierList');
-							app.ext.admin.calls.adminSupplierList({'callback':function(rd){
-								$('body').hideLoading();
-//clear the supplier manager even if the call fails. Otherwise, the removed supplier will still be in the list.
-								var $supplierEditorParent = $btn.closest("[data-app-role='supplierManager']").parent();
-								$supplierEditorParent.empty();
-								if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
-								else	{
-//refresh the entire manager. it won't re-request the supplier list, it'll use what's in memory.
-									app.ext.admin_wholesale.a.showSupplierManager($supplierEditorParent);
-									}
-								}},'immutable');
-							}).appendTo($wm);
-						}
+					event.preventDefault();
+					
+					const VENDORID = $btn.closest('tr').data('code');
+					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
+
+					
+					var $D = app.ext.admin.i.dialogConfirmRemove({
+						'message':'Are you sure you want to delete vendor '+VENDORID+'? There is no undo for this action.',
+						'removeButtonText' : 'Delete Vendor',
+						'removeFunction':function(vars,$modal){
+							$DMI.showLoading({"message":"removing vendor "+VENDORID});
+							app.model.addDispatchToQ({'_cmd':'adminSupplierRemove','VENDORID':VENDORID,'_tag':{'callback':'showMessaging','message':'The vendor '+VENDORID+' has been deleted','jqObj':$DMI}},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':{'datapointer':'adminSupplierList','callback':'DMIUpdateResults','extension':'admin','jqObj':$DMI}},'immutable');
+							app.model.dispatchThis('immutable');
+							$modal.dialog('close');
+							}
+						});
 
 					}); //$btn.on
-				}, //execSupplierDelete
+				}, //adminSupplierRemoveExec
 
 			execSupplierUpdate : function($btn)	{
 				$btn.button();

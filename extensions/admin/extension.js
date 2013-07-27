@@ -1159,21 +1159,6 @@ if giftcard is on there, no paypal will appear.
 				}
 			}, //adminProductManagementCategoryList
 
-		adminSupplierCreate	: {
-			
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			
-			dispatch : function(obj,_tag,Q){
-				obj._cmd = 'adminSupplierCreate';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminSupplierCreate';
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			
-			}, //adminSupplierCreate
 
 		adminSupplierItemList : {
 			init : function(vendorid,_tag,Q)	{
