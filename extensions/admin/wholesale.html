@@ -181,8 +181,8 @@
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierItemList'>Products</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierOrderListShow'>Orders</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
 	</td>
 </tr>
 
@@ -325,9 +325,9 @@
 
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
-		<button class='floatRight' data-app-event='admin|processForm' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierOrderListShow'>Order List</button>
-		<button class='floatRight' data-app-event='admin_wholesale|showSupplierItemList'>Product List</button>
+		<button class='floatRight' data-app-event='admin|processForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
+		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
 		<button class='floatRight'>Add Product</button>
 		
 		<h2 class='floatLeft ui-widget-header-padding'>

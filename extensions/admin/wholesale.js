@@ -486,76 +486,61 @@ app.model.dispatchThis('mutable');
 					});
 				}, //showSupplierEditor
 
-			showSupplierItemList : function($btn)	{
-				
-				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
-					event.preventDefault();
-					var code = $btn.closest("[data-code]").data('code');
-					if(code)	{
-						app.ext.admin.calls.adminSupplierItemList.init(code,{'callback':function(rd){
 
-							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
-							else	{
-								var $D = $(app.u.jqSelector('#',rd.datapointer));
-								if($D.length)	{$D.empty();}
-								else	{
-									$D = $("<div \/>").attr({'title':"Item list for vendor "+vendorID,'id':rd.datapointer});
-									$D.appendTo('body');
-									$D.dialog({
-										width : '70%',
-										height : ($(window).height() / 2),
-										autoOpen: false
-										});
-									}
-								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierItemListTemplate','showLoading':false});
-								$(".gridTable",$D).anytable();
-								$D.dialog('open');
-								}
-							}},'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierItemList, unable to determine "code".','gMessage':true});
-						}
-					});
-
-				}, //showSupplierItemList
-
-			adminSupplierOrderListShow : function($btn)	{
+			adminSupplierProdOrderListShow : function($btn)	{
 				$btn.button();
-				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
-					event.preventDefault();
-					const VENDORID = $btn.closest("[data-code]").data('code');
-					
-					if(VENDORID)	{
 
-var $D = app.ext.admin.i.dialogCreate({
-	'title':"Order list for vendor "+VENDORID
-	});
-$D.dialog('option','width','70%');
-$D.dialog('option','height',($(window).height() / 2));
-$D.dialog('open');
+				if($btn.data('mode') == 'product' || $btn.data('mode') == 'order')	{
 
+$btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrderListShow',function(event){
+	event.preventDefault();
+	const VENDORID = $btn.closest("[data-code]").data('code');
+	
+	if(VENDORID)	{
 
-app.model.addDispatchToQ({
-	'_cmd':'adminSupplierOrderList',
-	'VENDORID':VENDORID,
-	'FILTER':'RECENT',
-	'_tag':	{
-		'datapointer' : 'adminSupplierOrderList|'+VENDORID,
-		'callback': 'anycontent',
-		'templateID':'supplierOrderListTemplate',
-		'jqObj' : $D
+		var $D = app.ext.admin.i.dialogCreate({
+			'title': $btn.data('mode')+" list for vendor "+VENDORID
+			});
+		$D.dialog('option','width','70%');
+		$D.dialog('option','height',($(window).height() / 2));
+		$D.dialog('open');
+		
+		var cmdObj = {
+			'VENDORID':VENDORID,
+			'FILTER':'RECENT',
+			'_tag':	{
+				'callback': 'anycontent',
+				'templateID':'supplierOrderListTemplate',
+				'jqObj' : $D
+				}
+			}
+		
+		if($btn.data('mode') == 'order')	{
+			cmdObj._cmd = 'adminSupplierOrderList';
+			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
+			}
+		else if($btn.data('mode') == 'product')	{
+			cmdObj._cmd = 'adminSupplierItemList';
+			cmdObj._tag.datapointer = 'adminSupplierProductList|'+VENDORID;
+			}
+		else {} //should never get here. unrecognized mode.
+		
+		app.model.addDispatchToQ(cmdObj,'mutable');
+		app.model.dispatchThis('mutable');
+
 		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+	else	{
+		$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.adminSupplierProdOrderListShow, unable to determine vendorID.','gMessage':true})
+		}
+	});
 
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.adminSupplierOrderListShow, unable to determine vendorID.','gMessage':true})
-						}
-					});
+					
+					}
+				else	{
+					$btn.button('disable');
+					}
 				}, //adminSupplierOrderListShow
+				
 
 			showMediaLib4OrganizationLogo : function($ele)	{
 				$ele.off('click.mediaLib').on('click.mediaLib',function(event){

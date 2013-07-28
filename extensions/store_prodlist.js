@@ -391,7 +391,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 
 					}
 				else{
-					app.u.dump(" -> Missing some required fields for setProdlistVars"); app.u.dump(obj);
+					app.u.dump(" -> Missing some required fields for setProdlistVars. requires csv and loadstemplate."); app.u.dump(obj);
 					r = false;
 					}
 				return r;
@@ -454,12 +454,12 @@ if no parentID is set, then this function gets the data into memory for later us
 
 */
 			getProductDataForList : function(plObj,$tag,Q)	{
-//				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
+				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
 
 				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
 				if(plObj && plObj.csv)	{
-//					app.u.dump(" -> csv defined. length: "+plObj.csv.length);
+					app.u.dump(" -> csv defined. length: "+plObj.csv.length);
 					var pageCSV = this.getSkusForThisPage(plObj);
 					var L = pageCSV.length;
 					var call = 'appProductGet';  //this call is used unless variations or inventory are needed. this call is 'light' and just gets basic info.
@@ -468,7 +468,7 @@ if no parentID is set, then this function gets the data into memory for later us
 						}
 
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump("rendering");
+						app.u.dump("Queueing data fetch for "+pageCSV[i]);
 						numRequests += app.ext.store_prodlist.calls[call].init({
 							"pid":pageCSV[i],
 							"withVariations":plObj.withVariations,
@@ -477,7 +477,7 @@ if no parentID is set, then this function gets the data into memory for later us
 							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {}, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
-				if(numRequests > 0)	{app.model.dispatchThis()}
+				if(numRequests > 0)	{app.model.dispatchThis(Q)}
 				return numRequests;
 				}, //getProductDataForList
 
@@ -507,10 +507,32 @@ params that are missing will be auto-generated.
 				if(($tag || (obj && obj.parentID)) && obj.csv)	{
 //					app.u.dump(" -> required parameters exist. Proceed...");
 					obj.csv = app.ext.store_prodlist.u.cleanUpProductList(obj.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
-					
-					var plObj = this.setProdlistVars(obj); //full prodlist object now.
+
 
 //					app.u.dump(" -> plObj: "); app.u.dump(plObj);
+//					app.u.dump(" -> obj: "); app.u.dump(obj);
+					if(obj.useChildAsTemplate)	{
+						app.u.dump(" -> obj.useChildAsTemplate is true.");
+						obj.loadsTemplate = "_"+$tag.attr('id')+"ListItemTemplate";
+						if(app.templates[obj.loadsTemplate])	{
+							app.u.dump(" -> template already exists");
+							//child has already been made into a template. 
+							}
+						else	{
+							app.u.dump(" -> template does not exist. create it");
+							if($tag.children().length)	{
+								app.u.dump(" -> tag has a child. create template: "+obj.loadsTemplate);
+								app.model.makeTemplate($("li:first",$tag),obj.loadsTemplate);
+								}
+							else	{
+								//The tag has no children. can't make a template. can't proceed. how do we handle this error? !!!
+								$('#globalMessaging').anymessage({"message":"In store_prodlist.u.buildProductList, the parent declared 'useChildAsTemplate', but has no children. No template could be created. The product list will not render.","gMessage":true});
+								}
+							}
+
+						}
+
+					var plObj = this.setProdlistVars(obj); //full prodlist object now.
 
 //need a jquery obj. to work with.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
@@ -612,11 +634,12 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 			showProdlistSummary : function(plObj,location){
 				
 				location = location ? location : 'header';
-				var $output = app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+//* 201330 -> $output was being generated w/ transmogrify even if hide_pagination was set.  That's extra, unneccesary work.
+				var $output = false;
 				if(plObj.hide_pagination === true)	{
-					$output.find('.mpControlsPagination').addClass('displayNone');
 					}
 				else	{
+					$output = app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
 					$output.find('.mpControlJumpToPage, .paging').click(function(){
 						app.ext.store_prodlist.u.mpJumpToPage($(this))
 						app.u.jumpToAnchor('mpControl_'+plObj.parentID+'_header');

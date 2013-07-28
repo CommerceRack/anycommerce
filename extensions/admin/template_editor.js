@@ -380,24 +380,52 @@ var admin_templateEditor = function() {
 		window.magic.prodlist = function(selector,vars)	{
 			var $target = getTarget(selector,'magic.prodlist');
 			vars = vars || {};
+			
+			if(vars.templateID)	{
+
 			var $D = app.ext.admin.i.dialogCreate({
 				'title' : 'Add/Update CSS Classes'
 				});
 			
-			$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
-			$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
-				app.model.addDispatchToQ({
-					'_cmd':'appProductSelect',
-					'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
-					'_tag':	{
-						'datapointer' : 'appProductSelect'
-						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
-				}}]});
+				$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
+				$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
+					$D.showLoading({'message':'Fetching product list'});
+					app.model.addDispatchToQ({
+						'_cmd':'appProductSelect',
+						'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
+						'_tag':	{
+							'datapointer' : 'appProductSelect',
+							'callback' : function(rd)	{
+								$D.hideLoading()
+								if(app.model.responseHasErrors(rd)){
+									$D.anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									if(app.data[rd.datapointer] && app.data[rd.datapointer]['@products'] && app.data[rd.datapointer]['@products'].length)	{
+										$D.dialog('close');
+										var $prodlistContainer = $(app.u.jqSelector('#',vars.templateID)).clone(false);
+										$prodlistContainer.attr('id','WIZ_PRODLIST_'+app.u.guidGenerator()); //change the ID so it's unique.
+										$prodlistContainer.appendTo($target);
+										$prodlistContainer.anycontent({'datapointer':rd.datapointer});
+										}
+									else	{
+										$D.anymessage({'message':'Your selectors returned zero product.'});
+										}
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}}]});
+	
+				$D.dialog('open');
 
-			$D.dialog('open');
-			}
+				}
+			else	{
+				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'vars.templateID was not passed into magic.prodlist.'});
+				}
+			} //magic.prodlist
 		
 		//selector is an element within the wizard itself.
 		window.magic.inspect = function(selector)	{
