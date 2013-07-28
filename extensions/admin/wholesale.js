@@ -569,7 +569,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
 			}
 		else if($btn.data('mode') == 'product')	{
-			cmdObj._cmd = 'adminSupplierItemList';
+			cmdObj._cmd = 'adminSupplierProductList';
 			cmdObj.FILTER = 'OPEN';
 			cmdObj._tag.datapointer = 'adminSupplierProductList|'+VENDORID;
 			}
