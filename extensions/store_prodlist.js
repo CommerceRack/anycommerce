@@ -195,7 +195,7 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
 					tmp['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
 					}
-				$(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer});
+				(tagObj.jqObj instanceof jQuery) ? tagObj.jqObj.anycontent({'datapointer':tagObj.datapointer}) : $(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer})
 //				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				},
 //error needs to clear parent or we end up with orphans (especially in UI finder).
@@ -469,12 +469,20 @@ if no parentID is set, then this function gets the data into memory for later us
 
 					for(var i = 0; i < L; i += 1)	{
 						app.u.dump("Queueing data fetch for "+pageCSV[i]);
+						var _tag = {};
+						if(plObj.isWizard)	{
+							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':magic.inspect('#'+this.getSkuSafeIdForList(plObj.parentID,pageCSV[i]))}
+							}
+						else if(plObj.parentID)	{
+							_tag = {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])}
+							}
+						else	{}
 						numRequests += app.ext.store_prodlist.calls[call].init({
 							"pid":pageCSV[i],
 							"withVariations":plObj.withVariations,
 							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
-							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {}, Q);  //tagObj not passed if parentID not set. 
+							},_tag, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
 				if(numRequests > 0)	{app.model.dispatchThis(Q)}

@@ -379,47 +379,66 @@ var admin_templateEditor = function() {
 		
 		window.magic.prodlist = function(selector,vars)	{
 			var $target = getTarget(selector,'magic.prodlist');
+			
 			vars = vars || {};
 			
 			if(vars.templateID)	{
+//				$target.append("<br><h2>JT WAS HERE</h2><br>");
+				var $prodlistTemplate = $(app.u.jqSelector('#',vars.templateID));
+				if($prodlistTemplate.length)	{
 
-			var $D = app.ext.admin.i.dialogCreate({
-				'title' : 'Add/Update CSS Classes'
-				});
-			
-				$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
-				$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
-					$D.showLoading({'message':'Fetching product list'});
-					app.model.addDispatchToQ({
-						'_cmd':'appProductSelect',
-						'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
-						'_tag':	{
-							'datapointer' : 'appProductSelect',
-							'callback' : function(rd)	{
-								$D.hideLoading()
-								if(app.model.responseHasErrors(rd)){
-									$D.anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									if(app.data[rd.datapointer] && app.data[rd.datapointer]['@products'] && app.data[rd.datapointer]['@products'].length)	{
-										$D.dialog('close');
-										var $prodlistContainer = $(app.u.jqSelector('#',vars.templateID)).clone(false);
-										$prodlistContainer.attr('id','WIZ_PRODLIST_'+app.u.guidGenerator()); //change the ID so it's unique.
-										$prodlistContainer.appendTo($target);
-										$prodlistContainer.anycontent({'datapointer':rd.datapointer});
-										}
-									else	{
-										$D.anymessage({'message':'Your selectors returned zero product.'});
-										}
-									}
-								}
+var $D = app.ext.admin.i.dialogCreate({
+	'title' : 'Add/Update CSS Classes'
+	});
+
+	$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
+	$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
+		$D.showLoading({'message':'Fetching product list'});
+// NOTE -> by here, 'target' is already not referencing the object in the iframe, so don't make changes to it till it's redeclared on the selectors callback.
+//		$target.append("<br><h2>AND HERE</h2><br>");
+		app.model.addDispatchToQ({
+			'_cmd':'appProductSelect',
+			'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
+			'_tag':	{
+				'datapointer' : 'appProductSelect',
+				'callback' : function(rd)	{
+					$D.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$D.anymessage({'message':rd});
+						}
+					else	{
+						//success content goes here.
+						$target = getTarget(selector,'magic.prodlist'); //have to redeclare target. 'focus' of target in iframe was getting lost. for expediency's sake, this was quickest solution.
+//						app.u.dump("$target.length: "+$target.length);
+//						$target.append("<br><h2>And Here Too!</h2><br>");
+						if(app.data[rd.datapointer] && app.data[rd.datapointer]['@products'] && app.data[rd.datapointer]['@products'].length)	{
+							$D.dialog('close');
+							var $prodlistContainer = $prodlistTemplate.clone();
+//							app.u.dump(" -> $prodlistContainer.length: "+$prodlistContainer.length);
+							$prodlistContainer.attr('id','WIZ_PRODLIST_'+app.u.guidGenerator()); //change the ID so it's unique.
+							$prodlistContainer.appendTo($target);
+							$prodlistContainer.anycontent({'datapointer':rd.datapointer});
+							$('li:first',$prodlistContainer).empty().remove(); //removes the product list 'template' which is part of the UL.
 							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-					}}]});
-	
-				$D.dialog('open');
+						else	{
+							$D.anymessage({'message':'Your selectors returned zero product.'});
+							}
+						}
+					}
+				}
+			},'mutable');
+		app.model.dispatchThis('mutable');
+		}}]});
+
+	$D.dialog('open');
+
+
+
+
+					}
+				else	{
+					$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'vars.templateID was passed into magic.prodlist but element does not exist on the DOM.'});
+					}
 
 				}
 			else	{
