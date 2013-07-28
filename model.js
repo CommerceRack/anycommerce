@@ -144,7 +144,9 @@ function zoovyModel() {
 //** 201318 -> QID default needs to be before the string check (because a blank value typeof != string.
 			QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			var r; // return value.
-			if(dispatch['_cmd'] == 'undefined')	{
+// ** 201330 -> if _cmd wasn't set, this would cause a js error.
+//			if(dispatch['_cmd'] == 'undefined')	{
+			if(dispatch && !dispatch['_cmd'])	{
 				r = false;
 	//			zSTdErr(' -> _cmd not set. return false');
 				}

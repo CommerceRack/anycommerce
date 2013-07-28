@@ -187,7 +187,7 @@
 </tr>
 
 <tr id='supplierOrderListItemTemplate'>
-	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
+	<td><input type='checkbox' data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:name; valuePretext:orderid_;' /></td>
 	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
 	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
 	<td data-bind="var:order(STATUS); format:text;"></td>
@@ -195,6 +195,7 @@
 	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
 	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
 </tr>
+
 <tr id='supplierItemListItemTemplate'>
 	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
 	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
@@ -214,18 +215,33 @@
 
 <div id='supplierOrderListTemplate'>
 
-<h1>Recent Orders</h1>
 
-<div class='clearfix ui-state-focus ui-corner-top'>
-	<select name="update">
+<form action='#' onsubmit="return false">
+<div class='clearfix ui-widget-header ui-corner-top smallPadding'>
+	<h1>Recent Orders</h1>
+
+	<input type='hidden' name='_cmd' value='adminSupplierAction' />
+	<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierAction' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='The orders have been successfully updated.' />
+	<!-- vendorid added w/ JS -->
+
+
+	<div class='floatRight'>
+	<select name="action" required='required'>
 		<option value="">action for selected orders</option>
-		<option value="CLOSE">Close</option>
-		<option value="ARCHIVE">Archive</option>
-		<option value="RESET">Reset to Closed / Resend</option>
-		<option value="APPROVE">Approve Hold Orders</option>
+		<option value="ORDER:APPROVE">Approve hold orders</option>
+		<option value="ORDER:ARCHIVE">Archive</option>
+		<option value="ORDER:CLOSE">Close</option>
+		<option value="ORDER:CONFIRM">Confirm</option>
+		<option value="ORDER:RESET">Reset to closed / resend</option>
+		<option value="ORDER:REDISPATCH">Re-dispatch</option>
 	</select>
+	<button data-app-event="admin|processForm" class='smallButton'>Perform Action</button>
+	</div>
+
 </div>
-<table class='gridTable fullWidth applyAnytable'>
+<table class='gridTable fullWidth applyAnytable' data-app-role='supplierOrderListTable'>
 <thead>
 <tr>
 	<th data-anytable-nosort='true'></th>
@@ -240,26 +256,31 @@
 <tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListItemTemplate;">
 </tbody>
 </table>
-
+</form>
 </div>
 
 
 
 <div id='supplierItemListTemplate'>
-
+<form action='#' onsubmit="return false">
+<div class='ui-state-header smallPadding'>
+	<h2>Supplier Product List</h2>
+	<button class='floatRight'>De-associate product</button>
+</div>
+</form>
 <table class='gridTable fullWidth'>
 <thead>
 <tr>
 	<th data-anytable-nosort='true'></th>
-	<th class='alignLeft'>Order ID</th>
-	<th class='alignLeft'>Supplier Order ID</th>
-	<th class='alignLeft'>Status</th>
-	<th class='alignLeft'>Created</th>
-	<th class='alignLeft'>Dispatched</th>
-	<th class='alignLeft'>Confirmed</th>
+	<th class='alignLeft'>SKU</th>
+	<th class='alignLeft'>Inventory</th>
+	<th class='alignLeft'>Name</th>
+	<th class='alignLeft'>Shipping</th>
+	<th class='alignLeft'>Cost</th>
+	<th class='alignLeft'>Price</th>
 </tr>
 </thead>
-<tbody data-bind="var:orders(@PRODUCT); format:processList; loadsTemplate:supplierItemListItemTemplate;">
+<tbody data-bind="var:orders(@ITEMS); format:processList; loadsTemplate:supplierItemListItemTemplate;">
 </tbody>
 </table>
 
@@ -320,7 +341,7 @@
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='The vendor has been successfully updated.' />
 <input type="hidden" name="VENDOR" data-bind="var:supplier(CODE); format:popVal;" />
-<input type='hidden' name='_tag/callback' value='showMessaging' />
+
 
 
 

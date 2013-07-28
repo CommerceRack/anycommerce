@@ -317,7 +317,54 @@ app.model.dispatchThis('mutable');
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
+			
+			'adminSupplierAction' : function(sfo)	{
+				sfo = sfo || {};
+				var newSfo = {
+					'_cmd':'adminSupplierAction',
+					'VENDORID' : sfo.VENDORID,
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}
+				if(sfo.action.indexOf('ORDER:') == 0)	{
+					for(index in sfo)	{
+						if(index.indexOf('orderid_') == 0)	{
+							newSfo['@updates'].push(sfo.action+"?orderid="+index.substring(8));
+							}
+						}
+					}
+				else	{
+					newSfo = false;
+					die()
+					//unrecognized action. !!!
+					}
+				return newSfo;
+				},
 
+/*
+adminSupplierAction
+INVENTORY:UPDATE ->
+PRODUCT:DELINK
+
+ORDER:APPROVE
+ORDER:ARCHIVE
+ORDER:CLOSE
+ORDER:CONFIRM
+ORDER:RECEIVE
+ORDER:REDISPATCH
+
+*/
+
+	
+/*
+macros:
+ORDERSET -> 
+SHIPSET ->
+INVENTORYSET ->
+TRACKINGSET ->
+
+*/
+			
 			
 			adminSupplierUpdate : function($form)	{
 				if($form)	{
@@ -499,28 +546,31 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 	if(VENDORID)	{
 
 		var $D = app.ext.admin.i.dialogCreate({
-			'title': $btn.data('mode')+" list for vendor "+VENDORID
+			'templateID': ($btn.data('mode') == 'order') ? 'supplierOrderListTemplate' : 'supplierItemListTemplate',
+			'title': $btn.data('mode')+" list for vendor "+VENDORID,
+			'showLoading' : false
 			});
 		$D.dialog('option','width','70%');
 		$D.dialog('option','height',($(window).height() / 2));
+		$('form',$D).showLoading({'message':'Updating Orders'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
 		$D.dialog('open');
 		
 		var cmdObj = {
 			'VENDORID':VENDORID,
-			'FILTER':'RECENT',
 			'_tag':	{
 				'callback': 'anycontent',
-				'templateID':'supplierOrderListTemplate',
-				'jqObj' : $D
+				'jqObj' : $('form',$D)
 				}
 			}
 		
 		if($btn.data('mode') == 'order')	{
 			cmdObj._cmd = 'adminSupplierOrderList';
+			cmdObj.FILTER = 'RECENT';
 			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
 			}
 		else if($btn.data('mode') == 'product')	{
 			cmdObj._cmd = 'adminSupplierItemList';
+			cmdObj.FILTER = 'OPEN';
 			cmdObj._tag.datapointer = 'adminSupplierProductList|'+VENDORID;
 			}
 		else {} //should never get here. unrecognized mode.
