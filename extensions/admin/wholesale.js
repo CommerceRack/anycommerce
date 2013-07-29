@@ -518,6 +518,33 @@ TRACKINGSET ->
 					})
 				}, //showSupplierCreate
 
+			adminSupplierAction : function($btn)	{
+				$btn.button();
+				if($btn.data('action'))	{
+					
+					if($btn.data('action') == 'INVENTORY:UPDATE')	{}
+					else	{
+						$btn.button('disable').attr('title','Invalid action specified on button.');
+						}
+					
+					$btn.off('click.adminSupplierAction').on('click.adminSupplierAction',function(event){
+						event.preventDefault();
+						if($btn.data('action') == 'INVENTORY:UPDATE')	{
+							if(app.u.validateForm($btn.closest('fieldset')))	{
+								app.model.addDispatchToQ({'_cmd':'adminSupplierAction','@updates':["INVENTORY:UPDATE"],'VENDORID':$btn.closest("[data-code]").data('code')},'mutable');
+								}
+							else	{}
+							}
+						else	{} //shouldn't get here. actions have already been validated.
+						});
+					
+					
+					}
+				else	{
+					$btn.button('disable').attr('title','No action specified on button.');
+					}
+				},
+
 //applied to 'edit user' button and the link in the list (name). opens the editor.
 			showSupplierEditor : function($ele)	{
 //event used both on the supplier 'name' and the edit button.

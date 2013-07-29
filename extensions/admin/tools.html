@@ -773,10 +773,11 @@ JSON editor, which didn't work:
 				<label>
 					<span>Type</span>
 					<select name='type' data-bind='var: flexedit(type); format:popVal;'>
+						<option value='checkbox'>Checkbox</option>
+						<option value='image'>Image</option>
+						<option value='number'>Number</option>
 						<option value='textbox'>Text (small block)</option>
 						<option value='textarea'>Text (big block)</option>
-						<option value='checkbox'>Checkbox</option>
-						<option value='number'>Number</option>
 					</select>
 				</label>
 				<button data-app-event="admin_config|dataTableAddExec">Add Attribute</button>

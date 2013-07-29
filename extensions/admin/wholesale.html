@@ -457,7 +457,7 @@
 
 
 
-	<div class='twoColumn column2' data-app-column='2'>
+	<div class='twoColumn column2' data-app-column='2' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
 			<h2>Setup: Inventory Download</h2>
@@ -491,7 +491,7 @@
 						<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
 					</label>
 					
-					<button>Start Import</button>
+					<button data-app-event='admin_wholesale|adminSupplierAction' data-action="INVENTORY:UPDATE">Start Import</button>
 				
 				</div>
 			</fieldset>
