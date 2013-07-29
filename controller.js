@@ -1548,6 +1548,20 @@ AUTHENTICATION/USER
 			return newArray;
 			},
 
+
+		getWhitelistedObject : function(obj,whitelist)	{
+			var r = {};
+			for(index in obj)	{
+				if(whitelist.indexOf(index) >= 0)	{
+					r[index] = obj[index];
+					}
+				else	{} //not in whitelist
+				}
+			return r;
+			},
+
+
+
 //used in checkout to populate username: so either login or bill/email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
 //later, this could be expanded to include a facebook id.

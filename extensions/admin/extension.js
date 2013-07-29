@@ -3714,6 +3714,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				}, //applyEditTrackingToInputs
 
 
+// ### time permittting, replace use of function below with getWhitlestedObject
 //used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
 			getSanitizedKVPFromObject : function(obj)	{
 				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.

@@ -596,6 +596,31 @@ var admin_tools = function() {
 					});
 				},
 			
+			flexeditSaveExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.flexeditSaveExec').on('click.flexeditSaveExec',function(event){
+					event.preventDefault();
+					var json = new Array();
+					$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
+						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type']));
+						})
+					
+					
+
+					app.model.addDispatchToQ({
+						'_cmd':'adminConfigMacro',
+						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+JSON.stringify(json)],
+						'_tag':	{
+							'callback' : 'showMessaging',
+							'message':'Your changes have been saved'
+							}
+						},'immutable');
+					app.model.dispatchThis('immutable');
+
+					});
+				//FLEXEDIT-SAVE
+				},
+			
 			adminPrivateFileDownloadExec : function($btn)	{
 				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
 				$btn.off('click.adminPrivateFileDownloadExec').on('click.adminPrivateFileDownloadExec',function(event){
