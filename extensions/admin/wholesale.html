@@ -197,11 +197,11 @@
 </tr>
 
 <tr id='supplierItemListItemTemplate'>
-	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
-	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
-	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
-	<td data-bind="var:order(STATUS); format:text;"></td>
-	<td data-bind="var:order(CREATED_TS); format:text;"></td>
+	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name; valuePretext:pid_;' /></td>
+	<td data-bind="var:order(PID); format:text;"></td>
+	<td data-bind="var:order(SKU); format:text;"></td>
+	<td data-bind="var:order(PRODUCTID); format:text;"></td>
+	<td data-bind="var:order(PRODUCT_ID); format:text;"></td>
 	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
 	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
 </tr>
