@@ -537,7 +537,9 @@ TRACKINGSET ->
 					});
 				}, //showSupplierEditor
 
-
+//this is used in the list and also in the detail.
+//so the vendorid is ascertained using 'code' because that's what comes in the list response.
+// and it uses closest data- instead of closest tr because in detail mode, the buttons aren't in a tr.
 			adminSupplierProdOrderListShow : function($btn)	{
 				$btn.button();
 
@@ -965,6 +967,14 @@ and all .someClass are hidden (value of data-panel-selector)
 							}
 						}
 					});				
+//after adding the listeners, need to trigger some clicks.
+
+//trigger the hide/show panel on select options.
+				$("select[data-panel-selector]",$container).each(function(){
+					if($('option:selected',$(this)).data('show-panel'))	{
+						$('option:selected',$(this)).trigger('click');
+						}
+					});
 
 				}
 
