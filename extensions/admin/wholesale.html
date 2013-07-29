@@ -307,15 +307,6 @@
 	<input placeholder='supplier id' type="text" name="VENDORID" value="" maxlength="6" data-min-length='6' size="6" required='required' data-input-format="alphanumeric,uppercase" />
 	<span class='hint'>A unique 6 character alphanumeric code used for this supplier.</span>
 	</div>
-	
-	<div class='label'>some inputs for contact info</div>
-
-	<div class='label'><input type="text" placeholder='supplier name' maxlength="60" value="" name="NAME" required='required' /></div>
-	<div class='label'><input type="text" placeholder='account' maxlength="60" value="" name="ACCOUNT" required='required' /></div>
-	<div class='label'><input type="tel" placeholder='phone' maxlength="12" value="" name="PHONE"  /></div>
-	<div class='label'><input type="email" placeholder='email' maxlength="65" value="" name="EMAIL"  required='required' /></div>
-	<div class='label'><input type="text" placeholder='website' maxlength="65" value="" name="WEBSITE"  /></div>
-	
 	<div class='alignCenter'><button data-app-event='admin|processForm'>Add Supplier</button></div>
 </fieldset>
 </form>
@@ -340,7 +331,7 @@
 <input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierUpdate' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='The vendor has been successfully updated.' />
-<input type="hidden" name="VENDOR" data-bind="var:supplier(CODE); format:popVal;" />
+<input type="hidden" name="VENDORID" data-bind="var:supplier(CODE); format:popVal;" />
 
 
 
@@ -365,7 +356,7 @@
 			<h2>General Settings</h2>
 			<div class='clearfix'>
 			
-			<fieldset>
+			<fieldset data-app-role='COMPANYSET'>
 		
 				<label>
 					<span>Markup</span>
@@ -373,33 +364,33 @@
 				</label>
 				
 				<label>
-					<span>Name:</span>
+					<span>Name</span>
 					<input name='NAME' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(NAME); format:popVal;' />
 				</label>
 				
 				<label>
-					<span>Phone:</span>
+					<span>Phone</span>
 					<input name='PHONE' value='' size='12' maxlength='12' type='text' data-bind='var: supplier(PHONE); format:popVal;' />
 				</label>
 				
 				<label>
-					<span>Email:</span>
-					<input name='EMAIL' value='j' size='30' maxlength='40' type='text' data-bind='var: supplier(EMAIL); format:popVal;' />
+					<span>Email</span>
+					<input name='EMAIL' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(EMAIL); format:popVal;' />
 				</label>
 				
 				<label>
-					<span>Account:</span>
+					<span>Account</span>
 					<input name='ACCOUNT' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(ACCOUNT); format:popVal;' />
 				</label>
 				
 				<label>
-					<span>Website:</span>
+					<span>Website</span>
 					<input name='WEBSITE' value='' size='30' maxlength='40' type='url' data-bind='var: supplier(WEBSITE); format:popVal;' />
 				</label>
 				
 				<label>
 					<input name='ITEM_NOTES' type='checkbox' class='applyAnycb' data-bind='var: supplier(ITEM_NOTES); format:popVal;' />
-					<span>Item notes:</span>
+					<span>Item notes</span>
 				</label>
 				<div class='hint'>Choose to display supplier code / tracking info on invoice (under each Item)</div>
 				
@@ -425,6 +416,7 @@
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='productUpdates'>
 			<h2>Setup: Product Updates</h2>
 			<div>
+			<b class='red'>NO MACRO FOR THIS</b>
 			<fieldset>
 				<label>
 					<span>Connector:</span>
@@ -442,7 +434,7 @@
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='shippingCalculations'>
 			<h2>Setup: Shipping Calculations</h2>
 			<div>
-			<fieldset>
+			<fieldset data-app-role='SHIPSET'>
 
 				<label>
 					<span>Connector:</span>
@@ -470,7 +462,7 @@
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
 			<h2>Setup: Inventory Download</h2>
 			<div>
-			<fieldset>
+			<fieldset data-app-role='INVENTORYSET'>
 				<label>
 					<span>Connector:</span>
 					<select name='INVENTORY_CONNECTOR' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;" data-panel-selector=".supplierInventoryConnector" data-trigger='click'>
@@ -483,12 +475,12 @@
 
 					<label>
 						<span>FTP/HTTP URL</span>
-						<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" />
+						<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
 					</label>
 
 					<label>
 						<span>Import frequency</span>
-						<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;">
+						<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;" required='required'  data-validation-rules='skipIfHidden'>
 							<option value='0'>Manual</option>
 							<option value='1'>Daily</option>
 						</select>
@@ -496,7 +488,7 @@
 					
 					<label>
 						<span>Inventory header</span>
-						<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"></textarea>
+						<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
 					</label>
 					
 					<button>Start Import</button>
@@ -511,7 +503,7 @@
 			<h2>Setup: Automatic Ordering</h2>
 
 			<div>
-			<fieldset>
+			<fieldset data-app-role='ORDERSET'>
 				<label><span>Order formatting:</span>
 				<select name='FORMAT' data-bind="var:vendor(FORMAT); format:popVal;">
 					<option value='NONE'>None</option>
@@ -533,34 +525,30 @@
 				<label>
 					<span>Connector: </span>
 					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-panel-selector=".supplierAutomaticOrderingConnector">
-						<option value="NONE" data-show-panel='supplierAutomaticOrderingNONE'>None</option>
+						<option value="NONE">None</option>
 						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
 						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
 						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>API</option>
 						<option value="AMZSQS" data-show-panel='supplierAutomaticOrderingAMZSQS'>Amazon SQS</option>
 					</select>
 				</label>
-			</fieldset>
-		
-		<section data-app-role='connectorFieldsetContainer'>
-		
-			<fieldset data-panel-id='supplierAutomaticOrderingNONE' class='displayNone supplierAutomaticOrderingConnector'><!-- no extra fields for none at this time --></fieldset>
+
 			
 			
-			<fieldset data-panel-id='supplierAutomaticOrderingEMAIL' class='displayNone supplierAutomaticOrderingConnector'>
+			<div data-panel-id='supplierAutomaticOrderingEMAIL' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>Email from:</span>
-					<input type='email' name='email_src' data-bind="var: supplier(%ORDER.email_src); format:popVal;" />
+					<input type='email' name='email_src'  required='required'  data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.email_src); format:popVal;" />
 				</label>
 		
 				<label>
 					<span>Email to:</span>
-					<input type='email' name='email' data-bind="var: supplier(%ORDER.email); format:popVal;" />
+					<input type='email' name='email'  required='required'  data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.email); format:popVal;" />
 				</label>
 		
 				<label>
 					<span>Email BCC:</span>
-					<input type='email' name='bcc' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
+					<input type='email' name='bcc' data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
 				</label>
 		
 				<label>
@@ -574,46 +562,49 @@
 		
 				<label>
 					<span>Email subject:</span>
-					<input type='text' name='subject' data-bind="var: supplier(%ORDER.email_subject); format:popVal;" />
+					<input type='text' name='subject' data-bind="var: supplier(%ORDER.email_subject); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				
 				<label>
 					<span>Email body:</span>
 					<textarea name='body' data-bind="var: supplier(%ORDER.email_body); format:popVal;"></textarea>
 				</label>
-			</fieldset>
+			</div>
 			
-			<fieldset data-panel-id='supplierAutomaticOrderingFTP' class='displayNone supplierAutomaticOrderingConnector'>
+			<div data-panel-id='supplierAutomaticOrderingFTP' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>FTP URL:</span>
-					<input type='url' name='ftp_url' data-bind="var: supplier(%ORDER.ftp_url); format:popVal;" />
+					<input type='url' name='ftp_url' data-bind="var: supplier(%ORDER.ftp_url); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
-			</fieldset>
+			</div>
 			
-			<fieldset data-panel-id='supplierAutomaticOrderingAPI' class='displayNone supplierAutomaticOrderingConnector'>
+			<div data-panel-id='supplierAutomaticOrderingAPI' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>API URL:</span>
-					<input type='url' name='api_url' data-bind="var: supplier(%ORDER.api_url); format:popVal;" />
+					<input type='url' name='api_url' data-bind="var: supplier(%ORDER.api_url); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
-			</fieldset>
+			</div>
 			
-			<fieldset data-panel-id='supplierAutomaticOrderingAMZSQS' class='displayNone supplierAutomaticOrderingConnector'>
+			<div data-panel-id='supplierAutomaticOrderingAMZSQS' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>Amazon AWS access key</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;" />
+					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				<label title="Double Secret Probation Key">
 					<span>Amazon AWS secret key</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;" />
+					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				<label>
 					<span>Amazon SQS channel</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;" />
+					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
+			</div>
+
+
+
+
 			</fieldset>
-		
-		
-		</section>
+
 		
 			</div>
 		</div>
@@ -623,7 +614,7 @@
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='trackingConfirmation'>
 			<h2>Setup: Tracking/Confirmation</h2>
 			<div>
-			<fieldset>
+			<fieldset data-app-role='TRACKINGSET'>
 				<select name="TRACK_CONNECTOR" data-bind="var:vendor(TRACK_CONNECTOR); format:popVal;">
 					<option value="NONE">NONE</option>
 					<option value="API">API</option>

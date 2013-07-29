@@ -192,7 +192,7 @@ app.model.addDispatchToQ({
 	'_cmd':'adminSupplierDetail',
 	'VENDORID' : VENDORID,
 	'_tag':	{
-		'datapointer' : '',
+		'datapointer' : 'adminSupplierDetail|'+VENDORID,
 		'callback':function(rd)	{
 			$editorContainer.hideLoading();
 			if(app.model.responseHasErrors(rd)){
@@ -358,6 +358,7 @@ ORDER:REDISPATCH
 	
 /*
 macros:
+COMPANYSET
 ORDERSET -> 
 SHIPSET ->
 INVENTORYSET ->
@@ -366,23 +367,26 @@ TRACKINGSET ->
 */
 			
 			
-			adminSupplierUpdate : function($form)	{
-				if($form)	{
-					var formObj = $form.serializeJSON(),
-					vendorID = $form.closest("[data-vendorid]").data('vendorid');
-					
-					if(vendorID)	{
-						macro = "COMPANYSET?"+decodeURIComponent($.param(formObj));
-//						app.ext.admin.calls.adminSupplierUpdate.init(vendorID, [macro],{},'immutable');
-						app.u.dump(macro);
-						}
-					else	{
-						$form.anymessage({'message':'In admin_wholesale.e.adminSupplierUpdateExec, unable to ascertain vendorID.','gMessage':true});
+			adminSupplierUpdate : function(sfo,$form)	{
+				sfo = sfo || {};
+				var newSfo = {
+					'_cmd':'adminSupplierUpdate',
+					'VENDORID' : sfo.VENDORID,
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}
+				
+				var
+					cmds = new Array("COMPANYSET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"),
+					L = cmds.length;
+				
+				for(var i = 0; i < L; i += 1)	{
+					var $fieldset = $("fieldset[data-app-role='"+cmds[i]+"']",$form);
+					if($('.edited',$fieldset).length)	{
+						newSfo['@updates'].push(cmds[i]+"?"+encodeURIComponent($.param($fieldset.serializeJSON({'cb':true}))));
 						}
 					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_wholesale.macroBuilders.general, $form not set or not a jquery object.","gMessage":true})
-					}
+				return newSfo
 				}
 			}, //macroBuilders
 
@@ -404,7 +408,7 @@ TRACKINGSET ->
 //These fields are used for processForm on save.
 					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
-				},
+				}, //warehouseCreateShow
 
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -424,7 +428,7 @@ TRACKINGSET ->
 //					$('.buttonset',$panel).prepend("<button data-app-event='admin_wholesale|warehouseZoneCreateShow'>Add Zone<\/button>");
 					app.u.handleAppEvents($panel);
 					});
-				},
+				}, //warehouseDetailDMIPanel
 
 			warehouseRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
@@ -449,7 +453,7 @@ TRACKINGSET ->
 					
 
 					});
-				}, //execTicketClose
+				}, //warehouseRemoveConfirm
 
 			warehouseZoneCreateShow : function($btn,vars)	{
 				$btn.button();
@@ -467,7 +471,7 @@ TRACKINGSET ->
 //These fields are used for processForm on save.
 					$('form',$D).first().append("<input type='hidden' name='CODE' value='"+CODE+"' \/><input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE-LOCATIONS'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The zone has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
-				},
+				}, //warehouseZoneCreateShow
 
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
@@ -835,7 +839,8 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 					app.ext.admin_wholesale.a.showOrganizationEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'orgID':orgID});
 					app.u.dump('showOrganizationEditor has executed.');
 					});
-				},
+				}, //showOrganizationUpdate
+
 //triggered within the organization create modal when save is pushed.
 			execOrganizationCreate : function($btn){
 				$btn.button();
@@ -871,7 +876,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 						}
 					else	{} //form validation handles error display.
 					});
-				},
+				}, //execOrganizationCreate
 
 //triggered in the editor to show the organiation create form/modal.
 			showOrganizationCreate : function($btn)	{
@@ -906,7 +911,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 					app.u.handleAppEvents($D);
 					
 					});
-				}
+				} //showOrganizationCreate
 			}, //e [app Events]
 
 
@@ -960,7 +965,7 @@ and all .someClass are hidden (value of data-panel-selector)
 							}
 						}
 					});				
-				
+
 				}
 
 			}
