@@ -29,7 +29,29 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication'] //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		flexTypes : {
+			'textbox' : { 'type' : 'text'},
+			'text' : { 'type' : 'text'},
+			'textarea' : { 'type' : 'textarea'},
+			'textlist' : { 'type' : 'textarea'},
+			'image' : { 'type' : 'image'},
+			'finder' : { 'type' : 'button'},
+			'keyword' : { 'type' : 'textarea'},
+			'currency' : { 'type' : 'number'},
+			'number' : { 'type' : 'number'},
+			'weight' : { 'type' : 'text'},
+			'checkbox' : { 'type' : 'cb'},
+			'digest' : { 'type' : 'hidden'},
+			'special' : { 'type' : 'hidden'},
+			'boolean' : { 'type' : 'cb'},
+			'chooser/counter' : { 'type' : 'text'},
+			'ebay/storecat' :  {'type':'ebaycategorychooser'},
+			'ebay/attributes' : { 'type' : 'text'},
+			'overstock/category' : { 'type' : 'text'},
+			'select' : {'type':'select'},
+			'selectreset' : { 'type' : 'select'}
+			}
 		},
 
 
@@ -131,6 +153,49 @@ var admin_prodEdit = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	a : {
+
+
+		showProductManager : function($target)	{
+			
+
+
+			$target.empty();
+			var $DMITable = app.ext.admin.i.DMICreate($target,{
+				'header' : 'Product Manager',
+				'className' : 'productManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+				'thead' : ['','SKU','Name','Price','Options','Children',''],
+				'tbodyDatabind' : "var: results(hits.hits); format:processList; loadsTemplate:productListTemplateTableResults;",
+				'buttons' : ["<button class='floatRight' data-clickevent='storeVariationsShow'>Store Variations</button>","<button class='floatRight' data-clickevent='adminProductCreateShow'>New Product</button>"],
+				'controls' : "<form class='floatRight'>search<input type='search' name='keywords' \/><button data-clickevent='storeVariationsShow'>go<\/button><\/form><button data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Filter</button><button data-clickevent='storeVariationsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Management Categories<\/button>",
+				'showLoading' : false
+				});
+			var $DMI = $DMITable.closest("[data-app-role='dualModeContainer']");
+			$("[data-app-role='dualModeListTable']",$DMI).hide();
+			$("[data-app-role='dualModeContent']",$DMI).append($("<div \/>").addClass('productContentContainer').anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false}));
+
+			$('button',$DMI).each(function(){
+				var $button = $(this);
+				$button.button();
+				if($button.data('app-class'))	{
+					$button.button({text: ($button.data('app-text')) ? true : false,icons: {primary: $button.data('app-class')}})
+					}
+				});
+
+			$DMI.on('click',function(e){
+				var
+					node = e.target.nodeName.toLowerCase();
+					$target = $(e.target);
+//chrome registers jqueryUI button event on span, not button.
+				if(node == 'span' && $target.parent().hasClass('ui-button'))	{$target = $target.parent()} 
+				
+				if($target.data('clickevent'))	{
+					alert($target.data('clickevent'));
+					}
+				
+				}) //end dmi.on.click
+
+			
+			},
 
 		showCreateProductDialog : function(){
 			var $modal = $('#createProductDialog');
@@ -244,6 +309,21 @@ var admin_prodEdit = function() {
 			app.model.destroy('appProductGet|'+pid); //make sure product data is up to date. once the global timestamp is employed, this won't be necessary. ###
 			numRequests += app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{},'mutable'); //get into memory for app-based panels.
 			numRequests += app.ext.admin.calls.adminUIProductPanelList.init(pid,{},'mutable');
+			numRequests += app.ext.admin.calls.appResource.init('product_attribs_popular.json',{},'mutable');
+			numRequests += app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
+//flexedit data is necessary for that panel.
+			if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
+			else	{
+				numRequests += 1;
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigDetail',
+					'flexedit' : 1,
+					'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
+					},'mutable');
+				}
+			
+			
+
 			if(numRequests)	{
 				app.calls.ping.init(callback);
 				app.model.dispatchThis();
@@ -394,7 +474,8 @@ app.model.dispatchThis('mutable');
 			else	{
 				$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.getProductVariationManager, either $target not specified or PID ["+PID+"] was left blank.","gMessage":true});
 				}
-			}
+			} //showProductVariationManager
+
 		},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -440,6 +521,155 @@ app.model.dispatchThis('mutable');
 		u : {
 
 
+//type is an input type.  number, select, textarea or something specific to us, like finder, media, etc.
+//data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
+//prodData is an optional object. should be appProductGet and include %attribs, inventory, etc.
+		flexBuildInput : function(type,data,prodData)	{
+			app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
+		
+		//	app.u.dump('TYPE: '+type); app.u.dump(data);
+			var $r = $("<label \/>").data(data);
+			prodData = prodData || {'%attribs':{}};
+			$r.append($("<span \/>").attr('title',data.id).text(data.title || data.id));
+			if(data.hint)	{$r.find('span').append($("<span class='toolTip' title='"+data.hint+"'>?<\/span>"))}
+			
+			if(data.sku)	{
+				$r.append($("<div \/>").anymessage({'message':'No editor for SKU level fields yet.'}));
+				}
+			
+			else if(type == 'textarea')	{
+				var $textarea = $("<textarea \/>",{'name':data.id,'rows':data.rows || 5, 'cols':data.cols || 40});
+				
+				$textarea.val(prodData['%attribs'][data.id] || "");
+				if(data.type == 'textlist')	{
+					if(data.startsize)	{
+						$textarea.attr('rows',data.startsize);
+						$textarea.on('focus',function(){
+							$textarea.attr('rows',$data.max || 10);
+							}).on('blur',function(){
+								$textarea.attr('rows',data.rows || 5)
+								});
+						$('.toolTip',$r).append(" Only 1 entry per line.");
+						}
+					}
+				
+				$textarea.appendTo($r);
+				}
+			else if(type == 'select')	{
+				var $select = $("<select \/>",{'name':data.id});
+				var L = data.options.length;
+				for(var i = 0; i < L; i += 1)	{
+					$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
+					}
+				$select.val(prodData['%attribs'][data.id] || "");
+				$select.appendTo($r);
+				}
+			else if(type == 'button')	{
+				var $btn = $("<button \/>").text(data.title || data.id);
+				$btn.button();
+				if(data.type == 'finder')	{
+					if(prodData.pid)	{
+						$btn.button().on('click',function(event){
+							event.preventDefault();
+							app.ext.admin.a.showFinderInModal('PRODUCT',prodData.pid,data.id);
+							})
+						}
+					else	{
+						$btn.button('disable');
+						}
+					}
+				else	{
+					$btn.button('disable');
+					}
+				$btn.appendTo($r);
+				}
+			else if(type == 'image')	{
+				var $input = $("<input \/>",{'type':'hidden','name':data.id}).val(prodData['%attribs'][data.id]);
+				var $image = $("<img \/>",{'src':prodData['%attribs'][data.id] || 'i/imagenotfound','alt':''}).attr({'width':'75','height':'75'});
+
+				//return false; 				
+				$input.appendTo($r);
+				$image.appendTo($r);
+				
+				$("<button \/>").on('click',function(event){
+					event.preventDefault();
+					mediaLibrary($image,$input,'');
+					}).text('Select').appendTo($r);
+				
+				$("<button \/>").on('click',function(event){
+					event.preventDefault();
+					$image.attr('src','/images/blank.gif');
+					$input.val('');
+					}).text('Clear').appendTo($r);
+				}
+			else	{
+				var $input = $("<input \/>",{'type':type,'name':data.id});
+				if(type == 'checkbox' && prodData['%attribs'][data.id])	{
+					$input.prop('checked','checked')
+					} // !!! hhhmmmm may need to tune this.
+				else {
+					$input.val(prodData['%attribs'][data.id] || "");
+					$input.attr('size',data.size || 20); //do this early, then change for specific types, if necessary.
+					if(data.type == 'currency')	{
+						$input.attr({'step':'.01','min':'0.00','size':6})
+						}
+					
+					if(type == 'number' || data.type == 'weight')	{
+						$input.attr('size', data.size || 6); //default to smaller input for numbers, if size not set.
+						}
+					
+					if(data.maxlength)	{
+						$input.attr('maxlength',data.maxlength);
+						}
+					
+					}
+				$input.appendTo($r);
+				}
+			
+			return $r;
+
+
+			},
+
+		flexJSON2JqObj : function(thisFlex,prodData)	{
+			var r = $("<div \/>");; //what is returned. Either a chunk of html or an error message.
+			if(thisFlex && typeof thisFlex === 'object')	{
+				
+				var	L = thisFlex.length;
+				prodData = prodData || {};
+					
+				
+				for(var i = 0; i < L; i += 1)	{
+					if(thisFlex[i].id)	{
+						app.u.dump("ID: "+thisFlex[i].id);
+						var gfo = app.data['appResource|product_attribs_all.json'].contents[thisFlex[i].id] || {}; //Global Flex Object. may be empty for custom attributes.
+						var type = thisFlex[i].type || gfo.type;
+						if(type && app.ext.admin_prodEdit.vars.flexTypes[type] && app.ext.admin_prodEdit.vars.flexTypes[type].type)	{
+							r.append(app.ext.admin_prodEdit.u.flexBuildInput(app.ext.admin_prodEdit.vars.flexTypes[type].type,$.extend(true,{},gfo,thisFlex[i]),prodData)) //thisFlex merged into gfo with precedence set of thisFlex attributes. 
+							}
+						else	{
+							app.u.dump(' -> no valid editor.');
+							r.append($("<div \/>").anymessage({
+								'message':'Could not find valid editor for this input.  flex input type = '+type+' and typeof flexTypes[type] = '+typeof app.ext.admin_prodEdit.vars[type]}));					
+							}
+						}
+					else	{
+						app.u.dump(' -> no ID set');
+						r.append($("<div \/>").anymessage({'message':'No ID set for this input.'}));
+						}
+					$('.toolTip',r).tooltip();
+					}
+				}
+			else	{
+				r.anymessage({message:'In flex2Form, thisFlex was either empty or not an object.','gMessage':true});
+				}
+			return r;
+			},
+
+
+
+
+
 		handleProductListTab : function(process)	{
 			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
 			var
@@ -476,8 +706,16 @@ app.model.dispatchThis('mutable');
 		getPanelContents : function(pid,panelid)	{
 			var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
 			if(pid && panelid)	{
-				r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
-				app.ext.admin.u.handleAppEvents(r);
+				if(panelid == 'flexedit')	{
+					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
+					$('fieldset:first',r).addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['appProductGet|'+pid]));
+					
+					app.ext.admin.u.handleAppEvents(r);
+					}
+				else	{
+					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
+					app.ext.admin.u.handleAppEvents(r);
+					}
 				}
 			else	{
 				r = false;
@@ -640,6 +878,7 @@ app.model.dispatchThis('mutable');
 				$('.imgOnly',$target).removeClass('displayNone');
 				}
 			} //handleOptionEditorInputs
+
 		}, //u
 
 //e is for 'events'. This are used in handleAppEvents.
@@ -754,7 +993,7 @@ app.model.dispatchThis('mutable');
 					});
 				}, //webPageEditor
 
-			"serializeAndAdminProductUpdate" : function($t)	{
+			serializeAndAdminProductUpdate : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
 				$t.button();
 
@@ -764,21 +1003,8 @@ app.model.dispatchThis('mutable');
 					pid = $btn.closest("[data-pid]").data('pid'),
 					$panel = $btn.closest("[data-panelid]")
 					panelid = $panel.data('panelid'),
-					formJSON = $btn.parents('form').serializeJSON();
-//regularize checkbox values (1/0 instead of on/off). also set values for items NOT checked so that if unchecked, it gets updated.
-					$(":checkbox",$panel).each(function(){
-						var $input = $(this),
-						index = $input.attr('name');
+					formJSON = $btn.parents('form').serializeJSON({'cb':true}); //cb true handles making on = 1 and blank/unset = 0.
 
-						if($input.is(':checkbox') && index)	{ //if index isn't set (name attribute) do nothing with data.
-//							app.u.dump(" -> "+index+" is a checkbox");
-							if($input.is(':checked'))	{formJSON[index] = 1} //set val to 1 instead of 'on'.
-							else	{formJSON[index] = 0} //default to zero (not off). this handles items that were checked and now are not.
-							}
-						else	{} //the rest of the data is passed along as is.
-						
-						});			
-					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
 						$panel.showLoading({'message':'Updating product '+pid});
 //						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});

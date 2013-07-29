@@ -1,6 +1,106 @@
 
 
 
+
+<div id='productManagerLandingContentTemplate'>
+
+<h1>Online Product Manager</h1>
+
+<p>Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data. Here are some of the advantages:</p>
+
+<h2>Page Rendering</h2>
+<p>With our new app based solution, there are no frames to load and reload, it makes better use of your screen and browser capabilities. The app framework stays on the screen and only the information you want to view or manipulate changes. This makes for a smoother workflow and helps to increase productivity.</p>
+
+<h2>Extensible</h2>
+<p>Entering your product data is only the beginning. This interface will allow extensibility by developers so it is possible to create custom data input and management interfaces. From vendor management to drop shipping to complex supply chain strategies, our new Product Manager.</p>
+
+<h2>The World is Changing</h2>
+<p>The app-based structure is the future of technology. By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, we are convinced that this change will let our customers do more in less time. </p>
+
+</div>
+
+
+<div id='productManagerFilterTemplate'>
+<div class='alignRight'>
+	<button>Cancel</button>
+	<button>Filter</button>
+</div>
+<table>
+<tr>
+	<td class='valignTop'>
+	<h3>Tags: </h3>
+	<ul class='displayNone tagFilterList'>
+		<li>IS_FRESH</li>
+		<li>IS_NEEDREVIEW</li>
+		<li>IS_HASERRORS</li>
+		<li>IS_CONFIGABLE</li>
+		<li>IS_COLORFUL</li>
+		<li>IS_SIZEABLE</li>
+		<li>IS_OPENBOX</li>
+		<li>IS_PREORDER</li>
+		<li>IS_DISCONTINUED</li>
+		<li>IS_SPECIALORDER</li>
+		<li>IS_BESTSELLER</li>
+		<li>IS_SALE</li>
+		<li>IS_SHIPFREE</li>
+		<li>IS_NEWARRIVAL</li>
+		<li>IS_CLEARANCE</li>
+		<li>IS_REFURB</li>
+		<li>IS_USER1</li>
+		<li>IS_USER2</li>
+		<li>IS_USER3</li>
+		<li>IS_USER4</li>
+		<li>IS_USER5</li>
+		<li>IS_USER6</li>
+		<li>IS_USER7</li>
+		<li>IS_USER8</li>
+		<li>IS_USER9</li>
+	</ul>	
+	</td>
+
+	<td class='valignTop'>
+	<h3>Marketplaces</h3>
+	<ul class='displayNone mktFilterList'>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+	</ul>
+	</td>
+
+	<td class='valignTop'>
+	<h3>Price</h3>
+	
+	
+	<h3>Launch Profile</h3>
+	<ul>
+		<li>load launch profiles</li>
+	</ul>
+	</td>
+
+
+</tr>
+</table>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div id='productEditorTemplate' class='productEditor'>
 
 <table class='productEditorContainer'>
@@ -509,6 +609,25 @@
 
 
 
+<div id='productEditorPanelTemplate_flexedit' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Custom Fields/Flexedit</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+
+<form action='#' class='labelsAsBreaks alignedLabels alignedInputs'>
+<fieldset>
+ 
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+</div>
+
+</fieldset>
+</form>
+
+	</div>
+</div>
 
 
 

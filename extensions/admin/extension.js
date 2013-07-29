@@ -3812,6 +3812,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					}
 
 
+				else if(path == '#!productManager')	{
+					app.ext.admin_prodEdit.a.showProductManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+
 				else if(path == '#!partitionManager')	{
 					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
