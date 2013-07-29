@@ -1778,7 +1778,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Tax percent</span>
-				<input type='text' name='Item\ShippingDetails\SalesTax\SalesTaxPercent' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxPercent); format:popVal;" />
+				<input type='number' name='Item\ShippingDetails\SalesTax\SalesTaxPercent' size='6' max='100' min='0' step='.001' data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxPercent); format:popVal;" />%
 				<span class='toolTip' title="Percent of an item's price to be charged as the sales tax for the order. The value passed in is stored with a precision of 3 digits after the decimal point (##.###). ">?</span>
 			</label>
 			
