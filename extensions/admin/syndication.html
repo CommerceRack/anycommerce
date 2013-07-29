@@ -1775,7 +1775,19 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<input type='text' name='Item\Country' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\Country); format:popVal;" />
 				<span class='toolTip' title="Set to a two character country code">?</span>
 			</label>
-
+			
+			<label>
+				<span>Tax percent</span>
+				<input type='text' name='Item\ShippingDetails\SalesTax\SalesTaxPercent' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxPercent); format:popVal;" />
+				<span class='toolTip' title="Percent of an item's price to be charged as the sales tax for the order. The value passed in is stored with a precision of 3 digits after the decimal point (##.###). ">?</span>
+			</label>
+			
+			<label>
+				<span>Tax state</span>
+				<input type='text' name='Item\ShippingDetails\SalesTax\SalesTaxState' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxState); format:popVal;" />
+				<span class='toolTip' title="State or jurisdiction for which the sales tax is being collected. Only returned if the seller specified a value.">?</span>
+			</label>
+			
 			<label>
 				<span>Cross border trade</span>
 				<input type='text' name='Item\CrossBorderTrade' data-bind="var: profile(%PROFILE.Item\CrossBorderTrade); format:popVal;" />
