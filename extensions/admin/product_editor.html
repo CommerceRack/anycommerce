@@ -2218,9 +2218,10 @@ Snacks|Doughnuts<br />
 	</td>
 	
 	<td class='threeColumn valignTop' >
-	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group. -->
+	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group.
+	databind on tbody added w/ js later so that it isn't translated prematurely (wrong data was getting set) -->
 	<table data-app-role='storeVariationsOptionsContainer' class='displayNone'>
-		<tbody data-bind="var: sog(@options); format:processList;loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
+		<tbody></tbody>
 	</table>
 	
 	<div class='buttonset alignRight'>
@@ -2360,6 +2361,15 @@ Snacks|Doughnuts<br />
 
 
 <table>
+
+<!-- used when editing a non-global store variation on a product. -->
+<tr id='productVariationManagerOptionRowTemplate'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td data-bind="var: variation(v); format:text;"></td>
+</tr>
+
 
 <tr id='productVariationManagerStoreRowTemplate'>
 	<td data-bind="var: variation(prompt); format:text;"></td>

@@ -3679,8 +3679,19 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 						}
 					}
 				},
-
-
+//run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
+			restoreInputsFromTrackingState : function($context)	{
+				$('.edited',$context).removeClass('edited');
+				var $button = $("[data-app-role='saveButton']",$context);
+				$('.numChanges',$button).text("");
+				$button.removeClass('ui-state-highlight');
+				if($button.hasClass('ui-button'))	{
+					$button.button("disable")
+					}
+				else	{
+					$button.attr('disabled','disabled');
+					}
+				},
 
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
 //will also update a .numChanges selector with the number of elements within the context that have edited on them.

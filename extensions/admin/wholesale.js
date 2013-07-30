@@ -171,7 +171,8 @@ var admin_wholesale = function() {
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
 						"<button data-app-event='admin|refreshDMI'>Refresh Supplier List<\/button>",
-						"<button class='floatRight marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
+						"<button class='marginLeft'>Unordered Items</button>",
+						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
 						],
 					'thead' : ['Name','ID','Type','Mode',''],
 					'tbodyDatabind' : "var: users(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;",
@@ -335,7 +336,6 @@ app.model.dispatchThis('mutable');
 					}
 				else	{
 					newSfo = false;
-					die()
 					//unrecognized action. !!!
 					}
 				return newSfo;
@@ -367,23 +367,28 @@ TRACKINGSET ->
 */
 			
 			
-			adminSupplierUpdate : function(sfo,$form)	{
+			adminSupplierMacro : function(sfo,$form)	{
 				sfo = sfo || {};
 				var newSfo = {
-					'_cmd':'adminSupplierUpdate',
+					'_cmd':'adminSupplierMacro',
 					'VENDORID' : sfo.VENDORID,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					}
 				
 				var
-					cmds = new Array("COMPANYSET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"),
+					cmds = new Array("SET","OURSET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"),
 					L = cmds.length;
 				
 				for(var i = 0; i < L; i += 1)	{
+//go through each fieldset and, if any fieldsets are edited, update them.
 					var $fieldset = $("fieldset[data-app-role='"+cmds[i]+"']",$form);
 					if($('.edited',$fieldset).length)	{
-						newSfo['@updates'].push(cmds[i]+"?"+encodeURIComponent($.param($fieldset.serializeJSON({'cb':true}))));
+						$('.edited',$fieldset).each(function(){
+							//connectors are 'set' for macro. all other fields are what's set in cmd array.
+							newSfo['@updates'].push((($(this).attr('name').indexOf('CONNECTOR') > -1) ? 'SET' : cmds[i])+"?"+$(this).attr('name')+"="+encodeURIComponent($(this).val())); //encodeURIComponent($.param($fieldset.serializeJSON({'cb':true})))
+							})
+						
 						}
 					}
 				return newSfo
@@ -530,8 +535,20 @@ TRACKINGSET ->
 					$btn.off('click.adminSupplierAction').on('click.adminSupplierAction',function(event){
 						event.preventDefault();
 						if($btn.data('action') == 'INVENTORY:UPDATE')	{
-							if(app.u.validateForm($btn.closest('fieldset')))	{
-								app.model.addDispatchToQ({'_cmd':'adminSupplierAction','@updates':["INVENTORY:UPDATE"],'VENDORID':$btn.closest("[data-code]").data('code')},'mutable');
+							var $fieldset = $btn.closest('fieldset');
+							
+							if(app.u.validateForm($fieldset))	{
+								$fieldset.showLoading({"message":"Fetching inventory from supplier"});
+								app.model.addDispatchToQ({'_cmd':'adminSupplierAction','@updates':["INVENTORY:UPDATE"],'VENDORID':$btn.closest("[data-code]").data('code'),'_tag':{'callback':function(rd){
+									$fieldset.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$fieldset.anymessage({'message':rd});
+										}
+									else	{
+										$fieldset.anymessage(app.u.successMsgObject('File imported'));
+										}
+								}}},'mutable');
+								app.model.dispatchThis('mutable');
 								}
 							else	{}
 							}

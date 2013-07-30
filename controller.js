@@ -1097,6 +1097,10 @@ app.u.throwMessage(responseData); is the default error handler.
 					if(_rtag.jqObjEmpty)	{
 						_rtag.jqObj.empty();
 						}
+//you can't restore AND empty. it's empty, there's nothing to restore.
+					else if(_rtag.restoreInputsFromTrackingState)	{
+						app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj)
+						}
 					}
 				var msg = app.u.successMsgObject(_rtag.message);
 				msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.

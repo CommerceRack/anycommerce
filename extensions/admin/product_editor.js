@@ -440,9 +440,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 				if(mode == 'product')	{
 //when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
 					$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
-					app.u.dump(" -> app.data.adminSOGComplete['%SOGS'][varObj.id]: "); app.u.dump(app.data.adminSOGComplete['%SOGS'][varObj.id]);
-					$("[data-app-role='storeVariationsOptionsContainer']",$r).show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
-					//now need to 'lock' the options that are already selected on this product.
+
 					}
 
 				
@@ -450,11 +448,21 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 				$('.toolTip',$r).tooltip();
 //for 'select' based variations, need to add some additional UI functionality.
 				if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(varObj.type))	{
-					$("[data-app-role='variationsOptionsTbody']",$r).sortable();
+					$("[data-app-role='variationsOptionsTbody']",$r).addClass('sortGroup').sortable();
 					$("[data-app-role='variationsOptionsTbody'] tr",$r).each(function(){
 						var $tr = $(this);
 						$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 						})
+//in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
+					if(mode == 'product' && varObj.id.indexOf('#') == -1)	{
+						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
+						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:productVariationManagerOptionRowTemplate;")
+						$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
+						$tbody.sortable({connectWith: '.sortGroup'});
+						//now need to 'lock' the options that are already selected on this product.						
+						}
+					
+					
 					}
 				
 				if(varObj.type == 'imgselect' || varObj.type == 'imggrid')	{

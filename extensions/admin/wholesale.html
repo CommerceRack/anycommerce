@@ -183,6 +183,7 @@
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
+	<button class='marginLeft' data-mode='order'>Unordered Items</button>
 	</td>
 </tr>
 
@@ -218,9 +219,6 @@
 
 <form action='#' onsubmit="return false">
 <div class='clearfix ui-widget-header ui-corner-top smallPadding'>
-	<h1>Recent Orders</h1>
-
-	<input type='hidden' name='_cmd' value='adminSupplierAction' />
 	<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierAction' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
 	<input type='hidden' name='_tag/message' value='The orders have been successfully updated.' />
@@ -239,6 +237,7 @@
 	</select>
 	<button data-app-event="admin|processForm" class='smallButton'>Perform Action</button>
 	</div>
+	<h1>Recent Orders</h1>
 
 </div>
 <table class='gridTable fullWidth applyAnytable' data-app-role='supplierOrderListTable'>
@@ -280,7 +279,7 @@
 	<th class='alignLeft'>Price</th>
 </tr>
 </thead>
-<tbody data-bind="var:orders(@ITEMS); format:processList; loadsTemplate:supplierItemListItemTemplate;">
+<tbody data-bind="var:vendor(@SKUS); format: productList; extension: store_prodlist; loadsTemplate:supplierItemListItemTemplate; withInventory:1;">
 </tbody>
 </table>
 
@@ -327,9 +326,9 @@
 <div id='supplierUpdateTemplate' class='clearfix'>
 <form autocomplete="on" action='#' onsubmit="return false;">
 
-<input type='hidden' name='_cmd' value='adminSupplierUpdate' />
-<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierUpdate' />
+<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierMacro' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 <input type='hidden' name='_tag/message' value='The vendor has been successfully updated.' />
 <input type="hidden" name="VENDORID" data-bind="var:supplier(CODE); format:popVal;" />
 
@@ -340,7 +339,7 @@
 		<button class='floatRight' data-app-event='admin|processForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
 		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
-		<button class='floatRight'>Add Product</button>
+<!--		<button class='floatRight'>Add Product</button> add when time permits. -->
 		
 		<h2 class='floatLeft ui-widget-header-padding'>
 		Supplier: <span data-bind="var:supplier(CODE); format:text;"></span>
@@ -353,10 +352,10 @@
 
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='general'>
-			<h2>General Settings</h2>
+			<h2>Supplier Information</h2>
 			<div class='clearfix'>
 			
-			<fieldset data-app-role='COMPANYSET'>
+			<fieldset data-app-role='SET'>
 		
 				<label>
 					<span>Markup</span>
@@ -413,10 +412,70 @@
 		</div><!-- /general panel -->
 
 
+
+		<div class='panel labelsAsBreaks alignedLabels' data-app-role='out'>
+			<h2>Company Settings</h2>
+			<div class='clearfix'>
+			<fieldset data-app-role='OUR'>
+		
+			
+				<label>
+					<span>Name</span>
+					<input name='company_name' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.company_name); format:popVal;' />
+				</label>
+				
+			
+				<label>
+					<span>Address</span>
+					<input name='address' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.address); format:popVal;' />
+				</label>
+				<label>
+					<span>Address 2</span>
+					<input name='address2' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.address2); format:popVal;' />
+				</label>
+
+				<label>
+					<span>City</span>
+					<input name='city' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.city); format:popVal;' />
+				</label>
+
+				<label>
+					<span>State</span>
+					<input name='region' value='' size='2' maxlength='2' type='text' data-bind='var: supplier(%OUR.region); format:popVal;' />
+				</label>
+
+				<label>
+					<span>Postal</span>
+					<input name='postal' value='' size='20' maxlength='20' type='text' data-bind='var: supplier(%OUR.postal); format:popVal;' />
+				</label>
+
+				<label>
+					<span>Phone</span>
+					<input name='phone' value='' size='12' maxlength='12' type='text' data-bind='var: supplier(%OUR.phone); format:popVal;' />
+				</label>
+
+				<label>
+					<span>Country code</span>
+					<input name='countrycode' value='' size='2' maxlength='2' type='text' data-bind='var: supplier(%OUR.countrycode); format:popVal;' />
+				</label>
+				
+				<label>
+					<span>Email</span>
+					<input name='email' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.email); format:popVal;' />
+				</label>
+				
+		
+			</fieldset>
+			
+			</div>
+		</div><!-- /general panel -->
+
+
+
+<!--
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='productUpdates'>
 			<h2>Setup: Product Updates</h2>
 			<div>
-			<b class='red'>NO MACRO FOR THIS</b>
 			<fieldset>
 				<label>
 					<span>Connector:</span>
@@ -427,8 +486,8 @@
 		
 			</fieldset>
 			</div>
-		</div><!-- /productUpdates panel -->
-
+		</div>
+-->
 		
 		
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='shippingCalculations'>
@@ -475,12 +534,12 @@
 
 					<label>
 						<span>FTP/HTTP URL</span>
-						<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
+						<input name='inv_url' type='url' data-bind="var:vendor(%INVENTORY.inv_url); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
 					</label>
 
 					<label>
 						<span>Import frequency</span>
-						<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;" required='required'  data-validation-rules='skipIfHidden'>
+						<select name='inv_updateauto' data-bind="var:vendor(%INVENTORY.inv_updateauto); format:popVal;" required='required'  data-validation-rules='skipIfHidden'>
 							<option value='0'>Manual</option>
 							<option value='1'>Daily</option>
 						</select>
@@ -488,7 +547,7 @@
 					
 					<label>
 						<span>Inventory header</span>
-						<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
+						<textarea name='inv_header' data-bind="var:vendor(%INVENTORY.inv_header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
 					</label>
 					
 					<button data-app-event='admin_wholesale|adminSupplierAction' data-action="INVENTORY:UPDATE">Start Import</button>
