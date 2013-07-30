@@ -360,7 +360,12 @@ renderOptionNUMBER: function(pog) {
 		$textbox.attr('max',pog['max']);
 	if(pog['min'])
 		$textbox.attr('max',pog['max']);
-		
+	if(pog['maxlength'])	{
+		$textbox.keyup(function(){
+			if (this.value.length > (pog['maxlength'] - 1)) // if too long...trim it!
+		        this.value = this.value.substring(0, pog['maxlength']);
+			});
+		}
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
