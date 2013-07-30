@@ -32,8 +32,25 @@ var pogs_cubworld = function() {
 					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 					r = true;
 					app.rq.push(['templateFunction','productTemplate','onCompletes', function(P) {
-							app.ext.pogs_cubworld.vars.prodContext = $(app.u.jqSelector('#',P.parentID));
-							}]);
+						app.ext.pogs_cubworld.vars.prodContext = $(app.u.jqSelector('#',P.parentID));
+						}]);
+							
+					app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
+						var $context = $(app.u.jqSelector('#',P.parentID));
+						var variations = app.data['appProductGet|'+P.pid]['@variations'];
+						
+						if(variations.length == 1 && variations[0].id.match(/A[BDEFGH]/) ){
+							var id = variations[0].id;
+							$('select[name='+id+'] option', $context).each(function(){
+								var sku = P.pid+":"+id+""+$(this).attr("value");
+								//app.u.dump(sku);
+								if(app.data["appProductGet|"+P.pid]["@inventory"][sku] && app.data["appProductGet|"+P.pid]["@inventory"][sku].inv <= 0){
+									$(this).attr("disabled","disabled");
+									}
+								});
+							}
+						
+						}]);
 					return r;
 					},
 				onError : function()	{
