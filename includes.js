@@ -359,7 +359,7 @@ renderOptionNUMBER: function(pog) {
 	if(pog['max'])
 		$textbox.attr('max',pog['max']);
 	if(pog['min'])
-		$textbox.attr('max',pog['max']);
+		$textbox.attr('min',pog['min']);
 		
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
