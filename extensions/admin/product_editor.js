@@ -454,6 +454,8 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 						$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 						})
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
+/*
+NOT DONE YET.  close.  after drag, the option display doesn't match. make it look the same and then make sure the save works.
 					if(mode == 'product' && varObj.id.indexOf('#') == -1)	{
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:productVariationManagerOptionRowTemplate;")
@@ -461,7 +463,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 						$tbody.sortable({connectWith: '.sortGroup'});
 						//now need to 'lock' the options that are already selected on this product.						
 						}
-					
+*/					
 					
 					}
 				
@@ -663,13 +665,27 @@ app.model.dispatchThis('mutable');
 */			else if(type == 'select')	{
 				var $select = $("<select \/>",{'name':data.id});
 				var L = data.options.length;
+				
+				//data-reset requires a value.
+				if(data.type == 'select')	{
+					$select.append($("<option \/>",{'value':''}).text(""));
+					}
+				
 				for(var i = 0; i < L; i += 1)	{
 					$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
 					}
+				
 				$select.val(prodData['%attribs'][data.id] || "");
+// now take a look and see if the value set for this attrib is valid. respond accordingly.
 				if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
-				else if(data.type == 'selectreset')	{}
-				else if(data.type == 'select')	{}
+				else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
+					$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
+					$select.val(data.options[0].v)
+					}
+				else if(data.type == 'select')	{
+					$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
+					$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
+					}
 				else	{} //how the F did we get here?
 // !!! add something here where if data.type is selectreset and product value for attribute is not valid, throw warning and do nothing with value.
 // if it's a select list type and value doesn't exist, add it as option w/ prompt !!! invalid value: [VALUE] w/ [VALUE] as value (and selected) to allow preservation of bad value.
@@ -703,12 +719,12 @@ app.model.dispatchThis('mutable');
 				$input.appendTo($r);
 				$image.appendTo($r);
 				
-				$("<button \/>").on('click',function(event){
+				$("<button \/>").button().on('click',function(event){
 					event.preventDefault();
 					mediaLibrary($image,$input,'');
 					}).text('Select').appendTo($r);
 				
-				$("<button \/>").on('click',function(event){
+				$("<button \/>").button().on('click',function(event){
 					event.preventDefault();
 					$image.attr('src','/images/blank.gif');
 					$input.val('');
