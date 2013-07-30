@@ -415,11 +415,12 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 //PID is required for mode = product.
 //executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
 		getVariationEditor : function(mode, varObj, PID)	{
-//			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
+			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
 			varObj = varObj || {}; //defauilt to object to avoid JS error in error checking.
 			var $r = $("<div \/>").addClass('variationEditorContainer'); //what is returned. Either the editor or some error messaging.
 			if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
-//				app.u.dump(" -> mode: "+mode);
+				app.u.dump(" -> mode: "+mode);
+				app.u.dump(" -> varObj:"); app.u.dump(varObj);
 				
 				$r.data({
 					'variationtype':varObj.type,
@@ -434,12 +435,17 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 					$r.data('pid',PID); //used in save function.
 					} 
 				$r.anycontent({'templateID':'variationEditorTemplate','data':varObj});
-//when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
-				if(mode == 'product')	{
-					$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
-					}
-				//select
 				$("[data-app-role='variationsTypeSpecificsContainer']",$r).anycontent({'templateID':'variationsEditor_'+varObj.type.toLowerCase(),'data':varObj})
+				
+				if(mode == 'product')	{
+//when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
+					$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
+					app.u.dump(" -> app.data.adminSOGComplete['%SOGS'][varObj.id]: "); app.u.dump(app.data.adminSOGComplete['%SOGS'][varObj.id]);
+					$("[data-app-role='storeVariationsOptionsContainer']",$r).show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
+					//now need to 'lock' the options that are already selected on this product.
+					}
+
+				
 				app.u.handleAppEvents($r);
 				$('.toolTip',$r).tooltip();
 //for 'select' based variations, need to add some additional UI functionality.
@@ -935,7 +941,8 @@ app.model.dispatchThis('mutable');
 			}, //variationTypeIsSelectBased
 
 //the data for a sog edit is stored in 'data' for the option in the table row.  Of course, a lot of other stuff is stored there, so this whitelists the data.
-		getSanitizedSogData : function(data)	{
+// * 201330 -> deprecated. replaced w/ app.u.getWhitelistedObject which is more versatile
+/*		getSanitizedSogData : function(data)	{
 			var r = {}; //what is returned.
 			var whitelist = ['v','prompt','w','p','asm','html','img']
 			for(index in whitelist)	{
@@ -945,7 +952,7 @@ app.model.dispatchThis('mutable');
 				}
 			return r;
 			}, //getSanitizedSogData
-
+*/
 
 //the default option editor shows all the inputs.  Need to clear some out that are image or inventory specific.
 //executed from variationOptionUpdateShow and variationOptionAddShow
@@ -1175,13 +1182,14 @@ app.model.dispatchThis('mutable');
 						}
 
 
-
+//data for saving options in a 'select' based option requires some manipulation to get into 'options' array.
 					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
 						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
 						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
 							else	{
-								(variationData.variationmode == 'product') ? sfo['%sog'][index]['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data())) : sfo['%sog']['@options'].push(app.ext.admin_prodEdit.u.getSanitizedSogData($(this).data()))
+								var whitelist = new Array('v','prompt','w','p','asm','html','img');
+								(variationData.variationmode == 'product') ? sfo['%sog'][index]['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist)) : sfo['%sog']['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist))
 								}
 							});						
 						}
@@ -1368,6 +1376,8 @@ app.model.dispatchThis('mutable');
 					else	{
 						$btn.attr('title',"Can not add a new option because this is a store group.");
 						$btn.button('disable');
+// ** 201330 -> no point showing this button if it can't be clicked. building a new interface to allow for the SOG options to be added.
+						$btn.hide();
 						}
 					}
 

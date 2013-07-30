@@ -2193,7 +2193,6 @@ Snacks|Doughnuts<br />
 
 <!-- a shared template used by select and radio input variation types -->
 <div id='optionsEditor' data-app-role='variationOptionEditorContainer'>
-
 <table class='fullWidth'>
 <tbody>
 <tr>
@@ -2219,6 +2218,11 @@ Snacks|Doughnuts<br />
 	</td>
 	
 	<td class='threeColumn valignTop' >
+	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group. -->
+	<table data-app-role='storeVariationsOptionsContainer' class='displayNone'>
+		<tbody data-bind="var: sog(@options); format:processList;loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
+	</table>
+	
 	<div class='buttonset alignRight'>
 		<button data-app-role='addNewOptionButton' data-app-event='admin_prodEdit|variationOptionAddShow'>Add New Option</button>
 	</div>
