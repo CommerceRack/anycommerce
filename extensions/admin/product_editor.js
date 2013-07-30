@@ -50,7 +50,7 @@ var admin_prodEdit = function() {
 			'ebay/attributes' : { 'type' : 'text'},
 			'overstock/category' : { 'type' : 'text'},
 			'select' : {'type':'select'},
-			'selectreset' : { 'type' : 'select'} /* what is this? */
+			'selectreset' : { 'type' : 'select'} /* don't save a blank value. a selection is required. */
 			}
 		},
 
@@ -667,6 +667,13 @@ app.model.dispatchThis('mutable');
 					$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
 					}
 				$select.val(prodData['%attribs'][data.id] || "");
+				if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
+				else if(data.type == 'selectreset')	{}
+				else if(data.type == 'select')	{}
+				else	{} //how the F did we get here?
+// !!! add something here where if data.type is selectreset and product value for attribute is not valid, throw warning and do nothing with value.
+// if it's a select list type and value doesn't exist, add it as option w/ prompt !!! invalid value: [VALUE] w/ [VALUE] as value (and selected) to allow preservation of bad value.
+// throw in either case.
 				$select.appendTo($r);
 				}
 			else if(type == 'button')	{
