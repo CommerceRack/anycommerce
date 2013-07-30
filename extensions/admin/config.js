@@ -1076,6 +1076,7 @@ $D.dialog('open');
 // * 201324 -> after add/save, clear the inputs for the next entry.
 							$('input, textarea, select',$container).val(""); //clear inputs.
 							$(':checkbox',$container).prop('checked',false);
+							app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest('form'));
 							}
 						else	{
 							app.u.dump("form did not validate");

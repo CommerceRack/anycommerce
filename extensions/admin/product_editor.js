@@ -46,11 +46,11 @@ var admin_prodEdit = function() {
 			'special' : { 'type' : 'hidden'},
 			'boolean' : { 'type' : 'cb'},
 			'chooser/counter' : { 'type' : 'text'},
-			'ebay/storecat' :  {'type':'ebaycategorychooser'},
+//			'ebay/storecat' :  {'type':'ebay/storecat'}, //not supported at this time.
 			'ebay/attributes' : { 'type' : 'text'},
 			'overstock/category' : { 'type' : 'text'},
 			'select' : {'type':'select'},
-			'selectreset' : { 'type' : 'select'}
+			'selectreset' : { 'type' : 'select'} /* what is this? */
 			}
 		},
 
@@ -650,7 +650,17 @@ app.model.dispatchThis('mutable');
 				
 				$textarea.appendTo($r);
 				}
-			else if(type == 'select')	{
+/*			else if(type == 'ebay/storecat')	{
+//				$r.append("not done yet");
+				var $input = $("<input \/>",{'type':'text','size':'9','name':data.id})
+				$input.val(prodData['%attribs'][data.id] || "");
+				$input.appendTo($r);
+				
+//$("<button>Chooser</button>").on('click',function(){
+//	app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':'MODEL10','categoryselect':'primary'},jQuery(app.u.jqSelector('#','ebay:category_name')));
+//	}).appendTo($r);				
+				}
+*/			else if(type == 'select')	{
 				var $select = $("<select \/>",{'name':data.id});
 				var L = data.options.length;
 				for(var i = 0; i < L; i += 1)	{

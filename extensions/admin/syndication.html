@@ -1757,7 +1757,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</div>
 			
 			<label>
-				<input type='checkbox' name='AUTO_PRICE' data-bind="var: profile(%PROFILE.AUTO_PRICE); format:popVal;" />
+				<input type='checkbox' name='AUTO_PRICE' class='applyAnycb' data-bind="var: profile(%PROFILE.AUTO_PRICE); format:popVal;" />
 				<span>Enable auto-price</span>
 				<span class='toolTip' title="If enabled, ebay fixed price (if blank) will be set to base_price at launch.">?</span>
 			</label>
@@ -1781,7 +1781,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 			
 			<label>
-				<input type='checkbox' name='Item\UseTaxTable' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\UseTaxTable); format:popVal; hideZero:false;" checked='checked' data-app-event='admin_syndication|ebayTaxToggle' />
+				<input type='checkbox' name='Item\UseTaxTable\@BOOLEAN' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\UseTaxTable); format:popVal; hideZero:false;" checked='checked' data-app-event='admin_syndication|ebayTaxToggle' />
 				<span>Use tax table</span>
 				<span class='toolTip' title="Indicates whether the seller's tax table is to be used when applying and calculating sales tax for an order line item."></span>
 			</label>
