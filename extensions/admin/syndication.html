@@ -1755,13 +1755,17 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				</div>
 			
 			</div>
-
+			
+			<label>
+				<input type='checkbox' name='AUTOPILOT' data-bind="var: profile(%PROFILE.AUTOPILOT); format:popVal;" />
+				<span>Enable auto-pilot</span>
+				<span class='toolTip' title="If enabled, ebay fixed price will be set to base_price at item launch.">?</span>
+			</label>
 
 			<label>
 				<span>Note</span>
 				<textarea name='NOTE' value='' rows='10' placeholder="This is here for your use, to populate with hints or reminders about the profile." data-bind="var: profile(%PROFILE.NOTE); format:popVal;" />
 			</label>
-
 
 		</div>
 	</fieldset>
@@ -1777,6 +1781,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 			
 			<label>
+				<input type='checkbox' name='Item\UseTaxTable' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\UseTaxTable); format:popVal; hideZero:false;" checked='checked' data-app-event='admin_syndication|ebayTaxToggle' />
+				<span>Use tax table</span>
+				<span class='toolTip' title="Indicates whether the seller's tax table is to be used when applying and calculating sales tax for an order line item."></span>
+			</label>
+
+<!-- these fields will only show up if tax table is turned off -->
+			<div class='displayNone marginLeft marginTop' data-app-role='ebayTaxToggleContent'>
+			<label>
 				<span>Tax percent</span>
 				<input type='number' name='Item\ShippingDetails\SalesTax\SalesTaxPercent' size='6' max='100' min='0' step='.001' data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxPercent); format:popVal;" />%
 				<span class='toolTip' title="Percent of an item's price to be charged as the sales tax for the order. The value passed in is stored with a precision of 3 digits after the decimal point (##.###). ">?</span>
@@ -1787,7 +1799,14 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<input type='text' name='Item\ShippingDetails\SalesTax\SalesTaxState' size='2' maxlength="2" data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\SalesTaxState); format:popVal;" />
 				<span class='toolTip' title="State or jurisdiction for which the sales tax is being collected. Only returned if the seller specified a value.">?</span>
 			</label>
-			
+			<label>
+				<input type='checkbox' name='Item\ShippingDetails\SalesTax\ShippingIncludedInTax' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\ShippingIncludedInTax); format:popVal;" />
+				<span>Shipping included in tax</span>
+				<span class='toolTip' title="Whether shipping costs were part of the base amount that was taxed. Flat or calculated shipping. "></span>
+			</label>
+			<br />
+			</div>
+
 			<label>
 				<span>Cross border trade</span>
 				<input type='text' name='Item\CrossBorderTrade' data-bind="var: profile(%PROFILE.Item\CrossBorderTrade); format:popVal;" />

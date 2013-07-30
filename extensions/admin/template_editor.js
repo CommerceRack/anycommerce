@@ -22,7 +22,7 @@ var admin_templateEditor = function() {
 	var theseTemplates = new Array('templateEditorTemplate');
 	
 	var r = {
-	
+
 		vars : {},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -389,7 +389,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 				if($prodlistTemplate.length)	{
 
 var $D = app.ext.admin.i.dialogCreate({
-	'title' : 'Add/Update CSS Classes'
+	'title' : 'Select Product'
 	});
 
 	$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);

@@ -1653,6 +1653,22 @@ app.model.dispatchThis('immutable');
 					handleCB();
 					});
 				}, //ebayBuyerRequirementsToggle
+				
+				
+			ebayTaxToggle : function($ele)	{
+				function handleCB()	{
+					if($ele.is(':checked'))	{
+						$("[data-app-role='ebayTaxToggleContent']",$ele.closest('fieldset')).hide();
+						}
+					else	{
+						$("[data-app-role='ebayTaxToggleContent']",$ele.closest('fieldset')).show();
+						}
+					}
+				handleCB();
+				$ele.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+					handleCB();
+					});
+				}, //ebayBuyerRequirementsToggle
 
 			adminSyndicationMacroExec : function($btn)	{
 				$btn.button();
