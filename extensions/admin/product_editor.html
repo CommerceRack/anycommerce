@@ -20,16 +20,16 @@
 </div>
 
 
-<div id='productManagerFilterTemplate'>
-<div class='alignRight'>
+<div id='productManagerFilterTemplate' class='ui-widget-content ui-corner-bottom'>
+<div class='alignRight buttonset'>
 	<button>Cancel</button>
 	<button>Filter</button>
 </div>
-<table>
+<table class='fullWidth'>
 <tr>
 	<td class='valignTop'>
 	<h3>Tags: </h3>
-	<ul class='displayNone tagFilterList'>
+	<ul class='tagFilterList listStyleNone'>
 		<li>IS_FRESH</li>
 		<li>IS_NEEDREVIEW</li>
 		<li>IS_HASERRORS</li>
@@ -60,16 +60,30 @@
 
 	<td class='valignTop'>
 	<h3>Marketplaces</h3>
-	<ul class='displayNone mktFilterList'>
+	<ul class='mktFilterList listStyleNone'>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
 		<li data-mktid="GOO">Google</li>
 		<li data-mktid="EBS">eBay Store</li>
 	</ul>
 	</td>
 
 	<td class='valignTop'>
-	<h3>Price</h3>
-	
-	
+	<h3>Price Range</h3>
+<p>
+<label for="amount">Price range:</label>
+<input type="text" id="amount" />
+<div id="slider-range"></div>
+</p>
+	<br />	
 	<h3>Launch Profile</h3>
 	<ul>
 		<li>load launch profiles</li>
@@ -2287,13 +2301,13 @@ Snacks|Doughnuts<br />
 
 <div id='productVariationManager' class='ui-widget'>
 	<div class='ui-widget-header ui-corner-top clearfix stdPadding'>
-		<h3 class='floatRight' data-bind="var:variation(PID); format:text; pretext:Product: ;"></h3>
+		<h3 class='floatRight' data-bind="var:variation(pid); format:text; pretext:Product: ;"></h3>
 		<h1>Product Variation Manager</h1>
 	</div>
 	<section class='ui-widget-content stdPadding ui-corner-bottom' data-app-role='productVariationManagerContainer'>
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding alignRight marginBottom clearfix'>
 		
-		<button title="Return to Product." data-app-event="admin_prodEdit|productVariationsBackToProduct" data-bind="var:variation(PID); format:assignAttribute; attribute:data-pid;">Back to Product</button>
+		<button title="Return to Product." data-app-event="admin_prodEdit|variationsBackToProductExec" data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">Back to Product</button>
 		
 			<button title="Cancel any unsaved changes to these variations." data-app-event='admin_prodEdit|productVariationsManagerShow'>Cancel Changes</button>
 			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>

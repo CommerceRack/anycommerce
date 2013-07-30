@@ -723,18 +723,17 @@ else	{
 				$btn.off('click.adminCampaignSendConfirm').on('click.adminCampaignSendConfirm',function(event){
 					event.preventDefault();
 					var 
-						$tr = $btn.closest('tr'),
-						data = $tr.data();
+						sfo = $btn.closest('form').serializeJSON({cb:true})
 
 					app.ext.admin.i.dialogConfirmRemove({
-						"title" : "Start Campaign: "+data.campaignid,
+						"title" : "Start Campaign: "+sfo.CAMPAIGNID,
 						"removeButtonText" : "Start Campaign",
-						"message" : "Please confirm that you want to start the campaign: "+data.campaignid+" from domain <b>"+app.vars.domain+"<\/b>. There is no undo for this action.",
+						"message" : "Please confirm that you want to start the campaign: "+sfo.CAMPAIGNID+" from domain <b>"+app.vars.domain+"<\/b>. There is no undo for this action.",
 						'removeFunction':function(vars,$D){
-							$D.showLoading({"message":"Sending Campaign "+data.campaignid});
+							$D.showLoading({"message":"Sending Campaign "+sfo.CAMPAIGNID});
 							app.model.addDispatchToQ({
 								'_cmd':'adminCampaignMacro',
-								'CAMPAIGNID': data.campaignid,
+								'CAMPAIGNID': sfo.CAMPAIGNID,
 								'@updates' : ["CPGSTART"],
 								'_tag':	{
 									'callback':function(rd){

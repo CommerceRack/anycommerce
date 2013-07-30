@@ -251,7 +251,7 @@ var admin_templateEditor = function() {
 			initWizard : function()	{
 				var	$wizardForm = $('#wizardForm');
 //the success fieldset, which is last in the list.
-				$wizardForm.append("<fieldset class='wizardCompleted' class='displayNone'>Congrats! You have completed the wizard for this template.<\/fieldset>");
+				$wizardForm.find('fieldset:last').after("<fieldset class='wizardCompleted' class='displayNone'>Congrats! You have completed the wizard for this template.<\/fieldset>");
 				
 				var
 					$fieldsets = $('fieldset',$wizardForm),
@@ -291,8 +291,9 @@ var admin_templateEditor = function() {
 //					app.u.dump(" -> $target.is('button'): "+$target.is('button'));
 //					app.u.dump(" -> $target.data('button-action'): "+$target.data('button-action'));
 //					app.u.dump(" -> e.target.nodeNam: "+e.target.nodeNam);
+
 //in chrome, the click event is triggered on the child span of the button, not the button itself.
-					if(e.target.nodeName.toLowerCase() == 'span')	{
+					if(e.target.nodeName.toLowerCase() == 'span' && $target.parent().hasClass('ui-button'))	{
 						$target = $target.parent();
 						}
 					
@@ -307,7 +308,7 @@ var admin_templateEditor = function() {
 						
 						var $focusFieldset = $('fieldset:visible',$wizardForm);
 						fieldsetVerifyAndExecOnfocus($focusFieldset);
-
+app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 						//SANITY -> index() starts at 1, not zero.
 						if($focusFieldset.index() == 1)	{
 							$("[data-button-action='next']",$wizardForm).button('enable');
@@ -489,7 +490,7 @@ var $D = app.ext.admin.i.dialogCreate({
 					});
 				if(pass)	{
 					if($fieldset.data('onfocus'))	{
-						setTimeout($fieldset.data('onfocus'),100);
+						setTimeout($fieldset.data('onfocus'),100); //this executes the fieldset data-onfocus code. in a timeout to treat like an eval without running an eval.
 						}
 					} //woot! all elements are in the template.
 				else	{
@@ -569,7 +570,7 @@ var $D = app.ext.admin.i.dialogCreate({
 						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, pbar ["+$pbar instanceof jQuery+"] is not a valid jquery object.",'gMessage':true});
 						}
 					},
-
+//delegates a click event on the template container which updates the object inspector w/ information about the clicked element.
 				handleWizardObjects : function($iframeBody,$objectInspector)	{
 					if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
 						$iframeBody.on('click',function(e){

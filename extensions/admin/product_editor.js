@@ -166,12 +166,17 @@ var admin_prodEdit = function() {
 				'thead' : ['','SKU','Name','Price','Options','Children',''],
 				'tbodyDatabind' : "var: results(hits.hits); format:processList; loadsTemplate:productListTemplateTableResults;",
 				'buttons' : ["<button class='floatRight' data-clickevent='storeVariationsShow'>Store Variations</button>","<button class='floatRight' data-clickevent='adminProductCreateShow'>New Product</button>"],
-				'controls' : "<form class='floatRight'>search<input type='search' name='keywords' \/><button data-clickevent='storeVariationsShow'>go<\/button><\/form><button data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Filter</button><button data-clickevent='storeVariationsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Management Categories<\/button>",
+				'controls' : "<form class='floatRight'>search<input type='search' name='keywords' \/><button data-clickevent='storeVariationsShow'>go<\/button><\/form><button data-clickevent='filtersShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Filter</button><button data-clickevent='managementCategoriesShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Management Categories<\/button><ul class='displayNone' data-app-role='managementCategoryList'><\/ul>",
 				'showLoading' : false
 				});
+			
 			var $DMI = $DMITable.closest("[data-app-role='dualModeContainer']");
 			$("[data-app-role='dualModeListTable']",$DMI).hide();
 			$("[data-app-role='dualModeContent']",$DMI).append($("<div \/>").addClass('productContentContainer').anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false}));
+
+				
+			app.ext.admin_prodEdit.u.handleManagementCategories($DMI);
+
 
 			$('button',$DMI).each(function(){
 				var $button = $(this);
@@ -189,7 +194,48 @@ var admin_prodEdit = function() {
 				if(node == 'span' && $target.parent().hasClass('ui-button'))	{$target = $target.parent()} 
 				
 				if($target.data('clickevent'))	{
-					alert($target.data('clickevent'));
+// NOTE!!! if/else here for demo. do NOT impelement this way. implement in same manner as app events. this is placeholder code for a showable demo
+					if($target.data('clickevent') == 'managementCategoriesShow')	{
+						var $menu = $("[data-app-role='managementCategoryList']:first",$DMI);
+						$menu.show().position({
+							my: 'left bottom',
+							at: 'left botton',
+							of: $target
+							});
+//hide menu if anything is clicked.
+						setTimeout(function(){
+							 $( document ).one( "click", function() {
+								$menu.hide();
+								});
+							},100);
+						}
+					else if($target.data('clickevent') == 'filtersShow')	{
+						var $filterMenu = $("<div \/>").appendTo($DMI).position({
+							my: 'left bottom',
+							at: 'left botton',
+							of: $target
+							});
+						
+						$filterMenu.anycontent({'templateID':'productManagerFilterTemplate','showLoading':false}).show();
+$('.mktFilterList, .tagFilterList',$filterMenu).selectable()
+$('button',$filterMenu).button();
+$( "#slider-range" ).slider({
+range: true,
+min: 0,
+max: 500,
+values: [ 75, 300 ],
+slide: function( event, ui ) {
+$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+}
+});
+$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+" - $" + $( "#slider-range" ).slider( "values", 1 ) );
+
+
+						}
+					else	{
+						alert($target.data('clickevent'));
+						}
 					}
 				
 				}) //end dmi.on.click
@@ -421,10 +467,13 @@ var admin_prodEdit = function() {
 
 // opened when editing a product. shows enabled options and ability to add store variations to product.
 		showProductVariationManager : function($target,pid)	{
+			app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
+			
 			if($target instanceof jQuery && pid)	{
 			$target.empty().anycontent({
 				'templateID':'productVariationManager',
 				'showLoadingMessage':"Fetching Product Record and Store Variations",
+				data : {'pid':pid},
 				'dataAttribs':{'pid':pid}
 			});
 
@@ -487,8 +536,8 @@ app.model.dispatchThis('mutable');
 //
 //regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
 //uses a loadsTemplate Parameter on the data-bind to format each row.
-
-		manageCatsList : function($tag,data)	{
+// * 201330 -> not used anywhere. delete later if nothing was missed.
+/*		manageCatsList : function($tag,data)	{
 
 				var cats = Object.keys(data.value).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
 //				app.u.dump(cats);
@@ -503,7 +552,7 @@ app.model.dispatchThis('mutable');
 					}
 
 			},
-		
+*/		
 		bigListOptions : function($tag,data){
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
@@ -519,6 +568,38 @@ app.model.dispatchThis('mutable');
 
 
 		u : {
+
+//** 201330 -> for new product manager interface.
+		handleManagementCategories : function($DMI)	{
+
+			var callback = function(rd)	{
+				if(app.model.responseHasErrors(rd)){
+					$('.dualModeListMessaging',$DMI).anymessage({'message':rd});
+					}
+				else	{
+					var $ul = $("<ul \/>");
+					if(!$.isEmptyObject(app.data.adminProductManagementCategoryList['%CATEGORIES']))	{
+						var cats = Object.keys(app.data[rd.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+						for(var index in cats)	{
+							$ul.append($("<li \/>").attr('data-management-category',cats[index]).html("<a href='#'><span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized')+"<\/a>"));
+							}
+						$("[data-app-role='managementCategoryList']",$DMI).append($ul.children()).menu().width('200');
+						}
+					else	{
+						//successful call, but no management categories exist. do nothing.
+						}
+					}
+				}
+
+			if(app.model.fetchData('adminProductManagementCategoryList'))	{
+				callback({'datapointer':'adminProductManagementCategoryList'});
+				}
+			else	{
+				
+				}
+			app.model.dispatchThis('mutable');
+	
+			},
 
 
 //type is an input type.  number, select, textarea or something specific to us, like finder, media, etc.
@@ -1408,7 +1489,7 @@ app.model.dispatchThis('mutable');
 						});
 					}
 				else	{
-					$btn.button('disable');
+					$btn.button('disable').attr('title','Unable to ascertain product ID.');
 					$btn.hide();
 					}
 				},

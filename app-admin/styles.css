@@ -1335,7 +1335,7 @@ see shipping panel in product editor for example
     clear: both;
     visibility: hidden;
 	}
-
+#wizardForm fieldset div	{margin-bottom:12px;}
 
 
 #templateEditor .templatePreviewContainer {position:relative;}
