@@ -18,6 +18,7 @@ ADMIN
  -> new interface for vendors
  -> new flexedit manager interface in utilities
  -> flexedit panel in product editor upgraded to full app
+ -> fixed bugs in powertool
 
 
 301324

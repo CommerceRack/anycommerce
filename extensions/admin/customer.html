@@ -1113,8 +1113,7 @@ The checkbox below does not work.
 <div class='marginBottom clearfix'>
 	
 	<button class='floatRight' data-app-event="admin_customer|adminCampaignUpdateExec">Save Campaign</button>
-	<button class='floatRight marginRight' data-app-event="admin_customer|adminCampaignSendConfirm">Start</button>
-	
+
 	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
 </div>
 
@@ -1135,10 +1134,20 @@ The checkbox below does not work.
 	
 	</fieldset>
 	
+
+
+	<fieldset data-app-role='campaignCustomerSelector' class='floatLeft threeColumn'>
+		<legend>Customer Selection</legend>
+		<div data-app-role='pickerContainer'>
+		
+		</div>
 	
+	</fieldset>
+
+
 	
 	<fieldset data-app-role='campaignSettings' class='floatLeft threeColumn'>
-		<legend>Campaign Settings</legend>
+		<legend>Delivery Options</legend>
 
 
 <label>
@@ -1146,11 +1155,11 @@ The checkbox below does not work.
 </label>
 
 <label>
-	<input type='checkbox' name='SEND_APPLEIOS' data-bind="var: campaign(SEND_APPLEIOS); format:popVal;" />Apple iOS <span class='hint'>coming soon</span>
+	<input type='checkbox' name='SEND_APPLEIOS' data-bind="var: campaign(SEND_APPLEIOS); format:popVal;" />Apple iOS <span class='hint'>beta</span>
 </label>
 
 <label>
-	<input type='checkbox' name='SEND_ANDROID' data-bind="var: campaign(SEND_ANDROID); format:popVal;" />Android <span class='hint'>coming soon</span>
+	<input type='checkbox' name='SEND_ANDROID' data-bind="var: campaign(SEND_ANDROID); format:popVal;" />Android <span class='hint'>beta</span>
 </label>
 <!--
 <label>
@@ -1165,25 +1174,19 @@ The checkbox below does not work.
 	<input type='checkbox' name='SEND_SMS' data-bind="var: campaign(SEND_SMS); format:popVal;" />SMS/Text <span class='hint'>coming soon</span>
 </label>
 -->
-
+<br />
 <label>
 	<span>Start time</span>
 	<input type='text' name='STARTTIME' class='applyDatetimepicker' data-bind="var: campaign(STARTTIME); format:popVal;" />
 </label>
-
+<div class='marginTop marginBottom'>Or</div>
+<button data-app-event="admin_customer|adminCampaignSendConfirm">Start Now</button>
 
 
 
 
 	</fieldset>
 
-	<fieldset data-app-role='campaignCustomerSelector' class='floatLeft threeColumn'>
-		<legend>Customer Selection</legend>
-		<div data-app-role='pickerContainer'>
-		
-		</div>
-	
-	</fieldset>
 
 </form>
 
