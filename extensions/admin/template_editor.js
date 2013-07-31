@@ -305,11 +305,12 @@ var admin_templateEditor = function() {
 				
 				$('button',$fieldsets).button(); //applied to all buttons within fieldsets.
 				
+				$("<div class='clearfix marginBottom' \/>").appendTo($wizardForm);
 				//add the next/previous buttons.  The action on the button is controlled through a delegated event on the form itself.
-				$("<button data-button-action='previous'>Previous<\/button>").button({icons: {primary: "ui-icon-circle-triangle-w"},text: false}).css({'position':'absolute','top':'30px','left':'-20px'}).button('disable').appendTo($wizardForm);
-				$("<button data-button-action='next'>Next<\/button>").button({icons: {primary: "ui-icon-circle-triangle-e"},text: false}).css({'position':'absolute','top':'30px','right':'-20px'}).appendTo($wizardForm);
-				
-				$wizardForm.prepend("<div class='marginBottom alignCenter'><progress value='0' max='"+$fieldsets.length+"'></progress></div>");
+				$("<button data-button-action='previous'>Previous<\/button>").addClass('smallButton').button({icons: {primary: "ui-icon-circle-triangle-w"},text: true}).button('disable').width('40%').addClass('floatLeft').appendTo($wizardForm);
+				$("<button data-button-action='next'>Next<\/button>").addClass('smallButton ui-state-focus').button({icons: {primary: "ui-icon-circle-triangle-e"},text: true}).width('40%').addClass('floatRight').appendTo($wizardForm);
+				$("<div class='clearfix' \/>").appendTo($wizardForm);
+				$wizardForm.prepend("<div class='marginBottom ui-widget-content ui-corner-bottom smallPadding displayNone'><div class='alignCenter' data-app-role='progressBar'><div class='progress-label'>% Completed</div></div></div>"); //at B's request, do NOT use a progress bar here. no animation in slider desired.
 				
 				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
 				$wizardForm.on('click.templatewizard',function(e){
@@ -350,7 +351,14 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 							$("[data-button-action]").button('enable');
 							}
 						//last so last fieldset shows up as 100% complete.
-						app.ext.admin_templateEditor.u.handleWizardProgressBar($('progress:first',$templateEditor));
+						var $progressBar = $("[data-app-role='progressBar']",$templateEditor);
+						$progressBar.progressbar({
+							'change' : function(event,ui){
+								$('.progress-label',$progressBar).text($progressBar.progressbar("value")+"% Completed")
+								},
+							'complete' : function(){}
+							}).parent().css({top:'-13px','position':'relative'});
+						app.ext.admin_templateEditor.u.handleWizardProgressBar($("[data-app-role='progressBar']",$templateEditor));
 						}
 					});
 				} //initWizard
@@ -591,13 +599,20 @@ var $D = app.ext.admin.i.dialogCreate({
 					if($pbar instanceof jQuery)	{
 						var $fieldsets = $("fieldset",'#wizardForm');
 						if($fieldsets.length)	{
-							$pbar.val($("fieldset:visible",'#wizardForm').index());
+							$pbar.parent().slideDown('slow',function(){
+								$pbar.progressbar('option','value',(($("fieldset:visible",'#wizardForm').index() / $fieldsets.length ) * 100));
+								setTimeout(function(){
+									$pbar.parent().slideUp('slow');
+									},2000);
+								});
+							
 							}
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, pbar ["+$pbar instanceof jQuery+"] is not a valid jquery object.",'gMessage':true});
 						}
 					},
+
 //delegates a click event on the template container which updates the object inspector w/ information about the clicked element.
 				handleWizardObjects : function($iframeBody,$objectInspector)	{
 					if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
@@ -655,28 +670,42 @@ var $D = app.ext.admin.i.dialogCreate({
 
 				showObjectInInspector : function($object,$objectInspector)	{
 					if($object instanceof jQuery && $objectInspector instanceof jQuery)	{
-	
-						var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
-	
-						if(data.object)	{
-							for(index in data)	{
-								r += "<li>"+index+": "+data[index]+"<\/li>";
-								}
-							}
-						else	{
-							r += "<li>This object is not dynamic<\/li>";
-							}
 						
-						r += "<li>tag type: "+$object.get(0).tagName+"<\/li>";
+						function getObjectData($object)	{
+
+							var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
 	
-						if($object.is('img'))	{
-							r += "<li>width: "+($object.attr('width') || $object.width())+"<\/li>";
-							r += "<li>height: "+($object.attr('height') || $object.height())+"<\/li>";
+							if(data.object)	{
+								for(index in data)	{
+									r += "<li>"+index+": "+data[index]+"<\/li>";
+									}
+								}
+							else	{
+								r += "<li>This object is not dynamic<\/li>";
+								}
+							
+							r += "<li>tag type: "+$object.get(0).tagName+"<\/li>";
+		
+							if($object.is('img'))	{
+								r += "<li>width: "+($object.attr('width') || $object.width())+"<\/li>";
+								r += "<li>height: "+($object.attr('height') || $object.height())+"<\/li>";
+								}
+							r += "<\/ul>";
+							
+							return r;
+				
 							}
 	
-						$objectInspector.empty().append(r)
-						r += "<\/ul>";
-	
+						$objectInspector.empty().append(getObjectData($object));
+						
+/*						if($object.data('object'))	{} //is a data-object
+						else	{
+//find closest parent data-object and display it's info.
+							var $parentDataObject = $object.closest("[data-object]");
+							$objectInspector.append("<h2>parent data object</h2>");
+							$objectInspector.append($parentDataObject);
+							}
+*/	
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
