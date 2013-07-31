@@ -1781,8 +1781,8 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			</label>
 			
 			<label>
-				<input type='checkbox' name='Item\UseTaxTable\@BOOLEAN' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\UseTaxTable); format:popVal; hideZero:false;" checked='checked' data-app-event='admin_syndication|ebayTaxToggle' />
-				<span>Use tax table</span>
+				<input type='checkbox' name='Item\UseTaxTable\@BOOLEAN' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\UseTaxTable\@BOOLEAN); format:popVal; hideZero:false;" checked='checked' data-app-event='admin_syndication|ebayTaxToggle' />
+				<span>Use eBay tax table</span>
 				<span class='toolTip' title="Indicates whether the seller's tax table is to be used when applying and calculating sales tax for an order line item."></span>
 			</label>
 
@@ -1800,8 +1800,8 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 				<span class='toolTip' title="State or jurisdiction for which the sales tax is being collected. Only returned if the seller specified a value.">?</span>
 			</label>
 			<label>
-				<input type='checkbox' name='Item\ShippingDetails\SalesTax\ShippingIncludedInTax\@BOOLEAN' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\ShippingIncludedInTax); format:popVal;" />
-				<span>Shipping included in tax</span>
+				<input type='checkbox' name='Item\ShippingDetails\SalesTax\ShippingIncludedInTax\@BOOLEAN' class='applyAnycb' data-bind="var: profile(%PROFILE.Item\ShippingDetails\SalesTax\ShippingIncludedInTax\@BOOLEAN); format:popVal;" />
+				<span>Tax shipping</span>
 				<span class='toolTip' title="Whether shipping costs were part of the base amount that was taxed. Flat or calculated shipping. "></span>
 			</label>
 			<br />
