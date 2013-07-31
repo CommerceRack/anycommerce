@@ -1162,7 +1162,15 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 				$container.on('click',function(e){
 					var $ele = $(e.target);
 					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-					if(e.target.nodeName.toLowerCase() == 'option'){
+
+					
+					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
+
+//FF registers a click on the option. Chrome on the select.
+//to be consistent, put select into focus.						
+						if(e.target.nodeName.toLowerCase() == 'option'){
+							$ele = $ele.closest('select');
+							}
 /*
 panel-selector:
 on a select, set data-panel-selector=".someClass"
@@ -1172,16 +1180,17 @@ so when the option with data-show-panel="supplierShippingConnectorGeneric" is se
 and all .someClass are hidden (value of data-panel-selector)
 
 */
-						if($ele.parent('select').data('panel-selector'))    {
+						if($ele.data('panel-selector'))    {
 							var	$form = $ele.closest('form'); //used for context.
 				
-							$($ele.parent('select').data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
-							if(!$ele.data('show-panel'))	{} //no panel defined. do nada
-							else if($ele.data('show-panel') && $("[data-panel-id='"+$ele.data('show-panel')+"']",$form).length)	{
-								$("[data-panel-id='"+$ele.data('show-panel')+"']",$form).show(); //panel defined and it exists. show it.
+							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
+							var $option = $('option:selected',$ele);
+							if(!$option.data('show-panel'))	{} //no panel defined. do nada
+							else if($option.data('show-panel') && $("[data-panel-id='"+$option.data('show-panel')+"']",$form).length)	{
+								$("[data-panel-id='"+$option.data('show-panel')+"']",$form).show(); //panel defined and it exists. show it.
 								}
 							else	{
-								$form.anymessage({'message':"The option selected has a panel defined ["+$ele.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
+								$form.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
 								}
 							}
 						}
