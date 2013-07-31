@@ -334,6 +334,11 @@ has to be within the fieldset to for data-table to work right.
 
 
 
+
+
+
+
+
 <table>
 <tr id='powerToolActionsRowTemplate'>
 	<td data-bind='var: action(verb); format:text;'></td>
@@ -362,35 +367,6 @@ has to be within the fieldset to for data-table to work right.
 
 
 
-<!--
-action dataTable template:
-<tr><td valign="top"><a href="#" onclick="powerToolFrm.VERB.value='ACTION-DEL:0'; jQuery('#powerToolFrm').submit();  return false;">[x]</a></td><td valign="top">stripcrlf</td><td valign="top">zoovy:profile</td><td valign="top"></td><td valign="top"></td></tr>
-
-
-verbs removed:
-	<tr><td colspan="2">
-		<input type="radio" value="set-option" name="verb"> Enable Finder Option<br>
-		<input type="radio" value="nuke-option" name="verb"> Remove Finder or Finder Option<br>
-		Finder option: <input type="text" size="4" name="set-option"><br>
-		<div class="hint">HINT: use SSVV where SS is the SOG ID, and VV is the Option Value. 
-		When Removing you can use either SS or SSVV syntax.
-		If no options are available on a product after a finder option is removed then the finder SOG is cleaned from the product as well.
-		</div><br>
-	</td></tr>
-
-JSON editor, which didn't work:
-
-<a onclick="$('basic').hide(); $('advanced').show(); $('action-editor').value='json';" href="#" class="hint">[json]</a>
-</div>
-<div id="advanced" style="display: none">
-<b>Advanced Editor</b> 
-<a onclick="$('advanced').hide(); $('basic').show(); $('action-editor').value='basic';" href="#" class="hint">[turn off]</a><br>
-<textarea name="actions-expert" rows="20" cols="70">[{"verb":"stripcrlf","attrib":"zoovy:profile"}]</textarea>
-<input type="button" value="Update" onclick="powerToolFrm.VERB.value='ADVANCED-EDITOR-SAVE'; jQuery('#powerToolFrm').submit();" class="button2">
-
--->		
-
-
 
 
 
@@ -413,6 +389,7 @@ JSON editor, which didn't work:
 	</td>
 </tr>
 </table>
+
 
 
 
@@ -457,11 +434,12 @@ JSON editor, which didn't work:
 
 
 
-
 <!--
 
 //////////////////   PRIVATE FILES  \\\\\\\\\\\\\\\\\\\\\
 -->
+
+
 <table>
 <tr id='privateFilesRowTemplate'>
 	<td data-bind="var: file(CREATED); format:text;" class='hideInDetailMode'></td>
@@ -472,9 +450,9 @@ JSON editor, which didn't work:
 	<td class='alignRight'>
 	<button data-app-event="admin|tagRowForRemove">Delete</button>
 	<button data-app-event="admin_tools|adminPrivateFileDownloadExec">Download</button>
+	</td>
 </tr>
 </table>
-
 
 
 
@@ -724,6 +702,7 @@ JSON editor, which didn't work:
 		-->
 	</section>
 
+</div><!-- /accountUtilitiesTemplate -->
 
 <!--
 
@@ -818,6 +797,9 @@ JSON editor, which didn't work:
 </div>
 
 
+
+
+
 <table>
 <tr id='flexeditAttributeRowTemplate'>
 	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
@@ -832,3 +814,4 @@ JSON editor, which didn't work:
 </tr>
 
 </table>
+
