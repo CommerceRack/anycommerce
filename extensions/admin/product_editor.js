@@ -415,12 +415,12 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 //PID is required for mode = product.
 //executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
 		getVariationEditor : function(mode, varObj, PID)	{
-			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
+//			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
 			varObj = varObj || {}; //defauilt to object to avoid JS error in error checking.
 			var $r = $("<div \/>").addClass('variationEditorContainer'); //what is returned. Either the editor or some error messaging.
 			if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
-				app.u.dump(" -> mode: "+mode);
-				app.u.dump(" -> varObj:"); app.u.dump(varObj);
+//				app.u.dump(" -> mode: "+mode);
+//				app.u.dump(" -> varObj:"); app.u.dump(varObj);
 				
 				$r.data({
 					'variationtype':varObj.type,
@@ -434,8 +434,11 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 					varObj.pid = PID; //add pid to object so it can be used in data-binds.
 					$r.data('pid',PID); //used in save function.
 					} 
+				//build the generic editor.
 				$r.anycontent({'templateID':'variationEditorTemplate','data':varObj});
+				//add the editor specific to the variation type.
 				$("[data-app-role='variationsTypeSpecificsContainer']",$r).anycontent({'templateID':'variationsEditor_'+varObj.type.toLowerCase(),'data':varObj})
+				
 				
 				if(mode == 'product')	{
 //when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
@@ -445,6 +448,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 				
 				app.u.handleAppEvents($r);
 				$('.toolTip',$r).tooltip();
+
 //for 'select' based variations, need to add some additional UI functionality.
 				if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(varObj.type))	{
 					$("[data-app-role='variationsOptionsTbody']",$r).addClass('sortGroup').sortable();
@@ -453,16 +457,32 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 						$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 						})
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
-/*
-!!! NOT DONE YET.  close.  after drag, the option display doesn't match. make it look the same and then make sure the save works.
 					if(mode == 'product' && varObj.id.indexOf('#') == -1)	{
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
-						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:productVariationManagerOptionRowTemplate;")
+						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 						$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
-						$tbody.sortable({connectWith: '.sortGroup'});
-						//now need to 'lock' the options that are already selected on this product.						
+						$('button',$tbody).hide();
+						$tbody.sortable({
+							connectWith: '.sortGroup',
+							stop : function(event,ui){
+								var $tr = $(ui.item);
+								if($tr.closest('table').data('app-role') == "storeVariationsOptionsContainer")	{} //same parent. do nothing.
+								else	{
+									//moved to new parent.
+									$('button',$tr).show();
+									app.u.handleAppEvents($tr);
+									}
+								//optionsEditorRowTemplate
+								}
+							});
+						//now hide all the options in the 'global' list that are already enabled on the product.
+						$("tbody[data-app-role='variationsOptionsTbody'] tr",$r).each(function(){
+							app.u.dump(" -> $(this).data('v'): "+$(this).data('v'));
+							$("[data-v='"+$(this).data('v')+"']",$tbody).empty().remove(); //removed instead of just hidden so that css even/odd works. also, not necessary on DOM for anything.
+							})
+						//data-v="00"			
 						}
-*/					
+					
 					
 					}
 				
@@ -686,9 +706,7 @@ app.model.dispatchThis('mutable');
 					$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
 					}
 				else	{} //how the F did we get here?
-// !!! add something here where if data.type is selectreset and product value for attribute is not valid, throw warning and do nothing with value.
-// if it's a select list type and value doesn't exist, add it as option w/ prompt !!! invalid value: [VALUE] w/ [VALUE] as value (and selected) to allow preservation of bad value.
-// throw in either case.
+
 				$select.appendTo($r);
 				}
 			else if(type == 'button')	{
@@ -1481,8 +1499,8 @@ app.model.dispatchThis('mutable');
 							data = app.data.adminSOGComplete['%SOGS'][variationID]
 							}
 						else	{
-							app.u.dump(" -> this is an existing variation.");
-							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID));
+//							app.u.dump(" -> this is an existing variation.");
+//							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID));
 							data = app.data['appProductGet|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID)]
 							}
 

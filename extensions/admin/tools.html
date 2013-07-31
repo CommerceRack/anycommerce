@@ -752,26 +752,15 @@ has to be within the fieldset to for data-table to work right.
 				<label>
 					<span>Type</span>
 					<select name='type' data-bind='var: flexedit(type); format:popVal;'>
-						<option value='boolean'>Boolean</option>
 						<option value='checkbox'>Checkbox</option>
-						<option value='chooser/counter'>Chooser/Counter</option>
 						<option value='currency'>Currency</option>
 						<option value='image'>Image</option>
 						<option value='keyword'>Keyword</option>
 						<option value='number'>Number</option>
-							<option value='overstock/category'>Overstock category</option>
 						<option value='select'>Select</option>
 						<option value='textbox'>Text (small block)</option>
 						<option value='textarea'>Text (big block)</option>
 						<option value='weight'>Weight</option>
-						<optgroup label='eBay'>
-							<option value='ebay/storecat'>Store categories</option>
-							<option value='ebay/attributes'>Attributes</option>
-						</optgroup>
-						<optgroup label="Hidden">
-							<option value='digest'>Digest</option>
-							<option value='special'>Special</option>
-						</optgroup>
 					</select>
 				</label>
 				<button data-app-event="admin_config|dataTableAddExec">Add Attribute</button>

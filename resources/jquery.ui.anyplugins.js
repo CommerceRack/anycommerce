@@ -490,7 +490,7 @@ either templateID or (data or datapointer) are required.
 //always add the dataAttribs as 'data()'. that way they're available even if a failure occurs later.
 //applying theme as data() insteat of attr('data-** means case is preserved.
 			if(o.dataAttribs)	{
-				app.u.dump(" -> this.element.id: "+this.element.attr('id'));
+//				app.u.dump(" -> this.element.id: "+this.element.attr('id'));
 				this.element.data(o.dataAttribs);
 				}
 
