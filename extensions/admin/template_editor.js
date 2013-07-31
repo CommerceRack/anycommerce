@@ -60,19 +60,41 @@ var admin_templateEditor = function() {
 				vars = vars || {};
 				if(mode == 'ebay' || mode == 'campaign')	{
 					var $D = $('#templateEditor');
+
+					app.u.dump(" -> #templateEditor.length: "+$D.length);
+						
 					if($D.length)	{
+						$('#globalMessaging').anymessage({'message':'The template editor was already open for '+$D.data('mode')+'. That editor was closed'})
 						//template editor has been opened before. nuke the template vars so nothing carries over.
 						$D.removeData('profile');
 						$D.removeData('campaignid');
 						$D.removeData('mode');
-						$D.empty();
+						$D.empty().remove();
 						}
-					else	{
-						$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'});
+
+					$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'});
+					
+
+					vars.editor = 'inline';
+					
+					if(vars.editor == 'inline')	{
+						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append($D);
+						}
+					else if(vars.editor == 'fullscreen')	{
+						$D.appendTo('body');
+						$('#templateEditor').fullScreen({
+							'background' : '#ffffff',
+							'callback' : function(state)	{}
+							});
+						}
+					else if (vars.editor == 'modal')	{
+//must scroll to top of body/html first or issues with modal placement and lack of browser scrollbars.						
+						$('html, body').animate({scrollTop:0}, 'fast');
+
 						$D.dialog({
 							'modal':true,
 							'autoOpen':false,
-							'width':'94%',
+							'width':'96%',
 							close: function(event, ui)	{
 								$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
 //if the css editor was opened, close it.
@@ -85,123 +107,129 @@ var admin_templateEditor = function() {
 								}
 							});
 						$D.dialog("option", "position", "center");
-						}					
-					
-					if(mode == 'ebay' && !vars.profile)	{
-						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is ebay but vars.profile was not set and is required.","gMessage":true});
-						} //error
-					else if(mode == 'campaign' && !vars.campaignid)	{
-						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
+						$D.dialog('option','height',($(window).height() - 100));
+						
+						$D.dialog('open');
+
+
 						}
 					else	{
-
-						$D.data('mode',mode);
-						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
-						$D.dialog('option','height',($(window).height() - 100));
-						$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
-						$D.showLoading({"message":"Fetching template HTML"});
-//must scroll to top of body/html first or issues with modal placement and lack of browser scrollbars.						
-						$('html, body').animate({scrollTop:0}, 'fast', function(){
-							$D.dialog('open');
-							});
-						
-					
-						var callback = function(rd){
-							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$D.anymessage({'message':rd})
-								}
-							else	{
-						
-								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
-									'state' : 'persistent',
-									showClose : false, //set to false to disable close (X) button.
-									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-									extension : 'template_editor', //used in conjunction w/ persist.
-									name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-									persistentStateDefault : 'collapse',
-									persistent : true
-									});
-								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
-								var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
-									"|", 
-									app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
-									app.ext.admin_templateEditor.u.getEditorButton_image()
-									]);
-
-//handle some mode specifics.
-								$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
-								if(mode == 'ebay')	{
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
-									$(".ebay",$D).show();
-									}
-								else if(mode == 'campaign')	{
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
-									$(".campaign",$D).show();
-									}
-								else	{}
-//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
-						
-								$("textarea:first",$D)
-									.show()
-									.width('95%')
-									.height($D.height() - 100)
-									.css('width','95%')
-									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
-									.htmlarea({
-										// Override/Specify the Toolbar buttons to show
-										toolbar: toolbarButtons // 
-										});
-								
-							
-								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
-								var $iframeBody = $('iframe',$D).width('97%').contents().find('body');
-								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
-							
-								app.u.handleAppEvents($D);
-								$('.toolTip',$D).tooltip();
-								}
-							}
-					
-						if(mode == 'ebay')	{
-							app.model.addDispatchToQ({
-								'_cmd':'adminEBAYProfileFileContents',
-								'PROFILE' : vars.profile,
-								'FILENAME' : 'index.html',
-								'_tag' : {
-									'datapointer' : 'adminEBAYProfileFileContents|'+vars.profile,
-									'callback' : callback
-									}
-								},'immutable');
-							}
-						else if(mode == 'campaign')	{
-
-							app.model.addDispatchToQ({
-								'_cmd':'adminCampaignFileContents',
-								'CAMPAIGNID' : vars.campaignid,
-								'FILENAME' : 'index.html',
-								'_tag' : {
-									'datapointer' : 'adminCampaignFileContents|'+vars.campaignid,
-									'callback' : callback
-									}
-								},'immutable');
-
-							}
-						else	{
-							$D.anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] passed initial validation but failed at dispatch add.","gMessage":true});
-							} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
-					
-						app.model.dispatchThis('immutable');
+						$('#globalMessaging').anymessage({'message':'No editor mode passed.'});
 						}
 
+					if(vars.editor)	{
+	
+						if(mode == 'ebay' && !vars.profile)	{
+							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is ebay but vars.profile was not set and is required.","gMessage":true});
+							} //error
+						else if(mode == 'campaign' && !vars.campaignid)	{
+							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
+							}
+						else	{
+	
+							$D.data('mode',mode);
+							$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
+	//						
+							$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
+							$D.showLoading({"message":"Fetching template HTML"});
+							
+						
+							var callback = function(rd){
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$D.anymessage({'message':rd})
+									}
+								else	{
+							
+									$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
+										'state' : 'persistent',
+										showClose : false, //set to false to disable close (X) button.
+										wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+										extension : 'template_editor', //used in conjunction w/ persist.
+										name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+										persistentStateDefault : 'collapse',
+										persistent : true
+										});
+									var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
+									var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
+										"|", 
+										app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
+										app.ext.admin_templateEditor.u.getEditorButton_image()
+										]);
+	
+	//handle some mode specifics.
+									$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
+									if(mode == 'ebay')	{
+										toolbarButtons.push("|");
+										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
+										$(".ebay",$D).show();
+										}
+									else if(mode == 'campaign')	{
+										toolbarButtons.push("|");
+										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
+										toolbarButtons.push("|");
+										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
+										toolbarButtons.push("|");
+										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
+										$(".campaign",$D).show();
+										}
+									else	{}
+	//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
+							
+									$("textarea:first",$D)
+										.show()
+										.width('95%')
+										.height($D.height() - 100)
+										.css('width','95%')
+										.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
+										.htmlarea({
+											// Override/Specify the Toolbar buttons to show
+											toolbar: toolbarButtons // 
+											});
+									
+								
+									// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+									$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
+									var $iframeBody = $('iframe',$D).width('97%').contents().find('body');
+									app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
+								
+									app.u.handleAppEvents($D);
+									$('.toolTip',$D).tooltip();
+									}
+								}
+						
+							if(mode == 'ebay')	{
+								app.model.addDispatchToQ({
+									'_cmd':'adminEBAYProfileFileContents',
+									'PROFILE' : vars.profile,
+									'FILENAME' : 'index.html',
+									'_tag' : {
+										'datapointer' : 'adminEBAYProfileFileContents|'+vars.profile,
+										'callback' : callback
+										}
+									},'immutable');
+								}
+							else if(mode == 'campaign')	{
+	
+								app.model.addDispatchToQ({
+									'_cmd':'adminCampaignFileContents',
+									'CAMPAIGNID' : vars.campaignid,
+									'FILENAME' : 'index.html',
+									'_tag' : {
+										'datapointer' : 'adminCampaignFileContents|'+vars.campaignid,
+										'callback' : callback
+										}
+									},'immutable');
+	
+								}
+							else	{
+								$D.anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] passed initial validation but failed at dispatch add.","gMessage":true});
+								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
+						
+							app.model.dispatchThis('immutable');
+							}
 
+						}
 
 					
 					}

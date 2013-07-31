@@ -15,7 +15,9 @@ ADMIN
  -> new interface for account utilities (that interface formerly known as tech tools)
  	disk usage and inventory event queue are in the 'logs' section.
  -> "Inventory Lookup" in utilities moved to 'vstore' in setup.
- 
+ -> new interface for vendors
+ -> new flexedit manager interface in utilities
+ -> flexedit panel in product editor upgraded to full app
 
 
 301324
