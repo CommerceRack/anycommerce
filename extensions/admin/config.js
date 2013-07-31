@@ -1057,7 +1057,8 @@ $D.dialog('open');
 								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
 								sfo = $container.serializeJSON({'cb':true}),
 								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
-							
+
+
 //							app.u.dump(" -> sfo: "); app.u.dump(sfo);
 							
 							$tr.anycontent({data:sfo});
