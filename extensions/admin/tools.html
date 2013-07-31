@@ -182,13 +182,13 @@ has to be within the fieldset to for data-table to work right.
 				<tr>
 					<td><input type="radio" value="set" name="verb" required='required' data-app-event="admin_tools|powerToolVerbChange" /></td>
 					<td>Set value to</td>
-					<td><input type="text" name="setval" /></td>
+					<td><input type="text" name="setval" class='lockOnVerbChange' /></td>
 					<td><span class='toolTip' title="Will set the attribute selected above to the value specified in the text input on this row">?</span></td>
 				</tr>
 				<tr>
 					<td><input type="radio" value="add" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
 					<td>Simple equation:</td>
-					<td><input type="text" name="addval" /></td>
+					<td><input type="text" name="addval" class='lockOnVerbChange' /></td>
 					<td><span class='toolTip' title="Will perform a mathmatical operation on the attribute selected above based on the value of the text input on this row. +/- and % okay. This action is reserved for numeric fields only">?</span></td>
 				</tr>
 				<tr>
@@ -196,10 +196,10 @@ has to be within the fieldset to for data-table to work right.
 					<td class='valignTop'>Search and replace</td>
 					<td class='alignedLabels alignedInputs valignTop'>
 						<label>
-							<input placeholder='Search for' type="text" name="searchval" />
+							<input placeholder='Search for' type="text" name="searchval" class='lockOnVerbChange' />
 						</label>
 						<label>
-							<input placeholder='Replace with' type="text" name="replaceval" />
+							<input placeholder='Replace with' type="text" name="replaceval" class='lockOnVerbChange' />
 						</label>
 					</td>
 					<td class='valignTop'><span class='toolTip' title="Will search the attribute for the value of 'search for' and if a match, will replace with 'replace with' value. Use * to match wildcard">?</span></td>
@@ -207,13 +207,13 @@ has to be within the fieldset to for data-table to work right.
 				<tr>
 					<td><input type="radio" value="copy" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
 					<td>Copy to</td>
-					<td><input type="text" name="copyto" /></td>
+					<td><input type="text" name="copyto" class='lockOnVerbChange' /></td>
 					<td><span class='toolTip' title="Will copy the value of the attribute selected above into the value of the attribute set on the text input on this row.">?</span></td>
 				</tr>
 				<tr>
 					<td><input type="radio" value="copyfrom" name="verb" data-app-event="admin_tools|powerToolVerbChange" / ></td>
 					<td>Copy from</td>
-					<td><input type="text" name="copyfrom" /></td>
+					<td><input type="text" name="copyfrom" class='lockOnVerbChange' /></td>
 					<td><span class='toolTip' title="Will copy the value of the text input on this row into the attribute selected above.">?</span></td>
 				</tr>
 				<tr>

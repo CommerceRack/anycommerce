@@ -329,7 +329,10 @@ var admin_tools = function() {
 					var
 						data = $(this).data(),
 						verb = data.verb;
-						
+					if(data.attrib == '_')	{
+						data.attrib = data.attrib_custom;
+						delete attrib_custom;
+						}
 					delete data.verb;
 					r += verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data);
 					switch(verb)
@@ -434,19 +437,31 @@ var admin_tools = function() {
 					event.preventDefault();
 					app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
-						obj = {
-							'%vars' : {
-								'GUID' : app.u.guidGenerator(),
-								'APP' : 'PRODUCT_POWERTOOL',
-								'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
-								'actions' : app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
-								},
-							'type' : 'UTILITY'
+					
+					if($("[data-app-role='pickerContainer']",$form).find(':checkbox:checked').length)	{
+						if($('#powerToolActionListTbody tr').length)	{
+							obj = {
+								'%vars' : {
+									'GUID' : app.u.guidGenerator(),
+									'APP' : 'PRODUCT_POWERTOOL',
+									'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
+									'actions' : app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
+									},
+								'type' : 'UTILITY'
+								}
+	//					console.clear();
+	//					app.u.dump(" -> actions: "+obj['%vars'].actions);
+	//					app.u.dump(" -> obj: "); app.u.dump(obj); 
+							app.ext.admin_batchJob.a.adminBatchJobCreate(obj);
 							}
-//					console.clear();
-//					app.u.dump(" -> actions: "+obj['%vars'].actions);
-//					app.u.dump(" -> obj: "); app.u.dump(obj); 
-					app.ext.admin_batchJob.a.adminBatchJobCreate(obj);
+						else	{
+							$form.anymessage({'message':'Please specify at least one attribute/action in step 2.'})
+							}	
+						}
+					else	{
+						$form.anymessage({'message':'Please make at least one selection in Step 1.'})
+						}
+					
 					
 					})
 				},
@@ -479,10 +494,7 @@ var admin_tools = function() {
 			powerToolVerbChange : function($radio)	{
 				$radio.off('click.powerToolVerbChange').on('click.powerToolVerbChange',function(){
 					var $fieldset = $radio.closest('fieldset');
-					app.u.dump('got here');
-					$('input',$fieldset)
-						.not("[app-data-role='powerToolConditionalContainer'] input") //skip the conditional inputs
-						.not(':radio') //don't lock the radios or verb can't be changed.
+					$('input.lockOnVerbChange',$fieldset)
 						.attr('disabled','disabled')  //disable all other inputs. helps clearly indicate what's required.
 						.attr('required','').removeAttr('required').val(""); //make sure input isn't required. empty any value that was set to avoid confusion.
 					$radio.closest('tr').find('input').attr('disabled','').removeAttr('disabled').attr('required','required'); //enable input(s) related to this verb.
