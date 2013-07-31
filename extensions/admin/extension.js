@@ -3667,6 +3667,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else	{
 					$button.attr('disabled','disabled');
 					}
+				this.applyEditTrackingToInputs($context);
 				},
 
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.

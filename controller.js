@@ -1037,7 +1037,6 @@ app.u.throwMessage(responseData); is the default error handler.
 					$(':checkbox.applyAnycb',$target).anycb();
 					$('table.applyAnytable',$target).anytable();
 					$('.applyAnytabs',$target).anytabs();
-
 					app.u.handleAppEvents($target);
 
 					}
@@ -1787,10 +1786,17 @@ VALIDATION
 						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
 						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
-						r = false;
-						$input.addClass('ui-state-error');
-						$input.after($span.text('not a valid email address'));
-						removeClass($input);
+						//only 'error' if field is required. otherwise, show warning
+// ** 201330 -> field was erroring if email was invalid even if field was not required.						
+						if($input.attr('required') == 'required')	{
+							r = false;
+							$input.addClass('ui-state-error');
+							}
+						else if($input.val())	{
+							$input.after($span.text('not a valid email address'));
+							removeClass($input);
+							}
+						else	{} //field is not required and blank.
 						}
 					else if($input.attr('maxlength') && $input.val().length > $input.attr('maxlength'))	{
 						r = false;

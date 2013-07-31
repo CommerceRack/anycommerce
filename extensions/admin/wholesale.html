@@ -257,7 +257,7 @@
 <div id='supplierItemListTemplate'>
 <form action='#' onsubmit="return false">
 <div class='clearfix ui-widget-header ui-corner-top smallPadding'>
-	<button class='floatRight' data-app-event="admin_wholesale|adminSupplierActionDeAssociate">De-associate product</button>
+	<button class='floatRight' data-app-event="admin_wholesale|adminSupplierActionDeAssociate">Disassociate Product</button>
 </div>
 
 <table class='gridTable fullWidth applyAnytable'>
@@ -351,7 +351,7 @@
 			
 			<fieldset data-app-role='SET'>
 		
-				<label>
+				<label data-bind='var: supplier(MARKUP); format:showIfSet;' class='displayNone'>
 					<span>Markup</span>
 					<input name='MARKUP' value='' size='10' maxlength='15' type='text' data-bind='var: supplier(MARKUP); format:popVal;' />
 				</label>
@@ -408,13 +408,14 @@
 
 
 		<div class='panel labelsAsBreaks alignedLabels' data-app-role='out'>
-			<h2>Company Settings</h2>
+			<h2>Invoice Information</h2>
 			<div class='clearfix'>
+			<p class='hint'>The contents of this panel are transmitted to Supplier with every order.</p>
 			<fieldset data-app-role='OUR'>
 		
 			
 				<label>
-					<span>Name</span>
+					<span>Company name</span>
 					<input name='company_name' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.company_name); format:popVal;' />
 				</label>
 				
@@ -498,7 +499,7 @@
 				</label>
 
 				<div data-panel-id='supplierShippingConnectorNone' class='supplierShippingConnector'>Will use your store configuration</div>
-				<div data-panel-id='supplierShippingConnectorGeneric' class='displayNone supplierShippingConnector'>LINK to something</div>
+				<div data-panel-id='supplierShippingConnectorGeneric' class='displayNone supplierShippingConnector'></div>
 		
 			</fieldset>
 			</div>
@@ -601,7 +602,7 @@
 		
 				<label>
 					<span>Email BCC:</span>
-					<input type='email' name='bcc' data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
+					<input type='email' name='bcc' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
 				</label>
 		
 				<label>

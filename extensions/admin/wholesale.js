@@ -685,7 +685,12 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
 						$('button',$table).removeClass('ui-state-highlight');
 						$ele.addClass('ui-state-highlight');
-
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+						$('button, a',$table).each(function(){
+							$(this).off('close.stickytab').on('click.closeStickytab',function(){
+								$table.stickytab('close');
+								})
+							})
 
 
 						var $editorContainer = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
@@ -776,7 +781,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 		$D.dialog('option','width','70%');
 		$D.dialog('option','height',($(window).height() / 2));
 		$D.dialog( "option", "appendTo", $btn.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
-		$('form',$D).showLoading({'message':'Updating Orders'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
+		$('form',$D).showLoading({'message':'Fetching '+$btn.data('mode')+' list...'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
 		$D.dialog('open');
 		
 		var cmdObj = {
