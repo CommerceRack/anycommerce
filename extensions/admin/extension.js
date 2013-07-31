@@ -1160,30 +1160,6 @@ if giftcard is on there, no paypal will appear.
 			}, //adminProductManagementCategoryList
 
 
-		adminSupplierItemList : {
-			init : function(vendorid,_tag,Q)	{
-				var r = 0;
-				if(vendorid)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminSupplierItemList|"+vendorid;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(vendorid,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierItemList, vendorid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(vendorid,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : "adminSupplierItemList",_tag:_tag,"VENDORID":vendorid},Q || mutable);
-				}
-			}, //adminSupplierItemList
-
 
 		adminSyndicationDetail : {
 			init : function(DST,_tag,Q)	{
