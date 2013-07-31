@@ -447,7 +447,7 @@ CART
 .cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
 .cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
 
-.checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
+.checkoutButtonsContainer > span	{display:block; float:left; margin:0 12px 12px 0;}
 
 .cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
 

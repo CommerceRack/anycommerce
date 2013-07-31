@@ -1045,12 +1045,12 @@ So the cart template should contain these two elements and the extension should 
 
 	<!-- some buttons that are alternatives to checkout. fewer is better -->
 	<menu class='cartAltButtonsContainer noPadOrMargin'>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+	<button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button>
 	</menu>
 
 	<div class='checkoutButtonsContainer'>
 
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+		<span title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
 
 		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 
