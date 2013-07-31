@@ -183,7 +183,7 @@
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
-	<button class='marginLeft' data-mode='order'>Unordered Items</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
 	</td>
 </tr>
 
@@ -252,7 +252,8 @@
 	<th class='alignLeft'>Confirmed</th>
 </tr>
 </thead>
-<tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListItemTemplate;">
+<!-- orders is what's returned in order view. items is what's returned in unorderitems -->
+<tbody data-bind="var:orders(@ORDERS); defaultVar:orders(@ITEMS); format:processList; loadsTemplate:supplierOrderListItemTemplate;">
 </tbody>
 </table>
 </form>

@@ -171,7 +171,7 @@ var admin_wholesale = function() {
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
 						"<button data-app-event='admin|refreshDMI'>Refresh Supplier List<\/button>",
-						"<button class='marginLeft'>Unordered Items</button>",
+						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all'>Unordered Items</button>",
 						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
 						],
 					'thead' : ['Name','ID','Type','Mode',''],
@@ -580,6 +580,46 @@ TRACKINGSET ->
 						}
 					});
 				}, //showSupplierEditor
+
+	
+			adminSupplierUnorderedItemListShow : function($btn)	{
+				$btn.button();
+				
+				$btn.off('click.adminSupplierUnorderedItemListShow').on('click.adminSupplierUnorderedItemListShow',function(){
+
+					var $D = app.ext.admin.i.dialogCreate({
+						'title': "Unordered Items"
+						});
+					$D.dialog('option','width','70%');
+					$D.dialog('open');
+
+					var cmdObj = {
+						_cmd : 'adminSupplierUnorderedItemList',
+						'FILTER':'OPEN',
+						_tag : {
+							'templateID': "supplierOrderListTemplate",
+							callback : 'anycontent',
+							'jqObj' : $D
+							}
+						}
+					if($btn.data('mode') == 'vendor')	{
+						cmdObj.VENDORID = $btn.closest("[data-code]").data('CODE');
+						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList|"+cmdObj.VENDORID;
+						}
+					else if	($btn.data('mode') == 'all'){
+						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList";
+						}
+					else	{} //unrecognized mode.
+					//no datapointer will be set if invalid mode set.
+
+					if(cmdObj._tag.datapointer)	{
+						app.model.addDispatchToQ(cmdObj,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					
+					});
+				},
+
 
 //this is used in the list and also in the detail.
 //so the vendorid is ascertained using 'code' because that's what comes in the list response.

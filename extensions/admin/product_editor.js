@@ -440,7 +440,6 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 				if(mode == 'product')	{
 //when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
 					$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
-
 					}
 
 				
@@ -455,7 +454,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 						})
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
 /*
-NOT DONE YET.  close.  after drag, the option display doesn't match. make it look the same and then make sure the save works.
+!!! NOT DONE YET.  close.  after drag, the option display doesn't match. make it look the same and then make sure the save works.
 					if(mode == 'product' && varObj.id.indexOf('#') == -1)	{
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:productVariationManagerOptionRowTemplate;")
