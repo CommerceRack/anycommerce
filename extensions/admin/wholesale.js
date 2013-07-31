@@ -318,47 +318,13 @@ app.model.dispatchThis('mutable');
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
-			
-			'adminSupplierAction' : function(sfo)	{
-				sfo = sfo || {};
-				var newSfo = {
-					'_cmd':'adminSupplierAction',
-					'VENDORID' : sfo.VENDORID,
-					'_tag':sfo._tag,
-					'@updates':new Array()
-					}
-				if(sfo.action.indexOf('ORDER:') == 0)	{
-					for(index in sfo)	{
-						if(index.indexOf('orderid_') == 0)	{
-							newSfo['@updates'].push(sfo.action+"?orderid="+index.substring(8));
-							}
-						}
-					}
-				else	{
-					newSfo = false;
-					//unrecognized action. !!!
-					}
-				return newSfo;
-				},
 
-/*
-adminSupplierAction
-INVENTORY:UPDATE ->
-PRODUCT:DELINK
-
-ORDER:APPROVE
-ORDER:ARCHIVE
-ORDER:CLOSE
-ORDER:CONFIRM
-ORDER:RECEIVE
-ORDER:REDISPATCH
-
-*/
 
 	
 /*
 macros:
-COMPANYSET
+SET
+OURSET
 ORDERSET -> 
 SHIPSET ->
 INVENTORYSET ->
@@ -523,6 +489,147 @@ TRACKINGSET ->
 					})
 				}, //showSupplierCreate
 
+//this button action is applied to the order list in both 'orders' and 'unordered items'.
+//it'll validate to make sure an action is chosen as well as at least one order.
+//It'll then update those orders w/ the chosen action.
+//All things being equal, it'll then refresh the list of orders.
+			adminSupplierActionOrder : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSupplierActionOrder').on('click.adminSupplierActionOrder',function(){
+app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
+					var
+						$D = $btn.closest('.ui-dialog-content'), 
+						$form = $btn.closest('form');
+
+					if(app.u.validateForm($form))	{
+						
+						var
+							sfo = $form.serializeJSON(),
+							VENDORID = $btn.closest('.ui-dialog-content').data('vendorid'); 
+
+						sfo._cmd = 'adminSupplierAction';
+						sfo['@updates'] = new Array();
+						sfo._tag = {
+							callback : 'showMessaging',
+							message : 'Your changes have been saved.',
+							jqObj : $D
+							}
+
+
+						for(index in sfo)	{
+							if(index.indexOf('orderid_') == 0)	{
+								sfo['@updates'].push(sfo.action+"?orderid="+index.substring(8));
+								}
+							}
+						
+						
+						
+						if(sfo['@updates'].length)	{
+							
+							app.model.addDispatchToQ(sfo,'immutable');
+							
+							if($D.data('mode'))	{
+								if($D.data('mode') == 'adminSupplierUnorderedItemList')	{
+									$('tbody',$form).empty().showLoading({"message":"Performing action and fetching updated list of orders"})
+									app.model.addDispatchToQ({
+										_cmd : 'adminSupplierUnorderedItemList',
+										FILTER : 'OPEN',
+										VENDORID : VENDORID,
+										_tag : {
+											datapointer : 'adminSupplierOrderList|'+VENDORID,
+											callback : 'anycontent',
+											jqObj : $('tbody',$form)
+											}
+										},'immutable')					
+									}
+								else if($D.data('mode') == 'adminSupplierOrderList')	{
+									$('tbody',$form).empty().showLoading({"message":"Performing action and fetching updated list of orders"})
+									app.model.addDispatchToQ({
+										_cmd : 'adminSupplierOrderList',
+										FILTER : 'RECENT',
+										VENDORID : VENDORID,
+										_tag : {
+											datapointer : 'adminSupplierOrderList|'+VENDORID,
+											callback : 'anycontent',
+											jqObj : $('tbody',$form)
+											}
+										},'immutable')					
+									}
+								else	{
+									$D.anymessage({'message':'Invalid mode for this viewer. The request to change order status is still being attempted, but this list will not auto-refresh after that request finishes.'});
+									}
+								
+				
+								
+								}
+							else	{
+								$D.anymessage({'message':'Unable to ascertain a mode for this viewer. The request to change order status is still being attempted, but this list will not auto-refresh after that request finishes.'});
+								}
+								
+							app.model.dispatchThis('immutable'); //dispatch for update runs whether 'list' updated or not.
+							}
+						else	{
+							$form.anymessage({"message":"Please select at least one order to perform this action on."})
+							}
+
+						}
+					else	{} //validate form handles error display.
+					});
+
+
+
+				},
+
+
+			adminSupplierActionDeAssociate : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSupplierActionDeAssociate').on('click.adminSupplierActionDeAssociate',function(){
+
+					var
+						$form = $btn.closest('form'),
+						VENDORID = $btn.closest('.ui-dialog-content').data('vendorid'),
+						cmdObj = {
+						_cmd : 'adminSupplierAction',
+						'@updates' : new Array(),
+						VENDORID : VENDORID,
+						_tag : {
+							callback : 'showMessaging',
+							message : 'Your changes have been saved.',
+							jqObj : $form
+							}
+						}
+
+					$(":checkbox:checked",$form).each(function(){
+						cmdObj['@updates'].push("PRODUCT:DELINK?sku="+$(this).attr('name'));
+						})
+					
+					if(cmdObj['@updates'].length)	{
+						$form.showLoading({"message":"De-associating product and fetching updated list"});
+						('tbody',$form).empty();
+						app.model.addDispatchToQ(cmdObj,'immutable');
+						app.model.addDispatchToQ({
+							_cmd : 'adminSupplierProductList',
+							FILTER : 'OPEN',
+							VENDORID : VENDORID,
+							_tag : {
+								datapointer : 'adminSupplierProductList|'+VENDORID,
+								callback : 'anycontent',
+								jqObj : $('tbody',$form)
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$D.anymessage({'message':'Please select at least one product from the list below.'});
+						}
+
+					});
+
+
+
+				},
+
+
 			adminSupplierAction : function($btn)	{
 				$btn.button();
 				if($btn.data('action'))	{
@@ -571,6 +678,16 @@ TRACKINGSET ->
 				$ele.off('click.showSupplierEditor').on('click.showSupplierEditor',function(){
 					var $row = $ele.closest('tr');
 					if($row.data('code'))	{
+
+						var $table = $ele.closest('table');
+						
+						$table.stickytab({'tabtext':'vendors','tabID':'batchJobsStickyTab'}).addClass('small');
+						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+						$('button',$table).removeClass('ui-state-highlight');
+						$ele.addClass('ui-state-highlight');
+
+
+
 						var $editorContainer = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
 						$editorContainer.empty();
 						app.ext.admin_wholesale.a.showSupplierEditor($editorContainer,$row.data('code'));
@@ -587,26 +704,40 @@ TRACKINGSET ->
 				
 				$btn.off('click.adminSupplierUnorderedItemListShow').on('click.adminSupplierUnorderedItemListShow',function(){
 
+					var VENDORID = $btn.closest("[data-code]").data('CODE');
 					var $D = app.ext.admin.i.dialogCreate({
-						'title': "Unordered Items"
+						'templateID': "supplierOrderListTemplate",
+						'title': $btn.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
+						"showLoading" : false
 						});
+					
 					$D.dialog('option','width','70%');
+					$D.dialog('option','modal',false);
+
+					$D.dialog( "option", "appendTo", $btn.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
+//d.data is used by button on form submit. form template also used by order list
+					
 					$D.dialog('open');
+					
+					$('tbody',$D).showLoading({'message':'Fetching unordered item list...'});
+
 
 					var cmdObj = {
 						_cmd : 'adminSupplierUnorderedItemList',
-						'FILTER':'OPEN',
+						FILTER : 'OPEN',
 						_tag : {
-							'templateID': "supplierOrderListTemplate",
 							callback : 'anycontent',
-							'jqObj' : $D
+							jqObj : $('tbody',$D)
 							}
 						}
+
 					if($btn.data('mode') == 'vendor')	{
-						cmdObj.VENDORID = $btn.closest("[data-code]").data('CODE');
+						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList'});
+						cmdObj.VENDORID = VENDORID
 						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList|"+cmdObj.VENDORID;
 						}
 					else if	($btn.data('mode') == 'all'){
+						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList','vendorid':''});
 						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList";
 						}
 					else	{} //unrecognized mode.
@@ -640,8 +771,11 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 			'title': $btn.data('mode')+" list for vendor "+VENDORID,
 			'showLoading' : false
 			});
+		$D.data('vendorid',VENDORID);
+		$D.dialog('option','modal',false);
 		$D.dialog('option','width','70%');
 		$D.dialog('option','height',($(window).height() / 2));
+		$D.dialog( "option", "appendTo", $btn.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
 		$('form',$D).showLoading({'message':'Updating Orders'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
 		$D.dialog('open');
 		
@@ -654,13 +788,14 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 			}
 		
 		if($btn.data('mode') == 'order')	{
+			$D.data('mode','adminSupplierOrderList'); //used by button on form submit. form template also used by unordereditems
 			cmdObj._cmd = 'adminSupplierOrderList';
 			cmdObj.FILTER = 'RECENT';
 			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
 			}
 		else if($btn.data('mode') == 'product')	{
 			cmdObj._cmd = 'adminSupplierProductList';
-			cmdObj.FILTER = 'OPEN';
+//			cmdObj.FILTER = 'OPEN';
 			cmdObj._tag.datapointer = 'adminSupplierProductList|'+VENDORID;
 			}
 		else {} //should never get here. unrecognized mode.

@@ -176,14 +176,14 @@
 <tr id='supplierListItemTemplate'>
 	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
-	<td data-bind="var:supplier(FORMAT); format:text;" hideInMinimalMode></td>
-	<td data-bind="var:supplier(MODE); format:text;" hideInMinimalMode></td>
+	<td data-bind="var:supplier(FORMAT); format:text;"></td>
+	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
 	</td>
 </tr>
 
@@ -198,13 +198,13 @@
 </tr>
 
 <tr id='supplierItemListItemTemplate'>
-	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name; valuePretext:pid_;' /></td>
-	<td data-bind="var:order(PID); format:text;"></td>
-	<td data-bind="var:order(SKU); format:text;"></td>
-	<td data-bind="var:order(PRODUCTID); format:text;"></td>
-	<td data-bind="var:order(PRODUCT_ID); format:text;"></td>
-	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
-	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
+	<td><input type='checkbox' data-bind='var:product(pid);format:assignAttribute; attribute:name;' /></td>
+	<td data-bind="var:order(pid); format:text;"></td>
+	<td></td>
+	<td data-bind="var:product(zoovy:prod_name); format:text;"></td>
+	<td ></td>
+	<td data-bind="var:product(zoovy:base_cost); format:text;"></td>
+	<td data-bind="var:product(zoovy:base_price); defaultVal:Never; format:text;"></td>
 </tr>
 
 
@@ -219,26 +219,19 @@
 
 <form action='#' onsubmit="return false">
 <div class='clearfix ui-widget-header ui-corner-top smallPadding'>
-	<input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierAction' />
-	<input type='hidden' name='_tag/callback' value='showMessaging' />
-	<input type='hidden' name='_tag/message' value='The orders have been successfully updated.' />
-	<!-- vendorid added w/ JS -->
-
 
 	<div class='floatRight'>
 	<select name="action" required='required'>
 		<option value="">action for selected orders</option>
 		<option value="ORDER:APPROVE">Approve hold orders</option>
 		<option value="ORDER:ARCHIVE">Archive</option>
-		<option value="ORDER:CLOSE">Close</option>
+		<option value="ORDER:CLOSE">Close</option><!--
 		<option value="ORDER:CONFIRM">Confirm</option>
 		<option value="ORDER:RESET">Reset to closed / resend</option>
-		<option value="ORDER:REDISPATCH">Re-dispatch</option>
+		<option value="ORDER:REDISPATCH">Re-dispatch</option>-->
 	</select>
-	<button data-app-event="admin|processForm" class='smallButton'>Perform Action</button>
+	<button data-app-event="admin_wholesale|adminSupplierActionOrder" class='smallButton'>Perform Action</button>
 	</div>
-	<h1>Recent Orders</h1>
-
 </div>
 <table class='gridTable fullWidth applyAnytable' data-app-role='supplierOrderListTable'>
 <thead>
@@ -263,12 +256,11 @@
 
 <div id='supplierItemListTemplate'>
 <form action='#' onsubmit="return false">
-<div class='ui-state-header smallPadding'>
-	<h2>Supplier Product List</h2>
-	<button class='floatRight'>De-associate product</button>
+<div class='clearfix ui-widget-header ui-corner-top smallPadding'>
+	<button class='floatRight' data-app-event="admin_wholesale|adminSupplierActionDeAssociate">De-associate product</button>
 </div>
-</form>
-<table class='gridTable fullWidth'>
+
+<table class='gridTable fullWidth applyAnytable'>
 <thead>
 <tr>
 	<th data-anytable-nosort='true'></th>
@@ -283,7 +275,7 @@
 <tbody data-bind="var:vendor(@SKUS); format: productList; extension: store_prodlist; loadsTemplate:supplierItemListItemTemplate; withInventory:1;">
 </tbody>
 </table>
-
+</form>
 </div>
 
 
@@ -337,8 +329,9 @@
 
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
-		<button class='floatRight' data-app-event='admin|processForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
+		<button class='floatRight marginLeft' data-app-event='admin|processForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
+		<button class='marginRight marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
+		<button class='floatRight marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
 		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
 <!--		<button class='floatRight'>Add Product</button> add when time permits. -->
 		
