@@ -72,13 +72,15 @@ var admin_templateEditor = function() {
 						$D.empty().remove();
 						}
 
-					$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'});
+					$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'}).attr('data-app-role','templateEditor');
 					
 
-					vars.editor = 'inline';
+					vars.editor = 'inline'; //hard coded for now. may change later. support for dialog, fullscreen are also present.
+					var iframeHeight = 'auto';
 					
 					if(vars.editor == 'inline')	{
 						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append($D);
+						iframeHeight = $(window).height() - $('#mastHead').height() - 100;
 						}
 					else if(vars.editor == 'fullscreen')	{
 						$D.appendTo('body');
@@ -86,8 +88,9 @@ var admin_templateEditor = function() {
 							'background' : '#ffffff',
 							'callback' : function(state)	{}
 							});
+						iframeHeight = $(window).height() - 100;
 						}
-					else if (vars.editor == 'modal')	{
+					else if (vars.editor == 'dialog')	{
 //must scroll to top of body/html first or issues with modal placement and lack of browser scrollbars.						
 						$('html, body').animate({scrollTop:0}, 'fast');
 
@@ -190,7 +193,7 @@ var admin_templateEditor = function() {
 								
 									// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
 									$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
-									var $iframeBody = $('iframe',$D).width('97%').contents().find('body');
+									var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
 									app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
 								
 									app.u.handleAppEvents($D);
@@ -1271,7 +1274,28 @@ var $input = $(app.u.jqSelector('#',ID));
 						});
 					}, //containerZipDownloadExec
 
+				adminTemplateCampaignExit : function($btn)	{
+					$btn.button();
+					$btn.off('click.adminTemplateCampaignExit').on('click.adminTemplateCampaignExit',function(){
+var data = $btn.closest("[data-app-role='templateEditor']").data();
+if(data.editor='dialog')	{
+	//we're in a dialog, just close it.
+	$btn.closest('.ui-content-dialog').dialog('close');
+	}
+else	{
+	if(data.mode == 'campaign')	{
+		app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),data.campaignid);
+		}
+	else if(data.mode == 'ebay')	{
+		app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile);
+		}
+	else	{
+		
+		}
+	}
+						})
 
+					},
 				adminTemplateCampaignTestShow : function($btn)	{
 					$btn.button();
 
@@ -1436,10 +1460,10 @@ var $input = $(app.u.jqSelector('#',ID));
 					$cb.anycb();
 					$cb.on('change',function(){
 						if($cb.is(':checked'))	{
-							$('iframe',$cb.closest('.ui-dialog-content')).contents().find('body').addClass('showHighlights_'+$cb.data('objecttype'));
+							$('iframe',$cb.closest("[data-app-role='templateEditor']")).contents().find('body').addClass('showHighlights_'+$cb.data('objecttype'));
 							}
 						else	{
-							$('iframe',$cb.closest('.ui-dialog-content')).contents().find('body').removeClass('showHighlights_'+$cb.data('objecttype'));
+							$('iframe',$cb.closest("[data-app-role='templateEditor']")).contents().find('body').removeClass('showHighlights_'+$cb.data('objecttype'));
 							}
 						});
 					},

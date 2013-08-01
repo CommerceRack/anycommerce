@@ -2306,9 +2306,13 @@ add an input here (checkbox) for 'let ebay compute the costs'
 					<option value='Weekdays'>Weekdays</option>
 					<option value='Weekends'>Weekends</option>
 				</select>
-				<span class='toolTip' title="Indicates the range of days for which the primary contact hours specified by Hours1AnyTime or Hours1From and Hours1To apply. If a value of None is provided for this field, the values provided for Hours1AnyTime, Hours1From, Hours1To are ignored. ">?</span>
+				<span class='toolTip' title="Indicates the range of days for which the primary contact hours specified by Hours1AnyTime or Hours1From and Hours1To apply. If a value of None is provided for this field, the values provided for Hours1AnyTime, Hours1From, Hours1To are ignored. Format as THH:MM:SS.SSSZ (e.g., T19:09:02.768Z)">?</span>
 			</label>
-		
+			<label>
+				<span>Timezone ID</span>
+				<input type='text' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\TimeZoneID' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\TimeZoneID); format:popVal;" />
+				<span class='toolTip' title="Indicates the local time zone of the values provided for Hours1From/Hours1To and Hours2From/Hours2To. If you specify a contact hours time range with Hours1From and Hours1To, you must provide a local time zone. ">?</span>
+  			</label>
 			<label>
 				<span>Available From</span>
 				<input type='text' name='Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1From' data-bind="var: profile(%PROFILE.Item\ExtendedSellerContactDetails\ContactHoursDetails\Hours1From); format:popVal;" />
