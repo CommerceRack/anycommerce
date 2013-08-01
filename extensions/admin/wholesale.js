@@ -716,7 +716,7 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 
 					var VENDORID = $btn.closest("[data-code]").data('CODE');
 					var $D = app.ext.admin.i.dialogCreate({
-						'templateID': "supplierOrderListTemplate",
+						'templateID': "supplierUnorderedItemsTemplate",
 						'title': $btn.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
 						"showLoading" : false
 						});

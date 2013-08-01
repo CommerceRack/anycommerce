@@ -701,7 +701,8 @@ app.model.dispatchThis('mutable');
 					$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
 					$select.val(data.options[0].v)
 					}
-				else if(data.type == 'select')	{
+					//prodData['%attribs'][data.id] is checked so no error is thrown if the value is blank.
+				else if(data.type == 'select' && prodData['%attribs'][data.id])	{
 					$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
 					$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
 					}

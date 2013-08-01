@@ -189,7 +189,9 @@
 
 <tr id='supplierOrderListItemTemplate'>
 	<td><input type='checkbox' data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:name; valuePretext:orderid_;' /></td>
-	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
+	<td data-app-event='admin_orders|showOrderEditorInDialog'  data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
+	<span data-bind="var:supplier(OUR_ORDERID); format:text;"></span>
+	</td>
 	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
 	<td data-bind="var:order(STATUS); format:text;"></td>
 	<td data-bind="var:order(CREATED_TS); format:text;"></td>
@@ -208,6 +210,52 @@
 </tr>
 
 
+</table>
+
+
+
+
+
+
+
+
+<div id='supplierUnorderedItemsTemplate'>
+
+
+<form action='#' onsubmit="return false">
+<table class='gridTable fullWidth applyAnytable' data-app-role='supplierUnorderedItemListTable'>
+<thead>
+<tr>
+	<th class='alignLeft'>Created</th>
+	<th class='alignLeft'>ID</th>
+	<th class='alignLeft'>Order ID</th>
+	<th class='alignLeft'>QTY</th>
+	<th class='alignLeft'>SKU</th>
+	<th class='alignLeft'>Status</th>
+	<th class='alignLeft'>Vendor Order ID</th>
+</tr>
+</thead>
+<!-- orders is what's returned in order view. items is what's returned in unorderitems -->
+<tbody data-bind="var:orders(@ORDERS); defaultVar:orders(@ITEMS); format:processList; loadsTemplate:supplierUnorderedItemRowTemplate;">
+</tbody>
+</table>
+</form>
+</div>
+
+
+
+<table>
+<tr id='supplierUnorderedItemRowTemplate'>
+	<td data-bind="var:supplier(CREATED_TS); format:text;"></td>
+	<td data-bind="var:supplier(ID); format:text;"></td>
+	<td data-app-event='admin_orders|showOrderEditorInDialog'  data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
+	<span data-bind="var:supplier(OUR_ORDERID); format:text;"></span>
+	</td>
+	<td data-bind="var:supplier(QTY); format:text;"></td>
+	<td data-bind="var:supplier(SKU); format:text;"></td>
+	<td data-bind="var:supplier(STATUS); format:text;"></td>
+	<td data-bind="var:supplier(VENDOR_ORDER_DBID); format:text;"></td>
+</tr>
 </table>
 
 

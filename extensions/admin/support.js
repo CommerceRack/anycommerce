@@ -100,6 +100,8 @@ var admin_support = function() {
 			showPlatformInfo : function()	{
 				var $D = app.ext.admin.i.dialogCreate({
 					'title':'Platform Information',
+					'templateID':'platformInfoTemplate',
+					'data' : app.ext.admin.vars.versionMetaData
 					}).addClass('objectInspector');
 				
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
@@ -107,6 +109,7 @@ var admin_support = function() {
 						$D.anymessage({'message':rd});
 						}
 					else	{
+						//
 						$D.append(app.ext.admin_tools.u.objExplore(app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd'])));
 						}
 					}}},'mutable');

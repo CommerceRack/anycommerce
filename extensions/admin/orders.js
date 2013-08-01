@@ -1676,6 +1676,19 @@ $('.editable',$container).each(function(){
 				},
 */			
 			
+			"showOrderEditorInDialog" : function($ele)	{
+				var orderID = $ele.data('orderid') || $ele.closest("[data-orderid]").data('orderid');
+				if(orderID)	{
+					
+					if($ele.is('button'))	{$ele.button()}
+					else	{$ele.addClass('lookLikeLink')} //make sure element looks clickable.
+					
+					$ele.off('click.showOrderEditorInDialog').on('click.showOrderEditorInDialog',function(){
+						app.ext.admin_orders.a.showOrderEditorInDialog(orderID,0);
+						});
+					}
+				},
+			
 			"orderListFiltersUpdate" : function($ele)	{
 				$ele.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
 					app.ext.admin_orders.u.submitFilter();
