@@ -2002,42 +2002,50 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		
 				<label>
 					<span>Service</span>
+					
+					<!-- 
+					Item.ShippingDetails.ShippingServiceOptions.ShippingService
+
+					NOTE: gets a little wonky when mixing branded/non-branded shippingtypes
+					(*see Addl item cost note below)
+					
+					-->
 					<select name="service" class='skipTrack' >
-						<option value="ShippingMethodStandard">Standard Shipping</option>
+						<option data-ebay-carrier="" value="ShippingMethodStandard">Standard Shipping</option>
 						<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
 						<option value="ePacketChina">ePacket delivery from China</option>
-						<option value="UPSGround">UPS Ground</option>
-						<option value="ShippingMethodExpress">Expedited Shipping</option>
-						<option value="USPSPriority">USPS Priority Mail</option>
-						<option value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
-						<option value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
-						<option value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
-						<option value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
-						<option value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
-						<option value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
-						<option value="USPSFirstClass">USPS First Class Package</option>
-						<option value="UPS3rdDay">UPS 3 Day Select</option>
-						<option value="UPS2ndDay">UPS 2nd Day Air</option>
-						<option value="Other">Economy Shipping</option>
+						<option data-ebay-carrier="UPS" value="UPSGround">UPS Ground</option>
+						<option data-ebay-carrier="" value="ShippingMethodExpress">Expedited Shipping</option>
+						<option data-ebay-carrier="USPS" value="USPSPriority">USPS Priority Mail</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSFirstClass">USPS First Class Package</option>
+						<option data-ebay-carrier="UPS" value="UPS3rdDay">UPS 3 Day Select</option>
+						<option data-ebay-carrier="UPS" value="UPS2ndDay">UPS 2nd Day Air</option>
+						<option data-ebay-carrier="" value="Other">Economy Shipping</option>
 						<option value="USPSParcel">USPS Parcel Select</option>
 						<option value="USPSMedia">USPS Media Mail</option>
-						<option value="ShippingMethodOvernight">One-day Shipping</option>
+						<option data-ebay-carrier="" value="ShippingMethodOvernight">One-day Shipping</option>
 						<option value="USPSExpressMail">USPS Express Mail</option>
 						<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
 						<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
-						<option value="UPSNextDay">UPS Next Day Air Saver</option>
-						<option value="UPSNextDayAir">UPS Next Day Air</option>
-						<option value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
-						<option value="FedExExpressSaver">FedEx Express Saver</option>
-						<option value="FedEx2Day">FedEx 2Day</option>
-						<option value="FedExPriorityOvernight">FedEx Priority Overnight</option>
-						<option value="FedExStandardOvernight">FedEx Standard Overnight</option>
+						<option data-ebay-carrier="UPS" value="UPSNextDay">UPS Next Day Air Saver</option>
+						<option data-ebay-carrier="UPS" value="UPSNextDayAir">UPS Next Day Air</option>
+						<option data-ebay-carrier="FEDEX" value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
+						<option data-ebay-carrier="FEDEX" value="FedExExpressSaver">FedEx Express Saver</option>
+						<option data-ebay-carrier="FEDEX" value="FedEx2Day">FedEx 2Day</option>
+						<option data-ebay-carrier="FEDEX" value="FedExPriorityOvernight">FedEx Priority Overnight</option>
+						<option data-ebay-carrier="FEDEX" value="FedExStandardOvernight">FedEx Standard Overnight</option>
 						<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
 						<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
 						<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
 						<option value="US_FedExIntlEconomy">FedEx International Economy</option>
-						<option value="Freight">Flat Priced Freight</option>
-						<option value="FreightShipping">Freight Shipping</option>
+						<option data-ebay-carrier="" value="Freight">Flat Priced Freight</option>
+						<option data-ebay-carrier="" value="FreightShipping">Freight Shipping</option>
 						<option value="Pickup">Local Pickup</option>
 					</select>
 				</label>
@@ -2045,11 +2053,33 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 				<label>
 					<span>Ship cost</span>
 					<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+					<!--
+					Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
+					* NOTE: there needs to be a way to leave this blank because that will tell us it's fixed price shipping
+					-->
 				</label>
 		
 				<label>
 					<span>Addl item cost</span>
 					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+					<!--
+					Item.ShippingDetails.ShippingServiceOptions.ShippingSurcharge
+					
+					EBAY DESCRIPTION:
+					An additional fee to charge US buyers who have the item shipped via UPS or FedEx to Alaska, Hawaii or Puerto Rico.
+					Can only be assigned a value for the eBay US site and for items in the Parts and Accessories category of the eBay
+					Motors site. Flat rate shipping only.
+					
+					CLARIFICATION: it's confusing, it ONLY applies to flat rate (cases where Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
+					is non-zero, but it CANNOT be used on NON FEDEX/UPS shipping types (ex: it CAN be used with Fedex2Day but NOT USPSParcel or ShippingMethodExpress)
+
+					data-ebay-carrier="UPS|USPS|FEDEX" 
+	
+					TO REVIEW:
+						* only works when service/data-ebay-carrier="UPS|FEDEX"
+						* only works when cost (ShippingServiceCost) is set
+					
+					-->
 				</label>
 		
 				<label>
