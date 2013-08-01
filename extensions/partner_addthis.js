@@ -132,7 +132,7 @@ var partner_addthis = function() {
 				var $context = $(app.u.jqSelector('#',infoObj.parentID));
 				
 				$(app.ext.partner_addthis.vars.selector, $context).append(
-					'<div class="addthis_toolbox addthis_default_style ">'
+					'<div id="socialLinks" class="addthis_toolbox addthis_default_style ">'
 				+		'<a fb:like:layout="button_count" class="addthis_button_facebook_like"></a>'
 				+		'<a class="addthis_button_tweet"></a>'
 				+		'<a g:plusone:size="medium" class="addthis_button_google_plusone"></a>'
