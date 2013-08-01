@@ -1996,7 +1996,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 			</tbody>
 			</table>
 			
-			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
+			<p class='hint marginBottom'>eBay supports a max of 4. Any more than three get dropped at save</p>
 			
 			<div data-app-role='addServiceInputs' class='displayNone'>
 		
@@ -2109,7 +2109,6 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 			<label>
 				<span>Location</span>
 				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
-					<option value='None'>None</option>
 					<option value='Americas'>N. and S. America</option>
 					<option value='Asia'>Asia</option>
 					<option value='AU'>Australia</option>
@@ -2120,6 +2119,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					<option value='Europe'>Europe</option>
 					<option value='GB'>United Kingdom</option>
 					<option value='JP'>Japan</option>
+					<option value='None'>None (Will Not Be Shipped)</option>
 				</select>
 				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
 			</label>
