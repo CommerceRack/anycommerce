@@ -470,6 +470,11 @@ TRACKINGSET ->
 					}); //$btn.on
 				}, //adminSupplierRemoveExec
 
+
+
+
+
+
 //applied to 'create user' button. just opens the modal.
 			adminSupplierCreateShow : function($btn)	{
 				$btn.button();
@@ -1193,8 +1198,13 @@ and all .someClass are hidden (value of data-panel-selector)
 							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
 							var $option = $('option:selected',$ele);
 							if(!$option.data('show-panel'))	{} //no panel defined. do nada
-							else if($option.data('show-panel') && $("[data-panel-id='"+$option.data('show-panel')+"']",$form).length)	{
-								$("[data-panel-id='"+$option.data('show-panel')+"']",$form).show(); //panel defined and it exists. show it.
+							else if($option.data('show-panel'))	{
+								var panels = new Array();
+								if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
+								else {panels.push($option.data('show-panel'))};
+								for(var i = 0; i < panels.length; i += 1)	{
+									$("[data-panel-id='"+panels[i]+"']",$form).show(); //panel defined and it exists. show it.
+									}
 								}
 							else	{
 								$form.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.

@@ -494,12 +494,63 @@
 					<span>Connector:</span>
 					<select name='SHIP_CONNECTOR' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;" data-panel-selector=".supplierShippingConnector">
 						<option value='NONE' data-show-panel='supplierShippingConnectorNone'>None</option>
-						<option value='GENERIC' data-show-panel='supplierShippingConnectorGeneric'>Generic</option>
+						<option value='FREE'>Free</option>
+						<option value='FIXED' data-show-panel='supplierShippingConnectorFixed,supplierShippingConnectorHandling'>Fixed</option>
+						<option value='ZONE' data-show-panel='supplierShippingConnectorZone,supplierShippingConnectorHandling'>Zone</option>
 					</select />
 				</label>
 
 				<div data-panel-id='supplierShippingConnectorNone' class='supplierShippingConnector'>Will use your store configuration</div>
-				<div data-panel-id='supplierShippingConnectorGeneric' class='displayNone supplierShippingConnector'></div>
+				
+				<div data-panel-id='supplierShippingConnectorZone' class='displayNone supplierShippingConnector'>
+
+<label>
+	<span>Origin Zip Code</span>
+	<input type="text" name="%SHIP.origzip" value="" size="5" data-bind="var:vendor(%SHIP.origzip); format:popVal;" />
+</label>
+
+
+<label>
+	<span>Origin State</span>
+	<input type="text" name="%SHIP.origstate" value="" size="2" data-bind="var:vendor(%SHIP.origstate); format:popVal;" />
+</label>
+
+<button data-app-event='admin_config|shipMeterDetailInModal' data-provider='FEDEX'>Configure FedEx Meter</button>
+<button data-app-event='admin_config|shipMeterDetailInModal' data-provider='UPS'>Configure UPS Meter</button>
+
+				</div>
+				
+				<div data-panel-id='supplierShippingConnectorFixed' class='displayNone supplierShippingConnector'></div>
+<!--
+<b>Current Shipping Meter</b><br>
+					None confirmed at this time...<br>
+<input type="button" name="BUTTON" value="Configure UPS Meter Number" class="button" onclick="navigateTo('/biz/setup/shipping/upsapi.cgi?mode=apply&amp;SUPPLIER_ID=JOEBOB');">
+<input type="button" name="BUTTON" value="Configure Fedex Meter Number" class="button" onclick="navigateTo('/biz/setup/shipping/index.cgi?VERB=FEDEX-SUPPLIER-REGISTER&amp;SUPPLIER_ID=JOEBOB');">				
+-->
+		
+				<div  data-panel-id='supplierShippingConnectorHandling' class='displayNone supplierShippingConnector'>
+				
+				<label>
+					<input type="checkbox" name="%SHIP.options_1" data-bind="var:vendor(%SHIP.options_1); format:popVal;" /> Quote each package as its own shipment <span class='toolTip' title="Enable this when the items being shipped in individual boxes.">?</span>
+				</label>
+				
+					<h2 class='marginTop'>Handling Fees</h2>
+					
+					<label class='marginLeft'>
+						<span>Per Order</span> $
+						<input type="number" step='.01' min='0' name="%SHIP.hnd_perorder" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perorder); format:popVal;" />
+					</label>
+					
+					<label class='marginLeft'>
+						<span>Per Item</span> $
+						<input type="number" step='.01' min='0' name="%SHIP.hnd_peritem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_peritem); format:popVal;" />
+					</label>
+					
+					<label class='marginLeft'>
+						<span>Per Unique Item</span> $
+						<input type="number" step='.01' min='0' name="%SHIP.hnd_perunititem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perunititem); format:popVal;" />
+					</label>
+				</div>
 		
 			</fieldset>
 			</div>

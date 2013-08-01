@@ -588,6 +588,7 @@ else	{
 
 
 			showUPSOnlineToolsRegInModal : function(vars)	{
+
 				vars = vars || {}; //may include supplier
 				var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
 				$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{},'dataAttribs' : vars });
@@ -604,8 +605,10 @@ else	{
 				}, //showUPSOnlineToolsRegInModal
 			
 			showFedExMeterInModal : function(vars)	{
+
 vars = vars || {}; //may include supplier
-var $D = app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
+var $D = app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':(vars.vendorid) ? {} : app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
+$D.data(vars);
 app.u.handleAppEvents($D);
 $D.addClass('labelsAsBreaks alignedLabels');
 $D.dialog('open');	
@@ -751,6 +754,23 @@ $D.dialog('open');
 
 		e : {
 			
+
+			shipMeterDetailInModal : function($btn)	{
+				$btn.button();
+				$btn.off('click.shipMeterDetailInModal').on('click.shipMeterDetailInModal',function(event){
+					if($btn.data('provider') == 'UPS'){
+						app.ext.admin_config.a.showUPSOnlineToolsRegInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+						}
+					else if($btn.data('provider') == 'FEDEX'){
+						app.ext.admin_config.a.showFedExMeterInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+						}
+					else	{
+						$btn.closest('.ui-widget-anypanel').anymessage({'message':'In admin_wholesale.e.shipMeterDetailInModal, no/invalid provider ['+$btn.data('provider')+'] on button','gMessage':true})
+						}
+					});
+				},
+
+
 			
 			couponDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
