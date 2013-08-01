@@ -659,6 +659,38 @@ has to be within the fieldset to for data-table to work right.
 
 
 	<section class='marginTop marginBottom'>
+	<h2>App</h2>
+		
+		<div data-app-role='appInfoContainer' class='marginTop'>
+			<h6 data-bind="var: info(connected-server); pretext:connected-server: ; format:text;"></h6>
+			<div data-bind="var: info(server-time); pretext:Server time: ; format:text;"></div>
+			<div data-bind="var: info(media-host); pretext:Media host: ; format:text;"></div>
+			<div data-bind="var: info(api-max-version); pretext:api-max-version: ; format:text;"></div>
+			<div data-bind="var: info(api-min-version); pretext:api-min-version: ; format:text;"></div>
+			<div data-bind="var: info(api-our-version); pretext:api-our-version: ; format:text;"></div>
+		</div>
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some Localstorage</button></td>
+			<td class='valignTop small'>
+			This will selectively clear local storage for the admin interface. It will clear data such as product, category ,etc, but leave preferences such as panel sequence , panel state (open/closed) etc. It will not impact local storage for other domains. This action is browser-specific.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button onclick="localStorage.clear();">Clear Localstorage</button></td>
+			<td class='valignTop small'>
+			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific.
+			</td>
+		</tr>
+		</tbody>
+		</table>
+
+	
+	</section>
+
+
+	<section class='marginTop marginBottom'>
 		<h2>eBay</h2>
 	
 		<table class='marginTop'>

@@ -3143,7 +3143,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //update the view.
 					$('.partition','#appView').text(partition || "");
 					$('.domain','#appView').text(domain);
-					
+//					app.model.addDispatchToQ({'_cmd':'info','_tag':	{'datapointer' : 'info'}},'passive'); //when a domain is changed, passively update info so that 'media host' is correct.
 //get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
 //something here is causing session to not persist on reload.
 /*					if(app.model.fetchData('authAdminLogin'))	{
@@ -3420,6 +3420,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //immutable because that's wha the domain call uses. These will piggy-back.
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
+app.model.addDispatchToQ({'_cmd':'info','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.

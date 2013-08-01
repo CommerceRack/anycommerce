@@ -217,7 +217,6 @@ var admin_support = function() {
 			gatherIntel : function()	{
 				var r = "" //what is returned.
 				r += "\n\n ##### The following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
-				
 				r += "MVC version: "+app.model.version;
 				r += "\nMVC release: "+app.vars.release;
 				r += "\ndevice id: "+app.vars.deviceid;
@@ -229,6 +228,10 @@ var admin_support = function() {
 				r += "\noscpu: "+navigator.oscpu;
 				r += "\nscreen size: "+screen.width+" X "+screen.height;
 				r += "\nbrowser size: "+$('body').width()+" X "+$('body').height();
+				
+				var info = app.u.getBlacklistedObject(app.data.info,['server-time','ts','_uuid','_rtag','_rcmd']);
+				for(var index in info)	{r+= index+": "+info[index]}
+				
 				return r;
 				},
 

@@ -121,7 +121,7 @@ var admin_tools = function() {
 				},
 
 			showAccountUtilities : function($target)	{
-				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false});
+				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false,'datapointer':'info'});
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
 				app.u.handleAppEvents($target);

@@ -1537,6 +1537,8 @@ AUTHENTICATION/USER
 			return r;
 			}, //determineAuthentication
 
+
+
 //pass in a simple array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)
 		removeDuplicatesFromArray : function(arrayName)	{
@@ -1551,7 +1553,8 @@ AUTHENTICATION/USER
 			return newArray;
 			},
 
-
+//pass an object in as first param and an array as the second.
+//This will return a NEW object, removing any keys from 'obj' that are not declared in 'whitelist'.
 		getWhitelistedObject : function(obj,whitelist)	{
 			var r = {};
 			for(index in obj)	{
@@ -1559,6 +1562,18 @@ AUTHENTICATION/USER
 					r[index] = obj[index];
 					}
 				else	{} //not in whitelist
+				}
+			return r;
+			},
+//pass an object in as first param and an array as the second.
+//This will return a NEW object, removing any keys from 'obj' that ARE declared in 'blacklist'
+		getBlacklistedObject : function(obj,blacklist)	{
+			var r = $.extend({},obj);
+			for(index in obj)	{
+				if(blacklist.indexOf(index) >= 0)	{
+					delete r[index];
+					}
+				else	{} //is not in blacklist
 				}
 			return r;
 			},
