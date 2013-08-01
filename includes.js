@@ -118,7 +118,7 @@ renderOptionSELECT: function(pog) {
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select>").attr({"name":pogid});
     var i = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -131,10 +131,10 @@ renderOptionSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -155,7 +155,7 @@ renderOptionBIGLIST: function(pog) {
 	var selOptions = '';
 	var lastOptGrp,selValues;
 	var inc = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select \/>").attr({"name":pogid}).addClass("zform_select zform_biglist");
 //sets the first options on both select lists.
@@ -170,14 +170,14 @@ create first optgroup.
 These are here instead of in the while loop to save a lookup during each iteration. Otherwise we need to 
 check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tighter loop.
 */
-	selValues = pog['options'][inc]['prompt'].split('|');
+	selValues = pog['@options'][inc]['prompt'].split('|');
 	lastOptGrp = selValues[0];
 	selOptions += "<optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 	while (inc < len) {
 
 //selValues[0] = first dropdown prompt/opt group.
 //selValues[1] = second dropdown prompt.
-		selValues = pog['options'][inc]['prompt'].split('|');
+		selValues = pog['@options'][inc]['prompt'].split('|');
 		optGrp = selValues[0];
 
 //at each 'change' of grouping, add the current group to the select list.
@@ -185,7 +185,7 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 			selOptions += "<\/optgroup><optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 			}
 		
-		selOptions += "<option value='"+pog['options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
+		selOptions += "<option value='"+pog['@options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
 		lastOptGrp = selValues[0]
 		inc += 1;
 		}
@@ -212,7 +212,7 @@ renderOptionIMGSELECT: function(pog) {
 		$(this).closest('.imgSelectContainer').find('img').attr('src',app.u.makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false,"lib":app.username}));
 		});
     var i = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -225,10 +225,10 @@ renderOptionIMGSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"' data-thumbnail='"+pog['options'][i]['img']+"' id='option_"+pogid+""+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"' data-thumbnail='"+pog['@options'][i]['img']+"' id='option_"+pogid+""+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -253,9 +253,9 @@ renderOptionRADIO: function(pog)	{
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
     var i = 0;
-    var len = pog['options'].length;
+    var len = pog['@options'].length;
 	while (i < len) {
-		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']})).append(pog['options'][i]['prompt']));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']})).append(pog['@options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -408,11 +408,11 @@ renderOptionIMGGRID: function(pog)	{
 	var radioLabel; //used to create the radio button label.
 	var thumbnail; //guess what this holds
     var i = 0;
-    var len = pog['options'].length;
+    var len = pog['@options'].length;
 	while (i < len) {
-		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
-		radioLabel = "<label>"+pog['options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']});
+		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['@options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
+		radioLabel = "<label>"+pog['@options'][i]['prompt']+"<\/label>";
+		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']});
 		$parentDiv.append(thumbnail).append($radioInput).append(radioLabel).wrap("<div class='floatLeft'><\/div>");;
 		i++
 		}
