@@ -2775,7 +2775,7 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
 	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
 	$D.data('pickermode',data.mode);
-	$("[data-app-role='accordionContainer']",$D).first().accordion({
+	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
 		heightStyle: "content",
 		activate : function(event,ui)	{
 			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));

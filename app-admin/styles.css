@@ -249,6 +249,11 @@ Use this in a table where you want clear separation between rows and cells. This
 
 
 
+/*   product/customer picker */
+
+/* apply a max height for picker accordion content, but only when it's in a dialog. no constraints needed in the body (in general). */
+.ui-dialog-content .pickerAccordionContainer .ui-accordion-content	{max-height:200px; overflow:auto;}
+
 
 
 
