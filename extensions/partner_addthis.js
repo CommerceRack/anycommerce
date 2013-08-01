@@ -59,6 +59,12 @@ var partner_addthis = function() {
 					app.rq.push(['templateFunction','productTemplate','onDeparts',function(infoObj){
 						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
 						}]);
+					app.rq.push(['templateFUnction','categoryTemplateEarthcam','onCompletes',function(P){
+						app.ext.partner_addthis.u.buildSocialLinksCategoryPage(infoObj);
+						}]);
+					app.rq.push(['templateFUnction','categoryTemplateEarthcam','onDeparts',function(P){
+						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
+						}]);
 					return true;
 				},
 				onError : function() {
@@ -83,6 +89,10 @@ var partner_addthis = function() {
 					+		'<a class="addthis_button_preferred_2"></a>'
 					+		'<a class="addthis_button_preferred_3"></a>'
 					+		'<a class="addthis_button_preferred_4"></a>'
+					+		'<a class="addthis_button_preferred_5"></a>'
+					+		'<a class="addthis_button_preferred_6"></a>'
+					+		'<a class="addthis_button_preferred_7"></a>'
+					+		'<a class="addthis_button_preferred_8"></a>'
 					+		'<a class="addthis_button_compact"></a>'
 					+	'</div>');
 				
@@ -96,6 +106,50 @@ var partner_addthis = function() {
 				$('#ogTitle').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name']);
 				$('#ogImage').attr('content',app.u.makeImage({"name":app.data[infoObj.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
 				$('#ogDescription, #metaDescription').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_desc']);
+				
+				//Hooks everything in
+				//app.u.dump("-> Calling addthis.toolbox...");
+				addthis.toolbox('#socialLinks');
+				}
+			else {
+				//app.u.dump("-> Addthis is not defined...");
+				var n = 40;
+				if(attempts > n){
+					app.u.dump("Failed to build social links after "+(n/4)+" seconds.  infoObj follows: "); app.u.dump(infoObj);
+					}
+				else{
+					setTimeout(function(){app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj, attempts+1);}, 250);
+					}
+				}
+			},
+		buildSocialLinksCategoryPage : function(infoObj, attempts){
+			attempts = attempts || 0;
+			//app.u.dump("-> Addthis attempt: "+attempts);
+			if(typeof addthis !== "undefined"){
+				//Adds the addthis code to the container specified
+				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
+				//Note: this also includes using custom share icons.
+				var $context = $(app.u.jqSelector('#',infoObj.parentID));
+				
+				$(app.ext.partner_addthis.vars.selector, $context).append(
+					'<div class="addthis_toolbox addthis_default_style ">'
+				+		'<a fb:like:layout="button_count" class="addthis_button_facebook_like"></a>'
+				+		'<a class="addthis_button_tweet"></a>'
+				+		'<a g:plusone:size="medium" class="addthis_button_google_plusone"></a>'
+				+		'<a pi:pinit:layout="horizontal" pi:pinit:media="http://static.zoovy.com/img/cubworld/W326-H57-Btttttt-M/logos/sportsworld/sportsworldchicago_logoweb.png" pi:pinit:url="http://http://www.sportsworldchicago.com/category/a_cubworld_cam/" class="addthis_button_pinterest"></a>'
+				+		'<a class="addthis_counter addthis_pill_style"></a>'
+				+	'</div>');
+				
+				//Set URL+title for most sharing code
+				var url = zGlobals.appSettings.http_app_url+"category/"+infoObj.navcat.substring(1)+"/";
+				addthis_share.url = url;
+				addthis_share.title = app.data['appPageGet|'+infoObj.navcat]['%page']['page_title'];
+				
+				//Set URL+title for Facebook
+				$('#ogURL').attr('content',url);
+				$('#ogTitle').attr('content',app.data['appPageGet|'+infoObj.navcat]['%page']['page_title']);
+				$('#ogImage').attr('content',app.u.makeImage({"name":app.data['appPageGet|'+infoObj.navcat]['%page']['banner2'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
+				$('#ogDescription, #metaDescription').attr('content',app.data['appPageGet|'+infoObj.navcat]['%page']['description2']);
 				
 				//Hooks everything in
 				//app.u.dump("-> Calling addthis.toolbox...");
