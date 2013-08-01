@@ -923,8 +923,13 @@ $D.dialog('open');
 							}
 						
 						if(sfo.provider == 'FEDEX' || sfo.provider == 'UPS')	{
+//vendorid gets passed as part of supply chain shipping configuration.
+							if($btn.closest('.ui-dialog-content').data('vendorid'))	{
+								sfo.VENDORID = $btn.closest('.ui-dialog-content').data('vendorid');
+								}
 							$form.showLoading({'message':'Registering account. This may take a few moments.'});
 							var macroCmd = (sfo.provider == 'FEDEX') ? "FEDEX-REGISTER" : "UPSAPI-REGISTER";
+
 							app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/"+macroCmd+"?"+$.param(sfo)],{'callback':function(rd){
 								$form.hideLoading();
 								if(app.model.responseHasErrors(rd)){

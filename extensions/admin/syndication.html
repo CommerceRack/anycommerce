@@ -2050,9 +2050,16 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					</select>
 				</label>
 
+
+<!--
+add an input here (checkbox) for 'let ebay compute the costs'
+ -> only show this option for FEDEX or UPS services.  If checked, hide cose, addcost and farcost inputs. if unchecked, show inputs
+ -> if ANY other service is selected, the three inputs should be displayed and the checkbox for 'let ebay compute...' should not show up.
+ -->
+
 				<label>
 					<span>Ship cost</span>
-					<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+					<input type='number' step='.01' min='-1' name='cost' size='5' class='skipTrack' />
 					<!--
 					Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
 					* NOTE: there needs to be a way to leave this blank because that will tell us it's fixed price shipping
@@ -2061,25 +2068,8 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 		
 				<label>
 					<span>Addl item cost</span>
-					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
-					<!--
-					Item.ShippingDetails.ShippingServiceOptions.ShippingSurcharge
-					
-					EBAY DESCRIPTION:
-					An additional fee to charge US buyers who have the item shipped via UPS or FedEx to Alaska, Hawaii or Puerto Rico.
-					Can only be assigned a value for the eBay US site and for items in the Parts and Accessories category of the eBay
-					Motors site. Flat rate shipping only.
-					
-					CLARIFICATION: it's confusing, it ONLY applies to flat rate (cases where Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
-					is non-zero, but it CANNOT be used on NON FEDEX/UPS shipping types (ex: it CAN be used with Fedex2Day but NOT USPSParcel or ShippingMethodExpress)
+					<input type='number' step='.01' min='-1' name='addcost' size='5' class='skipTrack' disabled='disabled' />
 
-					data-ebay-carrier="UPS|USPS|FEDEX" 
-	
-					TO REVIEW:
-						* only works when service/data-ebay-carrier="UPS|FEDEX"
-						* only works when cost (ShippingServiceCost) is set
-					
-					-->
 				</label>
 		
 				<label>
