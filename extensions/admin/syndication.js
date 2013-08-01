@@ -1115,6 +1115,50 @@ else	{
 
 
 /*
+let ebay compute costs
+-> show option for FEDEX UPS or USPS
+if checked hide cost, addcost, farcost
+if unchecked AND UPS|FEDEX show cost, addcost, farcost
+if unchecked AND USPS show cost, addcost   (there is no farcost for USPS)
+[11:58:58 AM] Brian Horakh: if anyother service is selected then show cost, addcost, farcost
+*/
+		EBAYShipServiceChange : function($ele)	{
+			$ele.off('change.EBAYShipServiceChangeToggle').on('change.EBAYShipServiceChangeToggle',function(){
+				var $option = $('option:selected',$ele);
+				if($option.data('ebay-carrier') == 'UPS' || $option.data('ebay-carrier') == 'USPS' || $option.data('ebay-carrier') == 'FEDEX'){
+					$("[name='costComputation']",$ele.closest('fieldset')).attr('disabled','').removeAttr('disabled');
+					if($option.data('ebay-carrier') == 'USPS')	{
+						$("input[name='farcost']",$ele.closest('fieldset')).attr('disabled','disabled');
+						}
+					//
+					}
+				else	{
+					$("[name='costComputation']",$ele.closest('fieldset')).attr('disabled','disabled').val('custom').trigger('change'); //disable the selector, but set selected val to custom to indicate further data entry necessary.
+					$("input[name='farcost']",$ele.closest('fieldset')).attr('disabled','').removeAttr('disabled'); //this may have been hidden if USPS had been selected.
+					}
+				});
+			},
+
+		EBAYShipcostComputationChange : function($ele)	{
+			$ele.off('change.EBAYShipServiceChangeToggle').on('change.EBAYShipServiceChangeToggle',function(){
+				if($ele.val() == 'ebay' || $ele.val() == 'product')	{
+					$("[data-app-role='addlCostInputContainer']",$ele.closest('fieldset')).hide();
+					if($ele.val() == 'product')	{
+						$("[name='cost']",$ele.closest('fieldset')).val('-1');
+						$("[name='addcost']",$ele.closest('fieldset')).val('-1');
+						}
+					else if($ele.val() == 'ebay')	{
+						$("[name='cost']",$ele.closest('fieldset')).val('');
+						$("[name='addcost']",$ele.closest('fieldset')).val('');
+						}
+					}
+				else	{
+					$("[data-app-role='addlCostInputContainer']",$ele.closest('fieldset')).show();
+					}
+				});
+			},
+
+/*
 run when the 'save' button is pushed in the ebay category/item specifics modal.
 first, it does an adminEBAYCategory and passes the XSL and form contents. This is to get the most up to data XML that is returned by that call
  -> NOTE: once transform is handled within the app itself, that extra call won't be necessary

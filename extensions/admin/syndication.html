@@ -2010,7 +2010,7 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					(*see Addl item cost note below)
 					
 					-->
-					<select name="service" class='skipTrack' >
+					<select name="service" class='skipTrack' data-app-event='admin_syndication|EBAYShipServiceChange'>
 						<option data-ebay-carrier="" value="ShippingMethodStandard">Standard Shipping</option>
 						<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
 						<option value="ePacketChina">ePacket delivery from China</option>
@@ -2050,33 +2050,40 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					</select>
 				</label>
 
-
+				<label>
+					<span>Set ship cost from</span>
+					<select name='costComputation' data-app-event="admin_syndication|EBAYShipcostComputationChange">
+						<option value='custom'>Let me set price</option>
+						<option value='ebay'>eBay</option>
+						<option value='product'>The product</option>
+					</select>
+				</label>
 <!--
 add an input here (checkbox) for 'let ebay compute the costs'
  -> only show this option for FEDEX or UPS services.  If checked, hide cose, addcost and farcost inputs. if unchecked, show inputs
  -> if ANY other service is selected, the three inputs should be displayed and the checkbox for 'let ebay compute...' should not show up.
  -->
-
-				<label>
-					<span>Ship cost</span>
-					<input type='number' step='.01' min='-1' name='cost' size='5' class='skipTrack' />
-					<!--
-					Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
-					* NOTE: there needs to be a way to leave this blank because that will tell us it's fixed price shipping
-					-->
-				</label>
-		
-				<label>
-					<span>Addl item cost</span>
-					<input type='number' step='.01' min='-1' name='addcost' size='5' class='skipTrack' disabled='disabled' />
-
-				</label>
-		
-				<label>
-					<span>AK+HI add</span>
-					<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
-				</label>
-
+				<div data-app-role='addlCostInputContainer'>
+					<label>
+						<span>Ship cost</span>
+						<input type='number' step='.01' min='-1' name='cost' size='5' class='skipTrack' />
+						<!--
+						Item.ShippingDetails.ShippingServiceOptions.ShippingServiceCost
+						* NOTE: there needs to be a way to leave this blank because that will tell us it's fixed price shipping
+						-->
+					</label>
+			
+					<label>
+						<span>Addl item cost</span>
+						<input type='number' step='.01' min='-1' name='addcost' size='5' class='skipTrack' />
+	
+					</label>
+			
+					<label>
+						<span>AK+HI add</span>
+						<input type='number' step='.01' min='0' name='farcost' size='5' class='skipTrack' />
+					</label>
+				</div>
 				
 		
 				<label>
@@ -2161,42 +2168,52 @@ add an input here (checkbox) for 'let ebay compute the costs'
 			<div data-app-role='addServiceInputs' class='displayNone'>
 				<label>
 					<span>Service</span>
-					<select name="service" class='skipTrack' >
-						<option value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
-						<option value="USPSPriorityMailInternational">USPS Priority Mail International</option>
-						<option value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
-						<option value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
-						<option value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
-						<option value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
-						<option value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
-						<option value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
-						<option value="USPSExpressMailInternational">USPS Express Mail International</option>
-						<option value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
-						<option value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
-						<option value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
-						<option value="UPSWorldWideExpress">UPS Worldwide Express</option>
-						<option value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
-						<option value="UPSWorldwideSaver">UPS Worldwide Saver</option>
-						<option value="UPSStandardToCanada">UPS Standard To Canada</option>
-						<option value="FedExInternationalEconomy">FedEx International Economy</option>
-						<option value="FedExInternationalPriority">FedEx International Priority</option>
-						<option value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
+					<select name="service" class='skipTrack' data-app-event='admin_syndication|EBAYShipServiceChange' >
+						<option data-ebay-carrier="USPS" value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternational">USPS Priority Mail International</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternational">USPS Express Mail International</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpress">UPS Worldwide Express</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldwideSaver">UPS Worldwide Saver</option>
+						<option data-ebay-carrier="UPS" value="UPSStandardToCanada">UPS Standard To Canada</option>
+						<option data-ebay-carrier="FEDEX" value="FedExInternationalEconomy">FedEx International Economy</option>
+						<option data-ebay-carrier="FEDEX" value="FedExInternationalPriority">FedEx International Priority</option>
+						<option data-ebay-carrier="FEDEX" value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
 						<option value="StandardInternational">Standard Int'l Shipping</option>
 						<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
 						<option value="OtherInternational">Economy Int'l Shipping</option>
 						<option value="FreightShippingInternational">Freight Shipping</option>
 					</select>
 				</label>
-				<label>
-					<span>Ship cost</span>
-					<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
-				</label>
-		
-				<label>
-					<span>Addl item cost</span>
-					<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
-				</label>
 
+				<label>
+					<span>Set ship cost from</span>
+					<select name='costComputation' data-app-event="admin_syndication|EBAYShipcostComputationChange">
+						<option value='custom'>Let me set price</option>
+						<option value='ebay'>eBay</option>
+						<option value='product'>The product</option>
+					</select>
+				</label>
+				<div data-app-role='addlCostInputContainer'>
+					<label>
+						<span>Ship cost</span>
+						<input type='number' step='.01' min='0' name='cost' size='5' class='skipTrack' />
+					</label>
+			
+					<label>
+						<span>Addl item cost</span>
+						<input type='number' step='.01' min='0' name='addcost' size='5' class='skipTrack' />
+					</label>
+				</div>
 				<label>
 					<span>Countries:</span>
 					<input type='textbox' name='shipto' size='25' class='skipTrack' />
@@ -2267,7 +2284,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 	</fieldset>
 	-->
 	
-	
+	<!--
 	<fieldset data-panelname='eBayContactInfo'>
 		<legend>Contact Information/Availability</legend>
 
@@ -2305,7 +2322,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 			</label>
 		</div>
 	</fieldset>
-	
+	-->
 	
 	<!--
 	<fieldset>
@@ -2746,11 +2763,6 @@ The sandbox can be useful for developers who want to create test listings or pre
 	</div>
 
 	<section data-app-role='tokenListDetailContainer' class='marginBottom'>
-
-	<div class='betaWarning ui-widget ui-widget-content ui-corner-all smallPadding marginBottom clearfix'>
-	<p>This section has been updated as of 201324. If you experience issues please logout and click the previous version link, then come back to this page to make your changes.</p>
-	</div>
-
 
 	<h2>Tokens</h2>
 	<table class='fullWidth gridTable marginTop'>
