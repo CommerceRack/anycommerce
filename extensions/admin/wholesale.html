@@ -607,17 +607,17 @@
 		
 				<label>
 					<span>Email to:</span>
-					<input type='email' name='email'  required='required'  data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.email); format:popVal;" />
+					<input type='email' name='email_recipient'  required='required'  data-validation-rules='skipIfHidden' data-bind="var: supplier(%ORDER.email_recipient); format:popVal;" />
 				</label>
 		
 				<label>
 					<span>Email BCC:</span>
-					<input type='email' name='bcc' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
+					<input type='email' name='email_bcc' data-bind="var: supplier(%ORDER.email_bcc); format:popVal;" />
 				</label>
-		
+
 				<label>
 					<span>Email format:</span>
-					<select name='email_format' data-bind="var: supplier(%ORDER.email_format); format:popVal;">
+					<select name='email_body_format' data-bind="var: supplier(%ORDER.email_body_format); format:popVal;">
 						<option value="TXT">TXT</option>
 						<option value="HTML">HTML</option>
 						<option value="WIKI">WIKI</option>
@@ -626,12 +626,12 @@
 		
 				<label>
 					<span>Email subject:</span>
-					<input type='text' name='subject' data-bind="var: supplier(%ORDER.email_subject); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
+					<input type='text' name='email_subject' data-bind="var: supplier(%ORDER.email_subject); format:popVal;" required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				
 				<label>
 					<span>Email body:</span>
-					<textarea name='body' data-bind="var: supplier(%ORDER.email_body); format:popVal;"></textarea>
+					<textarea name='order.email_body_content' data-bind="var: supplier(%ORDER.order.email_body_content); format:popVal;"></textarea>
 				</label>
 			</div>
 			
