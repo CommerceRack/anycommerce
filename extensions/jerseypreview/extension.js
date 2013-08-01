@@ -91,7 +91,7 @@ var jerseypreview = function() {
 								app.u.dump("Checking font face support");
 								if(isFontFaceSupported){
 									app.u.dump("Font Face Supported");
-									if(app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"]){
+									if(app.data[P.datapointer]["%attribs"]["user:jerseypreview_image"]){
 										font = data.font;
 										if(font){
 											$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
@@ -105,7 +105,7 @@ var jerseypreview = function() {
 												app.ext.jerseypreview.u.updatePreview($context);
 												}, 600));
 											});
-										data.imgsrc = app.data[P.datapointer]["%attribs"]["zoovy:prod_image8"];
+										data.imgsrc = app.data[P.datapointer]["%attribs"]["user:jerseypreview_image"];
 										app.ext.jerseypreview.vars.paramsByPID[pid] = data;
 										app.ext.jerseypreview.u.assignPreviewerData($canvas, data, pid);
 										}
