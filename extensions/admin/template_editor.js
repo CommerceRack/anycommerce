@@ -61,7 +61,7 @@ var admin_templateEditor = function() {
 				if(mode == 'ebay' || mode == 'campaign')	{
 					var $D = $('#templateEditor');
 
-					app.u.dump(" -> #templateEditor.length: "+$D.length);
+//					app.u.dump(" -> #templateEditor.length: "+$D.length);
 						
 					if($D.length)	{
 						$('#globalMessaging').anymessage({'message':'The template editor was already open for '+$D.data('mode')+'. That editor was closed'})
@@ -410,29 +410,26 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 			}
 		return r;	
 		}
+
 	if(typeof window.magic === 'object')	{}
 	else	{
 		window.magic = {};
 		
-		window.magic.prodlist = function(selector,vars)	{
-			var $target = getTarget(selector,'magic.prodlist');
-			
-			vars = vars || {};
-			
-			if(vars.templateID)	{
-//				$target.append("<br><h2>JT WAS HERE</h2><br>");
-				var $prodlistTemplate = $(app.u.jqSelector('#',vars.templateID));
-				if($prodlistTemplate.length)	{
+//selector is, most likely, a hidden form element within the wizard.
+//This function will populate the hidden input with a csv of product once the 'apply' button in the picker is pushed.
+		window.magic.conjureProduct = function(ID){
 
 var $D = app.ext.admin.i.dialogCreate({
 	'title' : 'Select Product'
 	});
+var $input = $(app.u.jqSelector('#',ID));
+//app.u.dump(" -> app.u.jqSelector('#',ID): "+app.u.jqSelector('#',ID));
+//app.u.dump(" -> $input.length: "+$input.length);
 
 	$("<form>").append($("<fieldset data-app-role='pickerContainer'>").append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}))).appendTo($D);
 	$D.dialog({ buttons: [ { text: "Apply Product", click: function() {
 		$D.showLoading({'message':'Fetching product list'});
-// NOTE -> by here, 'target' is already not referencing the object in the iframe, so don't make changes to it till it's redeclared on the selectors callback.
-//		$target.append("<br><h2>AND HERE</h2><br>");
+
 		app.model.addDispatchToQ({
 			'_cmd':'appProductSelect',
 			'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($('form:first',$D)),
@@ -444,18 +441,10 @@ var $D = app.ext.admin.i.dialogCreate({
 						$D.anymessage({'message':rd});
 						}
 					else	{
-						//success content goes here.
-						$target = getTarget(selector,'magic.prodlist'); //have to redeclare target. 'focus' of target in iframe was getting lost. for expediency's sake, this was quickest solution.
-//						app.u.dump("$target.length: "+$target.length);
-//						$target.append("<br><h2>And Here Too!</h2><br>");
 						if(app.data[rd.datapointer] && app.data[rd.datapointer]['@products'] && app.data[rd.datapointer]['@products'].length)	{
+							$input.val(app.data[rd.datapointer]['@products'].join());
+							$input.triggerHandler("change"); //runs focus event w/out bringing 'focus' to input.
 							$D.dialog('close');
-							var $prodlistContainer = $prodlistTemplate.clone();
-//							app.u.dump(" -> $prodlistContainer.length: "+$prodlistContainer.length);
-							$prodlistContainer.attr('id','WIZ_PRODLIST_'+app.u.guidGenerator()); //change the ID so it's unique.
-							$prodlistContainer.appendTo($target);
-							$prodlistContainer.anycontent({'datapointer':rd.datapointer});
-							$('li:first',$prodlistContainer).empty().remove(); //removes the product list 'template' which is part of the UL.
 							}
 						else	{
 							$D.anymessage({'message':'Your selectors returned zero product.'});
@@ -468,6 +457,36 @@ var $D = app.ext.admin.i.dialogCreate({
 		}}]});
 
 	$D.dialog('open');
+
+			}
+		
+		window.magic.prodlist = function(selector,prodlist,vars)	{
+			var $target = getTarget(selector,'magic.prodlist');
+			
+			vars = vars || {};
+			
+			if(vars.templateID)	{
+//				$target.append("<br><h2>JT WAS HERE</h2><br>");
+				var $prodlistTemplate = $(app.u.jqSelector('#',vars.templateID));
+				if($prodlistTemplate.length)	{
+
+
+						//success content goes here.
+						$target = getTarget(selector,'magic.prodlist'); //have to redeclare target. 'focus' of target in iframe was getting lost. for expediency's sake, this was quickest solution.
+//						app.u.dump("$target.length: "+$target.length);
+//						$target.append("<br><h2>And Here Too!</h2><br>");
+						if(prodlist)	{
+							
+							var $prodlistContainer = $prodlistTemplate.clone();
+//							app.u.dump(" -> $prodlistContainer.length: "+$prodlistContainer.length);
+							$prodlistContainer.attr('id','WIZ_PL_'+app.u.guidGenerator().substring(0,10)); //change the ID so it's unique.
+							$prodlistContainer.appendTo($target);
+							
+							$prodlistContainer.anycontent({'data':{'@products':prodlist}});
+							}
+						else	{
+							$D.anymessage({'message':'Your selectors returned zero product.'});
+							}
 
 
 
@@ -627,6 +646,7 @@ var $D = app.ext.admin.i.dialogCreate({
 						}
 					},
 
+//adds some classes to the template.  These classes are removed on save.
 				buildTemplateStyleSheet : function()	{
 					var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
 						+ "	.showHighlights_PRODUCT .attributeContainer_PRODUCT {background-color:#efefef; border:1px dashed #cccccc;}\n" //used on all non-href product elements
@@ -639,6 +659,7 @@ var $D = app.ext.admin.i.dialogCreate({
 					return r;
 					}, //buildTemplateStyleSheet
 
+//removes the editor classes from the template. executed on save.
 				postprocessTemplate : function(template)	{
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
@@ -646,6 +667,8 @@ var $D = app.ext.admin.i.dialogCreate({
 					return $template.html();
 					}, //postprocessTemplate
 
+//This will add a style tag (classes) used by the editor. They're added to the template (stripped on save).
+// it will also add some classes on data-object elements. These stay (they do no harm)
 				preprocessTemplate : function(template)	{
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
@@ -668,12 +691,13 @@ var $D = app.ext.admin.i.dialogCreate({
 					return $template.html();
 					}, //preprocessTemplate
 
+//will display $object details in the $objectInspector element.
 				showObjectInInspector : function($object,$objectInspector)	{
 					if($object instanceof jQuery && $objectInspector instanceof jQuery)	{
 						
 						function getObjectData($object)	{
 
-							var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin'>";
+							var data = $object.data(), r = "<ul class='listStyleNone noPadOrMargin clearfix marginBottom'>";
 	
 							if(data.object)	{
 								for(index in data)	{
@@ -698,14 +722,17 @@ var $D = app.ext.admin.i.dialogCreate({
 	
 						$objectInspector.empty().append(getObjectData($object));
 						
-/*						if($object.data('object'))	{} //is a data-object
+						if($object.data('object'))	{} //is a data-object
 						else	{
 //find closest parent data-object and display it's info.
 							var $parentDataObject = $object.closest("[data-object]");
-							$objectInspector.append("<h2>parent data object</h2>");
-							$objectInspector.append($parentDataObject);
+							app.u.dump(" -> $parentDataObject.length: "+$parentDataObject.length);
+							if($parentDataObject.length)	{
+								$objectInspector.append("<h2>Parent Dynamic Element</h2>");
+								$objectInspector.append(getObjectData($parentDataObject));
+								}
 							}
-*/	
+	
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
@@ -1365,7 +1392,7 @@ var $D = app.ext.admin.i.dialogCreate({
 					
 					if($meta.length == 0)	{$btn.button('disable')}
 					else	{
-						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
+//						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
 						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
 							$btn.button('disable').hide();
 							event.preventDefault();

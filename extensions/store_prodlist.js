@@ -531,6 +531,7 @@ params that are missing will be auto-generated.
 							if($tag.children().length)	{
 								app.u.dump(" -> tag has a child. create template: "+obj.loadsTemplate);
 								app.model.makeTemplate($("li:first",$tag),obj.loadsTemplate);
+								$('li:first',$tag).empty().remove(); //removes the product list 'template' which is part of the UL.
 								}
 							else	{
 								//The tag has no children. can't make a template. can't proceed. how do we handle this error? !!!

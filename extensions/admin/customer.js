@@ -660,11 +660,12 @@ else	{
 					var $table = $ele.closest('table');
 					$table.stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-					$('button, a',$table).each(function(){
+					$('button, a, .lookLikeLink',$table).each(function(){
 						$(this).off('close.stickytab').on('click.closeStickytab',function(){
 							$table.stickytab('close');
 							})
 						})
+
 					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 					})
 				},
