@@ -59,10 +59,10 @@ var partner_addthis = function() {
 					app.rq.push(['templateFunction','productTemplate','onDeparts',function(infoObj){
 						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
 						}]);
-					app.rq.push(['templateFUnction','categoryTemplateEarthcam','onCompletes',function(P){
+					app.rq.push(['templateFunction','categoryTemplateEarthcam','onCompletes',function(P){
 						app.ext.partner_addthis.u.buildSocialLinksCategoryPage(infoObj);
 						}]);
-					app.rq.push(['templateFUnction','categoryTemplateEarthcam','onDeparts',function(P){
+					app.rq.push(['templateFunction','categoryTemplateEarthcam','onDeparts',function(P){
 						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
 						}]);
 					return true;
