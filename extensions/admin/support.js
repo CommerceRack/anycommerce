@@ -97,6 +97,23 @@ var admin_support = function() {
 				},
 
 
+			showPlatformInfo : function()	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Platform Information',
+					}).addClass('objectInspector');
+				
+				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$D.anymessage({'message':rd});
+						}
+					else	{
+						$D.append(app.ext.admin_tools.u.objExplore(app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd'])));
+						}
+					}}},'mutable');
+				app.model.dispatchThis('mutable');
+				$D.dialog('open');
+				},
+
 			showHelpInterfaceInDialog : function()	{
 				var $container = $('#helpDialog');
 				if($container.length)	{

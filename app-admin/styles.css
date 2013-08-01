@@ -1455,9 +1455,9 @@ ul.kpiSortable li:last-child	{border-bottom:0;}
 /*
 Account utilities / support tools
 */
-
+.objectInspector .objectInspector li {padding:4px;}
 .objectInspector .objectInspector li:nth-child(even)	{background-color:#efefef;}
-.objectInspector .objectInspector li:nth-child(even)	{background-color:#ffffff;}
+.objectInspector .objectInspector li:nth-child(odd)	{background-color:#ffffff;}
 .objectInspector .prompt {
     display: inline-block;
     width: 250px;
