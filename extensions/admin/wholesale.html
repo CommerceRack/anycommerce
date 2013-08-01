@@ -558,7 +558,7 @@
 
 			<div>
 			<fieldset data-app-role='ORDERSET'>
-				<label><span>Order formatting:</span>
+				<label><span>Order formatting</span>
 				<select name='FORMAT' data-bind="var:vendor(FORMAT); format:popVal;">
 					<option value='NONE'>None</option>
 					<option value='STOCK'>Stock</option>
@@ -566,6 +566,16 @@
 					<option value='FULFILL'>Fulfill</option>
 				</select>
 				</label>
+
+				<label><span>Version</span>
+				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;">
+					<option value="NONE">NONE</option>
+					<option value="TXT">TXT</option>
+					<option value="HTML">HTML</option>
+					<option value="XML">XML</option>
+				</select>
+				</label>				
+				
 				
 				<label><input type='checkbox' class='applyAnycb' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popVal;" />Automatic Ordering</label>
 				<div class='hint'>Orders will not be transmitted to the supplier until they are closed</div>
@@ -607,7 +617,7 @@
 		
 				<label>
 					<span>Email format:</span>
-					<select name='format' data-bind="var: supplier(%ORDER.email_format); format:popVal;">
+					<select name='email_format' data-bind="var: supplier(%ORDER.email_format); format:popVal;">
 						<option value="TXT">TXT</option>
 						<option value="HTML">HTML</option>
 						<option value="WIKI">WIKI</option>
@@ -642,15 +652,15 @@
 			<div data-panel-id='supplierAutomaticOrderingAMZSQS' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>Amazon AWS access key</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+					<input type='text' name='aws_access_key' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				<label title="Double Secret Probation Key">
 					<span>Amazon AWS secret key</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+					<input type='text' name='aws_secret_key' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 				<label>
 					<span>Amazon SQS channel</span>
-					<input type='text' name='' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+					<input type='text' name='aws_sqs_key' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 			</div>
 
