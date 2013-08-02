@@ -132,11 +132,11 @@
 	<div class='marginBottom pointer' data-mkt="" data-app-event="admin_syndication|showDSTDetail">
 	<img height="40" width="150"  src="app-admin/images/marketplaces/custom.png" />
 	</div>
-	<div class='marginBottom pointer' data-mkt="GSM" data-app-event="admin_syndication|showDSTDetail">
+-->	<div class='marginBottom pointer' data-mkt="GSM" data-app-event="admin_syndication|showDSTDetail">
 	<img height="40" width="150"  src="app-admin/images/marketplaces/google.png" /><br />Site Map
 	</div>
 
--->
+
 
 
 </div>
@@ -324,24 +324,6 @@
 
 	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-
-	<div class='label'>
-		Google Sitemap FTP Filename:
-		<span data-bind="var: mkt(ftp_filename); format:text;"></span>
-<p class='hint'>NOTE: the URL above requires authentication, it will not work if given to Google Sitemap (you must use their FTP server)</p>
-	</div>
-	<div class='label'>
-		Validation File:
-		<span data-bind="var: mkt(validation_file); format:text;"></span>
-	</div>
-
-	<label>
-		<span>Pricing Schedule</span>
-		<select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
-			<option value=''>none</option>
-		</select>
-		<span class='hint'>Requires Wholesale Bundle</span>
-	</label>
 
 <p class="hint">
 HINT: The username, password, etc. are provided by Google Sitemap.
