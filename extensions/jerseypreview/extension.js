@@ -194,7 +194,7 @@ var jerseypreview = function() {
 						context.drawImage(params.img, 0, 0);
 						
 						//draw number to canvas
-						context.font = params.number.size+"px "+params.font;
+						context.font = params.number.size+"px "+params.font+","+params.font+"2";
 						context.fillStyle = "#"+params.number.color;
 						context.strokeStyle = "#"+params.number.strokeColor;
 						context.lineWidth = params.number.strokeThickness;
