@@ -668,10 +668,13 @@
 
 				<label><span>Version</span>
 				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;">
-					<option value="NONE">NONE</option>
-					<option value="TXT">TXT</option>
-					<option value="HTML">HTML</option>
-					<option value="XML">XML</option>
+					<option value=''>-</option>
+					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
+					<option value='XSLT#201240'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>
+					<option value='JSON#201240'>v.201240 JSON - valid until: 2015-10-15</option>
+					<option value='CSV3D#0'>ORDER CSV-3D (brief output - no expiration)</option>
+					<option value='XCBL#4'>XCBL v4 (brief output - no expiration)</option>
+					<option value='XML#200'>** END OF LIFE ** XML ORDER v3.200 - valid until: 2013-09-01</option>
 				</select>
 				</label>				
 				
