@@ -1788,13 +1788,16 @@ app.model.dispatchThis('immutable');
 			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
-					DST = $btn.closest("[data-dst]").data('dst');
+					var DST = $btn.closest("[data-dst]").data('dst');
 					if(DST)	{
+						var $tbody = $btn.closest('.ui-tabs-panel').find('tbody')
+						$tbody.empty().showLoading({'message':'Clearing errors...'})
 						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{},'immutable');
+						app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_syndication','jqObj':$tbody},'mutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+						$btn.closest('section').anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
 				}, //adminSyndicationUnsuspendAndClearErrorMacro
