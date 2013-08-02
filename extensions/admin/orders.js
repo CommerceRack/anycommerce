@@ -1918,7 +1918,7 @@ $('.editable',$container).each(function(){
 					$('#orderListTableBody tr').each(function() {
 						$(this).removeClass("ui-selected").addClass("ui-unselecting");
 						});
-					$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
+					$('#orderListTableBody').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
 					});
 				}, //orderListUpdateDeselectAll
 
@@ -2092,7 +2092,7 @@ else	{
 					$('#orderListTableBody tr').each(function() {
 						$(this).addClass("ui-selected").removeClass("ui-unselecting");
 						});
-					$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
+					$('#orderListTableBody').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
 					});
 				}, //orderListUpdateSelectAll
 
