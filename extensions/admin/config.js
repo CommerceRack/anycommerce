@@ -557,7 +557,7 @@ if(vars.rulesmode == 'shipping')	{
 		app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
 		}
 	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
-		$D.hideLoading();
+		$DMI.hideLoading();
 		if(app.model.responseHasErrors(rd)){
 			$D.anymessage({'message':rd});
 			}
