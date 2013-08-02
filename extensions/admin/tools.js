@@ -506,7 +506,7 @@ var admin_tools = function() {
 				$btn.button();
 				$btn.off('click.productExportBatchJobCreateExec').on('click.productExportBatchJobCreateExec',function(){
 					var $form = $btn.closest('form');
-					if($("[data-app-role='pickerContainer'] :checkbox:checked",$form).length)	{
+					if($("[data-app-role='pickerContainer'] :checkbox:checked",$form).length || $("[name='csv']",$form).val())	{
 						var sfo = $("[data-app-role='exportConfiguration']",$form).serializeJSON();
 						sfo.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
 						if(sfo.attributes == 'specify' && !sfo.fields)	{
