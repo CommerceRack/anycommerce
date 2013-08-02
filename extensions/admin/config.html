@@ -445,13 +445,13 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <label>
 	<span>Valid From</span>
-	<input type='datetime' maxlength="20" value="" class='applyDatepicker' name="begins" data-bind='var:coupon(begins); format:popVal;' />
+	<input type='datetime' maxlength="20" value="" class='applyDatepicker' name="begins_gmt" data-bind='var:coupon(begins_gmt); format:popVal;' />
 	<span class='toolTip' title="Leave empty for no start time (active as soon as enabled).">?</span>
 </label>
 
 <label>
 	<span>Valid Until</span>
-	<input type='datetime' maxlength="20" value="" class='applyDatepicker' name="expires"  data-bind='var:coupon(expires); format:popVal;' />
+	<input type='datetime' maxlength="20" value="" class='applyDatepicker' name="expires_gmt"  data-bind='var:coupon(expires_gmt); format:popVal;' />
 	<span class='toolTip' title="Leave expires empty for 'never'.">?</span>
 </label>
 

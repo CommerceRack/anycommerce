@@ -792,11 +792,12 @@ $D.dialog('open');
 					 	.find(".applyDatepicker").datepicker({
 							changeMonth: true,
 							changeYear: true,
-							dateFormat : 'yymmdd'
+							dateFormat : '@'
 							})
+						.change(function(){$(this).val(parseInt($(this).val()) / 1000)}) //strip milliseconds from epoch
 						.end()
 						.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
-					});
+					}); //
 				}, //couponDetailDMIPanel
 
 			couponCreateShow : function($btn)	{
