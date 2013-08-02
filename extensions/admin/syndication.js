@@ -1788,7 +1788,7 @@ app.model.dispatchThis('immutable');
 			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
-					DST = btn.closest("[data-dst]").data('dst');
+					DST = $btn.closest("[data-dst]").data('dst');
 					if(DST)	{
 						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{},'immutable');
 						app.model.dispatchThis('immutable');
