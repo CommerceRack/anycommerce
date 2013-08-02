@@ -207,7 +207,7 @@ var jerseypreview = function() {
 						
 						//draw name to canvas
 						
-						context.font = params.name.size+"px "+params.font;
+						context.font = params.name.size+"px "+params.font+","+params.font+"2";
 						context.fillStyle = "#"+params.name.color;
 						context.strokeStyle = "#"+params.name.strokeColor;
 						context.lineWidth = params.name.strokeThickness;
