@@ -760,9 +760,13 @@
 					<span>Amazon AWS secret key</span>
 					<input type='text' name='aws_secret_key' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
-				<label>
-					<span>Amazon SQS channel</span>
+<!--				<label>
+					<span>Amazon SQS key</span>
 					<input type='text' name='aws_sqs_key' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+				</label>
+-->				<label>
+					<span>Amazon SQS channel</span>
+					<input type='text' name='aws_sqs_channel' data-bind="var:vendor(%ORDER.aws_sqs_channel); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 			</div>
 
