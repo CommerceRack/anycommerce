@@ -1241,7 +1241,7 @@ app.model.dispatchThis('mutable');
 						}
 
 
-//data for saving options in a 'select' based option requires some manipulation to get into 'options' array.
+//data for saving options in a 'select' based option requires some manipulation to get into '@options' array.
 					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
 						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
 						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){

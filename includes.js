@@ -133,7 +133,7 @@ renderOptionSELECT: function(pog) {
     while (i < len) {
 		optionTxt = pog['@options'][i]['prompt'];
 		if(pog['@options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
 		selOption = "<option value='"+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
@@ -227,7 +227,7 @@ renderOptionIMGSELECT: function(pog) {
     while (i < len) {
 		optionTxt = pog['@options'][i]['prompt'];
 		if(pog['@options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
 		selOption = "<option value='"+pog['@options'][i]['v']+"' data-thumbnail='"+pog['@options'][i]['img']+"' id='option_"+pogid+""+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
