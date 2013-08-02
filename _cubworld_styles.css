@@ -81,15 +81,20 @@ FONTS FOR JERSEY PREVIEWER
 
 ****************************************************************/
 @font-face {font-family: LHFFullBlock; src: url('extensions/jerseypreview/LHFFullBlock.ttf');}
-.LHFFullBlock { font-family: LHFFullBlock;}
-@font-face {font-family: LHFoldblockCONDBOLD; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.TTF');}
-.LHFoldblockCONDBOLD { font-family: LHFoldblockCONDBOLD;}
-@font-face {font-family: LHFoldblockCONDMED; src: url('extensions/jerseypreview/LHFoldblockCONDMED.TTF');}
-.LHFoldblockCONDMED { font-family: LHFoldblockCONDMED;}
-@font-face {font-family: LHFoldblockREGBOLD; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.TTF');}
-.LHFoldblockREGBOLD { font-family: LHFoldblockREGBOLD;}
-@font-face {font-family: LHFoldblockREGMED; src: url('extensions/jerseypreview/LHFoldblockREGMED.TTF');}
-.LHFoldblockREGMED { font-family: LHFoldblockREGMED;}
+@font-face {font-family: LHFFullBlock2; src: url('extensions/jerseypreview/LHFFullBlock.TTF');}
+.LHFFullBlock { font-family: LHFFullBlock, LHFFullBlock2;}
+@font-face {font-family: LHFoldblockCONDBOLD; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.ttf');}
+@font-face {font-family: LHFoldblockCONDBOLD2; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.TTF');}
+.LHFoldblockCONDBOLD { font-family: LHFoldblockCONDBOLD, LHFoldblockCONDBOLD2;}
+@font-face {font-family: LHFoldblockCONDMED; src: url('extensions/jerseypreview/LHFoldblockCONDMED.ttf');}
+@font-face {font-family: LHFoldblockCONDMED2; src: url('extensions/jerseypreview/LHFoldblockCONDMED.TTF');}
+.LHFoldblockCONDMED { font-family: LHFoldblockCONDMED, LHFoldblockCONDMED2;}
+@font-face {font-family: LHFoldblockREGBOLD; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.ttf');}
+@font-face {font-family: LHFoldblockREGBOLD2; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.TTF');}
+.LHFoldblockREGBOLD { font-family: LHFoldblockREGBOLD, LHFoldblockREGBOLD2;}
+@font-face {font-family: LHFoldblockREGMED; src: url('extensions/jerseypreview/LHFoldblockREGMED.ttf');}
+@font-face {font-family: LHFoldblockREGMED2; src: url('extensions/jerseypreview/LHFoldblockREGMED.TTF');}
+.LHFoldblockREGMED { font-family: LHFoldblockREGMED, LHFoldblockREGMED2;}
 /****************************************************************
 
 UTILITY CLASSES AND UNIVERSAL STYLES
