@@ -438,7 +438,7 @@ var admin_tools = function() {
 					app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
 					
-					if($("[data-app-role='pickerContainer']",$form).find(':checkbox:checked').length)	{
+					if($("[data-app-role='pickerContainer']",$form).find(':checkbox:checked').length || $("[name='csv']",$form).val())	{
 						if($('#powerToolActionListTbody tr').length)	{
 							obj = {
 								'%vars' : {
