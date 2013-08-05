@@ -416,7 +416,7 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <label>
 	<span>Discount Code</span>
-	<input type="text" name='coupon' value="" size="50"  data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
+	<input type="text" name='coupon' value="" size="20"  data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
 	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.">?</span>
 </label>
 
@@ -437,9 +437,9 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 <label class='label'>
 	<span>Thumbnail</span>
 	<img width="50" border="0" height="50" src="" name="THUMBURL" data-bind='var: coupon(image); format:imageURL;'>
-	<button onclick="mediaLibrary($(this).closest('div').find('img').first(),$(this).closest('div').find('input').first(),'Coupon Thumbnail'); return(false);" type="button" class="minibutton">Edit</button>
-	<button onclick="$(this).closest('div').find('img').first().attr('src',''); $(this).closest('div').find('input').first().val(''); return(false);" type="button" class="minibutton">Clear</button>
-	<input type="hidden" value="" name='image' data-bind='var: coupon(image); format:popVal;' >
+	<button onclick="mediaLibrary($(this).closest('label').find('img').first(),$(this).closest('label').find('.couponImageGoesHere:first'),'Coupon Thumbnail'); return(false);" type="button" class="minibutton">Edit</button>
+	<button onclick="$(this).closest('label').find('img').first().attr('src',''); $(this).closest('label').find('.couponImageGoesHere:first').val(''); return(false);" type="button" class="minibutton">Clear</button>
+	<input type="hidden" value="" name='image' data-bind='var: coupon(image); format:popVal;' class='couponImageGoesHere' >
 </label>
 
 
@@ -454,6 +454,13 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 	<input type='datetime' maxlength="20" value="" class='applyDatepicker' name="expires_gmt"  data-bind='var:coupon(expires_gmt); format:popVal;' />
 	<span class='toolTip' title="Leave expires empty for 'never'.">?</span>
 </label>
+
+
+<label>
+	<input type="checkbox" name="auto" data-bind='var:coupon(auto); format:popVal;' /> Automatic
+	<span class='toolTip' title="If enabled, will automatically add this coupon to the cart (customer does NOT have to enter a coupon code to get the discount)">?</span>
+</label>
+
 
 <label>
 	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Newsletter/Limited Use
