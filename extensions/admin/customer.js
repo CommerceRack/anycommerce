@@ -1202,6 +1202,7 @@ app.model.dispatchThis('mutable');
 var updates = new Array(),
 formObj = $form.serializeJSON();
 
+$form.showLoading({'message':'Creating customer record'});
 //app.u.dump(" -> formObj: "); app.u.dump(formObj);
 
 updates.push("CREATE?email="+formObj.email);
@@ -1211,6 +1212,7 @@ if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //genera
 
 // $('body').showLoading("Creating customer record for "+formObj.email);
 app.ext.admin.calls.adminCustomerCreate.init(updates,{'callback':function(rd){
+	$form.hideLoading();
 	if(app.model.responseHasErrors(rd)){
 		$('#globalMessaging').anymessage({'message':rd});
 		}
