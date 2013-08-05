@@ -1140,7 +1140,8 @@ app.model.dispatchThis('immutable');
 				}, //giftcardCreateShow
 
 			giftcardDetailDMIPanel : function($btn)	{
-				$btn.button();
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+
 				$btn.off('click.giftcardDetailDMIPanel').on('click.giftcardDetailDMIPanel',function(){
 
 var GCID = $btn.closest('tr').data('id');
