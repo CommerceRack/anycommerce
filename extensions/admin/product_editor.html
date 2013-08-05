@@ -324,6 +324,41 @@
 </div>
 
 
+
+<div id='productEditorPanelTemplate_xsell' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Reviews</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+<form action='#'>
+
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+<table>
+<tbody>
+<tr>
+	<td class='valignTop'>
+
+<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
+<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
+<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
+<label><input name="is:bestseller" type="checkbox" data-bind="var: product(is:bestseller); format:popVal;" class='applyAnycb' /> Best Seller</label>
+<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
+<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
+<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
+<label><input name="is:clearance" type="checkbox" data-bind="var: product(is:clearance); format:popVal;" class='applyAnycb' /> Clearance </label>
+
+	</td>
+	<td class='valignTop'></td>
+
+</tbody>
+</table>
+</fieldset>
+</form>
+	</div>
+</div>
+
+
 <div id='productEditorPanelTemplate_syndication' class='productPanel'>
 	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
