@@ -28,7 +28,7 @@ var admin_config = function() {
 		'paymentEcheckTemplate',
 		'paymentWallet_google',
 		'paymentWallet_paypalec',
-		'paymentWallet_amzcba',
+		'paymentWallet_amzpay',
 		'paymentSuppInputsTemplate_manual',
 		'paymentSuppInputsTemplate_paypalwp',
 		'paymentSuppInputsTemplate_verisign',
@@ -241,7 +241,7 @@ var admin_config = function() {
 /* wallets/third party payments */
 						case 'GOOGLE':
 						case 'PAYPALEC':
-						case 'AMZCBA':
+						case 'AMZPAY':
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('WALLET'));
 							$target.anycontent({'templateID':'paymentWallet_'+tender.toLowerCase(),data : payData});
 							break;

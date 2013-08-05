@@ -256,15 +256,15 @@ var admin_tools = function() {
 						}
 					
 					if(sfo.rstart && sfo.rend)	{
-						r += "range?"+sfo.rstart+"|"+sfo.rend+"\n";
+						r += "range="+sfo.rstart+"|"+sfo.rend+"\n";
 						}
 
 					if(sfo.createstart && sfo.createend)	{
-						r += "created?"+sfo.createstart+"|"+sfo.createend+"\n";
+						r += "created="+sfo.createstart+"|"+sfo.createend+"\n";
 						}
 					
 					if(sfo.csv)	{
-						r += "csv?"+sfo.csv.replace(/\n/,"")+"\n";
+						r += "csv="+sfo.csv.replace(/\n/,"")+"\n";
 						}
 					}
 				app.u.dump(" -> r: "+r);

@@ -335,7 +335,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
 	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
 	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
-	<td class='alignRight'><button data-app-event="admin_customer|showGiftcardUpdate">Edit Giftcard</button></td>
+	<td class='alignRight'><button data-app-event="admin_customer|adminGiftcardUpdateShow" data-edit-mode='dialog'>Edit Giftcard</button></td>
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
@@ -769,7 +769,7 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(TXNCNT); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(TYPE); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(SERIES); format:text;" class='hideInDetailMode'></td>
-	<td><button data-app-event='admin_customer|giftcardDetailDMIPanel'>Details</button></td>
+	<td><button data-app-event='admin_customer|adminGiftcardUpdateShow' data-edit-mode='panel'>Details</button></td>
 </tr>
 
 <tr id='giftcardLogRowTemplate'>

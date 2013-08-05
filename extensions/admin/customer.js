@@ -451,6 +451,7 @@ else	{
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminGiftcardMacro',
+					'GCID':sfo.GCID,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					}; 
@@ -1158,18 +1159,59 @@ app.model.dispatchThis('immutable');
 					});
 				}, //giftcardCreateShow
 
-			giftcardDetailDMIPanel : function($btn)	{
+			adminGiftcardUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 
-				$btn.off('click.giftcardDetailDMIPanel').on('click.giftcardDetailDMIPanel',function(){
+				$btn.off('click.adminGiftcardUpdateShow').on('click.adminGiftcardUpdateShow',function(event){
+event.preventDefault();
+if($btn.data('edit-mode'))	{
+	var
+		GCID = $btn.closest('tr').data('id'),
+		$panel;
 
-var GCID = $btn.closest('tr').data('id');
-var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-	'templateID' : 'giftcardDetailTemplate',
-	'panelID' : 'giftcard_'+GCID,
-	'header' : 'Edit Giftcard: '+GCID
-	});
+	if($btn.data('edit-mode') == 'dialog') {
+		
+		$panel = app.ext.admin.i.dialogCreate({'title':'Edit Giftcard','templateID' : 'giftcardDetailTemplate','showLoading':false});
+		$panel.dialog('open');
+		}
+	else if($btn.data('edit-mode') == 'panel')	{
 
+		$panel = app.ext.admin.i.DMIPanelOpen($btn,{
+			'templateID' : 'giftcardDetailTemplate',
+			'panelID' : 'giftcard_'+GCID,
+			'header' : 'Edit Giftcard: '+GCID,
+			'showLoading':false
+			});
+
+		}
+	else	{
+		$('#globalMessaging').anymessage({'message':'In admin_customer.giftcardDetailDMIPanl, invalid mode ['+$btn.data('edit-mode')+'] set on button.','gMessage':true})
+		}
+	
+	//panel will be blank if an invalid mode was set.
+	if($panel)	{
+$('form',$panel).showLoading({'message':'Fetching giftcard details'});
+app.model.addDispatchToQ({
+	'_cmd' : 'adminGiftcardDetail',
+	'GCID' : GCID,
+	'_tag' : {
+		'callback':'anycontent',
+		'jqObj':$('form',$panel),
+		'applyEditTrackingToInputs' : true,
+		'datapointer' : 'adminGiftcardDetail|'+GCID
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+		
+		}
+	
+	}
+else	{
+	$('#globalMessaging').anymessage({'message':'In admin_customer.giftcardDetailDMIPanl, no mode set on button.','gMessage':true})
+	}
+
+
+/*
 setTimeout(function(){
  $( ".applyDatepicker",$panel).datepicker({
 	changeMonth: true,
@@ -1177,20 +1219,10 @@ setTimeout(function(){
 	dateFormat : 'yymmdd'
 	});
 },5000);
+*/
 
-app.model.addDispatchToQ({
-	'_cmd' : 'adminGiftcardDetail',
-	'GCID' : GCID,
-	'_tag' : {
-		'callback':'anycontent',
-		'jqObj':$('.ui-widget-content',$panel),
-		'applyEditTrackingToInputs' : true,
-		'datapointer' : 'adminGiftcardDetail|'+GCID
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
 					});
-				}, //giftcardDetailDMIPanel
+				}, //adminGiftcardUpdateShow
 
 //executed within the customer create form to validate form and create user.
 			execAdminCustomerCreate : function($btn)	{
@@ -1715,17 +1747,18 @@ app.model.dispatchThis('immutable');
 					$("<span class='tooltip'>?<\/span>").attr('title','You must be logged in to a partition to edit a customer on that partition.').tooltip().insertAfter($btn);
 					}
 				}, //showCustomerUpdate
-			
+
+/*			
 			showGiftcardUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				
 				$btn.off('click.showGiftcardUpdate').on('click.showGiftcardUpdate',function(event){
 					event.preventDefault();
 					//!!! when giftcard macro is in place, update this.
-					navigateTo("/biz/manage/giftcard/index.cgi?VERB=EDIT&GCID="+$btn.closest('tr').data('id'));
+					app.ext.admin_customer.e.
 					});
 				}, //showGiftcardUpdate
-			
+*/			
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
 					var
