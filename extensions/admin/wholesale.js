@@ -1171,18 +1171,18 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 				
 				$container.on('click',function(e){
 					var $ele = $(e.target);
-					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
+//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 
 					
 					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
-						app.u.dump('is option or select');
+//						app.u.dump('is option or select');
 //FF registers a click on the option. Chrome on the select.
 //to be consistent, put select into focus.						
 						if(e.target.nodeName.toLowerCase() == 'option'){
 							$ele = $ele.closest('select');
 							}
-						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
-						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
+//						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
+//						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
 /*
 panel-selector:
 on a select, set data-panel-selector=".someClass"

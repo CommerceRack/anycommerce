@@ -667,10 +667,10 @@
 				</label>
 
 				<label><span>Version</span>
-				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;">
+				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;"  data-panel-selector=".supplierExportFormat">
 					<option value=''>-</option>
 					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
-					<option value='XSLT#201240'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>
+					<option value='XSLT#201240'  data-show-panel='supplierExportFormatXSLT'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>
 					<option value='JSON#201240'>v.201240 JSON - valid until: 2015-10-15</option>
 					<option value='CSV3D#0'>ORDER CSV-3D (brief output - no expiration)</option>
 					<option value='XCBL#4'>XCBL v4 (brief output - no expiration)</option>
@@ -678,6 +678,12 @@
 				</select>
 				</label>				
 				
+				<div class='displayNone supplierExportFormat' data-panel-id='supplierExportFormatXSLT'>
+				<label>
+					<span>XSLT Stylesheet</span>
+					<textarea type='text' name='xslt' rows='8' data-bind="var: supplier(%ORDER.xslt); format:popVal;"></textarea>
+				</label>
+				</div>
 				
 				<label><input type='checkbox' class='applyAnycb' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popVal;" />Automatic Ordering</label>
 				<div class='hint'>Orders will not be transmitted to the supplier until they are closed</div>
