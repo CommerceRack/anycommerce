@@ -1101,9 +1101,14 @@ $D.dialog('open');
 								}
 							app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
 // * 201324 -> after add/save, clear the inputs for the next entry.
-							$('input, textarea, select',$container).val(""); //clear inputs.
-							$(':checkbox',$container).prop('checked',false);
-							app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest('form'));
+// * 201330 -> turns out this behavior may not always be desired. caused issues in shipping. can now be disabled.
+							if($btn.data('form-skipreset'))	{
+								}
+							else	{
+								$('input, textarea, select',$container).val(""); //clear inputs.
+								$(':checkbox',$container).prop('checked',false);
+								}
+							app.ext.admin.u.handleSaveButtonByEditedClass($form);
 							}
 						else	{
 							app.u.dump("form did not validate");
