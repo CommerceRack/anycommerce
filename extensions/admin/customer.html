@@ -782,21 +782,81 @@ The checkbox below does not work.
 </table>
 
 
-<div id='giftcardDetailTemplate'>
 
-	<div data-bind="var:giftcard(ID); format:text; pretext:ID: ;"></div>
-	<div data-bind="var:giftcard(SRC_SERIES); format:text; pretext: Series: ;"></div>
-	<div data-bind="var:giftcard(BALANCE); format:text; pretext: Balance: ;"></div>
-	<div data-bind="var:giftcard(COMBINABLE); format:text; pretext: Combinable: ;"></div>
+
+
+<div id='giftcardDetailTemplate'>
+<form action='#' onSubmit="return false">
+
+<input type='hidden' name='_macrobuilder' value='admin_customer|adminGiftcardMacro' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+
+<input type="hidden" name="GCID" value="" data-bind="var:giftcard(GCID); format:popVal;" />
+
+<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<div class='buttonset alignRight ui-corner-all ui-widget-content smallPadding marginBottom'><button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> </button></div>
+
+	<div class='label' data-bind="var:giftcard(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var:giftcard(SRC_SERIES); format:text; pretext: Series: ;"></div>
+	
+	<label>
+		<span>Balance</span>
+		$<input type="number" min='0' step='.01' name="balance" value="0.00" size="5" required='required' data-bind="var:giftcard(BALANCE); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Balance change note</span>
+		<input type='text' name='balance_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made. Only saves if balance is updated.">?</span>
+	</label>
+
+	
+
+	<label>
+		<span>Expiration </span>
+		<input type="text" maxlength="10" name="expires" value="" class='applyDatepicker'  data-bind="var:giftcard(EXPIRES_GMT); format:popVal;">
+		<span class='toolTip' title="Leave empty for an expiration of never. Many states require you do not expire gift cards if you sell them for cash value. However, gift cards that you include discounted or free with an order are usually exempt.">?</span>
+		<span data-bind="var:giftcard(EXPIRES_GMT); format:epoch2pretty; pretext: (current: ; posttext:);"></span>
+	</label>
+
+	<label>
+		<span>Expiration change note</span>
+		<input type='text' name='expires_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made.  Only saves if expiration is updated.">?</span>
+	</label>
+
+	<label>
+		<span>Card Type</span>
+		<select name="cardtype" required='required'  data-bind="var:giftcard(CARDTYPE); format:popVal;">
+			<option value="7">Cash Equivalent</option>
+			<option value="3">Promotional</option>
+			<option value="1">Exclusive/One Time Use</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Card type change note</span>
+		<input type='text' name='cardtype_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made.  Only saves if card type is updated.">?</span>
+	</label>
+
+
+	<div class='marginTop' data-bind="var:giftcard(COMBINABLE); format:text; pretext: Combinable: ;"></div>
 	<div data-bind="var:giftcard(SYNCED_GMT); format:epoch2pretty; pretext: Synced: ;"></div>
 	<div data-bind="var:giftcard(CREATED_GMT); format:epoch2pretty; pretext: Created: ;"></div>
 	<div data-bind="var:giftcard(MODIFIED_GMT); format:epoch2pretty; pretext: Modified: ;"></div>
-	<div data-bind="var:giftcard(EXPIRES_GMT); format:epoch2pretty; pretext: Expiration: ;"></div>
+
+
+
 	<div data-bind="var:giftcard(LAST_ORDER); format:text; pretext: Last order: ;"></div>
 	<div data-bind="var:giftcard(NOTE); format:text; pretext: Note: ;"></div>
 	<div data-bind="var:giftcard(TXNCNT); format:text; pretext: Txncnt: ;"></div>
 	<div data-bind="var:giftcard(CREATED_BY); format:text; pretext: Created by: ;"></div>
-	<div data-bind="var:giftcard(CARDTYPE); format:text; pretext: Card type: ;"></div>
+
+
 	<div data-bind="var:giftcard(PRT); format:text; pretext: Partition: ;"></div>
 	<div data-bind="var:giftcard(CASHEQUIV); format:text; pretext: Cash equivalent: ;"></div>
 
@@ -816,7 +876,8 @@ The checkbox below does not work.
 	
 	</tbody>
 	</table>
-
+</fieldset>
+</form>
 </div>
 
 

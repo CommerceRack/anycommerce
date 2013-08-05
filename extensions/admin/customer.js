@@ -178,7 +178,7 @@ var admin_customer = function() {
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
 					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>","<button data-app-event='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button><button data-app-event='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
-					'thead' : ['code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
+					'thead' : ['Code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;",
 					'cmdVars' : {
@@ -436,6 +436,41 @@ else	{
 				} //newsletters
 
 			}, //renderFormats
+			
+			
+			
+		
+		
+////////////////////////////////////   MACROBUILDERS   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+		macrobuilders : {
+
+			'adminGiftcardMacro' : function(sfo,$form)	{
+				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-create");
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminGiftcardMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+
+				if($("[name='balance']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("SET/BALANCE?balance="+sfo.balance+"&note="+sfo.balance_note);
+					}
+				if($("[name='cardtype']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("SET/CARDTYPE?cardtype="+sfo.cardtype+"&note="+sfo.cardtype_note);
+					}
+				if($("[name='expires']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("SET/EXPIRES?expires="+sfo.expires+"&note="+sfo.expires_note);
+					}
+				return newSfo;
+				} //adminGiftcardMacro
+			
+			},
+			
+			
+			
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -1115,6 +1150,13 @@ var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 	'header' : 'Edit Giftcard: '+GCID
 	});
 
+setTimeout(function(){
+ $( ".applyDatepicker",$panel).datepicker({
+	changeMonth: true,
+	changeYear: true,
+	dateFormat : 'yymmdd'
+	});
+},5000);
 
 app.model.addDispatchToQ({
 	'_cmd' : 'adminGiftcardDetail',
