@@ -1303,7 +1303,8 @@ app.model.dispatchThis('immutable');
 							}
 						else if($tag.is('input') || $tag.is('select'))	{
 							if($tag.attr('name') == 'password')	{
-								macros.push("PASSWORDRESET?password="+$tag.val());
+// * 201330 -> passwords weren't accepting + or & on save.
+								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); 
 								}
 							else if(pr == 'general')	{
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
