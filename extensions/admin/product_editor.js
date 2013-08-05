@@ -29,7 +29,7 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication','flexedit'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
 			'textbox' : { 'type' : 'text'},
 			'text' : { 'type' : 'text'},
@@ -641,7 +641,7 @@ app.model.dispatchThis('mutable');
 //data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
 //prodData is an optional object. should be appProductGet and include %attribs, inventory, etc.
 		flexBuildInput : function(type,data,prodData)	{
-			app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
+//			app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
 		
 		//	app.u.dump('TYPE: '+type); app.u.dump(data);
 			var $r = $("<label \/>").data(data);
@@ -787,7 +787,7 @@ app.model.dispatchThis('mutable');
 				
 				for(var i = 0; i < L; i += 1)	{
 					if(thisFlex[i].id)	{
-						app.u.dump("ID: "+thisFlex[i].id);
+//						app.u.dump("ID: "+thisFlex[i].id);
 						var gfo = app.data['appResource|product_attribs_all.json'].contents[thisFlex[i].id] || {}; //Global Flex Object. may be empty for custom attributes.
 						var type = thisFlex[i].type || gfo.type;
 						if(type && app.ext.admin_prodEdit.vars.flexTypes[type] && app.ext.admin_prodEdit.vars.flexTypes[type].type)	{
@@ -848,6 +848,14 @@ app.model.dispatchThis('mutable');
 				}
 			}, //handleProductListTab
 
+		getReviewsPanelContents : function(pid)	{
+			var $r = $("<div \/>"); //what is returned. either panel contents or false.
+			$r.anycontent({'templateID':'productEditorPanelTemplate_reviews'});
+			
+			
+			return $r;
+			},
+
 //app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
 		getPanelContents : function(pid,panelid)	{
 			var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
@@ -857,6 +865,16 @@ app.model.dispatchThis('mutable');
 					$('fieldset:first',r).addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['appProductGet|'+pid]));
 					
 					app.ext.admin.u.handleAppEvents(r);
+					}
+				else if(panelid == 'reviews')	{
+					r = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate_reviews',{'id':'panel_'+panelid,'panelid':panelid,'pid':pid});
+					app.model.addDispatchToQ({'filter':'','PID':pid,'_cmd' : 'adminProductReviewList','_tag' : {'callback':function(rd){
+						$('tbody',r).anycontent({datapointer:rd.datapointer});
+						$("button[data-app-event='admin_customer|adminProductReviewUpdateShow']",r).attr('data-edit-mode','dialog');
+						app.u.handleAppEvents(r);
+						},'datapointer' : 'adminProductReviewList|'+pid}},'mutable');
+					app.model.dispatchThis('mutable')
+					
 					}
 				else	{
 					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);

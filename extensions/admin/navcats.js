@@ -19,7 +19,7 @@
 
 
 var admin_navcats = function() {
-	var theseTemplates = new Array('');
+	var theseTemplates = new Array('catTreeItemTemplate');
 	var r = {
 
 
@@ -32,7 +32,7 @@ var admin_navcats = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/navcats.html',theseTemplates);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -78,17 +78,13 @@ mode could be:  builder, selector
 				vars = vars || {};
 				//set some defaults.
 				if(mode)	{
-					if(vars.root && vars.filter && vars.templateID)	{
+					if(vars.safe && vars.templateID)	{
+$tree.showLoading({'message':'Fetching category tree'});
+$tree.append("<ul data-bind='var: categories(@subcategoryDetail); format:processList; loadsTemplate:"+vars.templateID+";' \/>");
 
+vars.detail = vars.detail || 'max';
 //everything necessary is here. proceed.
-app.ext.admin.calls.appCategoryList.init({'root':vars.root,'filter':vars.filter},{'callback':function(rd)	{
-	if(app.model.responseHasErrors(rd)){
-		$tree.anymessage({'message':rd});
-		}
-	else	{
-		//success content goes here.
-		}
-	}},'mutable');
+app.calls.appCategoryDetail.init(vars,{'callback':'anycontent','jqObj':$tree},'mutable');
 app.model.dispatchThis('mutable');
 
 						}
@@ -101,7 +97,17 @@ app.model.dispatchThis('mutable');
 					$tree.anymessage({'message':'In admin_navcats.u.getTree, mode ['+mode+'] not set or invalid.','gMessage':true});
 					}
 				return $tree;
+				},
+			
+			handleCatTreeDelegation : function($tree)	{
+				$tree.on('click',function(e){
+					var $target = $(e.target);
+					if($target.data('app-event'))	{
+						
+						}
+					});
 				}
+			
 			}, //u [utilities]
 
 		e : {

@@ -306,7 +306,22 @@
 
 
 
+<div id='productEditorPanelTemplate_reviews' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Reviews</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+<form action='#'>
 
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+<table class='gridTable applyAnytable'>
+<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
+</table>
+</fieldset>
+</form>
+	</div>
+</div>
 
 
 <div id='productEditorPanelTemplate_syndication' class='productPanel'>

@@ -360,30 +360,19 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <ul class='debugMenu'>
 	<li><a href='#'>Pages</a>
 	<ul>
+
+
+
+		<li><a href='#' onClick="$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_navcats.u.getTree('full',{'templateID':'catTreeItemTemplate','safe':'.subcategories'})); return false;">navTree</a></li>
+
 		<!-- privatefilelist supports 'type'. limit is also available. -->
 		<li><a href='#' onClick="app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),'MODEL07');; return false;">model07 in prod editor </a></li>
 		
 
-		<li><a href='#' onClick="app.ext.admin_templateEditor.a.showTemplateEditorInModal('campaign',{'campaignid':'ROBERT_20130724'}); app.model.dispatchThis('mutable'); return false;">edit campaign</a></li>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminSupplierOrderItemList','VENDORID':'JOEBOB'},'mutable'); app.model.dispatchThis('mutable'); return false;">platformInfo</a></li>
-	
-		
-
-<!--		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminPlatformHealth'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminPlatformHealth</a></li> -->
-
 		
 		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminConfigDetail','tuning':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminConfigDetail -> tuning</a></li>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'platformInfo','inventory-event-queue':'1','disk-usage':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">platformInfo</a></li>
-		
-	
-		
-		<li><a href='#' onClick="app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),'BOB'); return false;">edit launch profile bob</a></li>
-		<li><a href='#' onClick="app.ext.admin_templateEditor.a.showTemplateEditorInModal('ebay',{'profile':'BOB'}); return false;">BOB template</a></li>
-		<li><a href='#' onClick="app.ext.admin_prodEdit.u.showProductEditor('',{'pid':'AUDIO'}); return false;">edit AUDIO</a></li>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminCampaignFileContents','base64':true,'FILENAME' : 'index.html','CAMPAIGNID':'222222_1372278124','_tag':	{'callback':'fileDownloadInModal','extension':'admin','datapointer' : 'adminCampaignFileContent','mime_type':'text/plain'}},'mutable'); app.model.dispatchThis('mutable'); return false;">fileDownloadInModal</a></li>
 
 		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!supplierManager'); return false;">Supplier Manager</a></li>
 		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
 		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>

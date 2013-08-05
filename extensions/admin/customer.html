@@ -1015,7 +1015,7 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
 	<td class='alignRight'>
 	<button data-app-event='admin_customer|reviewRemoveConfirm'>Delete Review</button>
-	<button data-app-event='admin_customer|reviewDetailDMIPanel'>Edit Review</button>
+	<button data-app-event='admin_customer|adminProductReviewUpdateShow' data-edit-mode='panel'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
 	</td>
 </tr>
 
@@ -1035,7 +1035,7 @@ The checkbox below does not work.
 
 	<label>
 		<span>Rating</span>
-		<select name='RATING' data-bind="var: review(RATINGDECIMAL); format:popVal;" >
+		<select name='RATING' data-bind="var: review(RATING); format:popVal;" >
 			<option value='10'>10</option>
 			<option value='9'>9</option>
 			<option value='8'>8</option>

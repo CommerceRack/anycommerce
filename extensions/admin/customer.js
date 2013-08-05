@@ -1014,28 +1014,47 @@ app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"
 				}, //appAdminTicketCreateExec
 
 
-			reviewDetailDMIPanel : function($btn)	{
+			adminProductReviewUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.reviewDetailDMIPanel').on('click.reviewDetailDMIPanel',function(event){
+				$btn.off('click.adminProductReviewUpdateShow').on('click.adminProductReviewUpdateShow',function(event){
 					event.preventDefault();
 					var
 						RID = $btn.closest('tr').data('id'),
-						PID = $btn.closest('tr').data('pid');
+						PID = $btn.closest('tr').data('pid'),
+						$panel;
+					if($btn.data('edit-mode') == 'panel')	{
+						$panel = app.ext.admin.i.DMIPanelOpen($btn,{
+							'templateID' : 'reviewAddUpdateTemplate',
+							'panelID' : 'review_'+RID,
+							'header' : 'Edit Review: '+RID,
+							'handleAppEvents' : true,
+							'data' : app.data.adminProductReviewList['@REVIEWS'][$btn.closest('tr').data('obj_index')]
+							});
+						
+						$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+						
+						}
+					else if($btn.data('edit-mode') == 'dialog')	{
+						$panel = app.ext.admin.i.dialogCreate({
+							'title':'Edit Review',
+							'templateID':'reviewAddUpdateTemplate',
+							'data' : app.data['adminProductReviewList|'+PID]['@REVIEWS'][$btn.closest('tr').data('obj_index')],
+							'showLoading':false //will get passed into anycontent and disable showLoading.
+							});
+						$panel.dialog('open');
+						}
+					else	{
+						
+						$('#globalMessaging').anymessage({'message':'In admin_customer.e.adminProductReviewUpdateShow, invalid edit mode ['+$btn.data('edit-mode')+'] (must be dialog or panel) on button','gMessage':true});
+						
+						}
 					
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'reviewAddUpdateTemplate',
-						'panelID' : 'review_'+RID,
-						'header' : 'Edit Review: '+RID,
-						'handleAppEvents' : true,
-						'data' : app.data.adminProductReviewList['@REVIEWS'][$btn.closest('tr').data('obj_index')]
-						});
-					$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-					
-					//app.model.addDispatchToQ({'RID':RID,'PID':PID,'_cmd':'adminProductReviewDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
-					//app.model.dispatchThis('mutable');
+					if($panel)	{
+						$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+						$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+						}
 					});
-				}, //reviewDetailDMIPanel
+				}, //adminProductReviewUpdateShow
 			
 			
 			reviewRemoveConfirm : function($btn)	{
