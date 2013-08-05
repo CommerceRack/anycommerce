@@ -594,6 +594,18 @@ app.model.dispatchThis('mutable');
 				if(i > 0)	{$tag.append("\n")} //hard line separators but don't want orphan whitespace in textarea
 				$tag.append(data.value[i].prompt)
 				}
+			},
+		
+		assemblyList : function($tag,data)	{
+			for(i in data.value)	{
+				if(i.indexOf(':') == -1)	{} //not a variation. do nothing.
+				else	{
+					$tag.append("<li><label><span>"+i+"</span> <input type='text' name='"+i+"' value='' /></label></li>");
+					}
+				}
+			if($tag.children().length)	{
+				$tag.parent().removeClass('displayNone');
+				}			
 			}
 		
 		}, //renderFormats

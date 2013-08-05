@@ -328,7 +328,7 @@
 <div id='productEditorPanelTemplate_xsell' class='productPanel'>
 	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-		<span>Reviews</span>
+		<span>Cross Selling</span>
 	</h3>
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
 <form action='#'>
@@ -345,7 +345,7 @@
 		<span>Promotion Class</span>
 		<input type="textbox" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' />
 	</label>
-
+<br />
 	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
 	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
 	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
@@ -363,14 +363,16 @@
 <fieldset>
 	<legend>Cross/Up Selling</legend>
 
-	<button>Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span>
-	<button>Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span>
+	<p><button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
+	
+	<p><button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
 </fieldset>
 
 
 <fieldset data-app-role='assemblyContainer' class='displayNone'>
 	<legend>Assembly/Kit Components</legend>
-
+	<ul class='listStyleNone' data-bind="var: product(@inventory); format:assemblyList; extension:admin_prodEdit;">
+	</ul>
 </fieldset>
 
 	
