@@ -1039,6 +1039,10 @@ app.u.throwMessage(responseData); is the default error handler.
 					$('.applyAnytabs',$target).anytabs();
 					app.u.handleAppEvents($target);
 
+					if(_rtag.applyEditTrackingToInputs)	{
+						app.ext.admin.u.applyEditTrackingToInputs($target);
+						}
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});

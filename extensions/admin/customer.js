@@ -1121,7 +1121,8 @@ app.model.addDispatchToQ({
 	'GCID' : GCID,
 	'_tag' : {
 		'callback':'anycontent',
-		'jqObj':$panel,
+		'jqObj':$('.ui-widget-content',$panel),
+		'applyEditTrackingToInputs' : true,
 		'datapointer' : 'adminGiftcardDetail|'+GCID
 		}
 	},'mutable');
