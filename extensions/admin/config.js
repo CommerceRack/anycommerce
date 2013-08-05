@@ -813,7 +813,7 @@ $D.dialog('open');
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' \/>");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/><input type='hidden' name='_tag/message' value='Thank you, your coupon has been created.' \/>");
 					$("[data-app-event='admin_config|ruleBuilderShow']",$D).hide(); //hide rule builder till after coupon is saved.
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
