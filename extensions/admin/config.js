@@ -528,7 +528,7 @@ app.u.dump(" -> vars.TABLE: "+vars.table);
 //set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 if(vars.rulesmode == 'shipping')	{
 	DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
-	DMIVars.tbodyDatabind = 'var: rules(@'+vars.table.toUpperCase()+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
+	DMIVars.tbodyDatabind = 'var: rules(@'+vars.table+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
 	DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
 	$D.attr('data-provider',vars.provider);
 	}
