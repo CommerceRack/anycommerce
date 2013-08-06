@@ -2770,6 +2770,11 @@ else	{
 			navigateTo : function(path,$t)	{
 				return this.showUI(path,$t ? $t : {});
 				},
+				
+				
+				
+				
+				
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data)	{
 var r = false;  //what is returned. either false of a jquery object.
@@ -2841,6 +2846,13 @@ else	{
 //$( ".selector" ).accordion( "option", "disabled", true );
 				return r;
 				},
+				
+
+				
+				
+				
+				
+				
 
 			showSitesTab : function($target)	{
 				$target.empty();
@@ -3474,6 +3486,15 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 				}, //showHeader
+
+
+
+			//return a boolean. NO MESSAGING>  that's use-case specific.
+			validatePicker : function($picker) {
+				return ($("[data-app-role='pickerContainer']",$picker).find(':checkbox:checked').length || $("[name='csv']",$picker).val()) ? true : false;
+				},	
+
+
 
 //used to determine what page to show when app inits and after the user changes the domain.
 //uses whats in the hash first, then the default page passed in.

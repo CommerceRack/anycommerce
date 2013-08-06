@@ -327,14 +327,15 @@ var admin_tools = function() {
 				var r = "";
 				$('tr',$tbody).each(function(){
 					var
-						data = $(this).data(),
+						data = $.extend({},$(this).data()),
 						verb = data.verb;
+
 					if(data.attrib == '_')	{
 						data.attrib = data.attrib_custom;
 						delete attrib_custom;
 						}
-					delete data.verb;
-					r += verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data);
+
+					r += verb+"?"+$.param(app.u.getWhitelistedObject(data,['attrib','when','when-attrib','when-attrib-operator','when-attrib-contains'])); //verb not passed because it is macro
 					switch(verb)
 						{
 						case 'replace':
@@ -438,7 +439,7 @@ var admin_tools = function() {
 					app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
 					
-					if($("[data-app-role='pickerContainer']",$form).find(':checkbox:checked').length || $("[name='csv']",$form).val())	{
+					if(app.ext.admin.u.validatePicker($form))	{
 						if($('#powerToolActionListTbody tr').length)	{
 							obj = {
 								'%vars' : {
@@ -449,9 +450,9 @@ var admin_tools = function() {
 									},
 								'type' : 'UTILITY'
 								}
-	//					console.clear();
-	//					app.u.dump(" -> actions: "+obj['%vars'].actions);
-	//					app.u.dump(" -> obj: "); app.u.dump(obj); 
+//						console.clear();
+//						app.u.dump(" -> actions: "+obj['%vars'].actions);
+//						app.u.dump(" -> obj: "); app.u.dump(obj); 
 							app.ext.admin_batchJob.a.adminBatchJobCreate(obj);
 							}
 						else	{
@@ -506,7 +507,7 @@ var admin_tools = function() {
 				$btn.button();
 				$btn.off('click.productExportBatchJobCreateExec').on('click.productExportBatchJobCreateExec',function(){
 					var $form = $btn.closest('form');
-					if($("[data-app-role='pickerContainer'] :checkbox:checked",$form).length || $("[name='csv']",$form).val())	{
+					if(app.ext.admin.u.validatePicker($form))	{
 						var sfo = $("[data-app-role='exportConfiguration']",$form).serializeJSON();
 						sfo.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
 						if(sfo.attributes == 'specify' && !sfo.fields)	{

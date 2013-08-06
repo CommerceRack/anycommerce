@@ -1105,7 +1105,9 @@ $D.dialog('open');
 							if($btn.data('form-skipreset'))	{
 								}
 							else	{
-								$('input, textarea, select',$container).val(""); //clear inputs.
+								$('input, textarea',$container).not(':radio').val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
+								$(':radio').prop('checked',false);
+								$('select',$container).val();
 								$(':checkbox',$container).prop('checked',false);
 								}
 							app.ext.admin.u.handleSaveButtonByEditedClass($form);
