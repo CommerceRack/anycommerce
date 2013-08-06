@@ -457,7 +457,9 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 						$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 						})
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
-					if(mode == 'product' && varObj.id.indexOf('#') == -1)	{
+//app.u.dump(varObj);
+//app.u.dump(" -> "+varObj.id+".indexOf('#'): "+varObj.id.indexOf('#'));
+					if(mode == 'product' && ((varObj.isnew && varObj.ispog) || (varObj.id && varObj.id.indexOf('#') == -1)))	{
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 						$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
@@ -1454,11 +1456,17 @@ app.model.dispatchThis('mutable');
 
 
 				var varEditorData = $btn.closest(".variationEditorContainer").data();
+				if(!varEditorData.ispog)	{
+					if(varEditorData.variationid && varEditorData.variationid.indexOf('#') >= -1)	{
+						varEditorData.ispog = true;
+						}
+					}
 				//app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
 				//app.u.dump("varEditorData: "); app.u.dump(varEditorData);
 				
 				//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
 				if(varEditorData.variationmode == 'product')	{
+					app.u.dump(" -> variationmode == product. varEditorData: "); app.u.dump(varEditorData);
 					if(varEditorData.ispog)	{
 						
 						}
