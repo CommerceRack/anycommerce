@@ -157,6 +157,49 @@ var admin_tools = function() {
 				app.model.dispatchThis('mutable');
 				},
 			
+			showBillingHistory : function($target)	{
+				
+				$target.empty();
+
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Billing History',
+					'className' : 'billingHistory', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh List<\/button>",
+						"<button>Add Payment<\/button>"
+						],
+					'thead' : ['Invoice #','Created','Payment','Amount',''], //the blank at the end is for the th tag for the buttons.
+					'tbodyDatabind' : "var: users(@INVOICES); format:processList; loadsTemplate:billingHistoryInvoiceRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'billingInvoiceList',
+						'_tag' : {
+							'datapointer':'billingInvoiceList'
+							}
+						}
+					});
+
+$target.append("<br \/>");
+
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Pending Transactions',
+					'className' : 'billingTransactions', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh List<\/button>"
+						],
+					'thead' : ['Date','Class','Type','Description','amount',''], //the blank at the end is for the th tag for the buttons.
+					'tbodyDatabind' : "var: users(@TRANSACTIONS); format:processList; loadsTemplate:billingHistoryInvoiceRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'billingTransactions',
+						'_tag' : {
+							'datapointer':'billingTransactions'
+							}
+						}
+					});
+
+
+
+				app.model.dispatchThis('mutable');
+				},
 
 			
 			showciEngineAgentManager : function($target)	{

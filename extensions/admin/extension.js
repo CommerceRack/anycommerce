@@ -3823,6 +3823,9 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!globalSettings')	{
 					app.ext.admin_config.a.showGlobalSettings($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!billingHistory')	{
+					app.ext.admin_tools.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 
 
 				else if(path == '#!showPlatformInfo')	{
