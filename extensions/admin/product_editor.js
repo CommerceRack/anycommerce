@@ -697,31 +697,33 @@ app.model.dispatchThis('mutable');
 				}
 */			else if(type == 'select')	{
 				var $select = $("<select \/>",{'name':data.id});
-				var L = data['@options'].length;
-				
 				//data-reset requires a value.
 				if(data.type == 'select')	{
 					$select.append($("<option \/>",{'value':''}).text(""));
 					}
 				
-				for(var i = 0; i < L; i += 1)	{
-					$select.append($("<option \/>",{'value':data['@options'][i].v}).text(data['@options'][i].p));
+				if(data.options)	{
+					var L = data.options.length;
+					
+					
+					for(var i = 0; i < L; i += 1)	{
+						$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
+						}
+					
+					$select.val(prodData['%attribs'][data.id] || "");
+	// now take a look and see if the value set for this attrib is valid. respond accordingly.
+					if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
+					else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
+						$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
+						$select.val(data.options[0].v)
+						}
+						//prodData['%attribs'][data.id] is checked so no error is thrown if the value is blank.
+					else if(data.type == 'select' && prodData['%attribs'][data.id])	{
+						$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
+						$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
+						}
+					else	{} //how the F did we get here?
 					}
-				
-				$select.val(prodData['%attribs'][data.id] || "");
-// now take a look and see if the value set for this attrib is valid. respond accordingly.
-				if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
-				else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
-					$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data['@options'][0].v});
-					$select.val(data['@options'][0].v)
-					}
-					//prodData['%attribs'][data.id] is checked so no error is thrown if the value is blank.
-				else if(data.type == 'select' && prodData['%attribs'][data.id])	{
-					$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
-					$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
-					}
-				else	{} //how the F did we get here?
-
 				$select.appendTo($r);
 				}
 			else if(type == 'button')	{
