@@ -1780,9 +1780,10 @@ VALIDATION
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
 				
 				$('input, select, textarea',$form).each(function(){
-					var $input = $(this),
-					radios = new Array();
-					$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
+					var
+						$input = $(this),
+						radios = new Array(),
+						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 
