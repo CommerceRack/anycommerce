@@ -313,12 +313,14 @@ document.write = function(v){
 *** 201318 -> passing in unsanitized tagObj caused an issue with showPageContent
 				app.ext.myRIA.u.buildQueriesFromTemplate(tagObj);
 */
+/*
 				app.ext.myRIA.u.buildQueriesFromTemplate({
 					'templateID':tagObj.templateID,
 					'parentID':tagObj.parentID,
 					'navcat':tagObj.navcat,
 					'datapointer':tagObj.datapointer});
-
+*/
+				app.ext.myRIA.u.buildQueriesFromTemplate($.extend(true, {}, tagObj));
 				app.model.dispatchThis();
 				},
 			onError : function(responseData)	{
@@ -2217,9 +2219,9 @@ effects the display of the nav buttons only. should be run just after the handle
 						if(app.ext.myRIA.vars.session.recentCategories.length > 0)	{
 							app.ext.store_navcats.u.addQueries4BreadcrumbToQ(app.ext.myRIA.vars.session.recentCategories[0])
 							}
-
+						$.extend(infoObj, {'callback':'showProd','extension':'myRIA','parentID':parentID,'templateID':'productTemplate'});
 						app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
-						app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':parentID,'templateID':'productTemplate'});
+						app.ext.store_product.calls.appProductGet.init(pid,infoObj);
 						app.model.dispatchThis();
 						}
 					else	{
@@ -2317,16 +2319,14 @@ ex:  elasticsearch.size = 200
 */
 elasticsearch.size = 50;
 
-				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
-				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
-				//app.u.dump(_tag.datapointer);
+				$.extend(infoObj,{'callback':'handleElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')});
 				
 				//Used to build relative path
 				infoObj.elasticsearch = $.extend(true, {}, elasticsearch);
 				
 				
 				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
-				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,_tag);
+				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,infoObj);
 				app.model.dispatchThis();
 
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
@@ -2737,8 +2737,8 @@ buyer to 'take with them' as they move between  pages.
 							$content.addClass('displayNone'); //hidden by default for page transitions.
 							$('#mainContentArea').append($content);
 							}
-						
-						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':infoObj.templateID,'parentID':parentID});
+						$.extend(infoObj,{'callback':'fetchPageContent','extension':'myRIA','parentID':parentID});
+						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,infoObj);
 						app.model.dispatchThis();
 						}
 
@@ -2749,29 +2749,31 @@ buyer to 'take with them' as they move between  pages.
 
 
 
-//required params include templateid and either: P.navcat or P.pid  navcat can = . for homepage.
+//required params include templateid and either: tagObj.navcat or tagObj.pid  navcat can = . for homepage.
 //load in a template and the necessary queries will be built.
 //currently, only works on product, category and home page templates.
-			buildQueriesFromTemplate : function(P)	{
+			buildQueriesFromTemplate : function(tagObj)	{
 //app.u.dump("BEGIN myRIA.u.buildQueriesFromTemplate");
-//app.u.dump(P);
+//app.u.dump(tagObj);
 
 var numRequests = 0; //will be incremented for # of requests needed. if zero, execute showPageContent directly instead of as part of ping. returned.
-var catSafeID = P.navcat;
+var catSafeID = tagObj.navcat;
 
 var myAttributes = new Array(); // used to hold all the 'page' attributes that will be needed. passed into appPageGet request.
 var elementID; //used as a shortcut for the tag ID, which is requied on a search element. recycled var.
 
+$.extend(tagObj, {"callback":"showPageContent","searchArray":[],"extension":"myRIA","lists":[]});
+/*
 var tagObj = P;  //used for ping and in handleCallback if ping is skipped.
 tagObj.callback = 'showPageContent';
 tagObj.searchArray = new Array(); //an array of search datapointers. added to _tag so they can be translated in showPageContent
 tagObj.extension = 'myRIA'
 tagObj.lists = new Array(); // all the list id's needed.
-
+*/
 app.model.fetchData('appPageGet|'+catSafeID); //move data from local storage to memory, if present.
 
 //goes through template.  Put together a list of all the data needed. Add appropriate calls to Q.
-app.templates[P.templateID].find('[data-bind]').each(function()	{
+app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 
 	var $focusTag = $(this);
 	
@@ -2809,17 +2811,17 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 // the callback, showPageContent, does not run transmogrify over the product data. the lists are handled through buildProdlist, so if any new attributes
 // are supported that may require a request for additional data, something will need to be added to showPageContent to handle the display.
 // don't re-render entire layout. Inefficient AND will break some extensions, such as powerreviews.
-		else if(P.pid)	{
+		else if(tagObj.pid)	{
 //on a child page, need to go get the 'siblings' (on a small, go get med, large, etc)
 //don't just look at children, ALWAYS look at ['zoovy:grp_type'] to verify it's set as a CHILD (or PARENT in some cases)
-			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof app.data['appProductGet|'+P.pid] === 'object' && app.data['appProductGet|'+P.pid]['%attribs'] && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent'])	{
+			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof app.data['appProductGet|'+tagObj.pid] === 'object' && app.data['appProductGet|'+tagObj.pid]['%attribs'] && app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent'])	{
 				app.u.dump(" -> Fetch parent product record.");
-				numRequests += app.calls.appProductGet.init({'pid':app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
+				numRequests += app.calls.appProductGet.init({'pid':app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
 				}
 			else if(bindData.format == 'productList')	{
 //a product list takes care of getting all it's own data.
 //get the data for all the items in this attibutes list. no callback is executed because no parentID is set in params.
-//					numRequests += app.ext.store_prodlist.u.getProductDataForList({'csv':app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute])});
+//					numRequests += app.ext.store_prodlist.u.getProductDataForList({'csv':app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+tagObj.pid]['%attribs'][attribute])});
 				}
 				
 			else if(namespace == 'reviews')	{
@@ -2830,10 +2832,10 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				//do nothing here, but make sure the 'else' for unrecognized namespace isn't reached.
 				}
 			else	{
-				app.u.throwMessage("Uh oh! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+P.pid);
-				app.u.dump("ERROR! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+P.pid);
+				app.u.throwMessage("Uh oh! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+tagObj.pid);
+				app.u.dump("ERROR! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+tagObj.pid);
 				}
-			}// /p.pid
+			}// /tagObj.pid
 
 
 // this is a navcat in focus
@@ -2886,8 +2888,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				// do nothing. this would be hit for something like category(pretty), which is perfectly valid but needs no additional data.
 				}
 			else	{
-					app.u.throwMessage("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+P.pageType+" for navcat "+P.navcat);
-					app.u.dump("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+P.pageType+" for navcat "+P.navcat);
+					app.u.throwMessage("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+tagObj.pageType+" for navcat "+tagObj.navcat);
+					app.u.dump("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+tagObj.pageType+" for navcat "+tagObj.navcat);
 				}
 
 			}
