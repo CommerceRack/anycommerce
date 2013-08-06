@@ -1359,7 +1359,7 @@ app.model.dispatchThis('immutable');
 					app.ext.admin_batchJob.a.adminBatchJobCreate({
 						'guid' : app.u.guidGenerator(),
 						'profile' : $btn.closest('tr').data('profile'),
-						'TYPE' : 'EBAY_UPDATE',
+						'type' : 'EBAY_UPDATE',
 						'function' : 'refresh'
 						});	
 
