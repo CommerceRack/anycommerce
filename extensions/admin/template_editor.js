@@ -23,7 +23,9 @@ var admin_templateEditor = function() {
 	
 	var r = {
 
-		vars : {},
+		vars : {
+			templateModes : new Array('EBAYProfile','Campaign') //be sure to update u.missingParamsByMode function when adding a new mode.
+			},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -58,8 +60,13 @@ var admin_templateEditor = function() {
 			showTemplateEditorInModal : function(mode,vars)	{
 				
 				vars = vars || {};
-				if(mode == 'ebay' || mode == 'campaign')	{
+				
+				//will be false if it is not missing params
+				if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
+//By here, we know that we have a valid mode and that any requirements in 'vars' based on the mode ARE present.
+
 					var $D = $('#templateEditor');
+
 
 //					app.u.dump(" -> #templateEditor.length: "+$D.length);
 						
@@ -122,138 +129,120 @@ var admin_templateEditor = function() {
 
 					if(vars.editor)	{
 	
-						if(mode == 'ebay' && !vars.profile)	{
-							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is ebay but vars.profile was not set and is required.","gMessage":true});
-							} //error
-						else if(mode == 'campaign' && !vars.campaignid)	{
-							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode is campaign but vars.campaignID was not set and is required.","gMessage":true});
-							}
-						else	{
-	
-							$D.data('mode',mode);
-							$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
-	//						
-							$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
-							$D.showLoading({"message":"Fetching template HTML"});
+						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
+						$D.data('mode',mode);
+
+						$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
+						$D.showLoading({"message":"Fetching template HTML"});
 							
 						
-							var callback = function(rd){
-								$D.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$D.anymessage({'message':rd})
-									}
-								else	{
-							
-									$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
-										'state' : 'persistent',
-										showClose : false, //set to false to disable close (X) button.
-										wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-										extension : 'template_editor', //used in conjunction w/ persist.
-										name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-										persistentStateDefault : 'collapse',
-										persistent : true
-										});
-									var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
-									var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
-										"|", 
-										app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
-										app.ext.admin_templateEditor.u.getEditorButton_image()
-										]);
-	
-	//handle some mode specifics.
-									$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
-									if(mode == 'ebay')	{
-										toolbarButtons.push("|");
-										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
-										$(".ebay",$D).show();
-										}
-									else if(mode == 'campaign')	{
-										toolbarButtons.push("|");
-										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
-										toolbarButtons.push("|");
-										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
-										toolbarButtons.push("|");
-										toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
-										$(".campaign",$D).show();
-										}
-									else	{}
-	//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
-							
-									$("textarea:first",$D)
-										.show()
-										.width('95%')
-										.height($D.height() - 100)
-										.css('width','95%')
-										.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
-										.htmlarea({
-											// Override/Specify the Toolbar buttons to show
-											toolbar: toolbarButtons // 
-											});
-									
-								
-									// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-									$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
-									var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
-									app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
-								
-									app.u.handleAppEvents($D);
-									$('.toolTip',$D).tooltip();
-									}
-								}
-						
-							if(mode == 'ebay')	{
-								app.model.addDispatchToQ({
-									'_cmd':'adminEBAYProfileFileContents',
-									'PROFILE' : vars.profile,
-									'FILENAME' : 'index.html',
-									'_tag' : {
-										'datapointer' : 'adminEBAYProfileFileContents|'+vars.profile,
-										'callback' : callback
-										}
-									},'immutable');
-								}
-							else if(mode == 'campaign')	{
-	
-								app.model.addDispatchToQ({
-									'_cmd':'adminCampaignFileContents',
-									'CAMPAIGNID' : vars.campaignid,
-									'FILENAME' : 'index.html',
-									'_tag' : {
-										'datapointer' : 'adminCampaignFileContents|'+vars.campaignid,
-										'callback' : callback
-										}
-									},'immutable');
-	
+						var callback = function(rd){
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd})
 								}
 							else	{
-								$D.anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] passed initial validation but failed at dispatch add.","gMessage":true});
-								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
 						
-							app.model.dispatchThis('immutable');
+								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
+									'state' : 'persistent',
+									showClose : false, //set to false to disable close (X) button.
+									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+									extension : 'template_editor', //used in conjunction w/ persist.
+									name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+									persistentStateDefault : 'collapse',
+									persistent : true
+									});
+								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
+								
+								var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
+									"|", 
+									app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
+									app.ext.admin_templateEditor.u.getEditorButton_image()
+									]);
+
+//handle some mode specifics.
+								$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
+								if(mode == 'EBAYProfile')	{
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
+									$(".ebay",$D).show();
+									}
+								else if(mode == 'Campaign')	{
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
+									toolbarButtons.push("|");
+									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
+									$(".campaign",$D).show();
+									}
+								else	{}
+//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
+						
+								$("textarea:first",$D)
+									.show()
+									.width('95%')
+									.height($D.height() - 100)
+									.css('width','95%')
+									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
+									.htmlarea({
+										// Override/Specify the Toolbar buttons to show
+										toolbar: toolbarButtons // 
+										});
+								
+							
+								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
+								var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
+								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
+							
+								app.u.handleAppEvents($D);
+								$('.toolTip',$D).tooltip();
+								}
 							}
 
-						}
+						var cmdObj = {
+							'_cmd':'admin'+mode+'FileContents',
+							'FILENAME' : 'index.html',
+							'_tag' : {
+								'callback' : callback
+								}
+							}
+						
+							if(mode == 'EBAYProfile')	{
+								cmdObj.PROFILE = vars.profile;
+								cmdObj._tag.datapointer = 'adminEBAYProfileFileContents|'+vars.profile;
+								}
+							else if(mode == 'Campaign')	{
+								cmdObj.CAMPAIGNID = vars.campaignid;
+								cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
+								}
+							else	{
+								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
 
+							app.model.addDispatchToQ(cmdObj,'mutable');
+							app.model.dispatchThis('mutable');
+						}
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditorInModal, mode ["+mode+"] was blank or invalid.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
 					}				
 				
 				}, //showTemplateEditorInModal
 
 			showTemplateChooserInModal : function(vars)	{
 				vars = vars || {};				
-				if((vars.mode == 'campaign' && vars.campaignid) || (vars.mode == 'ebay' && vars.profile))	{
+				if((vars.mode == 'Campaign' && vars.campaignid) || (vars.mode == 'EBAYProfile' && vars.profile))	{
 
 					var dialogObject = {"templateID" : "templateChooserTemplate"};
 
-					if(vars.mode == 'campaign')	{
+					if(vars.mode == 'Campaign')	{
 						dialogObject.title = 'Campaign Template Chooser';
 						dialogObject.data = app.data.adminCampaignTemplateList;
 						dialogObject.dataAttribs = {'campaignid':vars.campaignid,'mode':vars.mode};
 						}
-					else if(vars.mode == 'ebay')	{
+					else if(vars.mode == 'EBAYProfile')	{
 						dialogObject.title = 'eBay Template Chooser';
 						dialogObject.data = app.data.adminEBAYTemplateList;
 						dialogObject.dataAttribs = {'profile':vars.profile,'mode':vars.mode};
@@ -390,6 +379,32 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 			u : {
+
+//this will return false if we have everything we need. 
+//if something is missing, will return the error message.
+				missingParamsByMode : function(mode,data)	{
+					var r = false;
+					if(mode)	{
+						if(app.ext.admin_templateEditor.vars.templateModes.indexOf(mode) > -1)	{
+							if(mode == 'EBAYProfile' && !data.profile)	{
+								r = "In admin_templateEditor.u.missingParamsByMode, mode set to EBAYProfile but no profile passed."
+								}
+							else if(mode == 'Campaign' && !data.campaignid)	{
+								r = "In admin_templateEditor.u.missingParamsByMode, mode set to Campaign but no campaignid passed."
+								}
+							else	{
+								//Success.
+								}
+							}
+						else	{
+							r = "In admin_templateEditor.u.missingParamsByMode, Invalid mode ["+mode+"] passed."
+							}
+						}
+					else	{
+						r = "In admin_templateEditor.u.missingParamsByMode, no mode passed."
+						}
+					return r;
+					},
 
 //adds some global functions for easy reference from the supporting html file for the wizard
 				declareMagicFunctions : function()	{
@@ -750,7 +765,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					const mode = $TC.data('mode'); //should never get changed through this code.
 					
 					if(mode)	{
-						if((mode == 'campaign' && $TC.data('campaignid')) || (mode == 'ebay' && $TC.data('profile')))	{
+						if((mode == 'Campaign' && $TC.data('campaignid')) || (mode == 'EBAYProfile' && $TC.data('profile')))	{
 							if(vars.SUBDIR)	{
 								//all is well at this point. proceed.
 								$TC.showLoading({'message':'One moment please. Copying files into directory.'});
@@ -774,7 +789,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								dObj.PROJECTID = vars.PROJECTID;
 								
 								
-								if(mode == 'ebay')	{
+								if(mode == 'EBAYProfile')	{
 									dObj._cmd = 'adminEBAYTemplateInstall';
 									dObj.PROFILE = $TC.data('profile');
 									app.model.addDispatchToQ({
@@ -783,7 +798,7 @@ var $input = $(app.u.jqSelector('#',ID));
 										'PROFILE' : $TC.data('profile')
 										},'immutable');
 									}
-								else if(mode == 'campaign')	{
+								else if(mode == 'Campaign')	{
 									dObj._cmd = 'adminCampaignTemplateInstall';
 									dObj.CAMPAIGNID = $TC.data('campaignid');
 									}
@@ -798,7 +813,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							
 							}
 						else	{
-							$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, either mode ["+mode+"] is invalid (must be ebay or campaign) or a supporting/required value (profile ["+$TC.data('profile')+"] for ebay or campaignid ["+$TC.data('campaignid')+"] for campaign) was unable to be ascertained. ","gMessage":true});
+							$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, either mode ["+mode+"] is invalid or a supporting/required value (profile ["+$TC.data('profile')+"] for ebay or campaignid ["+$TC.data('campaignid')+"] for campaign) was unable to be ascertained. ","gMessage":true});
 							}
 						}
 					else	{
@@ -1060,6 +1075,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					return (r === true) ? $ul : false;
 					},
+
 //this function does NOT escape the selector, so any selector that is a variable and needs escaping should be escaped before it's dumped in.
 				pluckObjectFromTemplate : function(selector)	{
 					return $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find(selector);
@@ -1147,47 +1163,37 @@ var $input = $(app.u.jqSelector('#',ID));
 							$D = $('#templateEditor');
 						const mode = $D.data('mode');
 						
-						if(templateName && templateName.length > 5 )	{
-							if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
-								$D.showLoading({'message':'Saving as new template: '+templateName});
-								var dObj = {
-									'SUBDIR' : templateName,
-//									'PROJECTID' : $D.data('PROJECTID'), //not passed cuz the user doesnt 'choose' the projectid. it'll be set to TEMPLATES
-									'_tag' : {
-										'callback' : function(responseData)	{
-											$D.hideLoading();
-											if(app.model.responseHasErrors(responseData)){
-												$D.anymessage({'message':responseData})
-												}
-											else	{
-												$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-												}
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
+
+							$D.showLoading({'message':'Saving as new template: '+templateName});
+							var dObj = {
+								'SUBDIR' : templateName,
+//								'PROJECTID' : $D.data('PROJECTID'), //not passed cuz the user doesnt 'choose' the projectid. it'll be set to TEMPLATES
+								'_tag' : {
+									'callback' : function(responseData)	{
+										$D.hideLoading();
+										if(app.model.responseHasErrors(responseData)){
+											$D.anymessage({'message':responseData})
+											}
+										else	{
+											$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
 											}
 										}
-//									'body' : $('.jHtmlArea iframe:first',$D).contents().find('body').html()
 									}
-								
-								if(mode == 'ebay')	{
-									dObj._cmd = 'adminEBAYTemplateCreateFrom';
-									dObj.PROFILE = $D.data('profile');
-									// !!! save original template prior to createFrom execution.
-									}
-								else if(mode == 'campaign')	{
-									dObj._cmd = 'adminCampaignTemplateCreateFrom';
-									dObj.CAMPAIGNID = $D.data('campaignid');
-									// !!! save original template prior to createFrom execution.
-									}
-								else	{} //shouldn't ever get here.
+								}
 
-								app.model.addDispatchToQ(dObj,'immutable');
-								app.model.dispatchThis('immutable');
-								}
-							else	{
-								$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
-								}
+							dObj._cmd = (mode == 'EBAYProfile') ? 'adminEBAYTemplateCreateFrom' : 'admin'+mode+'TemplateCreateFrom';
+
+							if(mode == 'EBAYProfile')	{dObj.PROFILE = $D.data('profile');}
+							else if(mode == 'Campaign')	{dObj.CAMPAIGNID = $D.data('campaignid');}
+							else	{} //shouldn't ever get here.
+
+							app.model.addDispatchToQ(dObj,'immutable');
+							app.model.dispatchThis('immutable');
+
 							}
 						else	{
-							$D.anymessage({"message":"Please enter a template name of at least 6 characters."});
+							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
 							}
 						});
 					},
@@ -1201,36 +1207,33 @@ var $input = $(app.u.jqSelector('#',ID));
 				
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
 				containerFileUploadShow : function($btn){
-
 					$btn.button();
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
-
-
 						const mode = $btn.data('mode');
-
-						if((mode == 'campaign' && $btn.closest("[data-campaignid]").data('campaignid')) || (mode == 'ebay' && $btn.closest("[data-profile]").data('profile')))	{
-							var $D = app.ext.admin.i.dialogCreate({
-								'title' : 'Template File Upload',
-								'templateID' : 'templateFileUploadTemplate',
-								data : {} //blank data because translation needs to occur (template calls another template)
-								});
-
-							$D.dialog('option','height','400');
-							if(mode == 'ebay')	{
-								$('form',$D).append("<input type='hidden' name='profile' value='"+$D.data('profile')+"' \/>");
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Template File Upload',
+							'templateID' : 'templateFileUploadTemplate',
+							data : {} //blank data because translation needs to occur (template calls another template)
+							});
+						$D.dialog('option','height','400');
+						$D.dialog('open');
+						
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$('#templateEditor').data()))	{
+							if(mode == 'EBAYProfile')	{
+								$('form',$D).append("<input type='hidden' name='profile' value='"+$('#templateEditor').data('profile')+"' \/>");
 								}
-							else if(mode == 'campaign')	{
-								$('form',$D).append("<input type='hidden' name='campaignid' value='"+$D.data('campaignid')+"' \/>");
+							else if(mode == 'Campaign')	{
+								$('form',$D).append("<input type='hidden' name='campaignid' value='"+$('#templateEditor').data('campaignid')+"' \/>");
 								}
-							$D.dialog('open');
-							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');
+							else	{}
+							
+							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');	
 							}
 						else	{
-							$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
 							}
 						});
-
-					},
+					}, //containerFileUploadShow
 				
 // used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
 				containerZipDownloadExec : function($btn)	{
@@ -1239,10 +1242,10 @@ var $input = $(app.u.jqSelector('#',ID));
 
 						const mode = $btn.data('mode');
 
-						if((mode == 'campaign' && $btn.closest("[data-campaignid]").data('campaignid')) || (mode == 'ebay' && $btn.closest("[data-profile]").data('profile')))	{
-							
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$('#templateEditor').data()))	{
 							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
 							var dObj = {
+								'_cmd' : 'admin'+mode+'ZipDownload',
 								'base64' : true,
 								'_tag' : {
 									'callback':'fileDownloadInModal',
@@ -1252,25 +1255,21 @@ var $input = $(app.u.jqSelector('#',ID));
 									}
 								}
 							
-							if(mode == 'ebay')	{
-								dObj._cmd = 'adminEBAYProfileZipDownload';
+							if(mode == 'EBAYProfile')	{
 								dObj.PROFILE = $btn.closest("[data-profile]").data('profile');
 								}
-							else if(mode == 'campaign')	{
-								dObj._cmd = 'adminCampaignZipDownload';
+							else if(mode == 'Campaign')	{
 								dObj.CAMPAIGNID = $btn.closest("[data-campaignid]").data('campaignid');
 								}
-							else	{}
+							else	{} //shouldn't get here.
 							
 							app.model.addDispatchToQ(dObj,'immutable');
 							app.model.dispatchThis('immutable');							
+							
 							}
 						else	{
-							$D.anymessage({"message":"In admin_syndication.e.adminSaveAsTemplateExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							$('#templateEditor').anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
 							}
-						
-					
-
 						});
 					}, //containerZipDownloadExec
 
@@ -1283,10 +1282,10 @@ if(data.editor='dialog')	{
 	$btn.closest('.ui-content-dialog').dialog('close');
 	}
 else	{
-	if(data.mode == 'campaign')	{
+	if(data.mode == 'Campaign')	{
 		app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),data.campaignid);
 		}
-	else if(data.mode == 'ebay')	{
+	else if(data.mode == 'EBAYProfile')	{
 		app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile);
 		}
 	else	{
@@ -1295,7 +1294,8 @@ else	{
 	}
 						})
 
-					},
+					}, //adminTemplateCampaignExit
+
 				adminTemplateCampaignTestShow : function($btn)	{
 					$btn.button();
 
@@ -1377,35 +1377,32 @@ else	{
 					$btn.button();
 					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
 
-						if($btn.data('mode') == 'campaign')	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"campaign","campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
+						if($btn.data('mode') == 'Campaign')	{
+							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
 							}
-						else if ($btn.data('mode') == 'ebay')	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"ebay","profile":$btn.closest("[data-profile]").data('profile')});
+						else if ($btn.data('mode') == 'EBAYProfile')	{
+							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$btn.closest("[data-profile]").data('profile')});
 							}
 						else	{
 							//invalid mode set.
 							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateChooserShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
 							}
-						
 						});
 					}, //templateChooserShow
 					
 				templateEditorShow : function($btn)	{
 					$btn.button();
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
-
-						if($btn.data('mode') == 'campaign')	{
-							app.ext.admin_templateEditor.a.showTemplateEditorInModal("campaign",{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
+						if($btn.data('mode') == 'Campaign')	{
+							app.ext.admin_templateEditor.a.showTemplateEditorInModal($btn.data('mode'),{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
 							}
-						else if ($btn.data('mode') == 'ebay')	{
-							app.ext.admin_templateEditor.a.showTemplateEditorInModal("ebay",{"profile":$btn.closest("[data-profile]").data('profile')});
+						else if ($btn.data('mode') == 'EBAYProfile')	{
+							app.ext.admin_templateEditor.a.showTemplateEditorInModal($btn.data('mode'),{"profile":$btn.closest("[data-profile]").data('profile')});
 							}
 						else	{
 							//invalid mode set.
 							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateEditorShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
 							}
-						
 						});
 					}, //templateEditorShow
 
@@ -1438,11 +1435,11 @@ else	{
 									}
 								}
 
-							if(editorData.mode == 'ebay')	{
+							if(editorData.mode == 'EBAYProfile')	{
 								cmdObj._cmd = 'adminEBAYProfileFileContents'
 								cmdObj.PROFILE = editorData.profile
 								}
-							else if(editorData.mode == 'campaign')	{
+							else if(editorData.mode == 'Campaign')	{
 								cmdObj._cmd = 'adminCampaignFileContents'
 								cmdObj.CAMPAIGNID = editorData.campaignid
 								}
@@ -1475,10 +1472,13 @@ else	{
 						var $D = $('#templateEditor');
 						const mode = $D.data('mode');
 						
-						if((mode == 'campaign' && $D.data('campaignid')) || (mode == 'ebay' && $D.data('profile')))	{
+						
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
+
 							$D.showLoading({'message':'Saving changes'});
 
 							var dObj = {
+								'_cmd' : 'admin'+mode+'FileSave',
 								'FILENAME' : 'index.html',
 								'_tag' : {
 									'callback' : function(responseData)	{
@@ -1487,7 +1487,7 @@ else	{
 											$D.anymessage({'message':responseData})
 											}
 										else	{
-											$D.dialog('close');
+											if($D.data('editor') == 'dialog')	{$D.dialog('close');}
 											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
 											}
 										}
@@ -1495,12 +1495,10 @@ else	{
 								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
 								}
 
-							if(mode == 'ebay')	{
-								dObj._cmd = 'adminEBAYProfileFileSave';
+							if(mode == 'EBAYProfile')	{
 								dObj.PROFILE = $D.data('profile');
 								}
-							else if(mode == 'campaign')	{
-								dObj._cmd = 'adminCampaignFileSave';
+							else if(mode == 'Campaign')	{
 								dObj.CAMPAIGNID = $D.data('campaignid');
 								}
 							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
@@ -1510,7 +1508,7 @@ else	{
 							app.model.dispatchThis('immutable');							
 							}
 						else	{
-							$D.anymessage({"message":"In admin_syndication.e.adminTemplateSaveExec, either mode ["+mode+"] is invalid or, based on mode, either profile or campaignid is not set.","gMessage":true});
+							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
 							}
 						
 
