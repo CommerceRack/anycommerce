@@ -1616,43 +1616,6 @@ app.model.dispatchThis('immutable');
 					});
 				}, //ebayServiceAddShow
 
-			adminEBAYProfileZipDownloadExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminEBAYProfileZipDownload').on('click.adminEBAYProfileZipDownload',function(){
-					var profile = $btn.data('profile');
-					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file of the template. One moment please...'});
-					app.model.addDispatchToQ({
-						'_cmd' : 'adminEBAYProfileZipDownload',
-						'base64' : true,
-						'PROFILE' : profile,
-						'FILENAME' : profile+'.zip',
-						'_tag' : {
-							'callback':'fileDownloadInModal',
-							'extension':'admin',
-							'datapointer':'adminEBAYProfileZipDownload|'+profile,
-							'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
-							}
-						},'immutable');
-					app.model.dispatchThis('immutable');
-					});
-				}, //adminEBAYProfileZipDownloadExec
-
-			adminEBAYProfileZipUploadExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminEBAYProfileZipUploadExec').on('click.adminEBAYProfileZipUploadExec',function(){
-					var profile = $btn.data('profile');
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'eBay Template Zip File Upload',
-						'templateID' : 'ebayZipUploadTemplate',
-						data : {} //blank data because translation needs to occur (template calls another template)
-						});
-					$D.dialog('option','height','400');
-					$('form',$D).append("<input type='hidden' name='profile' value='"+profile+"' \/>");
-					$D.dialog('open');
-					app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');
-					});
-				}, //adminEBAYProfileZipUploadExec
-
 
 			ebayBuyerRequirementsToggle : function($ele)	{
 				function handleSelect()	{
