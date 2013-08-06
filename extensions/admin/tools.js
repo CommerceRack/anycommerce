@@ -325,7 +325,7 @@ var admin_tools = function() {
 
 			powertoolActions2KVP : function($tbody)	{
 				var r = "";
-				$('tr',$tbody).each(function(){
+				$('tr',$tbody).not('.rowTaggedForRemove').each(function(){
 					var
 						data = $.extend({},$(this).data()),
 						verb = data.verb;
@@ -440,7 +440,7 @@ var admin_tools = function() {
 					var	$form = $btn.closest('form');
 					
 					if(app.ext.admin.u.validatePicker($form))	{
-						if($('#powerToolActionListTbody tr').length)	{
+						if($('#powerToolActionListTbody tr').not('.rowTaggedForRemove').length)	{
 							obj = {
 								'%vars' : {
 									'GUID' : app.u.guidGenerator(),
