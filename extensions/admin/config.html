@@ -2763,8 +2763,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 	<fieldset>
-
-		<label><span>Tax percentage</span><input type="number" value="" name="rate" size="5" step='0.01' min='0' />%</label>
+<!-- * 201330 -> removed 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket applied and a -X% is used to compensate in specific locales -->
+		<label><span>Tax percentage</span><input type="number" value="" name="rate" size="5" step='0.01' />%</label>
 
 		<div class='label'>
 		Also applies to:
