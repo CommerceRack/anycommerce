@@ -571,6 +571,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<td data-bind="var:coupon(disabled); format:isDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(coupon); format:text;"></td>
 	<td data-bind="var:coupon(title); format:text;"></td>
+	<td data-bind="var:coupon(auto); format:text;"></td>
 	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
@@ -2189,15 +2190,15 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 <table>
 <tr>
 	<td>Merchant ID:</td>
-	<td><i>Not set</i></td>
+	<td><i data-bind="var:payment(amz_merchantid); format:text;"></i></td>
 </tr>
 <tr>
 	<td>Access Key Id:</td>
-	<td><i>Not set</i></td>
+	<td><i data-bind="var:payment(amz_accesskey); format:text;"></i></td>
 </tr>
 <tr>
   	<td>Secret Key Id:</td>
-	<td><i>Not set</i></td>
+	<td><i data-bind="var:payment(amz_secretkey); format:text;"></i></td>
 </tr>
 </table>
 
@@ -2208,39 +2209,41 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 <label>
 	<span>Payment Environment</span>
 	<select name="amzpay_env" data-bind='var: payment(amzpay_env); format:popVal;'>
-		<option value="0" >Disable</option>
+		<option value="0">Disable</option>
 		<option value="1">Sandbox/Testing</option>
 		<option value="2">Production</option>
 	</select>
 </label>
 
+<!-- this is a vstore only setting -->
+<div class='showForZoovyOnly'>
+	<h5>Checkout Button</h5>
+	<p class='hint'>These settings are for vstore only</p>
+	<label>
+		<span>Color</span>
+		<select name="color" data-bind='var: payment(color); format:popVal;'>
+			<option value="orange">Orange</option>
+			<option value="tan">Tan</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Size</span>
+		<select name="size" data-bind='var: payment(size); format:popVal;'>
+			<option value="small">Small</option>
+			<option value="large">Large</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Background</span>
+		<select name="background" data-bind='var: payment(background); format:popVal;'>
+			<option value="white">White</option>
+			<option value="other">Other</option>
+		</select>
+	</label>
+</div>
 
-
-<h5>Checkout Button</h5>
-
-<label>
-	<span>Color</span>
-	<select name="color" data-bind='var: payment(color); format:popVal;'>
-		<option value="orange">Orange</option>
-		<option value="tan">Tan</option>
-	</select>
-</label>
-
-<label>
-	<span>Size</span>
-	<select name="size" data-bind='var: payment(size); format:popVal;'>
-		<option value="small">Small</option>
-		<option value="large">Large</option>
-	</select>
-</label>
-
-<label>
-	<span>Background</span>
-	<select name="background" data-bind='var: payment(background); format:popVal;'>
-		<option value="white">White</option>
-		<option value="other">Other</option>
-	</select>
-</label>
 </div>
 
 

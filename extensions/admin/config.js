@@ -457,7 +457,7 @@ else	{
 						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
 						"<button data-app-event='admin_config|couponCreateShow'>Add Coupon<\/button>"
 						],
-					'thead' : ['Disabled','Code','Title','Created','Begins','Expires',''],
+					'thead' : ['Disabled','Code','Title','Auto','Created','Begins','Expires',''],
 					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminConfigDetail',
