@@ -1805,7 +1805,8 @@ VALIDATION
 //app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
 						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
 						}
-					else if($input.prop('type') == 'url')	{
+//only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
+					else if($input.prop('type') == 'url' && $input.val())	{
 						var urlregex = new RegExp("^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
 						if (urlregex.test($input.val())) {}
 						else	{

@@ -628,12 +628,12 @@
 
 					<label>
 						<span>FTP/HTTP URL</span>
-						<input name='inv_url' type='url' data-bind="var:vendor(%INVENTORY.inv_url); format:popVal;" required='required' data-validation-rules='skipIfHidden' />
+						<input name='url' type='url' data-bind="var:vendor(%INVENTORY.url); format:popVal;" required='required' data-validation-rules='skipIfHidden' />
 					</label>
 
 					<label>
 						<span>Import frequency</span>
-						<select name='inv_updateauto' data-bind="var:vendor(%INVENTORY.inv_updateauto); format:popVal;" required='required'  data-validation-rules='skipIfHidden'>
+						<select name='updateauto' data-bind="var:vendor(%INVENTORY.updateauto); format:popVal;" required='required'  data-validation-rules='skipIfHidden'>
 							<option value='0'>Manual</option>
 							<option value='1'>Daily</option>
 						</select>
@@ -641,7 +641,7 @@
 					
 					<label>
 						<span>Inventory header</span>
-						<textarea name='inv_header' data-bind="var:vendor(%INVENTORY.inv_header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
+						<textarea name='header' data-bind="var:vendor(%INVENTORY.header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
 					</label>
 					
 					<button data-app-event='admin_wholesale|adminSupplierAction' data-action="INVENTORY:UPDATE">Start Import</button>
