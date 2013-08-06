@@ -103,9 +103,10 @@ var admin_batchJob = function() {
 					var $target = $('#batchJobStatusModal'); //modal id.
 					if($target.length)	{$target.empty()}
 					else	{
-						$target = $("<div \/>").attr({'id':'batchJobStatusModal','title':'Batch Job Status: '+jobid}).appendTo('body');
+						$target = $("<div \/>").attr({'id':'batchJobStatusModal'}).appendTo('body');
 						$target.dialog({'modal':true,'width':500,'height':300,'autoOpen':false});
 						}
+					$target.dialog('option','title','Batch Job Status: '+jobid);
 					$target.dialog('open');
 					$target.showLoading({'message':'Fetching Batch Job Details'});
 					app.ext.admin.calls.adminBatchJobStatus.init(jobid,{'callback':'anycontent','jqObj':$target,'templateID':'batchJobStatusTemplate','dataAttribs': {'jobid':jobid}},'immutable');
