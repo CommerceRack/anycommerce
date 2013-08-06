@@ -1804,6 +1804,16 @@ VALIDATION
 //app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
 						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
 						}
+					else if($input.prop('type') == 'url')	{
+						var urlregex = new RegExp("^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
+						if (urlregex.test($input.val())) {}
+						else	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.after($span.text('not a valid url. '));
+							$("<span class='toolTip' title='A url must be formatted as http, https, or ftp ://www.something.com/net/org/etc'>?<\/span>").tooltip().appendTo($span);
+							}
+						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						//only 'error' if field is required. otherwise, show warning
 // ** 201330 -> field was erroring if email was invalid even if field was not required.						
@@ -1854,7 +1864,7 @@ VALIDATION
 						removeClass($input);
 						}
 					else	{
-						$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
+						
 						}
 					
 					if($input.hasClass('ui-state-error'))	{
