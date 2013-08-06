@@ -114,6 +114,7 @@ var admin_support = function() {
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
+				$D.dialog('option','modal',false);
 				$D.dialog('open');
 				},
 
