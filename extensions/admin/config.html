@@ -571,7 +571,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<td data-bind="var:coupon(disabled); format:isDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(coupon); format:text;"></td>
 	<td data-bind="var:coupon(title); format:text;"></td>
-	<td data-bind="var:coupon(auto); format:text;"></td>
+	<td class='alignCenter'><span data-bind="var:coupon(auto); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
 	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
