@@ -1595,6 +1595,9 @@ app.model.dispatchThis('immutable');
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
+					$ele.closest("[data-app-role='slimLeftNav']").find('.selectedMarket').removeClass('selectedMarket');
+					$ele.addClass('selectedMarket ui-corner-all');
+
 					if($ele.data('mkt'))	{
 						app.ext.admin_syndication.a.showDSTDetails($ele.data('mkt'),$mktContainer)
 						}

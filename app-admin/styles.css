@@ -1483,6 +1483,9 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 .ebayCategoryChooser .leftCol	{width:25%;}
 .ebayCategoryChooser .leftCol li	{margin:3px 0 3px 0}
 
+
+.pageSyndication .market	{border:1px solid #ffffff; padding:8px;}
+.pageSyndication .selectedMarket	{border:1px solid #efefef;}
 /*
 http://codepad.co/s/7cca38#select
 some pad (more or less)specific styles.
