@@ -524,11 +524,11 @@ var DMIVars = {
 	'header' : 'Rules Editor',
 	'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
 	}; 
-
+app.u.dump(" -> vars.TABLE: "+vars.table);
 //set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 if(vars.rulesmode == 'shipping')	{
 	DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
-	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
+	DMIVars.tbodyDatabind = 'var: rules(@'+vars.table.toUpperCase()+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
 	DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
 	$D.attr('data-provider',vars.provider);
 	}
@@ -562,6 +562,8 @@ if(vars.rulesmode == 'shipping')	{
 			$D.anymessage({'message':rd});
 			}
 		else	{
+//			app.u.dump("Exec showRulesBuilderInModal callback for new shipmethods.");
+//			app.u.dump(" -> app.ext.admin_config.u.getShipMethodByProvider(vars.provider): "); app.u.dump(app.ext.admin_config.u.getShipMethodByProvider(vars.provider));
 			$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
 			app.u.handleAppEvents($D,vars); //needs to happen after request, because that's when the row contents are populated.
 			}
