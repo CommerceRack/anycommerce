@@ -5739,7 +5739,7 @@ not in use
 //The .rowTaggedForRemove class is used to know what action was taken. Thought being later other classesmay be applied (update, new, etc)
 //The customer manager keys off of the ui-state0error, so don't change that w/out updating
 			tagRowForRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.button({icons: {primary: "ui-icon-closethick"},text: false});
 				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
 					event.preventDefault();
 					
