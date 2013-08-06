@@ -5110,7 +5110,8 @@ else	{
 				var r = false; //what is returned. false or the object isf a match is found.
 				if(key && value && !$.isEmptyObject(obj))	{
 					for(var index in obj)	{
-						if(obj[index][key] == value)	{
+// * 201330 -> added obj[index] check. caused JS error if obj[index] doesn't exist.
+						if(obj[index] && obj[index][key] == value)	{
 							r = obj[index];
 							break; //once a match is found, exit early.
 							}
