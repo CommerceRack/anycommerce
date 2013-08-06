@@ -570,8 +570,11 @@ if(vars.rulesmode == 'shipping')	{
 	}
 else if(vars.rulesmode == 'coupons')	{
 	var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
-	$D.anycontent({'data': data});
-	app.u.handleAppEvents($D,vars);
+	if(data)	{
+		$D.anycontent({'data': data});
+		app.u.handleAppEvents($D,vars);
+		}
+	else	{} //getValueByKeyFromArray (used to set the data) will return false and display an error message.
 	}
 else	{
 	 //should never get here. if statement above accounts for mode being shipping or coupons. failsafe.
@@ -774,30 +777,36 @@ $D.dialog('open');
 			
 			couponDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.couponDetailDMIPanel').on('click.couponDetailDMIPanel',function(event){
-					event.preventDefault();
-					var
-						couponCode = $btn.closest('tr').data('coupon'),
-						$panel = app.ext.admin.i.DMIPanelOpen($btn,{
-							'templateID' : 'couponAddUpdateContentTemplate',
-							'panelID' : 'coupon_'+couponCode,
-							'header' : 'Edit Coupon: '+couponCode,
-							'handleAppEvents' : true,
-							'data' : app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',couponCode)
-							});
-						
-					$panel.attr('data-couponcode',couponCode);
-					$('form',$panel)
-						.append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/extension' value='admin' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>")
-					 	.find(".applyDatepicker").datepicker({
-							changeMonth: true,
-							changeYear: true,
-							dateFormat : '@'
-							})
-						.change(function(){$(this).val(parseInt($(this).val()) / 1000)}) //strip milliseconds from epoch
-						.end()
-						.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
-					}); //
+				var couponCode = $btn.closest('tr').data('coupon');
+				
+				if(couponCode)	{
+					
+					$btn.off('click.couponDetailDMIPanel').on('click.couponDetailDMIPanel',function(event){
+						event.preventDefault();
+						var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+								'templateID' : 'couponAddUpdateContentTemplate',
+								'panelID' : 'coupon_'+couponCode,
+								'header' : 'Edit Coupon: '+couponCode,
+								'handleAppEvents' : true,
+								'data' : app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',couponCode)
+								});
+							
+						$panel.attr('data-couponcode',couponCode);
+						$('form',$panel)
+							.append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/extension' value='admin' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>")
+							.find(".applyDatepicker").datepicker({
+								changeMonth: true,
+								changeYear: true,
+								dateFormat : '@'
+								})
+							.change(function(){$(this).val(parseInt($(this).val()) / 1000)}) //strip milliseconds from epoch
+							.end()
+							.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
+						}); //
+					}
+				else	{
+					$btn.button('disable');
+					}
 				}, //couponDetailDMIPanel
 
 			couponCreateShow : function($btn)	{
