@@ -221,6 +221,14 @@
       "fl" : "~downlite_c_dataentry",
       "description" : "Protect your bed investment with one of those soft pads and toppers. Also helps to improve a mattress needing additional softness."
    },
+   ".hotels.150-luxury-resort.290-the-furnace-creek-ranch-resort-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Furnace Creek Bedding",
+      "fl" : "~downlite_c_dataentry",
+      "picture1" : "4/480x360_the_ranch_at_furnace_creek_resort_bedding.jpg",
+      "description" : "The Furnace Creek Ranch/Resort features bedding made by DOWNLITE.\n\n\nThe Furnace Creek  Resort uses our down alternative EnviroLoft comforters as well as our EnviroLoft pillows.  EnviroLoft is our down alternative that mimics the properties of down bedding. EnviroLoft blankets run small for home usage - so consider upgrading to the bigger PrimaLoft blankets on our website. For the EnviroLoft pillows - be sure to opt for the medium density option.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
+   },
    ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.250-novelty-shape-pillow-inserts" : {
       "fl" : "~downlite_c_dataentry"
    },
@@ -389,14 +397,6 @@
       "description" : "The Tower 23 property features bedding made by DOWNLITE.\n\n\nThey use several of our items including our quilted feather beds, ultraplush mattress pads, EnviroLoft down alternative comforters and our 50/50 down and feather pillows.\n\n\nAll of the bedding is made in the USA and machine washable and dryable (except the feather beds which are too large - so be sure to add a feather bed protector). This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".hotels.380-conference-center-hotels" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Conference Center Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_mount_washington_mount_washington_confrence_center_hotel_bedding.jpg",
-      "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
-      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
-   },
    ".hotels.200-cruise-lines.100-regent-cruise-line-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Regent Cruise Bedding",
@@ -404,6 +404,14 @@
       "picture1" : "4/480x360_regent_cruise_line_bedding.jpg",
       "description2" : "This cruise line purchased/uses our line of warmer weight down comforters and our 5/95 feather blend pillows. We also suggest our cool to the touch Tencel Lyocell bedding to compliment the bedding. Please note that the comforter model they use is offered online in 3 weight levels to fit your comfort levels.",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
+   },
+   ".hotels.380-conference-center-hotels" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Conference Center Bedding",
+      "fl" : "~downlite_c_dataentry",
+      "picture1" : "4/480x360_mount_washington_mount_washington_confrence_center_hotel_bedding.jpg",
+      "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
    ".hotels.350-casino-hotels.120-the-venetian-casino-resort-hotel-bedding" : {
