@@ -1640,7 +1640,6 @@ app.model.dispatchThis('immutable');
 						}
 					else	{
 						$('.eBayIntShippingToggle',$ele.closest('.ui-widget-content')).hide();
-						alert($('.eBayItemShipToLocations option:selected',$ele.closest('.ui-widget-content')).length);
 						$('.eBayItemShipToLocations option:selected',$ele.closest('.ui-widget-content')).prop('selected','');
 						}
 					}
