@@ -3182,6 +3182,7 @@ $tmp.empty().remove();
 // ** 201320 -> needed processList to support indexed arrays AND associative arrays.
 // ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
 						if(data.value[i] && typeof data.value[i] === 'object')	{
+							if(!data.value[i].index && isNaN(i)) {data.value[i].index = i} //add an 'index' field to the data. handy for hashes (like in flexedit) where the index is something useful to have in the display.
 							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 							if($o instanceof jQuery)	{
 								if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)

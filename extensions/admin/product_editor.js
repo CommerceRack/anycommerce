@@ -31,6 +31,7 @@ var admin_prodEdit = function() {
 //when a panel is converted to app, add it here and add a template. 
 		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
+			'asin' : {'type':'text'},
 			'textbox' : { 'type' : 'text'},
 			'text' : { 'type' : 'text'},
 			'textarea' : { 'type' : 'textarea'},
@@ -41,7 +42,7 @@ var admin_prodEdit = function() {
 			'currency' : { 'type' : 'number'},
 			'number' : { 'type' : 'number'},
 			'weight' : { 'type' : 'text'},
-			'checkbox' : { 'type' : 'cb'},
+			'checkbox' : { 'type' : 'checkbox'},
 			'digest' : { 'type' : 'hidden'},
 			'special' : { 'type' : 'hidden'},
 			'boolean' : { 'type' : 'cb'},
