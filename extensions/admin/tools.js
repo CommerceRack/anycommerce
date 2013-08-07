@@ -86,6 +86,7 @@ var admin_tools = function() {
 						//if the item ends up in the enabled list, change from left/right arrows to up/down. also tag row to denote it's new (for save later).
 						if($(ui.item).closest('tbody').hasClass('connectMe'))	{
 							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')})
+							app.u.handleAppEvents($(ui.item)); //handled here instead of when right list is generated for efficiency.
 							}
 						}
 					});
@@ -101,7 +102,7 @@ var admin_tools = function() {
 						$master.anycontent({'datapointer':rd.datapointer});
 						app.u.handleAppEvents($master);
 						}
-					},'datapointer':'appResource|product_attribs_popular'}},'mutable');
+					},'datapointer':'appResource|product_attribs_popular.json'}},'mutable');
 //				app.u.handleAppEvents($target);
 				app.model.dispatchThis('mutable');
 //manageFlexeditorTemplate
@@ -623,6 +624,33 @@ $target.append("<br \/>");
 					});
 				}, //agentCreateShow
 
+
+			flexeditAttributesFullListShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.flexeditAttributesFullListShow').on('click.flexeditAttributesFullListShow',function(event){
+					event.preventDefault();
+					var $tbody = $btn.closest("[data-app-role='flexeditMasterListContainer']").find("[data-app-role='flexeditAttributeListTbody']");
+					$tbody.intervaledEmpty()
+					$tbody.parent().showLoading({'message':'Fetching full attribute list'});
+
+					app.ext.admin.calls.appResource.init('product_attribs_all.json',{
+						'callback' : function(rd){
+							$tbody.parent().hideLoading();
+							$('tr',$tbody).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$tbody.anycontent({'datapointer':rd.datapointer});
+								}
+							},
+						'datapointer':'appResource|product_attribs_all.json'
+						},'mutable'); //total sales
+//				app.model.dispatchThis('mutable');
+
+
+					});
+				},
 
 			flexeditAttributeCreateUpdateShow : function($btn)	{
 				

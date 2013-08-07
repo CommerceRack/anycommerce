@@ -763,9 +763,10 @@ has to be within the fieldset to for data-table to work right.
 	<div class='ui-widget twoColumn'>
 		<h3  class='stdPadding ui-widget-header ui-corner-top'>Enabled Attributes</h3>
 		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
+			
 			<fieldset>
 			<table data-app-role='dataTable' class=' fullWidth gridTable'>
-			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe'>
+			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' >
 			
 			</tbody>
 			</table>
@@ -805,9 +806,10 @@ has to be within the fieldset to for data-table to work right.
 	<section class='ui-widget twoColumn column2'>
 		<h3 class='stdPadding ui-widget-header ui-corner-top'>Popular Attributes</h3>
 		<div class='ui-widget-content ui-corner-bottom stdPadding flexeditMasterListContainer' data-app-role='flexeditMasterListContainer'>
+			<div class='buttonset alignRight'><button data-app-event="admin_tools|flexeditAttributesFullListShow">Full Attribute List</button></div>
 			<p>To enable a new attribute, simply drag it to the 'enabled' list on the left</p>
 			<table class='fullWidth gridTable'>
-				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" >
+				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" data-app-role='flexeditAttributeListTbody'>
 				</tbody>
 			</table>
 
@@ -826,7 +828,10 @@ has to be within the fieldset to for data-table to work right.
 	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
 	<td class='alignLeft'>
 		<div data-bind='var:flexedit(id); format:text;'></div>
-		<div data-bind='var:flexedit(title); defaultVar:flexedit(tag); format:text;'></div>
+		<div>
+			<span data-bind='var:flexedit(title); defaultVar:flexedit(tag); format:text;'></span>
+			<span data-bind='var:flexedit(index); format:text; pretext:(; posttext:);'></span>
+		</div>
 	</td>
 	<td class='hideInMasterList alignRight'>
 		<button data-app-event="admin|tagRowForRemove" class='hideInMasterList'>Remove Field</button>
