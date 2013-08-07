@@ -1744,7 +1744,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 
 			<label>
 				<span>Note</span>
-				<textarea name='NOTE' value='' rows='10' placeholder="This is here for your use, to populate with hints or reminders about the profile." data-bind="var: profile(%PROFILE.NOTE); format:popVal;" />
+				<textarea name='NOTE' value='' rows='3' cols='70' placeholder="This is here for your use, to populate with hints or reminders about the profile." data-bind="var: profile(%PROFILE.NOTE); format:popVal;" />
 			</label>
 
 		</div>
@@ -2108,14 +2108,26 @@ add an input here (checkbox) for 'let ebay compute the costs'
 	
 	<div data-panelname='eBayIntShipping'>
 		<h2>International Shipping and Insurance</h2>
-		<div class='clearfix'>
 
 
-		<h4>Shipping</h4>
+		<div class='clearfix toggleThis'>
 
 			<label>
+				<input type="checkbox" name='InternationalShipping\@BOOLEAN' data-bind="var:profile(%PROFILE.InternationalShipping\@BOOLEAN); format:popVal;" data-app-event='admin_syndication|ebayInternationalShippingToggle'>
+				Ship Internationally	
+				<span class='toolTip' title="Enable this if you will configure international shipping.">?</span>
+			</label>		
+	
+			<h4 class="eBayIntShippingToggle">Locations &amp; Services</h4>
+			<label class="eBayIntShippingToggle">
 				<span>Location</span>
-				<select name='Item\ShipToLocations\@ARRAY' required='required' data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" multiple="multiple">
+				<!-- This should not be 'required' because they may not want to
+				ship internationally -->
+				<select 
+					name='Item\ShipToLocations\@ARRAY' 
+					class='eBayItemShipToLocations'
+					data-bind="var: profile(%PROFILE.Item\ShipToLocations\@ARRAY); format:popVal;" 
+					multiple="multiple">
 					<option value='Americas'>N. and S. America</option>
 					<option value='Asia'>Asia</option>
 					<option value='AU'>Australia</option>
@@ -2126,12 +2138,12 @@ add an input here (checkbox) for 'let ebay compute the costs'
 					<option value='Europe'>Europe</option>
 					<option value='GB'>United Kingdom</option>
 					<option value='JP'>Japan</option>
-					<option value='None'>None (Will Not Be Shipped)</option>
+					<option value='None'>Download Only</option>
 				</select>
 				<span class='toolTip' title="Indicates the geographical location of the item (along with Country) to be displayed on eBay listing pages. When you revise a listing, you can add or change this value only if the listing has no bids (or no items have sold) and it does not end within 12 hours.">?</span>
 			</label>
-			
-			<fieldset>
+						
+			<fieldset class="eBayIntShippingToggle">
 			<table data-app-role='dataTable' class='gridTable fullWidth'>
 			<thead>
 			<tr>
@@ -2211,13 +2223,16 @@ add an input here (checkbox) for 'let ebay compute the costs'
 			</fieldset>
 			
 			<br />
-			<h4>Insurance</h4>
+			<h4 class="eBayIntShippingToggle">Insurance</h4>
 
 
 
-			<label>
+			<label class="eBayIntShippingToggle">
 				<span>Insurance option</span>
-				<select name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption); format:popVal;">
+				<select 
+					class='eBayIntShippingPanel'
+					name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption' 
+					data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption); format:popVal;">
 					<option value='NotOffered'>Not offered</option>
 					<option value='IncludedInShippingHandling'>Included in shipping/handling</option>
 					<option value='Optional'>Optional</option>
@@ -2227,14 +2242,16 @@ add an input here (checkbox) for 'let ebay compute the costs'
 			</label>
 
 
-			<label>
+			<label class="eBayIntShippingToggle">
 				<span>Insurance fee</span>
-				<input type='text' name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY' data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY); format:popVal;" />
+				<input type='text' 
+					class='eBayIntShippingPanel'
+					name='Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY' 
+					data-bind="var: profile(%PROFILE.Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY); format:popVal;" />
 				<span class='toolTip' title="Cost of shipping insurance set by the seller. If the buyer bought more than one of this item, this is the insurance for just a single item.">?</span>
 			</label>
 			
 		
-			
 		</div>
 	</div>
 
@@ -2486,7 +2503,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 					<option value='0'>Disabled</option>
 					<option value='1'>Enabled</option>
 				</select>
-				Use buyer requirements, including My Ebay.<!-- ebay's field is disable, but we prefer enable, so 'off' is 1 to match their field values -->
+				Use buyer requirements, including My Ebay.<!-- ebay's field is disable, but we prefer enable, so 'off' is 1 to match their field values -->				
 				<span class='toolTip' title="If enabled, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>		
 		

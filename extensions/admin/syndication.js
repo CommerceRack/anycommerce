@@ -1627,10 +1627,28 @@ app.model.dispatchThis('immutable');
 						}
 					}
 				handleSelect();
-				$ele.off('click.hideInputsByCheckbox').on('click.hideInputsByCheckbox',function(){
+				$ele.off('change.ebayBuyerRequirementsToggle').on('change.ebayBuyerRequirementsToggle',function(){
 					handleSelect();
 					});
 				}, //ebayBuyerRequirementsToggle
+
+			ebayInternationalShippingToggle : function($ele)	{
+				// I have no idea why this doesn't work.
+				function handleClick()	{
+					if ($ele.is(":checked"))	{
+						$('.eBayIntShippingToggle',$ele.closest('.ui-widget-content')).show();
+						}
+					else	{
+						$('.eBayIntShippingToggle',$ele.closest('.ui-widget-content')).hide();
+						alert($('.eBayItemShipToLocations option:selected',$ele.closest('.ui-widget-content')).length);
+						$('.eBayItemShipToLocations option:selected',$ele.closest('.ui-widget-content')).prop('selected','');
+						}
+					}
+				handleClick();
+				$ele.off('click.ebayInternationalShippingToggle').on('click.ebayInternationalShippingToggle',function(){
+					handleClick();
+					});
+				}, //ebayInternationalShippingToggle
 
 			ebayReturnsToggle : function($ele)	{
 				function handleSelect()	{
