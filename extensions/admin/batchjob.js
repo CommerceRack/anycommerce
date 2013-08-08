@@ -284,32 +284,27 @@ app.model.dispatchThis('mutable');
 			
 			adminBatchJobCleanupExec : function($btn)	{
 				var $row = $btn.closest('tr');
-				if($row.data('status') == 'ERROR' || $row.data('status') == 'finished' || $row.data('status') == 'abort')	{
-					$btn.show({text: false,icons: {primary: "ui-icon-trash"}});
-					$btn.button(); //daisy-chaining the button on the show didn't work. button didn't get classes.
-					$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
-						var jobid = $btn.closest('[data-jobid]').data('jobid');
-						if(jobid)	{
-							$('#batchJobStatusModal').empty().addClass('loadingBG');
-							app.model.addDispatchToQ({
-								'_cmd':'adminBatchJobCleanup',
-								'jobid' : jobid,
-								'_tag':	{
-									'callback':'showMessaging',
-									'message':'Batch job has been cleaned up',
-									'parentID':'batchJobStatus_'+jobid
-									}
-								},'immutable');
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							$('.appMessaging').anymessage({'message':'In admin_batchJob.e.adminBatchJobCleanupExec, unable to ascertain jobID from DOM tree.','gMessage':true});
-							}
-						});
-					}
-				else	{
-					$btn.hide();
-					}
+				$btn.show({text: false,icons: {primary: "ui-icon-trash"}});
+				$btn.button(); //daisy-chaining the button on the show didn't work. button didn't get classes.
+				$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
+					var jobid = $btn.closest('[data-jobid]').data('jobid');
+					if(jobid)	{
+						$('#batchJobStatusModal').empty().addClass('loadingBG');
+						app.model.addDispatchToQ({
+							'_cmd':'adminBatchJobCleanup',
+							'jobid' : jobid,
+							'_tag':	{
+								'callback':'showMessaging',
+								'message':'Batch job has been cleaned up',
+								'parentID':'batchJobStatus_'+jobid
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$('.appMessaging').anymessage({'message':'In admin_batchJob.e.adminBatchJobCleanupExec, unable to ascertain jobID from DOM tree.','gMessage':true});
+						}
+					});
 				},
 			
 			showBatchDetail : function($btn)	{

@@ -898,7 +898,7 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 .mhTabsContainer ul.hideIcons li	{height:20px;}
 
 .mhTabsContainer .text	{position:relative; z-index:10;}
-.mhTabsContainer .icon	{background-image:url(images/tab_sprites-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .icon	{background-image:url(images/tab_sprites_v2-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
 .mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 */
 .mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
 .mhTabsContainer .productsTab .icon	{background-position: -110px 0;}
