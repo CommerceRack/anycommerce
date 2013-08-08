@@ -17,44 +17,13 @@
 
 
 	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
-	<button data-app-event="admin_batchJob|execBatchCleanup">Clean Up/Remove</button>
+	<button data-app-event="admin_batchJob|adminBatchJobCleanupExec">Clean Up/Remove</button>
 
 	<p>This panel will not update automatically. Please go to the <a href="#" onClick="navigateTo('#!batchManager'); if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')}; return false">Batch Job Manager</a> for status</p>
 
 </section>
 
 
-
-
-
-<div id='batchJobManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-			<h3 class='heading'>Batch Jobs</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth marginBottom' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th class='alignLeft'>ID</th>
-			<th class='alignLeft'>Job Name</th>
-			<th class='hideInMinimalMode alignLeft'>Job Type</th>
-			<th class='hideInMinimalMode alignLeft'>User</th>
-			<th class='hideInMinimalMode alignLeft'>Created</th>
-			<th>Status</th>
-			<th data-anytable-nosort='true'></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
-</div>
 
 
 <table>
@@ -68,7 +37,7 @@
 	<td class='alignRight'>
 		<button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button>
 		<button data-app-event="admin_batchJob|showDownload" class='displayNone'>View Report</button>
-		<button data-app-event="admin_batchJob|execBatchCleanup" class='displayNone'>Delete</button>
+		<button data-app-event="admin_batchJob|adminBatchJobCleanupExec" class='displayNone'>Delete</button>
 		<button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button>
 	</td>
 	
