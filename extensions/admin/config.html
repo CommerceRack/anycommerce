@@ -461,12 +461,6 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 	<span class='toolTip' title="If enabled, will automatically add this coupon to the cart (customer does NOT have to enter a coupon code to get the discount)">?</span>
 </label>
 
-
-<label>
-	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Newsletter/Limited Use
-	<span class='toolTip' title="When enabled this coupon may only be added to the cart using a limited use link. Limited use links are automatically generated when a newsletter is sent out, but could also be generated programatically by custom applications. If this is enabled the coupon MAY NOT be added directly to the cart from 'Coupon Code' box.">?</span>
-</label>
-
 <label>
 	<input type="checkbox" name="stackable" data-bind='var:coupon(stackable); format:popVal;' /> Allow Coupon Stacking/Combinations.
 	<span class='toolTip' title="How this works: Coupons codes are added to the cart in alphanumeric order based on coupon code.  Each non-stackable coupon will remove all other coupons (which may have been added before it). When stacking is enabled, any non-combinable codes will need to be explicitly removed using rules. If you're not sure what to do here, leave this disabled.">?</span>
@@ -474,6 +468,11 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <label>
 	<input type="checkbox" name="taxable" data-bind='var:coupon(taxable); format:popVal;' /> Coupon value should be applied/deducted from tax.
+</label>
+
+<label>
+	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Require Security Digest (Newsletter/Limited Use)
+	<span class='toolTip' title="When enabled this coupon may only be added to the cart using a limited use link. Limited use links are automatically generated when a newsletter is sent out, but could also be generated programatically by custom applications. If this is enabled the coupon MAY NOT be added directly to the cart from 'Coupon Code' box.">?</span>
 </label>
 
 <div class='buttonset alignRight'>
