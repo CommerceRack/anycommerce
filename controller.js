@@ -2812,6 +2812,7 @@ return $r;
 //				$tag.css('display','none'); //if there is no image, hide the src. 
 				}
 			}, //imageURL
+		
 
 		stuffList : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormat.stuffList");
@@ -3054,7 +3055,12 @@ $tmp.empty().remove();
 				}
 			else	{
 //for all other inputs and selects, simply setting the value will suffice.
-				$tag.val(data.value);
+				if($tag.data('stringify'))	{
+					$tag.val(JSON.stringify(data.value));
+					}
+				else	{
+					$tag.val(data.value);
+					}
 				}
 			
 			if($tag.data('trigger'))	{

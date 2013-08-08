@@ -1335,52 +1335,6 @@ if giftcard is on there, no paypal will appear.
 			}, //adminUIProductPanelList
 
 
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-/*
-		adminUIExecuteCGI : {
-			init : function(uri,vars,_tag,Q)	{
-				var r = 0;
-				if(uri)	{
-					r = 1;
-					_tag = _tag || {};
-					this.dispatch(uri,vars,_tag,Q);
-					}
-				else	{
-					$("#globalMessaging").anymessage({'message':'in adminUIExecuteCGI, uri not specified.','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(uri,vars,_tag,Q)	{
-				obj = {};
-				obj['_cmd'] = "adminUIExecuteCGI";
-				if(vars)	{obj['%vars'] = vars} //only pass vars if present. would be a form post.
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //adminUIProductPanelList
-*/
-
-		adminUIProductPanelList : {
-			init : function(pid,_tag,Q)	{
-				var r = 0;
-				if(pid)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminUIProductPanelList|"+pid;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(pid,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag)
-						}
-					}
-				else	{app.u.throwGMessage("In admin.calls.adminUIProductPanelList, no pid passed.")}
-				return r;
-				},
-			dispatch : function(pid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":_tag,"pid":pid},Q);	
-				}
-			}, //adminUIProductPanelList
 //obj requires sub and sref.  sub can be LOAD or SAVE
 //reload is also supported.
 		adminUIBuilderPanelExecute : {
@@ -4948,8 +4902,11 @@ just lose the back button feature.
 							}
 						});
 					}
+				else if(!$target)	{
+					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified.");
+					}
 				else	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					app.u.throwGMessage("In admin.u.handleAppEvents, target is not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
 					}
 				
 				}, //handleAppEvents

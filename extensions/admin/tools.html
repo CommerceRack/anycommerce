@@ -796,6 +796,10 @@ has to be within the fieldset to for data-table to work right.
 						<option value='weight'>Weight</option>
 					</select>
 				</label>
+				<label>
+					<span>Options</span>
+					<textarea data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
+				</label>
 				<button data-app-event="admin_config|dataTableAddExec">Add Attribute</button>
 			</div>
 			</fieldset>
