@@ -92,6 +92,7 @@ var admin_tools = function() {
 					});
 
 				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
+				app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor.
 				app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
 					$master.hideLoading();
 					$('tr',$enabled).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
@@ -295,7 +296,7 @@ $target.append("<br \/>");
 						else if(index.indexOf('SUPPLIER') === 0)	{handleIt('SUPPLIER');}
 						else if(index.indexOf('MANAGECAT') === 0)	{handleIt('MANAGECAT');}
 						else if(index.indexOf('PROFILE') === 0)	{handleIt('PROFILE');}
-						else if(index.indexOf('SUBSCRIBERLIST') === 0)	{handleIt('SUBSCRIBERLIST');}
+						else if(index.indexOf('SUBLIST') === 0)	{handleIt('SUBLIST');}
 						else	{} //do nada. isn't a checkbox list.
 						}
 					
@@ -667,7 +668,8 @@ $target.append("<br \/>");
 					
 					if($btn.data('mode') == 'update')	{
 						$inputContainer.show();
-						$inputContainer.anycontent({'data':$btn.closest('tr').data()})
+						$inputContainer.anycontent({'data':$.extend({},$btn.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$btn.closest('tr').data('id')])})
+						app.u.dump(" -> bunch o data: "); app.u.dump($.extend({},$btn.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$btn.closest('tr').data('id')]))
 						}
 					else if($btn.data('mode') == 'create')	{
 						$('input, select',$inputContainer).val(''); //clear all the inputs

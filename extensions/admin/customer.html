@@ -1181,13 +1181,8 @@ The checkbox below does not work.
 
 	
 	<fieldset class='floatLeft threeColumn'>
-		<legend>Template &amp; Content</legend>
-		
-		<label class='marginTop'>
-			<span>Subject</span>
-			<input type='text' name='SUBJECT' size='40' value='' data-bind="var:campaign(SUBJECT); format:popVal;" />
-		</label>
-		
+		<legend>Template</legend>
+
 		<div class='label' data-app-role='campaignTemplateConfigContainer'>
 			<span>Selected</span>
 			<span data-bind='var:campaign(template_origin); format:text;' data-app-role='templateOrigin'  class='marginLeft marginRight'></span>
@@ -1215,7 +1210,12 @@ The checkbox below does not work.
 
 	
 	<fieldset data-app-role='campaignSettings' class='floatLeft threeColumn'>
-		<legend>Delivery Options</legend>
+		<legend>Subject &amp; Delivery Options</legend>
+
+		<label class='marginTop'>
+			<span>Subject</span>
+			<input type='text' name='SUBJECT' size='40' value='' data-bind="var:campaign(SUBJECT); format:popVal;" />
+		</label>
 
 
 <label class='marginTop'>

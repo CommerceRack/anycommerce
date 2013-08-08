@@ -1035,7 +1035,7 @@ app.u.throwMessage(responseData); is the default error handler.
 // * 201320 -> these are a few commonly used plugins that can now be applied w/out a custom callback.
 					$('.toolTip',$target).tooltip();
 					$(':checkbox.applyAnycb',$target).anycb();
-					$('table.applyAnytable',$target).anytable();
+					$('table.applyAnytable',$target).andSelf().anytable(_rtag.anytable || {});
 					$('.applyAnytabs',$target).anytabs();
 					app.u.handleAppEvents($target);
 
@@ -1474,7 +1474,7 @@ URI PARAM
 //				app.u.dump(s.replace(/"/g, "\",\x22"));
 				s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
 				// .replace(/"/g, "\",\x22")
-//				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
+				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
 				r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
 				}
 			else	{}
@@ -2812,6 +2812,7 @@ return $r;
 //				$tag.css('display','none'); //if there is no image, hide the src. 
 				}
 			}, //imageURL
+		
 
 		stuffList : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormat.stuffList");
@@ -3054,7 +3055,12 @@ $tmp.empty().remove();
 				}
 			else	{
 //for all other inputs and selects, simply setting the value will suffice.
-				$tag.val(data.value);
+				if($tag.data('stringify'))	{
+					$tag.val(JSON.stringify(data.value));
+					}
+				else	{
+					$tag.val(data.value);
+					}
 				}
 			
 			if($tag.data('trigger'))	{

@@ -139,80 +139,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminAppTicketCreate
 
 
-//status is optional
-		adminBatchJobList : {
-			init : function(status,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobList|"+status;
-//comment out local storage for testing.
-				this.dispatch(status,_tag,Q);
-				return r;
-				},
-			dispatch : function(status,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobList","status":status,"_tag":_tag},Q);	
-				}
-			}, //adminBatchJobList
-		adminBatchJobStatus : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{
-					r = 1;
-					this.dispatch(jobid,_tag,Q);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminBatchJobStatus, jobid not passed.");
-					}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobStatus|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":_tag,"jobid":jobid},Q);
-				}
-			}, //adminBatchJobStatus
-//Generate a unique guid per batch job.
-//if a request/job fails and needs to be resubmitted, use the same guid.
-		adminBatchJobCreate : {
-			init : function(opts,_tag,Q)	{
-				this.dispatch(opts,_tag,Q);
-				return 1;
-				},
-			dispatch : function(opts,_tag,Q)	{
-				opts = opts || {};
-				opts._tag = _tag || {};
-				opts._cmd = "adminBatchJobCreate";
-				opts._tag.datapointer = opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate";
-				app.model.addDispatchToQ(opts,Q);	
-				}
-			}, //adminBatchJobCreate		
-		adminBatchJobRemove : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
-				else	{app.u.throwGMessage("In admin.calls.adminBatchJobRemove, jobid not passed.");}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobRemove|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobRemove","_tag":_tag,"jobid":jobid},Q);	
-				}
-			}, //adminBatchJobRemove
-		adminBatchJobCleanup : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
-				else	{app.u.throwGMessage("In admin.calls.adminBatchJobCleanup, jobid not passed.");}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobCleanup|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobCleanup","jobid":jobid,"_tag":_tag},Q);	
-				}
-			}, //adminBatchJobStatus
-
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
@@ -1409,52 +1335,6 @@ if giftcard is on there, no paypal will appear.
 			}, //adminUIProductPanelList
 
 
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-/*
-		adminUIExecuteCGI : {
-			init : function(uri,vars,_tag,Q)	{
-				var r = 0;
-				if(uri)	{
-					r = 1;
-					_tag = _tag || {};
-					this.dispatch(uri,vars,_tag,Q);
-					}
-				else	{
-					$("#globalMessaging").anymessage({'message':'in adminUIExecuteCGI, uri not specified.','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(uri,vars,_tag,Q)	{
-				obj = {};
-				obj['_cmd'] = "adminUIExecuteCGI";
-				if(vars)	{obj['%vars'] = vars} //only pass vars if present. would be a form post.
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //adminUIProductPanelList
-*/
-
-		adminUIProductPanelList : {
-			init : function(pid,_tag,Q)	{
-				var r = 0;
-				if(pid)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminUIProductPanelList|"+pid;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(pid,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag)
-						}
-					}
-				else	{app.u.throwGMessage("In admin.calls.adminUIProductPanelList, no pid passed.")}
-				return r;
-				},
-			dispatch : function(pid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":_tag,"pid":pid},Q);	
-				}
-			}, //adminUIProductPanelList
 //obj requires sub and sref.  sub can be LOAD or SAVE
 //reload is also supported.
 		adminUIBuilderPanelExecute : {
@@ -2776,13 +2656,18 @@ else	{
 				
 				
 //data needs to include a templateID and a mode [product,customer]
-			getPicker : function(data)	{
+			getPicker : function(data,selectors)	{
 var r = false;  //what is returned. either false of a jquery object.
 data = data || {};
+selectors = selectors || "";
+
 if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
 	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
 	$D.data('pickermode',data.mode);
+
+	if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
+	
 	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
 		heightStyle: "content",
 		activate : function(event,ui)	{
@@ -2798,6 +2683,23 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 						}
 					else	{
 						ui.newPanel.anycontent(rd).data('contentloaded',true);
+
+	if(selectors)	{
+		app.u.dump("selectors are set: "+selectors);
+		var selArr = selectors.split('\n');
+		var L = selArr.length;
+		for(var i = 0; i < L; i += 1)	{
+			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+				//csv and 'all' are handled already.
+				}
+			else	{
+				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+				}
+			}
+		}
 						}
 					}
 				if(ui.newHeader.data('pickmethod') == 'LIST')	{
@@ -2837,6 +2739,29 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 			}
 		
 		});
+
+	if(selectors)	{
+		if(selectors == 'all')	{
+			$("[name='SELECTALL']",$D).prop('checked','checked');
+			}
+		else	{
+			
+			var selArr = selectors.split('\n');
+			var L = selArr.length;
+			for(var i = 0; i < L; i += 1)	{
+				if(selArr[i].indexOf('csv') === 0)	{
+					$("[name='csv']",$D).val(selArr[i].substring(4));
+					}
+				else	{
+					//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+	//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
+					}
+				}
+			}
+		}
+
+
+
 	r = $D.children();
 	}
 else	{
@@ -2849,7 +2774,7 @@ else	{
 				
 
 				
-				
+			
 				
 				
 				
@@ -4977,8 +4902,11 @@ just lose the back button feature.
 							}
 						});
 					}
+				else if(!$target)	{
+					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified.");
+					}
 				else	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					app.u.throwGMessage("In admin.u.handleAppEvents, target is not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
 					}
 				
 				}, //handleAppEvents
@@ -5166,6 +5094,9 @@ vars:
 						$table = $(".dualModeListTable:first",$DM);
 					
 					$DMI.attr('id','DMI_'+app.u.guidGenerator()); //apply an ID. this allows for content in a dialog to easily reference it's parent DMI.
+					if(vars.anytable)	{
+						$table.addClass('applyAnytable');
+						}
 					
 //if set, build thead.
 					if(vars.thead && typeof vars.thead == 'object')	{
@@ -5483,7 +5414,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 			lockAccordionIfChecked : function($cb)	{
-				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
+				//in a function so that code can be executed both on click and at init.
+				function handleChange()	{
 					if($cb.is(':checked'))	{
 						$cb.closest('.ui-accordion').find('.ui-accordion-header').each(function(){
 							$(this).addClass("ui-state-disabled");
@@ -5492,6 +5424,10 @@ dataAttribs -> an object that will be set as data- on the panel.
 					else	{
 						$cb.closest('.ui-accordion').accordion( "enable" );
 						}
+					}
+				handleChange();
+				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
+					handleChange();
 					})
 				},
 

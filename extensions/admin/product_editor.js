@@ -35,6 +35,7 @@ var admin_prodEdit = function() {
 			'textbox' : { 'type' : 'text'},
 			'text' : { 'type' : 'text'},
 			'textarea' : { 'type' : 'textarea'},
+			'keywordlist' : { 'type' : 'textarea'},
 			'textlist' : { 'type' : 'textarea'},
 			'image' : { 'type' : 'image'},
 			'finder' : { 'type' : 'button'},
@@ -117,27 +118,30 @@ var admin_prodEdit = function() {
 //panelData is an object with panel ids as keys and value TFU for whether or not so load/show the panel content.
 		loadAndShowPanels :	{
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
+				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
 //the device preferences are how panels are open/closed by default.
 				var settings = app.ext.admin.u.dpsGet('admin_prodEdit','openPanel');
 //				app.u.dump(" -> settings: "); app.u.dump(settings);
 				settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
-
-				var pid = app.data[_rtag.datapointer].pid;
-				var $target = $('#productTabMainContent');
-				$target.empty(); //removes loadingBG div and any leftovers.
-				var L = app.data[_rtag.datapointer]['@PANELS'].length;
-				var panelid; //recycled. shortcut to keep code cleaner.
+app.u.dump(" -> _rtag.datapointer: "+_rtag.datapointer);
+				var pid = _rtag.pid;
+				app.u.dump(" -> pid: "+pid);
 				
+				var
+					$target = $('#productTabMainContent'),
+					panels = app.data['adminUIProductPanelList']['@PANELS'],
+					L = panels.length;
+				
+				$target.empty(); //removes loadingBG div and any leftovers.
 				for(var i = 0; i < L; i += 1)	{
-					panelid = app.data[_rtag.datapointer]['@PANELS'][i].id;
+					var panelid = panels[i].id;
 //					app.u.dump(" -> panelid: "+panelid);
 					if(app.ext.admin_prodEdit.vars.appPanels.indexOf(panelid) > -1)	{
 						$target.append(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 						} //this/these panels are now all app-based.
 					else	{
 					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
-						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate',app.data[_rtag.datapointer]['@PANELS'][i]));
+						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate',panels[i]));
 						}
 					if(settings && settings[panelid])	{
 						$('.panelHeader','#panel_'+panelid).click(); //open panel. This function also adds the dispatch.
@@ -350,34 +354,43 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 //legacy call for panel list is needed (for now). productGet is used for panels as they're upgraded to full-app 
 		showPanelsFor : function(pid)	{
 			$('#productTabMainContent').empty().append("<div class='loadingBG'></div>");
-			var numRequests = 0,
-			callback = {'callback':'loadAndShowPanels','extension':'admin_prodEdit','datapointer':'adminUIProductPanelList|'+pid};
+
 //the data for BOTH these requests is needed before the panel list can correctly load.
-			app.model.destroy('appProductGet|'+pid); //make sure product data is up to date. once the global timestamp is employed, this won't be necessary. ###
-			numRequests += app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{},'mutable'); //get into memory for app-based panels.
-			numRequests += app.ext.admin.calls.adminUIProductPanelList.init(pid,{},'mutable');
-			numRequests += app.ext.admin.calls.appResource.init('product_attribs_popular.json',{},'mutable');
-			numRequests += app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
+
+//			app.calls.adminProductDetail.init({'pid':pid,'withInventory':true,'withVariations':true},{},'mutable'); //get into memory for app-based panels.
+//though a pid is required to 'get' this data, it's always the same. just get it once.
+			if(app.model.fetchData('adminUIProductPanelList'))	{}
+			else	{
+				app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":{'datapointer':'adminUIProductPanelList'},"pid":pid},'mutable');
+				}
+			app.ext.admin.calls.appResource.init('product_attribs_popular.json',{},'mutable');
+			app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
 //flexedit data is necessary for that panel.
 			if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
 			else	{
-				numRequests += 1;
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'flexedit' : 1,
 					'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
 					},'mutable');
 				}
-			
-			
 
-			if(numRequests)	{
-				app.calls.ping.init(callback);
-				app.model.dispatchThis();
-				}
-			else	{
-				app.u.handleCallback(callback);
-				}
+app.model.addDispatchToQ({
+	'_cmd':'adminProductDetail',
+	'variations' : true,
+	'skus' : true,
+//	'inventory' : true, //inventory
+	'pid':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductDetail|'+pid,
+		'callback': 'loadAndShowPanels',
+		'pid':pid,
+		'extension':'admin_prodEdit'
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+
 			},
 
 		showStoreVariationsManager : function($target)	{
@@ -654,140 +667,156 @@ app.model.dispatchThis('mutable');
 
 //type is an input type.  number, select, textarea or something specific to us, like finder, media, etc.
 //data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
-//prodData is an optional object. should be appProductGet and include %attribs, inventory, etc.
+//prodData is an optional object. should be adminProductDetail and include %attribs, inventory, etc.
 		flexBuildInput : function(type,data,prodData)	{
 //			app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
 		
 		//	app.u.dump('TYPE: '+type); app.u.dump(data);
-			var $r = $("<label \/>").data(data);
-			prodData = prodData || {'%attribs':{}};
-			$r.append($("<span \/>").attr('title',data.id).text(data.title || data.id));
-			if(data.hint)	{$r.find('span').append($("<span class='toolTip' title='"+data.hint+"'>?<\/span>"))}
+			var $r;
 			
 			if(data.sku)	{
-				$r.append($("<div \/>").anymessage({'message':'No editor for SKU level fields yet.'}));
-				}
-			
-			else if(type == 'textarea')	{
-				var $textarea = $("<textarea \/>",{'name':data.id,'rows':data.rows || 5, 'cols':data.cols || 40});
+				$r = $("<div \/>").data(data).addClass('label');
+				$r.append($("<div \/>").attr('title',data.id).text(data.title || data.id));
+				if(data.hint)	{$r.find('div').append($("<span class='toolTip' title='"+data.hint+"'>?<\/span>"))}
 				
-				$textarea.val(prodData['%attribs'][data.id] || "");
-				if(data.type == 'textlist')	{
-					if(data.startsize)	{
-						$textarea.attr('rows',data.startsize);
-						$textarea.on('focus',function(){
-							$textarea.attr('rows',$data.max || 10);
-							}).on('blur',function(){
-								$textarea.attr('rows',data.rows || 5)
-								});
-						$('.toolTip',$r).append(" Only 1 entry per line.");
-						}
+//				$r.append($("<div \/>").anymessage({'message':'No editor for SKU level fields yet.'}));
+				var L = prodData['@skus'].length;
+				app.u.dump(" -> data.id: "+data.id);
+				for(var i = 0; i < L; i += 1)	{
+					$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
 					}
-				
-				$textarea.appendTo($r);
 				}
-/*			else if(type == 'ebay/storecat')	{
-//				$r.append("not done yet");
-				var $input = $("<input \/>",{'type':'text','size':'9','name':data.id})
-				$input.val(prodData['%attribs'][data.id] || "");
-				$input.appendTo($r);
-				
-//$("<button>Chooser</button>").on('click',function(){
-//	app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':'MODEL10','categoryselect':'primary'},jQuery(app.u.jqSelector('#','ebay:category_name')));
-//	}).appendTo($r);				
-				}
-*/			else if(type == 'select')	{
-				var $select = $("<select \/>",{'name':data.id});
-				//data-reset requires a value.
-				if(data.type == 'select')	{
-					$select.append($("<option \/>",{'value':''}).text(""));
-					}
-				
-				if(data.options)	{
-					var L = data.options.length;
+			else	{
+
+				$r = $("<label \/>").data(data);
+				prodData = prodData || {'%attribs':{}};
+				$r.append($("<span \/>").attr('title',data.id).text(data.title || data.id));
+				if(data.hint)	{$r.find('span').append($("<span class='toolTip' title='"+data.hint+"'>?<\/span>"))}
+
+				if(type == 'textarea')	{
+					var $textarea = $("<textarea \/>",{'name':data.id,'rows':data.rows || 5, 'cols':data.cols || 40});
 					
-					
-					for(var i = 0; i < L; i += 1)	{
-						$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
+					$textarea.val(prodData['%attribs'][data.id] || "");
+					if(data.type == 'textlist')	{
+						if(data.startsize)	{
+							$textarea.attr('rows',data.startsize);
+							$textarea.on('focus',function(){
+								$textarea.attr('rows',$data.max || 10);
+								}).on('blur',function(){
+									$textarea.attr('rows',data.rows || 5)
+									});
+							$('.toolTip',$r).append(" Only 1 entry per line.");
+							}
 						}
 					
-					$select.val(prodData['%attribs'][data.id] || "");
-	// now take a look and see if the value set for this attrib is valid. respond accordingly.
-					if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
-					else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
-						$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
-						$select.val(data.options[0].v)
-						}
-						//prodData['%attribs'][data.id] is checked so no error is thrown if the value is blank.
-					else if(data.type == 'select' && prodData['%attribs'][data.id])	{
-						$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
-						$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
-						}
-					else	{} //how the F did we get here?
+					$textarea.appendTo($r);
 					}
-				$select.appendTo($r);
-				}
-			else if(type == 'button')	{
-				var $btn = $("<button \/>").text(data.title || data.id);
-				$btn.button();
-				if(data.type == 'finder')	{
-					if(prodData.pid)	{
-						$btn.button().on('click',function(event){
-							event.preventDefault();
-							app.ext.admin.a.showFinderInModal('PRODUCT',prodData.pid,data.id);
-							})
+	/*			else if(type == 'ebay/storecat')	{
+	//				$r.append("not done yet");
+					var $input = $("<input \/>",{'type':'text','size':'9','name':data.id})
+					$input.val(prodData['%attribs'][data.id] || "");
+					$input.appendTo($r);
+					
+	//$("<button>Chooser</button>").on('click',function(){
+	//	app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':'MODEL10','categoryselect':'primary'},jQuery(app.u.jqSelector('#','ebay:category_name')));
+	//	}).appendTo($r);				
+					}
+	*/			else if(type == 'select')	{
+					var $select = $("<select \/>",{'name':data.id});
+					//data-reset requires a value.
+					if(data.type == 'select')	{
+						$select.append($("<option \/>",{'value':''}).text(""));
+						}
+					
+					if(data.options)	{
+						var L = data.options.length;
+						
+						
+						for(var i = 0; i < L; i += 1)	{
+							$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
+							}
+						
+						$select.val(prodData['%attribs'][data.id] || "");
+		// now take a look and see if the value set for this attrib is valid. respond accordingly.
+						if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
+						else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
+							$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
+							$select.val(data.options[0].v)
+							}
+							//prodData['%attribs'][data.id] is checked so no error is thrown if the value is blank.
+						else if(data.type == 'select' && prodData['%attribs'][data.id])	{
+							$r.anymessage({'message':'The value for '+data.id+' does not have a match in the default list of options for this attribute. Your value may not be right, but will be preserved on save unless you correct it.'});
+							$select.append($("<option \/>",{'value':prodData['%attribs'][data.id]}).text("!!! invalid: "+prodData['%attribs'][data.id]));
+							}
+						else	{} //how the F did we get here?
+						}
+					$select.appendTo($r);
+					}
+				else if(type == 'button')	{
+					var $btn = $("<button \/>").text(data.title || data.id);
+					$btn.button();
+					if(data.type == 'finder')	{
+						if(prodData.pid)	{
+							$btn.button().on('click',function(event){
+								event.preventDefault();
+								app.ext.admin.a.showFinderInModal('PRODUCT',prodData.pid,data.id);
+								})
+							}
+						else	{
+							$btn.button('disable');
+							}
 						}
 					else	{
 						$btn.button('disable');
 						}
+					$btn.appendTo($r);
+					}
+				else if(type == 'image')	{
+					var $input = $("<input \/>",{'type':'hidden','name':data.id}).val(prodData['%attribs'][data.id]);
+					app.u.dump(" -> prodData['%attribs'][data.id]: "+prodData['%attribs'][data.id]);
+					var $image = $(app.u.makeImage({'w':'75','h':'75','alt':'','tag':true,'name':(prodData['%attribs'][data.id] || null)}));
+	
+					//return false; 				
+					$input.appendTo($r);
+					$image.appendTo($r);
+					
+					$("<button \/>").button().on('click',function(event){
+						event.preventDefault();
+						mediaLibrary($image,$input,'');
+						}).text('Select').appendTo($r);
+					
+					$("<button \/>").button().on('click',function(event){
+						event.preventDefault();
+						$image.attr('src','/images/blank.gif');
+						$input.val('');
+						}).text('Clear').appendTo($r);
 					}
 				else	{
-					$btn.button('disable');
+					var $input = $("<input \/>",{'type':type,'name':data.id});
+					if(type == 'checkbox' && prodData['%attribs'][data.id])	{
+						$input.prop('checked','checked')
+						} // !!! hhhmmmm may need to tune this.
+					else {
+						$input.val(prodData['%attribs'][data.id] || "");
+						$input.attr('size',data.size || 20); //do this early, then change for specific types, if necessary.
+						if(data.type == 'currency')	{
+							$input.attr({'step':'.01','min':'0.00','size':6})
+							}
+						
+						if(type == 'number' || data.type == 'weight')	{
+							$input.attr('size', data.size || 6); //default to smaller input for numbers, if size not set.
+							}
+						
+						if(data.maxlength)	{
+							$input.attr('maxlength',data.maxlength);
+							}
+						
+						}
+					$input.appendTo($r);
 					}
-				$btn.appendTo($r);
 				}
-			else if(type == 'image')	{
-				var $input = $("<input \/>",{'type':'hidden','name':data.id}).val(prodData['%attribs'][data.id]);
-				var $image = $("<img \/>",{'src':prodData['%attribs'][data.id] || 'i/imagenotfound','alt':''}).attr({'width':'75','height':'75'});
 
-				//return false; 				
-				$input.appendTo($r);
-				$image.appendTo($r);
-				
-				$("<button \/>").button().on('click',function(event){
-					event.preventDefault();
-					mediaLibrary($image,$input,'');
-					}).text('Select').appendTo($r);
-				
-				$("<button \/>").button().on('click',function(event){
-					event.preventDefault();
-					$image.attr('src','/images/blank.gif');
-					$input.val('');
-					}).text('Clear').appendTo($r);
-				}
-			else	{
-				var $input = $("<input \/>",{'type':type,'name':data.id});
-				if(type == 'checkbox' && prodData['%attribs'][data.id])	{
-					$input.prop('checked','checked')
-					} // !!! hhhmmmm may need to tune this.
-				else {
-					$input.val(prodData['%attribs'][data.id] || "");
-					$input.attr('size',data.size || 20); //do this early, then change for specific types, if necessary.
-					if(data.type == 'currency')	{
-						$input.attr({'step':'.01','min':'0.00','size':6})
-						}
-					
-					if(type == 'number' || data.type == 'weight')	{
-						$input.attr('size', data.size || 6); //default to smaller input for numbers, if size not set.
-						}
-					
-					if(data.maxlength)	{
-						$input.attr('maxlength',data.maxlength);
-						}
-					
-					}
-				$input.appendTo($r);
-				}
+
 			
 			return $r;
 
@@ -878,8 +907,8 @@ app.model.dispatchThis('mutable');
 			var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
 			if(pid && panelid)	{
 				if(panelid == 'flexedit')	{
-					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
-					$('fieldset:first',r).addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['appProductGet|'+pid]));
+					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
+					$('fieldset:first',r).addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
 					
 					app.ext.admin.u.handleAppEvents(r);
 					}
@@ -894,13 +923,13 @@ app.model.dispatchThis('mutable');
 					
 					}
 				else	{
-					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
+					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
 					app.ext.admin.u.handleAppEvents(r);
 					}
 				}
 			else	{
 				r = false;
-				app.u.throwGMessage("In admin_prodEdit.a.showAppPanel, no panelid specified.");
+				app.u.throwGMessage("In admin_prodEdit.a.getPanelContents, no panelid specified.");
 				}
 			return r;
 			}, //getPanelContents
@@ -1190,6 +1219,20 @@ app.model.dispatchThis('mutable');
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
 						$panel.showLoading({'message':'Updating product '+pid});
 //						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
+var macroUpdates = new Array();
+$('input.handleAsSku',$panel).each(function(){
+	var $input = $(this);
+	macroUpdates.push("SET/SKU?SKU="+$input.attr('name').split('|')[1]+"&"+$input.attr('name').split('|')[0]+"="+$input.val());
+	})
+
+if(!$.isEmptyObject(macroUpdates))	{
+	app.model.addDispatchToQ({
+		'pid':pid,
+		'@updates':macroUpdates,
+		'_cmd': 'adminProductMacro',
+		'_tag' : {}
+		},'immutable');
+	}
 
 						app.model.addDispatchToQ({
 							'pid':pid,
@@ -1198,19 +1241,29 @@ app.model.dispatchThis('mutable');
 							'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
 							},'immutable');	
 
-						app.model.destroy('appProductGet|'+pid);
-						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
-							$panel.hideLoading();
-							if(app.model.responseHasErrors(responseData)){
-								app.u.throwMessage(responseData);
+
+
+						app.model.addDispatchToQ({
+							'_cmd':'adminProductDetail',
+							'inventory':1,
+							'skus':1,
+							'pid':pid,
+							'_tag':	{
+								'datapointer' : 'adminProductDetail|'+pid,
+								'callback':function(responseData){
+									$panel.hideLoading();
+									if(app.model.responseHasErrors(responseData)){
+										app.u.throwMessage(responseData);
+										}
+									else	{
+										$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
+						//								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
+										$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.
+										}
+									}
 								}
-							else	{
-								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
-//								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
-								$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.
-								}
-							}},'immutable');
-						app.model.dispatchThis('immutable');
+							},'immutable');
+							app.model.dispatchThis('immutable');
 						}
 					else	{
 						app.u.throwGMessage("In productEdit.u.uiActions, unable to determine pid ["+pid+"] and/or panelid ["+panelid+"] and/or formJSON is empty (see console)");
