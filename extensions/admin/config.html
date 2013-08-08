@@ -544,7 +544,8 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <label>
 	<span>Modify Value:</span>
-	<input type="number" step='.01' name="value" value="" size='8' data-bind='var: rule(value); format:popVal;' /> <span class='hint'>(remember to use negative numbers to subtract)</span>
+	<!-- * 201332 -> must be text input type because + sign is used in value -->
+	<input type="text" step='.01' name="value" value="" size='8' data-bind='var: rule(value); format:popVal;' /> <span class='hint'>(remember to use negative numbers to subtract)</span>
 </label>
 
 <button data-app-event='admin_config|dataTableAddExec'>Add/Update</button><!-- needs to be within the fieldset for taxTableUpdateExec -->
