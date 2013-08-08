@@ -139,80 +139,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminAppTicketCreate
 
 
-//status is optional
-		adminBatchJobList : {
-			init : function(status,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobList|"+status;
-//comment out local storage for testing.
-				this.dispatch(status,_tag,Q);
-				return r;
-				},
-			dispatch : function(status,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobList","status":status,"_tag":_tag},Q);	
-				}
-			}, //adminBatchJobList
-		adminBatchJobStatus : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{
-					r = 1;
-					this.dispatch(jobid,_tag,Q);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminBatchJobStatus, jobid not passed.");
-					}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobStatus|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":_tag,"jobid":jobid},Q);
-				}
-			}, //adminBatchJobStatus
-//Generate a unique guid per batch job.
-//if a request/job fails and needs to be resubmitted, use the same guid.
-		adminBatchJobCreate : {
-			init : function(opts,_tag,Q)	{
-				this.dispatch(opts,_tag,Q);
-				return 1;
-				},
-			dispatch : function(opts,_tag,Q)	{
-				opts = opts || {};
-				opts._tag = _tag || {};
-				opts._cmd = "adminBatchJobCreate";
-				opts._tag.datapointer = opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate";
-				app.model.addDispatchToQ(opts,Q);	
-				}
-			}, //adminBatchJobCreate		
-		adminBatchJobRemove : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
-				else	{app.u.throwGMessage("In admin.calls.adminBatchJobRemove, jobid not passed.");}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobRemove|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobRemove","_tag":_tag,"jobid":jobid},Q);	
-				}
-			}, //adminBatchJobRemove
-		adminBatchJobCleanup : {
-			init : function(jobid,_tag,Q)	{
-				var r = 0;
-				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
-				else	{app.u.throwGMessage("In admin.calls.adminBatchJobCleanup, jobid not passed.");}
-				return r;
-				},
-			dispatch : function(jobid,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminBatchJobCleanup|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobCleanup","jobid":jobid,"_tag":_tag},Q);	
-				}
-			}, //adminBatchJobStatus
-
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
@@ -5166,6 +5092,9 @@ vars:
 						$table = $(".dualModeListTable:first",$DM);
 					
 					$DMI.attr('id','DMI_'+app.u.guidGenerator()); //apply an ID. this allows for content in a dialog to easily reference it's parent DMI.
+					if(vars.anytable)	{
+						$table.addClass('applyAnytable');
+						}
 					
 //if set, build thead.
 					if(vars.thead && typeof vars.thead == 'object')	{

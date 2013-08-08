@@ -683,69 +683,69 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 (function($) {
 	$.widget("ui.anytable",{
 		options : {
-			inverse : false
+			inverse : false,
+			defaultSortColumn : undefined
 			},
 		_init : function(){
-			this._styleHeader();
+
 			var
 				$table = this.element,
-				o = this.options;
+				o = this.options;			
 			
-	
+			if($table.data('widget-anytable'))	{} //already an anytable
+			else{
+
+			$table.attr('data-widget-anytable',true);
+			this._styleHeader();
+			
+			
 			$('th',$table).each(function(){
 
-var th = $(this),
-thIndex = th.index();
-
-// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
-if(th.data('anytable-nosort'))	{} //sorting is disabled on this column. good for columns that only have buttons.
-else	{
-	th.on('click.anytablesort',function(){
-		$table.find('td').filter(function(){
-			return $(this).index() === thIndex;
-			}).sortElements(function(a, b){
-				var r;
-				var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
-				var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
-				if(numA && numB)	{
-	//				console.log('is a number');
-					r = numA > numB ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
-					}
+				var th = $(this),
+				thIndex = th.index();
+				
+				// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
+				if(th.data('anytable-nosort'))	{} //sorting is disabled on this column. good for columns that only have buttons.
 				else	{
-					r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					th.on('click.anytablesort',function(){
+						app.u.dump("anytable click triggered");
+						$table.find('td').filter(function(){
+							return $(this).index() === thIndex;
+							}).sortElements(function(a, b){
+								var r;
+								var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
+								var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
+								if(numA && numB)	{
+					//				console.log('is a number');
+									r = numA > numB ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+									}
+								else	{
+									r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+									}
+								return r
+								},function(){
+							// parentNode is the element we want to move
+							return this.parentNode; 
+							});
+						o.inverse = !o.inverse;
+						});
 					}
-				return r
-				},function(){
-			// parentNode is the element we want to move
-			return this.parentNode; 
-			});
-		o.inverse = !o.inverse;
-		});
-	}
 
 				}); //ends 'each'
+				}
+			
+if(!isNaN(o.defaultSortColumn))	{
+	app.u.dump(" -> $table.length: "+$table.length);
+	app.u.dump(" -> th,$table.length: "+$('th',$table).length);
+	app.u.dump("nthchild length: "+$("th:nth-child("+Number(o.defaultSortColumn)+")",$table).length);
+	$("thead:first th:nth-child("+Number(o.defaultSortColumn)+")",$table).trigger('click.anytablesort');
+	}			
+
 			}, //_init
 
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
-// * 201320 -> the code below isn't necessary (from the copy/paste used to create widget
-/*			switch (option)	{
-				case 'state':
-					(value === 'close') ? this.close() : this.open(); //the open/close function will change the options.state val as well.
-					break;
-
-				case 'settingsMenu':
-					$.extend(this.options.menu,value); //add the new menu to the existing menu object. will overwrite if one already exists.
-					this.destroySettingsMenu();
-					this.buildSettingsMenu();
-					break;
-				
-				default:
-					console.log("Unrecognized option passed into anytable via setOption");
-					console.log(" -> option: "+option);
-					break;
-				}
-*/			}, //_setOption
+			}, //_setOption
 
 		_styleHeader : function()	{
 			var $table = this.element;
