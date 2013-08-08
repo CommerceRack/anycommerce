@@ -295,7 +295,7 @@ $target.append("<br \/>");
 						else if(index.indexOf('SUPPLIER') === 0)	{handleIt('SUPPLIER');}
 						else if(index.indexOf('MANAGECAT') === 0)	{handleIt('MANAGECAT');}
 						else if(index.indexOf('PROFILE') === 0)	{handleIt('PROFILE');}
-						else if(index.indexOf('SUBSCRIBERLIST') === 0)	{handleIt('SUBSCRIBERLIST');}
+						else if(index.indexOf('SUBLIST') === 0)	{handleIt('SUBLIST');}
 						else	{} //do nada. isn't a checkbox list.
 						}
 					

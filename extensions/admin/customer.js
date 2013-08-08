@@ -158,7 +158,9 @@ var admin_customer = function() {
 						$('.ui_tpicker_second',$target).hide(); //don't show second chooser, but have it so the seconds are added to the input.
 					
 					var $picker = $("[data-app-role='pickerContainer']:first",$target);
-					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'}));
+					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));
+					$picker.anycontent({data:data});
+					
 					app.u.handleAppEvents($target);
 						}
 					else if(data === false)	{
