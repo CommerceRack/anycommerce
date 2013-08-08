@@ -116,6 +116,7 @@ var admin_batchJob = function() {
 					$target.showLoading({'message':'Fetching Batch Job Details'});
 app.model.addDispatchToQ({
 	'_cmd':'adminBatchJobStatus',
+	'jobid':jobid,
 	'_tag':	{'callback':'anycontent','datapointer':'adminBatchJobStatus|'+jobid,'jqObj':$target,'templateID':'batchJobStatusTemplate','dataAttribs': {'jobid':jobid}}
 	},'mutable');
 app.model.dispatchThis('mutable');

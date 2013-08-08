@@ -2702,13 +2702,18 @@ else	{
 				
 				
 //data needs to include a templateID and a mode [product,customer]
-			getPicker : function(data)	{
+			getPicker : function(data,selectors)	{
 var r = false;  //what is returned. either false of a jquery object.
 data = data || {};
+selectors = selectors || "";
+
 if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
 	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
 	$D.data('pickermode',data.mode);
+
+	if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
+	
 	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
 		heightStyle: "content",
 		activate : function(event,ui)	{
@@ -2724,6 +2729,23 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 						}
 					else	{
 						ui.newPanel.anycontent(rd).data('contentloaded',true);
+
+	if(selectors)	{
+		app.u.dump("selectors are set: "+selectors);
+		var selArr = selectors.split('\n');
+		var L = selArr.length;
+		for(var i = 0; i < L; i += 1)	{
+			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+				//csv and 'all' are handled already.
+				}
+			else	{
+				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+				}
+			}
+		}
 						}
 					}
 				if(ui.newHeader.data('pickmethod') == 'LIST')	{
@@ -2763,6 +2785,29 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 			}
 		
 		});
+
+	if(selectors)	{
+		if(selectors == 'all')	{
+			$("[name='SELECTALL']",$D).prop('checked','checked');
+			}
+		else	{
+			
+			var selArr = selectors.split('\n');
+			var L = selArr.length;
+			for(var i = 0; i < L; i += 1)	{
+				if(selArr[i].indexOf('csv') === 0)	{
+					$("[name='csv']",$D).val(selArr[i].substring(4));
+					}
+				else	{
+					//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+	//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
+					}
+				}
+			}
+		}
+
+
+
 	r = $D.children();
 	}
 else	{
@@ -2775,7 +2820,7 @@ else	{
 				
 
 				
-				
+			
 				
 				
 				
@@ -5412,7 +5457,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 			lockAccordionIfChecked : function($cb)	{
-				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
+				//in a function so that code can be executed both on click and at init.
+				function handleChange()	{
 					if($cb.is(':checked'))	{
 						$cb.closest('.ui-accordion').find('.ui-accordion-header').each(function(){
 							$(this).addClass("ui-state-disabled");
@@ -5421,6 +5467,10 @@ dataAttribs -> an object that will be set as data- on the panel.
 					else	{
 						$cb.closest('.ui-accordion').accordion( "enable" );
 						}
+					}
+				handleChange();
+				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
+					handleChange();
 					})
 				},
 
