@@ -416,8 +416,9 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <label>
 	<span>Discount Code</span>
-	<input type="text" name='coupon' value="" size="20"  data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
-	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.">?</span>
+	<input type="text" name='coupon' value="" size="8" maxlength="8" data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
+	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.
+	If you have a longer than 8 character code you can supply that and only the first 8 characters will be used in a coupon box. For shared coupon/giftcards coupons must be only 8 characters.">?</span>
 </label>
 
 <label>
