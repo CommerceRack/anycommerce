@@ -997,8 +997,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 				
 				default:
-					console.log("Unrecognized option passed into anypanel via setOption");
-					console.log(" -> option: "+option);
+//					console.log("Unrecognized option passed into anypanel via setOption");
+//					console.log(" -> option: "+option);
 					break;
 				}
 			},
@@ -1300,7 +1300,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 		_addTabEvents : function($stickytab)	{
 			var self = this;
 			$stickytab.on('click.stickytab',function(){
-				console.log(self.sticky.position().left);
+//				console.log(self.sticky.position().left);
 				if(self.sticky.position().left >= 0)	{
 					self.close();
 					}
@@ -1313,14 +1313,14 @@ supported options include tabID (given to the container), tabtext (what appears 
 			$('.ui-widget-stickytab-tab',this.sticky).trigger('click.stickytab');
 			},
 		open : function()	{
-			console.log('open tab');
+//			console.log('open tab');
 			if(this.sticky.position().left != 0)	{
 				this.sticky.animate({left: 0}, 'slow');
 				}
 			else	{} //already open.
 			},
 		close : function()	{
-			console.log('close tab');
+//			console.log('close tab');
 			this.sticky.animate({left: -(this.sticky.outerWidth())}, 'slow');
 			},
 		destroy : function()	{

@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201330.e",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201332.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -361,7 +361,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<li><a href='#'>Pages</a>
 	<ul>
 
-
+		<li><a href='#' onClick='app.model.addDispatchToQ({"_cmd":"adminNavTreeList"},"mutable"); app.model.dispatchThis("mutable"); return false;'>adminNavTreeList</a></li>	
 
 		<li><a href='#' onClick="$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_navcats.u.getTree('full',{'templateID':'catTreeItemTemplate','safe':'.'})); return false;">navTree</a></li>
 

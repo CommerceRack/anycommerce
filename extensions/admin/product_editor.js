@@ -29,7 +29,7 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
 			'asin' : {'type':'text'},
 			'textbox' : { 'type' : 'text'},
@@ -118,14 +118,14 @@ var admin_prodEdit = function() {
 //panelData is an object with panel ids as keys and value TFU for whether or not so load/show the panel content.
 		loadAndShowPanels :	{
 			onSuccess : function(_rtag)	{
-				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
+//				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
 //the device preferences are how panels are open/closed by default.
 				var settings = app.ext.admin.u.dpsGet('admin_prodEdit','openPanel');
 //				app.u.dump(" -> settings: "); app.u.dump(settings);
 				settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
-app.u.dump(" -> _rtag.datapointer: "+_rtag.datapointer);
+//				app.u.dump(" -> _rtag.datapointer: "+_rtag.datapointer);
 				var pid = _rtag.pid;
-				app.u.dump(" -> pid: "+pid);
+//				app.u.dump(" -> pid: "+pid);
 				
 				var
 					$target = $('#productTabMainContent'),
@@ -582,6 +582,20 @@ app.model.dispatchThis('mutable');
 
 
 	renderFormats : {
+		
+		prodImages : function($tag,data)	{
+			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
+//			app.u.dump(" -> data.value: "); app.u.dump(data.value);
+			for(var i = 1; i <= 99; i += 1)	{
+				var imgName = data.value['%attribs']['zoovy:prod_image'+i];
+				app.u.dump(" -> imgName: "+imgName);
+				if(app.u.isSet(imgName))	{
+					$tag.append("<img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/>");
+					}
+				else	{break;} //exit once a blank is hit.
+				}
+			},
+		
 //Management categories (mancats) is an array where the key is the category ID and the value is a list of product.
 //This function sorts the list alphabetically and puts the key, product and lenght into an associative array before running it through the translates.
 //
@@ -681,7 +695,7 @@ app.model.dispatchThis('mutable');
 				
 //				$r.append($("<div \/>").anymessage({'message':'No editor for SKU level fields yet.'}));
 				var L = prodData['@skus'].length;
-				app.u.dump(" -> data.id: "+data.id);
+//				app.u.dump(" -> data.id: "+data.id);
 				for(var i = 0; i < L; i += 1)	{
 					$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
 					}
@@ -773,7 +787,7 @@ app.model.dispatchThis('mutable');
 					}
 				else if(type == 'image')	{
 					var $input = $("<input \/>",{'type':'hidden','name':data.id}).val(prodData['%attribs'][data.id]);
-					app.u.dump(" -> prodData['%attribs'][data.id]: "+prodData['%attribs'][data.id]);
+//					app.u.dump(" -> prodData['%attribs'][data.id]: "+prodData['%attribs'][data.id]);
 					var $image = $(app.u.makeImage({'w':'75','h':'75','alt':'','tag':true,'name':(prodData['%attribs'][data.id] || null)}));
 	
 					//return false; 				
@@ -840,7 +854,7 @@ app.model.dispatchThis('mutable');
 							r.append(app.ext.admin_prodEdit.u.flexBuildInput(app.ext.admin_prodEdit.vars.flexTypes[type].type,$.extend(true,{},gfo,thisFlex[i]),prodData)) //thisFlex merged into gfo with precedence set of thisFlex attributes. 
 							}
 						else	{
-							app.u.dump(' -> no valid editor.');
+//							app.u.dump(' -> no valid editor.');
 							r.append($("<div \/>").anymessage({
 								'message':'Could not find valid editor for this input.  flex input type = '+type+' and typeof flexTypes[type] = '+typeof app.ext.admin_prodEdit.vars[type]}));					
 							}
@@ -863,16 +877,16 @@ app.model.dispatchThis('mutable');
 
 
 		handleProductListTab : function(process)	{
-			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
+//			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
 			var
 				$target = $('#productListTab'),
 				$table = $('#prodEditorResultsTable')
 
 			if($target.length)	{
-				app.u.dump('sticky tab already exists');
+//				app.u.dump('sticky tab already exists');
 				if(process == 'activate')	{}
 				else if(process == 'deactivate'){
-					app.u.dump(' -> destroy stickytab');
+//					app.u.dump(' -> destroy stickytab');
 					$table.stickytab('destroy');
 					}
 				else	{} //unknown process
