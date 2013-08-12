@@ -1194,11 +1194,13 @@ $D.dialog('open');
 								{text: 'Delete Ship Method', click: function(){
 									$D.parent().showLoading({"message":"Deleting Ship Method "+provider});
 									app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-									app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/REMOVE?provider="+provider],{'callback':function(){
+									app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/REMOVE?provider="+provider],{'callback':function(rd){
+$D.parent().hideLoading();
 if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
+	$D.anymessage({'message':rd});
 	}
 else	{
+	$D.dialog('close');
 	app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 	}
 										}},'immutable');
