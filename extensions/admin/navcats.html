@@ -2,11 +2,16 @@
 
 
 <ul>
-<li id='catTreeItemTemplate'>
-	<a href='#'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' alt='' /></a>
-	<div>
-		pretty: <span data-bind='var: category(pretty); format:text;'></span><br />
-		id: <span data-bind='var: category(id); format:text;'></span> 
-	</div>
+<li id='catTreeItemTemplate' class='marginLeft'>
+	<div class='clearfix marginTop'>
+		<input type='checkbox' class='applyAnycb floatLeft marginRight' data-bind='var:category(id); format:assignAttribute; attribute:name; valuePretext:navcat_;' />
+		<div class='ui-icon ui-icon-circle-triangle-e floatLeft marginRight opacity50' data-bind="useParentData:true;extension:admin_navcats;format:openSubcatsIcon;"></div>
+		<div class='floatLeft marginLeft'>
+			<span data-bind='var: category(pretty); format:text;'></span><br />
+			<span data-bind='var: category(@products.length); format:text; pretext:product: ;'></span><br />
+			<span data-bind='var: category(@subcategories.length); format:text; pretext:subcategories: ;'></span><br />
+		</div>
+	</div>	
+	<ul data-app-role='categories' data-loadstemplate='catTreeItemTemplate'></ul><!-- doesn't use a databind because it isn't rendered till some other action (ex: a click) occurs -->
 </li>
 </ul>

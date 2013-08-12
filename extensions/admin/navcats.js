@@ -62,13 +62,38 @@ var admin_navcats = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
+			openSubcatsIcon : function($tag,data)	{
+				if(data.value['@subcategories'].length)	{
+					$tag.attr('data-app-action','admin_navcats|navcatSubsShow').removeClass('opacity50');
+					}
+				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			
+			getSubcats : function(subcats,$container,vars)	{
+				vars = vars || {};
+				if(subcats && $container instanceof jQuery && vars.templateID) {
+				
+					var L = subcats.length;
+					
+					for(var i = 0; i < L; i += 1)	{
+	//					app.u.dump(" -> subcats[i]: "+subcats[i]);
+						var $cat = app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]});
+						$container.append($cat);
+						app.calls.appCategoryDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
+						}
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required.",'gMessage':true})
+					}
+				
+				
+				},
 			
 /*
 mode could be:  builder, selector
@@ -79,14 +104,19 @@ mode could be:  builder, selector
 				//set some defaults.
 				if(mode)	{
 					if(vars.safe && vars.templateID)	{
-$tree.showLoading({'message':'Fetching category tree'});
-$tree.append("<ul data-bind='var: categories(@subcategoryDetail); format:processList; loadsTemplate:"+vars.templateID+";' \/>");
-
-vars.detail = vars.detail || 'max';
-//everything necessary is here. proceed.
-app.calls.appCategoryDetail.init(vars,{'callback':'anycontent','jqObj':$tree},'mutable');
-app.model.dispatchThis('mutable');
-
+						$tree.showLoading({'message':'Fetching category tree'});
+				
+						//all required params are present/set. proceed.
+						app.calls.appCategoryDetail.init(vars,{'callback':function(rd){
+							$tree.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$tree.anymessage({'message':rd});
+								}
+							else	{
+								app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories').appendTo($tree),vars);
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
 						}
 					else	{
 						$tree.anymessage({'message':'In admin_navcats.u.getTree, root ['+vars.root+'] and/or filter ['+vars.filter+'] and/or filter ['+vars.templateID+'] not set or invalid.','gMessage':true});
@@ -96,13 +126,31 @@ app.model.dispatchThis('mutable');
 				else	{
 					$tree.anymessage({'message':'In admin_navcats.u.getTree, mode ['+mode+'] not set or invalid.','gMessage':true});
 					}
+				app.ext.admin_navcats.u.handleCatTreeDelegation($tree);
 				return $tree;
 				},
 			
 			handleCatTreeDelegation : function($tree)	{
 				$tree.on('click',function(e){
+					
 					var $target = $(e.target);
-					if($target.data('app-event'))	{
+					if($target.data('app-action'))	{
+						app.u.dump(" -> $target.data('app-action'): "+$target.data('app-action'));
+						var
+							actionExtension = $target.data('app-action').split('|')[0],
+							actionFunction =  $target.data('app-action').split('|')[1];
+						
+						if(actionExtension && actionFunction)	{
+							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+								app.ext[actionExtension].e[actionFunction]($target);
+								}
+							else	{
+								$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+								}
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, app-action ["+$target.data('app-action')+"] is invalid.",'gMessage':true})
+							}
 						
 						}
 					});
@@ -111,6 +159,37 @@ app.model.dispatchThis('mutable');
 			}, //u [utilities]
 
 		e : {
+			
+			
+			navcatSubsShow : function($ele)	{
+//				app.u.dump("BEGIN analyzer.a.showSubcats ["+path+"]");
+//
+					var
+						$subcats = $ele.closest('li').find("[data-app-role='categories']"),
+						path = $ele.closest('li').data('catsafeid'),
+						$icon = $ele.closest('li').find('.ui-icon:first');
+					
+					if(path)	{
+						if($subcats.length)	{
+							if($subcats.children().length)	{
+								//subcats have already been rendered. not an error, just handled differently.
+								$subcats.toggle('fast',function(){
+									if($subcats.is(':visible'))	{$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s')}
+									else	{$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e')}
+									});
+								
+								} 
+							else	{
+								$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
+								app.ext.admin_navcats.u.getSubcats(app.data['appCategoryDetail|'+path]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+								}
+							}
+						else	{$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, no element with data-app-role='categories' exists (no destination for subcats",'gMessage':true})}
+						}
+					else	{$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, unable to ascertain path/catsafeid.",'gMessage':true})}
+
+				}, //navcatSubsShow
+			
 			
 			} //e [app Events]
 		} //r object.
