@@ -70,10 +70,11 @@ var admin_navcats = function() {
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//utilities are typically functions that are exected by an event or action.
-//any functions that are recycled should be here.
+
 		u : {
-			
+//subcats is an array of safe ID's.
+//Container is the parent of where the list will be generated.  typically a tbody or ul.
+//vars MUST contain templateID. may support more later.
 			getSubcats : function(subcats,$container,vars)	{
 				vars = vars || {};
 				if(subcats && $container instanceof jQuery && vars.templateID) {
@@ -82,9 +83,28 @@ var admin_navcats = function() {
 					
 					for(var i = 0; i < L; i += 1)	{
 	//					app.u.dump(" -> subcats[i]: "+subcats[i]);
-						var $cat = app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]});
+						var
+							$cat = app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
+							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
+						
 						$container.append($cat);
-						app.calls.appCategoryDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
+//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
+	if(app.model.fetchData(datapointer))	{
+		$cat.anycontent({'datapointer':datapointer})
+		}
+	else	{
+		app.model.addDispatchToQ({
+			'safe':subcats[i],
+			'detail':'more',
+			'_cmd': 'adminNavcatDetail',
+			'_tag' : {
+				'callback':'anycontent',
+				'datapointer':datapointer,
+				'jqObj':$cat}
+			},'mutable');
+		}
+							
+//						app.calls.appCategoryDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
 						}
 					app.model.dispatchThis('mutable');
 					}
@@ -97,29 +117,41 @@ var admin_navcats = function() {
 			
 /*
 mode could be:  builder, selector
+this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
+
 */
 			getTree : function(mode,vars){
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 				//set some defaults.
 				if(mode)	{
-					if(vars.safe && vars.templateID)	{
+					if(vars.templateID)	{
 						$tree.showLoading({'message':'Fetching category tree'});
-				
+
 						//all required params are present/set. proceed.
-						app.calls.appCategoryDetail.init(vars,{'callback':function(rd){
-							$tree.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$tree.anymessage({'message':rd});
+						app.model.addDispatchToQ({
+							'detail':'more',
+							'_cmd': 'adminNavcatDetail',
+							'path' : '.',
+							'navtree' : 'PRT000',
+							'_tag' : {
+								'callback':function(rd){
+									$tree.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$tree.anymessage({'message':rd});
+										}
+									else	{
+										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories').appendTo($tree),vars);
+										}
+									},
+								'datapointer':'adminNavList'
 								}
-							else	{
-								app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories').appendTo($tree),vars);
-								}
-							}},'mutable');
+							},'mutable');
+
 						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$tree.anymessage({'message':'In admin_navcats.u.getTree, root ['+vars.root+'] and/or filter ['+vars.filter+'] and/or filter ['+vars.templateID+'] not set or invalid.','gMessage':true});
+						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] not set or invalid.','gMessage':true});
 						}
 
 					}

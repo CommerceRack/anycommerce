@@ -446,6 +446,28 @@ else	{
 				}, //showShipMethodEditorByProvider
 				
 				
+			showDomainManager : function($target)	{
+				
+				$target.empty();
+				
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Domain Manager', //left off because the interface is in a tab.
+					'className' : 'domainManager',
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Domain List<\/button>",
+						"<button>Add New Domain<\/button>"
+						],
+					'thead' : ['Domain','Partition',''],
+					'tbodyDatabind' : "var: users(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminDomainList',
+						'_tag' : {'datapointer' : 'adminDomainList'}
+						}
+					});
+				app.model.dispatchThis();
+
+				},//showCouponManager				
+				
 			showCouponManager : function($target)	{
 				
 				$target.empty();

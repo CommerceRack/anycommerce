@@ -3072,5 +3072,50 @@ Coming Soon
 
 
 
+<!-- DOMAIN MANAGER -->
 
+<table>
+<tr id='domainListTemplate'>
+	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: domain(prt); format:text;"></td>
+	<td class='alignRight'>
+		<button>Remove Domain</button>
+		<button>Edit Domain</button>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='domainUpdateTemplate'>
+	<div class='buttonset ui-widget-content ui-corner-all alignRight'>
+	<button>Add New</button> <!-- dropdown w/ MX record, host, etc -->
+	</div>
+
+	<div data-app-role="tabContainer" class='applyAnytabs'>
+	<ul>
+		<li><a href='#domainGeneral'>General</a></li>
+		<li><a href='#domainEvents'>Events</a></li>
+		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li>
+	</ul>
+	
+	
+	<section data-anytab-content='domainGeneral' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	
+		<div>Partition</div>
+		<div>Syndication</div>
+		<div>Primary</div>
+
+	<button data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+
+	</form>
+	</section>
+	<section data-anytab-content='domainEvents' class='clearfix'></section>
+	<section data-anytab-content='domainRewriteRules' class='clearfix'></section>
+	</div>
+
+
+
+</div>
 

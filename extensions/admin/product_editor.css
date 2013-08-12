@@ -58,3 +58,15 @@
 td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; padding:0; width:2px;}
 td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
 td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
+
+.panelContents_images .skusImagesContainer	{float:right; display:none; width:20%; margin-left:2%;}
+.panelContents_images .thumbNewContainer	{
+	float:left;
+	margin-right: 2%;
+	width:20%;
+	min-width:150px;
+	}
+
+.panelContents_images .prodImagesContainer	{
+	float:left;	
+	}

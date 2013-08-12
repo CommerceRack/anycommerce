@@ -724,6 +724,33 @@
 
 
 
+<div id='productEditorPanelTemplate_images' class='productPanel panelContents_images'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Images</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+
+<div class='skusImagesContainer'>
+
+</div>
+
+<div class='thumbNewContainer'>
+	Add New Product Image:
+	<button>From Media Library</button>
+	<div class='ui-state-default'>Drag here from desktop</div>
+</div>
+
+<div class='prodImagesContainer' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;"></div>
+
+
+	</div>
+</div>
+
+
+
+
+
 <div id='productEditorPanelTemplate_general' class='productPanel'>
 	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
