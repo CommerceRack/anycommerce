@@ -525,12 +525,13 @@ app.model.dispatchThis('mutable');
 			app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
 			
 			if($target instanceof jQuery && pid)	{
-			$target.empty().anycontent({
-				'templateID':'productVariationManager',
-				'showLoadingMessage':"Fetching Product Record and Store Variations",
-				data : {'pid':pid},
-				'dataAttribs':{'pid':pid}
-			});
+				$target.empty().anycontent({
+					'templateID':'productVariationManager',
+					'showLoading':false,
+					data : {'pid':pid},
+					'dataAttribs':{'pid':pid}
+					});
+				$target.showLoading({"message":"Fetching Product Record and Store Variations"});
 
 //Need both the product data and the entire sog list. Need both of these to be up to date.
 app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete'}},'mutable');
@@ -1331,6 +1332,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 
 					if(variationData.variationmode == 'product')	{
 						sfo._cmd ='adminProductPOGUpdate';
+//						sfo.autoid = 1; //tells api to add id's to variations or options if none are set.
 						sfo.pid = variationData.pid;
 //for a product update, need to send up entire variation object, not just a given sog/pog.
 						sfo['%sog'] = app.data['appProductGet|'+sfo.pid]['@variations'];
@@ -1529,10 +1531,10 @@ app.model.dispatchThis('mutable');
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 
 				var varEditorData = $btn.closest(".variationEditorContainer").data();
-				if(!varEditorData.ispog)	{
-//					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
-					if(varEditorData.variationid && varEditorData.variationid.indexOf('#') >= 0)	{
-//						app.u.dump("setting ispog to true because variationid contains a #");
+				if(!varEditorData.ispog && varEditorData.variationid)	{
+					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
+					if(varEditorData.variationid.indexOf('#') == 0)	{
+						app.u.dump("setting ispog to true because variationid contains a #");
 						varEditorData.ispog = true;
 						}
 					}
@@ -1541,7 +1543,7 @@ app.model.dispatchThis('mutable');
 				
 				//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
 				if(varEditorData.variationmode == 'product')	{
-					app.u.dump(" -> variationmode == product. varEditorData: "); app.u.dump(varEditorData);
+//					app.u.dump(" -> variationmode == product. varEditorData: "); app.u.dump(varEditorData);
 					if(varEditorData.ispog)	{
 						
 						}
@@ -1788,16 +1790,22 @@ app.model.dispatchThis('mutable');
 					cmdObj.pid = $btn.closest("[data-pid]").data('pid');
 					var variations = app.data['appProductGet|'+cmdObj.pid]['@variations']; //shortcut.
 
+for(index in variations)	{
+	variations[index].autoid = 1; //tells the API to add id's to variations and/or options that don't have them.
+	}
+
 					$container.showLoading({"message":"Saving Product Variations Changes."});
 
 					$container.find("[data-app-role='productVariationManagerProductTbody'] tr").each(function(){
 						var $tr = $(this);
 						if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do nothing.
 						else	{
+							
 //Get the variation object out of the product object in memory.
 //At this point, all the data has been shoved into %variations on the product. The only trick here is using a guid, if set (for new pogs which have no ID yet)
 							
-							cmdObj['@pogs'].push(variations[($tr.data('guid')) ? app.ext.admin.u.getIndexInArrayByObjValue(variations,'guid',$tr.data('guid')) : app.ext.admin.u.getIndexInArrayByObjValue(variations,'id',$tr.data('id'))]);							
+							cmdObj['@pogs'].push(variations[($tr.data('guid')) ? app.ext.admin.u.getIndexInArrayByObjValue(variations,'guid',$tr.data('guid')) : app.ext.admin.u.getIndexInArrayByObjValue(variations,'id',$tr.data('id'))]);
+							
 //							cmdObj['%sog'].push();
 							}
 						});
