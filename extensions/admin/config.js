@@ -889,18 +889,18 @@ $D.dialog('open');
 							'handleAppEvents' : false
 							});
 
-app.model.addDispatchToQ({
-	'_cmd':'adminDomainDetail',
-	'DOMAINNAME':domain,
-	'_tag':	{
-		'datapointer' : 'adminDomainDetail|'+domain,
-		'callback':'anycontent',
-		'applyEditTrackingToInputs' : true,
-		'handleFormConditionalDelegation' : true,
-		'jqObj' : $panel
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminDomainDetail',
+							'DOMAINNAME':domain,
+							'_tag':	{
+								'datapointer' : 'adminDomainDetail|'+domain,
+								'callback':'anycontent',
+								'applyEditTrackingToInputs' : true,
+								'handleFormConditionalDelegation' : true,
+								'jqObj' : $panel
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
 
 						}); //
 					}

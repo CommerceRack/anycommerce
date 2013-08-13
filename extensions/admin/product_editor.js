@@ -501,7 +501,7 @@ app.model.dispatchThis('mutable');
 					
 					
 					}
-				
+
 				if(varObj.inv == 0)	{
 					$("[data-app-role='variationOptionalContainer']",$r).removeClass('displayNone');
 					}
@@ -1528,10 +1528,11 @@ app.model.dispatchThis('mutable');
 			variationOptionAddShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 
-
 				var varEditorData = $btn.closest(".variationEditorContainer").data();
 				if(!varEditorData.ispog)	{
-					if(varEditorData.variationid && varEditorData.variationid.indexOf('#') >= -1)	{
+//					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
+					if(varEditorData.variationid && varEditorData.variationid.indexOf('#') >= 0)	{
+//						app.u.dump("setting ispog to true because variationid contains a #");
 						varEditorData.ispog = true;
 						}
 					}
