@@ -3101,6 +3101,18 @@ Coming Soon
 	</td>
 </tr>
 
+<tr id='domainManagerHostsRowTemplate'>
+	<td data-bind="var: domain(HOSTNAME); format:text;"></td>
+	<td data-bind="var: domain(HOSTTYPE); format:text;"></td>
+	<td>
+		<div data-bind="var: domain(PROJECT); format:text;"></div>
+		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
+	</td>
+	<td>
+	<button>edit</button>
+	</td>
+</tr>
+
 
 
 </table>
@@ -3150,7 +3162,7 @@ Coming Soon
 	<ul>
 		<li><a href='#domainGeneral'>General</a></li>
 		<li><a href='#domainEvents'>Events</a></li>
-		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li>
+<!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
 	</ul>
 	
 	
@@ -3167,7 +3179,7 @@ Coming Soon
 
 
 	<div class='buttonset ui-widget-content ui-corner-all alignRight marginBottom smallPadding'>
-	<button>Add New</button> <!-- dropdown w/ MX record, host, etc -->
+	<button>Add Host</button> <!-- dropdown w/ MX record, host, etc -->
 	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
 	</div>
 
@@ -3177,6 +3189,24 @@ Coming Soon
 		<div data-bind="var: domain(REG_TYPE); format:text; pretext:Registrar: ;"></div>
 		<div data-bind="var: domain(REG_TYPE_TXT); format:text;" class='hint'></div>
 		<div>Syndication: <span data-bind="var: domain(SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
+		
+	</fieldset>
+	
+	
+	<fieldset>
+		<legend>Hosts</legend>
+		
+		<table class='fullWidth gridTable'>
+		<thead>
+		<tr>
+			<td>Name</td>
+			<td>Type</td>
+			<td>More</td>
+			<td></td>
+		</tr>
+		</thead>
+		<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainManagerHostsRowTemplate;"></tbody>
+		</table>
 		
 	</fieldset>
 	
@@ -3210,7 +3240,7 @@ Coming Soon
 
 	</form>
 	</section>
-	<section data-anytab-content='domainEvents' class='clearfix'>
+	<section data-anytab-content='domainEvents' class='clearfix displayNone'>
 	
 	<table class='applyAnytable gridTable fullWidth'>
 	<thead>

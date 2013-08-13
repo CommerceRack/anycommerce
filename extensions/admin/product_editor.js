@@ -1797,7 +1797,7 @@ app.model.dispatchThis('mutable');
 					var $container = $btn.closest("[data-app-role='productVariationManagerContainer']");
 					cmdObj.pid = $btn.closest("[data-pid]").data('pid');
 					var variations = app.data['appProductGet|'+cmdObj.pid]['@variations']; //shortcut.
-
+// ### this is probably in the wrong spot. It should be moved over
 for(index in variations)	{
 	variations[index].autoid = 1; //tells the API to add id's to variations and/or options that don't have them.
 	}
