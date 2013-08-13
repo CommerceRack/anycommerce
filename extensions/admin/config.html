@@ -3075,22 +3075,76 @@ Coming Soon
 <!-- DOMAIN MANAGER -->
 
 <table>
-<tr id='domainListTemplate'>
+<tr id='domainManagerRowTemplate'>
 	<td data-bind="var: domain(id); format:text;"></td>
-	<td data-bind="var: domain(prt); format:text;"></td>
+	<td data-bind="var: domain(prt); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
-		<button>Remove Domain</button>
-		<button>Edit Domain</button>
+		<button data-app-event="admin_config|domainRemoveConfirm">Remove Domain</button>
+		<button data-app-event="admin_config|adminDomainDetailShowDMIPanel">Edit Domain</button>
 	</td>
 </tr>
+
+
+<tr id='domainManagerHistoryRowTemplate'>
+	<td data-bind="var: domain(ID); format:text;"></td>
+	<td data-bind="var: domain(TXT); format:text;"></td>
+	<td data-bind="var: domain(CLASS); format:text;"></td>
+	<td data-bind="var: domain(CREATED_GMT); format:epoch2pretty;"></td>
+</tr>
+
+
+<tr id='domainManagerRewriteRowTemplate'>
+	<td data-bind="var: domain(PATH); format:text;"></td>
+	<td data-bind="var: domain(TXT); format:text;"></td>
+	<td>
+	<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
+	</td>
+</tr>
+
+
+
 </table>
 
 
 
-<div id='domainUpdateTemplate'>
-	<div class='buttonset ui-widget-content ui-corner-all alignRight'>
-	<button>Add New</button> <!-- dropdown w/ MX record, host, etc -->
+<div id='domainCreateTemplate'>
+<form action='#' onSubmit='return false'>
+
+<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='The domain has been added.' />
+
+<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<label>
+		<span>Type</span>
+		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype">
+			<option value='DOMAIN-DELEGATE' data-show-panel='domainCreateDomaintypeDelegate'>Delegate domain</option>
+			<option value='DOMAIN-RESERVE'>Reserve test domain</option>
+		</select>
+	</label>
+
+	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
+	<label>
+		<span>Domain</span>
+		<input type='text' name='DOMAINNAME' value='' />
+	</label>
 	</div>
+	
+	
+</fieldset>
+
+<div class='buttonset alignRight'>
+	<button data-app-event='admin|processForm'>Save Domain</button>
+</div>
+
+</form>
+</div>
+
+
+<div id='domainUpdateTemplate'>
 
 	<div data-app-role="tabContainer" class='applyAnytabs'>
 	<ul>
@@ -3101,18 +3155,112 @@ Coming Soon
 	
 	
 	<section data-anytab-content='domainGeneral' class='clearfix'>
-	<form action='#' onSubmit='return false'>
-	
-		<div>Partition</div>
-		<div>Syndication</div>
-		<div>Primary</div>
+	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 
-	<button data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+
+<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
+<input type="hidden" name="DOMAINNAME" data-bind="var:supplier(ID); format:popVal;" />
+
+
+
+	<div class='buttonset ui-widget-content ui-corner-all alignRight marginBottom smallPadding'>
+	<button>Add New</button> <!-- dropdown w/ MX record, host, etc -->
+	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+
+	<fieldset class='marginBottom'>
+		<legend>General</legend>
+		<div data-bind="var: domain(IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
+		<div data-bind="var: domain(REG_TYPE); format:text; pretext:Registrar: ;"></div>
+		<div data-bind="var: domain(REG_TYPE_TXT); format:text;" class='hint'></div>
+		<div>Syndication: <span data-bind="var: domain(SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
+		
+	</fieldset>
+	
+	<fieldset>
+		<legend>Email</legend>
+		
+		<label>
+			<span>Configuration</span>
+			<select name='%EMAIL.TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
+				<option value=''>None</option>
+				<option value='MX' data-show-panel='domainEmailConfigurationMX'>MX</option>
+				<option value='GOOGLE'>Google</option>
+				<option value='FUSEMAIL'>Fusemail</option>
+			</select>
+		</label>
+		
+		<div data-panel-id='domainEmailConfigurationMX' class='displayNone domainEmailConfiguration'>
+
+			<label>
+				<span>MX1</span>
+				<input type="text" name="%EMAIL.MX1" value="" size="25" data-bind="var:vendor(%EMAIL.MX1); format:popVal;" />
+			</label>
+			<label>
+				<span>MX2</span>
+				<input type="text" name="%EMAIL.MX2" value="" size="25" data-bind="var:vendor(%EMAIL.MX2); format:popVal;" />
+			</label>
+		</div>
+		
+		
+	</fieldset>
 
 	</form>
 	</section>
-	<section data-anytab-content='domainEvents' class='clearfix'></section>
-	<section data-anytab-content='domainRewriteRules' class='clearfix'></section>
+	<section data-anytab-content='domainEvents' class='clearfix'>
+	
+	<table class='applyAnytable gridTable fullWidth'>
+	<thead>
+	<tr>
+		<td>ID</td>
+		<td>Event</td>
+		<td>Class</td>
+		<td>Time/Date</td>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipping(@HISTORY); format:processList; loadsTemplate:domainManagerHistoryRowTemplate;">
+	</table>
+	
+	</section>
+	<section data-anytab-content='domainRewriteRules' class='clearfix'>
+	
+	
+	<form action='#' onsubmit="return false">
+
+	<div class='buttonset ui-widget-content ui-corner-all marginBottom alignRight smallPadding'>
+		<button>Save Changes</button>
+	</div>
+
+	<fieldset>
+		<legend>Add Rewrite Rule</legend>
+		<label>
+			<span>Incoming URL</span>
+			<input type='url' required='required' name='PATH' value='' />
+		</label>
+		<label>
+			<span>Rewrite to</span>
+			<input type='url' required='required' name='TARGETURL' value='' />
+		</label>
+		<button data-app-event='admin_config|dataTableAddExec' data-form-skipreset='true'>Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
+		
+		<table class='marginTop applyAnytable gridTable fullWidth' data-app-role='dataTable'>
+		<thead>
+		<tr>
+			<td>Incoming URL</td>
+			<td>Destination URL</td>
+			<td></td>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;">
+		</table>
+
+
+	</fieldset>
+	</form>
+	</section>
 	</div>
 
 

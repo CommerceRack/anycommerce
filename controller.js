@@ -1040,7 +1040,10 @@ app.u.throwMessage(responseData); is the default error handler.
 					app.u.handleAppEvents($target);
 
 					if(_rtag.applyEditTrackingToInputs)	{
-						app.ext.admin.u.applyEditTrackingToInputs($target);
+						app.ext.admin.u.applyEditTrackingToInputs($target); //applies 'edited' class when a field is updated. unlocks 'save' button.
+						}
+					if(_rtag.handleFormConditionalDelegation)	{
+						app.ext.admin.u.handleFormConditionalDelegation($('form',$target)); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature)
 						}
 
 					}
