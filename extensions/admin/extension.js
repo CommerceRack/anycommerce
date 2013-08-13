@@ -5820,6 +5820,14 @@ not in use
 					app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest("form"));
 					});
 				}, //tagRowForRemove
+//make sure button is withing the table. tfoot is good.
+			tagAllRowsForRemove : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-closethick"},text: true});
+				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
+					event.preventDefault();
+					$btn.closest('table').find("button[data-app-event='admin|tagRowForRemove']").trigger('click');
+					});
+				},
 
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
 //put all the fieldsets that may get toggld into an element with data-app-role='connectorFieldsetContainer' on it.
