@@ -1116,7 +1116,9 @@ $D.dialog('open');
 							var countries = "";
 							$('tbody tr',$bannedContainer).each(function(){
 								var $tr = $(this);
-								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+								if($tr.hasClass('rowTaggedForRemove'))	{
+									$tr.empty().remove();
+									} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
 									macros.push("SHIPPING/BANNEDTABLE-INSERT?match="+$tr.data('match')+"&type="+$tr.data('type'));
 									}
@@ -1128,7 +1130,9 @@ $D.dialog('open');
 						if($blacklistContainer.find('.edited').length)	{
 							var blacklistMacro = "SHIPPING/CONFIG?blacklist="
 							$('tbody tr',$blacklistContainer).each(function(){
-								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+								if($(this).hasClass('rowTaggedForRemove'))	{
+									$(this).empty().remove();
+									} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
 									blacklistMacro += $(this).data('country')+',';
 									}
@@ -1223,6 +1227,7 @@ $D.dialog('open');
 					//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
 					//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
 					//	$('input',$container).attr('required','required'); 
+					app.u.dump(" -> app.u.validateForm($container): "+app.u.validateForm($container));
 						if(app.u.validateForm($container))	{
 //							app.u.dump(" -> form is validated.");
 							var 
@@ -1486,7 +1491,7 @@ app.model.dispatchThis('immutable');
 						DVars.templateID = 'rulesInputsTemplate_coupons';
 						}
 					
-					app.u.dump(" -> DVars:"); app.u.dump(DVars);
+//					app.u.dump(" -> DVars:"); app.u.dump(DVars);
 					
 					var
 						$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
@@ -1499,7 +1504,9 @@ app.model.dispatchThis('immutable');
 					app.u.handleAppEvents($D,$.extend(true,{},vars,{'$form':$DMI,'$dataTbody': $("[data-app-role='dualModeListTbody']",$DMI)}));
 //add an extra event to the rule button to close the modal. The template is shared w/ the rule edit panel, so the action is not hard coded into the app event.
 					$("[data-app-event='admin_config|dataTableAddExec']",$D).on('click.closeModal',function(){
-						$D.dialog('close');
+						if(app.u.validateForm($('form',$D)))	{
+							$D.dialog('close');
+							}
 						})			
 					})
 				}, //ruleBuilderAddShow
