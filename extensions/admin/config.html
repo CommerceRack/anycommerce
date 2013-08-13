@@ -857,11 +857,11 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<div class='label'>
 		Insurance is:
-		<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popVal;" /> Optional (user will be prompted)</label>
-		<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popVal; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
+		<label><input type="radio" value="1" name="optional" data-bind="var: shipmethod(optional); format: popVal;" /> Optional (user will be prompted)</label>
+		<label><input type="radio" value="0" name="optional" data-bind="var: shipmethod(optional); format: popVal; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 	</div>
 	
-	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(ins_flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 	
 	<table>
 	<thead>
@@ -875,15 +875,15 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<tbody>
 	<tr>
 		<td>First Item:</td>
-		<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(ins_dom_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(ins_can_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(ins_int_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popVal; hideZero:false;" /></td>
 	</tr>
 	<tr>
 		<td>Additional Items:</td>
-		<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(ins_dom_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(ins_can_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(ins_int_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popVal; hideZero:false;" /></td>
 	</tr>
 	</tbody>
 	</table>
@@ -893,18 +893,18 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 	
 	
-	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Disabled (do not configure handling per product)</label>
-	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for all destinations</label>
-	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for domestic orders only</label>
-	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for canada orders only</label>
-	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for international orders only</label>
-	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for canada + international orders</label>
+	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Disabled (do not configure handling per product)</label>
+	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
+	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
+	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
+	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
+	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
 	
 	
 	
 	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(ins_weight); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -994,7 +994,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(ins_price); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" name="enable_price_table"  data-bind="var: shipmethod(enable_price_table); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -1117,7 +1117,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 </div>
 
 
-<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(hand_flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
 
 
 <table>
@@ -1132,15 +1132,15 @@ ITEM Matching rules: extended total (qty * price) <br>
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_dom_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_can_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_int_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_dom_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_can_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(hand_int_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
 </tr>
 </tbody>
 </table>
@@ -1148,17 +1148,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
-<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(hand_product); format: popVal; hideZero:false;" /> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(hand_product); format: popVal;" /> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(hand_product); format: popVal;" /> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(hand_product); format: popVal;" /> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(hand_product); format: popVal;" /> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(hand_product); format: popVal;" /> Use per product for canada + international orders</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal; hideZero:false;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
 
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
 lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popVal;" /> Enable</label>
+<label><input type="checkbox" name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
 
 
 
