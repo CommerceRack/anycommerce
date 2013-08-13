@@ -29,7 +29,7 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
 			'asin' : {'type':'text'},
 			'textbox' : { 'type' : 'text'},
@@ -452,7 +452,7 @@ app.model.dispatchThis('mutable');
 				$r.anycontent({'templateID':'variationEditorTemplate','data':varObj});
 				//add the editor specific to the variation type.
 				$("[data-app-role='variationsTypeSpecificsContainer']",$r).anycontent({'templateID':'variationsEditor_'+varObj.type.toLowerCase(),'data':varObj})
-				
+//				app.u.dump(" -> varObj");app.u.dump(varObj);
 				
 				if(mode == 'product')	{
 //when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
@@ -500,6 +500,10 @@ app.model.dispatchThis('mutable');
 						}
 					
 					
+					}
+				
+				if(varObj.inv == 0)	{
+					$("[data-app-role='variationOptionalContainer']",$r).removeClass('displayNone');
 					}
 				
 				if(varObj.type == 'imgselect' || varObj.type == 'imggrid')	{

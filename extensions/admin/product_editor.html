@@ -1553,7 +1553,8 @@ time.
 
 
 
-
+<!--
+201332 -> hhhmm... this template doesn't seem to be called anywhere.
 <div id='variationCreateUpdateTemplate'>
 
 <form action='#' onSubmit="return false;" class='labelsAsBreaks'>
@@ -1669,7 +1670,7 @@ time.
 
 
 </div>
-
+-->
 
 
 
@@ -2010,7 +2011,13 @@ time.
 		</div>
 
 	</fieldset>
-
+	<!-- optional will show up for non-inventoryable options -->
+	<fieldset class='displayNone' data-app-role='variationOptionalContainer'>
+	<label>
+		<input type="checkbox" name="optional" class='applyAnycb' data-bind="var: variation(optional); format:popVal;" />
+		Optional <span class='toolTip' title="If enabled, the variation will not display in cart/order if it is not selected. Only available on non inventory-able options.">?</span>
+	</label>
+	</fieldset>
 
 	<fieldset class='displayNone' data-app-role='variationImgInputs'>
 
@@ -2040,6 +2047,8 @@ time.
 
 
 	</fieldset>
+
+
 
 
 	</td>
