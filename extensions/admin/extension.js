@@ -5299,23 +5299,28 @@ dataAttribs -> an object that will be set as data- on the panel.
 				
 				vars.panelID = vars.panelID || 'panel_'+app.u.guidGenerator();
 				vars.data = vars.data || undefined;
-				
-				var $panel = $("<div\/>").anypanel(vars);
-				$panel.attr('id',vars.panelID);
-				
-				$("[data-app-role='dualModeDetail']",$DMI).append($panel);
-				$panel.slideDown('fast');
-				//append detail children before changing modes. descreases 'popping'.
-				app.ext.admin.u.toggleDualMode($DMI,'detail');
-				
-				if(vars.handleAppEvents)	{
-					app.u.handleAppEvents($panel);
+				var $panel = $(app.u.jqSelector('#',vars.panelID));
+				if($panel.length)	{
+					 $("[data-app-role='dualModeDetail']",$DMI).prepend($panel); //move panel to top.
 					}
-				
-				$('.applyAnycb',$panel).anycb();
-				$('.applyAnytable',$panel).anytable();
-				$('.toolTip',$panel).tooltip();
-				$('.applyAnytabs',$panel).anytabs();
+				else	{
+					$panel = $("<div\/>").anypanel(vars);
+					$panel.attr('id',vars.panelID);
+					
+					$("[data-app-role='dualModeDetail']",$DMI).prepend($panel);
+					$panel.slideDown('fast');
+					//append detail children before changing modes. descreases 'popping'.
+					app.ext.admin.u.toggleDualMode($DMI,'detail');
+					
+					if(vars.handleAppEvents)	{
+						app.u.handleAppEvents($panel);
+						}
+					
+					$('.applyAnycb',$panel).anycb();
+					$('.applyAnytable',$panel).anytable();
+					$('.toolTip',$panel).tooltip();
+					$('.applyAnytabs',$panel).anytabs();
+					}
 				
 				return $panel;
 				}, //DMIPanelOpen
