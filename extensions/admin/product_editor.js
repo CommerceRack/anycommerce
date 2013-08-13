@@ -435,6 +435,8 @@ app.model.dispatchThis('mutable');
 			if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
 //				app.u.dump(" -> mode: "+mode);
 //				app.u.dump(" -> varObj:"); app.u.dump(varObj);
+// * 201332 -> make sure ispog is set.
+				varObj.ispog = varObj.ispog || (varObj.id && varObj.id.charAt(0) == '#') ? true : false;
 				
 				$r.data({
 					'variationtype':varObj.type,
@@ -473,6 +475,7 @@ app.model.dispatchThis('mutable');
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
 //app.u.dump(varObj);
 //app.u.dump(" -> "+varObj.id+".indexOf('#'): "+varObj.id.indexOf('#'));
+//
 					if(mode == 'product' && ((varObj.isnew && varObj.ispog) || (varObj.id && varObj.id.indexOf('#') == -1)))	{
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
@@ -500,6 +503,11 @@ app.model.dispatchThis('mutable');
 						}
 					
 					
+					}
+//* 201332 -> when editing a sog, 'variation settings' are not displayed.
+				if(mode == 'product' && !varObj.ispog)	{
+					$("[data-app-role='variationSettingsContainer']",$r).hide(); //
+					$('.variationEditorSplitter',$r).hide();
 					}
 
 				if(varObj.inv == 0)	{
