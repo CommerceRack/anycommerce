@@ -861,7 +861,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 		<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popVal; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 	</div>
 	
-	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(ins_flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 	
 	<table>
 	<thead>
@@ -893,18 +893,18 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 	
 	
-	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Disabled (do not configure handling per product)</label>
-	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
-	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
-	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
-	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
-	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
+	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Disabled (do not configure handling per product)</label>
+	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for all destinations</label>
+	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for domestic orders only</label>
+	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for canada orders only</label>
+	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for international orders only</label>
+	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(ins_product); format: popVal;" /> Use per product for canada + international orders</label>
 	
 	
 	
 	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(ins_weight); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -994,7 +994,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(ins_price); format: popVal;" /> Enable</label>
 	
 	
 	
