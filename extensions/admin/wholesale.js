@@ -234,7 +234,7 @@ app.model.addDispatchToQ({
 						}
 					});
 			
-				app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$editorContainer));
+				app.ext.admin.u.handleFormConditionalDelegation($('form',$editorContainer));
 				}
 
 			}
@@ -489,7 +489,7 @@ TRACKINGSET ->
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
 					$('form',$D).first().append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
-					app.ext.admin_wholesale.u.handleFormConditionalDelegation($('form',$D));
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 					app.u.handleAppEvents($D,{"$context":$btn.closest("[data-app-role='supplierManager']").parent()})
 					})
 				}, //showSupplierCreate
@@ -1149,79 +1149,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 		u : {
 
 
-			handleFormConditionalDelegation : function($container)	{
-				$container.on('keyup',function(e)	{
-//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-					if(e.target.nodeName.toLowerCase() == 'input'){
-						var $input = $(e.target);
-						
-						if($input.data('input-format'))	{
 
-							if($input.data('input-format').indexOf('uppercase') > -1)	{
-								$input.val($input.val().toUpperCase());
-								}
-							
-							if($input.data('input-format').indexOf('alphanumeric') > -1)	{
-								$input.val($input.val().replace(/\W/g, ''));
-								}
-							
-							}
-						}
-					});
-				
-				$container.on('click',function(e){
-					var $ele = $(e.target);
-//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-
-					
-					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
-//						app.u.dump('is option or select');
-//FF registers a click on the option. Chrome on the select.
-//to be consistent, put select into focus.						
-						if(e.target.nodeName.toLowerCase() == 'option'){
-							$ele = $ele.closest('select');
-							}
-//						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
-//						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
-/*
-panel-selector:
-on a select, set data-panel-selector=".someClass"
-on each option, set data-show-panel=""
-on each panel, which MUST be within the same form, set data-panel-id="" where the value matches the data-show-panel set in the option.
-so when the option with data-show-panel="supplierShippingConnectorGeneric" is selected, the panel with data-panel-id="supplierShippingConnectorGeneric" is displayed
-and all .someClass are hidden (value of data-panel-selector)
-
-*/
-						if($ele.data('panel-selector'))    {
-							var	$form = $ele.closest('form'); //used for context.
-				
-							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
-							var $option = $('option:selected',$ele);
-							if(!$option.data('show-panel'))	{} //no panel defined. do nada
-							else if($option.data('show-panel'))	{
-								var panels = new Array();
-								if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
-								else {panels.push($option.data('show-panel'))};
-								for(var i = 0; i < panels.length; i += 1)	{
-									$("[data-panel-id='"+panels[i]+"']",$form).show(); //panel defined and it exists. show it.
-									}
-								}
-							else	{
-								$form.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
-								}
-							}
-						}
-					});				
-//after adding the listeners, need to trigger some clicks.
-
-//trigger the hide/show panel on select options.
-				$("select[data-panel-selector]",$container).each(function(){
-					if($('option:selected',$(this)).data('show-panel'))	{
-						$('option:selected',$(this)).trigger('click');
-						}
-					});
-
-				}
 
 			}
 

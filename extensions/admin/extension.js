@@ -3628,6 +3628,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
 //will also update a .numChanges selector with the number of elements within the context that have edited on them.
 //will also 'enable' the parent button of that class.
+// ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
 
 				$("input, textarea, select",$context).each(function(){
@@ -3655,6 +3656,85 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					});
 
 				}, //applyEditTrackingToInputs
+
+
+
+
+
+			handleFormConditionalDelegation : function($container)	{
+				$container.on('keyup',function(e)	{
+//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
+					if(e.target.nodeName.toLowerCase() == 'input'){
+						var $input = $(e.target);
+						
+						if($input.data('input-format'))	{
+
+							if($input.data('input-format').indexOf('uppercase') > -1)	{
+								$input.val($input.val().toUpperCase());
+								}
+							
+							if($input.data('input-format').indexOf('alphanumeric') > -1)	{
+								$input.val($input.val().replace(/\W/g, ''));
+								}
+							
+							}
+						}
+					});
+				
+				$container.on('click',function(e){
+					var $ele = $(e.target);
+//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
+
+					
+					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
+//						app.u.dump('is option or select');
+//FF registers a click on the option. Chrome on the select.
+//to be consistent, put select into focus.						
+						if(e.target.nodeName.toLowerCase() == 'option'){
+							$ele = $ele.closest('select');
+							}
+//						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
+//						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
+/*
+panel-selector:
+on a select, set data-panel-selector=".someClass"
+on each option, set data-show-panel=""
+on each panel, which MUST be within the same form, set data-panel-id="" where the value matches the data-show-panel set in the option.
+so when the option with data-show-panel="supplierShippingConnectorGeneric" is selected, the panel with data-panel-id="supplierShippingConnectorGeneric" is displayed
+and all .someClass are hidden (value of data-panel-selector)
+
+*/
+						if($ele.data('panel-selector'))    {
+							var	$form = $ele.closest('form'); //used for context.
+				
+							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
+							var $option = $('option:selected',$ele);
+							if(!$option.data('show-panel'))	{} //no panel defined. do nada
+							else if($option.data('show-panel'))	{
+								var panels = new Array();
+								if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
+								else {panels.push($option.data('show-panel'))};
+								for(var i = 0; i < panels.length; i += 1)	{
+									$("[data-panel-id='"+panels[i]+"']",$form).show(); //panel defined and it exists. show it.
+									}
+								}
+							else	{
+								$form.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
+								}
+							}
+						}
+					});				
+//after adding the listeners, need to trigger some clicks.
+
+//trigger the hide/show panel on select options.
+				$("select[data-panel-selector]",$container).each(function(){
+					if($('option:selected',$(this)).data('show-panel'))	{
+						$('option:selected',$(this)).trigger('click');
+						}
+					});
+
+				},
+
 
 
 // ### time permittting, replace use of function below with getWhitlestedObject
@@ -3750,6 +3830,9 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!publicFiles')	{
+					app.ext.admin_medialib.u.showPublicFiles(path,opts);
 					}
 
 				else if(path == '#!globalSettings')	{
@@ -3996,10 +4079,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.u.dump(" -> open import editor");
 					app.ext.admin_medialib.u.showFileUploadPage(path,P);
 					}
-				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
-					app.u.dump(" -> open public files list");
-					app.ext.admin_medialib.u.showPublicFiles(path,P);
-					}
+// * 201332 -> interface was replaced a version or two ago and this was overlooked.
+//				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
+//					app.u.dump(" -> open public files list");
+//					app.ext.admin_medialib.u.showPublicFiles(path,P);
+//					}
 				else	{
 //					app.u.dump(" -> open something wonderful .. "+path);
 					$target.empty().append("<div class='loadingBG'></div>");
@@ -5231,6 +5315,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$('.applyAnycb',$panel).anycb();
 				$('.applyAnytable',$panel).anytable();
 				$('.toolTip',$panel).tooltip();
+				$('.applyAnytabs',$panel).anytabs();
 				
 				return $panel;
 				}, //DMIPanelOpen
@@ -5310,6 +5395,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 				
 				return $D;
 				} //dialogCreate
+
+
 
 			},
 

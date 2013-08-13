@@ -455,10 +455,10 @@ else	{
 					'className' : 'domainManager',
 					'buttons' : [
 						"<button data-app-event='admin|refreshDMI'>Refresh Domain List<\/button>",
-						"<button>Add New Domain<\/button>"
+						"<button data-app-event='admin_config|adminDomainCreateShow'>Add Domain<\/button>"
 						],
 					'thead' : ['Domain','Partition',''],
-					'tbodyDatabind' : "var: users(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;",
+					'tbodyDatabind' : "var: users(@DOMAINS); format:processList; loadsTemplate:domainManagerRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminDomainList',
 						'_tag' : {'datapointer' : 'adminDomainList'}
@@ -773,7 +773,36 @@ $D.dialog('open');
 				newSfo['@updates'].push(newSfo._tag.macrocmd+"?"+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
+				},
+			
+			
+			adminDomainMacroCreate : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':[]
+					};
+				
+				die(); //not done yet. !!!
+				return newSfo;
+				},
+			
+			adminDomainMacroRewrites : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':[]
+					};
+				
+				die(); //not done yet. !!!
+				return newSfo;
 				}
+			
+			
 			},
 
 
@@ -796,6 +825,90 @@ $D.dialog('open');
 						}
 					});
 				},
+
+
+			adminDomainCreateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
+				$btn.off('click.adminDomainCreateShow').on('click.adminDomainCreateShow',function(event){
+
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Domain',
+						'templateID':'domainCreateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+					$D.dialog('option','width','350');
+					$D.dialog('open');
+					});
+				},
+
+
+			domainRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.domainRemoveConfirm').on('click.domainRemoveConfirm',function(event){
+					event.preventDefault();
+					var $tr = $btn.closest('tr');
+
+					app.ext.admin.i.dialogConfirmRemove({
+						'removeFunction':function(vars,$D){
+							$D.showLoading({"message":"Deleting Domain"});
+							app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$tr.data('id'),'@updates':["DOMAIN-REMOVE"],'_tag':{'callback':function(rd){
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$D.dialog('close');
+									$('#globalMessaging').anymessage(app.u.successMsgObject('The domain has been removed.'));
+									$tr.empty().remove(); //removes row for list.
+									}
+								}
+							}
+						},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable'); //update coupon list in memory.
+						app.model.dispatchThis('immutable');
+						}});
+					})
+				}, //domainRemoveConfirm
+
+
+			adminDomainDetailShowDMIPanel : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				var domain = $btn.closest('tr').data('id');
+				
+				if(domain)	{
+					
+					$btn.off('click.adminDomainDetailShowDMIPanel').on('click.adminDomainDetailShowDMIPanel',function(event){
+						event.preventDefault();
+						var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+							'templateID' : 'domainUpdateTemplate',
+							'panelID' : 'domain_'+domain,
+							'header' : 'Edit Domain: '+domain,
+							'handleAppEvents' : false
+							});
+
+app.model.addDispatchToQ({
+	'_cmd':'adminDomainDetail',
+	'DOMAINNAME':domain,
+	'_tag':	{
+		'datapointer' : 'adminDomainDetail|'+domain,
+		'callback':'anycontent',
+		'applyEditTrackingToInputs' : true,
+		'handleFormConditionalDelegation' : true,
+		'jqObj' : $panel
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+						}); //
+					}
+				else	{
+					$btn.button('disable');
+					}
+				}, //adminDomainDetailShowDMIPanel
+
 
 
 			
