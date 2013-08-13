@@ -789,7 +789,7 @@ $D.dialog('open');
 				return newSfo;
 				},
 			
-			adminDomainMacroRewrites : function(sfo,$form)	{
+			adminDomainMacroREWRITE : function(sfo,$form)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
