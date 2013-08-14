@@ -4947,7 +4947,7 @@ just lose the back button feature.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
 //				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
-				if(ext && ns && varObj)	{
+				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
 					sessionData = (typeof sessionData === 'object') ? sessionData : {};
@@ -4966,7 +4966,7 @@ just lose the back button feature.
 					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 					}
 				else	{
-					app.u.throwGMessage("Either extension ["+ext+"] or varObj ["+typeof varObj+"] not passed into admin.u.dpsSet.");
+					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj == 'object' ? 'an object' : varObj)+"] not passed into admin.u.dpsSet.");
 					}
 				},
 
