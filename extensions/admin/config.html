@@ -3080,7 +3080,7 @@ Coming Soon
 	<td data-bind="var: domain(prt); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 		<button data-app-event="admin_config|domainRemoveConfirm">Remove Domain</button>
-		<button data-app-event="admin_config|adminDomainDetailShowDMIPanel">Edit Domain</button>
+		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='panel'>Edit Domain</button>
 	</td>
 </tr>
 
@@ -3109,10 +3109,16 @@ Coming Soon
 		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
 	</td>
 	<td class='alignRight'>
+	<button data-app-event="admin|tagRowForRemove">Delete this Host</button>
 	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
 	</td>
 </tr>
 
+<tr id='domainManagerDiagnosticsRowTemplate'>
+	<td data-bind="var: domain(_); format:text;"></td>
+	<td data-bind="var: domain(+); format:text;"></td>
+	<td data-bind="var: domain(!); format:text;"></td>
+</tr>
 
 
 </table>
@@ -3159,30 +3165,17 @@ Coming Soon
 
 <div id='domainAddUpdateHostTemplate'>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
-
-	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroAddUpdateHost' />
-	<input type='hidden' name='_tag/callback' value='showMessaging' />
-	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-	<input type='hidden' name='_tag/jqObjEmpty' value='true' />
-	<input type='hidden' name='_tag/message' value='The domain has been added.' />
 	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
-
 	<fieldset class='marginBottom'>
-	<legend>Host Name</legend>	
-
-	<label>
-		<input type='radio' name='HOSTNAME' value='www' required='required' />
-		<span>www</span>
-	</label>
 	
 	<label>
-		<input type='radio' name='HOSTNAME' value='app' />
-		<span>app</span>
-	</label>
-	
-	<label>
-		<input type='radio' name='HOSTNAME' value='m' />
-		<span>m</span>
+		<span>Host name</span>
+		<select name='HOSTNAME' data-bind="var: host(HOSTNAME); format:popVal;" required='required'>
+			<option value=''>please choose</option>
+			<option value='WWW'>www</option>
+			<option value='APP'>app</option>
+			<option value='M'>m</option>
+		</select>
 	</label>
 	
 	</fieldset>
@@ -3191,7 +3184,7 @@ Coming Soon
 	
 	<label>
 		<span>Host Type</span>
-		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required'>
+		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
 			<option value=''>please choose</option>
 			<option value='APP' data-show-panel='domainNewHostTypeAPP'>App</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
@@ -3200,10 +3193,16 @@ Coming Soon
 		</select>
 	</label>
 
+	</fieldset>
+
+
+<!-- these are the 'panels' for the host type select list -->
 	<div data-panel-id='domainNewHostTypeAPP' class='displayNone domainNewHostSelectType'>
 		<label>
 			<span>Project</span>
-			<input type='text' name='PROJECT' value='' />
+			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsFromList; value:UUID; text:TITLE;">
+			<option value=''></option>
+			</select>
 		</label>
 	</div>
 	
@@ -3217,21 +3216,42 @@ Coming Soon
 			<input type='text' name='URI' value='' />
 		</label>
 	</div>
-	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint'>Add rewrites through host &#187; edit after saving this host.</div>
+	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint'>
 
-<!-- add this to each option that 'reveals' something. make the value very specific -->
+	<fieldset>
+		<legend>Add Rewrite Rule</legend>
+		<label>
+			<span>Incoming URL</span>
+			<input type='url' required='required' name='PATH' value='' />
+		</label>
+		<label>
+			<span>Rewrite to</span>
+			<input type='url' required='required' name='TARGETURL' value='' />
+		</label>
+		<button data-app-event='admin_config|dataTableAddExec' data-form-skipreset='true'>Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
+		
+		<table class='marginTop applyAnytable gridTable fullWidth' data-app-role='dataTable'>
+		<thead>
+		<tr>
+			<td>Incoming URL</td>
+			<td>Destination URL</td>
+			<td></td>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody'>
+		</table>
 
 
-<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option -->
-
-
-
-	</fieldset>
-
-
-	<div class='buttonset alignRight'>
-		<button data-app-event='admin|processForm'>Save Host</button>
+	</fieldset>	
+	
 	</div>
+
+
+
+
+
+
+	<div class='buttonset alignRight'></div><!-- save button added here w/ JS -->
 	
 </form>
 </div>
@@ -3253,7 +3273,7 @@ Coming Soon
 	
 	<section data-anytab-content='domainGeneral' class='clearfix'>
 	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
-	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroUpdate' />
+	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroGeneral' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 	<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
@@ -3269,9 +3289,16 @@ Coming Soon
 
 	<fieldset class='marginBottom'>
 		<legend>General</legend>
-		<div class='floatRight pointer ui-widget-content'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL; defaultValue: i/imagenotfound;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
+		<div class='floatRight pointer ui-widget-content smallPadding ui-corner-all'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL; defaultValue: i/imagenotfound;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
 		<h5 data-bind="var: domain(DOMAINNAME); format:text;"></h5>
-		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div>
+		
+		<label>
+			<span>Partition</span>
+
+			<select name='PRT' data-bind="var: partitions(@PRTS); format: optionsFromList; value:id; text:id;"></select>
+		</label>
+<!--		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div> -->
+		
 		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
 		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
 		<div data-bind="var: domain(@READONLY.REG_TYPE); format:text; pretext:Registrar: ;"></div>
@@ -3283,7 +3310,7 @@ Coming Soon
 	<fieldset>
 		<legend>Hosts</legend>
 		
-		<table class='fullWidth gridTable'>
+		<table class='fullWidth gridTable applyAnytable'>
 		<thead>
 		<tr>
 			<td>Name</td>
@@ -3292,7 +3319,7 @@ Coming Soon
 			<td></td>
 		</tr>
 		</thead>
-		<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainManagerHostsRowTemplate;"></tbody>
+		<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainManagerHostsRowTemplate;" data-app-role='domainsHostsTbody'></tbody>
 		</table>
 		
 	</fieldset>
@@ -3320,7 +3347,7 @@ Coming Soon
 		
 		<label>
 			<span>Configuration</span>
-			<select name='%EMAIL.TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
+			<select name='TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
 				<option value=''>None</option>
 				<option value='MX' data-show-panel='domainEmailConfigurationMX'>MX</option>
 				<option value='GOOGLE'>Google</option>
@@ -3332,11 +3359,11 @@ Coming Soon
 
 			<label>
 				<span>MX1</span>
-				<input type="text" name="%EMAIL.MX1" value="" size="25" data-bind="var:vendor(%EMAIL.MX1); format:popVal;" />
+				<input type="text" name="MX1" value="" size="25" data-bind="var:vendor(%EMAIL.MX1); format:popVal;" />
 			</label>
 			<label>
 				<span>MX2</span>
-				<input type="text" name="%EMAIL.MX2" value="" size="25" data-bind="var:vendor(%EMAIL.MX2); format:popVal;" />
+				<input type="text" name="MX2" value="" size="25" data-bind="var:vendor(%EMAIL.MX2); format:popVal;" />
 			</label>
 		</div>
 		
@@ -3346,8 +3373,25 @@ Coming Soon
 	
 	</form>
 	</section>
-	<section data-anytab-content='domainDiagnostics' class='clearfix'></section>
+
+
+
+	<section data-anytab-content='domainDiagnostics' class='clearfix'>
+	<table class='applyAnytable gridTable fullWidth'>
+	<thead>
+	<tr>
+		<td>Type</td>
+		<td>Message</td>
+		<td></td>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipping(@MSGS); format:processList; loadsTemplate:domainManagerDiagnosticsRowTemplate;">
+	</table>
 	
+	</section>
+
+
+
 	<section data-anytab-content='domainEvents' class='clearfix displayNone'>
 	
 	<table class='applyAnytable gridTable fullWidth'>
@@ -3363,42 +3407,7 @@ Coming Soon
 	</table>
 	
 	</section>
-	<section data-anytab-content='domainRewriteRules' class='clearfix'>
-	
-	
-	<form action='#' onsubmit="return false">
 
-	<div class='buttonset ui-widget-content ui-corner-all marginBottom alignRight smallPadding'>
-		<button>Save Changes</button>
-	</div>
-
-	<fieldset>
-		<legend>Add Rewrite Rule</legend>
-		<label>
-			<span>Incoming URL</span>
-			<input type='url' required='required' name='PATH' value='' />
-		</label>
-		<label>
-			<span>Rewrite to</span>
-			<input type='url' required='required' name='TARGETURL' value='' />
-		</label>
-		<button data-app-event='admin_config|dataTableAddExec' data-form-skipreset='true'>Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
-		
-		<table class='marginTop applyAnytable gridTable fullWidth' data-app-role='dataTable'>
-		<thead>
-		<tr>
-			<td>Incoming URL</td>
-			<td>Destination URL</td>
-			<td></td>
-		</tr>
-		</thead>
-		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;">
-		</table>
-
-
-	</fieldset>
-	</form>
-	</section>
 	</div>
 
 
