@@ -1091,6 +1091,7 @@ $D.dialog('open');
 											}
 										else	{
 											//success content goes here.
+											rd.translateOnly = true;
 											$panel.anycontent(rd);
 											app.ext.admin.u.applyEditTrackingToInputs($panel); //applies 'edited' class when a field is updated. unlocks 'save' button.
 											app.ext.admin.u.handleFormConditionalDelegation($('form',$panel)); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature). applied to ALL forms in panel.
