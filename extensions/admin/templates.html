@@ -578,9 +578,9 @@ SETUP PAGE TEMPLATE
 <table>
 
 <tr id='domainListTemplate'>
-	<td><img src='blank.gif' class='prodThumb' data-bind='var: domain(logo); format:imageURL;' width='150' height='50' /></td>
-	<td data-bind="var: domain(id); format:text;"></td>
-	<td data-bind="var: domain(prt); format:text; hideZero:false;" class='alignCenter'></td>
+	<td><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL;' width='150' height='50' /></td>
+	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
+	<td data-bind="var: domain(PRT); format:text; hideZero:false;" class='alignCenter'></td>
 	<td class='alignRight'>
 		<button data-app-event="admin|domainPutInFocus">use domain</button>
 		<button data-app-event="admin|domainView">view store</button>

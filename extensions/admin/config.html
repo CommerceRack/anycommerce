@@ -3076,17 +3076,18 @@ Coming Soon
 
 <table>
 <tr id='domainManagerRowTemplate'>
-	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td data-bind="var: domain(prt); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 		<button data-app-event="admin_config|domainRemoveConfirm">Remove Domain</button>
+		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Flag as Favorite</button>
 		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='panel'>Edit Domain</button>
 	</td>
 </tr>
 
 
 <tr id='domainManagerHistoryRowTemplate'>
-	<td data-bind="var: domain(ID); format:text;"></td>
+	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td data-bind="var: domain(TXT); format:text;"></td>
 	<td data-bind="var: domain(CLASS); format:text;"></td>
 	<td data-bind="var: domain(CREATED_GMT); format:epoch2pretty;"></td>
@@ -3166,22 +3167,14 @@ Coming Soon
 <div id='domainAddUpdateHostTemplate'>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
-	<fieldset class='marginBottom'>
-	
-	<label>
-		<span>Host name</span>
-		<select name='HOSTNAME' data-bind="var: host(HOSTNAME); format:popVal;" required='required'>
-			<option value=''>please choose</option>
-			<option value='WWW'>www</option>
-			<option value='APP'>app</option>
-			<option value='M'>m</option>
-		</select>
-	</label>
-	
-	</fieldset>
 
 	<fieldset>
 	
+	<label>
+		<span>Host name</span>
+		<input type='text' name='HOSTNAME' data-bind="var: host(HOSTNAME); format:popVal;" required='required'  />
+	</label>
+
 	<label>
 		<span>Host Type</span>
 		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">

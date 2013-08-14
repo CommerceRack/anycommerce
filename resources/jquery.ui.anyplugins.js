@@ -461,6 +461,7 @@ either templateID or (data or datapointer) are required.
 			data : null, //The data used to populate the template
 // ** 201332 -> extendByDatapointers added as a means for having multiple data objects passed into translator at the same time. 
 			extendByDatapointers : new Array(), //an array of datapointers. will merge all the data into one object prior to translation
+			translateOnly : false, //will skip any add template code.
 			showLoading : true, //if no data is passed and createTemplateInstance used, if true will execute show loading.
 			showLoadingMessage : 'Fetching content...', //message passed into showLoading.
 			dataAttribs : {} //will be used to set data attributes on the template [data- not data()].
@@ -536,14 +537,14 @@ either templateID or (data or datapointer) are required.
 			//isTranslated is added as a data() var to any template that's been translated. A way to globally identify if translation has already occured.
 //			app.u.dump(" -> _anyContent this.element.data(): "); app.u.dump(this.element.data());
 
-			if(o.templateID && o.datapointer && app.data[o.datapointer] && !this.element.data('isTemplated'))	{
+			if(o.templateID && o.datapointer && app.data[o.datapointer] && !o.translateOnly)	{
 //				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 				this.element.data('isTranslated',true);
 				this.element.data('isTemplated',true);
 				}
-			else if(o.templateID && o.data && !this.element.data('isTemplated'))	{
+			else if(o.templateID && o.data && !o.translateOnly)	{
 //				app.u.dump(" -> template and data present. transmogrify.");
 //				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
@@ -555,7 +556,7 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> data.isTranslated set to true.");
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
-			else if(o.templateID && !this.element.data('isTemplated'))	{
+			else if(o.templateID && !o.translateOnly)	{
 //				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				this.element.data('isTemplated',true);
