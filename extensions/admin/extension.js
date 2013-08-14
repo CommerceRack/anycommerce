@@ -3775,10 +3775,9 @@ and all .someClass are hidden (value of data-panel-selector)
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
-				if(!$target)	{app.u.dump("TARGET NOT SPECIFIED")}
+//				if(!$target)	{app.u.dump("TARGET NOT SPECIFIED")}
 
 				if($target && $target.data('anycontent'))	{
-					app.u.dump('got here!!!!!!!!!!!!!!!!!!!!!');
 					$target.anycontent('destroy');
 					}
 

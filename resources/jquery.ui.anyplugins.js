@@ -472,7 +472,7 @@ either templateID or (data or datapointer) are required.
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 // the 'or' portion will attemplate to add a template if the ID is on the DOM.
-			app.u.dump(" -> _init this.element.data(): "); app.u.dump(this.element.data());
+//			app.u.dump(" -> _init this.element.data(): "); app.u.dump(this.element.data());
 			
 //			app.u.dump("anycontent params: "); app.u.dump(o);
 			if(o.templateID && (app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
