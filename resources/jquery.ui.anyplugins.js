@@ -472,7 +472,8 @@ either templateID or (data or datapointer) are required.
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 // the 'or' portion will attemplate to add a template if the ID is on the DOM.
-
+			app.u.dump(" -> _init this.element.data(): "); app.u.dump(this.element.data());
+			
 //			app.u.dump("anycontent params: "); app.u.dump(o);
 			if(o.templateID && (app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
 //				app.u.dump(" -> passed template check.");
@@ -495,7 +496,7 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> this.element.id: "+this.element.attr('id'));
 				this.element.data(o.dataAttribs);
 				}
-
+			this.element.data('anycontent',true); //tag as anycontent. allows $(this).data('anycontent') to be used before applying anycontent('option','destroy');
 			}, //_init
 
 		_setOption : function(option,value)	{
@@ -526,19 +527,23 @@ either templateID or (data or datapointer) are required.
 			return eData;
 			},
 
+
+// *** 201332 -> there was an issue w/ anycontent being run over the same element and it double-populating the template instead of just translating on the second run. The 'istemplated' should fix that.
 		_anyContent : function()	{
 //			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
 			r = true; // what is returned. false if not able to create template.
 			//isTranslated is added as a data() var to any template that's been translated. A way to globally identify if translation has already occured.
-			
-			if(o.templateID && o.datapointer && app.data[o.datapointer])	{
+//			app.u.dump(" -> _anyContent this.element.data(): "); app.u.dump(this.element.data());
+
+			if(o.templateID && o.datapointer && app.data[o.datapointer] && !this.element.data('isTemplated'))	{
 //				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 				this.element.data('isTranslated',true);
+				this.element.data('isTemplated',true);
 				}
-			else if(o.templateID && o.data)	{
+			else if(o.templateID && o.data && !this.element.data('isTemplated'))	{
 //				app.u.dump(" -> template and data present. transmogrify.");
 //				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
@@ -546,12 +551,14 @@ either templateID or (data or datapointer) are required.
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 //				app.u.dump(" -> transmogrified");
 				this.element.data('isTranslated',true);
+				this.element.data('isTemplated',true);
 //				app.u.dump(" -> data.isTranslated set to true.");
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
-			else if(o.templateID)	{
+			else if(o.templateID && !this.element.data('isTemplated'))	{
 //				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
+				this.element.data('isTemplated',true);
 				if(o.showLoading)	{
 					this.element.showLoading({'message':o.showLoadingMessage});
 					}
@@ -592,9 +599,12 @@ either templateID or (data or datapointer) are required.
 			return r;
 			},
 
-//clear the message entirely. run after a close. removes element from DOM.
-		destroy : function(){
-			this.element.empty().remove();
+//clear the contents. leave the parent.
+		_destroy : function(){
+//			app.u.dump(" -> anycontent.destroy EXECUTED");
+			this.element.intervaledEmpty();
+			this.element.removeData();
+//			app.u.dump(" --> this.element.data():"); app.u.dump(this.element.data());
 			}
 		}); // create the widget
 })(jQuery); 
