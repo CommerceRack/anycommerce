@@ -3342,36 +3342,33 @@ Coming Soon
 		<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 		<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
 		<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+		
 		<fieldset>
-		<legend>Email</legend>
-		
-		<label>
-			<span>Configuration</span>
-			<select name='TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
-				<option value=''>None</option>
-				<option value='MX' data-show-panel='domainEmailConfigurationMX'>MX</option>
-				<option value='GOOGLE'>Google</option>
-				<option value='FUSEMAIL'>Fusemail</option>
-			</select>
-		</label>
-		
-		<div data-panel-id='domainEmailConfigurationMX' class='displayNone domainEmailConfiguration'>
-
+			<legend>Email</legend>
+			
 			<label>
-				<span>MX1</span>
-				<input type="text" name="MX1" value="" size="25" data-bind="var:vendor(%EMAIL.MX1); format:popVal;" />
+				<span>Configuration</span>
+				<select name='TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
+					<option value=''>None</option>
+					<option value='MX' data-show-panel='domainEmailConfigurationMX'>MX</option>
+					<option value='GOOGLE'>Google</option>
+					<option value='FUSEMAIL'>Fusemail</option>
+				</select>
 			</label>
-			<label>
-				<span>MX2</span>
-				<input type="text" name="MX2" value="" size="25" data-bind="var:vendor(%EMAIL.MX2); format:popVal;" />
-			</label>
-		</div>
-		
-		
-	</fieldset>
+			
+			<div data-panel-id='domainEmailConfigurationMX' class='displayNone domainEmailConfiguration'>
 	
-	
-	</form>
+				<label>
+					<span>MX1</span>
+					<input type="text" name="MX1" value="" size="25" data-bind="var:vendor(%EMAIL.MX1); format:popVal;" />
+				</label>
+				<label>
+					<span>MX2</span>
+					<input type="text" name="MX2" value="" size="25" data-bind="var:vendor(%EMAIL.MX2); format:popVal;" />
+				</label>
+			</div>
+		</fieldset>
+		</form>
 	</section>
 
 

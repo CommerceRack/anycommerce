@@ -963,7 +963,7 @@ else	{
 							app.u.throwMessage(rd);
 							}
 						else	{
-							app.u.dump(" -> rd: "); app.u.dump(rd);
+//							app.u.dump(" -> rd: "); app.u.dump(rd);
 							app.renderFunctions.translateSelector(rd.selector,app.data[rd.datapointer]);
 							}
 						}
