@@ -5301,7 +5301,10 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars.data = vars.data || undefined;
 				var $panel = $(app.u.jqSelector('#',vars.panelID));
 				if($panel.length)	{
-					 $("[data-app-role='dualModeDetail']",$DMI).prepend($panel); //move panel to top. empty it because whatever is runnign DMIPanelOpen will refresh.
+					//move panel to top. empty it because whatever is runnign DMIPanelOpen will refresh.
+					$panel.find('.ui-widget-content').intervaledEmpty().anycontent($.extend(true,{},vars,{'showLoading':false}));
+					$("[data-app-role='dualModeDetail']",$DMI).prepend($panel);
+					$panel.anypanel('option','state','expand')
 					}
 				else	{
 					$panel = $("<div\/>").anypanel(vars);

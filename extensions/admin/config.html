@@ -3108,8 +3108,8 @@ Coming Soon
 		<div data-bind="var: domain(PROJECT); format:text;"></div>
 		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
 	</td>
-	<td>
-	<button>edit</button>
+	<td class='alignRight'>
+	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
 	</td>
 </tr>
 
@@ -3156,39 +3156,126 @@ Coming Soon
 </div>
 
 
+
+<div id='domainAddUpdateHostTemplate'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+
+	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroAddUpdateHost' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+	<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+	<input type='hidden' name='_tag/message' value='The domain has been added.' />
+	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+
+	<fieldset class='marginBottom'>
+	<legend>Host Name</legend>	
+
+	<label>
+		<input type='radio' name='HOSTNAME' value='www' required='required' />
+		<span>www</span>
+	</label>
+	
+	<label>
+		<input type='radio' name='HOSTNAME' value='app' />
+		<span>app</span>
+	</label>
+	
+	<label>
+		<input type='radio' name='HOSTNAME' value='m' />
+		<span>m</span>
+	</label>
+	
+	</fieldset>
+
+	<fieldset>
+	
+	<label>
+		<span>Host Type</span>
+		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required'>
+			<option value=''>please choose</option>
+			<option value='APP' data-show-panel='domainNewHostTypeAPP'>App</option>
+			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
+			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE'>V-Store</option>
+			<option value='CUSTOM'>Custom</option>
+		</select>
+	</label>
+
+	<div data-panel-id='domainNewHostTypeAPP' class='displayNone domainNewHostSelectType'>
+		<label>
+			<span>Project</span>
+			<input type='text' name='PROJECT' value='' />
+		</label>
+	</div>
+	
+	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
+		<label>
+			<span>Redirect</span>
+			<input type='text' name='REDIR' value='' />
+		</label>
+		<label>
+			<span>Project</span>
+			<input type='text' name='URI' value='' />
+		</label>
+	</div>
+	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint'>Add rewrites through host &#187; edit after saving this host.</div>
+
+<!-- add this to each option that 'reveals' something. make the value very specific -->
+
+
+<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option -->
+
+
+
+	</fieldset>
+
+
+	<div class='buttonset alignRight'>
+		<button data-app-event='admin|processForm'>Save Host</button>
+	</div>
+	
+</form>
+</div>
+
+
+
+
 <div id='domainUpdateTemplate'>
 
 	<div data-app-role="tabContainer" class='applyAnytabs'>
 	<ul>
 		<li><a href='#domainGeneral'>General</a></li>
+		<li><a href='#domainEmail'>Email</a></li>
 		<li><a href='#domainEvents'>Events</a></li>
+		<li><a href='#domainDiagnostics'>Diagnostics</a></li>
 <!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
 	</ul>
 	
 	
 	<section data-anytab-content='domainGeneral' class='clearfix'>
 	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroUpdate' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+	<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
+	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+
+	<input type='hidden' name='LOGO' value='' data-bind="var:domain(LOGO); format:popVal;" />
 
 
-<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroUpdate' />
-<input type='hidden' name='_tag/callback' value='showMessaging' />
-<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
-<input type="hidden" name="DOMAINNAME" data-bind="var:supplier(ID); format:popVal;" />
-
-
-
-	<div class='buttonset ui-widget-content ui-corner-all alignRight marginBottom smallPadding'>
-	<button>Add Host</button> <!-- dropdown w/ MX record, host, etc -->
+	<div class='buttonset alignRight marginBottom'>
+	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='create'>Add Host</button>
 	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
 	</div>
 
 	<fieldset class='marginBottom'>
 		<legend>General</legend>
-		<div data-bind="var: domain(IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
-		<div data-bind="var: domain(REG_TYPE); format:text; pretext:Registrar: ;"></div>
-		<div data-bind="var: domain(REG_TYPE_TXT); format:text;" class='hint'></div>
-		<div>Syndication: <span data-bind="var: domain(SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
+		<div class='floatRight pointer ui-widget-content'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL; defaultValue: i/imagenotfound;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
+		<h5 data-bind="var: domain(DOMAINNAME); format:text;"></h5>
+		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div>
+		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
+		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
+		<div data-bind="var: domain(@READONLY.REG_TYPE); format:text; pretext:Registrar: ;"></div>
+		<div data-bind="var: domain(@READONLY.REG_TYPE_TXT); format:text;" class='hint'></div>
 		
 	</fieldset>
 	
@@ -3210,7 +3297,25 @@ Coming Soon
 		
 	</fieldset>
 	
-	<fieldset>
+
+
+	</form>
+	</section>
+	
+	<section data-anytab-content='domainEmail' class='clearfix'>
+	
+		<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+
+		<div class='buttonset alignRight marginBottom'>
+		<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
+		</div>
+
+		<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroEmail' />
+		<input type='hidden' name='_tag/callback' value='showMessaging' />
+		<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+		<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
+		<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+		<fieldset>
 		<legend>Email</legend>
 		
 		<label>
@@ -3237,9 +3342,12 @@ Coming Soon
 		
 		
 	</fieldset>
-
+	
+	
 	</form>
 	</section>
+	<section data-anytab-content='domainDiagnostics' class='clearfix'></section>
+	
 	<section data-anytab-content='domainEvents' class='clearfix displayNone'>
 	
 	<table class='applyAnytable gridTable fullWidth'>
