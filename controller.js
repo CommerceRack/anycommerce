@@ -996,28 +996,7 @@ app.u.throwMessage(responseData); is the default error handler.
 				}
 			},//convertSessionToOrder
 
-//executed when appCartExists is requested.
-//app.app.vars.cartID is already set by this point. need to reset it onError.
-// onError does NOT need to nuke app.vars.cartID because it's handled in handleResponse_appCartExists 
-// NOTE - may be obsolete 201314+
-/*		handleTrySession : {
-			onSuccess : function(_rtag)	{
-//				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
-//				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
-				if(app.data.appCartExists.exists >= 1)	{
-					app.u.dump(' -> valid cart id.  Proceed.');
-// if there are any  extensions(and most likely there will be) add then to the controller.
-// This is done here because a valid cart id is required.
-					app.model.addExtensions(app.vars.extensions);
-					}
-				else	{
-					app.u.dump(' -> UH OH! invalid cart ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
-					app.calls.appCartCreate.init({'callback':'handleNewSession'});
-					app.model.dispatchThis('immutable');
-					}
-				}
-			}, //handleTrySession
-*/		
+	
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
@@ -1034,7 +1013,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					$target.anycontent(_rtag);
 // * 201320 -> these are a few commonly used plugins that can now be applied w/out a custom callback.
 					$('.toolTip',$target).tooltip();
-					$(':checkbox.applyAnycb',$target).anycb();
+					$('.applyAnycb',$target).anycb();
 					$('table.applyAnytable',$target).andSelf().anytable(_rtag.anytable || {});
 					$('.applyAnytabs',$target).anytabs();
 					app.u.handleAppEvents($target);

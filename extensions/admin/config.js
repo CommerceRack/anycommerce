@@ -824,7 +824,7 @@ $D.dialog('open');
 						$btn.closest('.ui-widget-anypanel').anymessage({'message':'In admin_wholesale.e.shipMeterDetailInModal, no/invalid provider ['+$btn.data('provider')+'] on button','gMessage':true})
 						}
 					});
-				},
+				}, //shipMeterDetailInModal
 
 
 			adminDomainCreateShow : function($btn)	{
@@ -842,7 +842,33 @@ $D.dialog('open');
 					$D.dialog('option','width','350');
 					$D.dialog('open');
 					});
-				},
+				}, //adminDomainCreateShow
+
+			adminDomainCreateUpdateHostShow : function($btn)	{
+				if($btn.data('mode') == 'create')	{
+					$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
+					}
+				else if($btn.data('mode') == 'update')	{
+					$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+					}
+				else	{
+					$btn.button();
+					$btn.button('disable').attr('title','Invalid mode set on button');
+					}
+
+				$btn.off('click.adminDomainCreateUpdateHostShow').on('click.adminDomainCreateUpdateHostShow',function(event){
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title': $btn.data('mode') + '  host',
+						'data' : $btn.closest('form').serializeJSON(), //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
+						'templateID':'domainAddUpdateHostTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+					$D.dialog('option','width','350');
+					$D.dialog('open');
+					});
+				}, //adminDomainCreateUpdateHostShow
 
 
 			domainRemoveConfirm : function($btn)	{
@@ -889,6 +915,7 @@ $D.dialog('open');
 							'handleAppEvents' : false
 							});
 
+						app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':domain},'mutable');
 						app.model.addDispatchToQ({
 							'_cmd':'adminDomainDetail',
 							'DOMAINNAME':domain,
