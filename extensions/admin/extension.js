@@ -2212,8 +2212,8 @@ Function does NOT dispatch.
 						}
 
 					for(var i = 0; i < L; i += 1)	{
-						$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].id == app.vars.domain ? 'ui-selected' : '').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
-							app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'))
+						$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].DOMAINNAME == app.vars.domain ? 'ui-selected' : '').append(data[i].DOMAINNAME+" [prt: "+data[i].PRT+"]").click(function(){
+							app.ext.admin.a.changeDomain($(this).data('DOMAINNAME'),$(this).data('PRT'))
 							$target.dialog('close');
 							}).appendTo($ul);
 						}
@@ -2607,7 +2607,9 @@ else	{
 
 if($target && $target.length)	{
 
-
+	if($target && $target.data('anycontent'))	{
+		$target.anycontent('destroy');
+		}
 
 	if(opts.dialog)	{
 		app.ext.admin.u.handleShowSection(path,opts,$target); 
@@ -3078,7 +3080,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					
 					app.vars.domain = domain;
 					app.vars.partition = partition;
-					app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
+					app.vars.https_domain = app.data['adminDomainList']['media-host'];
 //set the vars in localStorage. This is what will be used upon return to preselect a domain.
 					app.ext.admin.u.dpsSet('admin',"domain",domain); 
 					app.ext.admin.u.dpsSet('admin',"partition",partition); 
@@ -3776,10 +3778,6 @@ and all .someClass are hidden (value of data-panel-selector)
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
 //				if(!$target)	{app.u.dump("TARGET NOT SPECIFIED")}
-
-				if($target && $target.data('anycontent'))	{
-					$target.anycontent('destroy');
-					}
 
 				if(path == '#!mediaLibraryManageMode')	{
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
@@ -5865,7 +5863,7 @@ not in use
 
 			domainPutInFocus : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-check"},text: true});
-				var domain = $btn.closest('tr').data('id');
+				var domain = $btn.closest('tr').data('DOMAINNAME');
 				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(){
 //					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
@@ -5876,22 +5874,10 @@ not in use
 			domainView : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-newwin"},text: true});
 				$btn.off('click.domainView').on('click.domainView',function(){
-					window.open("http://www."+$btn.closest('tr').data('id'));
+					window.open("http://www."+$btn.closest('tr').data('DOMAINNAME'));
 					});
 				},
-//opens the domain configuration panel in a modal.
-			domainEdit : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: true});
-				
-				var domain = $btn.closest('tr').data('id');
-				if(domain == app.vars.domain)	{}
-				else	{$btn.button("disable");}
-				
-				$btn.off('click.domainEdit').on('click.domainEdit',function(){
-					navigateTo("/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS="+$btn.closest('tr').data('id'));
-					});
-				},
-		
+	
 			
 			projectLinkOpen : function($btn)	{
 				if($btn.closest('tr').data('link'))	{
