@@ -459,6 +459,8 @@ either templateID or (data or datapointer) are required.
 			templateID : null, //The template to be used
 			datapointer : null, //The data pointer in app.data
 			data : null, //The data used to populate the template
+// ** 201332 -> extendByDatapointers added as a means for having multiple data objects passed into translator at the same time. 
+			extendByDatapointers : new Array(), //an array of datapointers. will merge all the data into one object prior to translation
 			showLoading : true, //if no data is passed and createTemplateInstance used, if true will execute show loading.
 			showLoadingMessage : 'Fetching content...', //message passed into showLoading.
 			dataAttribs : {} //will be used to set data attributes on the template [data- not data()].
@@ -499,7 +501,30 @@ either templateID or (data or datapointer) are required.
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
+// when a template is translated, what is returned from this function is the data passed into transmogrify. allows for multiple data sets.
+		_getData : function()	{
+			var
+				o = this.options,
+				eData = {}; //extended data. (didn't use data to avoid confusion w/ o.data)
+			
+			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
+			if(!$.isEmptyObject(o.extendByDatapointers))	{
+				var L = o.extendByDatapointers.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(app.data[o.extendByDatapointers[i]])	{
+						$.extend(true,eData,app.data[o.extendByDatapointers[i]])
+						}
+					}
+				}
+			
+			//datapointer can be set in addition to data or extendbydatapointers. added near the end to preserve integrity.
+			if(o.datapointer && app.data[o.datapointer])	{$.extend(true,eData,app.data[o.datapointer])}
 
+			//data can be set in addition to datapointer or extendbydatapointers. added near the end to preserve integrity.
+			if(o.data)	{$.extend(true,eData,o.data)}
+			
+			return eData;
+			},
 
 		_anyContent : function()	{
 //			app.u.dump(" -> _anyContent executed.");
@@ -510,7 +535,7 @@ either templateID or (data or datapointer) are required.
 			if(o.templateID && o.datapointer && app.data[o.datapointer])	{
 //				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
-				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[o.datapointer]));
+				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 				this.element.data('isTranslated',true);
 				}
 			else if(o.templateID && o.data)	{
@@ -518,7 +543,7 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 //				app.u.dump(" -> hideLoading has run.");
-				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 //				app.u.dump(" -> transmogrified");
 				this.element.data('isTranslated',true);
 //				app.u.dump(" -> data.isTranslated set to true.");
@@ -534,14 +559,14 @@ either templateID or (data or datapointer) are required.
 //if just translating because the template has already been rendered
 			else if(o.data)	{
 //				app.u.dump(" -> data specified, translate selector");
-				app.renderFunctions.translateSelector(this.element,o.data);
+				app.renderFunctions.translateSelector(this.element,this._getData());
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.data('isTranslated',true);
 				}
 //if just translating because the template has already been rendered
 			else if(o.datapointer  && app.data[o.datapointer])	{
 //				app.u.dump(" -> data specified, translate selector");
-				app.renderFunctions.translateSelector(this.element,app.data[o.datapointer]);
+				app.renderFunctions.translateSelector(this.element,this._getData());
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.data('isTranslated',true);
 				}

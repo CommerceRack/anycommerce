@@ -5883,31 +5883,7 @@ not in use
 					navigateTo("/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS="+$btn.closest('tr').data('id'));
 					});
 				},
-//opens the company information panel for a domain
-			domainSettings : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-wrench"},text: true});
-				$btn.off('click.domainSettings').on('click.domainSettings',function(){
-				
-					var
-						domain = $btn.closest('tr').data('id'),
-						$D = $("<div \/>").attr('title',"Edit Domain: "+domain);
-					
-					$D.addClass('displayNone').appendTo('body'); 
-					$D.dialog({
-						width : '70%',
-						modal: true,
-						autoOpen: false,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
-							}
-						});
-					$D.dialog('open');				
-					$D.append(app.renderFunctions.transmogrify({'domain':domain},'domainPanelTemplate',$btn.closest('tr').data()));	
-					$('.panelHeader',$D).trigger('click');
-
-					});	
-				},
-			
+		
 			
 			projectLinkOpen : function($btn)	{
 				if($btn.closest('tr').data('link'))	{
