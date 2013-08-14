@@ -6,6 +6,15 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201332
+ADMIN
+ -> new domain config interface
+ -> fixes to variations
+ -> fixes to handling and insurance
+ -> fixes to shipping rules
+ -> fixes to flexedit manager
+ -> fixes to flexedit in product
+
 301330
 ADMIN
  -> new options in customer search (schedule, account manager and account type)
