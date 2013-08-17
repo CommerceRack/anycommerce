@@ -2478,7 +2478,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<select name='processor' data-app-event="admin_config|showCCSuppInputs" data-bind="var:payment(processor); format:popVal;">
 		<option value='NONE'>None</option>
 		<option value='MANUAL'>Manual</option>
-		<option value='PAYPALWP'>PayPal Website Payments Pro</option>
+		<option value='PAYPALWP'>PayPal Website Payments</option>
 		<option value='VERISIGN'>PayPal Payflow Pro</option>
 		<option value='AUTHORIZENET'>Authorize.Net</option>
 		<option value='LINKPOINT'>Cardservice Linkpoint API</option>
@@ -2618,10 +2618,17 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_paypalwp'>
 	<legend class='marginBottom'>PayPal Website Payments Setup</legend>
 	<label><span>PayPal Email Address</span><input type="paypal_email" value="" name="email" required='required' data-bind='var: payment(paypal_email); format:popVal;'></label>
+	<div class="hint">
+	To use website payments you MUST authorize "paypal_api1.zoovy.com" with access to authorize/charge credit cards.
+	** NOTE: Paypal operates two competing gateways Payflow Pro and Website Payments (please make sure you configure the correct one).  
+	</div>
 </fieldset>
 
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_verisign'>
 	<legend class='marginBottom'>PayPal Payflow Pro Setup</legend>
+	<div class="hint">
+	** NOTE: Paypal operates two competing gateways Payflow Pro and Website Payments (please make sure you configure the correct one). 
+	</div>
 	<label><span>Username</span><input type="text" value="" name="verisign_username" data-bind='var: payment(verisign_username); format:popVal;'></label>
 	<label><span>Password</span><input type="password" value="" name="verisign_password" data-bind='var: payment(verisign_password); format:popVal;'></label>
 	<label><span>Partner</span><input type="text" value="" name="verisign_partner" data-bind='var: payment(verisign_partner); format:popVal;'></label>
