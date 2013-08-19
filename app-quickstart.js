@@ -2847,7 +2847,9 @@ app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 // ** 201318 -> the changes below are to make the appGet more efficient (eliminates duplicate %page attribute requests)
 //				if(myAttributes.indexOf(tmpAttr) >= 0)	{} //attribute is already in the list of attributes to be fetched.
 // ** 201332 -> IE8 doesn't support indexOf on an array.
-				if($.inArray(tmpAttr,myAttributes))	{} //attribute is already in the list of attributes to be fetched.
+//				if($.inArray(tmpAttr,myAttributes))	{} //attribute is already in the list of attributes to be fetched.
+// ** 201332 -> The return value of inArray is the same as indexOf, so it should be >= 0 as well
+				if($.inArray(tmpAttr,myAttributes) >= 0)	{} //attribute is already in the list of attributes to be fetched.
 				else if(app.data['appPageGet|'+catSafeID] && app.data['appPageGet|'+catSafeID]['%page'])	{
 					if(app.data['appPageGet|'+catSafeID]['%page'][tmpAttr])	{} //already have value
 					else if(app.data['appPageGet|'+catSafeID]['%page'][tmpAttr] === null){} //value has been requested but is not set.
