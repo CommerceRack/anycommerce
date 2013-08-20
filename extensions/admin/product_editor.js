@@ -1480,20 +1480,23 @@ if(!$.isEmptyObject(macroUpdates))	{
 			variationAddToProduct : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-w"},text: true});
 				$btn.off('click.variationAddToProduct').on('click.variationAddToProduct',function(){
-					$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
-					$btn.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
-					var pid = $btn.closest("[data-pid]").data('pid');
+
+					var pid = $btn.closest("[data-app-role='productVariationManager']").data('pid');
 					if(pid)	{
 						app.u.dump(" -> pid: "+pid);
 						if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@variations'])	{
-							app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{},app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')])); //add to variation object in memory.
+
+							$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
+							$btn.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
+							var variationID = $btn.closest('tr').data('id');
+							app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{'sog':variationID+'-'+app.data.adminSOGComplete['@SOGS'][variationID]},app.data.adminSOGComplete['%SOGS'][variationID])); //add to variation object in memory.
 							
 							var $tbody = $("<tbody \/>").anycontent({
 								'templateID':'productVariationManagerProductRowTemplate',
 								'data':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')],
 								'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
 								})
-							app.u.handleAppEvents($tbody,{'pid':$btn.closest("[data-pid]").data('pid')});
+							app.u.handleAppEvents($tbody,{'pid':pid});
 							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
 							}
 						else	{
