@@ -303,7 +303,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 
 
 
-//adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
+//adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updating fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
 	$('.adminOrderLineItem').each(function(){
 		var $row = $(this);

@@ -408,7 +408,7 @@ var admin_support = function() {
 					$panelContents = $btn.closest('.ui-widget-content');
 					
 					if(app.u.validateForm($form))	{
-						$panelContents.showLoading({'message':'Updateing ticket'});
+						$panelContents.showLoading({'message':'Updating ticket'});
 						app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
 							$panelContents.hideLoading();
 							if(app.model.responseHasErrors(rd)){
