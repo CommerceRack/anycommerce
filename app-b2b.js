@@ -744,9 +744,10 @@ fallback is to just output the value.
 //				if(app.model.fetchData('appProductGet|'+pid))	{}
 				if(data.bindData.isElastic)	{
 					price = data.value.base_price;
-					if(data.value.tags.indexOf('IS_PREORDER') > -1)	{buttonText = 'Preorder'; className = 'preorder';}
-					else if(data.value.tags.indexOf('IS_COLORFUL') > -1)	{buttonText = 'Choose Color'; className = 'variational colorful';}
-					else if(data.value.tags.indexOf('IS_SIZEABLE') > -1)	{buttonText = 'Choose Size'; className = 'variational sizeable;'}
+// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+					if($.inArray('IS_PREORDER', data.value.tags) > -1)	{buttonText = 'Preorder'; className = 'preorder';}
+					else if($.inArray('IS_COLORFUL', data.value.tags) > -1)	{buttonText = 'Choose Color'; className = 'variational colorful';}
+					else if($.inArray('IS_SIZEABLE', data.value.tags) > -1)	{buttonText = 'Choose Size'; className = 'variational sizeable';}
 					else if(data.value.pogs.length > 0)	{buttonText = 'Choose Options'; className = 'variational';}
 					else	{}
 					//look in tags for tags. indexOf
@@ -903,8 +904,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 								app.ext.myRIA.vars.session.recentlyViewedItems.unshift(infoObj.pid);
 								}
 							else	{
+// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
 								//the item is already in the list. move it to the front.
-								app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice(app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(infoObj.pid), 1)[0]);
+								app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, app.ext.myRIA.vars.session.recentlyViewedItems), 1)[0]);
 								}
 							infoObj.parentID = app.ext.myRIA.u.showProd(infoObj);
 							break;
@@ -2130,7 +2132,8 @@ effects the display of the nav buttons only. should be run just after the handle
 				function step($btn,increment)	{
 					if($btn.data('datapointer').indexOf('appCategoryDetail') >= 0)	{
 						var csv = app.data[$btn.data('datapointer')]['@products'],
-						index = csv.indexOf(app.ext.myRIA.vars.hotw[0].pid) + increment;
+// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+						index = $.inArray(app.ext.myRIA.vars.hotw[0].pid, csv) + increment;
 						
 						if(index < 0)	{index = csv.length - 1} //after first product, jump to last
 						else if(index >= csv.length)	{index = 0} //afer last item, jump to first.
