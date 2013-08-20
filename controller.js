@@ -1544,7 +1544,8 @@ AUTHENTICATION/USER
 		getWhitelistedObject : function(obj,whitelist)	{
 			var r = {};
 			for(index in obj)	{
-				if(whitelist.indexOf(index) >= 0)	{
+// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+				if($.inArray(index, whitelist) >= 0)	{
 					r[index] = obj[index];
 					}
 				else	{} //not in whitelist
@@ -1556,7 +1557,8 @@ AUTHENTICATION/USER
 		getBlacklistedObject : function(obj,blacklist)	{
 			var r = $.extend({},obj);
 			for(index in obj)	{
-				if(blacklist.indexOf(index) >= 0)	{
+// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+				if($.inArray(index, blacklist) >= 0)	{
 					delete r[index];
 					}
 				else	{} //is not in blacklist
@@ -1785,7 +1787,7 @@ VALIDATION
 					else if($input.prop('type') == 'radio'){
 //keep a list of all required radios. only one entry per name.
 //app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
-						if($input.attr('required') && radios.indexOf($input.attr('name')) == -1)	{radios.push($input.attr('name'))}
+						if($input.attr('required') && $.inArray($input.attr('name'), radios) == -1)	{radios.push($input.attr('name'))}
 						}
 //only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
 					else if($input.prop('type') == 'url' && $input.val())	{
@@ -2938,6 +2940,8 @@ else	{
 			for(var i = 0; i < L; i += 1)	{
 //				app.u.dump("whitelist[i]: "+whitelist[i]+" and tagsDisplayed: "+tagsDisplayed+" and maxTagsShown: "+maxTagsShown);
 //				app.u.dump("data.value.indexOf(whitelist[i]): "+data.value.indexOf(whitelist[i]));
+// ** 201332 NOTE: data.value is assumed to be a String, a comma separated list of values.  If it were an array, we would
+//				need to use $.inArray instead of indexOf for IE8 compatibility
 				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
 
 					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
