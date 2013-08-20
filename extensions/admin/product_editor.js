@@ -357,7 +357,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 
 //the data for BOTH these requests is needed before the panel list can correctly load.
 
-//			app.calls.adminProductDetail.init({'pid':pid,'withInventory':true,'withVariations':true},{},'mutable'); //get into memory for app-based panels.
+//			app.calls.adminProductDetail.init({'pid':pid,'skus':true,'variations':true},{},'mutable'); //get into memory for app-based panels.
 //though a pid is required to 'get' this data, it's always the same. just get it once.
 			if(app.model.fetchData('adminUIProductPanelList'))	{}
 			else	{
@@ -543,7 +543,7 @@ app.model.dispatchThis('mutable');
 
 //Need both the product data and the entire sog list. Need both of these to be up to date.
 app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete'}},'mutable');
-app.model.addDispatchToQ({'_cmd':'appProductGet','withVariations':1,'withInventory':1,'pid' : pid,'_tag':{'datapointer':'appProductGet|'+pid,'callback':function(rd){
+app.model.addDispatchToQ({'_cmd':'adminProductDetail','variations':1,'skus':1,'pid' : pid,'_tag':{'datapointer':'adminProductDetail|'+pid,'callback':function(rd){
 	$target.hideLoading();
 	if(app.model.responseHasErrors(rd)){
 		$('#globalMessaging').anymessage({'message':rd});
@@ -1398,7 +1398,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 //						sfo.autoid = 1; //tells api to add id's to variations or options if none are set.
 						sfo.pid = variationData.pid;
 //for a product update, need to send up entire variation object, not just a given sog/pog.
-						sfo['%sog'] = app.data['appProductGet|'+sfo.pid]['@variations'];
+						sfo['%sog'] = app.data['adminProductDetail|'+sfo.pid]['@variations'];
 //if guid is present, use it.  That means this was a pog just added to the product.
 						var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
 						$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
@@ -1483,7 +1483,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 					$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
 					$btn.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
 					var pid = $btn.closest("[data-pid]").data('pid');
-					app.data['appProductGet|'+pid]['@variations'].push($.extend(true,{},app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')])); //add to variation object in memory.
+					app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{},app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')])); //add to variation object in memory.
 					
 					var $tbody = $("<tbody \/>").anycontent({
 						'templateID':'productVariationManagerProductRowTemplate',
@@ -1665,13 +1665,13 @@ app.model.dispatchThis('mutable');
 						}
 					else if($btn.data('variationmode') == 'product')	{
 						var data, variationID = $btn.closest('tr').data('id');
-						var L = app.data['appProductGet|'+vars.pid]['@variations'].length;
+						var L = app.data['adminProductDetail|'+vars.pid]['@variations'].length;
 // if isnew is true, that means this is a sog or pog that was just added to the product.
 // pogs do not have an ID immediately after they're added, so the guid is used to get the data from the product object in memory.
 						if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('ispog'))	{
 							app.u.dump(" -> this is a newly added POG");
 							variationID = ""; //set to blank so modal title doesn't show 'undefined'.
-							data = app.data['appProductGet|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'guid',$btn.closest('tr').data('guid'))]
+							data = app.data['adminProductDetail|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'guid',$btn.closest('tr').data('guid'))]
 							}
 						else if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('issog'))	{
 							app.u.dump(" -> this is a sog just added to the pid");
@@ -1679,8 +1679,8 @@ app.model.dispatchThis('mutable');
 							}
 						else	{
 //							app.u.dump(" -> this is an existing variation.");
-//							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID));
-							data = app.data['appProductGet|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['appProductGet|'+vars.pid]['@variations'],'id',variationID)]
+//							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'id',variationID));
+							data = app.data['adminProductDetail|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'id',variationID)]
 							}
 
 						var $D = app.ext.admin.i.dialogCreate({
@@ -1801,7 +1801,7 @@ app.model.dispatchThis('mutable');
 						else if(mode == 'product' && pid){
 							
 							sfo.guid = app.u.guidGenerator();
-							app.data['appProductGet|'+pid]['@variations'].push(sfo); //add to variation object in memory.
+							app.data['adminProductDetail|'+pid]['@variations'].push(sfo); //add to variation object in memory.
 	
 							var $tbody = $("<tbody \/>").anycontent({
 								'templateID':'productVariationManagerProductRowTemplate',
@@ -1851,7 +1851,7 @@ app.model.dispatchThis('mutable');
 						
 					var $container = $btn.closest("[data-app-role='productVariationManagerContainer']");
 					cmdObj.pid = $btn.closest("[data-pid]").data('pid');
-					var variations = app.data['appProductGet|'+cmdObj.pid]['@variations']; //shortcut.
+					var variations = app.data['adminProductDetail|'+cmdObj.pid]['@variations']; //shortcut.
 // ### this is probably in the wrong spot. It should be moved over
 for(index in variations)	{
 	variations[index].autoid = 1; //tells the API to add id's to variations and/or options that don't have them.
