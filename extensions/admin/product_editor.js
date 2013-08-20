@@ -1484,15 +1484,21 @@ if(!$.isEmptyObject(macroUpdates))	{
 					$btn.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
 					var pid = $btn.closest("[data-pid]").data('pid');
 					if(pid)	{
-						app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{},app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')])); //add to variation object in memory.
-						
-						var $tbody = $("<tbody \/>").anycontent({
-							'templateID':'productVariationManagerProductRowTemplate',
-							'data':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')],
-							'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
-							})
-						app.u.handleAppEvents($tbody,{'pid':$btn.closest("[data-pid]").data('pid')});
-						$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+						app.u.dump(" -> pid: "+pid);
+						if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@variations'])	{
+							app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{},app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')])); //add to variation object in memory.
+							
+							var $tbody = $("<tbody \/>").anycontent({
+								'templateID':'productVariationManagerProductRowTemplate',
+								'data':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')],
+								'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
+								})
+							app.u.handleAppEvents($tbody,{'pid':$btn.closest("[data-pid]").data('pid')});
+							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+							}
+						else	{
+							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
+							}
 						}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, unable to resolve PID.","gMessage":true});
