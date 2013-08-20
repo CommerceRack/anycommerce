@@ -29,7 +29,7 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit','reviews'], //,'images'a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
 			'asin' : {'type':'text'},
 			'textbox' : { 'type' : 'text'},
@@ -603,7 +603,7 @@ app.model.dispatchThis('mutable');
 				var imgName = data.value['%attribs']['zoovy:prod_image'+i];
 				app.u.dump(" -> imgName: "+imgName);
 				if(app.u.isSet(imgName))	{
-					$tag.append("<img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/>");
+					$tag.append("<li class='positionRelative marginRight marginBottom floatLeft'><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/></li>");
 					}
 				else	{break;} //exit once a blank is hit.
 				}
@@ -947,7 +947,62 @@ app.model.dispatchThis('mutable');
 						app.u.handleAppEvents(r);
 						},'datapointer' : 'adminProductReviewList|'+pid}},'mutable');
 					app.model.dispatchThis('mutable')
-					
+					}
+				else if(panelid == 'images')	{
+					app.u.dump("BEGIN getPanelContents.images");
+					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
+
+//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
+					if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
+//						app.u.dump(" -> More than one sku is present.");
+						var $container = $("[data-app-role='prodEditSkuImagesContainer']",r).show();
+						var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
+						var L = skus.length;
+						var $table = $("<table \/>").addClass('gridTable').appendTo($container);
+						for(var i = 0; i < L; i += 1)	{
+//							app.u.dump(" -> skus[i].sku: "+skus[i].sku);
+							var $tr = app.renderFunctions.transmogrify('','prodEditSKUImageTemplate',skus[i])
+							$tr.appendTo($table);
+							}
+						}
+
+					app.ext.admin.u.handleAppEvents(r);
+
+//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
+					$(".sortableImagery",r).sortable({
+						'items' : 'li',
+						'appendTo' : r,
+						'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
+						'containment' : r,
+						'placeholder' : 'ui-state-highlight positionRelative marginRight marginBottom floatLeft',
+						'forcePlaceholderSize' : true,
+						'cursor' : "move",
+						'cursorAt' : { left: 5 },
+						'connectWith' : '.sortableImagery',
+						'remove' : function(event, ui) {
+							ui.item.after(ui.item.clone());//clone the dropped item into the new parent at the drop index.
+							$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
+							},
+						'revert' : true
+						});
+						
+						
+						r.on('mouseenter','img',function(e){
+							var $target = $(e.target).closest('li');
+							
+							$target.on('mouseleave',function(e){
+								$target.find('span').empty().remove(); //get rid of all children.
+								});
+							
+							$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
+							$("<span class='ui-icon ui-icon-circle-close pointer' \/>").attr('title','Disassociate image from '+pid).css({
+								'position':'absolute',
+								'top':'3px',
+								'right':'3px'
+								}).on('click',function(){
+									$(this).closest('li').empty().remove();
+									}).appendTo($target);
+								})
 					}
 				else	{
 					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);

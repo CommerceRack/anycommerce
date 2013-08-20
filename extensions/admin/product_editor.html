@@ -729,25 +729,32 @@
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
 		<span>Images</span>
 	</h3>
-	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
-
-<div class='skusImagesContainer'>
-
-</div>
-
-<div class='thumbNewContainer'>
-	Add New Product Image:
-	<button>From Media Library</button>
-	<div class='ui-state-default'>Drag here from desktop</div>
-</div>
-
-<div class='prodImagesContainer' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;"></div>
-
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom smallPadding'>
+		<div class='clearfix marginBottom'>
+			<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
+			
+			<ul class='prodImagesContainer listStyleNone noPadOrMargin sortableImagery' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;"></ul>
+		</div>		
+		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+		<button class='floatLeft'>Add Image</button>
+		<button class='floatRight' title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+		</div>
 
 	</div>
 </div>
 
-
+<table>
+	<tr id='prodEditSKUImageTemplate'>
+		<td data-bind="var: product(sku); format:text;"></td>
+		<td>
+		<ul class='noPadOrMargin listStyleNone sortableImagery'>
+			<li class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></li>
+			<li class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='75' height='75' /></li>
+			<li class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='75' height='75' /></li>
+		</ul>
+		</td>
+	</tr>
+</table>
 
 
 
