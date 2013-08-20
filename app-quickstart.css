@@ -72,6 +72,7 @@ and offMenu is toggle off, hiding the change button.
 .alignCenter	{text-align:center;}
 .alignLeft	{text-align:left;}
 .alignRight	{text-align:right;}
+.alignJustify {text-align:justify;}
 
 .center	{margin:0 auto;}
 
