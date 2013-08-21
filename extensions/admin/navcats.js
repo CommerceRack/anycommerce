@@ -104,7 +104,7 @@ var admin_navcats = function() {
 			},'mutable');
 		}
 							
-//						app.calls.appCategoryDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
+//						app.calls.appNavcatDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
 						}
 					app.model.dispatchThis('mutable');
 					}
@@ -213,7 +213,7 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 								} 
 							else	{
 								$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
-								app.ext.admin_navcats.u.getSubcats(app.data['appCategoryDetail|'+path]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+								app.ext.admin_navcats.u.getSubcats(app.data['appNavcatDetail|'+path]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
 								}
 							}
 						else	{$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, no element with data-app-role='categories' exists (no destination for subcats",'gMessage':true})}
