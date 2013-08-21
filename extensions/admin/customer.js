@@ -153,9 +153,10 @@ var admin_customer = function() {
 							minDate : 0, //can't start before today.
 							dateFormat : 'yymmdd',
 							timeFormat:"HHmm00", //HH vs hh gives you military vs standard time (respectivly)
-							stepMinute : 60
+							stepMinute : 60,
+							separator : '' //get rid of space between date and time.
 							});
-						$('.ui_tpicker_second',$target).hide(); //don't show second chooser, but have it so the seconds are added to the input.
+						$('.ui_tpicker_second, .ui_tpicker_minute',$target).hide(); //don't show minute or second chooser, but have it so they're added to the input.
 					
 					var $picker = $("[data-app-role='pickerContainer']:first",$target);
 					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));

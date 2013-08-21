@@ -689,7 +689,7 @@ app.model.dispatchThis('mutable');
 				}
 			app.model.dispatchThis('mutable');
 	
-			},
+			}, //handleManagementCategories
 
 
 //type is an input type.  number, select, textarea or something specific to us, like finder, media, etc.
@@ -848,7 +848,7 @@ app.model.dispatchThis('mutable');
 			return $r;
 
 
-			},
+			}, //flexBuildInput
 
 		flexJSON2JqObj : function(thisFlex,prodData)	{
 			var r = $("<div \/>");; //what is returned. Either a chunk of html or an error message.
@@ -883,11 +883,7 @@ app.model.dispatchThis('mutable');
 				r.anymessage({message:'In flex2Form, thisFlex was either empty or not an object.','gMessage':true});
 				}
 			return r;
-			},
-
-
-
-
+			}, //flexJSON2JqObj
 
 		handleProductListTab : function(process)	{
 //			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
@@ -924,9 +920,75 @@ app.model.dispatchThis('mutable');
 		getReviewsPanelContents : function(pid)	{
 			var $r = $("<div \/>"); //what is returned. either panel contents or false.
 			$r.anycontent({'templateID':'productEditorPanelTemplate_reviews'});
-			
-			
 			return $r;
+			},
+
+		getImagesPanelContents : function(pid,panelid)	{
+			var r;
+
+			app.u.dump("BEGIN admin_prodEdit.u.getImagesPanelContents");
+			r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
+
+//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
+			if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
+//						app.u.dump(" -> More than one sku is present.");
+				var $container = $("[data-app-role='prodEditSkuImagesContainer']",r).show();
+				var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
+				var L = skus.length;
+				var $table = $("<table \/>").addClass('gridTable').appendTo($container);
+				for(var i = 0; i < L; i += 1)	{
+//							app.u.dump(" -> skus[i].sku: "+skus[i].sku);
+					var $tr = app.renderFunctions.transmogrify('','prodEditSKUImageTemplate',skus[i])
+					$tr.appendTo($table);
+					}
+				}
+
+			app.ext.admin.u.handleAppEvents(r);
+
+//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
+			$(".sortableImagery",r).sortable({
+				'items' : 'li',
+				'appendTo' : r,
+				'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
+				'containment' : r,
+				'placeholder' : 'ui-state-highlight positionRelative marginRight marginBottom floatLeft',
+				'forcePlaceholderSize' : true,
+				'cursor' : "move",
+				'cursorAt' : { left: 5 },
+				'connectWith' : '.sortableImagery',
+				'remove' : function(event, ui) {
+					ui.item.after(ui.item.clone());//clone the dropped item into the new parent at the drop index.
+					$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
+					},
+				'revert' : true
+				});
+
+			$("[data-app-role='productPanelImagesContent']",r).anydropzone({
+				drop : function(f,e){app.u.dump(f)},
+				upload : function(f,e,rd)	{app.u.dump(rd)}
+				});
+
+			r.on('mouseenter','img',function(e){
+				var $target = $(e.target).closest('li');
+				
+				$target.on('mouseleave',function(e){
+					$target.find('span').empty().remove(); //get rid of all children.
+					});
+				
+				$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
+				$("<span class='ui-icon ui-icon-circle-close pointer' \/>")
+					.attr('title','Disassociate image from '+pid)
+					.css({
+						'position':'absolute',
+						'top':'3px',
+						'right':'3px'
+						})
+					.on('click',function(){$(this).closest('li').empty().remove();})
+					.appendTo($target);
+					})
+					
+				
+			return r;
 			},
 
 //app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
@@ -949,60 +1011,7 @@ app.model.dispatchThis('mutable');
 					app.model.dispatchThis('mutable')
 					}
 				else if(panelid == 'images')	{
-					app.u.dump("BEGIN getPanelContents.images");
-					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
-
-//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
-					if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
-//						app.u.dump(" -> More than one sku is present.");
-						var $container = $("[data-app-role='prodEditSkuImagesContainer']",r).show();
-						var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
-						var L = skus.length;
-						var $table = $("<table \/>").addClass('gridTable').appendTo($container);
-						for(var i = 0; i < L; i += 1)	{
-//							app.u.dump(" -> skus[i].sku: "+skus[i].sku);
-							var $tr = app.renderFunctions.transmogrify('','prodEditSKUImageTemplate',skus[i])
-							$tr.appendTo($table);
-							}
-						}
-
-					app.ext.admin.u.handleAppEvents(r);
-
-//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
-					$(".sortableImagery",r).sortable({
-						'items' : 'li',
-						'appendTo' : r,
-						'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
-						'containment' : r,
-						'placeholder' : 'ui-state-highlight positionRelative marginRight marginBottom floatLeft',
-						'forcePlaceholderSize' : true,
-						'cursor' : "move",
-						'cursorAt' : { left: 5 },
-						'connectWith' : '.sortableImagery',
-						'remove' : function(event, ui) {
-							ui.item.after(ui.item.clone());//clone the dropped item into the new parent at the drop index.
-							$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
-							},
-						'revert' : true
-						});
-						
-						
-						r.on('mouseenter','img',function(e){
-							var $target = $(e.target).closest('li');
-							
-							$target.on('mouseleave',function(e){
-								$target.find('span').empty().remove(); //get rid of all children.
-								});
-							
-							$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
-							$("<span class='ui-icon ui-icon-circle-close pointer' \/>").attr('title','Disassociate image from '+pid).css({
-								'position':'absolute',
-								'top':'3px',
-								'right':'3px'
-								}).on('click',function(){
-									$(this).closest('li').empty().remove();
-									}).appendTo($target);
-								})
+					r = this.getImagesPanelContents(pid,panelid);
 					}
 				else	{
 					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
