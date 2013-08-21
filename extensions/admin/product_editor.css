@@ -77,6 +77,13 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 	float:left;	
 	}
 
+#panel_images .sortableImagery	{
+	border: #ff0000;
+	background:#FCF;
+	}
+
+#panel_images .sortableImagery:before	{content:"Drop Images Here"; display: block; clear:both;}
+
 #panel_images .sortableImagery li	{
 	float:left;
 	margin: 6px;
