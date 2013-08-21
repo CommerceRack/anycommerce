@@ -892,8 +892,8 @@ $D.dialog('open');
 					'@updates': new Array()
 					};
 				
-				newSfo['@updates'].push("IS_PRIMARY?"+sfo.IS_PRIMARY);
-				newSfo['@updates'].push("ENABLE_SYNDICATION?"+sfo.ENABLE_SYNDICATION);
+				newSfo['@updates'].push("DOMAIN-SET-PRIMARY?IS="+sfo.IS_PRIMARY);
+				newSfo['@updates'].push("DOMAIN-SET-SYNDICATION?IS="+sfo.IS_SYNDICATION);
 			
 				
 				
