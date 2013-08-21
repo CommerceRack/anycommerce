@@ -1,0 +1,21 @@
+<div id="debuggerTemplate">
+	This is the Debugger.
+	
+	<span data-debug="refresh" data-debug-target="prodDumperList"></span>
+	<div data-debug="prodDumperList"></div>
+
+	<span data-debug="refresh" data-debug-target="catDumperList"></span>
+	<div data-debug="catDumperList"></div>
+</div>
+
+<div id="prodDumperTemplate">
+	<span data-bind="var: product(pid); format:text;"></span>
+	<span data-bind="var: product(zoovy:prod_name); format:text;"></span>
+	<a href="#" data-bind="var: product(pid); format:assignAttribute; attribute: data-pid;" onClick="app.ext.entomologist.u.dumpData('appProductGet|'+$(this).attr('data-pid')); return false;">Dump</a>
+</div>
+	
+<div id="catDumperTemplate">
+	<span data-bind="var: category(id); format:text;"></span>
+	<span data-bind="var: cateogyr(pretty); format:text;"></span>
+	<a href="#" data-bind="var: category(id); format:assignAttribute; attribute: data-navcat;" onClick="app.ext.entomologist.u.dumpData('appNavcatDetail|'+$(this).attr('data-navcat')); return false;">Dump</a>
+</div>
