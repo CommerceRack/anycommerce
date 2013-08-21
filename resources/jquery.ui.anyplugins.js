@@ -624,7 +624,7 @@ either templateID or (data or datapointer) are required.
 			filetypes : null, //pass in an array of file types supported. ex ['csv','xls']
 			imageAttributes : null, //an object: {h:100,w:100,b:'ffffff'}. if thumbList is not set, this won't be used.
 			thumbList : null, //a jquery object or selector of where thumbnails of successfully uploaded images should be placed.
-			fpath : null, //folder in media library where images are placed.
+			folder : null, //folder in media library where images are placed.
 			_preview : null, //used to store the preview.
 //events
 			drop : null, //a function executed when a file is dropped. executed for each file. file,event passed in.
@@ -665,42 +665,79 @@ either templateID or (data or datapointer) are required.
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			}, //_setOption
 
-		_drop : function(event)	{
-			event.preventDefault();
-			var dt = event.originalEvent.dataTransfer;
-			var files = dt.files;
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				this._upload(file,event);
-
-				if(typeof this.options.drop === 'function')	{
-					this.options.drop(file,event);
-					}
-
+		_sendFiles : function()	{
+			var imgs = document.querySelectorAll(".newMediaFile");
+			for (var i = 0; i < imgs.length; i++) {
+				this._fileUpload(imgs[i], imgs[i].file);
 				}
-			}, //_drop
+			},
 
-		_upload : function(file,event){
-			//fileReader docs: https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
-			var reader = new FileReader();
-			file.folder = this.options.fpath || file.name.charAt(0);
-//			var bin = reader.result;
-			app.u.dump(" -> adding file: "+file.name+" to folder "+file.folder);
-			app.model.addDispatchToQ({
-				'_cmd':'adminImageUpload',
-				'base64' : btoa(reader.readAsBinaryString), //btoa is binary to base64
-				'folder' : file.folder,
-				'filename' : file.name,
-				'_tag':	{
-					'callback' : function(rd){
-						if(typeof this.options.upload === 'function')	{
-							this.options.upload(file,event,rd);
+		_fileUpload : function(img, file)	{
+			var o = this.options;
+			var reader = new FileReader();  
+			reader.onload = function(evt) {
+				app.model.addDispatchToQ({
+					'_cmd':'adminImageUpload',
+					'base64' : btoa(evt.target.result), //btoa is binary to base64
+					'folder' : o.folder || file.name.charAt(0).toLowerCase(),
+					'filename' : file.name,
+					'_tag':	{
+						'callback' : function(rd){
+//							if(typeof o.upload === 'function')	{
+//								o.upload(file,event,rd);
+//								}
 							}
 						}
+					},'passive');
+				app.model.dispatchThis('passive');
+//				xhr.sendAsBinary(evt.target.result);
+				};
+			reader.readAsBinaryString(file);
+			},
+
+//adds files to the DOM.
+		_handleFiles : function(files,event)	{
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				var imageType = /image.*/;
+
+				if(typeof this.options.drop === 'function')	{
+					this.options.drop(files[i],event);
 					}
-				},'mutable');
-			app.model.dispatchThis('mutable');
-			}, //upload
+
+				if (!file.type.match(imageType)) {
+					continue;
+					}
+			
+				var img = document.createElement("img");
+				img.classList.add("obj");
+				img.file = file;
+				img.height = 75;
+				img.width = 75;
+				img.classList.add('newMediaFile');
+
+				var $target = $(event.target);
+				if($target.is('ul'))	{
+					$("<li \/>").append(img).appendTo($target);
+					}
+				else	{
+					$target.append(img);
+					}
+//				preview.appendChild(img);
+				
+				var reader = new FileReader();
+				reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+				reader.readAsDataURL(file);
+				}
+			},
+//executed when a file is dropped onto a dropzone.
+		_drop : function(event)	{
+			event.preventDefault();
+			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
+			this._handleFiles(dt.files,event);
+			this._sendFiles();
+			}, //_drop
+
 
 		_destroy : function(){
 			this.element.empty();

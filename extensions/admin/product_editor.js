@@ -598,12 +598,13 @@ app.model.dispatchThis('mutable');
 		
 		prodImages : function($tag,data)	{
 			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
+			var L = data.bindData.max || 99;
 //			app.u.dump(" -> data.value: "); app.u.dump(data.value);
 			for(var i = 1; i <= 99; i += 1)	{
 				var imgName = data.value['%attribs']['zoovy:prod_image'+i];
 				app.u.dump(" -> imgName: "+imgName);
 				if(app.u.isSet(imgName))	{
-					$tag.append("<li class='positionRelative marginRight marginBottom floatLeft'><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/></li>");
+					$tag.append("<li><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/></li>");
 					}
 				else	{break;} //exit once a blank is hit.
 				}
@@ -963,9 +964,10 @@ app.model.dispatchThis('mutable');
 				'revert' : true
 				});
 
-			$("[data-app-role='productPanelImagesContent']",r).anydropzone({
-				drop : function(f,e){app.u.dump(f)},
-				upload : function(f,e,rd)	{app.u.dump(rd)}
+			$(".sortableImagery",r).anydropzone({
+				folder : 'product/'+pid,
+				drop : function(f,e){app.u.dump(' -> logged a drop.')},
+				upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
 				});
 
 			r.on('mouseenter','img',function(e){

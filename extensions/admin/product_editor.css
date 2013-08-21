@@ -76,3 +76,9 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 .panelContents_images .prodImagesContainer	{
 	float:left;	
 	}
+
+#panel_images .sortableImagery li	{
+	float:left;
+	margin: 6px;
+	position:relative;
+	}
