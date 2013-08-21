@@ -997,7 +997,7 @@ app.model.dispatchThis('mutable');
 
 					},
 				upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
-				}).append($("<li class='dropzone ui-state-highlight ui-corner-all'>Click here to add image or drop file here from desktop</li>").on('click',function(){
+				}).append($("<li class='dropzone'>Click here to add image or drop file here from desktop</li>").on('click',function(){
 					app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
 					}));
 
