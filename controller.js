@@ -2834,7 +2834,7 @@ return $r;
 
 		optionsFromList : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormats.optionsFromList.  data.value: "); app.u.dump(data.value);
-			var L = data.value.length;
+//			var L = data.value.length;
 			for(var index in data.value)	{
 				$("<option \/>").val((data.bindData.value) ? data.value[index][data.bindData.value] : data.value[index]).text((data.bindData.text) ? data.value[index][data.bindData.text] : data.value[index]).appendTo($tag);
 				}

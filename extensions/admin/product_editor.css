@@ -63,29 +63,24 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 .panelContents_images .skusImagesContainer ul	{width:225px; display:inline-block; min-height:35px;}
 
 .panelContents_images .sortableImagery li {border:1px solid #ffffff;} /* added so hover border doesn't cause 'pop' */
-.panelContents_images .sortableImagery li:hover	{border:1px solid #cccccc;}
+.panelContents_images .sortableImagery li:hover	{border:1px solid #efefef;}
+
 .imageIDRef {position:absolute; bottom:0px; left:0px; background:#efefef; padding:1px 3px;} /* the image ID (image32) shown on mouseover */
 
-.panelContents_images .thumbNewContainer	{
-	float:left;
-	margin-right: 2%;
-	width:20%;
-	min-width:150px;
-	}
-
+/* container for the 'product' level imagery */
 .panelContents_images .prodImagesContainer	{
 	float:left;	
 	}
 
-#panel_images .sortableImagery	{
-	border: #ff0000;
-	background:#FCF;
+/* used on an li at the end of each list of imagery to let users know they can 'drop' a file on here */
+#panel_images .dropzone	{
+	font-size:.85em;
+	width:75px;
+	height:75px;
 	}
 
-#panel_images .sortableImagery:before	{content:"Drop Images Here"; display: block; clear:both;}
-
-#panel_images .sortableImagery li	{
-	float:left;
-	margin: 6px;
-	position:relative;
+/* applied to the ul's around each list of images */
+#panel_images .sortableImagery	{
+	margin:0;
+	padding:20px;
 	}

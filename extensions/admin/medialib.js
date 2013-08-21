@@ -503,7 +503,8 @@ setTimeout(function(){
 //						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
-							'alt':fileInfo.Name
+							'alt':fileInfo.Name,
+							'data-filename':fileInfo.newFilename
 							});
 						}
 //update form element
