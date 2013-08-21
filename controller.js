@@ -286,12 +286,12 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			},//appCartCreate
 
-		appCategoryDetail : {
+		appNavcatDetail : {
 			init : function(obj,_tag,Q)	{
 				if(obj && obj.safe)	{
 					var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 					_tag = _tag || {};
-					_tag.datapointer = 'appCategoryDetail|'+obj.safe;
+					_tag.datapointer = 'appNavcatDetail|'+obj.safe;
 					
 //the model will add the value of _tag.detail into the response so it is stored in the data and can be referenced for future comparison.
 					if(obj.detail)	{_tag.detail = obj.detail} else {}
@@ -313,17 +313,17 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 						}
 					}
 				else	{
-					app.u.throwGMessage("In calls.appCategoryDetail, obj.safe not passed.");
+					app.u.throwGMessage("In calls.appNavcatDetail, obj.safe not passed.");
 					app.u.dump(obj);
 					}
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "appCategoryDetail";
+				obj._cmd = "appNavcatDetail";
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);	
 				}
-			},//appCategoryDetail		
+			},//appNavcatDetail		
 
 
 

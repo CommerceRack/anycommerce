@@ -3153,8 +3153,8 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}
 				else if(vars.findertype == 'NAVCAT')	{
 //Too many f'ing issues with using a local copy of the cat data.
-					app.model.destroy('appCategoryDetail|'+vars.path);
-					app.calls.appCategoryDetail.init({'safe':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					app.model.destroy('appNavcatDetail|'+vars.path);
+					app.calls.appNavcatDetail.init({'safe':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
 				else if(vars.findertype == 'CHOOSER')	{
 					app.ext.admin.u.addFinder(targetID,vars);
@@ -4408,8 +4408,8 @@ for a category, each sku added or removed is a separate request.
 						//datastatus set but not to a valid value. maybe queued?
 						}
 					});
-					app.model.destroy('appCategoryDetail|'+path);
-					app.calls.appCategoryDetail.init({'safe':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					app.model.destroy('appNavcatDetail|'+path);
+					app.calls.appNavcatDetail.init({'safe':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				else if (findertype == 'PAGE') {
 					app.u.dump("SAVING findertype PAGE");
@@ -4466,7 +4466,7 @@ app.ext.admin.u.updateFinderCurrentItemCount();
 
 
 /*
-executed in a callback for a appCategoryDetail or a appProductGet.
+executed in a callback for a appNavcatDetail or a appProductGet.
 generates an instance of the product finder.
 targetID is the id of the element you want the finder added to. so 'bob' would add an instance of the finder to id='bob'
 path is the list/category src (ex: .my.safe.id) or a product attribute [ex: product(zoovy:relateditems)].
@@ -4504,8 +4504,8 @@ if(vars.findertype == 'PRODUCT')	{
 		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+vars.path]['%attribs'][vars.attrib]);
 	}
 else if(vars.findertype == 'NAVCAT')	{
-	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appCategoryDetail|'+vars.path].pretty); //updates modal title
-	prodlist = app.data['appCategoryDetail|'+vars.path]['@products'];
+	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
+	prodlist = app.data['appNavcatDetail|'+vars.path]['@products'];
 	}
 else if (vars.findertype == 'CHOOSER')	{
 	$('#chooserResultContainer', $target).show();
@@ -4522,7 +4522,7 @@ else if(vars.findertype == 'PAGE')	{
 		$target.parent().find('.ui-dialog-title').text('Product Finder: Cart');
 		}
 	else	{
-		$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appCategoryDetail|'+vars.path].pretty); //updates modal title
+		$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
 		}
 	if(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])	{
 		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])

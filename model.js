@@ -829,8 +829,8 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 	
 	
 //no special error handling or anything like that.  this is just here to get the category safe id into the response for easy reference.	
-		handleResponse_appCategoryDetail : function(responseData)	{
-//			app.u.dump("BEGIN model.handleResponse_appCategoryDetail");
+		handleResponse_appNavcatDetail : function(responseData)	{
+//			app.u.dump("BEGIN model.handleResponse_appNavcatDetail");
 //save detail into response to make it easier to see what level of data has been requested during a fetch or call
 			if(responseData['_rtag'] && responseData['_rtag'].detail){
 				responseData.detail = responseData['_rtag'].detail;
@@ -958,7 +958,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errtype'] = "apperr"; 
 							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.PROFILE.";
 							}
-					case 'appCategoryDetail':
+					case 'appNavcatDetail':
 						if(responseData.errid > 0 || responseData['exists'] == 0)	{
 							r = true
 							responseData['errid'] = "MVC-M-200";
