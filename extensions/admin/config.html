@@ -3297,7 +3297,7 @@ Coming Soon
 		</label>		
 
 		<label>
-			<input type='checkbox' class='applyAnycb' name='ENABLE_SYNDICATION'  data-bind="var: domain(ENABLE_SYNDICATION); format:popVal;" />
+			<input type='checkbox' class='applyAnycb' name='IS_SYNDICATION'  data-bind="var: domain(IS_SYNDICATION); format:popVal;" />
 			Enable syndication
 		</label>
 		
@@ -3308,8 +3308,8 @@ Coming Soon
 		</label>
 <!--		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div> -->
 		
-		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
-<!--		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div> -->
+<!--		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
+		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div> -->
 		<div data-bind="var: domain(@READONLY.REG_TYPE); format:text; pretext:Registrar: ;"></div>
 		<div data-bind="var: domain(@READONLY.REG_TYPE_TXT); format:text;" class='hint'></div>
 		
