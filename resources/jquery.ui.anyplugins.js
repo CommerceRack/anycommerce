@@ -647,16 +647,16 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				if(this.options.status instanceof jQuery)	{
 					console.log(" -> status element IS defined.");
 					}
-				
+
 				if(this.options.thumbList instanceof jQuery)	{
 					console.log(" -> thumblist element IS defined.");
 					}
-				
+
 				$dropzone.on("dragover dragenter", function(event) {
 					event.stopPropagation();
 					event.preventDefault();
 					})
-					
+
 				$dropzone.on("drop",function(event){
 					event.preventDefault();
 					event.stopPropagation();
@@ -721,8 +721,8 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				img.width = 75;
 				img.classList.add('newMediaFile');
 
-				var $target = $(event.target);
-				if($target.is('ul'))	{
+				var $target = this.element;
+				if($target.is('ul') || $target.is('ol'))	{
 					$("<li \/>").append(img).appendTo($target);
 					}
 				else	{
