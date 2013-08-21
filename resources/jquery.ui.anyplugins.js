@@ -616,19 +616,24 @@ either templateID or (data or datapointer) are required.
 
 
 ///// anydropzone \\\\\
+/*
+turn any element into a drop zone for files to be dragged from a users desktop onto the browser.
 
+a lot of this code came from here:
+https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
+
+*/
 
 (function($) {
 	$.widget("ui.anydropzone",{
 		options : {
 			filetypes : null, //pass in an array of file types supported. ex ['csv','xls']
-			imageAttributes : null, //an object: {h:100,w:100,b:'ffffff'}. if thumbList is not set, this won't be used.
-			thumbList : null, //a jquery object or selector of where thumbnails of successfully uploaded images should be placed.
+			imageAttributes : null, //an object: {h:100,w:100,b:'ffffff'}.
 			folder : null, //folder in media library where images are placed.
 			_preview : null, //used to store the preview.
 //events
 			drop : null, //a function executed when a file is dropped. executed for each file. file,event passed in.
-			upload : null //a function executed after the upload has occured. executed for each file. file,event,responsedata passed in.
+			upload : null //a function executed after the upload has occured. executed for each file. file,event,responsedata passed in. executed whether response contains errors or not.
 			},
 		_init : function(){
 			console.log('got to init');
