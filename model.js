@@ -843,7 +843,21 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			app.model.handleResponse_defaultAction(responseData);
 			return responseData.id;
 			}, //handleResponse_categoryDetail
-
+		
+		handleResponse_appNavcatDetail : function(responseData)	{
+//			app.u.dump("BEGIN model.handleResponse_appNavcatDetail");
+//save detail into response to make it easier to see what level of data has been requested during a fetch or call
+			if(responseData['_rtag'] && responseData['_rtag'].detail){
+				responseData.detail = responseData['_rtag'].detail;
+				}
+			if(responseData['@products'] && !$.isEmptyObject(responseData['@products']))	{
+				responseData['@products'] = $.grep(responseData['@products'],function(n){return(n);}); //strip blanks
+				}
+			if(responseData['_rtag'] && responseData['_rtag'].datapointer)
+				responseData.id = responseData['_rtag'].datapointer.split('|')[1]; //safe id into data for easy reference.
+			app.model.handleResponse_defaultAction(responseData);
+			return responseData.id;
+			}, //handleResponse_appNavcatDetail
 
 /*
 It is possible that multiple requests for page content could come in for the same page at different times.

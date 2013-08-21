@@ -205,7 +205,7 @@ document.write = function(v){
 //we always get the tier 1 cats so they're handy, but we only do something with them out of the get if necessary (tier1categories is defined)
 				if($('#tier1categories').length)	{
 					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
-					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appNavcatDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 					app.model.dispatchThis();
 					}
 				}
@@ -333,8 +333,8 @@ document.write = function(v){
 				if(tagObj.navcat)	{
 //					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
 
-					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
-						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
+					if(typeof app.data['appNavcatDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appNavcatDetail|'+tagObj.navcat]))	{
+						tmp = app.data['appNavcatDetail|'+tagObj.navcat]
 						}
 					if(typeof app.data['appPageGet|'+tagObj.navcat] == 'object' && typeof app.data['appPageGet|'+tagObj.navcat]['%page'] == 'object' && !$.isEmptyObject(app.data['appPageGet|'+tagObj.navcat]['%page']))	{
 						tmp['%page'] = app.data['appPageGet|'+tagObj.navcat]['%page'];
@@ -529,7 +529,7 @@ need to be customized on a per-ria basis.
 		renderFormats : {
 
 //This function works in conjuction with the showContent/showPage and buildQueriesFromTemplate functions.
-//the parent and subcategory data (appCategoryDetail) must be in memory already for this to work right.
+//the parent and subcategory data (appNavcatDetail) must be in memory already for this to work right.
 //data.value is the category object. data.bindData is the bindData obj.
 			subcategoryList : function($tag,data)	{
 //				app.u.dump("BEGIN control.renderFormats.subcats");
@@ -546,11 +546,11 @@ need to be customized on a per-ria basis.
 					else if(!data.value[i].pretty || data.value[i].pretty.charAt(0) == '!')	{
 						//categories that start with ! are 'hidden' and should not be displayed.
 						}
-					else if(!$.isEmptyObject(app.data['appCategoryDetail|'+thisCatSafeID]))	{
-						$tag.append(app.renderFunctions.transmogrify({'id':thisCatSafeID,'catsafeid':thisCatSafeID},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+thisCatSafeID]));
+					else if(!$.isEmptyObject(app.data['appNavcatDetail|'+thisCatSafeID]))	{
+						$tag.append(app.renderFunctions.transmogrify({'id':thisCatSafeID,'catsafeid':thisCatSafeID},data.bindData.loadsTemplate,app.data['appNavcatDetail|'+thisCatSafeID]));
 						}
 					else	{
-						app.u.dump("WARNING - subcategoryList reference to appCategoryDetail|"+thisCatSafeID+" was an empty object.");
+						app.u.dump("WARNING - subcategoryList reference to appNavcatDetail|"+thisCatSafeID+" was an empty object.");
 						}
 					}
 				}, //subcategoryList
@@ -2108,8 +2108,8 @@ effects the display of the nav buttons only. should be run just after the handle
 				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
 				
 				if(infoObj.pageType == 'category')	{
-					$nextBtn.data('datapointer','appCategoryDetail|'+infoObj.navcat);
-					$prevBtn.data('datapointer','appCategoryDetail|'+infoObj.navcat);
+					$nextBtn.data('datapointer','appNavcatDetail|'+infoObj.navcat);
+					$prevBtn.data('datapointer','appNavcatDetail|'+infoObj.navcat);
 					r = true;
 					}
 //when moving from one product to the next using the buttons, do not reset data();
@@ -2130,7 +2130,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				$prevBtn.button({icons: {primary: "ui-icon-seek-prev"},text: false});
 				
 				function step($btn,increment)	{
-					if($btn.data('datapointer').indexOf('appCategoryDetail') >= 0)	{
+					if($btn.data('datapointer').indexOf('appNavcatDetail') >= 0)	{
 						var csv = app.data[$btn.data('datapointer')]['@products'],
 // ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
 						index = $.inArray(app.ext.myRIA.vars.hotw[0].pid, csv) + increment;
@@ -2554,7 +2554,7 @@ elasticsearch.size = 50;
 					var P = app.ext.myRIA.u.parseAnchor($this.attr('href'));
 					if(P.pageType == 'category' && P.navcat && P.navcat != '.'){
 //for bindnavs, get info to have handy. add to passive Q and It'll get dispatched by a setInterval.
-app.ext.store_navcats.calls.appCategoryDetailMax.init(P.navcat,{},'passive');
+app.ext.store_navcats.calls.appNavcatDetailMax.init(P.navcat,{},'passive');
 						}
 					$this.click(function(event){
 //						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
@@ -2709,7 +2709,7 @@ buyer to 'take with them' as they move between  pages.
 							$('#mainContentArea').append($content);
 							}
 						
-						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':infoObj.templateID,'parentID':parentID});
+						app.ext.store_navcats.calls.appNavcatDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':infoObj.templateID,'parentID':parentID});
 						app.model.dispatchThis();
 						}
 
@@ -2811,9 +2811,9 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 			if(namespace == 'category' &&  attribute.substring(0,5) === '%page')	{
 				tmpAttr = attribute.substring(6)
 				myAttributes.push(tmpAttr);  //set value to the actual value
-				if(app.data['appCategoryDetail|'+catSafeID] && app.data['appCategoryDetail|'+catSafeID]['%page'])	{
-					if(app.data['appCategoryDetail|'+catSafeID]['%page'][tmpAttr])	{}
-					else if(app.data['appCategoryDetail|'+catSafeID]['%page'][tmpAttr] === null){}
+				if(app.data['appNavcatDetail|'+catSafeID] && app.data['appNavcatDetail|'+catSafeID]['%page'])	{
+					if(app.data['appNavcatDetail|'+catSafeID]['%page'][tmpAttr])	{}
+					else if(app.data['appNavcatDetail|'+catSafeID]['%page'][tmpAttr] === null){}
 					else	{
 						myAttributes.push(tmpAttr);  //set value to the actual value
 						}
@@ -2837,8 +2837,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //				app.u.dump(" -> category(@subcategoryDetail) found");
 //check for the presence of subcats. if none are present, do nothing.
 //if detail isn't set on the subcat, fetching subcats isn't necessary anyway.
-				if(bindData.detail && typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
-					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'appCategoryDetailMax');
+				if(bindData.detail && typeof app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail']))	{
+					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'appNavcatDetailMax');
 					}
 				}
 			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{
