@@ -128,6 +128,32 @@ obj.PATH = .cat.safe.id
 				}
 			},//appCategoryDetail
 
+		appNavcatDetail : {
+			init : function(path,tagObj,Q)	{
+				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+				Q = Q || 'mutable';
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
+//whether max, more or just detail, always save to same loc.
+//add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
+				tagObj.datapointer = 'appNavcatDetail|'+path;
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r += 1;
+					this.dispatch(path,tagObj,Q);
+					}
+				else {
+		// app.u.dump(' -> using local');
+					app.u.handleCallback(tagObj)
+					}
+				return r;
+				},
+			dispatch : function(path,tagObj,Q)	{
+		// app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.dispatch');
+				var path;
+				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":path, "detail":"fast","_tag" : tagObj},Q);	
+				}
+			},//appNavcatDetail
+			
 		appCategoryDetailMore : {
 			init : function(catSafeID,tagObj,Q)	{
 				Q = Q || 'mutable';
@@ -161,8 +187,38 @@ obj.PATH = .cat.safe.id
 				}
 			},//appCategoryDetailMore
 
-
-
+		appNavcatDetailMore : {
+			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
+//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetailMore.init');
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
+				tagObj.datapointer = 'appNavcatDetail|'+catSafeID;
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+//nothing is local. go get it.
+					this.dispatch(catSafeID,tagObj,Q);
+					r += 1;
+					}
+				else	{
+//something is in local. if max or more, use it.
+					if(app.data[tagObj.datapointer].detail == 'max'  || app.data[tagObj.datapointer].detail == 'more')	{
+						app.u.handleCallback(tagObj)
+						}
+					else 	{
+//local is probably from a 'fast' request. go get more.
+						this.dispatch(catSafeID,tagObj,Q);
+						r += 1;
+						}
+					}
+				return r;
+				},
+			dispatch : function(catSafeID,tagObj,Q)	{
+				var catSafeID;
+				tagObj.datapointer = 'appNavcatDetail|'+catSafeID; //whether max, more or just detail, always save to same loc.
+				tagObj.detail = 'more'; //if detail is in tabObj, model will add it to data object.
+				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":catSafeID,"detail":"more","_tag" : tagObj},Q);	
+				}
+			},//appNavcatDetailMore
 
 		appCategoryDetailMax : {
 			init : function(catSafeID,tagObj,Q)	{
@@ -199,33 +255,41 @@ obj.PATH = .cat.safe.id
 				}
 			},//appCategoryDetailMax
 
-
-
-		appNavcatDetail : {
-			init : function(path,tagObj,Q)	{
-				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+		appNavcatDetailMax : {
+			init : function(catSafeID,tagObj,Q)	{
 				Q = Q || 'mutable';
+//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetailMax.init');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
 //whether max, more or just detail, always save to same loc.
 //add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
-				tagObj.datapointer = 'appNavcatDetail|'+path;
+				tagObj.datapointer = 'appNavcatDetail|'+catSafeID;
+//				app.u.dump(' -> datapointer = '+tagObj.datapointer);
+				
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
+//					app.u.dump(' -> data is not local. go get it.');
 					r += 1;
-					this.dispatch(path,tagObj,Q);
+					this.dispatch(catSafeID,tagObj,Q);
 					}
-				else {
-		// app.u.dump(' -> using local');
-					app.u.handleCallback(tagObj)
+				else	{
+					if(app.data[tagObj.datapointer].detail == 'max')	{
+						app.u.handleCallback(tagObj);
+						}
+					else 	{
+						r += 1;
+						this.dispatch(catSafeID,tagObj,Q);
+						}
 					}
 				return r;
 				},
-			dispatch : function(path,tagObj,Q)	{
-		// app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.dispatch');
-				var path;
-				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":path,"_tag" : tagObj},Q);	
+			dispatch : function(catSafeID,tagObj,Q)	{
+//				app.u.dump(' -> safeid = '+catSafeID);
+//				app.u.dump(' -> executing dispatch.');
+				tagObj.detail = 'max';
+				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":catSafeID,"detail":"max","_tag" : tagObj},Q);	
 				}
-			}//appNavcatDetail
+			}//appNavcatDetailMax
+
 
 
 		}, //calls
@@ -268,8 +332,8 @@ obj.PATH = .cat.safe.id
 				}
 			},
 /*
-cats that start with a ! in the 'pretty' name are 'hidden'.  However, the pretty name isn't available until appCategoryDetail is request.
-appCategoryDetail is requested AFTER a DOM element is already created for each category in the specified tree.  This is necessary because some data is loaded from local storage (fast)
+cats that start with a ! in the 'pretty' name are 'hidden'.  However, the pretty name isn't available until appNavcatDetail is request.
+appNavcatDetail is requested AFTER a DOM element is already created for each category in the specified tree.  This is necessary because some data is loaded from local storage (fast)
 and some has to be requested (not as fast). To maintain the correct order, the DOM element is added, then populated as info becomes available.
 in this case, the DOM element may not be necessary, and in those cases (hidden cat), it is removed.
 
@@ -295,7 +359,7 @@ templateID - the template id used (from app.templates)
 			},
 
 
-//to display a category w/ thumbnails, first the parent category obj is fetched (appCategoryDetail...) and this would be the callback.
+//to display a category w/ thumbnails, first the parent category obj is fetched (appNavcatDetail...) and this would be the callback.
 //it will get the detail of all the children, including 'meta' which has the thumbnail. It'll absorb the tag properties set in the inital request (parent, template) but
 // override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
 		getChildData : {
@@ -304,7 +368,7 @@ templateID - the template id used (from app.templates)
 				var catSafeID = tagObj.datapointer.split('|')[1];
 //				app.u.dump(" -> catsafeid: "+catSafeID);
 				tagObj.callback = 'addCatToDom'; //the tagObj will have 
-				app.ext.store_navcats.u.getChildDataOf(catSafeID,tagObj,'appCategoryDetail');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+				app.ext.store_navcats.u.getChildDataOf(catSafeID,tagObj,'appNavcatDetail');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 				app.model.dispatchThis();
 				}
 			} //getChildData
@@ -342,7 +406,7 @@ templateID - the template id used (from app.templates)
 //				app.u.dump("BEGIN store_navcats.renderFormats.categoryList");
 				if(typeof data.value == 'object' && data.value.length > 0)	{
 					var L = data.value.length;
-					var call = 'appCategoryDetail';
+					var call = 'appNavcatDetail';
 					var numRequests = 0;
 //The process is different depending on whether or not 'detail' is set.  detail requires a call for additional data.
 //detail will be set when more than the very basic information about the category is displayed (thumb, subcats, etc)
@@ -406,7 +470,7 @@ templateID - the template id used (from app.templates)
 
 //pass in category safe id as value
 			breadcrumb : function($tag,data)	{
-//app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); 
+app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); 
 var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
 
 if(app.u.isSet(data.value))	{
@@ -415,8 +479,8 @@ if(app.u.isSet(data.value))	{
 	var s = '.'
 	var catSafeID; //recycled in loop for path of category in focus during iteration.
 	//make sure homepage has a pretty.  yes, it sometimes happens that it doesn't.
-//	if(!app.data['appCategoryDetail|.'] || !app.data['appCategoryDetail|.'].pretty)	{
-//		app.data['appCategoryDetail|.'].pretty = 'Home';
+//	if(!app.data['appNavcatDetail|.'] || !app.data['appNavcatDetail|.'].pretty)	{
+//		app.data['appNavcatDetail|.'].pretty = 'Home';
 //		}
 
 //Creates var for tracking whether root has been met.
@@ -432,8 +496,9 @@ if(app.u.isSet(data.value))	{
 				reachedRoot = (zGlobals.appSettings.rootcat === s);
 			}
 			if(reachedRoot) {
-			//	app.u.dump(" -> "+i+" s(path): "+s);
-				$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));
+				app.u.dump(" -> "+i+" s(path): "+s);
+				app.u.dump(app.data['appNavcatDetail|'+s]);
+				$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appNavcatDetail|'+s]));
 			}
 			if(i!=0)
 			s += '.';
@@ -455,7 +520,7 @@ if(app.u.isSet(data.value))	{
 /*
 In cases where the root categories are needed, this function will return them from the appCategoryList dataset.
 function assumes appCategoryList already exists in memory.
-will return an object of id:safeid, which is how the categories are stored in a appCategoryDetail.
+will return an object of id:safeid, which is how the categories are stored in a appNavcatDetail.
 the formatted is specific so that getChildDataOf can be used for a specific id or '.' so don't change the output without testing it in that function.
 */
 			getRootCats : function()	{
@@ -510,12 +575,12 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 				if(catSafeID == '.')	{
 					catsArray = this.getRootCats();
 					}
-				else if(app.data['appCategoryDetail|'+catSafeID])	{
-					if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
-						catsArray = app.data['appCategoryDetail|'+catSafeID]['@subcategories'];
+				else if(app.data['appNavcatDetail|'+catSafeID])	{
+					if(typeof app.data['appNavcatDetail|'+catSafeID]['@subcategories'] == 'object')	{
+						catsArray = app.data['appNavcatDetail|'+catSafeID]['@subcategories'];
 						}
-//when a max detail is done for appCategoryDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
-					else if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object')	{
+//when a max detail is done for appNavcatDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
+					else if(typeof app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'] == 'object')	{
 						catsArray = this.getSubsFromDetail(catSafeID);
 						}
 //					app.u.dump(" -> catsArray: "); app.u.dump(catsArray);
@@ -529,7 +594,7 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 a function for obtaining information about a categories children.
 assumes you have already retrieved data on parent so that @subcategories or @subcategoryDetail is present.
  -> catSafeID should be the category safe id that you want to obtain information for.
- -> call, in all likelyhood, will be set to one of the following:  appCategoryDetailMax, appCategoryDetailMore, appCategoryDetailFast.  It'll default to Fast.
+ -> call, in all likelyhood, will be set to one of the following:  appNavcatDetailMax, appNavcatDetailMore, appNavcatDetail.  It'll default to Fast (no suffix).
 tagObj is optional and would contain an object to be passed as _tag in the request (callback, templateID, etc).
 if the parentID and templateID are passed as part of tagObj, a template instance is created within parentID.
 
@@ -541,7 +606,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 			getChildDataOf : function(catSafeID,tagObj,call){
 				var numRequests = 0; //will get incremented once for each request that needs dispatching.
 //				app.u.dump("BEGIN app.ext.store_navcats.u.getChildDataOf ("+catSafeID+")");
-//				app.u.dump(app.data['appCategoryDetail|'+catSafeID])
+//				app.u.dump(app.data['appNavcatDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
 				var catsArray = this.getListOfSubcats(catSafeID)
 				var newParentID;
@@ -551,7 +616,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 					
 					catsArray.sort(); //sort by safe id.
 					var L = catsArray.length;
-					var call = call ? call : "appCategoryDetail"
+					var call = call ? call : "appNavcatDetail"
 	//used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
 					renderTemplate = false;
 					if(tagObj.templateID && tagObj.parentID)	{
@@ -574,13 +639,13 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 				return numRequests;
 				}, //getChildDataOf
 
-//on a appCategoryDetail, the @subcategoryDetail contains an object. The data is structured differently than @subcategories.
+//on a appNavcatDetail, the @subcategoryDetail contains an object. The data is structured differently than @subcategories.
 //this function will return an array of subcat id's, formatted like the value of @subcategories.
 			getSubsFromDetail : function(catSafeID)	{
 				var catsArray = new Array(); //what is returned. incremented with each dispatch created.
-				var L = app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'].length
+				var L = app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'].length
 				for(var i = 0; i < L; i += 1)	{
-					catsArray.push(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'][i].id);
+					catsArray.push(app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'][i].id);
 					}
 				//app.u.dump(catsArray);
 				return catsArray;			
@@ -593,11 +658,11 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 				var pathArray = path.split('.');
 				var len = pathArray.length
 				var s= '.'; //used to contatonate safe id.
-				numRequests += app.ext.store_navcats.calls.appCategoryDetail.init('.'); //homepage data. outside of loop so I can keep loop more efficient
+				numRequests += app.ext.store_navcats.calls.appNavcatDetail.init('.'); //homepage data. outside of loop so I can keep loop more efficient
 				for (var i=1; i < len; i += 1) {
 					s += pathArray[i]; //pathArray[0] will be blank, so s (.) plus nothing is just .
 //					app.u.dump(" -> path for breadcrumb: "+s);
-					numRequests += app.ext.store_navcats.calls.appCategoryDetail.init(s);
+					numRequests += app.ext.store_navcats.calls.appNavcatDetail.init(s);
 				//after each loop, the . is added so when the next cat id is appended, they're concatonated with a . between. won't matter on the last loop cuz we're done.
 					s += "."; //put a period between each id. do this first so homepage data gets retrieved.
 					
