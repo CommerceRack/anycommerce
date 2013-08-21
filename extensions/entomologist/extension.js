@@ -61,12 +61,17 @@ var entomologist = function() {
 					var $debugger = $('<div></div>');
 					$debugger.anycontent({'data':{}, 'templateID':'debuggerTemplate'});
 					app.ext.entomologist.vars.$debugger = $debugger;
-					
+					$debugger.on('click.refreshDebug', '[data-debug="refresh"]', function(){
+						if($(this).attr('data-debug-target')){
+							app.u.dump($('[data-debug="'+$(this).attr('data-debug-target')+'"]', $debugger));
+							app.ext.entomologist.u.update($('[data-debug="'+$(this).attr('data-debug-target')+'"]', $debugger));
+							}
+						});
 					$debugger.dialog({'title':'Entomology Lab'});
 					}
 								
-				app.ext.entomologist.u.updateProdDumperList();
-				app.ext.entomologist.u.updateCatDumperList();
+				app.ext.entomologist.u.update( $('[data-debug="prodDumperList"]', $debugger));
+				app.ext.entomologist.u.update( $('[data-debug="catDumperList"]', $debugger));
 				
 				
 				return "Opening Entomology Lab...";
@@ -82,23 +87,33 @@ var entomologist = function() {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
-			updateProdDumperList : function($context){
-				var $prodDumperList = $('[data-debug="prodDumperList"]', $context);
+			updateList : function($target, datapointerPrefix, templateID){
+				app.u.dump('BEGIN app.ext.entomologist.u.updateList');
+				$target.intervaledEmpty();
 				for(var index in app.data){
-					if(index.indexOf('appProductGet') >= 0){
+					if(index.indexOf(datapointerPrefix) >= 0){
 						app.u.dump(index);
-						var $listing = $('<div />').anycontent({'data':app.data[index], 'templateID':'prodDumperTemplate'});
-						$prodDumperList.append($listing);
+						var $listing = $('<div />').anycontent({'data':app.data[index], 'templateID':templateID});
+						$target.append($listing);
 						}
 					}
 				},
-			updateCatDumperList : function($context){
-				var $catDumperList = $('[data-debug="catDumperList"]', $context);
-				for(var index in app.data){
-					if(index.indexOf('appNavcatDetail') >= 0){
-						var $listing = $('<div />').anycontent({'data':app.data[index], 'templateID':'catDumperTemplate'});
-						$catDumperList.append($listing);
-						}
+			updateTag : function($target, datapointer, templateID){
+				app.u.dump('BEGIN app.ext.entomologist.u.updateTag');
+				if(app.data[datapointer]){
+					$target.intervaledEmpty().anycontent({'data':app.data[datapointer], 'templateID':templateID});
+					}
+				
+				},
+			update : function($target){
+				app.u.dump('BEGIN app.ext.entomologist.u.update');
+				if($target.attr('data-debug-loadsTemplate') && $target.attr('data-debug-datapointerPrefix')){
+					app.u.dump('Looks like a list!');
+					this.updateList($target, $target.attr('data-debug-datapointerPrefix'), $target.attr('data-debug-loadsTemplate'));
+					}
+				else if($target.attr('data-debug-templateID') && $target.attr('data-debug-datapointer')) {
+					app.u.dump('Looks like a tag!');
+					this.updateTag($target, $target.attr('data-debug-datapointer'), $target.attr('data-debug-templateID'));
 					}
 				},
 			dumpData : function(datapointer){
