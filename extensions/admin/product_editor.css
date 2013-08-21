@@ -59,11 +59,37 @@ td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; pad
 td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
 td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 
+
+/* for the sku-specific imagery */
 .panelContents_images .skusImagesContainer	{float:right; display:none; margin-left:2%;}
 .panelContents_images .skusImagesContainer ul	{width:225px; display:inline-block; min-height:35px;}
 
+
+/*
 .panelContents_images .sortableImagery li {border:1px solid #ffffff;} /* added so hover border doesn't cause 'pop' */
+/*
 .panelContents_images .sortableImagery li:hover	{border:1px solid #efefef;}
+*/
+
+
+.polaroid-images a
+{
+	background: white;
+	display: inline;
+	float: left;
+	margin: 0 15px 30px;
+	padding: 10px 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	-webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	-webkit-transition: all .15s linear;
+	-moz-transition: all .15s linear;
+	transition: all .15s linear;
+	z-index:0;
+        position:relative;
+}
 
 .imageIDRef {position:absolute; bottom:0px; left:0px; background:#efefef; padding:1px 3px;} /* the image ID (image32) shown on mouseover */
 
@@ -84,3 +110,29 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 	margin:0;
 	padding:20px;
 	}
+
+
+
+
+#panel_images .sortableImagery li {
+	background: white;
+	display: inline;
+	float: left;
+	margin: 0 15px 30px;
+	padding: 10px 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	-webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	-webkit-transition: all .15s linear;
+	-moz-transition: all .15s linear;
+	transition: all .15s linear;
+	z-index:0;
+	position:relative;
+	}
+
+#panel_images .sortableImagery img { 
+	display: block; 
+	width: inherit; 
+}

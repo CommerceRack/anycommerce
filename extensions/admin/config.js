@@ -891,7 +891,12 @@ $D.dialog('open');
 					'_tag':sfo._tag,
 					'@updates': new Array()
 					};
-
+				
+				newSfo['@updates'].push("IS_PRIMARY?"+sfo.IS_PRIMARY);
+				newSfo['@updates'].push("ENABLE_SYNDICATION?"+sfo.ENABLE_SYNDICATION);
+			
+				
+				
 				if($("input[name='LOGO']",$form).hasClass('edited'))	{
 					newSfo['@updates'].push("DOMAIN-SET-LOGO?LOGO="+sfo.LOGO || ""); //set to value of LOGO. if not set, set to blank (so logo can be cleared).
 					}				

@@ -190,10 +190,6 @@
 
 
 <div id='partitionCreateTemplate'>
-<h1>NOT DONE YET.</h1>
-
-
-
 <form action='#' onsubmit="return false;" class='labelsAsBreaks'>
 
 
@@ -3220,8 +3216,8 @@ Coming Soon
 	</div>
 	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint'>
 
-	<fieldset>
-		<legend>Add Rewrite Rule</legend>
+	<fieldset class='alignedInputs'>
+		<legend>Rewrite Rules</legend>
 		<label>
 			<span>Incoming URL</span>
 			<input type='url' required='required' name='PATH' value='' />
@@ -3295,14 +3291,25 @@ Coming Soon
 		<h5 data-bind="var: domain(DOMAINNAME); format:text;"></h5>
 		
 		<label>
-			<span>Partition</span>
+			<input type='checkbox' class='applyAnycb' name='IS_PRIMARY'  data-bind="var: domain(IS_PRIMARY); format:popVal;" />
+			Tag as primary
+			<span class='toolTip' title="Only 1 primary domain per partition.">?</span>
+		</label>		
 
+		<label>
+			<input type='checkbox' class='applyAnycb' name='ENABLE_SYNDICATION'  data-bind="var: domain(ENABLE_SYNDICATION); format:popVal;" />
+			Enable syndication
+		</label>
+		
+		
+		<label>
+			<span>Partition</span>
 			<select name='PRT' data-bind="var: partitions(@PRTS); format: optionsFromList; value:id; text:id;"></select>
 		</label>
 <!--		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div> -->
 		
 		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
-		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div>
+<!--		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div> -->
 		<div data-bind="var: domain(@READONLY.REG_TYPE); format:text; pretext:Registrar: ;"></div>
 		<div data-bind="var: domain(@READONLY.REG_TYPE_TXT); format:text;" class='hint'></div>
 		
