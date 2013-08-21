@@ -570,7 +570,7 @@ need to be customized on a per-ria basis.
 //likely to be used in prodcats if/when it's built.s
 //here, on 'could' disable the display if they didn't want hidden cats to show in the breadcrumb.
 			catText : function($tag,data)	{
-				app.u.dump(data.value);
+//				app.u.dump(data.value);
 				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
 				app.renderFormats.text($tag,data)
 				},
