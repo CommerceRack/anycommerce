@@ -1,11 +1,13 @@
 <div id="debuggerTemplate">
-	This is the Debugger.
+	<h4>
+		This is the Debugger.
+	</h4>
 	
-	<span data-debug="refresh" data-debug-target="prodDumperList"></span>
-	<div data-debug="prodDumperList"></div>
+	<span data-debug="refresh" data-debug-target="prodDumperList">Refresh ProdList</span>
+	<div data-debug="prodDumperList" data-debug-loadsTemplate="prodDumperTemplate" data-debug-datapointerPrefix="appProductGet" ></div>
 
-	<span data-debug="refresh" data-debug-target="catDumperList"></span>
-	<div data-debug="catDumperList"></div>
+	<span data-debug="refresh" data-debug-target="catDumperList">Refresh CatList</span>
+	<div data-debug="catDumperList" data-debug-loadsTemplate="catDumperTemplate" data-debug-datapointerPrefix="appNavcatDetail" ></div>
 </div>
 
 <div id="prodDumperTemplate">
