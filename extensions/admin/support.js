@@ -304,7 +304,7 @@ var admin_support = function() {
 			execTicketCreate : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-e"}});
 //					app.u.dump("-> vars: "); app.u.dump(vars)
-				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
+				$btn.off('click.execTicketCreate').on('click.execTicketCreate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
 					
@@ -621,6 +621,7 @@ app.model.dispatchThis('mutable');
 					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
 					$target.data({'ticketid':'0','uuid':app.u.guidGenerator()}); //necessary for file attachment.
 					$target.dialog({'width':'75%','height':500});
+					
 					app.u.handleAppEvents($target,{'$context':$btn.closest("[data-app-role='dualModeList']")});
 					});
 				}, //showTicketCreate
