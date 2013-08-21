@@ -602,9 +602,12 @@ app.model.dispatchThis('mutable');
 //			app.u.dump(" -> data.value: "); app.u.dump(data.value);
 			for(var i = 1; i <= 30; i += 1)	{
 				var imgName = data.value['%attribs']['zoovy:prod_image'+i];
+				var w = data.bindData.w || 75;
+				var h = data.bindData.h || 75;
+				var b = data.bindData.b || 'ffffff';
 //				app.u.dump(" -> imgName: "+imgName);
 				if(app.u.isSet(imgName))	{
-					$tag.append("<li><a title='"+imgName+"'><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' data-filename='"+imgName+"' \/><\/a><\/li>");
+					$tag.append("<li><a title='"+imgName+"'><img src='"+app.u.makeImage({'tag':0,'w':w,'h':h,'name':imgName,'b':b})+"' width='"+w+"' height='"+b+"' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' data-filename='"+imgName+"' \/><\/a><\/li>");
 					//data-filename on the image is used in the 'save' in the product editor - images panel.
 					}
 				else	{break;} //exit once a blank is hit.
@@ -931,9 +934,16 @@ app.model.dispatchThis('mutable');
 			app.u.dump("BEGIN admin_prodEdit.u.getImagesPanelContents");
 			r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
 
+
+//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
+			var $prodImageUL = $("[data-app-role='prodImagesContainer']",r);
+			$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
+			
+
 //@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
 			if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
 //						app.u.dump(" -> More than one sku is present.");
+				$prodImageUL.width('60%'); //width is only applied IF right column (sku imagery) is present.
 				var $container = $("[data-app-role='prodEditSkuImagesContainer']",r).show();
 				var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
 				var L = skus.length;
@@ -946,9 +956,6 @@ app.model.dispatchThis('mutable');
 
 			app.ext.admin.u.handleAppEvents(r);
 
-//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
-			var $prodImageUL = $("[data-app-role='prodImagesContainer']",r);
-			$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
 
 //images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
 			$(".sortableImagery",r).sortable({
@@ -980,15 +987,21 @@ app.model.dispatchThis('mutable');
 						if (!file.type.match(imageType)) {
 							continue;
 							}
-					
+						var $target = self.element;
 						var img = document.createElement("img");
 						img.classList.add("obj");
 						img.file = file;
-						img.height = 75;
-						img.width = 75;
+						if($target.attr('data-app-role') == 'skulist')	{
+							img.height = 35;
+							img.width = 35;
+							}
+						else	{
+							img.height = 75;
+							img.width = 75;
+							}
 						img.classList.add('newMediaFile');
 		
-						var $target = self.element;
+						
 						$target.children().last().before($("<li \/>").append(img)); //the last child is the 'click here'. put new image before that.
 						var reader = new FileReader();
 						reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
@@ -997,7 +1010,7 @@ app.model.dispatchThis('mutable');
 
 					},
 				upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
-				}).append($("<li class='dropzone'>Click here to add image or drop file here from desktop</li>").on('click',function(){
+				}).append($("<li class='dropzone'>Click or drop file here to add image</li>").on('click',function(){
 					app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
 					}));
 

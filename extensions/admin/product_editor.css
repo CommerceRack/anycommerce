@@ -61,54 +61,37 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 
 
 /* for the sku-specific imagery */
-.panelContents_images .skusImagesContainer	{float:right; display:none; margin-left:2%;}
+.panelContents_images .skusImagesContainer	{float:right; display:none; width:35%;}
 .panelContents_images .skusImagesContainer ul	{width:225px; display:inline-block; min-height:35px;}
 
-
-/*
-.panelContents_images .sortableImagery li {border:1px solid #ffffff;} /* added so hover border doesn't cause 'pop' */
-/*
-.panelContents_images .sortableImagery li:hover	{border:1px solid #efefef;}
-*/
-
-
-.polaroid-images a
-{
-	background: white;
-	display: inline;
-	float: left;
-	margin: 0 15px 30px;
-	padding: 10px 10px 25px;
-	text-align: center;
-	text-decoration: none;
-	-webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
-	-moz-box-shadow: 0 4px 6px rgba(0,0,0,.3);
-	box-shadow: 0 4px 6px rgba(0,0,0,.3);
-	-webkit-transition: all .15s linear;
-	-moz-transition: all .15s linear;
-	transition: all .15s linear;
-	z-index:0;
-        position:relative;
-}
 
 .imageIDRef {position:absolute; bottom:0px; left:0px; background:#efefef; padding:1px 3px;} /* the image ID (image32) shown on mouseover */
 
 /* container for the 'product' level imagery */
 .panelContents_images .prodImagesContainer	{
-	float:left;	
+	float:left;
 	}
 
 /* used on an li at the end of each list of imagery to let users know they can 'drop' a file on here */
 #panel_images .dropzone	{
-	font-size:.85em;
+	font-size:.9em;
 	width:75px;
 	height:75px;
 	}
+
+#panel_images .skusImagesContainer .dropzone	{
+	font-size:.65em;
+	width:45px;
+	height:45px;
+	}
+
+
 
 /* applied to the ul's around each list of images */
 #panel_images .sortableImagery	{
 	margin:0;
 	padding:20px;
+	display: inline-block;
 	}
 
 
@@ -119,7 +102,7 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 	display: inline;
 	float: left;
 	margin: 6px;
-	padding: 6px 6px 12px;
+	padding: 6px;
 	text-align: center;
 	text-decoration: none;
 	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
