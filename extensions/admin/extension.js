@@ -79,35 +79,6 @@ var admin = function() {
 			},
 
 
-
-//////////// PAGES \\\\\\\\\\\\\
-
-/*
-Planned enhancement.  inline page handler. supports same params as legacy compat mode.
-if no handler is in place, then the app would use legacy compatibility mode.
-	pages : {
-		
-		"/biz/setup/index.cgi" : {
-			messages : [], //array of strings. TYPE|MESSAGE -> used in legacy compat.
-			bc : [], //array of objects. link and name in order left to right. zero is leftmost in array.
-			help : "", //webdoc ID.
-			navtabs : {}, //array of objects. link, name and selected (boolean)
-			title : {},
-			requireDomain : false,
-			rolesAllowed : ['ts1','ro1'],
-			tab : '', //string. can be blank. if blank, uses tab in focus. use 'home' for no tab/turn all tabs off.
-			exec : function(){}  //executes the code to render the page.
-			},
-		"/biz/syndication/index.cgi" : {
-			exec : function(){
-				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-				$('#syndicationContent').empty().append(app.renderFunctions.transmogrify('','pageSyndicationTemplate',{}));
-
-				}
-			}
-		},
-*/
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 
 
@@ -173,7 +144,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
-			}, //adminBatchJobStatus
+			}, //adminConfigDetail
 
 
 
@@ -242,6 +213,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerDetail
+
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
 			init : function(obj,_tag,Q)	{
@@ -262,6 +234,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
+
 //email is required in macro
 		adminCustomerCreate : {
 			init : function(updates,_tag)	{
@@ -1870,15 +1843,19 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 //** 201320 -> no more hunting and pecking for domain. stored in dps and if it isn't there, the user will be prompted (in showHeader) to select one.
 //the domainChange will set these three vars in localStorage so they'll be there next time.
 //all three of the vars are required. images require the https_domain and several configDetail calls require partition.
-				app.vars.domain = app.ext.admin.u.dpsGet('admin','domain');
-				app.vars.partition = app.ext.admin.u.dpsGet('admin','partition');
-				app.vars.https_domain = app.ext.admin.u.dpsGet('admin','https_domain');
-				
+var adminObj = app.ext.admin.u.dpsGet('admin');
+if(!$.isEmptyObject(adminObj))	{
+	app.vars.domain = adminObj.domain;
+	app.vars.partition = adminObj.partition;
+	app.vars.https_domain = adminObj.https_domain;
+	}
+			
 				app.u.dump(" -> domain: "+app.vars.domain);
 				app.u.dump(" -> partition: "+app.vars.partition);
 				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
-				if(!app.vars.domain || !app.vars.partition || !app.vars.https_domain)	{
+				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
+					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
 
@@ -2199,7 +2176,7 @@ Function does NOT dispatch.
 				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td valignTop><iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'><\/iframe><\/td><\/tr><\/table>");
+				$target.empty().append("<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='noBorders floatRight marginLeft ad-300x250'><\/iframe>");
 				var L = data.length;
 				$target.hideLoading();
 				if(L)	{
@@ -2208,20 +2185,37 @@ Function does NOT dispatch.
 					if($ul.length)	{$ul.empty()} //user is changing domains.
 	//first time modal has been viewed.
 					else	{
-						$ul = $("<ul \/>").attr('id','domainList');
+						$ul = $("<ul \/>").attr('id','domainList').addClass('listStyleNone marginRight');
+						$ul.off('click.domain').on('click.domain','li',function(e){
+							app.ext.admin.a.changeDomain($(e.target).data('DOMAINNAME'),$(e.target).data('PRT'))
+							$target.dialog('close');
+							});
 						}
 
-					for(var i = 0; i < L; i += 1)	{
-						$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].DOMAINNAME == app.vars.domain ? 'ui-selected' : '').append(data[i].DOMAINNAME+" [prt: "+data[i].PRT+"]").click(function(){
-							app.ext.admin.a.changeDomain($(this).data('DOMAINNAME'),$(this).data('PRT'))
-							$target.dialog('close');
-							}).appendTo($ul);
+					function showDomains(favoritesOnly)	{
+						for(var i = 0; i < L; i += 1)	{
+							if((favoritesOnly && data[i].IS_FAVORITE) || (favoritesOnly === false))	{
+								$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].DOMAINNAME == app.vars.domain ? 'ui-selected' : '').append(data[i].DOMAINNAME+" [prt: "+data[i].PRT+"]").appendTo($ul);
+								}
+							}
 						}
-					$('.domainList',$target).append($ul);
+
+					//load the list of favorites.
+					showDomains(true); 
+					//no favorites were present. show all domains.
+					if(!$ul.children().length)	{
+						showDomains(false); 
+						}
+
+					$ul.appendTo($target); //added last to minimize DOM updates.
 					}
 				else	{
-//user has no domains on file. What to do?
+					$("<p>It appears you have no domains configured. <span class='lookLikeLink'>Click here<\/span> to go configure one.<\p>").on('click',function(){
+						$target.dialog('close');
+						navigateTo("#!domainConfigPanel");
+						}).appendTo($target);
 					}
+				
 				},
 			onError: function(responseData)	{
 				var $target = $(app.u.jqSelector('#',responseData._rtag.targetID));
