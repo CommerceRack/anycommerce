@@ -636,7 +636,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			upload : null //a function executed after the upload has occured. executed for each file. file,event,responsedata passed in. executed whether response contains errors or not.
 			},
 		_init : function(){
-			console.log('got to init');
+//			app.u.dump('got to init');
 			var
 				$dropzone = this.element,
 				anyfiledrop = this; //inside the event handlers below, 'this' loses context.
@@ -645,11 +645,11 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			else{
 				$dropzone.data('widget-anydropzone',true);
 				if(this.options.status instanceof jQuery)	{
-					console.log(" -> status element IS defined.");
+					app.u.dump(" -> status element IS defined.");
 					}
 
 				if(this.options.thumbList instanceof jQuery)	{
-					console.log(" -> thumblist element IS defined.");
+					app.u.dump(" -> thumblist element IS defined.");
 					}
 
 				$dropzone.on("dragover dragenter", function(event) {
@@ -678,13 +678,18 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			},
 
 		_fileUpload : function(img, file)	{
+			
+			file.name = file.name.toLowerCase();
+			
 			var o = this.options;
 			var reader = new FileReader();  
+			var folder = o.folder || file.name.charAt(0).toLowerCase();
+			$(img).attr('data-filename',folder+'/'+file.name); //used during the save.
 			reader.onload = function(evt) {
 				app.model.addDispatchToQ({
 					'_cmd':'adminImageUpload',
 					'base64' : btoa(evt.target.result), //btoa is binary to base64
-					'folder' : o.folder || file.name.charAt(0).toLowerCase(),
+					'folder' : folder,
 					'filename' : file.name,
 					'_tag':	{
 						'callback' : function(rd){
@@ -700,46 +705,13 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			reader.readAsBinaryString(file);
 			},
 
-//adds files to the DOM.
-		_handleFiles : function(files,event)	{
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				var imageType = /image.*/;
-
-				if(typeof this.options.drop === 'function')	{
-					this.options.drop(files[i],event);
-					}
-
-				if (!file.type.match(imageType)) {
-					continue;
-					}
-			
-				var img = document.createElement("img");
-				img.classList.add("obj");
-				img.file = file;
-				img.height = 75;
-				img.width = 75;
-				img.classList.add('newMediaFile');
-
-				var $target = this.element;
-				if($target.is('ul') || $target.is('ol'))	{
-					$("<li \/>").append(img).appendTo($target);
-					}
-				else	{
-					$target.append(img);
-					}
-//				preview.appendChild(img);
-				
-				var reader = new FileReader();
-				reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-				reader.readAsDataURL(file);
-				}
-			},
 //executed when a file is dropped onto a dropzone.
 		_drop : function(event)	{
 			event.preventDefault();
 			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
-			this._handleFiles(dt.files,event);
+			if(typeof this.options.drop === 'function')	{
+				new this.options.drop(dt.files,event,this); // !!! revisit this. should pass in 'events' and 'ui' like other plugins. need to figure that out.
+				}
 			this._sendFiles();
 			}, //_drop
 
@@ -889,7 +861,7 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 								var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
 								var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
 								if(numA && numB)	{
-					//				console.log('is a number');
+					//				app.u.dump('is a number');
 									r = numA > numB ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
 									}
 								else	{
@@ -1170,8 +1142,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 				
 				default:
-//					console.log("Unrecognized option passed into anypanel via setOption");
-//					console.log(" -> option: "+option);
+//					app.u.dump("Unrecognized option passed into anypanel via setOption");
+//					app.u.dump(" -> option: "+option);
 					break;
 				}
 			},
@@ -1368,7 +1340,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			},
 
 		_init : function(){
-//			console.log('init sticktab');
+//			app.u.dump('init sticktab');
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element, //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
@@ -1422,7 +1394,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 
 //if no sticktabs container exists, create one. if more control is desired over location, create a sticktabs element in your html and css to position as desired.
 		_handleContainer : function()	{
-//			console.log('building container');
+//			app.u.dump('building container');
 			var $container = $('#stickytabs');
 			if($container.length)	{} //container is already defined. do nothing.
 			else	{
@@ -1459,7 +1431,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			},
 //builds the tab and content container.
 		_buildSticky : function()	{
-//			console.log('building sticktab');
+//			app.u.dump('building sticktab');
 			var 
 				$sticky = $("<div \/>").css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
 				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
@@ -1473,7 +1445,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 		_addTabEvents : function($stickytab)	{
 			var self = this;
 			$stickytab.on('click.stickytab',function(){
-//				console.log(self.sticky.position().left);
+//				app.u.dump(self.sticky.position().left);
 				if(self.sticky.position().left >= 0)	{
 					self.close();
 					}
@@ -1486,14 +1458,14 @@ supported options include tabID (given to the container), tabtext (what appears 
 			$('.ui-widget-stickytab-tab',this.sticky).trigger('click.stickytab');
 			},
 		open : function()	{
-//			console.log('open tab');
+//			app.u.dump('open tab');
 			if(this.sticky.position().left != 0)	{
 				this.sticky.animate({left: 0}, 'slow');
 				}
 			else	{} //already open.
 			},
 		close : function()	{
-//			console.log('close tab');
+//			app.u.dump('close tab');
 			this.sticky.animate({left: -(this.sticky.outerWidth())}, 'slow');
 			},
 		destroy : function()	{

@@ -597,14 +597,15 @@ app.model.dispatchThis('mutable');
 	renderFormats : {
 		
 		prodImages : function($tag,data)	{
-			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
+//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
 			var L = data.bindData.max || 99;
 //			app.u.dump(" -> data.value: "); app.u.dump(data.value);
-			for(var i = 1; i <= 99; i += 1)	{
+			for(var i = 1; i <= 30; i += 1)	{
 				var imgName = data.value['%attribs']['zoovy:prod_image'+i];
-				app.u.dump(" -> imgName: "+imgName);
+//				app.u.dump(" -> imgName: "+imgName);
 				if(app.u.isSet(imgName))	{
-					$tag.append("<li><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' \/></li>");
+					$tag.append("<li><a title='"+imgName+"'><img src='"+app.u.makeImage({'tag':0,'w':75,'h':75,'name':imgName,'b':'ffffff'})+"' width='75' height='75' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' data-filename='"+imgName+"' \/><\/a><\/li>");
+					//data-filename on the image is used in the 'save' in the product editor - images panel.
 					}
 				else	{break;} //exit once a blank is hit.
 				}
@@ -938,13 +939,16 @@ app.model.dispatchThis('mutable');
 				var L = skus.length;
 				var $table = $("<table \/>").addClass('gridTable').appendTo($container);
 				for(var i = 0; i < L; i += 1)	{
-//							app.u.dump(" -> skus[i].sku: "+skus[i].sku);
-					var $tr = app.renderFunctions.transmogrify('','prodEditSKUImageTemplate',skus[i])
+					var $tr = app.renderFunctions.transmogrify(skus[i],'prodEditSKUImageTemplate',skus[i])
 					$tr.appendTo($table);
 					}
 				}
 
 			app.ext.admin.u.handleAppEvents(r);
+
+//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
+			var $prodImageUL = $("[data-app-role='prodImagesContainer']",r);
+			$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
 
 //images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
 			$(".sortableImagery",r).sortable({
@@ -957,18 +961,45 @@ app.model.dispatchThis('mutable');
 				'cursor' : "move",
 				'cursorAt' : { left: 5 },
 				'connectWith' : '.sortableImagery',
+				'stop' : function(event,ui)	{ui.item.addClass('edited')},
 				'remove' : function(event, ui) {
-					ui.item.after(ui.item.clone());//clone the dropped item into the new parent at the drop index.
+					ui.item.after(ui.item.clone().addClass('edited'));//clone the dropped item into the new parent at the drop index.
 					$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
 					},
 				'revert' : true
 				});
 
 			$(".sortableImagery",r).anydropzone({
-				folder : 'product/'+pid,
-				drop : function(f,e){app.u.dump(' -> logged a drop.')},
+				folder : 'product/'+pid.toLowerCase(),
+				drop : function(files,event,self){
+
+					for (var i = 0; i < files.length; i++) {
+						var file = files[i];
+						var imageType = /image.*/;
+		
+						if (!file.type.match(imageType)) {
+							continue;
+							}
+					
+						var img = document.createElement("img");
+						img.classList.add("obj");
+						img.file = file;
+						img.height = 75;
+						img.width = 75;
+						img.classList.add('newMediaFile');
+		
+						var $target = self.element;
+						$target.children().last().before($("<li \/>").append(img)); //the last child is the 'click here'. put new image before that.
+						var reader = new FileReader();
+						reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+						reader.readAsDataURL(file);
+						}
+
+					},
 				upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
-				});
+				}).append($("<li class='dropzone ui-state-highlight ui-corner-all'>Click here to add image or drop file here from desktop</li>").on('click',function(){
+					app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
+					}));
 
 			r.on('mouseenter','img',function(e){
 				var $target = $(e.target).closest('li');
@@ -978,19 +1009,33 @@ app.model.dispatchThis('mutable');
 					});
 				
 				$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
-				$("<span class='ui-icon ui-icon-circle-close pointer' \/>")
+				$("<span \/>")
 					.attr('title','Disassociate image from '+pid)
 					.css({
 						'position':'absolute',
 						'top':'3px',
 						'right':'3px'
 						})
+					.button({icons: {primary: "ui-icon-circle-close"},text: false})
 					.on('click',function(){$(this).closest('li').empty().remove();})
 					.appendTo($target);
 					})
-					
 				
 			return r;
+			},
+//executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
+		handleAddImageToList : function($list)	{
+			app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
+//			var $img = $list.children().last().find('img');
+			var $img = $(":nth-child("+($list.children().length - 1)+")",$list).find('img');
+//if 'choose from media...' is pushed and cancelled prior to selection, there'd be an li w/ an img without a src. use that one if this is the case. otherwise, create an li w/ an img without a src.
+			if($img.attr('src'))	{
+				$img = $("<img \/>",{'width':75,'height':75});
+				$("<li \/>").insertBefore($list.children().last()).append($img);
+				}
+			else	{}
+
+			mediaLibrary($img,$("[name='throwAway']",$('#prod_images')),'Select Product Image');
 			},
 
 //app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
@@ -1190,8 +1235,6 @@ app.model.dispatchThis('mutable');
 			
 			"showProductEditor" : function($btn){
 				$btn.button();
-
-				
 //This is a separate click event so that it can be removed after the product are moved.
 //this event needs to happen first because the next event removes the table.
 				$btn.off('click.moveProductToTab').on('click.moveProductsToTab',function(){
@@ -1211,8 +1254,6 @@ app.model.dispatchThis('mutable');
 						$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductEditor, unable to ascertain product id.',gMessage:true});
 						}
 					});
-
-				
 				}, //showProductEditor
 			
 			"configOptions" : function($t)	{
@@ -1235,6 +1276,78 @@ app.model.dispatchThis('mutable');
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
 					});
 				}, //enterSyndicationSpecifics
+
+			"saveProdImagesPanel" : function($btn)	{
+				$btn.button();
+				$btn.off('click.saveProdImagesPanel').on('click.saveProdImagesPanel',function(event){
+					event.preventDefault();
+
+var $panel = $btn.closest(".panelContents");
+var cmdObj = {
+	'_cmd' : 'adminProductMacro',
+	'pid' : '',
+	'@updates' : new Array(), //used for sku images
+	'%attribs' : {}, //used for prod images
+	'_tag' : {
+		'callback' : 'showMessaging',
+		'message' : "Your changes have been save",
+		jqObj : $panel
+		}
+	}
+
+
+
+//sku-specific imagery.
+$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$panel).each(function(){
+	var sku = $(this).data('sku');
+	var images = "";
+	$('img',$(this)).each(function(index){
+		if(index < 3)	{
+			if($(this).attr('src'))	{
+				images += "&zoovy:prod_image"+(index+1)+"="+$(this).data('filename')
+				}
+			else	{
+				images += "&zoovy:prod_image"+(index+1)+"="; //if no img, set to blank. that way deletes are handled.
+				}
+			}
+		else {return} //sku's only support three images.
+		})
+	
+	cmdObj['@updates'].push("SETSKU?SKU="+sku+images);
+//	app.u.dump(" -> sku: "+sku);
+
+	});
+
+//Generic product imagery
+var imgIndex = 0;
+var $prodImageUL = $("[data-app-role='prodImagesContainer']",$panel);
+$("[data-app-role='prodImagesContainer'] img",$panel).each(function(){
+	var $img = $(this);
+	imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images were present.
+	if($img.data('filename'))	{
+		//image either an original OR added w/ media lib.
+		cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
+		}
+	else	{
+		//this is a 'new' image, that was dropped in.
+		}
+	
+	})
+//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
+if(imgIndex < ($prodImageUL.children().length))	{
+	var L = $prodImageUL.children().length - imgIndex;
+	for(var i = 0; i <= L; i += 1)	{
+		imgIndex++; //increment before to pick up after we left off.
+		cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
+		}
+	}
+//app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+
+app.model.addDispatchToQ(cmdObj,'immutable');
+app.model.dispatchThis('immutable');
+
+					});
+				},
 
 //not currently in use. planned for when html4/5, wiki and text editors are available.
 			"textareaEditorMode" : function($t)	{

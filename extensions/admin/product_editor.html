@@ -727,17 +727,21 @@
 <div id='productEditorPanelTemplate_images' class='productPanel panelContents_images'>
 	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-		<span>Images</span>
+		<span>Images (beta)</span>
 	</h3>
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom smallPadding' data-app-role='productPanelImagesContent'>
 		<div class='clearfix marginBottom'>
+			<!-- sku images will get added into this div (with js) -->
 			<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
 			
-			<ul class='prodImagesContainer listStyleNone noPadOrMargin sortableImagery' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;"></ul>
+			<!-- all the product images -->
+			<ul class=' prodImagesContainer listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;" data-app-role='prodImagesContainer'>
+				
+			</ul>
 		</div>		
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-		<button class='floatRight' title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-		<button class='floatRight' title='Select Image from your Media Library'>Add Image from Media Library</button>
+		<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+		<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
 		</div>
 
 	</div>
@@ -747,7 +751,9 @@
 	<tr id='prodEditSKUImageTemplate'>
 		<td data-bind="var: product(sku); format:text;"></td>
 		<td>
-		<ul class='noPadOrMargin listStyleNone sortableImagery'  data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;"></ul>
+		<ul class='listStyleNone sortableImagery skuList'  data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;">
+			
+		</ul>
 		</td>
 	</tr>
 </table>

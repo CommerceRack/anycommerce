@@ -1088,14 +1088,14 @@ $D.dialog('open');
 
 							$panel.attr('data-domain',domain);
 							app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':domain,'_tag':{'datapointer':'adminDomainDiagnostics|'+domain}},'mutable');
-							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigMacro|prts'}},'mutable');
+							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
 	
 							app.model.addDispatchToQ({
 								'_cmd':'adminDomainDetail',
 								'DOMAINNAME':domain,
 								'_tag':	{
 									'datapointer' : 'adminDomainDetail|'+domain,
-									'extendByDatapointers' : ['adminDomainDiagnostics|'+domain,'adminConfigMacro|prts'],
+									'extendByDatapointers' : ['adminDomainDiagnostics|'+domain,'adminConfigDetail|prts'],
 									'callback':function(rd){
 										if(app.model.responseHasErrors(rd)){
 											$panel.anymessage({'message':rd});
