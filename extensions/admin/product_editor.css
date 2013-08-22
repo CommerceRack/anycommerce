@@ -111,7 +111,6 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 	-webkit-transition: all .15s linear;
 	-moz-transition: all .15s linear;
 	transition: all .15s linear;
-	z-index:0;
 	position:relative;
 	-webkit-border-radius: 2px;
 	border-radius: 2px; 
