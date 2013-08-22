@@ -1036,6 +1036,7 @@ app.model.dispatchThis('mutable');
 				
 			return r;
 			},
+
 //executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
 		handleAddImageToList : function($list)	{
 			app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
@@ -1043,7 +1044,7 @@ app.model.dispatchThis('mutable');
 			var $img = $(":nth-child("+($list.children().length - 1)+")",$list).find('img');
 //if 'choose from media...' is pushed and cancelled prior to selection, there'd be an li w/ an img without a src. use that one if this is the case. otherwise, create an li w/ an img without a src.
 			if($img.attr('src'))	{ //data-app-role='prodImagesContainer'
-				$img = $("<img \/>",{'width':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35,'height':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35});
+				$img = $("<img \/>").attr({'width':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35,'height':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35});
 				$("<li \/>").insertBefore($list.children().last()).append($img);
 				}
 			else	{}
