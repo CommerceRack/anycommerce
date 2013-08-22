@@ -646,23 +646,30 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				}, //handleEBAYChild
 
 			buildEBAYCategoryPath : function(categoryid)	{
-				var r = false; // what is returned. either the path (as a string) or false if the path could not be generated.
-				app.u.dump('In buildEBAYCategoryPath');
-				app.u.dump(categoryid);
-				app.u.dump(app.model.version);
-				app.u.dump('adminEBAYCategory|'+app.model.version+'|'+categoryid);
+				var pid = 'N';
+				if($('#ebayCategoryChooser').length && $('#ebayCategoryChooser').data('pid')) {
+					pid = $('#ebayCategoryChooser').data('pid');
+				}
+				var r = ''; // what is returned. either the path (as a string) or false if the path could not be generated.
+				var catData = false;
+				if(app.data['adminEBAYCategory|'+app.model.version+'|'+pid+'|'+categoryid]) {
+					catData = app.data['adminEBAYCategory|'+app.model.version+'|'+pid+'|'+categoryid];
+				}
+				if(app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]) {
+					catData = app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid];
+				}
 				
-				if(categoryid && app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid])	{
-					if(app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['%INFO'] && app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['@PARENTS'])	{
+				if(categoryid && catData)	{
+					if(catData['%INFO'] && catData['@PARENTS'])	{
 						var
-							parents = app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['@PARENTS'], //shortcut
+							parents = catData['@PARENTS'], //shortcut
 							L = (parents.length - 1);
 						//loop thru backwards because oldest parent is at bottom of array.
 						for(var i = L; i >= 0; i -= 1)	{
 							r += parents[i].name + " / ";
 							}
 						
-						r += app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['%INFO'].name
+						r += catData['%INFO'].name
 						
 						}
 					else	{
