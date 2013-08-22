@@ -613,6 +613,10 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 									//$ItemSpecificsArea.ebaySpecificsFormBuild(app.data[rd.datapointer]);
 									//app.u.dump(app.data[rd.datapointer]);
 									$('#APIForm').show(); //form is hidden by default
+									// chooser block can become long when you browse the category tree
+									// and ItemSpecificsForm appears on the top -> scroll there
+									$('#ebayCategoryChooser').animate({ scrollTop:0 }, 600);
+									
 									app.u.handleAppEvents($chooser);
 									}
 								}
@@ -750,6 +754,9 @@ if(categoryid && data.pid)	{
 							app.u.handleAppEvents($chooser);
 							$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
 							$('#APIForm').show(); //form is hidden by default
+							// chooser block can become long when you browse the category tree
+							// and ItemSpecificsForm appears on the top -> scroll there
+							$('#ebayCategoryChooser').animate({ scrollTop:0 }, 600);
 							}
 						}
 					}},'mutable');
@@ -1234,7 +1241,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						app.model.addDispatchToQ(obj,'immutable');			
 						app.model.dispatchThis('immutable');
 						}
-					else	{
+					else if(!data.pid || !data.categoryselect || !data.inputid || !categoryid)	{
 						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on $(\'#ebayCategoryChooser\').data()','gMessage':true});
 						}
 					});

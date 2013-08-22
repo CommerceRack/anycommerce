@@ -608,7 +608,7 @@
 
 		if(errorText) {
 			showErrorBalloon($(form),errorText,5000);
-			/*$('html, body').animate({ scrollTop: $(form).find('.errorBalloon').last().offset().top }, 600);*/
+			$('#ebayCategoryChooser').animate({ scrollTop: $(form).find('.errorBalloon').last().offset().top }, 600);
 			return errorText;
 		} else {
 			return '';
