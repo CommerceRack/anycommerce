@@ -1043,7 +1043,8 @@ app.model.dispatchThis('mutable');
 //			var $img = $list.children().last().find('img');
 			var $img = $(":nth-child("+($list.children().length - 1)+")",$list).find('img');
 //if 'choose from media...' is pushed and cancelled prior to selection, there'd be an li w/ an img without a src. use that one if this is the case. otherwise, create an li w/ an img without a src.
-			if($img.attr('src'))	{ //data-app-role='prodImagesContainer'
+//or if this is the first image being added to a product.
+			if($img.attr('src') || $list.children().length == 1)	{
 				$img = $("<img \/>").attr({'width':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35,'height':($list.attr('data-app-role') == 'prodImagesContainer') ? 75 : 35});
 				$("<li \/>").insertBefore($list.children().last()).append($img);
 				}
