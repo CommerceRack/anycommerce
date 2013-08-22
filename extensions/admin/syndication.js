@@ -236,9 +236,10 @@ var admin_syndication = function() {
 								}
 							else	{
 								if($input.val())	{
-									app.ext.admin_syndication.u.ebayShowTreeByChild($input.val(),vars);
+									app.ext.admin_syndication.u.ebayShowTreeByChild($input.val());
 									}
 								$("[data-app-role='ebayCategoryChooserTable']",$D).anycontent(rd);
+								app.u.handleAppEvents($D);
 								// app.u.dump(" -> item specifics: "+app.data[rd.datapointer]['ebay:itemspecifics']);
 								}
 							}},'mutable');
@@ -612,7 +613,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 									//$ItemSpecificsArea.ebaySpecificsFormBuild(app.data[rd.datapointer]);
 									//app.u.dump(app.data[rd.datapointer]);
 									$('#APIForm').show(); //form is hidden by default
-									//app.u.handleAppEvents($chooser);
+									app.u.handleAppEvents($chooser);
 									}
 								}
 							app.model.addDispatchToQ(dispatch,'mutable');
@@ -646,6 +647,11 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 
 			buildEBAYCategoryPath : function(categoryid)	{
 				var r = false; // what is returned. either the path (as a string) or false if the path could not be generated.
+				app.u.dump('In buildEBAYCategoryPath');
+				app.u.dump(categoryid);
+				app.u.dump(app.model.version);
+				app.u.dump('adminEBAYCategory|'+app.model.version+'|'+categoryid);
+				
 				if(categoryid && app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid])	{
 					if(app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['%INFO'] && app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]['@PARENTS'])	{
 						var
@@ -695,7 +701,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
 				}, //buildItemSpecificsMacro
 
-			ebayShowTreeByChild : function(categoryid,vars)	{
+			ebayShowTreeByChild : function(categoryid)	{
 					app.u.dump("BEGIN admin_syndication.u.ebayShowTreeByChild");
 					app.u.dump(' -> categoryid: '+categoryid);
 					//app.u.dump(vars);
@@ -752,7 +758,7 @@ if(categoryid && data.pid)	{
 							else	{$li.find('span:first').trigger('click');} //category hasn't been loaded yet, trigger a click.
 							}
 						$chooser.hideLoading();
-						if(vars && vars['categoryselect'] == 'primary') {
+						if($chooser.data('categoryselect') == 'primary') {
 							$ItemSpecificsArea.ebaySpecificsFormBuild(leafData);
 							app.u.handleAppEvents($chooser);
 							$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
