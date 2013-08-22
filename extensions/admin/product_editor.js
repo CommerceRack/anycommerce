@@ -959,7 +959,7 @@ app.model.dispatchThis('mutable');
 
 //images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
 			$(".sortableImagery",r).sortable({
-				'items' : 'li',
+				'items' : 'li:not(.dropzone)',
 				'appendTo' : r,
 				'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
 				'containment' : r,
