@@ -103,7 +103,7 @@ var entomologist = function() {
 					if(index.indexOf(datapointerPrefix) >= 0){
 						app.u.dump(index);
 						var $listing = $('<div />').anycontent({'data':app.data[index], 'templateID':templateID});
-						$target.append($listing);
+						$target.append($listing.children());
 						}
 					}
 				},
