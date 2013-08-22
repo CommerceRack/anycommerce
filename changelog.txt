@@ -17,6 +17,8 @@ ADMIN
  -> fixes to campaigns
  -> 'choose domain' dialog will only show favorites IF favorites are configured.
  -> new 'images' panel in product editor.
+ -> new eBay Item Specifics form (with @RECOMMENDATIONS). Old XSLT piece not used any more.
+
 
 301330
 ADMIN
