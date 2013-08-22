@@ -343,7 +343,7 @@ TRACKINGSET ->
 					}
 				
 				var
-					cmds = new Array("SET","OURSET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"),
+					cmds = new Array("SET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"), //ourset is left out intentionally. see below.
 					L = cmds.length;
 				
 				for(var i = 0; i < L; i += 1)	{
@@ -357,6 +357,15 @@ TRACKINGSET ->
 						
 						}
 					}
+				
+				//ourset data is destructive, so EVERY field in the fieldset gets updated if anything has changed.
+				var $oursetFieldset = $("fieldset[data-app-role='OURSET']",$form);
+				if($('.edited',$oursetFieldset).length)	{
+					newSfo['@updates'].push("OURSET?"+$.param($oursetFieldset.serializeJSON({'cb':true})));
+					}
+				else	{} //no changes.
+				
+				
 				return newSfo
 				}
 			}, //macroBuilders
