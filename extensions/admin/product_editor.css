@@ -59,10 +59,19 @@ td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; pad
 td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
 td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 
+/* this didn't solve the issue.
+tbody.variationGroupOptions	{
+     height: auto;
+     min-height:100px;
+	 width:100%;
+     display:block	
+	}min-height added so drag and drop would be easier */
+
+
 
 /* for the sku-specific imagery */
 .panelContents_images .skusImagesContainer	{float:right; display:none; width:35%;}
-.panelContents_images .skusImagesContainer ul	{width:225px; display:inline-block; min-height:35px;}
+.panelContents_images .skusImagesContainer ul	{display:inline-block; min-height:35px;}
 
 
 .imageIDRef {position:absolute; bottom:0px; left:0px; background:#efefef; padding:1px 3px;} /* the image ID (image32) shown on mouseover */
@@ -90,7 +99,7 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 /* applied to the ul's around each list of images */
 #panel_images .sortableImagery	{
 	margin:0;
-	padding:20px;
+	padding:0 20px;
 	display: inline-block;
 	}
 
