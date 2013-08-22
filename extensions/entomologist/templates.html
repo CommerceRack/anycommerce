@@ -4,11 +4,12 @@
 	</h4>
 	<div class="tabificateMe">
 		<ul>
-			<li><a href="#prodDumperList">Prod Data</a></li>
-			<li><a href="#catDumperList">Cat Data</a></li>
+			<li><a href="#prodDumper">Prod Data</a></li>
+			<li><a href="#catDumper">Cat Data</a></li>
+			<li><a href="#localStorageDumper">Local Storage</a></li>
 		</ul>
 		
-		<div data-anytab-content="prodDumperList">
+		<div data-anytab-content="prodDumper">
 			<p>
 				Below is a list of all the product data that is currently loaded into the app.  A product record can be requested for many reasons,
 				but the most common are: 
@@ -33,7 +34,7 @@
 			<div class="displayTable dumperList" data-debug="prodDumperList" data-debug-loadsTemplate="prodDumperTemplate" data-debug-datapointerPrefix="appProductGet" ></div>
 		</div>
 
-		<div data-anytab-content="catDumperList">
+		<div data-anytab-content="catDumper">
 			<p>
 				Below is a list of all the category data that is currently loaded into the app.  A category can be requested for many reasons,
 				but the most common are: 
@@ -52,6 +53,11 @@
 			</p>
 			<a class="marginBottom" href="#" onClick="return false;" data-debug="refresh" data-debug-target="catDumperList">Refresh CatList</a>
 			<div class="displayTable dumperList" data-debug="catDumperList" data-debug-loadsTemplate="catDumperTemplate" data-debug-datapointerPrefix="appNavcatDetail" ></div>
+		</div>
+		
+		<div data-anytab-content="localStorageDumper">
+			<a class="marginBottom" href="#" onClick="return false;" data-debug="refresh" data-debug-target="localStorageDumperList">Refresh LocalStorage List</a>
+			<div class="displayTable dumperList" data-debug="localStorageDumperList" data-debug-loadsTemplate="localStorageDumperTemplate" data-debug-localStorage="true" data-debug-datapointerPrefix=""></div>
 		</div>
 	</div>
 </div>
@@ -72,4 +78,15 @@
 	<span class="displayTableCell" data-bind="var: cateogyr(pretty); format:text;"></span>
 	<a class="displayTableCell" href="#" data-bind="var: category(id); format:assignAttribute; attribute: data-navcat;" onClick="app.ext.entomologist.u.dumpData('appNavcatDetail|'+$(this).attr('data-navcat')); return false;">Dump</a>
 	<a class="displayTableCell" href="#" data-bind="var: category(id); format:assignAttribute; attribute: data-navcat;" onClick="app.ext.entomologist.u.dumpData('appNavcatDetail|'+$(this).attr('data-navcat'), true); return false;">Dump JSON</a>
+</div>
+
+<div id="localStorageDumperTemplate" class="displayTableRow">
+	<span class="displayTableCell" data-bind="var: ls(lsKey); format: text;"></span>
+	<a class="displayTableCell" href="#" data-bind="var: ls(lsKey); format:assignAttribute; attribute: data-key;" onClick="app.ext.entomologist.u.dumpData($(this).attr('data-key'), false, true); return false;">Dump</a>
+	<a class="displayTableCell" href="#" data-bind="var: ls(lsKey); format:assignAttribute; attribute: data-key;" onClick="app.ext.entomologist.u.dumpData($(this).attr('data-key'), true, true); return false;">Dump JSON</a>
+	
+	<!--
+	A DEBUG RENDER FORMAT THAT DUMPS THE DATA.VALUE
+	<div class="displayNone" data-bind="useParentData:true; format:dumpData; extension:entomologist;"></div>
+	-->
 </div>
