@@ -496,8 +496,8 @@ if(app.u.isSet(data.value))	{
 				reachedRoot = (zGlobals.appSettings.rootcat === s);
 			}
 			if(reachedRoot) {
-				app.u.dump(" -> "+i+" s(path): "+s);
-				app.u.dump(app.data['appNavcatDetail|'+s]);
+				//app.u.dump(" -> "+i+" s(path): "+s);
+				//app.u.dump(app.data['appNavcatDetail|'+s]);
 				$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appNavcatDetail|'+s]));
 			}
 			if(i!=0)

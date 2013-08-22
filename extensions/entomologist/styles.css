@@ -1,0 +1,7 @@
+.displayTable {display: table;}
+.displayTableRow {display: table-row;}
+.displayTableCell {display: table-cell;}
+
+
+.dumperList {border-collapse: collapse; border-spacing: 5px; border: 1px solid black; width: 100%;}
+.dumperList .displayTableCell{ border: 1px solid black; padding: 2px; }
