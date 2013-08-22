@@ -1770,13 +1770,13 @@ app.model.dispatchThis('immutable');
 
 			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
 				$btn.button();
-				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
+				$btn.off('click.adminSyndicationUnsuspendAndClearErrorMacro').on('click.adminSyndicationUnsuspendAndClearErrorMacro',function(){
 					var DST = $btn.closest("[data-dst]").data('dst');
 					if(DST)	{
 						var $tbody = $btn.closest('.ui-tabs-panel').find('tbody')
 						$tbody.empty().showLoading({'message':'Clearing errors...'})
-						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{},'immutable');
-						app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_syndication','jqObj':$tbody},'mutable');
+						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{'callback' : 'showMessaging','message':'Your errors have been cleared','jqObj':$('#globalMessaging')},'immutable');
+						app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_syndication','jqObj':$tbody},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{

@@ -757,6 +757,52 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					},
 
+//does not and SHOULD not dispatch.  Allows this to be used w/ test in campaigns.
+				handleTemplateSave : function($D)	{
+					
+					if($D instanceof jQuery)	{
+						const mode = $D.data('mode');
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
+	
+							$D.showLoading({'message':'Saving changes'});
+	
+							var dObj = {
+								'_cmd' : 'admin'+mode+'FileSave',
+								'FILENAME' : 'index.html',
+								'_tag' : {
+									'callback' : function(responseData)	{
+										$D.hideLoading();
+										if(app.model.responseHasErrors(responseData)){
+											$D.anymessage({'message':responseData})
+											}
+										else	{
+											if($D.data('editor') == 'dialog')	{$D.dialog('close');}
+											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
+											}
+										}
+									},
+								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
+								}
+	
+							if(mode == 'EBAYProfile')	{
+								dObj.PROFILE = $D.data('profile');
+								}
+							else if(mode == 'Campaign')	{
+								dObj.CAMPAIGNID = $D.data('campaignid');
+								}
+							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
+							app.model.addDispatchToQ(dObj,'immutable');
+								
+							}
+						else	{
+							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateSave, object passed in not a valid jquery object.','gMessage':true});
+						}
+					},
+
 //Used to copy a template into a profile or campaign (or whatever as more get added).
 //vars needs to include SUBDIR and PROJECTID.  Vars is most likely passed from an li.data(), but doesn't have to be.
 				handleTemplateSelect : function(vars)	{
@@ -1307,9 +1353,9 @@ else	{
 						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
 							if(app.u.isValidEmail($input.val()))	{
 								$D.showLoading({'message':'Sending Test Email'});
+								app.ext.admin_templateEditor.u.handleTemplateSave($('#templateEditor'));
 								app.model.addDispatchToQ({
-									'_cmd':'adminCampaignStart',
-									'test' : '1',
+									'_cmd':'adminCampaignTest',
 									'CAMPAIGNID' : $('#templateEditor').data('campaignid'),
 									'RECIPIENTS' : "emails="+$input.val()+"\n",
 									'_tag':	{
@@ -1468,50 +1514,14 @@ else	{
 				adminTemplateSaveExec : function($btn)	{
 					$btn.button();
 					$btn.off('click.adminTemplateSaveExec').on('click.adminTemplateSaveExec',function(){
-						
 						var $D = $('#templateEditor');
-						const mode = $D.data('mode');
-						
-						
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
-
-							$D.showLoading({'message':'Saving changes'});
-
-							var dObj = {
-								'_cmd' : 'admin'+mode+'FileSave',
-								'FILENAME' : 'index.html',
-								'_tag' : {
-									'callback' : function(responseData)	{
-										$D.hideLoading();
-										if(app.model.responseHasErrors(responseData)){
-											$D.anymessage({'message':responseData})
-											}
-										else	{
-											if($D.data('editor') == 'dialog')	{$D.dialog('close');}
-											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
-											}
-										}
-									},
-								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
-								}
-
-							if(mode == 'EBAYProfile')	{
-								dObj.PROFILE = $D.data('profile');
-								}
-							else if(mode == 'Campaign')	{
-								dObj.CAMPAIGNID = $D.data('campaignid');
-								}
-							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
-	
-	
-							app.model.addDispatchToQ(dObj,'immutable');
-							app.model.dispatchThis('immutable');							
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode($D.data('mode'),$D.data()))	{
+							app.ext.admin_templateEditor.u.handleTemplateSave($D); 
+							app.model.dispatchThis('immutable');
 							}
 						else	{
 							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
 							}
-						
-
 						});
 	
 					},

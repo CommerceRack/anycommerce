@@ -14,7 +14,9 @@ ADMIN
  -> fixes to shipping rules
  -> fixes to flexedit manager
  -> fixes to flexedit in product
- -> 'choose domain' dialog will no only show favorites IF favorites are configured.
+ -> fixes to campaigns
+ -> 'choose domain' dialog will only show favorites IF favorites are configured.
+ -> new 'images' panel in product editor.
 
 301330
 ADMIN
