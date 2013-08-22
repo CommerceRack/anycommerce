@@ -64,7 +64,7 @@ var admin_navcats = function() {
 		renderFormats : {
 			openSubcatsIcon : function($tag,data)	{
 				if(data.value['@subcategories'].length)	{
-					$tag.attr('data-app-action','admin_navcats|navcatSubsShow').removeClass('opacity50');
+					$tag.attr('data-app-action','admin_navcats|navcatSubsShow').removeClass('opacity50').addClass('pointer');
 					}
 				}
 			}, //renderFormats
@@ -89,18 +89,21 @@ var admin_navcats = function() {
 						
 						$container.append($cat);
 //hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
+var _tag = {
+	'callback':'anycontent',
+	'datapointer':datapointer,
+	'jqObj':$cat}
+
 	if(app.model.fetchData(datapointer))	{
-		$cat.anycontent({'datapointer':datapointer})
+		app.u.handleCallback(_tag);
+//		$cat.anycontent({'datapointer':datapointer})
 		}
 	else	{
 		app.model.addDispatchToQ({
 			'safe':subcats[i],
 			'detail':'more',
 			'_cmd': 'adminNavcatDetail',
-			'_tag' : {
-				'callback':'anycontent',
-				'datapointer':datapointer,
-				'jqObj':$cat}
+			'_tag' : _tag
 			},'mutable');
 		}
 							
@@ -114,7 +117,7 @@ var admin_navcats = function() {
 				
 				
 				},
-			
+
 /*
 mode could be:  builder, selector
 this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
@@ -133,7 +136,7 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 							'detail':'more',
 							'_cmd': 'adminNavcatDetail',
 							'path' : '.',
-							'navtree' : 'PRT000',
+							'navtree' : 'PRT00'+app.vars.partition,
 							'_tag' : {
 								'callback':function(rd){
 									$tree.hideLoading();
@@ -194,7 +197,7 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 			
 			
 			navcatSubsShow : function($ele)	{
-//				app.u.dump("BEGIN analyzer.a.showSubcats ["+path+"]");
+//				app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
 //
 					var
 						$subcats = $ele.closest('li').find("[data-app-role='categories']"),
@@ -210,10 +213,17 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 									else	{$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e')}
 									});
 								
-								} 
+								}
 							else	{
-								$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
-								app.ext.admin_navcats.u.getSubcats(app.data['appNavcatDetail|'+path]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+								var dp = 'adminNavcatDetail|'+app.vars.partition+'|'+path
+								app.u.dump(' -> datapointer: '+dp);
+								if(app.data[dp])	{
+									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
+									app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+									}
+								else	{
+									$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, attempted to load app.data["+dp+"], which is not in memory.",'gMessage':true})
+									}
 								}
 							}
 						else	{$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, no element with data-app-role='categories' exists (no destination for subcats",'gMessage':true})}
