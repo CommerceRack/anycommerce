@@ -646,38 +646,18 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				}, //handleEBAYChild
 
 			buildEBAYCategoryPath : function(categoryid)	{
-				var pid = 'N';
-				if($('#ebayCategoryChooser').length && $('#ebayCategoryChooser').data('pid')) {
-					pid = $('#ebayCategoryChooser').data('pid');
-				}
-				var r = ''; // what is returned. either the path (as a string) or false if the path could not be generated.
-				var catData = false;
-				if(app.data['adminEBAYCategory|'+app.model.version+'|'+pid+'|'+categoryid]) {
-					catData = app.data['adminEBAYCategory|'+app.model.version+'|'+pid+'|'+categoryid];
-				}
-				if(app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid]) {
-					catData = app.data['adminEBAYCategory|'+app.model.version+'|'+categoryid];
-				}
-				
-				if(categoryid && catData)	{
-					if(catData['%INFO'] && catData['@PARENTS'])	{
-						var
-							parents = catData['@PARENTS'], //shortcut
-							L = (parents.length - 1);
-						//loop thru backwards because oldest parent is at bottom of array.
-						for(var i = L; i >= 0; i -= 1)	{
-							r += parents[i].name + " / ";
-							}
-						
-						r += catData['%INFO'].name
-						
-						}
-					else	{
-						app.u.dump("In admin_syndication.u.buildEBAYCategoryPath, ebay category data is in memory, but either %INFO or @PARENTS is not present.");
+				var r = '';
+				// iterate category tree DOM and build full eBay category path - as a readable string
+				if(categoryid && $('li[data-categoryid="'+categoryid+'"]').length) {
+					var $el = $('li[data-categoryid="'+categoryid+'"]');
+					r = '/' + $el.attr('data-name');
+					while($el && $el.attr('data-parent_id')) {
+						$el = $('li[data-categoryid="'+$el.attr('data-parent_id')+'"]');
+						r = '/' + $el.attr('data-name') + r;
 						}
 					}
 				else	{
-					app.u.dump("In admin_syndication.u.buildEBAYCategoryPath, unable to build category path. either categoryid ["+categoryid+"] not passed or ebay category data doesn't exist in memory.");
+					app.u.dump("In admin_syndication.u.buildEBAYCategoryPath, unable to build category path for ["+categoryid+"]");
 					}
 				return r;
 				}, //buildEBAYCategoryPath
