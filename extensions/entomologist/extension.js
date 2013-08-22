@@ -18,7 +18,12 @@
 
 
 
-//    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
+/*
+
+This extension provides a set of tools for tech support (e.g. Non-Developers)
+to debug issues in a shopping application.
+
+*/
 
 var entomologist = function() {
 	var theseTemplates = new Array('');
@@ -37,7 +42,7 @@ var entomologist = function() {
 				window.showDebugger = app.ext.entomologist.a.showDebugger
 				
 				app.model.fetchNLoadTemplates(app.vars.baseURL + "extensions/entomologist/templates.html", []);
-				
+				app.u.loadCSSFile("extensions/entomologist/styles.css","entomologistCSS");
 				r = true;
 
 				return r;
@@ -53,7 +58,9 @@ var entomologist = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-			showDebugger : function(){
+			showDebugger : function(width, height){
+				width = width || 800;
+				height = height || 500;
 				if(app.ext.entomologist.vars.$debugger){
 					app.ext.entomologist.vars.$debugger.dialog('open');
 					}
@@ -67,7 +74,9 @@ var entomologist = function() {
 							app.ext.entomologist.u.update($('[data-debug="'+$(this).attr('data-debug-target')+'"]', $debugger));
 							}
 						});
-					$debugger.dialog({'title':'Entomology Lab'});
+						
+					$('.tabificateMe', $debugger).anytabs();
+					$debugger.dialog({'title':'Entomology Lab', 'height':height, 'width':width});
 					}
 								
 				app.ext.entomologist.u.update( $('[data-debug="prodDumperList"]', $debugger));
@@ -116,10 +125,15 @@ var entomologist = function() {
 					this.updateTag($target, $target.attr('data-debug-datapointer'), $target.attr('data-debug-templateID'));
 					}
 				},
-			dumpData : function(datapointer){
+			dumpData : function(datapointer, json){
 				if(app.data[datapointer]){
 					app.u.dump("Data for "+datapointer+":");
-					app.u.dump(app.data[datapointer]);
+					if(json){
+						app.u.dump(JSON.stringify(app.data[datapointer]));
+						}
+					else{
+						app.u.dump(app.data[datapointer]);
+						}
 					}
 				else {
 					app.u.dump("-> Error: app.ext.entomologist.u.dumpData could not find data for "+datapointer);
