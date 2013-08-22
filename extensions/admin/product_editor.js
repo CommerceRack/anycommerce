@@ -1296,14 +1296,15 @@ app.model.dispatchThis('mutable');
 					event.preventDefault();
 
 var $panel = $btn.closest(".panelContents");
+
 var cmdObj = {
-	'_cmd' : 'adminProductMacro',
-	'pid' : '',
+	'_cmd' : 'adminProductUpdate',
+	'pid' : $('#panel_images').data('pid'),
 	'@updates' : new Array(), //used for sku images
 	'%attribs' : {}, //used for prod images
 	'_tag' : {
 		'callback' : 'showMessaging',
-		'message' : "Your changes have been save",
+		'message' : "Your changes have been saved",
 		jqObj : $panel
 		}
 	}
@@ -1314,19 +1315,18 @@ var cmdObj = {
 $("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$panel).each(function(){
 	var sku = $(this).data('sku');
 	var images = "";
-	$('img',$(this)).each(function(index){
-		if(index < 3)	{
-			if($(this).attr('src'))	{
-				images += "&zoovy:prod_image"+(index+1)+"="+$(this).data('filename')
-				}
-			else	{
-				images += "&zoovy:prod_image"+(index+1)+"="; //if no img, set to blank. that way deletes are handled.
-				}
+	var $images = $('img',$(this));
+//	app.u.dump($images);
+	for(i = 0; i < 3; i += 1)	{
+		if($images[i])	{
+			images += "&zoovy:prod_image"+(i + 1)+"="+$($images[i]).data('filename');
 			}
-		else {return} //sku's only support three images.
-		})
+		else	{
+			images += "&zoovy:prod_image"+(i + 1)+"="; //set to blank to 'erase' anything that may have been deleted.
+			}
+		}
 	
-	cmdObj['@updates'].push("SETSKU?SKU="+sku+images);
+	cmdObj['@updates'].push("SET-SKU?SKU="+sku+images);
 //	app.u.dump(" -> sku: "+sku);
 
 	});
@@ -1441,7 +1441,7 @@ app.model.dispatchThis('immutable');
 var macroUpdates = new Array();
 $('input.handleAsSku',$panel).each(function(){
 	var $input = $(this);
-	macroUpdates.push("SET/SKU?SKU="+$input.attr('name').split('|')[1]+"&"+$input.attr('name').split('|')[0]+"="+$input.val());
+	macroUpdates.push("SET-SKU?SKU="+$input.attr('name').split('|')[1]+"&"+$input.attr('name').split('|')[0]+"="+$input.val());
 	})
 
 if(!$.isEmptyObject(macroUpdates))	{

@@ -96,7 +96,7 @@ td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 
 
 
-
+#panel_images .sortableImagery a	{cursor: default;}
 #panel_images .sortableImagery li {
 	background: white;
 	display: inline;

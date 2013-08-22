@@ -360,9 +360,13 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 */
 			$('a',this.tabs).each(function(){
 				$(this).on('click.anytabs',function(event){
-//					app.u.dump('tab clicked!');
-					self.reveal($(this).parent());
+					var oldHash = window.location.hash;
 					event.preventDefault();
+					app.u.dump('tab clicked!');
+					_ignoreHashChange = true;
+					window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
+					_ignoreHashChange = false;
+					self.reveal($(this).parent());
 					return false;
 					});
 				});
