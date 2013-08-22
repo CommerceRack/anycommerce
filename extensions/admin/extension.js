@@ -69,8 +69,9 @@ var admin = function() {
 			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities','launchpad'],
 			state : {},
 			tab : 'home',
+			// YOUTUBE RELEASE VIDEO:
 			versionMetaData : {
-				'youtubeVideoID' : 'fEWSsblLQ94'
+				'youtubeVideoID' : 'tKQ_SJzjbXI'
 				},
 			templates : theseTemplates,
 			willFetchMyOwnTemplates : true,
