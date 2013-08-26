@@ -419,7 +419,6 @@
 	// when parent gets it's value - enable child input/select
 	function handleNested(el) {
 		var elName = $(el).attr('name');
-		app.u.dump("-> handleNested "+elName);
 		var $fs = $(el).parent().find('fieldset');
 		if($(el).val()) {
 			$('input,select', $fs).attr("disabled",false);
