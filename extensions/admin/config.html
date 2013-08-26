@@ -3183,27 +3183,28 @@ Coming Soon
 	<label>
 		<span>Host Type</span>
 		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
-			<option value=''>please choose</option>
-			<option value='APP' data-show-panel='domainNewHostTypeAPP'>App</option>
+			<option value='SITE' data-bind="var:domain(DOMAINNAME); format:text;">Domain Project</option>
+			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR'>Other Project Reference</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
 			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE'>V-Store</option>
 			<option value='CUSTOM'>Custom</option>
 		</select>
+		<span class='toolTip' title="brian will fill this in later. !!!">?</span>
 	</label>
 
 	</fieldset>
 
 
 <!-- these are the 'panels' for the host type select list -->
-	<div data-panel-id='domainNewHostTypeAPP' class='displayNone domainNewHostSelectType'>
+	<div data-panel-id='domainNewHostTypeSITEPTR' class='displayNone domainNewHostSelectType'>
 		<label>
-			<span>Project</span>
+			<span>Project Reference</span>
 			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsFromList; value:UUID; text:TITLE;">
 			<option value=''></option>
 			</select>
 		</label>
 	</div>
-	
+
 	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
 		<label>
 			<span>Redirect</span>
@@ -3281,6 +3282,7 @@ Coming Soon
 
 
 	<div class='buttonset alignRight marginBottom'>
+	<button data-mode='Site' data-app-event='admin_templateEditor|templateChooserShow'>Add Project</button>
 	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='create'>Add Host</button>
 	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
 	</div>

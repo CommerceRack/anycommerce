@@ -3228,11 +3228,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}				
 				},
 
-			showAppChooser : function()	{
-				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
-				app.ext.admin.u.handleAppEvents($target);
-				},
+
 
 
 
@@ -3896,7 +3892,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if (path == '#!appChooser')	{
-					app.ext.admin.a.showAppChooser();
+					app.ext.admin_config.a.showAppChooser();
 					}
 				else if (path == '#!projects')	{
 					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));

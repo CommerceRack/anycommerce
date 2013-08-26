@@ -98,7 +98,13 @@ var admin_config = function() {
 
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
-			
+
+			showAppChooser : function($target)	{
+				
+				
+				
+				
+				},
 			
 			showPluginManager : function($target)	{
 				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
@@ -464,6 +470,7 @@ else	{
 						'_tag' : {'datapointer' : 'adminDomainList'}
 						}
 					});
+				app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{'datapointer' : 'adminSiteTemplateList'}},'mutable');
 				app.model.dispatchThis('mutable');
 
 				},//showCouponManager				
