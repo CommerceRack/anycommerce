@@ -430,7 +430,8 @@
 			// 'Size' has about 50 values, like S,M,L,XL,2XL,1,2,3,1X,2X,3X,14W,16W,....
 			// If user selects 'Size Type' = 'Plus', we need to show only appropriate sizes in 'Size' dropdown
 			// (for Plus they will be 1X,2X,3X,... 14W,16W..... And normal S,M,L will be hidden)
-			$('.dropDownList li, select option', $fs).each(function() {
+/*
+				$('.dropDownList li, select option', $fs).each(function() {
 				$(this).not('.dropDownOwn').hide();
 				if($(this).attr('parent-name') == elName) {
 					var parentValues = $(this).attr('parent-values');
@@ -439,11 +440,12 @@
 					}
 				}
 			});
+*/
 			
 			// sometimes fieldsets are not nested, but related - and we need to handle this
 			// See "DVDs & Movies -> VHS Tapes" for how this works
 			// Changing 'Genre' automatically shows/hides checkboxes inside 'Sub-Genre' - but they're not nested!
-			$(ebaySpecsBlock+' label.checkbox').each(function() {
+			$(ebaySpecsBlock).find('.dropDownList li, select option, label.checkbox').each(function() {
 				if($(this).attr('parent-name') == elName) {
 					var parentValues = $(this).attr('parent-values');
 					if(parentValues.search($(el).val()) != -1 || $(this).find('input').prop('checked')) {

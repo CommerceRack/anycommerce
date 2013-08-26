@@ -1,6 +1,6 @@
 .ebayCatChooserRightColContainer { width:600px; }
 
-.ebaySpecificsFormInner { font-family:Tahoma; }
+.ebaySpecificsFormInner { font-family:Tahoma, sans-serif; }
 .ebaySpecificsFormInner .hidden { display:none; }
 .ebaySpecificsFormInner input[type=text] { width:20em; }
 
