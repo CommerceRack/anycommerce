@@ -554,6 +554,14 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						$chooser = $('#ebayCategoryChooser'),
 						$ItemSpecificsArea = $chooser.find("[data-app-role='ebayItemSpecificsContainer']"),
 						data = $chooser.data();
+						
+						// if eBay site=0 just save categoryid (176984)
+						// if eBay site!=0 (ebay motors site=100), save categoryid.site (38627.100)
+						if($li.data('site')) { 
+							categoryid = categoryid+'.'+$li.data('site');
+							}
+							
+							
 //categoryselect is necessary so that it can be determined whether or not items specifics should be displayed.
 					if(data.categoryselect) 	{
 
@@ -569,7 +577,6 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 							}
 
 						else if(Number($li.data('leaf')) >= 1 && data.categoryselect == 'secondary')	{
-
 							app.model.addDispatchToQ({
 								'_cmd' : 'adminProductUpdate',
 								'@updates' : ["SET-EBAY?category2="+categoryid],
@@ -650,10 +657,18 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				}, //handleEBAYChild
 
 			buildEBAYCategoryPath : function(categoryid)	{
-				var r = '';
+				var r = '', site=0;
+				categoryid = categoryid.toString();
+				// if categoryid looks like '1234.100' - split it on catID + siteID
+				if(categoryid.search(/\./) != -1) {
+					var data = categoryid.split(/\./);
+					categoryid = data[0];
+					site = data[1];
+					}
+					
 				// iterate category tree DOM and build full eBay category path - as a readable string
-				if(categoryid && $('li[data-categoryid="'+categoryid+'"]').length) {
-					var $el = $('li[data-categoryid="'+categoryid+'"]');
+				if(categoryid && $('li[data-categoryid="'+categoryid+'"][data-site="'+site+'"]').length) {
+					var $el = $('li[data-categoryid="'+categoryid+'"][data-site="'+site+'"]');
 					r = '/' + $el.attr('data-name');
 					while($el && $el.attr('data-parent_id')) {
 						$el = $('li[data-categoryid="'+$el.attr('data-parent_id')+'"]');
