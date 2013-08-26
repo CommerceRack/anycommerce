@@ -74,34 +74,54 @@ var admin_navcats = function() {
 		u : {
 //subcats is an array of safe ID's.
 //Container is the parent of where the list will be generated.  typically a tbody or ul.
-//vars MUST contain templateID. may support more later.
+//vars MUST contain templateID.
+//vars.fetchonly allows for getTree to 'get' all the data, but not display it right away.
 			getSubcats : function(subcats,$container,vars)	{
 				vars = vars || {};
-				if(subcats && $container instanceof jQuery && vars.templateID) {
+				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
 				
-					var L = subcats.length;
+					var
+						L = subcats.length,
+						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition), //list of 'open' categories from localStorage.
+						NOL = navcatObj.length;
 					
 					for(var i = 0; i < L; i += 1)	{
 	//					app.u.dump(" -> subcats[i]: "+subcats[i]);
 						var
-							$cat = app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
+							$cat = vars.fetchOnly ? '' : app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
 							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
 						
-						$container.append($cat);
-//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
-var _tag = {
-	'callback':'anycontent',
-	'datapointer':datapointer,
-	'jqObj':$cat}
+						if(vars.fetchOnly)	{}
+						else	{$container.append($cat)}
+						
 
+						var _tag = {
+							'path' : subcats[i],
+							'callback': vars.fetchOnly ? '' : function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									app.callbacks.anycontent.onSuccess(rd);
+									app.u.dump(" -> path: "+rd.path);
+									for(var ni = 0; j < NOL; ni += 1)	{
+										if(navcatObj[ni].indexOf(rd.path) === 0)	{app.u.dump(" Match! "+rd.path)}
+										
+										}
+									}
+								},
+							'datapointer':datapointer,
+							'jqObj':vars.fetchOnly ? '' : $cat}
+//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
 	if(app.model.fetchData(datapointer))	{
 		app.u.handleCallback(_tag);
 //		$cat.anycontent({'datapointer':datapointer})
 		}
 	else	{
 		app.model.addDispatchToQ({
-			'safe':subcats[i],
+			'path':subcats[i],
 			'detail':'more',
+			'navtree' : 'PRT00'+app.vars.partition,
 			'_cmd': 'adminNavcatDetail',
 			'_tag' : _tag
 			},'mutable');
@@ -118,8 +138,9 @@ var _tag = {
 				},
 
 /*
-mode could be:  builder, selector
-this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
+This is what gets run to display a category tree.  
+	mode could be:  builder, selector
+	this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
 
 */
 			getTree : function(mode,vars){
@@ -129,6 +150,9 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 				if(mode)	{
 					if(vars.templateID)	{
 						$tree.showLoading({'message':'Fetching category tree'});
+
+var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
+app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
 
 						//all required params are present/set. proceed.
 						app.model.addDispatchToQ({
@@ -151,6 +175,7 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 							},'mutable');
 
 						app.model.dispatchThis('mutable');
+						app.ext.admin_navcats.u.handleCatTreeDelegation($tree);
 						}
 					else	{
 						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] not set or invalid.','gMessage':true});
@@ -160,22 +185,22 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 				else	{
 					$tree.anymessage({'message':'In admin_navcats.u.getTree, mode ['+mode+'] not set or invalid.','gMessage':true});
 					}
-				app.ext.admin_navcats.u.handleCatTreeDelegation($tree);
+				
 				return $tree;
 				},
 			
 			handleCatTreeDelegation : function($tree)	{
 				$tree.on('click',function(e){
-					
 					var $target = $(e.target);
 					if($target.data('app-action'))	{
-						app.u.dump(" -> $target.data('app-action'): "+$target.data('app-action'));
+//						app.u.dump(" -> $target.data('app-action'): "+$target.data('app-action'));
 						var
 							actionExtension = $target.data('app-action').split('|')[0],
 							actionFunction =  $target.data('app-action').split('|')[1];
 						
 						if(actionExtension && actionFunction)	{
 							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+//execute the app event.
 								app.ext[actionExtension].e[actionFunction]($target);
 								}
 							else	{
@@ -204,20 +229,48 @@ this should only be run once within a 'selector' (meaning don't re-run this for 
 						$icon = $ele.closest('li').find('.ui-icon:first');
 					
 					if(path)	{
+						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+
+function handleDPS(cmd)	{
+	var index = $.inArray(path,navcatObj);
+	app.u.dump(" -> cmd: "+cmd);
+	app.u.dump(" -> index: "+index);
+	if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{app.u.dump("NO ACTION NECESSARY FOR "+path);} //do nothing. array already reflects cmd.
+	else if(cmd == 'remove')	{
+		app.u.dump("REMOVE "+path);
+		navcatObj.splice(index,1);
+		app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+		}
+	else if(cmd == 'add' && index < 0){
+		navcatObj.push(path);
+		app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+		}
+	else	{
+		app.u.dump("handleDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
+		}
+	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
+	}
+
 						if($subcats.length)	{
 							if($subcats.children().length)	{
 								//subcats have already been rendered. not an error, just handled differently.
-								$subcats.toggle('fast',function(){
-									if($subcats.is(':visible'))	{$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s')}
-									else	{$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e')}
-									});
+								if($subcats.is(':visible'))	{
+									$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e');
+									handleDPS('remove');
+									}
+								else	{
+									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s')
+									handleDPS('add');
+									}
+								$subcats.toggle('fast'); //putting the handleDPS code in the toggle oncomplete was causing it to be executed multiple times
 								
 								}
 							else	{
 								var dp = 'adminNavcatDetail|'+app.vars.partition+'|'+path
-								app.u.dump(' -> datapointer: '+dp);
+//								app.u.dump(' -> datapointer: '+dp);
 								if(app.data[dp])	{
 									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
+									handleDPS('add');
 									app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
 									}
 								else	{
