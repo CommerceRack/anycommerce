@@ -542,7 +542,7 @@
 				// restore smart suggest or basic <input>
 				$('input[type=text]', $(ebaySpecsBlock)).each(function() {
 					// we need case-insensitive comparison, to be sure "Brand", "BRAND" and "brand" mean the same
-					if($(this).attr('name') && $(this).attr('name').toUpperCase() === sName.toUpperCase()) { $(this).val(sValue); found = 1; }
+					if($(this).attr('name') && $(this).attr('name').toUpperCase() === sName.toUpperCase()) { $(this).val(sValue).change(); found = 1; }
 				});
 
 				// restore <select>
