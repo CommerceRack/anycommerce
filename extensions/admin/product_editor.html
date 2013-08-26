@@ -1908,7 +1908,7 @@ time.
 
 	<label>
 	<span>Amazon Variation Keyword:</span>
-	<select name="AMZ">
+	<select name="amz" data-bind="var: variation(amz); format:popVal;">
 	<option value="">None</option>
 	<option value="APPAREL: Color">APPAREL: Color</option>
 	<option value="APPAREL: Size">APPAREL: Size</option>
@@ -1970,7 +1970,7 @@ time.
 
 	<label>
 	<span>Google Variation Keyword</span>
-	<select name="GOO">
+	<select name="goo" data-bind="var: variation(goo); format:popVal;">
 		<option value="">None</option>
 		<option value="Color">Color</option>
 		<option value="Size">Size</option>
@@ -1981,7 +1981,7 @@ time.
 
 	<label>
 	<span>eBay Variation Specifics Name: </span>
-	<input type="text" name="EBAY" />
+	<input type="text" name="ebay" data-bind="var: variation(ebay); format:popVal;" />
 	</label>
 
 </div>
