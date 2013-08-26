@@ -149,14 +149,44 @@
 									$fieldSetEl.append('<span class="notice">Choose at least one value from the list or define your own.</span>');
 								}
 								var $checkboxes = $('<div class="checkboxesWrapper"></div>');
+								var $input = $('<input class="addCheckbox" type="text" maxlength="50" size="30" />');
+								var $button = $('<button class="addCheckboxBtn">Add One More</button>');
+								
 								$.each(rec.ValueRecommendation, function(index) {
 									var recVal = rec.ValueRecommendation[index].Value;
 									var $checkbox = $('<input type="checkbox" />').attr('name',rec.Name).val(recVal);
-									var $label = $('<label></label>').append($checkbox).append(recVal);
+									var $label = $('<label></label>').addClass('checkbox').append($checkbox).append(recVal);
+
+									// eBay also provides validation rules for nested dropdown lists (relationships)
+									if(	rec.ValueRecommendation[index].ValidationRules && 
+											rec.ValueRecommendation[index].ValidationRules.Relationship) {
+										var parentName = '';
+										var parentValues = [];
+
+										// relationship is just a hash
+										if(rec.ValueRecommendation[index].ValidationRules.Relationship.ParentName) {
+											var rel = rec.ValueRecommendation[index].ValidationRules.Relationship;
+											parentName = rel.ParentName;
+											parentValues.push(rel.ParentValue);
+										// relationship is an array
+										} else {
+											$.each(rec.ValueRecommendation[index].ValidationRules.Relationship, function(relIndex) {
+												var rel = rec.ValueRecommendation[index].ValidationRules.Relationship[relIndex];
+												if(rel.ParentName && rel.ParentValue) {
+													parentName = rel.ParentName;
+													parentValues.push(rel.ParentValue);
+												}
+											});
+										}
+										$label.hide();
+										$label.attr('parent-name',parentName);
+										$label.attr('parent-values',parentValues.join('\|'));
+									}
 									$checkboxes.append($label);
 								});
-								$fieldSetEl.append($checkboxes);
-								$fieldSetEl.append('<input class="addCheckbox" type="text" size="30" /><button class="addCheckboxBtn">Add One More</button>');
+								$fieldSetEl.append($checkboxes).append($input).append($button);
+								
+								// we set actions for dropDownArrow and dropDownList below
 								$('.addCheckboxBtn',$fieldSetEl).click(function() { handleAddCheckbox(this) });
 							} // rec.ValidationRules.MaxValues > 1
 
@@ -245,11 +275,12 @@
 				// attributes can be independent OR can rely on some other attribute (nested)
 				// Ex. - see rec.ValidationRules.Relationship for category 63869
 				// let's decide where to insert our fieldset (independent or nested inside the other one)
+				$('input,select',$fieldSetEl).first().unbind('change').change(function(){ handleNested(this); });
 				if(rec.ValidationRules.Relationship && rec.ValidationRules.Relationship[0] && rec.ValidationRules.Relationship[0].ParentName) {
 					var parentName = rec.ValidationRules.Relationship[0].ParentName;
 					$("select,input",$fieldSetEl).attr('disabled',true);
 					$(".dropDownArrow",$fieldSetEl).addClass('dropDownArrowDisabled');
-					$(ebaySpecsBlock+' fieldset legend:contains('+parentName+')').parent().append($fieldSetEl).find('input,select').first().change(function(){ handleNested(this); });
+					$(ebaySpecsBlock+' fieldset legend:contains('+parentName+')').parent().append($fieldSetEl);
 				} else {
 					$(ebaySpecsBlock).append($fieldSetEl); // put it into the DOM
 				}
@@ -388,6 +419,7 @@
 	// when parent gets it's value - enable child input/select
 	function handleNested(el) {
 		var elName = $(el).attr('name');
+		app.u.dump("-> handleNested "+elName);
 		var $fs = $(el).parent().find('fieldset');
 		if($(el).val()) {
 			$('input,select', $fs).attr("disabled",false);
@@ -408,6 +440,20 @@
 					}
 				}
 			});
+			
+			// sometimes fieldsets are not nested, but related - and we need to handle this
+			// See "DVDs & Movies -> VHS Tapes" for how this works
+			// Changing 'Genre' automatically shows/hides checkboxes inside 'Sub-Genre' - but they're not nested!
+			$(ebaySpecsBlock+' label.checkbox').each(function() {
+				if($(this).attr('parent-name') == elName) {
+					var parentValues = $(this).attr('parent-values');
+					if(parentValues.search($(el).val()) != -1 || $(this).find('input').prop('checked')) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				}
+			});
 
 		} 
 		else {
@@ -420,7 +466,12 @@
 	// add a checkbox with your own item specific
 	function handleAddCheckbox(el) {
 		var checkboxVal = $(el).parent().find('.addCheckbox').val();
-		var checkboxesTotal = $(el).parent().find('.checkboxesWrapper input').length;
+		var checkboxesTotal = 0;
+		$(el).parent().find('.checkboxesWrapper input').each(function() {
+			if($(this).prop('checked')) {
+				checkboxesTotal += 1;
+			}
+		});
 		var max = $(el).parent().attr('data-maxvalues');
 		var name = $(el).parent().find('legend > b').text();
 		if(checkboxVal && max && checkboxesTotal < max) {
@@ -432,7 +483,9 @@
 					if($(this).prop('checked')) {
 						showErrorBalloon(el,'Value "'+checkboxVal+'" already exists');
 					} else {
-						$(this).prop('checked',true);
+						// mark the checkbox and show it's label if it was hidden 
+						// (<label class="checkbox"><input type=checkbox value="Value">Value</label>)
+						$(this).prop('checked',true).parent().show();
 						$(el).parent().find('.addCheckbox').val('');
 					}
 				}
@@ -561,7 +614,7 @@
 								found = 1;
 
 								if($(this).attr('value') && $(this).attr('value').toUpperCase() === v.toUpperCase()) {
-									$(this).attr('checked',true);
+									$(this).prop('checked',true).parent().show();
 									checkboxFound = 1;
 								}
 							}
