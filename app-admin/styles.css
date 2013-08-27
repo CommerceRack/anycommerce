@@ -28,6 +28,8 @@ class can also be applied to a 1 item per row list.
 .floatRight	{float:right;}
 .clearBoth	{clear:both;}
 
+.displayInlineBlock	{display:inline-block;}
+
 .alignRight	{text-align:right;}
 .alignLeft	{text-align:left;}
 .alignCenter	{text-align:center;}
@@ -1320,6 +1322,29 @@ see shipping panel in product editor for example
 
 .alignedInputs input[type=number], 
 .alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
+
+
+
+
+
+/* SITES TAB */
+
+.domainPanel	{
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	float:left;
+	margin:1%;
+	padding:12px;
+	width:29%;
+	}
+
+
+
+
+
+
+
 
 
 

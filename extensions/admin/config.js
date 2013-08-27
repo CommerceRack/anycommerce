@@ -965,7 +965,7 @@ $D.dialog('open');
 
 			adminDomainToggleFavoriteExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-tag"},text: false});
-				if($btn.closest('tr').data('IS_FAVORITE') == 1)	{$btn.addClass('ui-state-highlight')}
+				if($btn.closest("[data-is_favorite]").data('is_favorite') == 1)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.adminDomainToggleFavoriteExec').on('click.adminDomainToggleFavoriteExec',function(event){
 					$btn.toggleClass('ui-state-highlight');
 					app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$btn.closest('tr').data('DOMAINNAME'),'@updates':["DOMAIN-SET-FAVORITE?IS="+($btn.hasClass('ui-state-highlight') ? 1 : 0)]},'passive');
@@ -1072,10 +1072,10 @@ $D.dialog('open');
 				}, //domainRemoveConfirm
 
 			adminDomainDetailShow : function($btn)	{
-				if($btn.data('mode') == 'dialog')	{$btn.button({icons: {primary: "ui-icon-wrench"},text: true});}
-				else	{$btn.button({icons: {primary: "ui-icon-pencil"},text: false});}
+				if($btn.data('mode') == 'dialog')	{$btn.button({icons: {primary: "ui-icon-wrench"},text: false});}
+				else	{$btn.button({icons: {primary: "ui-icon-wrench"},text: false});}
 
-				var domain = $btn.closest('tr').data('DOMAINNAME');
+				var domain = $btn.closest("[data-domainname]").data('domainname')
 				
 				if(domain)	{
 					if($btn.data('mode') == 'panel' || $btn.data('mode') == 'dialog')	{

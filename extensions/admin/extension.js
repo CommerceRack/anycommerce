@@ -40,7 +40,7 @@ var admin = function() {
 		'pageUtilitiesTemplate',
 //		'pageTemplateSetupAppchooser',
 		
-		'dashboardTemplate',
+//		'dashboardTemplate',
 		'recentNewsItemTemplate',
 		'quickstatReportTemplate',
 //		'achievementsListTemplate',
@@ -51,8 +51,7 @@ var admin = function() {
 		'mailToolTemplate',
 		
 		'pageTemplateSites',
-		'domainListTemplate',
-		'partitionListTemplate'
+		'domainListTemplate'
 
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
@@ -2781,25 +2780,9 @@ else	{
 
 			showSitesTab : function($target)	{
 				$target.empty();
-				if($("[data-app-role='sitesTabContainer']",$target).attr('data-widget-anytabs'))	{
-					$target.anytabs('destroy');
-					}
+				$target.showLoading({'message':'Fetching List of Domains'});
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
-				if(app.ext.admin.calls.adminDomainList.init({},'mutable'))	{
-					app.model.destroy('adminConfigDetail|prts');
-					}
-				app.ext.admin.calls.adminConfigDetail.init({'prts':true},{'datapointer':'adminConfigDetail|prts','callback': function(rd){
-					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd})
-						}
-					else	{
-						$target.anycontent({'templateID':'pageTemplateSites',data : $.extend(true,{},app.data['adminConfigDetail|prts'],app.data['adminDomainList'])});
-						$("[data-app-role='sitesTabContainer']",$target).anytabs();
-						$('.gridTable',$target).anytable();
-						app.u.handleAppEvents($target);
-						}
-					}},'mutable');
+				app.ext.admin.calls.adminDomainList.init({'callback':'anycontent','jqObj':$target,'templateID':'pageTemplateSites'},'mutable');
 				app.model.dispatchThis('mutable');
 				},
 
@@ -5853,8 +5836,8 @@ not in use
 
 
 			domainPutInFocus : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-check"},text: true});
-				var domain = $btn.closest('tr').data('DOMAINNAME');
+				$btn.button({icons: {primary: "ui-icon-check"},text: false});
+				var domain = $btn.closest("[data-domainname]").data('domainname');
 				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(){
 //					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
@@ -5863,7 +5846,7 @@ not in use
 				//
 				},
 			domainView : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-newwin"},text: true});
+				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
 				$btn.off('click.domainView').on('click.domainView',function(){
 					window.open("http://www."+$btn.closest('tr').data('DOMAINNAME'));
 					});
