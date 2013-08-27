@@ -57,18 +57,15 @@ var admin_templateEditor = function() {
 		a : {
 
 //for mode = ebay, vars.profile is required.
-			showTemplateEditorInModal : function(mode,vars)	{
-				
+			showTemplateEditor : function(mode,vars)	{
+
 				vars = vars || {};
-				
+				app.u.dump(" -> vars: "); app.u.dump(vars);
 				//will be false if it is not missing params
 				if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
 //By here, we know that we have a valid mode and that any requirements in 'vars' based on the mode ARE present.
 
 					var $D = $('#templateEditor');
-
-
-//					app.u.dump(" -> #templateEditor.length: "+$D.length);
 						
 					if($D.length)	{
 						$('#globalMessaging').anymessage({'message':'The template editor was already open for '+$D.data('mode')+'. That editor was closed'})
@@ -132,7 +129,7 @@ var admin_templateEditor = function() {
 						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
 						$D.data('mode',mode);
 
-						$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
+						
 						$D.showLoading({"message":"Fetching template HTML"});
 							
 						
@@ -142,7 +139,8 @@ var admin_templateEditor = function() {
 								$D.anymessage({'message':rd})
 								}
 							else	{
-						
+								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
+								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
 								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
 									'state' : 'persistent',
 									showClose : false, //set to false to disable close (X) button.
@@ -167,6 +165,10 @@ var admin_templateEditor = function() {
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
 									$(".ebay",$D).show();
 									}
+								if(mode == 'Site')	{
+									toolbarButtons.push("|");
+									$(".site",$D).show();
+									}
 								else if(mode == 'Campaign')	{
 									toolbarButtons.push("|");
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
@@ -184,7 +186,7 @@ var admin_templateEditor = function() {
 									.width('95%')
 									.height($D.height() - 100)
 									.css('width','95%')
-									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body']))
+									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body'],mode,vars))
 									.htmlarea({
 										// Override/Specify the Toolbar buttons to show
 										toolbar: toolbarButtons // 
@@ -217,6 +219,10 @@ var admin_templateEditor = function() {
 								cmdObj.CAMPAIGNID = vars.campaignid;
 								cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
 								}
+							else if(mode == 'Site')	{
+								cmdObj.DOMAIN = vars.domain;
+								cmdObj._tag.datapointer = 'adminDomainFileContents|'+vars.domain;
+								}
 							else	{
 								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
 
@@ -229,7 +235,7 @@ var admin_templateEditor = function() {
 					$('#globalMessaging').anymessage({"message":app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
 					}				
 				
-				}, //showTemplateEditorInModal
+				}, //showTemplateEditor
 
 			showTemplateChooserInModal : function(vars)	{
 				vars = vars || {};
@@ -686,7 +692,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					}, //buildTemplateStyleSheet
 
 //removes the editor classes from the template. executed on save.
-				postprocessTemplate : function(template)	{
+				postprocessTemplate : function(template,mode)	{
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
 					$('#templateBuilderCSS',$template).empty().remove();
@@ -695,9 +701,29 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //This will add a style tag (classes) used by the editor. They're added to the template (stripped on save).
 // it will also add some classes on data-object elements. These stay (they do no harm)
-				preprocessTemplate : function(template)	{
+				preprocessTemplate : function(template,mode,vars)	{
+					app.u.dump("BEGIN admin_templateEditor.u.preprocessTemplate");
+//					app.u.dump(" -> mode: "+mode); app.u.dump(" -> vars: "); app.u.dump(vars);
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
+					
+					if(mode == 'Site')	{
+						app.u.dump(" -> Is a Site template");
+						$('base',$template).attr('href','http://www.'+vars.domain); //!!! this is temporary. Need a good solution for protocol and domain prefix/host.
+						$('script',$template).remove();
+/*						$('script',$template).each(function(index){
+							app.u.dump(" -> index: "+index);
+							var $script = $(this);
+							if($script.attr('href'))	{
+								$script.attr({'data-scripttype':'file','data-href':$script.attr('src')}).removeAttr('src');
+								}
+							else	{
+								//empty or text("") was not consistently removing the content of the script tag.
+								$script.replaceWith($("<meta \/>").attr({'data-scripttype':'inline','name':'script','content':$script.text()})) //.data('scriptcontent',$script.text("// temporarily removed for editor. \n")))
+								}
+							});
+*/						}
+					
 					$("[data-object]",$template).each(function(){
 						var $ele = $(this);
 						if($ele.data('object') == 'PRODUCT' || $ele.data('object') == 'BUYER')	{
@@ -789,7 +815,7 @@ var $input = $(app.u.jqSelector('#',ID));
 											}
 										}
 									},
-								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html())
+								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode)
 								}
 	
 							if(mode == 'EBAYProfile')	{
@@ -797,6 +823,9 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 							else if(mode == 'Campaign')	{
 								dObj.CAMPAIGNID = $D.data('campaignid');
+								}
+							else if(mode == 'Site')	{
+								dObj.DOMAIN = $D.data('domain');
 								}
 							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
 							app.model.addDispatchToQ(dObj,'immutable');
@@ -1450,10 +1479,13 @@ else	{
 					$btn.button();
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
 						if($btn.data('mode') == 'Campaign')	{
-							app.ext.admin_templateEditor.a.showTemplateEditorInModal($btn.data('mode'),{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
+							app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
 							}
 						else if ($btn.data('mode') == 'EBAYProfile')	{
-							app.ext.admin_templateEditor.a.showTemplateEditorInModal($btn.data('mode'),{"profile":$btn.closest("[data-profile]").data('profile')});
+							app.ext.admin_templateEditor.a.showTemplateEditor('EBAYProfile',{"profile":$btn.closest("[data-profile]").data('profile')});
+							}
+						else if ($btn.data('mode') == 'Site')	{
+							app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":$btn.closest("[data-domainname]").data('domainname')});
 							}
 						else	{
 							//invalid mode set.

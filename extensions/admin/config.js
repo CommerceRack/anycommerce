@@ -1072,8 +1072,8 @@ $D.dialog('open');
 				}, //domainRemoveConfirm
 
 			adminDomainDetailShow : function($btn)	{
-				if($btn.data('mode') == 'dialog')	{$btn.button({icons: {primary: "ui-icon-wrench"},text: false});}
-				else	{$btn.button({icons: {primary: "ui-icon-wrench"},text: false});}
+				if($btn.data('mode') == 'dialog')	{$btn.button({icons: {primary: "ui-icon-pencil"},text: false});}
+				else	{$btn.button({icons: {primary: "ui-icon-pencil"},text: false});}
 
 				var domain = $btn.closest("[data-domainname]").data('domainname')
 				

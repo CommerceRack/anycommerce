@@ -525,27 +525,27 @@ SETUP PAGE TEMPLATE
 
 <div id='pageTemplateSites'>
 
-<ul data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;	" class='listStyleNone ui-widget noPadOrMargin clearfix'></ul>
+	<ul data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;	" class='listStyleNone ui-widget noPadOrMargin clearfix'></ul>
 
 </div>
 
 <ul>
-
-<li id='domainListTemplate' class='ui-widget-content ui-corner-all domainPanel'>
-	<div class='marginBottom alignCenter'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL;' width='160' height='80' /></div>
 	
-	<h4 data-bind="var: domain(DOMAINNAME); format:text;"></h4>
-	<p>
-		<div>Partition: <span data-bind="var: domain(PRT); format:text; hideZero:false;" class='marginLeft'></span></div>
-	</p>
-	<div class='buttonset'>
-		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
-		<button data-app-event="admin|domainView">View Store</button>
-		<button>Edit Project</button>
-		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
-		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
-	</div>
-</li>
+	<li id='domainListTemplate' class='ui-widget-content ui-corner-all domainPanel'>
+		<div class='marginBottom alignCenter'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL;' width='160' height='80' /></div>
+		
+		<h4 data-bind="var: domain(DOMAINNAME); format:text;"></h4>
+		<p>
+			<div>Partition: <span data-bind="var: domain(PRT); format:text; hideZero:false;" class='marginLeft'></span></div>
+		</p>
+		<div class='buttonset'>
+			<button data-app-event="admin|domainPutInFocus">Use Domain</button>
+			<button data-app-event="admin|domainView" data-mode='Site'>View Store</button>
+			<button data-app-event='admin_templateEditor|templateEditorShow' data-button-text='false' data-mode='Site'>Edit Project</button>
+			<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
+			<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
+		</div>
+	</li>
 </ul>
 
 

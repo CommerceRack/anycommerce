@@ -21,7 +21,7 @@ app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']);
 app.rq.push(['extension',0,'admin_tools','extensions/admin/tools.js']); 
 app.rq.push(['extension',1,'admin_navcats','extensions/admin/navcats.js']); 
 app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
-app.rq.push(['extension',1,'admin_templateEditor','extensions/admin/template_editor.js']); 
+app.rq.push(['extension',0,'admin_templateEditor','extensions/admin/template_editor.js']); 
 app.rq.push(['extension',0,'admin_syndication','extensions/admin/syndication.js']); //needs to be in pass 0 for linkFrom (links from marketplaces)
  
 app.rq.push(['extension',0,'admin_config','extensions/admin/config.js']);
