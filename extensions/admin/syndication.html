@@ -2508,6 +2508,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				Use buyer requirements, including My Ebay.<!-- ebay's field is disable, but we prefer enable, so 'off' is 1 to match their field values -->				
 				<span class='toolTip' title="If enabled, all buyer requirements (from Item.BuyerRequirementDetails or Buyer requirements preferences in My eBay) are ignored. ">?</span>
 			</label>		
+
 		
 <!--		
 			<label>
@@ -2518,6 +2519,19 @@ add an input here (checkbox) for 'let ebay compute the costs'
 			</label>
 -->
 			<div class='toggleThis'>
+
+				<fieldset>
+				<legend>Buyer Requirements</legend>
+				<label>
+					<span>Min Feedback Score</span>
+					<select name='Item\BuyerRequirementDetails\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MinimumFeedbackScore); format:popVal;">
+						<option value='-1'>-1</option>
+						<option value='-2'>-2</option>
+						<option value='-3'>-3</option>
+					</select>
+					<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than zero.">?</span>
+				</label>
+
 				<label>
 					<span>Max # policy violations</span>
 					<input type='number' step='1' min='0' size='6' name='Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumBuyerPolicyViolations\Count); format:popVal;" />
@@ -2535,8 +2549,14 @@ add an input here (checkbox) for 'let ebay compute the costs'
 					</select>
 					<span class='toolTip' title="The length of time over which a prospective buyer's buyer policy violations will be counted. If the prospective buyer's number of buyer policy violations during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
 				</label>
+				</fieldset>
 	
 			
+				<!-- 
+				limit the number of items a buyer can purchase
+				-->
+				<fieldset>
+				<legend>Purchasing Limits</legend>
 				<label>
 					<span>Max. item count</span>
 					<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MaximumItemCount); format:popVal;">
@@ -2568,20 +2588,27 @@ add an input here (checkbox) for 'let ebay compute the costs'
 						<option value='4'>4</option>
 						<option value='5'>5</option>
 					</select>
-					<span class='toolTip' title="The value of this field specifies the maximum number of items a prospective buyer can purchase from the seller during a 10-day period. The prospective buyer will be blocked from bidding/buying once this value is reached.">?</span>
+					<span class='toolTip' title="When using Max Item Count a prospective buyer will be blocked from bidding/buying if they have reached or exceeded the MaximumItemCount and their feedback score is less than the value of this field.">?</span>
 				</label>
+				</fieldset>
 			
-			
-			
+				<!-- 
+				used by the seller as a mechanism to block prospective buyers
+				who have unpaid item strikes on their account exceeding the
+				value set in the Count field during a specified time period (set
+				in the Period field). 
+				-->
+				<fieldset>
+				<legend>Unpaid Items</legend>
 				<label>
 					<span>Max. unpaid item strikes count</span>
-					<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Count); format:popVal;" />
+					<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MaximumUnpaidItemStrikesInfo\Count' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumUnpaidItemStrikesInfo\Count); format:popVal;" />
 					<span class='toolTip' title="This integer value sets the maximum number of unpaid item strikes that a prospective buyer is allowed to have during a specified time period (MaximumUnpaidItemStrikesInfo.Period) before being blocked from buying/bidding on the item. ">?</span>
 				</label>
 			
 				<label>
 					<span>Max. unpaid item strikes Period</span>
-					<select name='Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumItemRequirements\MinimumFeedbackScore\Period); format:popVal;">
+					<select name='Item\BuyerRequirementDetails\MaximumUnpaidItemStrikesInfo\Period' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MaximumUnpaidItemStrikesInfo\Period); format:popVal;">
 						<option value=''></option>
 						<option value='Days_30'>30</option>
 						<option value='Days_180'>180</option>
@@ -2590,17 +2617,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 					<span class='toolTip' title="This enumerated value defines the length of time over which a prospective buyer's unpaid item strikes will be counted. If the prospective buyer's number of unpaid item strikes during this defined period exceeds the value set in the Count field, that prospective buyer is blocked from buying/bidding on the item. ">?</span>
 				</label>
 			
-			
-				
-				<label>
-					<span>Min Feedback Score</span>
-					<input type='number' step='1' size='5'  min='0' name='Item\BuyerRequirementDetails\MinimumFeedbackScore' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\MinimumFeedbackScore); format:popVal;" />
-					<span class='toolTip' title="Set this field as a mechanism to block bidders who have a Feedback Score less than the specified value.">?</span>
-				</label>
-				
-	
-				
-				
+				<legend>Verification &amp; Trust</legend>
 				<label>
 					<input type="checkbox" class='applyAnycb' name='Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN' data-bind="var: profile(%PROFILE.Item\BuyerRequirementDetails\ShipToRegistrationCountry\@BOOLEAN); format:popVal;" />
 					Ship to Reg. Country
@@ -2632,6 +2649,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<p class='hint'>
 				Applicable for listings in vehicle categories on the US eBay Motors site and eBay Canada site. (No business effect if specified for other categories or sites, as the Web site will not display the information to buyers.)
 				</p>
+				</fieldset>
 			</div>
 		</div>
 	</fieldset>

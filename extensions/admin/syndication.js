@@ -1369,8 +1369,9 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					app.ext.admin_batchJob.a.adminBatchJobCreate({
 						'guid' : app.u.guidGenerator(),
 						'profile' : $btn.closest('tr').data('profile'),
-						'type' : 'EBAY_UPDATE',
-						'function' : 'refresh'
+						'function' : 'refresh',
+						'type':'UTILITY',
+						'%vars':{'APP':'EBAY_UPDATE','function':'refresh','profile':$btn.closest('tr').data('profile')}
 						});	
 
 					})
