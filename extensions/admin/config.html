@@ -3183,8 +3183,8 @@ Coming Soon
 	<label>
 		<span>Host Type</span>
 		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
-			<option value='SITE' data-bind="var:domain(DOMAINNAME); format:text;">Domain Project</option>
-			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR'>Other Project Reference</option>
+			<option value='SITE' data-bind="var:domain(DOMAINNAME); format:text; posttext: project;">Domain project</option>
+			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR'>Other project reference</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
 			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE'>V-Store</option>
 			<option value='CUSTOM'>Custom</option>
@@ -3321,7 +3321,7 @@ Coming Soon
 	<fieldset>
 		<legend>Hosts</legend>
 		
-		<table class='fullWidth gridTable applyAnytable'>
+		<table class='fullWidth gridTable applyAnytable' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;">
 		<thead>
 		<tr>
 			<td>Name</td>

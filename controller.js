@@ -3020,7 +3020,7 @@ $tmp.empty().remove();
 					$tag.prop('checked',false); //have to handle unchecking in case checked=checked when template created.
 					}
 				else	{
-//the value here could be checked, on or some other string. if the value is set (and we won't get this far if it isn't), check the box.
+//the value here could be checked, on, 1 or some other string. if the value is set (and we won't get this far if it isn't), check the box.
 					$tag.prop('checked',true);
 					}
 				}

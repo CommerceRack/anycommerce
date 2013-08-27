@@ -38,7 +38,7 @@ var admin = function() {
 
 		'pageSetupTemplate',
 		'pageUtilitiesTemplate',
-		'pageTemplateSetupAppchooser',
+//		'pageTemplateSetupAppchooser',
 		
 		'dashboardTemplate',
 		'recentNewsItemTemplate',
