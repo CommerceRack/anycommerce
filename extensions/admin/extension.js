@@ -70,7 +70,10 @@ var admin = function() {
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
 			versionMetaData : {
-				'youtubeVideoID' : 'tKQ_SJzjbXI'
+				'youtubeVideoIDs' : {
+					'201332':'tKQ_SJzjbXI',
+					'201330':'fEWSsblLQ94'
+					}
 				},
 			templates : theseTemplates,
 			willFetchMyOwnTemplates : true,

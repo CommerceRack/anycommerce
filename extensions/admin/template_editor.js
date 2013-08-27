@@ -1382,9 +1382,9 @@ var $input = $(app.u.jqSelector('#',ID));
 							var templateData = app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')];
 							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
 							
-							app.u.dump(" -> $chooser.length: "+$chooser.length);
-							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
-							app.u.dump(" -> $panel already exists: "+$panel.length);
+//							app.u.dump(" -> $chooser.length: "+$chooser.length);
+//							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
+//							app.u.dump(" -> $panel already exists: "+$panel.length);
 							
 							if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
 							else	{
@@ -1408,8 +1408,6 @@ var $input = $(app.u.jqSelector('#',ID));
 							else	{
 								$panel.show('scale');
 								}
-
-
 							}
 						else	{
 							$chooser.anymessage({'message':'In admin_templateEditor.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})

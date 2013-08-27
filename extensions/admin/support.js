@@ -98,6 +98,11 @@ var admin_support = function() {
 
 
 			showPlatformInfo : function()	{
+				//if the current release has a video, give it a special pointer so that it can be loaded inline.
+				if(app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.release])	{
+					app.ext.admin.vars.versionMetaData.youtubeVideoID = app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.release];
+					}
+					
 				var $D = app.ext.admin.i.dialogCreate({
 					'title':'Platform Information',
 					'templateID':'platformInfoTemplate',
@@ -109,8 +114,14 @@ var admin_support = function() {
 						$D.anymessage({'message':rd});
 						}
 					else	{
-						//
+						$D.append("<h3>Platform Information<\/h3>");
 						$D.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
+						$D.append("<h3>Video History<\/h3>");
+						for(index in app.ext.admin.vars.versionMetaData.youtubeVideoIDs)	{
+							$D.append($("<div class='lookLikeLink'> &#187; "+index+"<\/div>").on('click',function(){
+								linkOffSite('http://www.youtube.com/watch?v='+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]);
+								}));
+							}
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
