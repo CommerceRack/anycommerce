@@ -110,7 +110,7 @@ var admin_support = function() {
 						}
 					else	{
 						//
-						$D.append(app.ext.admin_tools.u.objExplore(app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd'])));
+						$D.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
