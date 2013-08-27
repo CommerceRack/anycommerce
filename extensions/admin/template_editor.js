@@ -140,7 +140,7 @@ var admin_templateEditor = function() {
 								}
 							else	{
 								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
-								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs 
+								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
 								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
 									'state' : 'persistent',
 									showClose : false, //set to false to disable close (X) button.
@@ -159,7 +159,7 @@ var admin_templateEditor = function() {
 									]);
 
 //handle some mode specifics.
-								$('.ebay, .campaign').hide(); // hide all 'specifics' by default. show as needed.
+								$('.ebay, .campaign, .site').hide(); // hide all 'specifics' by default. show as needed.
 								if(mode == 'EBAYProfile')	{
 									toolbarButtons.push("|");
 									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
@@ -180,13 +180,15 @@ var admin_templateEditor = function() {
 									}
 								else	{}
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
-						
+								
+								app.ext.admin_templateEditor.u.handleTemplateModeSpecifics(mode,vars,app.data[rd.datapointer]['body']);
+								
 								$("textarea:first",$D)
 									.show()
 									.width('95%')
 									.height($D.height() - 100)
 									.css('width','95%')
-									.val(app.ext.admin_templateEditor.u.preprocessTemplate(app.data[rd.datapointer]['body'],mode,vars))
+									.val(app.ext.admin_templateEditor.u.preprocessTemplate(mode,vars,app.data[rd.datapointer]['body']))
 									.htmlarea({
 										// Override/Specify the Toolbar buttons to show
 										toolbar: toolbarButtons // 
@@ -298,7 +300,7 @@ var admin_templateEditor = function() {
 				function fieldsetVerifyAndExecOnfocus($fieldset)	{
 					if(window.magic.fieldset_verify($fieldset))	{
 						if($fieldset.data('onfocus'))	{
-							setTimeout($fieldset.data('onfocus'),100);
+							setTimeout($fieldset.data('onfocus'),100); //setTimeout is a workaround (to avoid eval) to execute the value of data-onfocus as script.
 							}
 						}
 					}
@@ -316,7 +318,7 @@ var admin_templateEditor = function() {
 				$wizardForm.prepend("<div class='marginBottom ui-widget-content ui-corner-bottom smallPadding displayNone'><div class='alignCenter' data-app-role='progressBar'><div class='progress-label'>% Completed</div></div></div>"); //at B's request, do NOT use a progress bar here. no animation in slider desired.
 				
 				//handles the wizard nav button click events (and any other buttons we add later will get controlled here too)
-				$wizardForm.on('click.templatewizard',function(e){
+				$wizardForm.off('click.templatewizard').on('click.templatewizard',function(e){
 //					app.u.dump("Click registered in the wizard panel");
 					var $target = $(e.target); //the element that was clicked.
 					
@@ -701,7 +703,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //This will add a style tag (classes) used by the editor. They're added to the template (stripped on save).
 // it will also add some classes on data-object elements. These stay (they do no harm)
-				preprocessTemplate : function(template,mode,vars)	{
+				preprocessTemplate : function(mode,vars,template)	{
 					app.u.dump("BEGIN admin_templateEditor.u.preprocessTemplate");
 //					app.u.dump(" -> mode: "+mode); app.u.dump(" -> vars: "); app.u.dump(vars);
 					var $template = $("<html>"); //need a parent container.
@@ -742,6 +744,69 @@ var $input = $(app.u.jqSelector('#',ID));
 					$template.append(app.ext.admin_templateEditor.u.buildTemplateStyleSheet())
 					return $template.html();
 					}, //preprocessTemplate
+
+				handleTemplateModeSpecifics : function(mode,vars,template)	{
+					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
+						if(template)	{
+							var $template = $("<html>").html(template);
+							app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
+							var $select = $("[data-app-role='siteTemplateSelect']",$('#templateEditor'));
+							$("[data-wizard]",$template).each(function(){
+								var $ele = $(this);
+								$select.append($("<option \/>").text($ele.data('wizard')).val($ele.data('wizard')))
+								})							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, no template passed','gMessage':true});
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, '+app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),'gMessage':true});
+						}
+					//data-app-role='siteTemplateSelect'
+					},
+
+				summonWizard : function(filename)	{
+
+					$('#wizardForm').showLoading({"message":"Summoning Wizard..."});
+
+					var editorData = $('#templateEditor').data();
+					var cmdObj = {
+						'FILENAME':filename,
+						'_tag':	{
+							'datapointer' : 'admin'+editorData.mode+'FileContents|'+filename,
+							'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':rd});
+									}
+								else	{
+									$('#wizardForm').html(app.data[rd.datapointer].body)
+									app.ext.admin_templateEditor.a.initWizard();
+									}
+								}
+							}
+						}
+
+					if(editorData.mode == 'EBAYProfile')	{
+						cmdObj._cmd = 'adminEBAYProfileFileContents'
+						cmdObj.PROFILE = editorData.profile
+						}
+					else if(editorData.mode == 'Campaign')	{
+						cmdObj._cmd = 'adminCampaignFileContents'
+						cmdObj.CAMPAIGNID = editorData.campaignid
+						}
+					else if(editorData.mode == 'Site')	{
+						cmdObj._cmd = 'adminSiteFileContents'
+						cmdObj.DOMAIN = editorData.domain
+						}
+					else	{
+						//throw error.
+						}
+
+					app.model.addDispatchToQ(cmdObj,'mutable');
+					app.model.dispatchThis('mutable');
+
+					},
+
 
 //will display $object details in the $objectInspector element.
 				showObjectInInspector : function($object,$objectInspector)	{
@@ -1103,6 +1168,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							}
 						}
 					}, //getEditorButton_prodattributeadd
+
 //returns an array that gets appended to the html editor toolbar.
 				getEditorButton_buyerattributeadd : function()	{
 	
@@ -1236,6 +1302,16 @@ var $input = $(app.u.jqSelector('#',ID));
 
 
 			e : {
+//a site index.html file may contain several editable 'templates', each with their own wizard.
+//a dropdown is added to the template editor to allow the user to select a given template. The wizard file is then loaded.
+				adminSiteTemplateEdit : function($ele)	{
+					
+					$ele.off('change.adminSiteTemplateEdit').on('change.adminSiteTemplateEdit',function(){
+						//when a template is changed, all that needs to be done is to load the wizard. the wizard should take care of everything.
+						app.ext.admin_templateEditor.u.summonWizard("wizard-"+$(this).val()+".html")
+						});
+					
+					},
 
 				adminSaveAsTemplateExec : function($btn)	{
 					$btn.button();
@@ -1282,11 +1358,70 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 //executed when a template is selected.
 				templateChooserExec : function($ele)	{
-					$ele.off('click.templateChooserShow').on('click.templateChooserShow',function(){
-						app.ext.admin_templateEditor.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest('li').data()));
+					if($ele.is('button'))	{$ele.button();}
+					$ele.off('click.templateChooserShow').on('click.templateChooserShow',function(event){
+						event.preventDefault();
+						app.ext.admin_templateEditor.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
 						});
 					},
-				
+
+
+
+//$ele is probably an li.  This is exectued when a template preview is clicked. It'll open a detail template.
+//a 'choose' button will be present within the detail pane.
+			templateChooserPreview : function($ele)	{
+				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+					
+					event.preventDefault();
+					var $chooser = $ele.closest("[data-app-role='templateChooser']");
+					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
+					const mode = $ele.closest("[data-mode]").data('mode');
+					
+					if(mode)	{
+						if(app.data['admin'+mode+'TemplateList'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')])	{
+							var templateData = app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')];
+							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
+							
+							app.u.dump(" -> $chooser.length: "+$chooser.length);
+							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
+							app.u.dump(" -> $panel already exists: "+$panel.length);
+							
+							if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
+							else	{
+								$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
+								$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
+								$panel.appendTo($panelContainer);
+								app.u.handleAppEvents($panel);
+								}
+
+							//set all preview li's to default state then the new active one to active.
+							$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
+							$ele.addClass('ui-state-active').removeClass('ui-state-default');
+
+							if($panelContainer.children().length > 1)	{
+								//
+//hide the current preview and show the new one.					
+								$("[data-app-role='templateDetail']:visible",$previewPanel).first().hide('scale',function(){
+									$panel.show('scale');
+									});
+								}
+							else	{
+								$panel.show('scale');
+								}
+
+
+							}
+						else	{
+							$chooser.anymessage({'message':'In admin_templateEditor.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
+							}
+						}
+					else	{
+						$chooser.anymessage({'message':'In admin_templateEditor.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
+						}
+					});
+				},
+
+
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
 				containerFileUploadShow : function($btn){
 					$btn.button();
@@ -1505,38 +1640,7 @@ else	{
 						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
 							$btn.button('disable').hide();
 							event.preventDefault();
-							$('#wizardForm').showLoading({"message":"Summoning Wizard..."});
-
-							var cmdObj = {
-								'FILENAME':$meta.attr('content'),
-								'_tag':	{
-									'datapointer' : 'adminEBAYProfileFileContents|'+$meta.attr('content'),
-									'callback':function(rd){
-										if(app.model.responseHasErrors(rd)){
-											$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':rd});
-											}
-										else	{
-											$('#wizardForm').html(app.data[rd.datapointer].body)
-											app.ext.admin_templateEditor.a.initWizard();
-											}
-										}
-									}
-								}
-
-							if(editorData.mode == 'EBAYProfile')	{
-								cmdObj._cmd = 'adminEBAYProfileFileContents'
-								cmdObj.PROFILE = editorData.profile
-								}
-							else if(editorData.mode == 'Campaign')	{
-								cmdObj._cmd = 'adminCampaignFileContents'
-								cmdObj.CAMPAIGNID = editorData.campaignid
-								}
-							else	{
-								//throw error.
-								}
-
-							app.model.addDispatchToQ(cmdObj,'mutable');
-							app.model.dispatchThis('mutable');
+							app.ext.admin_templateEditor.u.summonWizard($meta.attr('content'));
 							});
 						}
 					},

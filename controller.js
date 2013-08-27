@@ -1255,7 +1255,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 							app.ext[extension].e[action]($ele,obj);
 							} //no action specified. do nothing. element may have it's own event actions specified inline.
 						else	{
-							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
+							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+" typeof app.data.extension: "+(extension ? typeof app.data[extension] : 'undefined')+"] and/or extension/action combination is not a function");
 							}
 						});
 					}

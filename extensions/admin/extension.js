@@ -5544,54 +5544,6 @@ not in use
 */
 /* app chooser */
 
-			appChooserAppChoose : function($btn)	{
-				$btn.button();
-				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
-					event.preventDefault();
-					var $parent = $btn.closest("[data-appid]");
-					})
-				},
-
-			appChooserFork : function($btn)	{
-				$btn.button();
-				$btn.off('click.appChooserFork').on('click.appChooserFork',function(event){
-					event.preventDefault();
-					var $parent = $btn.closest("[data-appid]");
-					app.u.dump("$parent.length: "+$parent.length);
-					app.u.dump("$parent.data: "); app.u.dump($parent.data());
-					window.open($parent.data('app-repo')+"archive/master.zip");
-					})
-				},
-
-			appChooserAppDownload : function($btn)	{
-				$btn.button();
-				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
-					event.preventDefault();
-					var $parent = $btn.closest("[data-appid]");
-					alert("Open a confirm dialog that shows the app id AND the domain in focus. after confirm, 'this may take a few moments...' then go through process.. creating project, adding files to project, selecting app for domain xyz.com, etc");
-					})
-				},
-
-
-//$ele is probably an li.
-			appChooserAppPreview : function($ele)	{
-				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
-					
-					event.preventDefault();
-					var appID = $ele.data('appid'),
-					$panel = $('#appChooserDetailPanel');
-
-					app.u.dump("Show preview for: "+appID);
-					//set all preview li's to default state then the new active one to active.
-					$ele.closest('ul').find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
-					$ele.addClass('ui-state-active').removeClass('ui-state-default');
-					
-//hide the current preview and show the new one.					
-					$("section:visible",$panel).first().hide('scale',function(){
-						$("section[data-appid='"+appID+"']:first",$panel).show('scale')
-						});
-					});
-				},
 
 
 			execDialogClose : function($btn)	{

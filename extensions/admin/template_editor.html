@@ -7,6 +7,9 @@
 	<td class='valignTop width20'>
 	<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
 <!--		<button data-app-event="admin_templateEditor|adminTemplateCampaignExit">Exit</button> -->
+		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_templateEditor|adminSiteTemplateEdit'>
+			<option value='' disabled="disabled" selected="selected">Choose Template</option>
+		</select>
 		<button data-app-event="admin_templateEditor|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
 		<button data-app-event="admin_templateEditor|adminTemplateSaveExec" class='ui-state-focus'>Save</button>
 	</div>
@@ -158,81 +161,40 @@
 <!-- for the template chooser interface -->
 
 
+<div id='templateChooserDetailTemplate'>
+	<div class='marginBottom clearfix'>
+		<div class='floatRight alignRight'>
+			<button class='smallButton'  data-app-event='admin_templateEditor|templateChooserExec'>Choose</button><!--
+			<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>-->
+		</div>
+		<h2 data-bind="var:template(SUBDIR); format:text;"></h2>
+	</div>
+	<div class='clearfix'>
+<img border="0" src="" data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;'>
+<p data-bind="var:template(%info.about); format:text;"></p>
+	</div>
+</div>
 
 
-<div id='templateChooserTemplate' class='page pageSetup pageSetupAppchooser clearfix'>
+
+<div id='templateChooserTemplate' class='page pageSetup pageSetupAppchooser clearfix' data-app-role='templateChooser'>
 	<h1>Choose a Template</h1>
-	<div class='ui-widget ui-widget-content ui-corner-all stdPadding marginBottom alignCenter'>
+	<section class='ui-widget ui-widget-content ui-corner-all stdPadding marginBottom alignCenter'>
 		
-		<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:templateChooserItemTemplate;" class='listStyleNone'></ul>
+		<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:templateChooserItemTemplate;" class='listStyleNone clearfix'></ul>
 		
 <!--
-<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='b2b'>
+<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer'  data-appid='b2b'>
 			<img src='app-b2b/preview-120x120.jpg' width='120' height='100' alt='Shadow' />
 			<div>B 2 B</div>
 			</li>
 -->
-	</div>	
+	</section>	
 	
-	<div class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel'>
+	<section class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel' data-app-role='appPreviewPanel'>
 
-		<section id='details_fashion' data-app-role='appPreviewPanel'  data-appid='fashion' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-
-			<div class='marginBottom clearfix'>
-				<div class='floatRight alignRight'>
-					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-				</div>
-				<h2>Fashion</h2>
-			</div>
-			<div class='clearfix'>
-<img src='app-fashion/preview-374x500.jpg' width='374' height='500' alt='Fashion' class='floatLeft marginRight' />
-<p>Fashion is intended for apparel and jewelry sellers, however it could be easily adopted for any industry.</p>
-<p>The main navigation bar, homepage banner and homepage product lists rely heavily on product tagging, specifically new arrivals, best sellers, sale and clearance items.</p>
-<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
-			</div>
-		</section>
-
-
-		<section id='details_mobile' data-app-role='appPreviewPanel' class='displayNone' data-appid='mobile' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-
-			<div class='marginBottom clearfix'>
-				<div class='floatRight alignRight'>
-					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-				</div>
-				<h2>Mobile</h2>
-			</div>
-			<div class='clearfix'>
-<img src='app-mobile/preview-193x500.jpg' width='193' height='500' alt='Mobile' class='floatLeft marginRight' />
-<p>Mobile is intended for all sellers, for use on their mobile domain. The site is responsive, so it will work on a variety of screen resolutions and devices.</p>
-<p>The homepage product lists rely heavily on product tagging, specifically new arrivals and best sellers. The various pages (product and category) are designed for a smaller screen size.</p>
-<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
-			</div>
-		</section>
-
-
-		<section id='details_b2b' data-app-role='appPreviewPanel' class='displayNone' data-appid='b2b' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-
-			<div class='marginBottom clearfix'>
-				<div class='floatRight alignRight'>
-					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-				</div>
-				<h2>B2B</h2>
-			</div>
-			<div class='clearfix'>
-<img src='app-b2b/preview-500x486.jpg' width='500' height='486' alt='b2b' class='floatLeft marginRight' />
-<p>B2B is indended for business to business sellers.  It's a no-frills website that offers the buyer the ability to purchase directly from the category page and in bulk.</p>
-<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
-			</div>
-		</section>
-
-
-	</div>
+	</section>
 
 </div>
 
@@ -247,9 +209,9 @@
 
 
 <ul>
-	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer'>
-	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;' />
-	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink' data-app-event='admin_templateEditor|templateChooserExec'></div>
+	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-event='admin_templateEditor|templateChooserPreview'>
+	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;'  />
+	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink'></div>
 	</li>
 </ul>
 
