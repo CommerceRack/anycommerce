@@ -526,13 +526,13 @@ SETUP PAGE TEMPLATE
 <div id='pageTemplateSites' class='ui-widget'>
 
 	<div data-bind="var: domains(*favorites); format:showIfSet;">
-		<h2>Favorite Domains</h2>
+<!--		<h2>Favorite Domains</h2>-->
 		<ul data-bind="var: domains(*favorites); format:processList; loadsTemplate:domainListFavoriteTemplate;" class='marginTop listStyleNone ui-widget noPadOrMargin clearfix' data-app-role='domainListFavorites'></ul>
 	</div>
 	
 	
 	<div class='ui-widget-content ui-corner-all displayNone stdPadding' data-bind="var: domains(*nonfavorites); format:showIfSet;">
-	<h3>Non Favorite Domains</h3>
+<!--	<h3>Non Favorite Domains</h3>-->
 	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites'>
 		<thead>
 		<tr>
@@ -554,14 +554,19 @@ SETUP PAGE TEMPLATE
 		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='80' />
 		</div>
 		
-		<h4 data-bind="var: domain(DOMAINNAME); format:text;"></h4>
-		<p>
-			<div>Partition: <span data-bind="var: domain(PRT); format:text; hideZero:false;" class='marginLeft'></span></div>
-		</p>
-		<div class='buttonset'>
+		<h4>
+			<span data-bind="var: domain(DOMAINNAME); format:text;"></span>
+			<span data-bind="var: domain(PRT); format:text; pretext:(;posttext:);" class='marginLeft'></span>
+		</h4>
+		<div class='buttonset marginTop' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;">
 			<button data-app-event="admin|domainPutInFocus">Use Domain</button>
-			<button data-app-event="admin|domainView" data-mode='Site'>View Store</button>
+			<button data-app-event="admin|domainView" data-mode='Site'>View Site</button>
 			<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
+<!-- buttons locked UNLESS a project is in place -->
+			<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site' data-hidebuttontext='true'>Download Zip of Template</button>
+			<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
+<!-- end project dependant buttons -->
+			
 			<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
 			<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
 		</div>
@@ -574,7 +579,7 @@ SETUP PAGE TEMPLATE
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
-			<button data-app-event="admin|domainView" data-mode='Site'>View Store</button>
+		<button data-app-event="admin|domainView" data-mode='Site'>View Site</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
 		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
 	</td>

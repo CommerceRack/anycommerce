@@ -3081,8 +3081,9 @@ Coming Soon
 
 <table>
 <tr id='domainManagerRowTemplate'>
+	<td class='alignCenter width1' ><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='80' height='40' /></td>
 	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
-	<td data-bind="var: domain(prt); format:text; hideZero:false;"></td>
+	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 		<button data-app-event="admin_config|domainRemoveConfirm">Remove Domain</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Flag as Favorite</button>
@@ -3115,6 +3116,7 @@ Coming Soon
 		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
 	</td>
 	<td class='alignRight'>
+	<button data-app-event="admin|domainView" data-mode='host'>View Site</button>
 	<button data-app-event="admin|tagRowForRemove">Delete this Host</button>
 	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
 	</td>
@@ -3282,14 +3284,13 @@ Coming Soon
 
 
 	<div class='buttonset alignRight marginBottom'>
-	<button data-mode='Site' data-app-event='admin_templateEditor|templateChooserShow' title="A project specific to this domain. The domain name will be the project title. Only 1 domain project per domain.">Add Domain Project</button>
 	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='create'>Add Host</button>
 	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
 	</div>
 
 	<fieldset class='marginBottom'>
 		<legend>General</legend>
-		<div class='floatRight pointer ui-widget-content smallPadding ui-corner-all'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL; defaultValue: i/imagenotfound;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
+		<div class='floatRight pointer ui-widget-content smallPadding ui-corner-all'><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
 		<h5 data-bind="var: domain(DOMAINNAME); format:text;"></h5>
 		
 		<label>

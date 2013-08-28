@@ -11,7 +11,7 @@ ADMIN
  -> domain manager out of beta
  -> new 'sites' interface
  -> new 'edit' site for domain apps
-
+ -> but fixes in campaign/ebay template download.
 
 201332
 ADMIN

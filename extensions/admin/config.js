@@ -457,7 +457,7 @@ var admin_config = function() {
 						"<button data-app-event='admin|refreshDMI'>Refresh Domain List<\/button>",
 						"<button data-app-event='admin_config|adminDomainCreateShow'>Add Domain<\/button>"
 						],
-					'thead' : ['Domain','Partition',''],
+					'thead' : ['Logo','Domain','Partition',''],
 					'tbodyDatabind' : "var: users(@DOMAINS); format:processList; loadsTemplate:domainManagerRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminDomainList',
@@ -962,7 +962,16 @@ $D.dialog('open');
 				if($btn.closest("[data-is_favorite]").data('is_favorite') == 1)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.adminDomainToggleFavoriteExec').on('click.adminDomainToggleFavoriteExec',function(event){
 					$btn.toggleClass('ui-state-highlight');
-					app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$btn.closest("[data-domainname]").data('domainname'),'@updates':["DOMAIN-SET-FAVORITE?IS="+($btn.hasClass('ui-state-highlight') ? 1 : 0)]},'passive');
+					var domainname = $btn.closest("[data-domainname]").data('domainname');
+					app.model.addDispatchToQ({
+						'_tag':{
+							'callback' : 'showMessaging',
+							'message' : domainname+' has been '+($btn.hasClass('ui-state-highlight') ? 'tagged as a favorite. It will now show at the top of some domain lists.' : 'removed from your favorites')
+							},
+						'_cmd':'adminDomainMacro',
+						'DOMAINNAME':domainname,
+						'@updates':["DOMAIN-SET-FAVORITE?IS="+($btn.hasClass('ui-state-highlight') ? 1 : 0)]
+						},'passive');
 					app.model.dispatchThis('passive');
 					});
 				}, //adminDomainToggleFavoriteExec
@@ -1069,9 +1078,9 @@ $D.dialog('open');
 				if($btn.data('mode') == 'dialog')	{$btn.button({icons: {primary: "ui-icon-pencil"},text: false});}
 				else	{$btn.button({icons: {primary: "ui-icon-pencil"},text: false});}
 
-				var domain = $btn.closest("[data-domainname]").data('domainname')
+				var domainname = $btn.closest("[data-domainname]").data('domainname');
 				
-				if(domain)	{
+				if(domainname)	{
 					if($btn.data('mode') == 'panel' || $btn.data('mode') == 'dialog')	{
 						$btn.off('click.adminDomainDetailShow').on('click.adminDomainDetailShow',function(event){
 							event.preventDefault();
@@ -1080,30 +1089,30 @@ $D.dialog('open');
 							if($btn.data('mode') == 'panel')	{
 								$panel = app.ext.admin.i.DMIPanelOpen($btn,{
 									'templateID' : 'domainUpdateTemplate',
-									'panelID' : 'domain_'+domain,
-									'header' : 'Edit Domain: '+domain,
+									'panelID' : 'domain_'+domainname,
+									'header' : 'Edit Domain: '+domainname,
 									'handleAppEvents' : false
 									});								
 								}
 							else	{
 								$panel = app.ext.admin.i.dialogCreate({
-									'title':'Edit Domain',
+									'title':'Edit Domain: '+domainname,
 									'templateID':'domainUpdateTemplate',
 									'showLoading':false //will get passed into anycontent and disable showLoading.
 									});
 								$panel.dialog('open');
 								}
 
-							$panel.attr('data-domain',domain);
-							app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':domain,'_tag':{'datapointer':'adminDomainDiagnostics|'+domain}},'mutable');
+							$panel.attr({'data-domainname':domainname,'data-domain':domainname}); //### start using domainname instead of domain as much as possible. format in reponse changed.
+							app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':domainname,'_tag':{'datapointer':'adminDomainDiagnostics|'+domainname}},'mutable');
 							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
 	
 							app.model.addDispatchToQ({
 								'_cmd':'adminDomainDetail',
-								'DOMAINNAME':domain,
+								'DOMAINNAME':domainname,
 								'_tag':	{
-									'datapointer' : 'adminDomainDetail|'+domain,
-									'extendByDatapointers' : ['adminDomainDiagnostics|'+domain,'adminConfigDetail|prts'],
+									'datapointer' : 'adminDomainDetail|'+domainname,
+									'extendByDatapointers' : ['adminDomainDiagnostics|'+domainname,'adminConfigDetail|prts'],
 									'callback':function(rd){
 										if(app.model.responseHasErrors(rd)){
 											$panel.anymessage({'message':rd});

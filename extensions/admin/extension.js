@@ -2457,7 +2457,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				data.value = data.value.LOGO;
 				app.renderFormats.imageURL($tag,data);
 				}
-			else	{
+			else if(data.value.DOMAINNAME)	{
 				var $qrdiv = $("<div \/>").css({'width':$tag.width(),'height':$tag.height(),'margin' : 'auto'});
 				$tag.replaceWith($qrdiv);
 				$qrdiv.qrcode({
@@ -2466,6 +2466,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					'text': data.value.DOMAINNAME
 					});
 				}
+			else	{} //nothing to see here. move along.
 			},
 
 		graphicURL : function($tag,data)	{
@@ -2791,67 +2792,70 @@ else	{
 				},
 				
 
-				
-			
-				
-				
-				
+
+
+
+
+
 
 			showSitesTab : function($target)	{
 				$target.empty();
 				$target.showLoading({'message':'Fetching List of Domains'});
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
-				app.ext.admin.calls.adminDomainList.init({'callback':function(rd)	{
-					$target.hideLoading();
-					var data = {
-						'*favorites' : new Array(),
-						'*nonfavorites' : new Array()
-						}
-					var domains = app.data[rd.datapointer]['@DOMAINS'];
-					var L = domains.length;
-					for(var i = 0; i < L; i += 1)	{
-						if(domains[i].IS_FAVORITE == 1)	{
-							data['*favorites'].push(domains[i]);
+				app.model.addDispatchToQ({
+					'_cmd':'adminDomainList',
+					'_tag':	{
+						'datapointer' : 'adminDomainList',
+						'callback':function(rd)	{
+							$target.hideLoading();
+							var data = {
+								'*favorites' : new Array(),
+								'*nonfavorites' : new Array()
+								}
+				//					app.u.dump(" -> rd: "); app.u.dump(rd);
+							var domains = app.data[rd.datapointer]['@DOMAINS'];
+							var L = domains.length;
+							for(var i = 0; i < L; i += 1)	{
+								if(domains[i].IS_FAVORITE == 1)	{
+									data['*favorites'].push(domains[i]);
+									}
+								else	{
+									data['*nonfavorites'].push(domains[i]);
+									}
+								}
+							$target.anycontent({'templateID':'pageTemplateSites','data':data});
+				
+							if(data['*favorites'].length)	{
+								var $favs = $("[data-app-role='domainListFavorites']",$target); //used for context.
+								for(var i = 0; i < data['*favorites'].length; i += 1)	{
+							
+									var $li = $("li[data-domainname='"+data['*favorites'][i].DOMAINNAME+"']",$favs);
+									$li.showLoading({'message':'Fetching Domain Details'});
+							
+									app.model.addDispatchToQ({
+										'_cmd':'adminDomainDetail',
+										'DOMAINNAME' : data['*favorites'][i].DOMAINNAME,
+										'_tag':	_tag = {
+											'callback' : 'anycontent',
+											'jqObj' : $li,
+											'datapointer' : 'adminDomainDetail|'+data['*favorites'][i].DOMAINNAME
+											}
+										},'mutable');
+									}
+								app.model.dispatchThis('mutable');
+								}
+				
+							if(data['*nonfavorites'].length)	{
+								app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
+								$("[data-app-role='domainListNonFavorites']",$target).anytable();
+								}
+							
+				
 							}
-						else	{
-							data['*nonfavorites'].push(domains[i]);
-							}
 						}
-					$target.anycontent({'templateID':'pageTemplateSites','data':data});
-
-if(data['*favorites'].length)	{
-	var $favs = $("[data-app-role='domainListFavorites']",$target); //used for context.
-	for(var i = 0; i < data['*favorites'].length; i += 1)	{
-
-		var _tag = {
-			'callback' : 'anycontent',
-			'jqObj' : $("li[data-domainname='"+data['*favorites'][i].DOMAINNAME+"']",$favs),
-			'datapointer' : 'adminDomainDetail|'+data['*favorites'][i].DOMAINNAME
-			}
-			
-		if(app.model.fetchData(_tag.datapointer))	{
-			app.u.handleCallback(_tag);
-			}
-		else	{
-			_tag.jqObj.showLoading({'message':'Fetching Domain Details'});
-			app.model.addDispatchToQ({
-				'_cmd':'adminDomainDetail',
-				'DOMAINNAME' : data['*favorites'][i].DOMAINNAME,
-				'_tag':	_tag
-				},'mutable');
-			}
-		}
-	app.model.dispatchThis('mutable');
-	}
-
-					if(data['*nonfavorites'].length)	{
-						app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
-						$("[data-app-role='domainListNonFavorites']",$target).anytable();
-						}
-					
-
-					}},'mutable');
+					},'mutable');
 				app.model.dispatchThis('mutable');
+
 				},
 
 
@@ -5871,7 +5875,25 @@ not in use
 			domainView : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
 				$btn.off('click.domainView').on('click.domainView',function(){
-					window.open("http://www."+$btn.closest("[data-domainname]").data('domainname'));
+					var domainname = $btn.closest("[data-domainname]").data('domainname');
+if(domainname)	{
+	if($btn.data('mode') == 'host')	{
+		var hostname = $btn.closest("[data-hostname]").data('hostname');
+		if(hostname)	{
+			linkOffSite("http://"+hostname+"."+domainname+"/");
+			}
+		else {
+			$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
+			}
+		}
+	else	{
+		linkOffSite("http://www."+domainname+"/");
+		}
+	}
+else	{
+	$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine domain.","gMessage":true});
+	}
+					
 					});
 				},
 	

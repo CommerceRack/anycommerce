@@ -398,7 +398,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 //if something is missing, will return the error message.
 				missingParamsByMode : function(mode,data)	{
 					var r = false;
-					if(mode)	{
+					if(mode && !$.isEmptyObject(data))	{
 						if($.inArray(mode,app.ext.admin_templateEditor.vars.templateModes) > -1)	{
 							if(mode == 'EBAYProfile' && !data.profile)	{
 								r = "In admin_templateEditor.u.missingParamsByMode, mode set to EBAYProfile but no profile passed."
@@ -418,7 +418,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 							}
 						}
 					else	{
-						r = "In admin_templateEditor.u.missingParamsByMode, no mode passed."
+						r = "In admin_templateEditor.u.missingParamsByMode, no mode passed or data was empty."
 						}
 					return r;
 					},
@@ -1477,9 +1477,27 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
 				containerFileUploadShow : function($btn){
-					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
+
+					if($btn.data('mode') == 'Site')	{
+						var domainname = $btn.closest("[data-domainname]").data('domainname');
+						if(app.data['adminDomainDetail|'+domainname])	{
+							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
+								//this domain has a project. open the editor. that occurs later as long as pass=true.
+								}
+							else	{
+								$btn.button('disable').attr('title','Upload not available because no project exists for this domain.');
+								}
+							}
+						else 	{
+							$btn.button('disable').attr('title','Upload not available because domain ['+domainname+'] data not in memory.');
+							}	
+						}
+
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
 						const mode = $btn.data('mode');
+						var data = $btn.closest('.buttonset').data();
+						
 						var $D = app.ext.admin.i.dialogCreate({
 							'title' : 'Template File Upload',
 							'templateID' : 'templateFileUploadTemplate',
@@ -1488,31 +1506,52 @@ var $input = $(app.u.jqSelector('#',ID));
 						$D.dialog('option','height','400');
 						$D.dialog('open');
 						
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$('#templateEditor').data()))	{
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
 							if(mode == 'EBAYProfile')	{
-								$('form',$D).append("<input type='hidden' name='profile' value='"+$('#templateEditor').data('profile')+"' \/>");
+								$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
 								}
 							else if(mode == 'Campaign')	{
-								$('form',$D).append("<input type='hidden' name='campaignid' value='"+$('#templateEditor').data('campaignid')+"' \/>");
+								$('form',$D).append("<input type='hidden' name='campaignid' value='"+data.campaignid+"' \/>");
+								}
+							else if(mode == 'Site')	{
+								$('form',$D).append("<input type='hidden' name='domain' value='"+data.domainname+"' \/>");
 								}
 							else	{}
 							
 							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');	
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)});
 							}
 						});
 					}, //containerFileUploadShow
 				
 // used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
 				containerZipDownloadExec : function($btn)	{
-					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-s"},text: ($btn.data('hidebuttontext')) ? false : true});
+//lock button for 'site' if no projectid is set or it's unavailable.
+					if($btn.data('mode') == 'Site')	{
+						var domainname = $btn.closest(".buttonset").data('domain');
+						if(app.data['adminDomainDetail|'+domainname])	{
+							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
+								//this domain has a project. do nothing to the button.
+								}
+							else	{
+								$btn.button('disable').attr('title','Download not available because no project exists for this domain.');
+								}
+							}
+						else 	{
+							$btn.button('disable').attr('title','Download not available because domain ['+domainname+'] data not in memory.');
+							}	
+						}
+
+
 					$btn.off('click.containerZipDownloadExec').on('click.containerZipDownloadExec',function(){
 
 						const mode = $btn.data('mode');
-
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$('#templateEditor').data()))	{
+						var data = $btn.closest('.buttonset').data();
+app.u.dump(" -> data: "); app.u.dump(data);
+						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
 							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
 							var dObj = {
 								'_cmd' : 'admin'+mode+'ZipDownload',
@@ -1526,10 +1565,13 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 							
 							if(mode == 'EBAYProfile')	{
-								dObj.PROFILE = $btn.closest("[data-profile]").data('profile');
+								dObj.PROFILE = data.profile;
 								}
 							else if(mode == 'Campaign')	{
-								dObj.CAMPAIGNID = $btn.closest("[data-campaignid]").data('campaignid');
+								dObj.CAMPAIGNID = data.campaignid;
+								}
+							else if(mode == 'Site')	{
+								dObj.DOMAIN = data.domain;
 								}
 							else	{} //shouldn't get here.
 							
@@ -1538,7 +1580,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							
 							}
 						else	{
-							$('#templateEditor').anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							$('#globalMessaging').anymessage({'message':"In admin_templateEditor.e.containerZipDownloadExec, "+app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)+". The required params should be on the .buttonset around the download button"});
 							}
 						});
 					}, //containerZipDownloadExec
@@ -1662,23 +1704,14 @@ else	{
 							}
 						});
 					}, //templateChooserShow
-					
+
 				templateEditorShow : function($btn)	{
 					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
 					$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
-					if($btn.data('mode') == 'Site')	{
-						var domainname = $btn.closest("[data-domainname]").data('domainname');
-						if(app.data['adminDomainDetail|'+domainname])	{
-							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{}
-							else	{
-								$btn.button('disable').attr('title','A domain must first have a project before the project can be edited.');
-								}
-							}
-						else 	{
-							$btn.button('disable').attr('title','Domain detail is not in memory and is required.');
-							}
-						}
+					
+				
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
+						var pass = true;
 						if($btn.data('mode') == 'Campaign')	{
 							app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
 							}
@@ -1686,7 +1719,26 @@ else	{
 							app.ext.admin_templateEditor.a.showTemplateEditor('EBAYProfile',{"profile":$btn.closest("[data-profile]").data('profile')});
 							}
 						else if ($btn.data('mode') == 'Site')	{
-							app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":$btn.closest("[data-domainname]").data('domainname')});
+							
+							var domainname = $btn.closest("[data-domainname]").data('domainname');
+							if(app.data['adminDomainDetail|'+domainname])	{
+								if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
+									//this domain has a project. open the editor. that occurs later as long as pass=true.
+									}
+								else	{
+									//no project set. open chooser.
+									pass = false;
+									app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":domainname});
+									}
+								}
+							else 	{
+								pass = false;
+								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, domain detail is not in memory and is required.','gMessage':true});
+								}
+							
+							if(pass)	{
+								app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":$btn.closest("[data-domainname]").data('domainname')});
+								}
 							}
 						else	{
 							//invalid mode set.
