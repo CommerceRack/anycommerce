@@ -1,17 +1,25 @@
 
-<table id='templateEditorTemplate'>
+<table id='templateEditorTemplate' class='fullWidth'>
 <tr>
-	<td data-app-role="ebayTemplateEditorIframeContainer" class='valignTop width75'>
+	<td  class='valignTop width75'>
+	
+		<label class='site displayNone'>
+		<span>Choose Template</span>
+		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_templateEditor|adminSiteTemplateEdit'>
+			<option value='' disabled="disabled" selected="selected">Choose Template</option>
+		</select>
+		</label>
+	
+		<div data-app-role="ebayTemplateEditorIframeContainer">
 		<textarea id='ebayTemplateHTMLTextarea' rows='10' class='fullWidth'></textarea>
+		</div>
 	</td>
 	<td class='valignTop width20'>
 	<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
 <!--		<button data-app-event="admin_templateEditor|adminTemplateCampaignExit">Exit</button> -->
-		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_templateEditor|adminSiteTemplateEdit'>
-			<option value='' disabled="disabled" selected="selected">Choose Template</option>
-		</select>
+
 		<button data-app-event="admin_templateEditor|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
-		<button data-app-event="admin_templateEditor|adminTemplateSaveExec" class='ui-state-focus'>Save</button>
+		<button data-app-event='admin_templateEditor|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus'>Save</button>
 	</div>
 
 <section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
@@ -137,7 +145,7 @@
 	</div>
 </section>
 
-<section class='ui-widget marginBottom'>
+<section class='ui-widget marginBottom' data-app-role='templateEditorSaveAsTemplate'>
 	<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
 	<p class='hint'>This will make a new template for use on other profiles</p>

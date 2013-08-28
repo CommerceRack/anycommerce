@@ -6,6 +6,13 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201334
+ADMIN
+ -> domain manager out of beta
+ -> new 'sites' interface
+ -> new 'edit' site for domain apps
+
+
 201332
 ADMIN
  -> new domain config interface

@@ -181,7 +181,6 @@ var admin_templateEditor = function() {
 								else	{}
 //								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
 								
-								app.ext.admin_templateEditor.u.handleTemplateModeSpecifics(mode,vars,app.data[rd.datapointer]['body']);
 								
 								$("textarea:first",$D)
 									.show()
@@ -199,7 +198,9 @@ var admin_templateEditor = function() {
 								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
 								var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
 								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
-							
+								
+								app.ext.admin_templateEditor.u.handleTemplateModeSpecifics(mode,vars,$iframeBody); //needs to be after iframe is added to the DOM.
+								
 								app.u.handleAppEvents($D);
 								$('.toolTip',$D).tooltip();
 								}
@@ -223,7 +224,7 @@ var admin_templateEditor = function() {
 								}
 							else if(mode == 'Site')	{
 								cmdObj.DOMAIN = vars.domain;
-								cmdObj._tag.datapointer = 'adminDomainFileContents|'+vars.domain;
+								cmdObj._tag.datapointer = 'adminSiteFileContents|'+vars.domain;
 								}
 							else	{
 								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
@@ -710,7 +711,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					$template.append(template);
 					
 					if(mode == 'Site')	{
-						app.u.dump(" -> Is a Site template");
+//						app.u.dump(" -> Is a Site template");
 						$('base',$template).attr('href','http://www.'+vars.domain); //!!! this is temporary. Need a good solution for protocol and domain prefix/host.
 						$('script',$template).remove();
 /*						$('script',$template).each(function(index){
@@ -745,18 +746,24 @@ var $input = $(app.u.jqSelector('#',ID));
 					return $template.html();
 					}, //preprocessTemplate
 
-				handleTemplateModeSpecifics : function(mode,vars,template)	{
+				handleTemplateModeSpecifics : function(mode,vars,$iframeContents)	{
 					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
-						if(template)	{
-							var $template = $("<html>").html(template);
-							app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
-							var $select = $("[data-app-role='siteTemplateSelect']",$('#templateEditor'));
-							$("[data-wizard]",$template).each(function(){
-								var $ele = $(this);
-								$select.append($("<option \/>").text($ele.data('wizard')).val($ele.data('wizard')))
-								})							}
+						if($iframeContents instanceof jQuery)	{
+							if(mode == 'Site')	{
+								$("[data-app-role='saveButton']",$("#templateEditor")).text("Save Templates");
+								$("[data-app-role='templateEditorSaveAsTemplate']",$('#templateEditor')).hide();
+//build the list of templates that are editable and update the select list.
+//								app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
+								var $select = $("[data-app-role='siteTemplateSelect']",$('#templateEditor'));
+								$("[data-wizard]",$iframeContents).each(function(){
+									var $ele = $(this);
+									//create an MD5 for the contents of the element which can be used to compare later to see if any changes occured.
+									$select.append($("<option \/>").text($ele.data('wizard')).val($ele.data('wizard')).attr({'data-md5':Crypto.MD5($(app.u.jqSelector('#',$ele.attr('id')),$iframeContents).html()),'data-elementid':$ele.attr('id')}));
+									})
+								}
+							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, no template passed','gMessage':true});
+							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, $iframeContents is not a valid jQuery instance ['+($iframeContents instanceof jQuery)+'].','gMessage':true});
 							}
 						}
 					else	{
@@ -843,7 +850,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						else	{
 //find closest parent data-object and display it's info.
 							var $parentDataObject = $object.closest("[data-object]");
-							app.u.dump(" -> $parentDataObject.length: "+$parentDataObject.length);
+//							app.u.dump(" -> $parentDataObject.length: "+$parentDataObject.length);
 							if($parentDataObject.length)	{
 								$objectInspector.append("<h2>Parent Dynamic Element</h2>");
 								$objectInspector.append(getObjectData($parentDataObject));
@@ -858,13 +865,43 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //does not and SHOULD not dispatch.  Allows this to be used w/ test in campaigns.
 				handleTemplateSave : function($D)	{
-					
+
 					if($D instanceof jQuery)	{
 						const mode = $D.data('mode');
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
 	
 							$D.showLoading({'message':'Saving changes'});
-	
+							var docBody;
+							if(mode == 'Site')	{
+								var dp = 'adminSiteFileContents|'+$D.data('domain')
+								if(app.data[dp] && app.data[dp].body)	{
+									var $oTemplate = $("<html>").append(app.data[dp].body); //the original instance of the template.
+									$("[data-app-role='siteTemplateSelect']",$('#templateEditor')).first().find('option').each(function(){
+										var $option = $(this);
+										if($option.data('md5') && $option.data('elementid'))	{
+											var $thisTemplate = magic.inspect(app.u.jqSelector('#',$option.data('elementid')));
+//											app.u.dump(" -> $thisTemplate.length: "+$thisTemplate.length);
+//											app.u.dump(" -> old md5 : "+$option.data('md5'));
+//											app.u.dump(" -> new md5 : "+Crypto.MD5($thisTemplate.html()));
+
+											if(Crypto.MD5($thisTemplate.html()) != $option.data('md5'))	{
+												app.u.dump(" -> save occuring for element "+$option.data('elementid'));
+												$(app.u.jqSelector('#',$option.data('elementid')),$oTemplate).replaceWith($thisTemplate);
+												}
+											}
+										else	{} //no md5 set. probably the default,
+										
+										});
+									app.u.dump(" -> $oTemplate: "); app.u.dump($oTemplate);
+									}
+								else	{
+									$D.anymessage({'message':'In admin_templateEditor.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
+									}
+								}
+							else	{
+								docBody = app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode);
+								}
+							die()
 							var dObj = {
 								'_cmd' : 'admin'+mode+'FileSave',
 								'FILENAME' : 'index.html',
@@ -880,7 +917,7 @@ var $input = $(app.u.jqSelector('#',ID));
 											}
 										}
 									},
-								'body' : app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode)
+								'body' : docBody
 								}
 	
 							if(mode == 'EBAYProfile')	{
