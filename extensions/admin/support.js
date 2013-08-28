@@ -108,20 +108,25 @@ var admin_support = function() {
 					'templateID':'platformInfoTemplate',
 					'data' : app.ext.admin.vars.versionMetaData
 					}).addClass('objectInspector');
-				
+				$D.attr('id','platformInformation');
+				var $platInfo = $("[data-app-role='platformInfoContainer']",$D);
+				$platInfo.showLoading({'message':'Fetching platform data'});
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
+					$platInfo.hideLoading();
 					if(app.model.responseHasErrors(rd)){
 						$D.anymessage({'message':rd});
 						}
 					else	{
-						$D.append("<h3>Platform Information<\/h3>");
-						$D.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
-						$D.append("<h3>Video History<\/h3>");
+						
+						$platInfo.append("<h3>Platform Information<\/h3>");
+						$platInfo.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
+						$platInfo.append("<h3>Video History<\/h3>");
 						for(index in app.ext.admin.vars.versionMetaData.youtubeVideoIDs)	{
-							$D.append($("<div class='lookLikeLink'> &#187; "+index+"<\/div>").on('click',function(){
+							$platInfo.append($("<div class='lookLikeLink'> &#187; "+index+"<\/div>").on('click',function(){
 								linkOffSite('http://www.youtube.com/watch?v='+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]);
 								}));
 							}
+						app.u.handleAppEvents($D);
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -705,6 +710,28 @@ app.model.dispatchThis('mutable');
 					});
 				
 				}, //showTopicInputs
+
+			ping : function($btn)	{
+				$btn.button();
+				$btn.off('click.ping').on('click.ping',function(){
+					var start = new Date().getTime();
+app.model.addDispatchToQ({
+	'_cmd':'ping',
+	'_tag':	{
+		'callback':function(rd){
+if(app.model.responseHasErrors(rd)){
+	$('#platformInformation').anymessage({'message':rd});
+	}
+else	{
+	var end = new Date().getTime();
+	alert("Pong! took "+(end - start) / 1000+" seconds")
+	}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+					});
+				},
 
 			tagAsPriority : function($ele)	{
 

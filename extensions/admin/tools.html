@@ -660,17 +660,13 @@ has to be within the fieldset to for data-table to work right.
 
 	<section class='marginTop marginBottom'>
 	<h2>App</h2>
-		
-		<div data-app-role='appInfoContainer' class='marginTop'>
-			<h6 data-bind="var: info(connected-server); pretext:connected-server: ; format:text;"></h6>
-			<div data-bind="var: info(server-time); pretext:Server time: ; format:text;"></div>
-			<div data-bind="var: info(media-host); pretext:Media host: ; format:text;"></div>
-			<div data-bind="var: info(api-max-version); pretext:api-max-version: ; format:text;"></div>
-			<div data-bind="var: info(api-min-version); pretext:api-min-version: ; format:text;"></div>
-			<div data-bind="var: info(api-our-version); pretext:api-our-version: ; format:text;"></div>
-		</div>
+
 		<table class='marginTop'>
 		<tbody>
+		<tr>
+			<td class='valignTop'><button onClick="showUI('#!showPlatformInfo'); return false;">App/Server Details</button></td>
+			<td>Some details about the server you are on, app version, etc.</td>
+		</tr>
 		<tr>
 			<td class='valignTop'><button onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some Localstorage</button></td>
 			<td class='valignTop small'>
@@ -682,6 +678,10 @@ has to be within the fieldset to for data-table to work right.
 			<td class='valignTop small'>
 			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific.
 			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button data-app-event='admin_support|ping'>Ping!</button></td>
+			<td>The simplest of calls on our API. Hit this and get a report of how long it took to make. For accurate results, make sure entire page is done loading prior to running this.</td>
 		</tr>
 		</tbody>
 		</table>
