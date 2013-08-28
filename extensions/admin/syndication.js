@@ -1022,6 +1022,7 @@ if(mode == 'test' || mode == 'update')	{
 					//their contents need formatted and saved to the serialized form object.
 					function setShippingServices(type)	{
 						//type needs to be 'dom' or 'int'
+						// @ship_domservices  @ship_intservices
 						var $shipping = $("[data-app-role='ebayShippingTbody_"+type+"']:first",$form).find('tr');
 						if($shipping.length)	{
 							sfo['@ship_'+type+'services'] = new Array();
@@ -1044,7 +1045,7 @@ if(mode == 'test' || mode == 'update')	{
 									}
 								
 								if(!$tr.hasClass("rowTaggedForRemove")) {sfo['@ship_'+type+'services'].push(obj);}
-								if(sfo['@ship_'+type+'services'].length >= 2)	{return false} //exit now. only 3 allowed.
+								if(sfo['@ship_'+type+'services'].length >= 4)	{return false} //exit now. only 4 allowed.
 								})
 							}
 						}
