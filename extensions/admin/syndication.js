@@ -1167,13 +1167,10 @@ if unchecked AND USPS show cost, addcost   (there is no farcost for USPS)
 
 /*
 run when the 'save' button is pushed in the ebay category/item specifics modal.
-first, it does an adminEBAYCategory and passes the XSL and form contents. This is to get the most up to data XML that is returned by that call
- -> NOTE: once transform is handled within the app itself, that extra call won't be necessary
-After that, it puts together the adminProductUpdate call, which has up to three updates:
- 1. item specifics, based on the 'custom detail' button are added.
- 2. the category id is set.
- 3. ebay attributes are set (this is the form returned in the adminEBAYCategory call when XSL is sent.
-
+ 1. jquery.ebay-specifics-form.js -> ebaySpecificsFormSave() is launched - validates the whole form and returns
+    a string ready-to-save into ebay:itemspecifics
+ 2. specifics string is passed to adminProductUpdate -> ebay:itemspecifics
+ 3. the category id is set.
 after that cmd is sent, the modal is closed and the original input is updated. If path was passed as the third param in showEBAYCategoryChooserInModal, it is also updated.
 */			
 			ebaySaveCatAndUpdateItemSpecifics : function($btn)	{
@@ -1189,6 +1186,13 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					var res = $ItemSpecificsArea.ebaySpecificsFormSave();
 
 					if(data.pid && data.categoryselect && data.inputid && categoryid && !res.error)	{
+						
+						// let say - previously user saved something to ebay:itemspecifics
+						// and now he reviews and wants to save the *empty* item specifics, but
+						// if we just pass "SET-EBAY?itemspecifics=" to adminProductUpdate - nothing happens...
+						// so let's pass "SET-EBAY?itemspecifics=\n" there (URI encoded of course)
+						if(!res.specificsStr || !res.specificsStr.length) { res.specificsStr = "\n"; }
+						
 						$chooser.showLoading({'message':'Saving changes'});
 						var obj = {
 							'_cmd' : 'adminProductUpdate',
@@ -1215,9 +1219,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						obj['@updates'].push("SET-EBAY?category"+(data.categoryselect == 'primary' ? '' : 2)+"="+categoryid);
 						
 						// set ebay:itemspecifics
-						if(res.specificsStr) {
-							obj['@updates'].push("SET-EBAY?itemspecifics="+encodeURIComponent(res.specificsStr));
-							}
+						obj['@updates'].push("SET-EBAY?itemspecifics="+encodeURIComponent(res.specificsStr));
 
 						if(data.pathid)	{
 							var path = app.ext.admin_syndication.u.buildEBAYCategoryPath(categoryid);
