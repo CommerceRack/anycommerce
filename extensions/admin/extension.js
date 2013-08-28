@@ -3676,7 +3676,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else	{
 					$button.attr('disabled','disabled');
 					}
-				this.applyEditTrackingToInputs($context);
+//* 201334 -> no need to re-apply. event tracking is now delegated, so it's always on.
+//				this.applyEditTrackingToInputs($context); 
 				},
 
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
