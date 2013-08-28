@@ -1906,11 +1906,13 @@ else {
 				$btn.off('click.pluginUpdateExec').on('click.pluginUpdateExec',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
+					$form.showLoading({'message':'Saving Changes'});
 					app.model.addDispatchToQ({
 	'_cmd':'adminConfigMacro',
 	'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
 	'_tag':	{
 		'callback':'showMessaging',
+		'restoreInputsFromTrackingState' : true,
 		'message' : "Your changes have been saved.",
 		'jqObj' : $form
 		}
