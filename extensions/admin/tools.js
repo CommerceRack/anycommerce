@@ -489,11 +489,10 @@ $target.append("<br \/>");
 							obj = {
 								'%vars' : {
 									'GUID' : app.u.guidGenerator(),
-									'APP' : 'PRODUCT_POWERTOOL',
 									'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
 									'actions' : app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
 									},
-								'type' : 'UTILITY'
+								'type' : 'UTILITY/PRODUCT_POWERTOOL'
 								}
 //						console.clear();
 //						app.u.dump(" -> actions: "+obj['%vars'].actions);
@@ -559,7 +558,7 @@ $target.append("<br \/>");
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
 						else	{
-							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT'});
+							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/'+$form['EXPORT']});
 							}
 						}
 					else	{

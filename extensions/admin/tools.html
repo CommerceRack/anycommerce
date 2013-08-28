@@ -611,40 +611,40 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_CLEANUP'}}); return false;">Product Cleanup</button></td>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_CLEANUP','%vars':{}}); return false;">Product Cleanup</button></td>
 			<td class='valignTop small'>
 			Resets/Rebuilds Product Index, clears out deleted items, and source pid from zoovy:related_products, and zoovy:accessory_products. Removes unicode characters. 
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'INVENTORY_CLEANUP'}}); return false; ">Inventory Cleanup</button></td>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_CLEANUP','%vars':{}}); return false; ">Inventory Cleanup</button></td>
 			<td class='valignTop small'>
 			Removes orphan inventory records which are not associated with a sku, creates records w/0 qty for pids which don't have inv. records.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'INVENTORY_UPDATE_RESERVES'}}); return false; ">Inventory Update Reserves</button></td>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_UPDATE_RESERVES','%vars':{}}); return false; ">Inventory Update Reserves</button></td>
 			<td class='valignTop small'>
 			Removes orphaned inventory reservations / verifies reserves.
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'IMAGE_REINDEX'}}); return false; ">Image Reindex</button></td>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/IMAGE_REINDEX','%vars':{}}); return false; ">Image Reindex</button></td>
 			<td class='valignTop small'>
 			Image Reindex
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'ELASTIC_REBUILD'}}); return false; ">Elastic Rebuild</button></td>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{}}); return false; ">Elastic Rebuild</button></td>
 			<td class='valignTop small'>
 			Elastic Search Rebuild (note: will be offline/unavailable during rebuild)
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'PRODUCT_SALESRANK'}}); return false; ">Update SalesRanks</button></td>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_SALESRANK','%vars':{}}); return false; ">Update SalesRanks</button></td>
 			<td class='valignTop small'>
 			Goes through all products which have customer reviews and updates zoovy:prod_salesrank
 			<p class="warning ui-corner-all stdPadding">Notice about Sales Rank:<br />
@@ -696,7 +696,7 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'EBAY_UPDATE','f':'end-all'}}); return false; ">Close All Listings</button></td>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_UPDATE','%vars':{'f':'end-all'}}); return false; ">Close All Listings</button></td>
 			<td class='valignTop small'>
 			Ends all active listings on eBay.
 			</td>
@@ -713,7 +713,7 @@ has to be within the fieldset to for data-table to work right.
 		<tbody>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY','%vars':{'APP':'KPIBI_RESET'}}); return false; ">Reset KPIBI</button>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/KPIBI_RESET','%vars':{}}); return false; ">Reset KPIBI</button>
 			</td>
 			<td class='valignTop'>
 			Rebuilds all KPIBI data for the last year

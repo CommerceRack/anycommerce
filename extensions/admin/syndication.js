@@ -1370,8 +1370,8 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						'guid' : app.u.guidGenerator(),
 						'profile' : $btn.closest('tr').data('profile'),
 						'function' : 'refresh',
-						'type':'UTILITY',
-						'%vars':{'APP':'EBAY_UPDATE','function':'refresh','profile':$btn.closest('tr').data('profile')}
+						'type':'UTILITY/EBAY_UPDATE',
+						'%vars':{'function':'refresh','profile':$btn.closest('tr').data('profile')}
 						});	
 
 					})

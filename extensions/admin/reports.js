@@ -1359,7 +1359,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					var $form = $btn.closest('form');
 					if(app.u.validateForm($form))	{
 						var sfo = {'%vars':$form.serializeJSON()}
-						sfo.type = 'REPORT';
+						sfo.type = 'REPORT/'+sfo['%vars'].REPORT;
 						sfo.guid = app.u.guidGenerator();
 						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
 							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
