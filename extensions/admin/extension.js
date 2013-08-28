@@ -3685,30 +3685,41 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //will also 'enable' the parent button of that class.
 // ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
-					
-				$context.off('click.trackform').on('click.trackform',"input, textarea, select",function(){
+// ** 201334 -> instead of applying the tracking to each input, the event is delegated on to $context. This is more efficient (in terms of memory)
+
+				$context.off('click.trackform').on('click.trackform',":checkbox",function(event){
+					var $input = $(this);
+					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
+					else	{
+						$input.toggleClass('edited');
+						app.ext.admin.u.handleSaveButtonByEditedClass($context);
+						}
+					});
+
+
+				$context.off('keyup.trackform').on('keyup.trackform',"input, textarea",function(event){
 					var $input = $(this);
 					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
 					else if($input.is(':checkbox'))	{
-						$input.off('change.trackChange').on('change.trackChange',function(){
-							$input.toggleClass('edited');
-							app.ext.admin.u.handleSaveButtonByEditedClass($context);
-							});			
-						}
-					else if($input.is('select') || $input.is(':radio'))	{
-						$input.off('change.trackChange').one('change.trackChange',function(){
-							$input.addClass('edited');
-							app.ext.admin.u.handleSaveButtonByEditedClass($context);
-							});
+//handled in it's own delegation above. technically, a checkbox could be triggered by a space bar.
 						}
 					else	{
-						$input.off('keyup.trackChange').one('keyup.trackChange',function(){
-							$input.addClass('edited');
-							app.ext.admin.u.handleSaveButtonByEditedClass($context);
-							});
+						$input.addClass('edited');
+						app.ext.admin.u.handleSaveButtonByEditedClass($context);
 						}
 					});
-					
+
+				$context.off('change.trackform').on('change.trackform',"select, :radio",function(event){
+					var $input = $(this);
+					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
+					else	{
+						if($input.is(':radio'))	{
+							$("[name='"+$input.attr('name')+"']",$input.closest('form')).removeClass('edited'); //remove edited class from the other radio buttons in this group.
+							}
+						$input.addClass('edited');
+						app.ext.admin.u.handleSaveButtonByEditedClass($context);
+						}
+					});					
 
 				}, //applyEditTrackingToInputs
 
@@ -4996,7 +5007,7 @@ just lose the back button feature.
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
+//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
