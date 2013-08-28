@@ -60,7 +60,7 @@ var admin_templateEditor = function() {
 			showTemplateEditor : function(mode,vars)	{
 
 				vars = vars || {};
-				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				app.u.dump(" -> vars: "); app.u.dump(vars);
 				//will be false if it is not missing params
 				if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
 //By here, we know that we have a valid mode and that any requirements in 'vars' based on the mode ARE present.
@@ -72,6 +72,7 @@ var admin_templateEditor = function() {
 						//template editor has been opened before. nuke the template vars so nothing carries over.
 						$D.removeData('profile');
 						$D.removeData('campaignid');
+						$D.removeData('domain');
 						$D.removeData('mode');
 						$D.empty().remove();
 						}
@@ -125,22 +126,25 @@ var admin_templateEditor = function() {
 						}
 
 					if(vars.editor)	{
+						
 	
 						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
 						$D.data('mode',mode);
-
-						
+					
 						$D.showLoading({"message":"Fetching template HTML"});
-							
-						
+						app.u.dump(' -> go get template contents ');
 						var callback = function(rd){
 							$D.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd})
 								}
 							else	{
+								app.u.dump(' -> template contents obtained');
 								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
+//								app.u.dump(" -> $D.length: "+$D.length);
 								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
+								app.u.dump(" -> $D.children().length: "+$D.children().length); app.u.dump($D);
+
 								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
 									'state' : 'persistent',
 									showClose : false, //set to false to disable close (X) button.
@@ -235,7 +239,7 @@ var admin_templateEditor = function() {
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditor, "+app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
 					}				
 				
 				}, //showTemplateEditor
@@ -244,36 +248,50 @@ var admin_templateEditor = function() {
 				vars = vars || {};
 				if(!app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars))	{
 
-					var dialogObject = {"templateID" : "templateChooserTemplate"};
-
+					var dialogObject = {'showLoading':false};
+					vars.cmd = 'admin'+vars.mode+'TemplateList';
 					if(vars.mode == 'Campaign')	{
 						dialogObject.title = 'Campaign Template Chooser';
-						dialogObject.data = app.data.adminCampaignTemplateList;
 						dialogObject.dataAttribs = {'campaignid':vars.campaignid,'mode':vars.mode};
 						}
 					else if(vars.mode == 'Site')	{
 						dialogObject.title = 'Site App Template Chooser';
-						dialogObject.data = app.data.adminSiteTemplateList;
 						dialogObject.dataAttribs = {'domain':vars.domain,'mode':vars.mode};
 						}
 					else if(vars.mode == 'EBAYProfile')	{
 						dialogObject.title = 'eBay Template Chooser';
-						dialogObject.data = app.data.adminEBAYTemplateList;
-						dialogObject.dataAttribs = {'profile':vars.profile,'mode':vars.mode};
+						vars.cmd = "adminEBAYTemplateList"; //cmd keyword varies slightly from mode.
 						}
 					else	{} //shouldn't get here.
 
 					var $D = app.ext.admin.i.dialogCreate(dialogObject); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
-					$D.attr('id','templateChooser');
+					$D.attr('id','templateChooser').data(vars);
 					$D.dialog('open');
+					$D.showLoading();
 					
-					$D.imagegallery({
+					vars._tag = {
+						'callback' : 'anycontent',
+						"templateID" : "templateChooserTemplate",
+						'datapointer' : vars.cmd,
+						'jqObj' : $D
+						}
+					
+					if(app.model.fetchData(vars._tag.datapointer) == false)	{
+						app.model.addDispatchToQ(vars,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						app.u.handleCallback(vars._tag);
+						}
+					
+/*					$D.imagegallery({
 						selector: 'a[data-gallery="gallery"]',
 						show: 'fade',
 						hide: 'fade',
 						fullscreen: false,
 						slideshow: false
 						});
+*/
 //					app.u.dump(" -> $D.data()"); app.u.dump($D.data());
 					app.u.handleAppEvents($D);
 					}
@@ -978,7 +996,11 @@ var $input = $(app.u.jqSelector('#',ID));
 										else	{
 											$TC.dialog('close');
 											$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the template "+vars.SUBDIR+" has been copied."));
-											$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
+//											$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
+//app.u.dump("vars: "); app.u.dump(vars);
+//app.u.dump("whitelist: "); app.u.dump(app.u.getWhitelistedObject(vars,['domain','templateid','profile']));
+
+											app.ext.admin_templateEditor.a.showTemplateEditor(mode,app.u.getWhitelistedObject(vars,['domain','campaignid','profile']));
 											}
 										}
 									}	
@@ -1425,11 +1447,13 @@ var $input = $(app.u.jqSelector('#',ID));
 				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
 					
 					event.preventDefault();
+					app.u.dump("BEGIN admin_templateEditor.e.templateChooserPreview");
 					var $chooser = $("#templateChooser");
 					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
-					const mode = $ele.closest("[data-mode]").data('mode');
+					const mode = $chooser.data('mode');
 					
 					if(mode)	{
+						app.u.dump(" --> mode is set ("+mode+")");
 						if(app.data['admin'+mode+'TemplateList'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')])	{
 							var templateData = app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')];
 							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
@@ -1440,7 +1464,9 @@ var $input = $(app.u.jqSelector('#',ID));
 							
 							if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
 							else	{
+								app.u.dump(" --> panel is NOT generated (first time click). build new panel");
 								$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
+								$panel.attr('data-subdir',templateData.SUBDIR);
 								$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
 								$panel.appendTo($panelContainer);
 								app.u.handleAppEvents($panel);
@@ -1449,18 +1475,21 @@ var $input = $(app.u.jqSelector('#',ID));
 							//set all preview li's to default state then the new active one to active.
 							$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
 							$ele.addClass('ui-state-active').removeClass('ui-state-default');
-
-							if($panelContainer.children().length > 1)	{
-								//
+							if($panel.is(':visible'))	{} //panel already in focus. do nothing.
+							else if($panelContainer.children().length > 1)	{
+								app.u.dump(" --> more than 1 child. transition between them");
 //hide the current preview and show the new one.					
 								$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
 									$panel.show('scale');
 									});
 								}
 							else	{
+								app.u.dump(" --> only 1 panel. just expand.");
 								$panel.show('scale',function(){
+									app.u.dump(' --> now recenter the dialog');
 									//after the first preview is displayed, resize and recenter the modal.
-									$("#dialog").dialog("option", "position", "center");
+									$chooser.dialog("option", "position", "center");
+									$chooser.dialog('option','height',($('body').height() - 100));
 									});
 								}
 							}
