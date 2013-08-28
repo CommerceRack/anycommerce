@@ -46,7 +46,7 @@ app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); /
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.fullscreen-1.2.js']); //used in template editor. will likely get used more.
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
 
-app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication.
+app.rq.push(['script',0,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication and in various other places.
 
 //have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']);
@@ -65,6 +65,9 @@ app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ebay
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
 app.rq.push(['css',1,app.vars.baseURL+'resources/anyplugins.css']);
+
+
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.qrcode-0.7.0.js']);
 
 
 // jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.

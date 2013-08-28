@@ -2452,6 +2452,22 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
+		companyLogo : function($tag,data)	{
+			if(data.value.LOGO)	{
+				data.value = data.value.LOGO;
+				app.renderFormats.imageURL($tag,data);
+				}
+			else	{
+				var $qrdiv = $("<div \/>").css({'width':$tag.width(),'height':$tag.height(),'margin' : 'auto'});
+				$tag.replaceWith($qrdiv);
+				$qrdiv.qrcode({
+					'size' : $qrdiv.height(),
+					'fill' : '#'+Crypto.MD5(data.value.DOMAINNAME).substring(0,6), //generate a random color based on first 6 chars of md5.
+					'text': data.value.DOMAINNAME
+					});
+				}
+			},
+
 		graphicURL : function($tag,data)	{
 			$tag.attr('src',"https://"+app.vars.https_domain+data.value);
 			$tag.wrap("<a href='https://"+app.vars.https_domain+data.value+"' data-gallery='gallery'>");
@@ -2476,13 +2492,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //very simple data to list function. no template needed (or allowed. use processList for that).
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
-
 			var $o = $("<ul />"); //what is appended to tag. 
 			for(var i = 0; i < L; i += 1)	{
 				$o.append("<li>"+data.value[i]+"<\/li>");
 				}
 			$tag.append($o.children());
 			},
+
 		arrayLength : function($tag,data)	{
 			$tag.text(data.value.length);
 			},
@@ -2785,7 +2801,56 @@ else	{
 				$target.empty();
 				$target.showLoading({'message':'Fetching List of Domains'});
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
-				app.ext.admin.calls.adminDomainList.init({'callback':'anycontent','jqObj':$target,'templateID':'pageTemplateSites'},'mutable');
+				app.ext.admin.calls.adminDomainList.init({'callback':function(rd)	{
+					$target.hideLoading();
+					var data = {
+						'*favorites' : new Array(),
+						'*nonfavorites' : new Array()
+						}
+					var domains = app.data[rd.datapointer]['@DOMAINS'];
+					var L = domains.length;
+					for(var i = 0; i < L; i += 1)	{
+						if(domains[i].IS_FAVORITE == 1)	{
+							data['*favorites'].push(domains[i]);
+							}
+						else	{
+							data['*nonfavorites'].push(domains[i]);
+							}
+						}
+					$target.anycontent({'templateID':'pageTemplateSites','data':data});
+
+if(data['*favorites'].length)	{
+	var $favs = $("[data-app-role='domainListFavorites']",$target); //used for context.
+	for(var i = 0; i < data['*favorites'].length; i += 1)	{
+
+		var _tag = {
+			'callback' : 'anycontent',
+			'jqObj' : $("li[data-domainname='"+data['*favorites'][i].DOMAINNAME+"']",$favs),
+			'datapointer' : 'adminDomainDetail|'+data['*favorites'][i].DOMAINNAME
+			}
+			
+		if(app.model.fetchData(_tag.datapointer))	{
+			app.u.handleCallback(_tag);
+			}
+		else	{
+			_tag.jqObj.showLoading({'message':'Fetching Domain Details'});
+			app.model.addDispatchToQ({
+				'_cmd':'adminDomainDetail',
+				'DOMAINNAME' : data['*favorites'][i].DOMAINNAME,
+				'_tag':	_tag
+				},'mutable');
+			}
+		}
+	app.model.dispatchThis('mutable');
+	}
+
+					if(data['*nonfavorites'].length)	{
+						app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
+						$("[data-app-role='domainListNonFavorites']",$target).anytable();
+						}
+					
+
+					}},'mutable');
 				app.model.dispatchThis('mutable');
 				},
 
@@ -5806,7 +5871,7 @@ not in use
 			domainView : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
 				$btn.off('click.domainView').on('click.domainView',function(){
-					window.open("http://www."+$btn.closest('tr').data('DOMAINNAME'));
+					window.open("http://www."+$btn.closest("[data-domainname]").data('domainname'));
 					});
 				},
 	

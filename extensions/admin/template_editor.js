@@ -1664,7 +1664,20 @@ else	{
 					}, //templateChooserShow
 					
 				templateEditorShow : function($btn)	{
-					$btn.button();
+					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
+					$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
+					if($btn.data('mode') == 'Site')	{
+						var domainname = $btn.closest("[data-domainname]").data('domainname');
+						if(app.data['adminDomainDetail|'+domainname])	{
+							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{}
+							else	{
+								$btn.button('disable').attr('title','A domain must first have a project before the project can be edited.');
+								}
+							}
+						else 	{
+							$btn.button('disable').attr('title','Domain detail is not in memory and is required.');
+							}
+						}
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
 						if($btn.data('mode') == 'Campaign')	{
 							app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});

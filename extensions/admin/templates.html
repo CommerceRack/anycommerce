@@ -523,16 +523,36 @@ SETUP PAGE TEMPLATE
 
 
 
-<div id='pageTemplateSites'>
+<div id='pageTemplateSites' class='ui-widget'>
 
-	<ul data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;	" class='listStyleNone ui-widget noPadOrMargin clearfix'></ul>
-
+	<div data-bind="var: domains(*favorites); format:showIfSet;">
+		<h2>Favorite Domains</h2>
+		<ul data-bind="var: domains(*favorites); format:processList; loadsTemplate:domainListFavoriteTemplate;" class='marginTop listStyleNone ui-widget noPadOrMargin clearfix' data-app-role='domainListFavorites'></ul>
+	</div>
+	
+	
+	<div class='ui-widget-content ui-corner-all displayNone stdPadding' data-bind="var: domains(*nonfavorites); format:showIfSet;">
+	<h3>Non Favorite Domains</h3>
+	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites'>
+		<thead>
+		<tr>
+			<th>Domain</th>
+			<th>Partition</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: domains(*nonfavorites); format:processList; loadsTemplate:domainListTemplate;"></tbody>
+	</table>
+	</div>
+	
 </div>
 
 <ul>
 	
-	<li id='domainListTemplate' class='ui-widget-content ui-corner-all domainPanel'>
-		<div class='marginBottom alignCenter'><img src='blank.gif' class='prodThumb' data-bind='var: domain(LOGO); format:imageURL;' width='160' height='80' /></div>
+	<li id='domainListFavoriteTemplate' class='ui-widget-content ui-corner-all domainPanel'>
+		<div class='marginBottom alignCenter'>
+		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='80' />
+		</div>
 		
 		<h4 data-bind="var: domain(DOMAINNAME); format:text;"></h4>
 		<p>
@@ -541,13 +561,25 @@ SETUP PAGE TEMPLATE
 		<div class='buttonset'>
 			<button data-app-event="admin|domainPutInFocus">Use Domain</button>
 			<button data-app-event="admin|domainView" data-mode='Site'>View Store</button>
-			<button data-app-event='admin_templateEditor|templateEditorShow' data-button-text='false' data-mode='Site'>Edit Project</button>
+			<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
 			<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
 			<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
 		</div>
 	</li>
 </ul>
 
+<table>
+<tr id='domainListTemplate'>
+	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
+	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
+			<button data-app-event="admin|domainView" data-mode='Site'>View Store</button>
+		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
+		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
+	</td>
+</tr>
+</table>
 
 
 

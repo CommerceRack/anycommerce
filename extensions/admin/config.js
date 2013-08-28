@@ -99,13 +99,7 @@ var admin_config = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-			showAppChooser : function($target)	{
-				
-				
-				
-				
-				},
-			
+		
 			showPluginManager : function($target)	{
 				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
 
@@ -278,25 +272,25 @@ var admin_config = function() {
 				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
 				app.model.destroy(datapointer);
 				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{'datapointer' : datapointer, 'callback' : function(rd){
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	$target.hideLoading();
-	$target.anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer});
-	
-	$('.gridTable',$target).anytable();
-	$('.toolTip',$target).tooltip();
-	$(':checkbox',$target).anycb();
-	$("[name='expires']",$target).datepicker({
-		changeMonth: true,
-		changeYear: true,
-		minDate: 0,
-		dateFormat : "yymmdd"
-		});
-	
-	app.u.handleAppEvents($target,{'$form':$("[data-app-role='taxTableExecForm']",$target),'$container':$("[data-app-role='taxTableInputForm']",$target),'$dataTbody':$("[data-app-role='dataTableTbody']",$target)});
-	}
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						$target.hideLoading();
+						$target.anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer});
+						
+						$('.gridTable',$target).anytable();
+						$('.toolTip',$target).tooltip();
+						$(':checkbox',$target).anycb();
+						$("[name='expires']",$target).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							minDate: 0,
+							dateFormat : "yymmdd"
+							});
+						
+						app.u.handleAppEvents($target,{'$form':$("[data-app-role='taxTableExecForm']",$target),'$container':$("[data-app-role='taxTableInputForm']",$target),'$dataTbody':$("[data-app-role='dataTableTbody']",$target)});
+						}
 
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -534,83 +528,83 @@ else	{
 
 
 
-var $D = app.ext.admin.i.dialogCreate({
-	'title' : 'Rules Builder',
-	});
-
-$D.dialog('option','buttons',[ 
-	{text: 'Cancel', click: function(){
-		$D.dialog('close');
-		if(typeof vars.closeFunction === 'function')	{
-			vars.closeFunction($(this));
-			}
-		}}	
-	]);
-$D.dialog('open');
-
-//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
-var DMIVars = {
-	'header' : 'Rules Editor',
-	'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
-	}; 
-app.u.dump(" -> vars.TABLE: "+vars.table);
-//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
-if(vars.rulesmode == 'shipping')	{
-	DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
-	DMIVars.tbodyDatabind = 'var: rules(@'+vars.table+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
-	DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
-	$D.attr('data-provider',vars.provider);
-	}
-else if(vars.rulesmode == 'coupons')	{
-	DMIVars.thead = ['','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
-	DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
-	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
-	}
-else	{}
-
-var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
-$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode})
-
-$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
-	ui.item.addClass('edited');
-	app.ext.admin.u.handleSaveButtonByEditedClass($D);
-	});
-
-
-
-if(vars.rulesmode == 'shipping')	{
-//need pricing schedules. This is for shipping.
-	var numDispatches = app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
-//if making a request for the wholesale list, re-request shipmethods too. callback is on shipmethods
-	if(numDispatches)	{
-		app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-		}
-	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
-		$DMI.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$D.anymessage({'message':rd});
-			}
-		else	{
-//			app.u.dump("Exec showRulesBuilderInModal callback for new shipmethods.");
-//			app.u.dump(" -> app.ext.admin_config.u.getShipMethodByProvider(vars.provider): "); app.u.dump(app.ext.admin_config.u.getShipMethodByProvider(vars.provider));
-			$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
-			app.u.handleAppEvents($D,vars); //needs to happen after request, because that's when the row contents are populated.
-			}
-		}},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else if(vars.rulesmode == 'coupons')	{
-	var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
-	if(data)	{
-		$D.anycontent({'data': data});
-		app.u.handleAppEvents($D,vars);
-		}
-	else	{} //getValueByKeyFromArray (used to set the data) will return false and display an error message.
-	}
-else	{
-	 //should never get here. if statement above accounts for mode being shipping or coupons. failsafe.
-	$('.dualModeListMessaging',$DMI).anymessage({'message':'In admin_config.a.showRulesBuilderInModal, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
-	}
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Rules Builder',
+						});
+					
+					$D.dialog('option','buttons',[ 
+						{text: 'Cancel', click: function(){
+							$D.dialog('close');
+							if(typeof vars.closeFunction === 'function')	{
+								vars.closeFunction($(this));
+								}
+							}}	
+						]);
+					$D.dialog('open');
+					
+					//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
+					var DMIVars = {
+						'header' : 'Rules Editor',
+						'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
+						}; 
+					app.u.dump(" -> vars.TABLE: "+vars.table);
+					//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
+					if(vars.rulesmode == 'shipping')	{
+						DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
+						DMIVars.tbodyDatabind = 'var: rules(@'+vars.table+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
+						DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
+						$D.attr('data-provider',vars.provider);
+						}
+					else if(vars.rulesmode == 'coupons')	{
+						DMIVars.thead = ['','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
+						DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
+						DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
+						}
+					else	{}
+					
+					var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
+					$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode})
+					
+					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
+						ui.item.addClass('edited');
+						app.ext.admin.u.handleSaveButtonByEditedClass($D);
+						});
+					
+					
+					
+					if(vars.rulesmode == 'shipping')	{
+					//need pricing schedules. This is for shipping.
+						var numDispatches = app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
+					//if making a request for the wholesale list, re-request shipmethods too. callback is on shipmethods
+						if(numDispatches)	{
+							app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+							}
+						app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
+							$DMI.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd});
+								}
+							else	{
+					//			app.u.dump("Exec showRulesBuilderInModal callback for new shipmethods.");
+					//			app.u.dump(" -> app.ext.admin_config.u.getShipMethodByProvider(vars.provider): "); app.u.dump(app.ext.admin_config.u.getShipMethodByProvider(vars.provider));
+								$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
+								app.u.handleAppEvents($D,vars); //needs to happen after request, because that's when the row contents are populated.
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else if(vars.rulesmode == 'coupons')	{
+						var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
+						if(data)	{
+							$D.anycontent({'data': data});
+							app.u.handleAppEvents($D,vars);
+							}
+						else	{} //getValueByKeyFromArray (used to set the data) will return false and display an error message.
+						}
+					else	{
+						 //should never get here. if statement above accounts for mode being shipping or coupons. failsafe.
+						$('.dualModeListMessaging',$DMI).anymessage({'message':'In admin_config.a.showRulesBuilderInModal, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
+						}
 
 					}
 				else	{
@@ -968,7 +962,7 @@ $D.dialog('open');
 				if($btn.closest("[data-is_favorite]").data('is_favorite') == 1)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.adminDomainToggleFavoriteExec').on('click.adminDomainToggleFavoriteExec',function(event){
 					$btn.toggleClass('ui-state-highlight');
-					app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$btn.closest('tr').data('DOMAINNAME'),'@updates':["DOMAIN-SET-FAVORITE?IS="+($btn.hasClass('ui-state-highlight') ? 1 : 0)]},'passive');
+					app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$btn.closest("[data-domainname]").data('domainname'),'@updates':["DOMAIN-SET-FAVORITE?IS="+($btn.hasClass('ui-state-highlight') ? 1 : 0)]},'passive');
 					app.model.dispatchThis('passive');
 					});
 				}, //adminDomainToggleFavoriteExec
