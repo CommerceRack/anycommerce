@@ -3044,6 +3044,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						}
 					else{} //catch.
 					}
+//				app.u.dump(" -> r: "+r);
 				return r;
 				}, //getDataForDomain
 
@@ -3051,12 +3052,14 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
+//				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain); app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition));
 				if(domain)	{
-//if no partition available, get it.					
-					if(Number(partition) >= 0){
+//if no partition available, get it. if partition is null, number() returns 0.		
+					if(partition != null && Number(partition) >= 0){
+						
 						}
 					else	{
-						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
+						partition = app.ext.admin.a.getDataForDomain(domain,'PRT');
 						}
 					
 					app.vars.domain = domain;
@@ -4923,7 +4926,7 @@ just lose the back button feature.
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
+				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
@@ -4943,7 +4946,7 @@ just lose the back button feature.
 					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 					}
 				else	{
-					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj == 'object' ? 'an object' : varObj)+"] not passed into admin.u.dpsSet.");
+					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
 				},
 

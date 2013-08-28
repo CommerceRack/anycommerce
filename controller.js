@@ -1525,7 +1525,7 @@ AUTHENTICATION/USER
 
 
 
-//pass in a simple array and all the duplicates will be removed.
+//pass in an array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)
 		removeDuplicatesFromArray : function(arrayName)	{
 			var newArray=new Array();
@@ -2385,7 +2385,7 @@ later, it will handle other third party plugins as well.
 			return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);
-		}
+			}
 
 		}, //util
 
