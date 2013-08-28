@@ -1984,42 +1984,52 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					
 					-->
 					<select name="service" class='skipTrack' data-app-event='admin_syndication|EBAYShipServiceChange'>
-						<option data-ebay-carrier="" value="ShippingMethodStandard">Standard Shipping</option>
-						<option value="ePacketHongKong">ePacket delivery from Hong Kong</option>
-						<option value="ePacketChina">ePacket delivery from China</option>
-						<option data-ebay-carrier="UPS" value="UPSGround">UPS Ground</option>
-						<option data-ebay-carrier="" value="ShippingMethodExpress">Expedited Shipping</option>
-						<option data-ebay-carrier="USPS" value="USPSPriority">USPS Priority Mail</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateEnvelope">USPS Priority Mail Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailSmallFlatRateBox">USPS Priority Mail Small Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateBox">USPS Priority Mail Medium Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailLargeFlatRateBox">USPS Priority Mail Large Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailPaddedFlatRateEnvelope">USPS Priority Mail Padded Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailLegalFlatRateEnvelope">USPS Priority Mail Legal Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSFirstClass">USPS First Class Package</option>
-						<option data-ebay-carrier="UPS" value="UPS3rdDay">UPS 3 Day Select</option>
-						<option data-ebay-carrier="UPS" value="UPS2ndDay">UPS 2nd Day Air</option>
-						<option data-ebay-carrier="" value="Other">Economy Shipping</option>
-						<option value="USPSParcel">USPS Parcel Select</option>
-						<option value="USPSMedia">USPS Media Mail</option>
-						<option data-ebay-carrier="" value="ShippingMethodOvernight">One-day Shipping</option>
-						<option value="USPSExpressMail">USPS Express Mail</option>
-						<option value="USPSExpressFlatRateEnvelope">USPS Express Mail Flat Rate Envelope</option>
-						<option value="USPSExpressMailLegalFlatRateEnvelope">USPS Express Mail Legal Flat Rate Envelope</option>
-						<option data-ebay-carrier="UPS" value="UPSNextDay">UPS Next Day Air Saver</option>
-						<option data-ebay-carrier="UPS" value="UPSNextDayAir">UPS Next Day Air</option>
-						<option data-ebay-carrier="FEDEX" value="FedExHomeDelivery">FedEx Ground or FedEx Home Delivery</option>
-						<option data-ebay-carrier="FEDEX" value="FedExExpressSaver">FedEx Express Saver</option>
-						<option data-ebay-carrier="FEDEX" value="FedEx2Day">FedEx 2Day</option>
-						<option data-ebay-carrier="FEDEX" value="FedExPriorityOvernight">FedEx Priority Overnight</option>
-						<option data-ebay-carrier="FEDEX" value="FedExStandardOvernight">FedEx Standard Overnight</option>
-						<option value="EconomyShippingFromOutsideUS">Economy Shipping from outside US</option>
-						<option value="StandardShippingFromOutsideUS">Standard Shipping from outside US</option>
-						<option value="ExpeditedShippingFromOutsideUS">Expedited Shipping from outside US</option>
-						<option value="US_FedExIntlEconomy">FedEx International Economy</option>
-						<option data-ebay-carrier="" value="Freight">Flat Priced Freight</option>
-						<option data-ebay-carrier="" value="FreightShipping">Freight Shipping</option>
-						<option value="Pickup">Local Pickup</option>
+					
+						<option disabled>UPS</option>
+						<option data-ebay-carrier="UPS" value="UPSGround"> UPS Ground</option>
+						<option data-ebay-carrier="UPS" value="UPS3rdDay"> UPS 3 Day Select</option>
+						<option data-ebay-carrier="UPS" value="UPS2ndDay"> UPS 2nd Day Air</option>
+						<option data-ebay-carrier="UPS" value="UPSNextDay"> UPS Next Day Air Saver</option>
+						<option data-ebay-carrier="UPS" value="UPSNextDayAir"> UPS Next Day Air</option>
+
+						<option disabled>FedEx</option>
+						<option data-ebay-carrier="FEDEX" value="FedExHomeDelivery"> FedEx Ground or FedEx Home Delivery</option>
+						<option data-ebay-carrier="FEDEX" value="FedExExpressSaver"> FedEx Express Saver</option>
+						<option data-ebay-carrier="FEDEX" value="FedEx2Day"> FedEx 2Day</option>
+						<option data-ebay-carrier="FEDEX" value="FedExPriorityOvernight"> FedEx Priority Overnight</option>
+						<option data-ebay-carrier="FEDEX" value="FedExStandardOvernight"> FedEx Standard Overnight</option>
+
+						<option disabled>USPS</option>
+						<option data-ebay-carrier="USPS" value="USPSPriority"> USPS Priority Mail</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateEnvelope"> USPS Priority Mail Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailSmallFlatRateBox"> USPS Priority Mail Small Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateBox"> USPS Priority Mail Medium Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailLargeFlatRateBox"> USPS Priority Mail Large Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailPaddedFlatRateEnvelope"> USPS Priority Mail Padded Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailLegalFlatRateEnvelope"> USPS Priority Mail Legal Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSFirstClass"> USPS First Class Package</option>
+						<option data-ebay-carrier="USPS" value="USPSParcel"> USPS Parcel Select</option>
+						<option data-ebay-carrier="USPS" value="USPSMedia"> USPS Media Mail</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMail"> USPS Express Mail</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressFlatRateEnvelope"> USPS Express Mail Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailLegalFlatRateEnvelope"> USPS Express Mail Legal Flat Rate Envelope</option>
+
+						<option disabled>Carrier Neutral</option>
+						<option value="Pickup"> Local Pickup</option>
+						<option data-ebay-carrier="" value="ShippingMethodStandard"> Standard Shipping</option>
+						<option data-ebay-carrier="" value="ShippingMethodExpress"> Expedited Shipping</option>
+						<option data-ebay-carrier="" value="ShippingMethodOvernight"> One-day Shipping</option>
+						<option data-ebay-carrier="" value="Other"> Economy Shipping</option>
+						<option data-ebay-carrier="" value="Freight"> Flat Priced Freight</option>
+						<option data-ebay-carrier="" value="FreightShipping"> Freight Shipping</option>
+
+						<option disabled>Outside US to US</option>
+						<option data-ebay-carrier="FEDEX" value="US_FedExIntlEconomy"> FedEx International Economy from outside US</option>
+						<option value="EconomyShippingFromOutsideUS"> Economy Shipping from outside US</option>
+						<option value="StandardShippingFromOutsideUS"> Standard Shipping from outside US</option>
+						<option value="ExpeditedShippingFromOutsideUS"> Expedited Shipping from outside US</option>
+						<option value="ePacketHongKong"> ePacket delivery from Hong Kong</option>
+						<option value="ePacketChina"> ePacket delivery from China</option>
 					</select>
 				</label>
 
@@ -2027,8 +2037,8 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					<span>Set ship cost from</span>
 					<select name='costComputation' data-app-event="admin_syndication|EBAYShipcostComputationChange">
 						<option value='custom'>Let me set price</option>
-						<option value='ebay'>eBay</option>
-						<option value='product'>The product</option>
+						<option value='ebay'>eBay/Carrier Rates</option>
+						<option value='product'>Load from product</option>
 					</select>
 				</label>
 <!--
