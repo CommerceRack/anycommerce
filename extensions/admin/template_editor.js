@@ -379,7 +379,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 		renderFormats : {
 				templateThumb : function($tag,data)	{
 					$tag.attr('src',"data:"+data.value[0].type+";base64,"+data.value[0].base64);
-					$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' data-gallery='gallery'>");
+					$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' >"); //data-gallery='gallery'
 					}
 			}, //renderFormats
 
@@ -536,6 +536,25 @@ var $input = $(app.u.jqSelector('#',ID));
 				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'vars.templateID was not passed into magic.prodlist.'});
 				}
 			} //magic.prodlist
+		
+		window.magic.siteArticleFocus = function(ID,containerID)	{
+			var $container = getTarget(containerID,'magic.siteArticleFocus');
+			if($container)	{
+				$container.find('.textContentArea').hide();
+				var $target = getTarget(ID,'magic.siteArticleFocus').show(); //if an error occurs in getTarget, it'll handle it's own error display.
+				}
+			else	{}  //getTarget handles error display.
+			}
+		
+		window.magic.siteTemplateFocus = function(ID)	{
+			var $target = getTarget(ID,'magic.templateFocus');
+			var $body = getTarget('body','magic.templateFocus');
+			if($target)	{
+				$body.children().hide();
+				$target.show().appendTo($body); //move template to root level and make visible.
+				}
+			else	{}  //getTarget handles error display.
+			}
 		
 		//selector is an element within the wizard itself.
 		window.magic.inspect = function(selector)	{
@@ -713,19 +732,8 @@ var $input = $(app.u.jqSelector('#',ID));
 					if(mode == 'Site')	{
 //						app.u.dump(" -> Is a Site template");
 						$('base',$template).attr('href','http://www.'+vars.domain); //!!! this is temporary. Need a good solution for protocol and domain prefix/host.
-						$('script',$template).remove();
-/*						$('script',$template).each(function(index){
-							app.u.dump(" -> index: "+index);
-							var $script = $(this);
-							if($script.attr('href'))	{
-								$script.attr({'data-scripttype':'file','data-href':$script.attr('src')}).removeAttr('src');
-								}
-							else	{
-								//empty or text("") was not consistently removing the content of the script tag.
-								$script.replaceWith($("<meta \/>").attr({'data-scripttype':'inline','name':'script','content':$script.text()})) //.data('scriptcontent',$script.text("// temporarily removed for editor. \n")))
-								}
-							});
-*/						}
+						$('script',$template).remove(); //make sure the app template doesn't instantiate itself.
+						}
 					
 					$("[data-object]",$template).each(function(){
 						var $ele = $(this);
@@ -752,6 +760,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							if(mode == 'Site')	{
 								$("[data-app-role='saveButton']",$("#templateEditor")).text("Save Templates");
 								$("[data-app-role='templateEditorSaveAsTemplate']",$('#templateEditor')).hide();
+								$iframeContents.children().hide();
 //build the list of templates that are editable and update the select list.
 //								app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
 								var $select = $("[data-app-role='siteTemplateSelect']",$('#templateEditor'));
@@ -875,7 +884,8 @@ var $input = $(app.u.jqSelector('#',ID));
 							if(mode == 'Site')	{
 								var dp = 'adminSiteFileContents|'+$D.data('domain')
 								if(app.data[dp] && app.data[dp].body)	{
-									var $oTemplate = $("<html>").append(app.data[dp].body); //the original instance of the template.
+									var $oTemplate = $("<html>").html(app.data[dp].body); //the original instance of the template.
+					
 									$("[data-app-role='siteTemplateSelect']",$('#templateEditor')).first().find('option').each(function(){
 										var $option = $(this);
 										if($option.data('md5') && $option.data('elementid'))	{
@@ -883,16 +893,21 @@ var $input = $(app.u.jqSelector('#',ID));
 //											app.u.dump(" -> $thisTemplate.length: "+$thisTemplate.length);
 //											app.u.dump(" -> old md5 : "+$option.data('md5'));
 //											app.u.dump(" -> new md5 : "+Crypto.MD5($thisTemplate.html()));
+											$thisTemplate.css('display','');  //the editor uses show/hide which adds inline styles. These need to be removed.
+											if(!$thisTemplate.attr('style'))	{
+												$thisTemplate.removeAttr('style'); //if no styles are set, remove the empty tag. that way the md5 'should' match if no change occured.
+												}
 
 											if(Crypto.MD5($thisTemplate.html()) != $option.data('md5'))	{
 												app.u.dump(" -> save occuring for element "+$option.data('elementid'));
 												$(app.u.jqSelector('#',$option.data('elementid')),$oTemplate).replaceWith($thisTemplate);
 												}
 											}
-										else	{} //no md5 set. probably the default,
+										else	{} //no md5 set. probably the default 'choose';
 										
 										});
-									app.u.dump(" -> $oTemplate: "); app.u.dump($oTemplate);
+
+									docBody = "<html>\n<!DOCTYPE html>\n"+$.trim($oTemplate.html())+"/n</html>"; //putting the template body into a jquery object strips the html and doctype tags.
 									}
 								else	{
 									$D.anymessage({'message':'In admin_templateEditor.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
@@ -901,7 +916,6 @@ var $input = $(app.u.jqSelector('#',ID));
 							else	{
 								docBody = app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode);
 								}
-							die()
 							var dObj = {
 								'_cmd' : 'admin'+mode+'FileSave',
 								'FILENAME' : 'index.html',
@@ -930,6 +944,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								dObj.DOMAIN = $D.data('domain');
 								}
 							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
+//							app.u.dump(" -> cmd: "); app.u.dump(dObj);
 							app.model.addDispatchToQ(dObj,'immutable');
 								
 							}
@@ -1410,7 +1425,7 @@ var $input = $(app.u.jqSelector('#',ID));
 				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
 					
 					event.preventDefault();
-					var $chooser = $ele.closest("[data-app-role='templateChooser']");
+					var $chooser = $("#templateChooser");
 					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
 					const mode = $ele.closest("[data-mode]").data('mode');
 					
@@ -1438,12 +1453,15 @@ var $input = $(app.u.jqSelector('#',ID));
 							if($panelContainer.children().length > 1)	{
 								//
 //hide the current preview and show the new one.					
-								$("[data-app-role='templateDetail']:visible",$previewPanel).first().hide('scale',function(){
+								$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
 									$panel.show('scale');
 									});
 								}
 							else	{
-								$panel.show('scale');
+								$panel.show('scale',function(){
+									//after the first preview is displayed, resize and recenter the modal.
+									$("#dialog").dialog("option", "position", "center");
+									});
 								}
 							}
 						else	{
