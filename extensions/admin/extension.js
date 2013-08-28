@@ -3684,9 +3684,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //will also 'enable' the parent button of that class.
 // ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
-
-				$("input, textarea, select",$context).each(function(){
-
+					
+				$context.off('click.trackform').on('click.trackform',"input, textarea, select",function(){
 					var $input = $(this);
 					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
 					else if($input.is(':checkbox'))	{
@@ -3708,6 +3707,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 							});
 						}
 					});
+					
 
 				}, //applyEditTrackingToInputs
 

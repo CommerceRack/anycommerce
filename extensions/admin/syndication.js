@@ -128,7 +128,7 @@ var admin_syndication = function() {
 			},
 		anycontentPlus : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN callbacks.anycontent");
+//				app.u.dump("BEGIN callbacks.anycontentPlus");
 
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
