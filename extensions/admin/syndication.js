@@ -695,7 +695,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 // NOT USED ANY MORE - jquery.ebay-specifics-form.js plugin handles this
 //for item specifics, can't just serialize the fieldset because the wikihash format wants the data formatted differently.
 // there are two inputs on each row, the value of 1 is the key and the value of the second is the value.			
-			buildItemSpecificsMacro : function()	{
+/*			buildItemSpecificsMacro : function()	{
 				var	$fieldset = $("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",'#APIForm');
 				var kvp = "";
 				$('.inputContainer',$fieldset).each(function(){
@@ -705,7 +705,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						}
 					})
 				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
-				}, //buildItemSpecificsMacro
+				}, //buildItemSpecificsMacro */
 
 			ebayShowTreeByChild : function(categoryid)	{
 					app.u.dump("BEGIN admin_syndication.u.ebayShowTreeByChild");
@@ -797,7 +797,7 @@ else	{
 						}
 					}, //ebayShowTreeByChild
 
-			getUpdatedEBAYAttributesForm : function($form)	{
+/*			getUpdatedEBAYAttributesForm : function($form)	{
 
 				app.u.dump("BEGIN admin_syndication.u.updateSpecifics");
 
@@ -830,7 +830,7 @@ else	{
 				else	{
 					$('#APIForm').anymessage({'message':'In admin_syndication.u.getUpdatedEBAYAttributesForm, either $form ['+typeof $form+'] not passed or unable to determine categoryid from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
 					}
-				}, //getUpdatedEBAYAttributesForm
+				}, //getUpdatedEBAYAttributesForm */
 
 // !!! delete this once the templateEditor code is all refactored.
 			handleEBAYTemplateSelect : function(vars)	{
