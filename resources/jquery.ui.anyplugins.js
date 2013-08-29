@@ -198,7 +198,7 @@ For the list of available params, see the 'options' object below.
 //					console.dir("Got to @issues, length: "+L);
 					$r = $("<ul \/>"); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
-						$r.append("<li>"+msg['@RESPONSES'][i].type+": "+msg['@RESPONSES'][i].msg+"<\/li>");
+						$r.append("<li>"+(msg['@RESPONSES'][i].msgsubtype || msg['@RESPONSES'][i].msgtype)+": "+msg['@RESPONSES'][i].msg+"<\/li>");
 						}
 					}
 

@@ -787,10 +787,12 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			else	{
 				status = 'completed';
 				if(typeof callback == 'function')	{
-					callback(responseData._rtag);
+// * 201334 -> responses contain macro-specific messaging. some or all of these may be success or fail, but the response is still considered a success.
+					
+					callback(responseData._rtag,{'@RESPONSES':responseData['@RESPONSES']});
 					}
 				else if(typeof callback == 'object' && typeof callback.onSuccess == 'function')	{
-					callback.onSuccess(responseData['_rtag']); //executes the onSuccess for the callback
+					callback.onSuccess(responseData['_rtag'],{'@RESPONSES':responseData['@RESPONSES']}); //executes the onSuccess for the callback
 					}
 				else{
 					app.u.dump(' -> successful response for uuid '+uuid+'. callback defined ('+callback+') but does not exist or is not valid type.')

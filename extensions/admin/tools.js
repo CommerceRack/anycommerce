@@ -687,10 +687,8 @@ $target.append("<br \/>");
 					event.preventDefault();
 					var json = new Array();
 					$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
-						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type']));
+						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
 						})
-					
-					
 
 					app.model.addDispatchToQ({
 						'_cmd':'adminConfigMacro',
@@ -700,6 +698,7 @@ $target.append("<br \/>");
 							'message':'Your changes have been saved'
 							}
 						},'immutable');
+					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
 					app.model.dispatchThis('immutable');
 
 					});

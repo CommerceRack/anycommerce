@@ -776,7 +776,7 @@ has to be within the fieldset to for data-table to work right.
 				<button data-app-event='admin_tools|flexeditSaveExec'>Save Changes</button>
 			</div>
 
-
+<!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
 			<div class='labelsAsBreaks displayNone' data-app-role='flexeditAttributeAddUpdateContainer'>
 				<label><span>Attribute ID </span><input name='id' value='' type='text' data-bind='var: flexedit(id); format:popVal;' /></label>
 				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
