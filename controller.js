@@ -1075,7 +1075,7 @@ app.u.throwMessage(responseData); is the default error handler.
 // a generic callback to allow for success messaging to be added. 
 // pass message for what will be displayed.  For error messages, the system messaging is used.
 		showMessaging : {
-			onSuccess : function(_rtag)	{
+			onSuccess : function(_rtag,macroResponses)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
 				if(_rtag.jqObj)	{
 					_rtag.jqObj.hideLoading();
@@ -1087,9 +1087,15 @@ app.u.throwMessage(responseData); is the default error handler.
 						app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj)
 						}
 					}
-				var msg = app.u.successMsgObject(_rtag.message);
-				msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
-				app.u.throwMessage(msg);
+				if(macroResponses && macroResponses['@RESPONSES'])	{
+					var $target = _rtag.jqObj || $("#globalMessaging");
+					$target.anymessage(macroResponses);
+					}
+				else	{
+					var msg = app.u.successMsgObject(_rtag.message);
+					msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
+					app.u.throwMessage(msg);
+					}
 				}
 			}, //showMessaging
 		
