@@ -99,7 +99,6 @@ var tools_animation = function() {
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
 				animation.nextUpdate += animation.frameDur;
-				app.u.dump(animation.nextUpdate);
 				animation.currFrame = (animation.currFrame+1);
 				if(animation.currFrame < animation.frameCount){
 					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
