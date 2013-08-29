@@ -68,7 +68,7 @@ var admin_syndication = function() {
 //when this macro response syntax gets adopted elsewhere, move this to admin extension.
 // this was not the method that got implemented. processForm was.
 		handleMacroUpdate : {
-			onSuccess : function(_rtag)	{
+			onSuccess : function(_rtag,macroResponses)	{
 				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate.onSuccess");
 				app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
 				var $target;
@@ -81,8 +81,14 @@ var admin_syndication = function() {
 					$target = $('#globalMessaging');
 					}
 				
-				$target.anymessage(app.u.successMsgObject('Your changes have been saved'));
-//				$target.anymessage(_rtag);
+				
+				if(macroResponses && macroResponses['@RESPONSES'])	{
+					$target.anymessage(macroResponses);
+					}
+				else	{
+					$target.anymessage(app.u.successMsgObject('Your changes have been saved')); //generic success message if no @RESPONSES are set.
+					}
+//				
 //				app.u.dump(" -> _rtag"); app.u.dump(_rtag);
 
 //if everything was successful, revert the form to a pre-change state.
