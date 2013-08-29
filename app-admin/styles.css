@@ -899,6 +899,8 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 	float:right;}
 .mhTabsContainer ul.showIcons li	{height:55px;}
 .mhTabsContainer ul.hideIcons .icon	{display:none;}
+.mhTabsContainer ul.hideIcons .animIcon	{display:none;}
+.mhTabsContainer ul.hideIcons .animator{display:none;}
 .mhTabsContainer ul.hideIcons li	{height:20px;}
 
 .mhTabsContainer .text	{position:relative; z-index:10;}
