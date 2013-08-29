@@ -480,7 +480,9 @@ app.model.dispatchThis('mutable');
 						var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 						$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 						$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
-						$('button',$tbody).hide();
+//						$('button',$tbody).hide();
+						$("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
+						app.u.handleAppEvents($("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tbody).andSelf());
 						$tbody.sortable({
 							connectWith: '.sortGroup',
 							stop : function(event,ui){
@@ -489,6 +491,7 @@ app.model.dispatchThis('mutable');
 								else	{
 									//moved to new parent.
 									$('button',$tr).show();
+									$("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tr).hide();
 									app.u.handleAppEvents($tr);
 									}
 								//optionsEditorRowTemplate
@@ -2029,6 +2032,25 @@ for(index in variations)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					app.model.dispatchThis('immutable');
 					
+					});
+				},
+//a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
+			variationsOptionToggle : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});
+				$btn.off('click.productVariationsManagerShow').on('click.productVariationsManagerShow',function(event){
+					event.preventDefault();
+					app.u.dump("Click! $btn.closest([data-app-role='variationsOptionsTbody']).length: "+$btn.closest("[data-app-role='variationsOptionsTbody']").length);
+					
+					var $tr = $btn.closest('tr');
+					var $editor = $btn.closest("[data-app-role='variationOptionEditorContainer']"); //used for context.
+					if($btn.closest("[data-app-role='variationsOptionsTbody']").length)	{
+						$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});
+						$("[data-app-role='storeVariationsOptionsTbody']",$editor).append($tr);
+						}
+					else	{
+						$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: false});
+						$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
+						}
 					});
 				},
 

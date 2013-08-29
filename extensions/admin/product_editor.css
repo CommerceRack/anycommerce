@@ -59,6 +59,12 @@ td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; pad
 td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
 td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
 
+
+[data-app-role='variationsOptionsTbody'] .toggleByAppRole.globalListOfOptions {display:none;}
+[data-app-role='storeVariationsOptionsContainer'] .toggleByAppRole.optionsEnabledOnProduct {display:none;}
+
+
+
 /* this didn't solve the issue.
 tbody.variationGroupOptions	{
      height: auto;

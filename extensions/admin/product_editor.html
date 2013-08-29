@@ -2347,7 +2347,7 @@ Snacks|Doughnuts<br />
 	</tr>
 	</thead>
 <!-- sogs return @options, product return options. nice. -->	
-	<tbody data-app-role="variationsOptionsTbody" class='variationGroupOptions' data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
+	<tbody data-app-role='variationsOptionsTbody' class='variationGroupOptions' data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
 	
 	</tbody>
 	<tfoot>
@@ -2376,7 +2376,7 @@ Snacks|Doughnuts<br />
 		<th></th>
 	</tr>
 	</thead>
-	<tbody></tbody>
+	<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
 	</table>
 	
 	<div class='buttonset alignRight'>
@@ -2448,8 +2448,9 @@ Snacks|Doughnuts<br />
 	<td data-bind="var:option(asm); format:text;"></td>
 	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin|tagRowForRemove">delete</button>
-	<button data-app-event="admin_prodEdit|variationOptionUpdateShow">edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
+	<button data-app-event='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions'>Move</button>
+	<button data-app-event="admin|tagRowForRemove" class='toggleByAppRole optionsEnabledOnProduct'>Delete</button>
+	<button data-app-event="admin_prodEdit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
 	</td>
 </tr>
 </table>
