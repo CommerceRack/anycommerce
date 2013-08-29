@@ -35,7 +35,6 @@ app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //
 
 
 app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js', function(){
-	app.u.dump($('.mhTabsContainer [data-animation]').length);
 	$('.mhTabsContainer [data-animation]').each(function(){
 		var args = $(this).attr('data-animation');	
 		var anim = args.split('?')[0];
