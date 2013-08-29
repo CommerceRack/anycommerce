@@ -107,8 +107,8 @@ var tools_animation = function() {
 				else {
 					animation.currFrame = animation.frameCount-1;
 					app.ext.tools_animation.u.stopAnim(animKey);
-					if(animation.callback && typeof animation.callback == 'function'){
-						animation.callback();
+					if(animation.animCallback && typeof animation.animCallback == 'function'){
+						animation.animCallback();
 						}
 					}
 				}
@@ -116,8 +116,6 @@ var tools_animation = function() {
 		back : function(animation, time, delta, animKey){
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
-				app.u.dump("Back anim frame");
-				app.u.dump(animation.currFrame);
 				animation.nextUpdate += animation.frameDur;
 				animation.currFrame = (animation.currFrame-1);
 				if(animation.currFrame >=0){
@@ -127,8 +125,8 @@ var tools_animation = function() {
 				else {
 					animation.currFrame = 0;
 					app.ext.tools_animation.u.stopAnim(animKey);
-					if(animation.callback && typeof animation.callback == 'function'){
-						animation.callback();
+					if(animation.animCallback && typeof animation.animCallback == 'function'){
+						animation.animCallback();
 						}
 					}
 				}
@@ -136,7 +134,16 @@ var tools_animation = function() {
 		},
 	
 	animCallbacks : {
-		
+		goToLastFrame : function(){
+			animation.currFrame = (animation.currFrame-1);
+			var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+			animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
+			},
+		goToFirstFrame : function(){
+			animation.currFrame = 0;
+			var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+			animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
+			}
 		},
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -163,15 +170,18 @@ var tools_animation = function() {
 					if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
 						params.animFunc = app.ext.tools_animation.animations[params.animFunc];
 						}
-					
+					if (params.animCallback && typeof params.animCallback == 'string' && app.ext.tools_animation.animCallbacks[params.animCallback]){
+						params.animCallback = app.ext.tools_animation.animCallbacks[params.animCallback];
+						}
 					if(params.start){
-						params.currFrame = params.start;
+						params.currFrame = Number(params.start);
 						delete params.start;
 						}
 					
 					for(var p in params){
 						app.ext.tools_animation.vars.anims[animation][p] = params[p];
 					}
+					app.u.dump(app.ext.tools_animation.vars.anims[animation]);
 				
 					app.ext.tools_animation.aq[animation] = app.ext.tools_animation.vars.anims[animation];
 					}
@@ -212,11 +222,15 @@ var tools_animation = function() {
 					else if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
 						animation.animFunc = app.ext.tools_animation.animations[params.animFunc];
 						}
-					
+						
+					if(params.animCallback && typeof params.animCallback == 'function'){
+						animation.animCallback = params.animCallback;
+						}
+					else if (params.animCallback && typeof params.animCallback == 'string' && app.ext.tools_animation.animCallbacks[params.animCallback]){
+						animation.animCallback = app.ext.tools_animation.animCallbacks[params.animCallback];
+						}
+						
 					var xpos = animation.x1 + (animation.currFrame * (animation.width + animation.xGap));
-					app.u.dump(animation.x1);
-					app.u.dump((animation.currFrame * (animation.width + animation.xGap)));
-					app.u.dump(xpos);
 					animation.$tag.css('background', 'url('+animation.imgsrc+') no-repeat '+(-1*xpos)+'px '+(-1*animation.y)+'px');
 						
 					app.ext.tools_animation.vars.anims[name] = animation;

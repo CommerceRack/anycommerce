@@ -37,12 +37,9 @@ app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //
 app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js', function(){
 	app.u.dump($('.mhTabsContainer [data-animation]').length);
 	$('.mhTabsContainer [data-animation]').each(function(){
-		
 		var args = $(this).attr('data-animation');	
-		app.u.dump(args);
 		var anim = args.split('?')[0];
 		var params = app.u.kvp2Array(args.split('?')[1]);
-		//params.imgsrc = anim;
 		app.ext.tools_animation.u.loadAnim($(this),anim,params);
 		});
 	}]);
