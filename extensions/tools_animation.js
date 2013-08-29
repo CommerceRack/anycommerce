@@ -195,15 +195,15 @@ var tools_animation = function() {
 					typeof params.y !== 'undefined' ){
 					var animation = {
 						$tag : $tag,
-						currFrame : params.startFrame || 0,
-						frameCount : params.frameCount,
+						currFrame : Number(params.startFrame) || 0,
+						frameCount : Number(params.frameCount),
 						imgsrc : params.imgsrc,
-						frameDur : params.frameDur || 100,
-						width : params.width,
-						height : params.height,
-						x1 : params.x1,
-						xGap : params.xGap || 0,
-						y : params.y
+						frameDur : Number(params.frameDur) || 100,
+						width : Number(params.width),
+						height : Number(params.height),
+						x1 : Number(params.x1),
+						xGap : Number(params.xGap) || 0,
+						y : Number(params.y)
 						};
 						
 					if(params.animFunc && typeof params.animFunc == 'function'){
@@ -213,7 +213,10 @@ var tools_animation = function() {
 						animation.animFunc = app.ext.tools_animation.animations[params.animFunc];
 						}
 					
-					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+					var xpos = animation.x1 + (animation.currFrame * (animation.width + animation.xGap));
+					app.u.dump(animation.x1);
+					app.u.dump((animation.currFrame * (animation.width + animation.xGap)));
+					app.u.dump(xpos);
 					animation.$tag.css('background', 'url('+animation.imgsrc+') no-repeat '+(-1*xpos)+'px '+(-1*animation.y)+'px');
 						
 					app.ext.tools_animation.vars.anims[name] = animation;

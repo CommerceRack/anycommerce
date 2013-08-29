@@ -894,14 +894,32 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 .mhTabsContainer .toggleArrow	{width:1%;}
 
 .mhTabsContainer ul.navIcons	{max-width:1150px;} /* as the browser gets very wide, the icon/tabs don't look as good stretched out. cap em */
-.mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
+.mhTabsContainer ul.showIcons .icon	{
+	/* display:block; */
+	float:right;}
 .mhTabsContainer ul.showIcons li	{height:55px;}
 .mhTabsContainer ul.hideIcons .icon	{display:none;}
 .mhTabsContainer ul.hideIcons li	{height:20px;}
 
 .mhTabsContainer .text	{position:relative; z-index:10;}
-.mhTabsContainer .icon	{background-image:url(images/tab_sprites_v2-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
-.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 */
+.mhTabsContainer .icon	{display: none; background-image:url(images/tab_sprites_v2-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .active .animIcon	{display: none;} 
+.mhTabsContainer .animIcon	{background-repeat:no-repeat; position:absolute; z-index:9;}
+.mhTabsContainer .animator {left: 0px; width: 92px; height: 55px; position: absolute; z-index: 10;}
+
+.mhTabsContainer .setupTab .animIcon	{bottom:0; right:0; height:55px; width:55px;} 
+.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 10px; right: 6px;}
+.mhTabsContainer .productsTab .animIcon	{width:45px; height:39px; bottom: 8px; right: 5px;}
+.mhTabsContainer .ordersTab .animIcon	{width:61px; height:42px; bottom: 6px; right: 0px;}
+.mhTabsContainer .crmTab .animIcon	{width:62px; height:36px; bottom: 10px; right: 0px;}
+.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 8px; right: 0px;}
+.mhTabsContainer .reportsTab .animIcon	{width:33px; height:39px; bottom: 10px; right: 6px;}
+.mhTabsContainer .kpiTab .animIcon	{width:41px; height:42px; bottom: 6px; right: 6px;}
+.mhTabsContainer .utilitiesTab .animIcon	{width:53px; height:53px; bottom: 1px; right: 1px;}
+.mhTabsContainer .supportTab .animIcon	{width:38px; height:38px; bottom: 8px; right: 8px;}
+.mhTabsContainer .messagesTab .animIcon	{width:45px; height:45px; bottom: 5px; right: 5px;}
+/*
+.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 //reminder close this comment
 .mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
 .mhTabsContainer .productsTab .icon	{background-position: -110px 0;}
 .mhTabsContainer .ordersTab .icon	{background-position: -165px 0;}
@@ -911,18 +929,18 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 .mhTabsContainer .kpiTab .icon	{background-position: -385px 0;}
 .mhTabsContainer .utilitiesTab .icon	{background-position: -440px 0;}
 .mhTabsContainer .supportTab .icon	{background-position: -495px 0;}
+*/
 
-
-.mhTabsContainer .setupTab.active .icon	{background-position: 0px -55px;} /* uses default position 0,0 */
-.mhTabsContainer .sitesTab.active .icon	{background-position: -55px -55px;}
-.mhTabsContainer .productsTab.active .icon	{background-position: -110px -55px;}
-.mhTabsContainer .ordersTab.active .icon	{background-position: -165px -55px;}
-.mhTabsContainer .crmTab.active .icon	{background-position: -220px -55px;}
-.mhTabsContainer .syndicationTab.active .icon	{background-position: -275px -55px;}
-.mhTabsContainer .reportsTab.active .icon	{background-position: -330px -55px;}
-.mhTabsContainer .kpiTab.active .icon	{background-position: -385px -55px;}
-.mhTabsContainer .utilitiesTab.active .icon	{background-position: -440px -55px;}
-.mhTabsContainer .supportTab.active .icon	{background-position: -495px -55px;}
+.mhTabsContainer .setupTab.active .icon	{display: block; background-position: 0px -55px;} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab.active .icon	{display: block; background-position: -55px -55px;}
+.mhTabsContainer .productsTab.active .icon	{display: block; background-position: -110px -55px;}
+.mhTabsContainer .ordersTab.active .icon	{display: block; background-position: -165px -55px;}
+.mhTabsContainer .crmTab.active .icon	{display: block; background-position: -220px -55px;}
+.mhTabsContainer .syndicationTab.active .icon	{display: block; background-position: -275px -55px;}
+.mhTabsContainer .reportsTab.active .icon	{display: block; background-position: -330px -55px;}
+.mhTabsContainer .kpiTab.active .icon	{display: block; background-position: -385px -55px;}
+.mhTabsContainer .utilitiesTab.active .icon	{display: block; background-position: -440px -55px;}
+.mhTabsContainer .supportTab.active .icon	{display: block; background-position: -495px -55px;}
 
 
 .mhTabsContainer .messageCount	{

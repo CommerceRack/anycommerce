@@ -1512,7 +1512,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 
 		executeExtensionCallback : function(namespace,callback)	{
 			if(namespace && callback)	{
-				if(typeof callback == 'function'){window[callback]()}
+				if(typeof callback == 'function'){callback()}
 				else if(typeof callback == 'string' && typeof app.ext[namespace] == 'object' && typeof app.ext[namespace].callbacks[callback] == 'object')	{
 					app.ext[namespace].callbacks[callback].onSuccess()
 					}

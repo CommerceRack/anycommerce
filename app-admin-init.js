@@ -34,6 +34,19 @@ app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_creat
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 
 
+app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js', function(){
+	app.u.dump($('.mhTabsContainer [data-animation]').length);
+	$('.mhTabsContainer [data-animation]').each(function(){
+		
+		var args = $(this).attr('data-animation');	
+		app.u.dump(args);
+		var anim = args.split('?')[0];
+		var params = app.u.kvp2Array(args.split('?')[1]);
+		//params.imgsrc = anim;
+		app.ext.tools_animation.u.loadAnim($(this),anim,params);
+		});
+	}]);
+
 //required for init. don't change from 0.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
