@@ -143,7 +143,7 @@ var admin_templateEditor = function() {
 								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
 //								app.u.dump(" -> $D.length: "+$D.length);
 								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
-								app.u.dump(" -> $D.children().length: "+$D.children().length); app.u.dump($D);
+//								app.u.dump(" -> $D.children().length: "+$D.children().length); app.u.dump($D);
 
 								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
 									'state' : 'persistent',
@@ -1454,8 +1454,9 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 					if(mode)	{
 						app.u.dump(" --> mode is set ("+mode+")");
-						if(app.data['admin'+mode+'TemplateList'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'] && app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')])	{
-							var templateData = app.data['admin'+mode+'TemplateList']['@TEMPLATES'][$ele.data('obj_index')];
+						var listDP = (mode == 'EBAYProfile') ? 'adminEBAYTemplateList' : 'admin'+mode+'TemplateList'; //ebay is ebayprofile most of the time, but sometimes just ebay. handy.
+						if(app.data[listDP] && app.data[listDP]['@TEMPLATES'] && app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')])	{
+							var templateData = app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')];
 							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
 							
 //							app.u.dump(" -> $chooser.length: "+$chooser.length);

@@ -75,7 +75,7 @@ var admin_navcats = function() {
 //subcats is an array of safe ID's.
 //Container is the parent of where the list will be generated.  typically a tbody or ul.
 //vars MUST contain templateID.
-//vars.fetchonly allows for getTree to 'get' all the data, but not display it right away.
+//vars.fetchonly allows for getTree to 'get' all the data, but not display it right away. used when tree initially loads.
 			getSubcats : function(subcats,$container,vars)	{
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
@@ -102,9 +102,9 @@ var admin_navcats = function() {
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									app.callbacks.anycontent.onSuccess(rd);
+									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
 									app.u.dump(" -> path: "+rd.path);
-									for(var ni = 0; j < NOL; ni += 1)	{
+									for(var ni = 0; ni < NOL; ni += 1)	{
 										if(navcatObj[ni].indexOf(rd.path) === 0)	{app.u.dump(" Match! "+rd.path)}
 										
 										}
@@ -112,27 +112,28 @@ var admin_navcats = function() {
 								},
 							'datapointer':datapointer,
 							'jqObj':vars.fetchOnly ? '' : $cat}
-//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
-	if(app.model.fetchData(datapointer))	{
-		app.u.handleCallback(_tag);
-//		$cat.anycontent({'datapointer':datapointer})
-		}
-	else	{
-		app.model.addDispatchToQ({
-			'path':subcats[i],
-			'detail':'more',
-			'navtree' : 'PRT00'+app.vars.partition,
-			'_cmd': 'adminNavcatDetail',
-			'_tag' : _tag
-			},'mutable');
-		}
+
+					//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
+						if(app.model.fetchData(datapointer))	{
+							app.u.handleCallback(_tag);
+					//		$cat.anycontent({'datapointer':datapointer})
+							}
+						else	{
+							app.model.addDispatchToQ({
+								'path':subcats[i],
+								'detail':'more',
+								'navtree' : 'PRT00'+app.vars.partition,
+								'_cmd': 'adminNavcatDetail',
+								'_tag' : _tag
+								},'mutable');
+							}
 							
 //						app.calls.appNavcatDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
 						}
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required.",'gMessage':true})
+						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required.",'gMessage':true})
 					}
 				
 				},
@@ -167,7 +168,9 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 										$tree.anymessage({'message':rd});
 										}
 									else	{
-										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories').appendTo($tree),vars);
+										var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
+										$ul.appendTo($tree);
+										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
 										}
 									},
 								'datapointer':'adminNavList'
