@@ -1177,10 +1177,11 @@ $D.dialog('open');
 							.append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/extension' value='admin' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>")
 							.find(".applyDatepicker").datetimepicker({
 								changeMonth: true,
+								dateFormat : 'yymmdd',
+								timeFormat: 'hhmmss',
 								changeYear: true,
-								dateFormat : 'yymmddHHmm00'
+								separator : '' //get rid of space between date and time.
 								})
-							.change(function(){$(this).val(parseInt($(this).val()) / 1000)}) //strip milliseconds from epoch
 							.end()
 							.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
 						}); //

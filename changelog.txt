@@ -12,6 +12,8 @@ ADMIN
  -> new 'sites' interface
  -> new 'edit' site for domain apps
  -> but fixes in campaign/ebay template download.
+ -> amz thesaurus bug fixes.
+ -> bug fixes in supplier interface (handling)
 
 201332
 ADMIN
