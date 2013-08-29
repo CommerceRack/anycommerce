@@ -2000,9 +2000,9 @@ Function does NOT dispatch.
 						bindData = app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
 						listpointer = app.renderFunctions.parseDataVar(bindData['var']),
 						data = app.data[_rtag.datapointer]; //shortcut.
-					app.u.dump('listpointer: '+listpointer);
-					app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
-					app.u.dump('data[listpointer]: '); app.u.dump(data[listpointer]);
+//					app.u.dump('listpointer: '+listpointer);
+//					app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
+//					app.u.dump('data[listpointer]: '); app.u.dump(data[listpointer]);
 					$DMI.hideLoading();
 					$tbody.empty();
 					//data[listpointer] check needs to be a !isemptyobject and NOT a .length check because value could be a hash OR an array.
