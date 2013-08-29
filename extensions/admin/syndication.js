@@ -1751,12 +1751,15 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 										//if it's a new row that was deleted before a save occured, no macro needed to remove it.
 										}
 									else if($tr.hasClass('rowTaggedForRemove'))	{
-										macros.push("AMZ-THESAURUS-DELETE?ID="+$tr.data('thid'));
+										macros.push("AMZ-THESAURUS-DELETE?guid="+$tr.data('guid'));
 										$tr.empty().remove();
 										}
 									else if($tr.hasClass('isNewRow'))	{
 										//  getWhitelistedObject
-										macros.push("AMZ-THESAURUS-SAVE?THID="+$tr.data('thid')+"&"+$.param(app.u.getWhitelistedObject($tr.data(),['name','itemtype','isgiftwrapavailable','isgiftmessageavailable','subjectcontent','targetaudience','search_terms']))); //THID is not in whitelist because data saves it as lowercase and we need it upper.
+										if(!$tr.data('guid'))	{
+											$tr.data('guid',app.u.guidGenerator())
+											}
+										macros.push("AMZ-THESAURUS-SAVE?"+$.param(app.u.getWhitelistedObject($tr.data(),['guid','name','itemtype','isgiftwrapavailable','isgiftmessageavailable','subjectcontent','targetaudience','search_terms']))); //THID is not in whitelist because data saves it as lowercase and we need it upper.
 										}
 									else	{
 										//HUH! shouldn't have gotten here.
