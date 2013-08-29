@@ -759,7 +759,7 @@ $D.dialog('open');
 			domainAddUpdateHost : function(mode,$form,$domainEditor)	{
 				if(mode == 'create' || mode == 'update' && $form instanceof jQuery)	{
 
-					var sfo = $form.serializeJSON();
+					var sfo = $form.serializeJSON({'cb':true});
 					var cmdObj = {
 						_cmd : 'adminDomainMacro',
 						_tag : {
@@ -789,8 +789,11 @@ $D.dialog('open');
 							else	{} //unchanged row. this is a non-destructive process, so existing rules don't need to be re-added.
 							})
 						}
-					else if(sfo.HOSTTYPE == 'APP')	{
-						hostSet += "&PROJECT="+sfo.PROJECT;
+					else if(sfo.HOSTTYPE == 'SITE')	{
+						hostSet += "&force_https"+sfo.force_https;
+						}
+					else if(sfo.HOSTTYPE == 'SITEPTR')	{
+						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https"+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
 						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
@@ -1008,6 +1011,8 @@ $D.dialog('open');
 								//success content goes here.
 								$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
 								if($btn.data('mode') == 'update')	{
+									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
+									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT);
 									$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT)
 									}
 								}

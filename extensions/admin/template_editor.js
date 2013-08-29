@@ -690,12 +690,20 @@ var $input = $(app.u.jqSelector('#',ID));
 					if($pbar instanceof jQuery)	{
 						var $fieldsets = $("fieldset",'#wizardForm');
 						if($fieldsets.length)	{
-							$pbar.parent().slideDown('slow',function(){
-								$pbar.progressbar('option','value',(($("fieldset:visible",'#wizardForm').index() / $fieldsets.length ) * 100));
-								setTimeout(function(){
-									$pbar.parent().slideUp('slow');
-									},2000);
-								});
+							// * 201334 -> better handling if animation is in progress.
+							//if the animation is in progress already, don't mess w/ it. let it wrap up, but adjust the progress.
+							var progress = Math.round((($("fieldset:visible",'#wizardForm').index() / $fieldsets.length ) * 100));
+							if($pbar.is(':animated'))	{
+								$pbar.progressbar('option','value',progress);
+								}
+							else	{
+								$pbar.parent().slideDown('slow',function(){
+									$pbar.progressbar('option','value',progress);
+									setTimeout(function(){
+										$pbar.parent().slideUp('slow');
+										},2000);
+									});
+								}
 							
 							}
 						}

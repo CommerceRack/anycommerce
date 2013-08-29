@@ -103,9 +103,13 @@ var admin_navcats = function() {
 									}
 								else	{
 									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
-									app.u.dump(" -> path: "+rd.path);
+//									app.u.dump(" -> path: "+rd.path);
+									//loop through the list of 'open' (from DPS) and open them.
 									for(var ni = 0; ni < NOL; ni += 1)	{
-										if(navcatObj[ni].indexOf(rd.path) === 0)	{app.u.dump(" Match! "+rd.path)}
+										if(navcatObj[ni].indexOf(rd.path) === 0)	{
+											app.u.dump(" Match! "+rd.path);
+											$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click');
+											}
 										
 										}
 									}
@@ -142,6 +146,11 @@ var admin_navcats = function() {
 This is what gets run to display a category tree.  
 	mode could be:  builder, selector
 	this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
+
+
+YO!
+The delegation for the 'open' and the 'remember this for next time' need to be separate events.  That way we can trigger them individually (specifically, we need to trigger just 'open' on initial load when loading DPS)
+
 
 */
 			getTree : function(mode,vars){
@@ -251,7 +260,7 @@ function handleDPS(cmd)	{
 	else	{
 		app.u.dump("handleDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
 		}
-	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
+//	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
 	}
 
 						if($subcats.length)	{
