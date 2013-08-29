@@ -81,7 +81,9 @@ var admin_syndication = function() {
 					$target = $('#globalMessaging');
 					}
 				
-				$target.anymessage(app.u.successMsgObject('Your changes have been saved'))
+				$target.anymessage(app.u.successMsgObject('Your changes have been saved'));
+//				$target.anymessage(_rtag);
+//				app.u.dump(" -> _rtag"); app.u.dump(_rtag);
 
 //if everything was successful, revert the form to a pre-change state.
 				$("[data-app-role='saveButton']",$target).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
@@ -1747,7 +1749,8 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 										$tr.empty().remove();
 										}
 									else if($tr.hasClass('isNewRow'))	{
-										macros.push("AMZ-THESAURUS-SAVE?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+										//  getWhitelistedObject
+										macros.push("AMZ-THESAURUS-SAVE?THID="+$tr.data('thid')+"&"+$.param(app.u.getWhitelistedObject($tr.data(),['name','itemtype','isgiftwrapavailable','isgiftmessageavailable','subjectcontent','targetaudience','search_terms']))); //THID is not in whitelist because data saves it as lowercase and we need it upper.
 										}
 									else	{
 										//HUH! shouldn't have gotten here.

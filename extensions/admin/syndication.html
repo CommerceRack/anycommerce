@@ -900,7 +900,9 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 
 
 <div class='floatLeft' data-app-role='thesaurusDataTableInputs'>
+<!-- the data on this save is whitelisted. look for AMZ-THESAURUS-SAVE in admin_syndication.js -->
 	<input type='hidden' name='guid' value='' data-bind="var: thesaurus(guid); format:popVal;"  />
+	<input type='hidden' name='THID' value='' data-bind="var: thesaurus(thid); format:popVal;"  />
 	<label>
 		<span>Name</span>
 		<input type="text" size="20" value="" name="name" class='skipTrack'  data-bind="var: thesaurus(name); format:popVal;" />
