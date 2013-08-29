@@ -1739,10 +1739,12 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 								$('tr.edited',$form).each(function(){
 									var $tr = $(this);
 									if($tr.hasClass('rowTaggedForRemove') && $tr.hasClass('isNewRow'))	{
+										$tr.empty().remove();
 										//if it's a new row that was deleted before a save occured, no macro needed to remove it.
 										}
 									else if($tr.hasClass('rowTaggedForRemove'))	{
 										macros.push("AMZ-THESAURUS-DELETE?ID="+$tr.data('thid'));
+										$tr.empty().remove();
 										}
 									else if($tr.hasClass('isNewRow'))	{
 										macros.push("AMZ-THESAURUS-SAVE?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
@@ -1753,7 +1755,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 										}
 									});
 								}
-							app.u.dump("macros: "); app.u.dump(macros);
+//							app.u.dump("macros: "); app.u.dump(macros);
 							$form.showLoading({'message':'Updating Marketplace Settings...'});
 							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_syndication','jqObj':$form},'immutable');
 							app.ext.admin.calls.adminSyndicationDetail.init(DST,{},'immutable');
