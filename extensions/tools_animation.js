@@ -52,6 +52,29 @@ var tools_animation = function() {
 						};
 				app.ext.tools_animation.u.animLoop();
 				
+				//Set up delegated events
+				$('body').on('mouseenter.animation', '[data-animation-mouseenter]', function(){
+					var args = $(this).attr('data-animation-mouseenter');
+					
+					var anim = args.split('?')[0];
+					var params = app.u.kvp2Array(args.split('?')[1]);
+					
+					app.ext.tools_animation.u.stopAnim(anim);
+					app.ext.tools_animation.u.startAnim(anim, params);
+					
+					});
+				
+				$('body').on('mouseout.animation', '[data-animation-mouseout]', function(){
+					var args = $(this).attr('data-animation-mouseout');
+					
+					var anim = args.split('?')[0];
+					var params = app.u.kvp2Array(args.split('?')[1]);
+					
+					app.ext.tools_animation.u.stopAnim(anim);
+					app.ext.tools_animation.u.startAnim(anim, params);
+					
+					});
+				
 				r = true;
 
 				return r;
@@ -62,8 +85,59 @@ var tools_animation = function() {
 			}
 		}, //callbacks
 
-
-
+	animations : {
+		loop : function(animation, time, delta, animKey){
+			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
+			if(time > animation.nextUpdate){
+				animation.nextUpdate += animation.frameDur;
+				animation.currFrame = (animation.currFrame+1) % animation.frameCount;
+				var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+				animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
+				}
+			},
+		fwd : function(animation, time, delta, animKey){
+			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
+			if(time > animation.nextUpdate){
+				animation.nextUpdate += animation.frameDur;
+				animation.currFrame = (animation.currFrame+1);
+				if(animation.currFrame < animation.frameCount){
+					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+					animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
+					}
+				else {
+					animation.currFrame = animation.frameCount-1;
+					app.ext.tools_animation.u.stopAnim(animKey);
+					if(animation.callback && typeof animation.callback == 'function'){
+						animation.callback();
+						}
+					}
+				}
+			},
+		back : function(animation, time, delta, animKey){
+			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
+			if(time > animation.nextUpdate){
+				app.u.dump("Back anim frame");
+				app.u.dump(animation.currFrame);
+				animation.nextUpdate += animation.frameDur;
+				animation.currFrame = (animation.currFrame-1);
+				if(animation.currFrame >=0){
+					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
+					animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
+					}
+				else {
+					animation.currFrame = 0;
+					app.ext.tools_animation.u.stopAnim(animKey);
+					if(animation.callback && typeof animation.callback == 'function'){
+						animation.callback();
+						}
+					}
+				}
+			},
+		},
+	
+	animCallbacks : {
+		
+		},
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
@@ -79,18 +153,26 @@ var tools_animation = function() {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
-			update : function(animation, time, delta){
-				animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
-				if(time > animation.nextUpdate){
-					animation.nextUpdate += animation.frameDur;
-					animation.currFrame = (animation.currFrame+1) % animation.frameCount;
-					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
-					animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
-					}
-				},
+			//update : function(animation, time, delta){
+			//	
+			//	},
 			
-			startAnim : function(animation){
+			startAnim : function(animation, params){
+				params = params || {};
 				if(app.ext.tools_animation.vars.anims[animation]){
+					if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
+						params.animFunc = app.ext.tools_animation.animations[params.animFunc];
+						}
+					
+					if(params.start){
+						params.currFrame = params.start;
+						delete params.start;
+						}
+					
+					for(var p in params){
+						app.ext.tools_animation.vars.anims[animation][p] = params[p];
+					}
+				
 					app.ext.tools_animation.aq[animation] = app.ext.tools_animation.vars.anims[animation];
 					}
 				else {
@@ -113,7 +195,7 @@ var tools_animation = function() {
 					typeof params.y !== 'undefined' ){
 					var animation = {
 						$tag : $tag,
-						currFrame : 0,
+						currFrame : params.startFrame || 0,
 						frameCount : params.frameCount,
 						imgsrc : params.imgsrc,
 						frameDur : params.frameDur || 100,
@@ -123,6 +205,14 @@ var tools_animation = function() {
 						xGap : params.xGap || 0,
 						y : params.y
 						};
+						
+					if(params.animFunc && typeof params.animFunc == 'function'){
+						animation.animFunc = params.animFunc;
+						}
+					else if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
+						animation.animFunc = app.ext.tools_animation.animations[params.animFunc];
+						}
+					
 					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
 					animation.$tag.css('background', 'url('+animation.imgsrc+') no-repeat '+(-1*xpos)+'px '+(-1*animation.y)+'px');
 						
@@ -144,7 +234,8 @@ var tools_animation = function() {
 				
 				//Run the animations
 				for(var anim in app.ext.tools_animation.aq){
-					app.ext.tools_animation.u.update(app.ext.tools_animation.aq[anim], newTime, delta);
+					//app.ext.tools_animation.u.update(app.ext.tools_animation.aq[anim], newTime, delta);
+					app.ext.tools_animation.aq[anim].animFunc(app.ext.tools_animation.aq[anim], newTime, delta, anim);
 					}
 				
 				//Update an report metrics
