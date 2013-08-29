@@ -251,8 +251,8 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='kpiTab' onClick="navigateTo('#:kpi');">
 				<span class='text'>KPI</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="kpi?animFunc=fwd&start=0" ></span>
-				<span class='animIcon' data-animation="kpi?imgsrc=app-admin/images/header_anime/kpi_sprite.png&frameCount=15&startFrame=14&width=41&height=32&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="kpi?animFunc=loop&start=0" data-animation-mouseout="kpi?animFunc=stop&animCallback=goToFirstFrame" ></span>
+				<span class='animIcon' data-animation="kpi?imgsrc=app-admin/images/header_anime/kpi_sprite.png&frameCount=33&startFrame=0&width=41&height=32&xGap=5&x1=70&y=0&frameDur=60" ></span>
 			</li>
 			<li class='utilitiesTab' onClick="navigateTo('#:utilities');">
 				<span class='text'>Utilities</span>

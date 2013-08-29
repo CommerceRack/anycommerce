@@ -89,7 +89,7 @@ var tools_animation = function() {
 		loop : function(animation, time, delta, animKey){
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
-				animation.nextUpdate += animation.frameDur;
+				animation.nextUpdate = time + animation.frameDur;
 				animation.currFrame = (animation.currFrame+1) % animation.frameCount;
 				var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
 				animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
@@ -98,7 +98,7 @@ var tools_animation = function() {
 		fwd : function(animation, time, delta, animKey){
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
-				animation.nextUpdate += animation.frameDur;
+				animation.nextUpdate = time + animation.frameDur;
 				animation.currFrame = (animation.currFrame+1);
 				if(animation.currFrame < animation.frameCount){
 					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
@@ -116,7 +116,7 @@ var tools_animation = function() {
 		back : function(animation, time, delta, animKey){
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
-				animation.nextUpdate += animation.frameDur;
+				animation.nextUpdate = time + animation.frameDur;
 				animation.currFrame = (animation.currFrame-1);
 				if(animation.currFrame >=0){
 					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
