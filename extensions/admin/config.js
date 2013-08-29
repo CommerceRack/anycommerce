@@ -1175,10 +1175,10 @@ $D.dialog('open');
 						$panel.attr('data-couponcode',couponCode);
 						$('form',$panel)
 							.append("<input type='hidden' name='_macrobuilder' value='admin_config|adminConfigMacro' \/><input type='hidden' name='_tag/macrocmd' value='COUPON/INSERT' \/><input type='hidden' name='_tag/extension' value='admin' \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>")
-							.find(".applyDatepicker").datepicker({
+							.find(".applyDatepicker").datetimepicker({
 								changeMonth: true,
 								changeYear: true,
-								dateFormat : '@'
+								dateFormat : 'yymmddHHmm00'
 								})
 							.change(function(){$(this).val(parseInt($(this).val()) / 1000)}) //strip milliseconds from epoch
 							.end()
