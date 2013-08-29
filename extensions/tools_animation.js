@@ -99,6 +99,7 @@ var tools_animation = function() {
 			animation.nextUpdate = animation.nextUpdate || time + animation.frameDur;
 			if(time > animation.nextUpdate){
 				animation.nextUpdate += animation.frameDur;
+				app.u.dump(animation.nextUpdate);
 				animation.currFrame = (animation.currFrame+1);
 				if(animation.currFrame < animation.frameCount){
 					var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
@@ -108,7 +109,7 @@ var tools_animation = function() {
 					animation.currFrame = animation.frameCount-1;
 					app.ext.tools_animation.u.stopAnim(animKey);
 					if(animation.animCallback && typeof animation.animCallback == 'function'){
-						animation.animCallback();
+						animation.animCallback(animation);
 						}
 					}
 				}
@@ -126,20 +127,26 @@ var tools_animation = function() {
 					animation.currFrame = 0;
 					app.ext.tools_animation.u.stopAnim(animKey);
 					if(animation.animCallback && typeof animation.animCallback == 'function'){
-						animation.animCallback();
+						animation.animCallback(animation);
 						}
 					}
 				}
 			},
+		stop : function(animation, time, delta, animKey){
+			app.ext.tools_animation.u.stopAnim(animKey);
+			if(animation.animCallback && typeof animation.animCallback == 'function'){
+				animation.animCallback(animation);
+				}
+			} 
 		},
 	
 	animCallbacks : {
-		goToLastFrame : function(){
+		goToLastFrame : function(animation){
 			animation.currFrame = (animation.currFrame-1);
 			var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
 			animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
 			},
-		goToFirstFrame : function(){
+		goToFirstFrame : function(animation){
 			animation.currFrame = 0;
 			var xpos = animation.x1 + animation.currFrame * (animation.width + animation.xGap);
 			animation.$tag.css('background-position', (-1*xpos)+'px '+(-1*animation.y)+'px');
@@ -181,7 +188,6 @@ var tools_animation = function() {
 					for(var p in params){
 						app.ext.tools_animation.vars.anims[animation][p] = params[p];
 					}
-					app.u.dump(app.ext.tools_animation.vars.anims[animation]);
 				
 					app.ext.tools_animation.aq[animation] = app.ext.tools_animation.vars.anims[animation];
 					}

@@ -215,14 +215,14 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='sitesTab' onClick="navigateTo('#:sites');">
 				<span class='text'>Sites</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="sites?animFunc=fwd" data-animation-mouseout="sites?animFunc=back"></span>
-				<span class='animIcon' data-animation="sites?imgsrc=app-admin/images/header_anime/sites_sprite.png&frameCount=16&startFrame=0&width=42&height=32&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="sites?animFunc=loop" data-animation-mouseout="sites?animFunc=stop&animCallback=goToFirstFrame"></span>
+				<span class='animIcon' data-animation="sites?imgsrc=app-admin/images/header_anime/sites_sprite.png&frameCount=16&startFrame=0&width=42&height=32&xGap=5&x1=70&y=0&frameDur=100" ></span>
 			</li>
 			<li class='productsTab' onClick="navigateTo('#:product');">
 				<span class='text'>Products</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="products?animFunc=fwd" data-animation-mouseout="products?animFunc=back"></span>
-				<span class='animIcon' data-animation="products?imgsrc=app-admin/images/header_anime/products_sprite.png&frameCount=15&startFrame=0&width=45&height=39&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="products?animFunc=loop" data-animation-mouseout="products?animFunc=stop&animCallback=goToFirstFrame"></span>
+				<span class='animIcon' data-animation="products?imgsrc=app-admin/images/header_anime/products_sprite.png&frameCount=15&startFrame=0&width=45&height=39&xGap=5&x1=70&y=0&frameDur=100" ></span>
 			</li>
 			<li class='ordersTab' onClick="navigateTo('#:orders');">
 				<span class='text'>Orders</span>
