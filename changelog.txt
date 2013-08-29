@@ -11,9 +11,11 @@ ADMIN
  -> domain manager out of beta
  -> new 'sites' interface
  -> new 'edit' site for domain apps
- -> but fixes in campaign/ebay template download.
+ -> bug fixes in campaign/ebay template download.
  -> amz thesaurus bug fixes.
  -> bug fixes in supplier interface (handling)
+ -> bug fix in coupons begin/expire
+
 
 201332
 ADMIN

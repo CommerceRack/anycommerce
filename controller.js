@@ -2996,6 +2996,7 @@ $tmp.empty().remove();
 			$tag.append(myDate.getFullYear()+"/"+((myDate.getMonth()+1) < 10 ? '0'+(myDate.getMonth()+1) : (myDate.getMonth()+1))+"/"+(myDate.getDate() < 10 ? '0'+myDate.getDate() : myDate.getDate())+" "+(myDate.getHours() < 10 ? '0'+myDate.getHours() : myDate.getHours())+":"+(myDate.getMinutes() < 10 ? '0'+myDate.getMinutes() : myDate.getMinutes())); //+":"+myDate.getSeconds() pulled seconds in 201307. really necessary?
 			},
 
+
 		unix2mdy : function($tag,data)	{
 			$tag.text(app.u.unix2Pretty(data.value,data.bindData.showtime))
 			},
