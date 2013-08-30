@@ -6,8 +6,8 @@
 		"searchLink":{"KEYWORDS":"Nike","fields":["prod_mfg"]}
 	},
 	{
-		"src":"banners/2013/back_to_school_banner_2013.png",
-		"alt":"Back to School 2013 is Here...Get Your Cubs Gear!",
+		"src":"banners/2013/2013_garage_sale_banner_v2.jpg",
+		"alt":"2013 Inventory Clearance + FREE Shipping on Everything!",
 		"title":"",
 		"catLink":""
 	},
@@ -18,10 +18,10 @@
 		"catLink":".on-field-gear"
 	},
 	{
-		"src":"banners/2013/back_to_school_labels_2013_banner.jpg",
-		"alt":"Label Help You to Never Lose Anything!",
+		"src":"banners/2013/back_to_school_banner_2013.png",
+		"alt":"Back to School 2013 is Here...Get Your Cubs Gear!",
 		"title":"",
-		"prodLink":"MLDLD"
+		"prodLink":""
 	},
 	{
 		"src":"banners/2012/institutional_clothing_homepage_banner.png",
