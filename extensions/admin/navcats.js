@@ -84,16 +84,16 @@ var admin_navcats = function() {
 						L = subcats.length,
 						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition), //list of 'open' categories from localStorage.
 						NOL = navcatObj.length;
-					
+
+//					app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
 					for(var i = 0; i < L; i += 1)	{
-	//					app.u.dump(" -> subcats[i]: "+subcats[i]);
+						app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
 						var
 							$cat = vars.fetchOnly ? '' : app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
 							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
 						
 						if(vars.fetchOnly)	{}
 						else	{$container.append($cat)}
-						
 
 						var _tag = {
 							'path' : subcats[i],
@@ -102,15 +102,16 @@ var admin_navcats = function() {
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
+									
 									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
-//									app.u.dump(" -> path: "+rd.path);
+									app.u.dump(" -> callback path: "+rd.path);
 									//loop through the list of 'open' (from DPS) and open them.
-									for(var ni = 0; ni < NOL; ni += 1)	{
-										if(navcatObj[ni].indexOf(rd.path) === 0)	{
-											app.u.dump(" Match! "+rd.path);
-											$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click');
-											}
-										
+										for(var ni = 0; ni < NOL; ni += 1)	{
+//											app.u.dump(" -> $.inArray("+subcats[i]+",navcatObj): "+$.inArray(subcats[i],navcatObj));
+											if($.inArray(subcats[i],navcatObj) >= 0)	{
+												app.u.dump(" Match! "+rd.path);
+												$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click',{'isInit':true});
+												}
 										}
 									}
 								},
@@ -154,6 +155,7 @@ The delegation for the 'open' and the 'remember this for next time' need to be s
 
 */
 			getTree : function(mode,vars){
+				app.u.dump("BEGIN admin_navcats.u.getTree");
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 				//set some defaults.
@@ -161,9 +163,14 @@ The delegation for the 'open' and the 'remember this for next time' need to be s
 					if(vars.templateID)	{
 						$tree.showLoading({'message':'Fetching category tree'});
 
-var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
-app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
+						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
+						app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
 
+
+						var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
+						$ul.appendTo($tree);
+
+						app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
 						//all required params are present/set. proceed.
 						app.model.addDispatchToQ({
 							'detail':'more',
@@ -177,8 +184,6 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 										$tree.anymessage({'message':rd});
 										}
 									else	{
-										var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
-										$ul.appendTo($tree);
 										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
 										}
 									},
@@ -202,7 +207,8 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 				},
 			
 			handleCatTreeDelegation : function($tree)	{
-				$tree.on('click',function(e){
+				$tree.on('click',function(e,p){
+					p = p || {}; //
 					var $target = $(e.target);
 					if($target.data('app-action'))	{
 //						app.u.dump(" -> $target.data('app-action'): "+$target.data('app-action'));
@@ -213,7 +219,7 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 						if(actionExtension && actionFunction)	{
 							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
 //execute the app event.
-								app.ext[actionExtension].e[actionFunction]($target);
+								app.ext[actionExtension].e[actionFunction]($target,p);
 								}
 							else	{
 								$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
@@ -231,10 +237,14 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 
 		e : {
 			
-			
-			navcatSubsShow : function($ele)	{
-//				app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
-//
+//triggered when a category is clicked opened or closed.
+//will show/load or hide the category as needed.  Will also update DPS so that the next time the user comes into the category editor, 
+//anything that was open will auto-open in the current session.
+//p.isInit is passed in on the initial load in order to skip the DPS update, which isn't needed because the click is triggered by the app (to reopen open cats)
+			navcatSubsShow : function($ele,p)	{
+				app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
+//				app.u.dump(" -> p: "); app.u.dump(p);
+					p = p || {};
 					var
 						$subcats = $ele.closest('li').find("[data-app-role='categories']"),
 						path = $ele.closest('li').data('catsafeid'),
@@ -242,23 +252,33 @@ app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the
 					
 					if(path)	{
 						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+//						app.u.dump(' -> path: '+path);
 
+// a function for adding or removing a category from the list of what's open by default.
+// On the initial load, p.isInit will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
 function handleDPS(cmd)	{
-	var index = $.inArray(path,navcatObj);
-	app.u.dump(" -> cmd: "+cmd);
-	app.u.dump(" -> index: "+index);
-	if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{app.u.dump("NO ACTION NECESSARY FOR "+path);} //do nothing. array already reflects cmd.
-	else if(cmd == 'remove')	{
-		app.u.dump("REMOVE "+path);
-		navcatObj.splice(index,1);
-		app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
-		}
-	else if(cmd == 'add' && index < 0){
-		navcatObj.push(path);
-		app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
-		}
+	if(p.isInit)	{}
 	else	{
-		app.u.dump("handleDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
+	
+		var index = $.inArray(path,navcatObj);
+	//	app.u.dump(" -> cmd: "+cmd);
+	//	app.u.dump(" -> index: "+index);
+		if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{
+			//do nothing. array already reflects cmd.
+	//		app.u.dump("NO ACTION NECESSARY FOR "+path);
+			} 
+		else if(cmd == 'remove')	{
+	//		app.u.dump("REMOVE "+path);
+			navcatObj.splice(index,1);
+			app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+			}
+		else if(cmd == 'add' && index < 0){
+			navcatObj.push(path);
+			app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+			}
+		else	{
+			app.u.dump("handleDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
+			}
 		}
 //	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
 	}
