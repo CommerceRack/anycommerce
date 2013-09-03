@@ -16,7 +16,13 @@
 
 ************************************************************** */
 
+/*
 
+on the navcat object, save a 'data' for the array of 'whats checked'.  Then, when a tree is opened or closed, look at that array to see what should be prechecked.
+also, add a button for 'show all the checked categories'.
+
+
+*/
 
 var admin_navcats = function() {
 	var theseTemplates = new Array('catTreeItemTemplate');
@@ -87,7 +93,7 @@ var admin_navcats = function() {
 
 //					app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
 					for(var i = 0; i < L; i += 1)	{
-						app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
+//						app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
 						var
 							$cat = vars.fetchOnly ? '' : app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
 							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
@@ -97,31 +103,27 @@ var admin_navcats = function() {
 
 						var _tag = {
 							'path' : subcats[i],
-							'callback': vars.fetchOnly ? '' : function(rd){
+							'callback': vars.fetchOnly ? false : function(rd){
 								if(app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									
 									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
-									app.u.dump(" -> callback path: "+rd.path);
-									//loop through the list of 'open' (from DPS) and open them.
-										for(var ni = 0; ni < NOL; ni += 1)	{
-//											app.u.dump(" -> $.inArray("+subcats[i]+",navcatObj): "+$.inArray(subcats[i],navcatObj));
-											if($.inArray(subcats[i],navcatObj) >= 0)	{
-												app.u.dump(" Match! "+rd.path);
-												$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click',{'isInit':true});
-												}
+//if the category is 'open' in DPS, trigger the click to show the subcats (which will already have been loaded in memory by now)
+										if($.inArray(rd.path,navcatObj) >= 0)	{
+//											app.u.dump(" Match! "+rd.path);
+											$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click',{'isInit':vars.isInit});
 										}
 									}
 								},
 							'datapointer':datapointer,
 							'jqObj':vars.fetchOnly ? '' : $cat}
-
+						
+//						app.u.dump(" -> typeof callback: "+typeof _tag.callback);
 					//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
 						if(app.model.fetchData(datapointer))	{
 							app.u.handleCallback(_tag);
-					//		$cat.anycontent({'datapointer':datapointer})
 							}
 						else	{
 							app.model.addDispatchToQ({
@@ -145,26 +147,27 @@ var admin_navcats = function() {
 
 /*
 This is what gets run to display a category tree.  
-	mode could be:  builder, selector
-	this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
-
-
-YO!
-The delegation for the 'open' and the 'remember this for next time' need to be separate events.  That way we can trigger them individually (specifically, we need to trigger just 'open' on initial load when loading DPS)
-
-
+this should only be run once within a 'selector' (meaning don't re-run this for each subcat set, use getSubcats)
+Params:
+	mode could be:  builder, chooser
+	vars:
+		navtree -> required. the root level category of this tree
+		templateID -> required. the template to be used for each category (list item)
+		safeIDs -> an array of safe id's. each of these will be 'checked' (enabled, turned on, whatever)
+	
 */
 			getTree : function(mode,vars){
-				app.u.dump("BEGIN admin_navcats.u.getTree");
+//				app.u.dump("BEGIN admin_navcats.u.getTree");
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
+
 				//set some defaults.
 				if(mode)	{
-					if(vars.templateID)	{
+					if(vars.templateID && vars.navtree)	{
 						$tree.showLoading({'message':'Fetching category tree'});
 
 						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
-						app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
+//						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
 
 
 						var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
@@ -175,7 +178,7 @@ The delegation for the 'open' and the 'remember this for next time' need to be s
 						app.model.addDispatchToQ({
 							'detail':'more',
 							'_cmd': 'adminNavcatDetail',
-							'path' : '.',
+							'path' : vars.navtree,
 							'navtree' : 'PRT00'+app.vars.partition,
 							'_tag' : {
 								'callback':function(rd){
@@ -187,7 +190,7 @@ The delegation for the 'open' and the 'remember this for next time' need to be s
 										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
 										}
 									},
-								'datapointer':'adminNavList'
+								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.navtree
 								}
 							},'mutable');
 
