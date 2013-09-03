@@ -10,7 +10,6 @@ body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#56565
 
 img {border:0px;}
 
-
 /*
 items that are floated may cause their containers to 'shrink'. apply this class to the container
 class can also be applied to a 1 item per row list.
@@ -37,7 +36,6 @@ class can also be applied to a 1 item per row list.
 
 .valignTop	{vertical-align:top;}
 .valignMiddle	{vertical-align:middle;}
-
 
 .displayNone,
 .labelsAsBreaks label.displayNone,
