@@ -70,7 +70,7 @@ var admin_navcats = function() {
 		renderFormats : {
 			openSubcatsIcon : function($tag,data)	{
 				if(data.value['@subcategories'].length)	{
-					$tag.attr('data-app-action','admin_navcats|navcatSubsShow').removeClass('opacity50').addClass('pointer');
+					$tag.attr('data-app-click','admin_navcats|navcatSubsShow').removeClass('opacity50').addClass('pointer');
 					}
 				}
 			}, //renderFormats
@@ -83,6 +83,7 @@ var admin_navcats = function() {
 //vars MUST contain templateID.
 //vars.fetchonly allows for getTree to 'get' all the data, but not display it right away. used when tree initially loads.
 			getSubcats : function(subcats,$container,vars)	{
+				var r = 0; //what is returned. will be # of dispatches added to Q.
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
 				
@@ -90,6 +91,7 @@ var admin_navcats = function() {
 						L = subcats.length,
 						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition), //list of 'open' categories from localStorage.
 						NOL = navcatObj.length;
+						
 
 //					app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
 					for(var i = 0; i < L; i += 1)	{
@@ -99,11 +101,16 @@ var admin_navcats = function() {
 							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
 						
 						if(vars.fetchOnly)	{}
-						else	{$container.append($cat)}
+						else	{
+							$container.append($cat);
+							var paths = $container.closest("[data-app-role='categoryTree']").data('paths') || []; //used to 'precheck' items in list.
+//							app.u.dump(" -> safeID's has a length"); app.u.dump(paths);
+							}
 
 						var _tag = {
 							'path' : subcats[i],
 							'callback': vars.fetchOnly ? false : function(rd){
+								$('.wait',$container).hide();
 								if(app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
@@ -111,10 +118,15 @@ var admin_navcats = function() {
 									
 									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
 //if the category is 'open' in DPS, trigger the click to show the subcats (which will already have been loaded in memory by now)
-										if($.inArray(rd.path,navcatObj) >= 0)	{
-//											app.u.dump(" Match! "+rd.path);
-											$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-action='admin_navcats|navcatSubsShow']").first().trigger('click',{'isInit':vars.isInit});
+									if($.inArray(rd.path,navcatObj) >= 0)	{
+										$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-click='admin_navcats|navcatSubsShow']").first().trigger('click',{'skipDPSset':vars.skipDPSset});
 										}
+//if the category is present in the paths array, that means it should be 'checked'.
+									if($.inArray(rd.path,paths) >= 0)	{
+										app.u.dump("Match! "+rd.path);
+										$(":checkbox[name='"+rd.path+"']",$cat).trigger('click');
+										}
+
 									}
 								},
 							'datapointer':datapointer,
@@ -126,6 +138,7 @@ var admin_navcats = function() {
 							app.u.handleCallback(_tag);
 							}
 						else	{
+							r++;
 							app.model.addDispatchToQ({
 								'path':subcats[i],
 								'detail':'more',
@@ -153,7 +166,7 @@ Params:
 	vars:
 		navtree -> required. the root level category of this tree
 		templateID -> required. the template to be used for each category (list item)
-		safeIDs -> an array of safe id's. each of these will be 'checked' (enabled, turned on, whatever)
+		paths -> an array of safe id's. each of these will be 'checked' (enabled, turned on, whatever)
 	
 */
 			getTree : function(mode,vars){
@@ -169,7 +182,9 @@ Params:
 						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
 //						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
 
-
+//						var $controls = $("<div \/>").addClass("ui-widget ui-corner-top ui-widget-header smallPadding alignRight clearfix").appendTo($tree);
+//						$controls.append($("<button \/>").text('Expand Checked').button().attr('data-app-click','admin_navcats|navcatsCheckedShow'));
+						
 						var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
 						$ul.appendTo($tree);
 
@@ -188,6 +203,8 @@ Params:
 										}
 									else	{
 										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
+//adds .edited class when inputs change. last so tracking doesn't start till after 'checked' is added.
+										app.ext.admin.u.applyEditTrackingToInputs($tree); 
 										}
 									},
 								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.navtree
@@ -195,7 +212,7 @@ Params:
 							},'mutable');
 
 						app.model.dispatchThis('mutable');
-						app.ext.admin_navcats.u.handleCatTreeDelegation($tree);
+						app.ext.admin_navcats.u.handleCatTreeDelegation($tree); //handles click events
 						}
 					else	{
 						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] not set or invalid.','gMessage':true});
@@ -213,11 +230,11 @@ Params:
 				$tree.on('click',function(e,p){
 					p = p || {}; //
 					var $target = $(e.target);
-					if($target.data('app-action'))	{
-//						app.u.dump(" -> $target.data('app-action'): "+$target.data('app-action'));
+					if($target.data('app-click'))	{
+//						app.u.dump(" -> $target.data('app-click'): "+$target.data('app-click'));
 						var
-							actionExtension = $target.data('app-action').split('|')[0],
-							actionFunction =  $target.data('app-action').split('|')[1];
+							actionExtension = $target.data('app-click').split('|')[0],
+							actionFunction =  $target.data('app-click').split('|')[1];
 						
 						if(actionExtension && actionFunction)	{
 							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
@@ -229,21 +246,35 @@ Params:
 								}
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, app-action ["+$target.data('app-action')+"] is invalid.",'gMessage':true})
+							$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
 							}
 						
 						}
 					});
+				},
+			
+			getPathsArrayFromTree : function($tree)	{
+				var arr = {}; //what is returned. either an object where key = safeid/path and value = 1/0 OR false, if $tree doesn't validate.
+				if($tree instanceof jQuery)	{
+					$(":checkbox.edited",$tree).each(function(){
+						arr[$(this).attr('name')] = $(this).is(':checked') ? 1 : 0;
+						});
+					}
+				else	{
+					arr = false;
+					$('#globalMessaging').anymessage({'message':'In admin_navcats.u.getPathsArrayFromTree, $tree is not a valid jquery instance.','gMessage':true});
+					}
+				return arr;
 				}
 			
 			}, //u [utilities]
-
+//This extension uses a delegated event model, so each 'event' below does NOT need an on() declared. 
 		e : {
 			
 //triggered when a category is clicked opened or closed.
 //will show/load or hide the category as needed.  Will also update DPS so that the next time the user comes into the category editor, 
 //anything that was open will auto-open in the current session.
-//p.isInit is passed in on the initial load in order to skip the DPS update, which isn't needed because the click is triggered by the app (to reopen open cats)
+//p.skipDPSset is passed in on the initial load in order to skip the DPS update, which isn't needed because the click is triggered by the app (to reopen open cats)
 			navcatSubsShow : function($ele,p)	{
 				app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
 //				app.u.dump(" -> p: "); app.u.dump(p);
@@ -258,9 +289,9 @@ Params:
 //						app.u.dump(' -> path: '+path);
 
 // a function for adding or removing a category from the list of what's open by default.
-// On the initial load, p.isInit will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
+// On the initial load, p.skipDPSset will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
 function handleDPS(cmd)	{
-	if(p.isInit)	{}
+	if(p.skipDPSset)	{}
 	else	{
 	
 		var index = $.inArray(path,navcatObj);
@@ -318,6 +349,18 @@ function handleDPS(cmd)	{
 					else	{$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, unable to ascertain path/catsafeid.",'gMessage':true})}
 
 				}, //navcatSubsShow
+
+			
+			navcatsCheckedShow : function($btn)	{
+				//will open all the categories that are checked.
+var $tree = $btn.closest("[data-app-role='categoryTree']");
+var paths = $tree.data('paths') || []; //used to 'precheck' items in list.
+var numDispatches = app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:true}); //get all the 'open' category data handy.
+setTimeout(function(){
+	 app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:false}); //get all the 'open' category data handy.
+	},3000);
+app.model.dispatchThis('mutable');
+				}
 			
 			
 			} //e [app Events]

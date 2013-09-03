@@ -2,12 +2,13 @@
 
 
 <ul>
-<li id='catTreeItemTemplate' class='marginLeft'>
+<li id='catTreeItemTemplate'>
 	<div class='clearfix marginTop'>
-		<label><input type='checkbox' class='applyAnycb floatLeft marginRight' data-bind='var:category(id); format:assignAttribute; attribute:name; valuePretext:navcat_;' /></label>
+		<span class='wait marginLeft'></span>
+		<label><input type='checkbox' class='floatLeft marginRight' data-bind='var:category(path); format:assignAttribute; attribute:name;' /></label>
 		<div class='ui-icon ui-icon-circle-triangle-e floatLeft marginRight opacity50' data-bind="useParentData:true;extension:admin_navcats;format:openSubcatsIcon;"></div>
 		<div class='floatLeft marginLeft'>
-			<span data-bind='var: category(pretty); format:text;'></span> (	<span data-bind='var: category(@products.length); format:text; pretext:product: ; showZero: true;'></span> | <span data-bind='var: category(@subcategories.length); format:text; pretext:subcategories: ; showZero:true;'></span> )
+			<span data-bind='var: category(pretty); format:text;'></span> (product:	<span data-bind='var: category(@products.length); format:text; defaultVal:0; showZero:true;'></span> | subcategories: <span data-bind='var: category(@subcategories.length); format:text; showZero:true;'></span> )
 		</div>
 	</div>	
 	<ul data-app-role='categories' data-loadstemplate='catTreeItemTemplate'></ul><!-- doesn't use a databind because it isn't rendered till some other action (ex: a click) occurs -->

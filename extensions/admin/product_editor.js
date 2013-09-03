@@ -29,7 +29,7 @@ var admin_prodEdit = function() {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images','navigation'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		flexTypes : {
 			'asin' : {'type':'text'},
 			'textbox' : { 'type' : 'text'},
@@ -136,7 +136,7 @@ var admin_prodEdit = function() {
 				for(var i = 0; i < L; i += 1)	{
 					var panelid = panels[i].id;
 //					app.u.dump(" -> panelid: "+panelid);
-					if(app.ext.admin_prodEdit.vars.appPanels.indexOf(panelid) > -1)	{
+					if($.inArray(panelid,app.ext.admin_prodEdit.vars.appPanels) > -1)	{
 						$target.append(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 						} //this/these panels are now all app-based.
 					else	{
@@ -159,7 +159,7 @@ var admin_prodEdit = function() {
 
 	a : {
 
-
+/*
 		showProductManager : function($target)	{
 			
 
@@ -247,7 +247,7 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 
 			
 			},
-
+*/
 		showCreateProductDialog : function(){
 			var $modal = $('#createProductDialog');
 			if($modal.length < 1)	{
@@ -374,6 +374,17 @@ $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
 					'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
 					},'mutable');
 				}
+
+
+app.model.addDispatchToQ({
+	'_cmd':'adminProductNavcatList',
+	'pid':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductNavcatList|'+pid,
+		'pid':pid
+		}
+	},'mutable');
+
 
 app.model.addDispatchToQ({
 	'_cmd':'adminProductDetail',
@@ -1078,6 +1089,11 @@ app.model.dispatchThis('mutable');
 				else if(panelid == 'images')	{
 					r = this.getImagesPanelContents(pid,panelid);
 					}
+				else if(panelid == 'navigation')	{
+					r = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate_navigation',{'id':'panel_'+panelid,'panelid':panelid,'pid':pid});
+					app.ext.admin.u.handleAppEvents(r); //before getTree prepend because the tree code uses delegated events. The save button uses old app events tho.
+					$('fieldset',r).prepend(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data['adminProductNavcatList|'+pid]['@PATHS']}));
+					}
 				else	{
 					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
 					app.ext.admin.u.handleAppEvents(r);
@@ -1295,16 +1311,23 @@ app.model.dispatchThis('mutable');
 					});
 				}, //enterSyndicationSpecifics
 
-			"saveProdImagesPanel" : function($btn)	{
-				$btn.button();
-				$btn.off('click.saveProdImagesPanel').on('click.saveProdImagesPanel',function(event){
-					event.preventDefault();
 
+
+
+//executed from the save button in the website navigation panel of the product editor.
+			adminProductMacroNavcats : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminProductMacroNavcats').on('click.adminProductMacroNavcats',function(event){
+					event.preventDefault();
+//create an object of safe id's w/ value of 1/0 based on checked/unchecked. ONLY builds cats that have changed.
+var navcats = app.ext.admin_navcats.u.getPathsArrayFromTree($btn.closest("form"));
 var $panel = $btn.closest(".panelContents");
+var pid = $btn.closest(".productPanel").data('pid');
+$panel.showLoading({'message':'Updating Website Navigation for '+pid});
 
 var cmdObj = {
-	'_cmd' : 'adminProductUpdate',
-	'pid' : $('#panel_images').data('pid'),
+	'_cmd' : 'adminProductMacro',
+	'pid' : pid,
 	'@updates' : new Array(), //used for sku images
 	'%attribs' : {}, //used for prod images
 	'_tag' : {
@@ -1314,55 +1337,87 @@ var cmdObj = {
 		}
 	}
 
-
-
-//sku-specific imagery.
-$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$panel).each(function(){
-	var sku = $(this).data('sku');
-	var images = "";
-	var $images = $('img',$(this));
-//	app.u.dump($images);
-	for(i = 0; i < 3; i += 1)	{
-		if($images[i])	{
-			images += "&zoovy:prod_image"+(i + 1)+"="+$($images[i]).data('filename');
-			}
-		else	{
-			images += "&zoovy:prod_image"+(i + 1)+"="; //set to blank to 'erase' anything that may have been deleted.
-			}
-		}
-	
-	cmdObj['@updates'].push("SET-SKU?SKU="+sku+images);
-//	app.u.dump(" -> sku: "+sku);
-
-	});
-
-//Generic product imagery
-var imgIndex = 0;
-var $prodImageUL = $("[data-app-role='prodImagesContainer']",$panel);
-$("[data-app-role='prodImagesContainer'] img",$panel).each(function(){
-	var $img = $(this);
-	imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images were present.
-	if($img.data('filename'))	{
-		//image either an original OR added w/ media lib.
-		cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
-		}
-	else	{
-		//this is a 'new' image, that was dropped in.
-		}
-	
-	})
-//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
-if(imgIndex < ($prodImageUL.children().length))	{
-	var L = $prodImageUL.children().length - imgIndex;
-	for(var i = 0; i <= L; i += 1)	{
-		imgIndex++; //increment before to pick up after we left off.
-		cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
-		}
+for(var index in navcats)	{
+	cmdObj['@updates'].push("NAVCAT-"+(navcats[index] ? 'INSERT' : 'DELETE')+"?path="+index);
 	}
-//app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-
+//					app.u.dump(" -> updates: "); app.u.dump(updates);
 app.model.addDispatchToQ(cmdObj,'immutable');
 app.model.dispatchThis('immutable');
+
+					
+					});
+				},
+
+
+
+			"saveProdImagesPanel" : function($btn)	{
+				$btn.button();
+				$btn.off('click.saveProdImagesPanel').on('click.saveProdImagesPanel',function(event){
+					event.preventDefault();
+
+					var $panel = $btn.closest(".panelContents");
+					
+					var cmdObj = {
+						'_cmd' : 'adminProductUpdate',
+						'pid' : $('#panel_images').data('pid'),
+						'@updates' : new Array(), //used for sku images
+						'%attribs' : {}, //used for prod images
+						'_tag' : {
+							'callback' : 'showMessaging',
+							'message' : "Your changes have been saved",
+							jqObj : $panel
+							}
+						}
+					
+					
+					
+					//sku-specific imagery.
+					$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$panel).each(function(){
+						var sku = $(this).data('sku');
+						var images = "";
+						var $images = $('img',$(this));
+					//	app.u.dump($images);
+						for(i = 0; i < 3; i += 1)	{
+							if($images[i])	{
+								images += "&zoovy:prod_image"+(i + 1)+"="+$($images[i]).data('filename');
+								}
+							else	{
+								images += "&zoovy:prod_image"+(i + 1)+"="; //set to blank to 'erase' anything that may have been deleted.
+								}
+							}
+						
+						cmdObj['@updates'].push("SET-SKU?SKU="+sku+images);
+					//	app.u.dump(" -> sku: "+sku);
+					
+						});
+					
+					//Generic product imagery
+					var imgIndex = 0;
+					var $prodImageUL = $("[data-app-role='prodImagesContainer']",$panel);
+					$("[data-app-role='prodImagesContainer'] img",$panel).each(function(){
+						var $img = $(this);
+						imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images were present.
+						if($img.data('filename'))	{
+							//image either an original OR added w/ media lib.
+							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
+							}
+						else	{
+							//this is a 'new' image, that was dropped in.
+							}
+						
+						})
+					//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
+					if(imgIndex < ($prodImageUL.children().length))	{
+						var L = $prodImageUL.children().length - imgIndex;
+						for(var i = 0; i <= L; i += 1)	{
+							imgIndex++; //increment before to pick up after we left off.
+							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
+							}
+						}
+					//app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+					
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					app.model.dispatchThis('immutable');
 
 					});
 				},
@@ -1427,6 +1482,10 @@ app.model.dispatchThis('immutable');
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
 					});
 				}, //webPageEditor
+
+
+
+
 
 			serializeAndAdminProductUpdate : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");

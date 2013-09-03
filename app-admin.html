@@ -418,7 +418,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 		<li><a href='#' onClick='app.model.addDispatchToQ({"_cmd":"adminNavTreeList"},"mutable"); app.model.dispatchThis("mutable"); return false;'>adminNavTreeList</a></li>	
 
-		<li><a href='#' onClick="$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.'})); return false;">navTree</a></li>
+		<li><a href='#' onClick="$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':['.kids','.outdoor.for_him']})); return false;">navTree</a></li>
 
 		<li><a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor('MODEL07');; return false;">edit model07</a></li>
 		<li><a href='#' onClick="app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),'MODEL07');; return false;">model07 variations </a></li>
