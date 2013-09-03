@@ -829,7 +829,8 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			return responseData.orderid;
 			}, //handleResponse_cartOrderCreate
 	
-	
+/*
+** 201334 --> removed.  path is now returned on the root level.
 //no special error handling or anything like that.  this is just here to get the category safe id into the response for easy reference.	
 		handleResponse_appNavcatDetail : function(responseData)	{
 //			app.u.dump("BEGIN model.handleResponse_appNavcatDetail");
@@ -860,7 +861,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			app.model.handleResponse_defaultAction(responseData);
 			return responseData.id;
 			}, //handleResponse_appNavcatDetail
-
+*/
 /*
 It is possible that multiple requests for page content could come in for the same page at different times.
 so to ensure saving to appPageGet|.safe doesn't save over previously requested data, we extend it the ['%page'] object.
