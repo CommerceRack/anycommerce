@@ -60,8 +60,7 @@ var admin_prodEdit = function() {
 				'rss' : {'title':'SEO and RSS Tools','isLegacy':false},
 				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':true}
 				},
-	//when a panel is converted to app, add it here and add a template. 
-			appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+
 			flexTypes : {
 				'asin' : {'type':'text'},
 				'textbox' : { 'type' : 'text'},
@@ -112,76 +111,6 @@ var admin_prodEdit = function() {
 					}
 				},
 	
-			showMangementCats : {
-				onSuccess : function(_rtag)	{
-					$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
-					var $results = $(app.u.jqSelector('#',_rtag.targetID)),
-					$a, //recycled.
-	//cats is an array of keys (management category names) used for sorting purposes.
-	//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
-					cats = Object.keys(app.data[_rtag.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
-	//				app.u.dump(cats);
-					for(var index in cats)	{
-						$a = $("<a \/>").attr('data-management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized'));
-	//In the app framework, it's not real practical to load several hundred product into memory at one time.
-	//so the list is opened in the main product area in a multipage format.
-							$a.click(function(){
-								var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')}),
-								$target = $('#productTabMainContent').empty().append($ul),
-	//convert to array and clean up extra comma's, blanks, etc.
-	//also, sort alphabetically.
-								csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')]).sort();
-	
-								app.ext.store_prodlist.u.buildProductList({
-									'csv': csv,
-									'parentID':'manageCatProdlist',
-									'loadsTemplate' : 'productListTableListTemplate',
-									'items_per_page' : 100
-									},$ul);
-								});
-						$a.wrap("<li>");
-						$results.append($a);
-						}
-					}
-				}, //showManagementCats
-	
-	//executed after the list of panels for a given product are received (in the product editor).
-	//Uses local storage to determine which panels to open and retrieve content for.
-	//panelData is an object with panel ids as keys and value TFU for whether or not so load/show the panel content.
-			loadAndShowPanels :	{
-				onSuccess : function(_rtag)	{
-	//				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
-	//the device preferences are how panels are open/closed by default.
-					var settings = app.ext.admin.u.dpsGet('admin_prodEdit','openPanel');
-	//				app.u.dump(" -> settings: "); app.u.dump(settings);
-					settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
-	//				app.u.dump(" -> _rtag.datapointer: "+_rtag.datapointer);
-					var pid = _rtag.pid;
-	//				app.u.dump(" -> pid: "+pid);
-					
-					var
-						$target = $('#productTabMainContent'),
-						panels = app.data['adminUIProductPanelList']['@PANELS'],
-						L = panels.length;
-					
-					$target.empty(); //removes loadingBG div and any leftovers.
-					for(var i = 0; i < L; i += 1)	{
-						var panelid = panels[i].id;
-	//					app.u.dump(" -> panelid: "+panelid);
-						if($.inArray(panelid,app.ext.admin_prodEdit.vars.appPanels) > -1)	{
-							$target.append(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
-							} //this/these panels are now all app-based.
-						else	{
-						//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
-							$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate',panels[i]));
-							}
-						if(settings && settings[panelid])	{
-							$('.panelHeader','#panel_'+panelid).click(); //open panel. This function also adds the dispatch.
-							}
-						}
-					app.ext.admin.u.dpsSet('admin_prodEdit',"openPanel",settings); //update the localStorage session var.
-					}
-				}
 			}, //callbacks
 
 
@@ -292,29 +221,7 @@ for(var index in panels)	{
 				app.ext.admin.u.dpsSet('admin_prodEdit',"openPanel",settings); //update the localStorage session var.
 				},
 	
-	//t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.
-			toggleManagementCat : function(t,manCatID){
-				var $parent = $(t).parent(); //used to append the new UL to.
-				
-				var targetID = 'manCats_'+app.u.makeSafeHTMLId(manCatID);
-				var $target = $(app.u.jqSelector('#',targetID));
-	//if target already exists on the DOM, then this category has been opened previously. The target is the UL containing the product list.
-				if($target.length)	{
-					$target.toggle();
-					}
-				else	{
-					$target = $("<ul \/>").attr('id',targetID).appendTo($parent);
-	//for a full list of what vars can/should be set in buildProductList, see store_prodlist.u.setProdlistVars
-					app.ext.store_prodlist.u.buildProductList({
-						'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][manCatID],
-						'hide_summary': true,
-						'parentID':targetID,
-						'loadsTemplate' : 'productListTemplateEditMe',
-						'items_per_page' : 100
-						},$target);
-					}
-				}, //toggleManagementCat
-				
+		
 	//used for saving compatibility mode panels. app panels have a ui-event
 			saveProductPanel : function(t,panelid,SUB){
 				var $form = $(t).closest("form");
@@ -342,59 +249,7 @@ for(var index in panels)	{
 					}
 				}, //saveProductPanel
 	
-	//call executed to open the editor for a given pid.
-	//legacy call for panel list is needed (for now). productGet is used for panels as they're upgraded to full-app 
-			showPanelsFor : function(pid)	{
-				$('#productTabMainContent').empty().append("<div class='loadingBG'></div>");
-	
-	//the data for BOTH these requests is needed before the panel list can correctly load.
-	
-	//			app.calls.adminProductDetail.init({'pid':pid,'skus':true,'variations':true},{},'mutable'); //get into memory for app-based panels.
-	//though a pid is required to 'get' this data, it's always the same. just get it once.
-				if(app.model.fetchData('adminUIProductPanelList'))	{}
-				else	{
-					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":{'datapointer':'adminUIProductPanelList'},"pid":pid},'mutable');
-					}
-				app.ext.admin.calls.appResource.init('product_attribs_popular.json',{},'mutable');
-				app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
-	//flexedit data is necessary for that panel.
-				if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
-				else	{
-					app.model.addDispatchToQ({
-						'_cmd':'adminConfigDetail',
-						'flexedit' : 1,
-						'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
-						},'mutable');
-					}
-	
-	
-	app.model.addDispatchToQ({
-		'_cmd':'adminProductNavcatList',
-		'pid':pid,
-		'_tag':	{
-			'datapointer' : 'adminProductNavcatList|'+pid,
-			'pid':pid
-			}
-		},'mutable');
-	
-	
-	app.model.addDispatchToQ({
-		'_cmd':'adminProductDetail',
-		'variations' : true,
-		'skus' : true,
-	//	'inventory' : true, //inventory
-		'pid':pid,
-		'_tag':	{
-			'datapointer' : 'adminProductDetail|'+pid,
-			'callback': 'loadAndShowPanels',
-			'pid':pid,
-			'extension':'admin_prodEdit'
-			}
-		},'mutable');
-	app.model.dispatchThis('mutable');
-	
-	
-				},
+
 	
 			showStoreVariationsManager : function($target)	{
 	//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
@@ -620,28 +475,7 @@ for(var index in panels)	{
 					}
 				},
 			
-	//Management categories (mancats) is an array where the key is the category ID and the value is a list of product.
-	//This function sorts the list alphabetically and puts the key, product and lenght into an associative array before running it through the translates.
-	//
-	//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
-	//uses a loadsTemplate Parameter on the data-bind to format each row.
-	// * 201330 -> not used anywhere. delete later if nothing was missed.
-	/*		manageCatsList : function($tag,data)	{
-	
-					var cats = Object.keys(data.value).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
-	//				app.u.dump(cats);
-					for(var index in cats)	{
-						if(cats[index])	{
-	//						app.u.dump(" -> index: "+cats[index]);
-	//						app.u.dump(" -> data.value[index]: "+data.value[cats[index]]);
-							var obj = {'MCID':cats[index], 'product_count' : data.value[cats[index]].length, '@product' : data.value[cats[index]]}
-							$o = app.renderFunctions.transmogrify({'mcid':index},data.bindData.loadsTemplate,obj);
-							$tag.append($o);
-							}
-						}
-	
-				},
-	*/		
+
 			bigListOptions : function($tag,data){
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
@@ -1115,106 +949,6 @@ for(var index in panels)	{
 				mediaLibrary($img,$("[name='throwAway']",$('#prod_images')),'Select Product Image');
 				},
 	
-	//app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
-			getPanelContents : function(pid,panelid)	{
-				var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
-				if(pid && panelid)	{
-					if(panelid == 'flexedit')	{
-						r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
-						$('fieldset:first',r).addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
-						
-						app.ext.admin.u.handleAppEvents(r);
-						}
-					else if(panelid == 'reviews')	{
-						r = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate_reviews',{'id':'panel_'+panelid,'panelid':panelid,'pid':pid});
-						app.model.addDispatchToQ({'filter':'','PID':pid,'_cmd' : 'adminProductReviewList','_tag' : {'callback':function(rd){
-							$('tbody',r).anycontent({datapointer:rd.datapointer});
-							$("button[data-app-event='admin_customer|adminProductReviewUpdateShow']",r).attr('data-edit-mode','dialog');
-							app.u.handleAppEvents(r);
-							},'datapointer' : 'adminProductReviewList|'+pid}},'mutable');
-						app.model.dispatchThis('mutable')
-						}
-					else if(panelid == 'images')	{
-						r = this.getImagesPanelContents(pid,panelid);
-						}
-					else if(panelid == 'navigation')	{
-						r = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate_navigation',{'id':'panel_'+panelid,'panelid':panelid,'pid':pid});
-						app.ext.admin.u.handleAppEvents(r); //before getTree prepend because the tree code uses delegated events. The save button uses old app events tho.
-						$('fieldset',r).prepend(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data['adminProductNavcatList|'+pid]['@PATHS']}));
-						}
-					else	{
-						r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
-						app.ext.admin.u.handleAppEvents(r);
-						}
-					}
-				else	{
-					r = false;
-					app.u.throwGMessage("In admin_prodEdit.a.getPanelContents, no panelid specified.");
-					}
-				return r;
-				}, //getPanelContents
-	
-			showProductEditor : function(path,P)	{
-	//			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor ["+path+"]");
-	//			app.u.dump(" -> P: "); app.u.dump(P);
-				
-				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  
-				//always rewrite savePanel. another 'tab' may change the function.
-				//kill any calls in progress so that if setup then product tabs are clicked quickly, setup doesn't get loaded.
-				app.ext.admin_prodEdit.u.handleProductListTab('deactivate'); //will clear the open results tab
-				if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
-					app.u.dump("request in progress. Aborting.");
-					app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
-					}
-	
-	//add product page template if not already set.
-				if(!$('#productEditorTemplate').length)	{
-					$(app.u.jqSelector('#',P.targetID)).empty().append(
-						app.renderFunctions.createTemplateInstance('productEditorTemplate')
-						);
-	//get and display the list of product management categories.				
-					app.ext.admin.calls.adminProductManagementCategoryList.init(
-						{'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},
-						'mutable');
-					app.model.dispatchThis('mutable');
-	
-	
-	//add click actions to the list of tags. Once clicked, a search result for that tag will get displayed in the main edit area.
-					$('.tagFilterList li','#prodLeftCol').each(function(){
-						$(this).addClass('lookLikeLink').click(function(){
-							app.ext.admin_prodEdit.u.prepContentArea4Results();
-							var tag = $(this).text();
-							$('#prodEditorResultsTbody').showLoading({'message':'Fetching items tagged as '+tag})
-							app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search',list:$('#prodEditorResultsTbody')});
-							app.model.dispatchThis('mutable');
-							})
-						})
-	
-	//add click actions to the syndication list items. Once clicked, a search result for that tag will get displayed in the main edit area.
-					$('.mktFilterList li','#prodLeftCol').each(function(){
-						$(this).addClass('lookLikeLink').click(function(){
-							app.ext.admin_prodEdit.u.prepContentArea4Results();
-							var mktid = $(this).data('mktid')+'_on';
-							$('#prodEditorResultsTbody').showLoading({'message':'Fetching items for '+$(this).text()})
-							app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search',list:$('#prodEditorResultsTbody')});
-							app.model.dispatchThis('mutable');
-							})
-						})
-					}
-				else	{
-					//product editor is already on the dom. Right now, only one instance of the editor can be created at a time.
-					}
-				
-				if(P.pid)	{app.ext.admin_prodEdit.a.showPanelsFor(P.pid)} //if a pid is specified, immediately show the editor for that pid.
-				else if(!path || path == '/biz/product/index.cgi' || path == '/biz/product/edit.cgi?VERB=WELCOME')	{
-					//do nothing. product page template has initial load content.
-					}
-				else	{
-					P.targetID = "productTabMainContent";
-					$(app.u.jqSelector('#',P.targetID)).empty().showLoading({'message':'loading...'});
-					app.model.fetchAdminResource(path,P);
-					}
-				}, //showProductTab 
 	
 			handleCreateNewProduct : function(vars)	{
 				var pid = vars.pid;
@@ -1242,10 +976,6 @@ for(var index in panels)	{
 						$("<button \/>").text('Close Window').button().on('click',function(){
 							$target.dialog('close');
 							}).appendTo($target);
-	
-	
-	
-						
 						}
 					}});
 				app.model.dispatchThis('immutable');
@@ -1282,20 +1012,7 @@ for(var index in panels)	{
 				if(type == 'select' || type == 'radio' || type == 'attribs' || type == 'imgselect' || type == 'imggrid')	{r = true}
 				return r;
 				}, //variationTypeIsSelectBased
-	
-	//the data for a sog edit is stored in 'data' for the option in the table row.  Of course, a lot of other stuff is stored there, so this whitelists the data.
-	// * 201330 -> deprecated. replaced w/ app.u.getWhitelistedObject which is more versatile
-	/*		getSanitizedSogData : function(data)	{
-				var r = {}; //what is returned.
-				var whitelist = ['v','prompt','w','p','asm','html','img']
-				for(index in whitelist)	{
-					if(data[whitelist[index]])	{
-						r[whitelist[index]] = data[whitelist[index]]
-						}
-					}
-				return r;
-				}, //getSanitizedSogData
-	*/
+
 	
 	//the default option editor shows all the inputs.  Need to clear some out that are image or inventory specific.
 	//executed from variationOptionUpdateShow and variationOptionAddShow
@@ -1327,7 +1044,7 @@ for(var index in panels)	{
 					},100);
 				},
 			
-			showProductEditor2 : function($ele,p)	{
+			showProductEditor : function($ele,p)	{
 				if($ele.data('pid'))	{
 					app.ext.admin_prodEdit.a.showProductEditor($('#productContent'),$ele.data('pid'));
 					}
@@ -1375,28 +1092,7 @@ for(var index in panels)	{
 				},
 
 // END new product editor events
-			"showProductEditor" : function($btn){
-				$btn.button();
-//This is a separate click event so that it can be removed after the product are moved.
-//this event needs to happen first because the next event removes the table.
-				$btn.off('click.moveProductToTab').on('click.moveProductsToTab',function(){
-					var pid = $btn.closest('[data-pid]').data('pid');
-					if(pid)	{
-						app.ext.admin_prodEdit.u.handleProductListTab('activate');
-						}
-					});
 
-				$btn.off('click.showProductEditor').on('click.showProductEditor',function(event){
-					event.preventDefault();
-					var pid = $btn.closest('[data-pid]').data('pid');
-					if(pid)	{
-						app.ext.admin_prodEdit.a.showPanelsFor($btn.closest('[data-pid]').data('pid'));
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductEditor, unable to ascertain product id.',gMessage:true});
-						}
-					});
-				}, //showProductEditor
 			
 			"configOptions" : function($t)	{
 				$t.button();
