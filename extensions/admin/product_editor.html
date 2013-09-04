@@ -158,6 +158,28 @@
 
 
 
+<!-- used in old and new editor. edit w/ caution till changeover occurs -->
+<div class='productPanel' id='productEditorPanelTemplate'>
+	
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+	
+	
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span data-bind="var: panel(title); format:text;"></span>
+	
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">
+	<fieldset data-bind="var: panel(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
+	</form>
+	</div>	
+	
+</div>
+
+
+
+
+
 
 
 
@@ -345,22 +367,7 @@ OLD PRODUCT EDITOR
 
 
 
-<div class='productPanel' id='productEditorPanelTemplate'>
-	
-	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
-	
-	
-		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-		<span data-bind="var: panel(title); format:text;"></span>
-	
-	</h3>
-	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
-	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">
-	<fieldset data-bind="var: panel(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
-	</form>
-	</div>	
-	
-</div>
+
 
 
 

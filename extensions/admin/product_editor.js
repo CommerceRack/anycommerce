@@ -195,7 +195,7 @@ var admin_prodEdit = function() {
 //P -> an object of params.
 //  -> currently supports 'pid' which, if set, will open the product editor for that pid.
 			showProductManager : function($target,P)	{
-				
+				P = P || {};
 				//for legacy panels:
 				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;
 
@@ -231,7 +231,7 @@ var admin_prodEdit = function() {
 var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
 //					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
 for(var index in panels)	{
-	$target.append($("<div \/>"));
+	$target.append(app.renderFunctions.createTemplateInstance('productEditorPanelTemplate').anypanel());
 	}
 					}
 				else	{
