@@ -1185,6 +1185,23 @@ app.u.handleEventDelegation($target);
 
 
 
+			amazonProductDefinitionsShow : function($ele,p)	{
+
+var docid = $ele.closest('form').find("[name='amz:catalog']").val();
+if (docid == '') {
+	alert('please select an amazon product type');
+	}
+else {
+	docid = String('amz.'+docid).toLowerCase();
+	navigateTo(
+		'/biz/product/definition.cgi?_PRODUCT=MODEL04&amp;_DOCID='+docid,
+		{dialog:true,title:'Amazon Product Type'}
+		); /// !!! this'll need to get upgraded too.
+//	savePanel(this,'amazon'); !!! talk to B about this. Need to save before loading the definition editor?
+	}
+
+				},
+
 // END new product editor events
 
 			
