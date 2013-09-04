@@ -61,7 +61,7 @@ var admin_prodEdit = function() {
 				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':true}
 				},
 	//when a panel is converted to app, add it here and add a template. 
-			appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images','navigation'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+			appPanels : ['general','shipping','rss','syndication','flexedit','reviews','images'], //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 			flexTypes : {
 				'asin' : {'type':'text'},
 				'textbox' : { 'type' : 'text'},
