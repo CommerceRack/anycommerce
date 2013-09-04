@@ -2,10 +2,10 @@
 
 
 
-<div id='productManagerLandingContentTemplate' class='ui-widget'>
+<div id='productManagerLandingContentTemplate' class='ui-widget' data-app-role='productManager'>
 
 	<!-- do not change this ID. used a lot -->
-	<div class='productContentContainer' id='productTabMainContent'>
+	<div data-app-role='productManagerLandingContent'>
 
 <h1>Online Product Manager</h1>
 
@@ -20,8 +20,33 @@
 <h2>The World is Changing</h2>
 <p>The app-based structure is the future of technology. By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, we are convinced that this change will let our customers do more in less time. </p>
 
+	</div>
+
+	<div data-app-role='productManagerEditorContent' class='displayNone ui-widget'>
 
 	</div>
+	
+	<div data-app-role='productManagerVariationsContent' class='displayNone ui-widget'></div>
+	
+	<!-- used for both product lists (management categories) and search/filter results. the template used changes, so no data-bind on tbody. -->
+	<div data-app-role='productManagerResultsContent' class='displayNone ui-widget'>
+	<table class='fullWidth gridTable applyAnytable ui-widget-content'>
+	<thead>
+	<tr>
+		<th></th>
+		<th>SKU</th>
+		<th>Name</th>
+		<th>Price</th>
+		<th># Variations</th>
+		<th># Children</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-app-role='productManagerResultsTbody'>
+	</tbody>
+	</table>
+	</div>
+
 
 </div>
 
@@ -134,7 +159,7 @@
 
 
 <table>
-
+<!-- used for management categories list -->
 <tr id='prodManagerProductListTemplate' class='loadingBG'>
 		
 	<td>
@@ -147,7 +172,24 @@
 	<td data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:false;'></td>
 	<td data-bind='var: product(@variations.length); defaultVar: product(_id); format:text;'></td>
 	<td></td>
-	<td><button data-app-click='admin_prodEdit|showProductEditor' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
+	<td><button data-app-click='admin_prodEdit|productEditorShow' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
+</tr>
+
+
+<!-- used for keyword and filtered search -->
+<tr id='prodManagerProductResultsTemplate'>
+		
+	<td>
+	<div class='prodThumbContainer'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
+	</div>
+	</td>
+	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
+	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
+	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
+	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
+	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
+	<td align='right'><button data-app-click='admin_prodEdit|productEditorShow' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
 </tr>
 
 </table>
@@ -161,12 +203,8 @@
 <!-- used in old and new editor. edit w/ caution till changeover occurs -->
 <div class='productPanel' id='productEditorPanelTemplate'>
 	
-	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
-	
-	
-		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' ><!-- onClick="app.ext.admin_prodEdit.a.handlePanel(this);" -->
 		<span data-bind="var: panel(title); format:text;"></span>
-	
 	</h3>
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
 	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">
@@ -175,149 +213,6 @@
 	</div>	
 	
 </div>
-
-
-
-
-
-
-
-
-
-
-<!--
-
-OLD PRODUCT EDITOR
-
--->
-
-
-
-
-<div id='productEditorTemplate' class='productEditor'>
-
-<table class='productEditorContainer'>
-<tr>
-	<td class='leftColNav'>
-	<div id='prodLeftCol'>
-
-<form action='#' onSubmit="app.ext.admin_prodEdit.u.handleProductKeywordSearch($(this).serializeJSON()); return false" class='marginBottom'>
-<fieldset>
-	<legend>Product Search</legend>
-	<input type='search' name='KEYWORDS' value='' />
-	<input type='submit' value='go' />
-</fieldset>
-</form>
-
-
-<ul>
-	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showCreateProductDialog(); return false;">New Product</a></li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle();  return false;">Filter Product</a>
-	<ul class='displayNone tagFilterList'>
-		<li>IS_FRESH</li>
-		<li>IS_NEEDREVIEW</li>
-		<li>IS_HASERRORS</li>
-		<li>IS_CONFIGABLE</li>
-		<li>IS_COLORFUL</li>
-		<li>IS_SIZEABLE</li>
-		<li>IS_OPENBOX</li>
-		<li>IS_PREORDER</li>
-		<li>IS_DISCONTINUED</li>
-		<li>IS_SPECIALORDER</li>
-		<li>IS_BESTSELLER</li>
-		<li>IS_SALE</li>
-		<li>IS_SHIPFREE</li>
-		<li>IS_NEWARRIVAL</li>
-		<li>IS_CLEARANCE</li>
-		<li>IS_REFURB</li>
-		<li>IS_USER1</li>
-		<li>IS_USER2</li>
-		<li>IS_USER3</li>
-		<li>IS_USER4</li>
-		<li>IS_USER5</li>
-		<li>IS_USER6</li>
-		<li>IS_USER7</li>
-		<li>IS_USER8</li>
-		<li>IS_USER9</li>
-	</ul>
-	</li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Syndication</a>
-	<ul class='displayNone mktFilterList'>
-		<li data-mktid="GOO">Google</li>
-		<li data-mktid="EBS">eBay Store</li>
-	</ul>
-	</li>
-<!--	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li> -->
-	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent')); return false;">Global Variations</a></li>
-	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
-		<ul id='manCats' class='displayNone'>
-		</ul>
-	</li>
-</ul>
-
-	</div>
-	</td>
-	<td class='mainColContent stackedPanels'>
-	<!-- do not change this ID. used a lot -->
-	<div class='productContentContainer' id='productTabMainContent'>
-
-<h1>Online Product Manager</h1>
-
-<p>Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data. Here are some of the advantages:</p>
-
-<h2>Page Rendering</h2>
-<p>With our new app based solution, there are no frames to load and reload, it makes better use of your screen and browser capabilities. The app framework stays on the screen and only the information you want to view or manipulate changes. This makes for a smoother workflow and helps to increase productivity.</p>
-
-<h2>Extensible</h2>
-<p>Entering your product data is only the beginning. This interface will allow extensibility by developers so it is possible to create custom data input and management interfaces. From vendor management to drop shipping to complex supply chain strategies, our new Product Manager.</p>
-
-<h2>The World is Changing</h2>
-<p>The app-based structure is the future of technology. By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, we are convinced that this change will let our customers do more in less time. </p>
-
-
-	</div>
-	
-	</td>
-</tr>
-</table>
-
-</div>
-
-
-
-<!-- used when a filter/search occurs to display the results -->
-<table>
-<tr id='productListTemplateTableResults'>
-		
-	<td>
-	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
-	</div>
-	</td>
-	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
-	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
-	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
-	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
-	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
-	<td align='right'><button data-app-event='admin_prodEdit|showProductEditor'>Edit</button></td>
-</tr>
-
-
-<tr id='productListTableListTemplate' class='loadingBG'>
-		
-	<td>
-	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='35' height='35' />
-	</div>
-	</td>
-	<td>
-	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); format:text;'></span></div>
-	<div data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:false;'></div>
-	</td>
-	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
-</tr>
-
-</table>
 
 
 
@@ -354,6 +249,20 @@ OLD PRODUCT EDITOR
 	</form>
 
 </div>
+
+
+
+
+
+
+<!--
+
+OLD PRODUCT EDITOR
+
+-->
+
+
+
 
 
 
@@ -867,16 +776,7 @@ OLD PRODUCT EDITOR
 
 
 
-
-<div id='productEditorPanelTemplate_general' class='productPanel'>
-	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
-		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-		<span>General Product Information</span>
-	
-	</h3>
-	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
-	<form action='#'>
-	<fieldset>
+<div  id='productEditorPanelTemplate_general'>
 	<table class='fullWidth'>
 	<tr>
 		
@@ -948,11 +848,7 @@ This HTML Editor option will be removed altogether in the future.
 	<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly floatLeft marginRight'>Web Page Editor</button>
 	<button data-app-event="admin_prodEdit|viewProductOnWebsite" class='floatLeft marginRight'>Preview</button>
 	</div>
-	</fieldset>
-	</form>
-	</div>
 </div>
-
 
 
 

@@ -25,10 +25,9 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 var admin_prodEdit = function() {
 	var theseTemplates = new Array(
-		'productEditorTemplate',
 		'ProductCreateNewTemplate',
-		'productListTemplateTableResults',
-		'productListTableListTemplate',
+		'prodManagerProductResultsTemplate',
+		'prodManagerProductListTemplate',
 		'productListTemplateEditMe',
 		'productEditorPanelTemplate',
 		'mpControlSpec'
@@ -37,28 +36,32 @@ var admin_prodEdit = function() {
 	var r = {
 
 		vars : {
+//for panels, the key is the panel id. 
+//isLegacy=true will build and save the panel in legacy mode. 
+//if isLegacy=false, panelCallback needs to be set.
+//panelCallback is a pointer to a function in 'panels' of admin_prodedit. is run currently run onload. will likely later run on panel open.
 			panels : {
-				'general' : {'title':'General Product Information','isLegacy':false},
-				'images' : {'title':'Images','isLegacy':false},
-				'flexedit' : {'title':'Custom Fields/Flexedit','isLegacy':false},
-				'wms' : {'title':'Warehouse Management','isLegacy':true},
-				'inventory' : {'title':'Inventory 1.0','isLegacy':true},
-				'sku' : {'title':'SKU Management','isLegacy':false},
-				'shipping' : {'title':'Shipping','isLegacy':false},
-				'navigation' : {'title':'Website Navigation','isLegacy':false},
-				'syndication' : {'title':'Marketplaces (formerly syndication)','isLegacy':false},
-				'ciengine' : {'title':'Competitive Intelligence','isLegacy':true},
-				'amazon' : {'title':'Amazon Marketplace','isLegacy':true},
-				'ebaypower' : {'title':'eBay Powerlister','isLegacy':true},
-				'ebay2' : {'title':'eBay','isLegacy':true},
-				'listing' : {'title':'HTML Listing','isLegacy':true},
-				'doba' : {'title':'Doba Supplier Settings','isLegacy':true},
-				'events' : {'title':'Listing Events','isLegacy':true},
-				'xsell' : {'title':'Cross Selling','isLegacy':true},
-				'wholesale' : {'title':'Wholesale','isLegacy':true},
-				'reviews' : {'title':'Customer Reviews','isLegacy':false},
-				'rss' : {'title':'SEO and RSS Tools','isLegacy':false},
-				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':true}
+				'general' : {'title':'General Product Information','isLegacy':false,'panelCallback':'default','column':1},
+				'images' : {'title':'Images','isLegacy':false,'column':1},
+				'flexedit' : {'title':'Custom Fields/Flexedit','isLegacy':false,'column':1},
+				'wms' : {'title':'Warehouse Management','isLegacy':true,'column':1},
+				'inventory' : {'title':'Inventory 1.0','isLegacy':true,'column':1},
+				'sku' : {'title':'SKU Management','isLegacy':false,'panelCallback':'default','column':1},
+				'shipping' : {'title':'Shipping','isLegacy':false,'panelCallback':'default','column':1},
+				'navigation' : {'title':'Website Navigation','isLegacy':false,'column':1},
+				'syndication' : {'title':'Marketplaces (formerly syndication)','isLegacy':false,'panelCallback':'default','column':1},
+				'ciengine' : {'title':'Competitive Intelligence','isLegacy':true,'column':1},
+				'amazon' : {'title':'Amazon Marketplace','isLegacy':true,'column':2},
+				'ebaypower' : {'title':'eBay Powerlister','isLegacy':true,'column':2},
+				'ebay2' : {'title':'eBay','isLegacy':true,'column':2},
+				'listing' : {'title':'HTML Listing','isLegacy':true,'column':2},
+				'doba' : {'title':'Doba Supplier Settings','isLegacy':true,'column':2},
+				'events' : {'title':'Listing Events','isLegacy':true,'column':2},
+				'xsell' : {'title':'Cross Selling','isLegacy':true,'column':2},
+				'wholesale' : {'title':'Wholesale','isLegacy':true,'column':2},
+				'reviews' : {'title':'Customer Reviews','isLegacy':false,'column':2},
+				'rss' : {'title':'SEO and RSS Tools','isLegacy':false,'panelCallback':'default','column':2},
+				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':true,'column':2}
 				},
 
 			flexTypes : {
@@ -110,7 +113,21 @@ var admin_prodEdit = function() {
 					app.u.dump('BEGIN admin_prodEdit.callbacks.init.onError');
 					}
 				},
-	
+			handleProductPanels : {
+				onSuccess : function(_rtag)	{
+var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
+//					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
+for(var index in panels)	{
+	if(panels.isLegacy)	{}
+	else if(panels.panelCallback)	{
+		app.ext.admin_prodEdit.panels[panels.panelCallback](panelid,pid);
+		}
+	else	{
+		//ERRROR. either isLegacy or panelCallback must be set.
+		}
+	}
+					}
+				}
 			}, //callbacks
 
 
@@ -136,16 +153,19 @@ var admin_prodEdit = function() {
 					app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 					}
 
-				app.ext.admin_prodEdit.u.handleProductListTab('deactivate'); //will stickytab, if open.
+				app.ext.admin_prodEdit.u.handleStickyTab('deactivate'); //will stickytab, if open.
 				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
 				app.ext.admin_prodEdit.u.handleManagementCategories();//handleManagementCategories 'may' add a dispatch.
 				$target.empty();
 				$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
+				//no events are delegated on the editor from here. Those get delegated inside showProductEditor so the code for editing is entirely self-contained within that one function (more or less).
 				app.u.handleEventDelegation($('#productTabMainContent'));
+				app.u.handleEventDelegation($("[data-app-role='productManagerResultsTbody']",$target)); //handles the click events on the product list.
+				
 
 
 				if(P.pid)	{app.ext.admin_prodEdit.a.showPanelsFor(P.pid)} //if a pid is specified, immediately show the editor for that pid.
-				else if(!path || path == '/biz/product/index.cgi' || path == '/biz/product/edit.cgi?VERB=WELCOME')	{
+				else	{
 					//do nothing. product page template has initial load content.
 					}
 
@@ -155,13 +175,81 @@ var admin_prodEdit = function() {
 			showProductEditor : function($target,pid)	{
 				if($target instanceof jQuery && pid)	{
 //					this.showPanelsFor(pid); //!!! tmp. will want a new function here.
-// !!! NOT DONE YET.
+var $col = {};
+$col['1'] = $("<div \/>").addClass('twoColumn').attr('data-app-column',1);
+$col['2'] = $("<div \/>").addClass('twoColumn column2').attr('data-app-column',2);
+
 //Loop through the list of panels and display them in the default order.  Then use some JS magic to change the order based on what is in DPS.
 var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
 //					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
+$target.addClass('productEditor'); //this class needs to be present to control panel width.
 for(var index in panels)	{
-	$target.append(app.renderFunctions.createTemplateInstance('productEditorPanelTemplate').anypanel());
+	
+	var $panel = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate');
+	$panel.anypanel({
+		'state' : 'persistent',
+		'data' : panels[index],
+		'showClose' : false,
+		'name' : index,
+		'persistent' : true,
+		'wholeHeaderToggle' : false, //disabled for draggable.
+		'dataAttribs' : {
+			'panelid' : index,
+			'pid' : pid
+			},
+		'persistentStateDefault' : 'expand',
+		'showLoading' : true,
+		'extension' : 'admin_prodEdit'
+		});
+	$panel.attr({'data-pid':pid,'data-panelid':index}).addClass('productEditorPanel');
+	$panel.appendTo($col[panels[index].column])
+
 	}
+
+$target.append($col['1']);
+$target.append($col['2']);
+
+//get data for flexedit panel.
+app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
+if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
+else	{
+	app.model.addDispatchToQ({
+		'_cmd':'adminConfigDetail',
+		'flexedit' : 1,
+		'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
+		},'mutable');
+	}
+
+//get data for navigation panel.
+app.model.addDispatchToQ({
+	'_cmd':'adminProductNavcatList',
+	'pid':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductNavcatList|'+pid,
+		'pid':pid
+		}
+	},'mutable');
+
+//product record, used in most panels.
+app.model.addDispatchToQ({
+	'_cmd':'adminProductDetail',
+	'variations':1,
+	'skus':1,
+	'pid' : pid,
+	'_tag':{
+		'datapointer':'adminProductDetail|'+pid,
+		'jqObj' : $target,
+		'extension' : 'admin_prodEdit',
+		'callback' : 'handleProductPanels'
+		}
+	},'mutable');
+
+
+app.model.dispatchThis('mutable');
+
+app.u.handleEventDelegation($target);
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductEditor, either $target is not an instance of jquery or pid is not set.","gMessage":true});
@@ -179,47 +267,6 @@ for(var index in panels)	{
 				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
 				$modal.dialog('open');
 				}, //showCreateProductDialog
-	
-	//t is 'this' passed in from the h3 that contains the icon and link.
-	//run when a panel header is clicked. a 'click' may be triggered by the app when the list of panels appears.
-	//view can equal 'show' or 'hide'. This is to force a panel open or closed. if blank, panel will toggle.
-			handlePanel : function(t)	{
-	//			app.u.dump("BEGIN admin_prodEdit.a.handlePanel");
-				
-				var $header = $(t), //if not already a jquery object
-				$panel = $('.panelContents',$header.parent()),
-				pid = $panel.data('pid'),
-				panelid = $header.parent().data('panelid'),
-				settings = app.ext.admin.u.dpsGet('admin_prodEdit',"openPanel");
-	
-				settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
-	
-				$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
-	
-				if($panel.is(":visible"))	{
-	//				app.u.dump(" -> into the code to show the panel");
-					settings[panelid] = true;
-					$header.addClass('ui-accordion-header-active ui-state-active').removeClass('ui-corner-bottom');
-					$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
-	//panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
-					if($('fieldset',$panel).children().length > 0)	{} 
-	//default to getting the contents. better to take an API hit then to somehow accidentally load a blank panel.
-					else if(app.ext.admin_prodEdit.vars.appPanels.indexOf(panelid) > -1)	{
-	//panel is app based, do nothing extra.
-						}
-					else	{
-						app.ext.admin.calls.adminUIProductPanelExecute.init({'pid':$('#panel_'+panelid).data('pid'),'sub':'LOAD','panel':panelid},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(panelid)},'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					}
-				else	{
-					settings[panelid] = false;
-					$header.removeClass('ui-accordion-header-active ui-state-active').addClass('ui-corner-bottom');
-					$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
-					}
-	
-				app.ext.admin.u.dpsSet('admin_prodEdit',"openPanel",settings); //update the localStorage session var.
-				},
 	
 		
 	//used for saving compatibility mode panels. app panels have a ui-event
@@ -452,6 +499,17 @@ for(var index in panels)	{
 	
 			},
 	
+	
+		panels : {
+//some of the panels, such as general, don't require anything special beyond translation.
+			'default' : function(panelid,pid)	{
+				var r = app.renderFunctions.transmogrify({},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
+				return r;
+				}
+			
+			},
+	
+	
 	////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	
@@ -461,17 +519,19 @@ for(var index in panels)	{
 	//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
 				var L = data.bindData.max || 99;
 	//			app.u.dump(" -> data.value: "); app.u.dump(data.value);
-				for(var i = 1; i <= 30; i += 1)	{
-					var imgName = data.value['%attribs']['zoovy:prod_image'+i];
-					var w = data.bindData.w || 75;
-					var h = data.bindData.h || 75;
-					var b = data.bindData.b || 'ffffff';
-	//				app.u.dump(" -> imgName: "+imgName);
-					if(app.u.isSet(imgName))	{
-						$tag.append("<li><a title='"+imgName+"'><img src='"+app.u.makeImage({'tag':0,'w':w,'h':h,'name':imgName,'b':b})+"' width='"+w+"' height='"+b+"' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' data-filename='"+imgName+"' \/><\/a><\/li>");
-						//data-filename on the image is used in the 'save' in the product editor - images panel.
+				if(data.value && data.value['%attribs'])	{
+					for(var i = 1; i <= 30; i += 1)	{
+						var imgName = data.value['%attribs']['zoovy:prod_image'+i];
+						var w = data.bindData.w || 75;
+						var h = data.bindData.h || 75;
+						var b = data.bindData.b || 'ffffff';
+		//				app.u.dump(" -> imgName: "+imgName);
+						if(app.u.isSet(imgName))	{
+							$tag.append("<li><a title='"+imgName+"'><img src='"+app.u.makeImage({'tag':0,'w':w,'h':h,'name':imgName,'b':b})+"' width='"+w+"' height='"+b+"' alt='"+imgName+"' title='"+imgName+"' data-originalurl='"+app.u.makeImage({'tag':0,'w':'','h':'','name':imgName,'b':'ffffff'})+"' data-filename='"+imgName+"' \/><\/a><\/li>");
+							//data-filename on the image is used in the 'save' in the product editor - images panel.
+							}
+						else	{break;} //exit once a blank is hit.
 						}
-					else	{break;} //exit once a blank is hit.
 					}
 				},
 			
@@ -786,8 +846,8 @@ for(var index in panels)	{
 				return r;
 				}, //flexJSON2JqObj
 	
-			handleProductListTab : function(process)	{
-	//			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab ["+process+"]");
+			handleStickyTab : function(process)	{
+	//			app.u.dump("BEGIN admin_prodEdit.u.handleStickyTab ["+process+"]");
 				var
 					$target = $('#productListTab'),
 					$table = $('#prodEditorResultsTable')
@@ -816,7 +876,7 @@ for(var index in panels)	{
 				else	{
 					//do nothing. process is unknown OR de-activate and sticktab not active yet.
 					}
-				}, //handleProductListTab
+				}, //handleStickyTab
 	
 			getReviewsPanelContents : function(pid)	{
 				var $r = $("<div \/>"); //what is returned. either panel contents or false.
@@ -981,24 +1041,39 @@ for(var index in panels)	{
 				app.model.dispatchThis('immutable');
 				}, //handleCreateNewProduct
 	
-	//clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
-			prepContentArea4Results : function(){
+
+//hides the other children in the manager template (such as the landing page content or a product that is being edited.)
+//shows the results container and clears any previous results.
+//ensures results table is an anytable.
+//also clears the stickytab, if open.
+
+			prepContentArea4Results : function($container){
+				if($container instanceof jQuery)	{
+					app.ext.admin_prodEdit.u.handleStickyTab('deactivate'); //if a results tab is open, this will clear it. needs to happen any time a new results set is generated.
 				
-				app.ext.admin_prodEdit.u.handleProductListTab('deactivate'); //if a results tab is open, this will clear it. needs to happen any time a new results set is generated.
-				
-				var $container = $("#productTabMainContent"),
-				$table = $("<table \/>",{'id':'prodEditorResultsTable'}).addClass('fullWidth ui-widget ui-widget-content').addClass('gridTable');
-				$table.append("<thead><tr><th><\/th><th>SKU<\/th><th class='hideInMinimalMode'>Name<\/th><th>Price<\/th><th class='hideInMinimalMode'>Options<\/th><th class='hideInMinimalMode'>Children<\/th><th><\/th><\/tr><\/thead>");
-				$table.append($("<tbody \/>",{'id':'prodEditorResultsTbody'}));
-				$container.empty().append($table);
-				$table.anytable();
+					var $tbody = $("[data-app-role='productManagerResultsTbody']",$container);
+	
+					$container.children().hide(); //hide the other parent divs (landing text, product editor)
+					$tbody.empty(); //empty previous results.
+					
+					$("[data-app-role='productManagerResultsContent']",$container).show();
+	//make sure results table has anytable applied.
+					if($tbody.parent('table').data('widget-anytable'))	{}
+					else	{
+						$tbody.parent('table').anytable()
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.prepContentArea4Results, $container is not a valid instance of jquery.","gMessage":true});
+					}
 				}, //prepContentArea4Results
 			
 			handleProductKeywordSearch : function(obj)	{
 				if(obj && obj.KEYWORDS)	{
-					app.ext.admin_prodEdit.u.prepContentArea4Results();
-					$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'})
-					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateTableResults','list':$('#prodEditorResultsTbody')});
+					var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
+					$("[data-app-role='productManagerResultsTbody']",$container).showLoading({'message':'Performing search...'})
+					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerResultsTbody']",$container)});
 					app.model.dispatchThis();
 					}
 				else	{
@@ -1043,10 +1118,14 @@ for(var index in panels)	{
 						});
 					},100);
 				},
-			
-			showProductEditor : function($ele,p)	{
+
+			productEditorShow : function($ele,p)	{
 				if($ele.data('pid'))	{
-					app.ext.admin_prodEdit.a.showProductEditor($('#productContent'),$ele.data('pid'));
+					var $container = $ele.closest("[data-app-role='productManager']");
+					$container.children().hide();
+					$("[data-app-role='productManagerEditorContent']",$container).show();
+					app.ext.admin_prodEdit.u.handleStickyTab('activate');
+					app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productManagerEditorContent']",$container).show(),$ele.data('pid'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
@@ -1054,7 +1133,8 @@ for(var index in panels)	{
 				},
 			
 			"managementCatsProdlistShow" : function($ele,p)	{
-				app.ext.admin_prodEdit.u.prepContentArea4Results();
+				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
 //				$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
 				var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$ele.data('management-category')]).sort();
 				app.ext.store_prodlist.u.buildProductList({
@@ -1063,7 +1143,7 @@ for(var index in panels)	{
 					'loadsTemplate' : 'prodManagerProductListTemplate',
 					'withVariations' : true,
 					'items_per_page' : 100
-					},$('#prodEditorResultsTbody'));
+					},$("[data-app-role='productManagerResultsTbody']",$container));
 				},
 			
 			"managementCatsShow" : function($ele,p)	{
@@ -1084,12 +1164,16 @@ for(var index in panels)	{
 				},
 
 			storeVariationsShow : function($ele,p)	{
-				app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productContent'));
+				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				$container.children().hide();
+				app.ext.admin_prodEdit.a.showStoreVariationsManager($("[data-app-role='productManagerVariationsContent']",$container).show());
 				},
 
 			adminProductCreateShow : function($ele,p)	{
 				app.ext.admin_prodEdit.a.showCreateProductDialog();
 				},
+
+
 
 // END new product editor events
 
@@ -1362,7 +1446,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 			variationSearchByIDExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
 				$btn.off('click.variationSearchByIDExec').on('click.variationSearchByIDExec',function(){
-					app.ext.admin_prodEdit.u.prepContentArea4Results();
+					app.ext.admin_prodEdit.u.prepContentArea4Results($("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
 					var varID = $btn.closest('tr').data('id');
 					app.model.addDispatchToQ({
@@ -1374,7 +1458,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 							'callback':'handleElasticResults',
 							'extension':'store_search',
 							'datapointer' : 'appPublicSearch|variation|'+varID,
-							'templateID':'productListTemplateTableResults',
+							'templateID':'prodManagerProductResultsTemplate',
 							'list':$('#prodEditorResultsTbody')
 							},
 						"type":"product"

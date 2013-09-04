@@ -3914,11 +3914,6 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin_support.a.showPlatformInfo($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 
-
-				else if(path == '#!productManager')	{
-					app.ext.admin_prodEdit.a.showProductManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
 				else if(path == '#!partitionManager')	{
 					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
@@ -4004,12 +3999,12 @@ and all .someClass are hidden (value of data-panel-selector)
 					}
 				else if(path == '#!products')	{
 //					app.u.dump("Go to product editor");
-// ** 201334 -> new product editor.
-					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
+// ** 201336 -> new product editor.
+//					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
 					app.ext.admin.vars.tab = 'product';
 					app.ext.admin.u.bringTabIntoFocus('product');
 					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-//					app.ext.admin_prodEdit.a.showProductManager($("#productContent"));
+					app.ext.admin_prodEdit.a.showProductManager($("#productContent"));
 					}
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager();
@@ -4095,10 +4090,9 @@ and all .someClass are hidden (value of data-panel-selector)
 //					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-// ** 201334 -> new product editor.
-					app.ext.admin_prodEdit.u.showProductEditor(path,P);
-
-//					app.ext.admin_prodEdit.a.showProductManager($target);					
+// ** 201336 -> new product editor.
+//					app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					app.ext.admin_prodEdit.a.showProductManager($target);					
 					}
 				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
 					app.ext.admin.u.bringTabIntoFocus('kpi');

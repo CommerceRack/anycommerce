@@ -1266,12 +1266,19 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //p in event = optional params. can be added when 'trigger' is executed. these are then passed into the app event and can be used to change behavior, if necessary.
 			handleEventDelegation : function($container)	{
 //				app.u.dump(" events are being delegated");
-				$container.on('click',"[data-app-click]",function(e,p){
-					app.u.executeEvent($(e.target),p)
-					});
-				$container.on('change',"[data-app-change]",function(e,p){
-					app.u.executeEvent($(e.target),p)
-					});
+				if($container.data('is-delegated') || $container.parent("[data-is-delegated]").length >= 1)	{
+					
+					app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
+					}
+				else	{
+					$container.on('click',"[data-app-click]",function(e,p){
+						app.u.executeEvent($(e.target),p)
+						});
+					$container.on('change',"[data-app-change]",function(e,p){
+						app.u.executeEvent($(e.target),p)
+						});
+					$container.attr('data-is-delegated',true); //is a attribute so that an element can look for it via parent()
+					}
 				},
 
 
