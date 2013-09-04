@@ -1095,11 +1095,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 				if(o.name)	{$t.addClass('panel_'+o.name)} 
 				var $header, $content;
 				
-				
 				if(o.header)	{$header = $("<h2 \/>").text(o.header); $header.appendTo($t)}
 				else	{$header = $t.children(":first")}
 				
-				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'});
+				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em','border':'none'});
 				$header.wrap($("<div \/>").addClass('ui-widget-header ui-anypanel-header ui-corner-top ').css({'padding':'0px;','minHeight':'24px'}));
 
 				if(o.wholeHeaderToggle)	{

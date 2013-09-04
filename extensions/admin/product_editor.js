@@ -42,13 +42,13 @@ var admin_prodEdit = function() {
 //panelCallback is a pointer to a function in 'panels' of admin_prodedit. is run currently run onload. will likely later run on panel open.
 			panels : {
 				'general' : {'title':'General Product Information','isLegacy':false,'panelCallback':'default','column':1},
-				'images' : {'title':'Images','isLegacy':false,'column':1},
-				'flexedit' : {'title':'Custom Fields/Flexedit','isLegacy':false,'column':1},
-				'wms' : {'title':'Warehouse Management','isLegacy':true,'column':1},
+				'images' : {'title':'Images','isLegacy':false,'column':1,'panelCallback':'images'},
+				'flexedit' : {'title':'Custom Fields/Flexedit','isLegacy':false,'column':1,'panelCallback':'flexedit'},
+				'wms' : {'title':'Warehouse Management','isLegacy':false,'column':1,'panelCallback':'default'},
 				'inventory' : {'title':'Inventory 1.0','isLegacy':true,'column':1},
-				'sku' : {'title':'SKU Management','isLegacy':false,'panelCallback':'default','column':1},
+				'sku' : {'title':'SKU Management','isLegacy':false,'panelCallback':'default','column':1,'panelCallback':'default'},
 				'shipping' : {'title':'Shipping','isLegacy':false,'panelCallback':'default','column':1},
-				'navigation' : {'title':'Website Navigation','isLegacy':false,'column':1},
+				'navigation' : {'title':'Website Navigation','isLegacy':false,'column':1,'panelCallback':'navigation'},
 				'syndication' : {'title':'Marketplaces (formerly syndication)','isLegacy':false,'panelCallback':'default','column':1},
 				'ciengine' : {'title':'Competitive Intelligence','isLegacy':true,'column':1},
 				'amazon' : {'title':'Amazon Marketplace','isLegacy':true,'column':2},
@@ -118,12 +118,13 @@ var admin_prodEdit = function() {
 var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
 //					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
 for(var index in panels)	{
-	if(panels.isLegacy)	{}
-	else if(panels.panelCallback)	{
-		app.ext.admin_prodEdit.panels[panels.panelCallback](panelid,pid);
+	if(panels[index].isLegacy)	{}
+	else if(panels[index].panelCallback && typeof app.ext.admin_prodEdit.panels[panels[index].panelCallback] == 'function')	{
+		app.u.dump(" -> index "+index+" has a panelCallback defined");
+		app.ext.admin_prodEdit.panels[panels[index].panelCallback]($("[data-panelid='"+index+"']:first",_rtag.jqObj).find('fieldset'),_rtag.pid)
 		}
 	else	{
-		//ERRROR. either isLegacy or panelCallback must be set.
+		//ERRROR. either isLegacy or panelCallback must be set. OR panelcallback is defined but doesn't exist.as
 		}
 	}
 					}
@@ -174,7 +175,7 @@ for(var index in panels)	{
 
 			showProductEditor : function($target,pid)	{
 				if($target instanceof jQuery && pid)	{
-//					this.showPanelsFor(pid); //!!! tmp. will want a new function here.
+
 var $col = {};
 $col['1'] = $("<div \/>").addClass('twoColumn').attr('data-app-column',1);
 $col['2'] = $("<div \/>").addClass('twoColumn column2').attr('data-app-column',2);
@@ -198,10 +199,11 @@ for(var index in panels)	{
 			'pid' : pid
 			},
 		'persistentStateDefault' : 'expand',
-		'showLoading' : true,
+		'showLoading' : false, //loading will be added to the fieldset.
 		'extension' : 'admin_prodEdit'
 		});
 	$panel.attr({'data-pid':pid,'data-panelid':index}).addClass('productEditorPanel');
+	$('fieldset',$panel).anycontent({'templateID' : (panels[index].isLegacy) ? '' : 'productEditorPanelTemplate_'+index});
 	$panel.appendTo($col[panels[index].column])
 
 	}
@@ -238,6 +240,7 @@ app.model.addDispatchToQ({
 	'pid' : pid,
 	'_tag':{
 		'datapointer':'adminProductDetail|'+pid,
+		'pid' : pid,
 		'jqObj' : $target,
 		'extension' : 'admin_prodEdit',
 		'callback' : 'handleProductPanels'
@@ -502,11 +505,127 @@ app.u.handleEventDelegation($target);
 	
 		panels : {
 //some of the panels, such as general, don't require anything special beyond translation.
-			'default' : function(panelid,pid)	{
-				var r = app.renderFunctions.transmogrify({},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
-				return r;
-				}
+			'default' : function($form,pid)	{
+				app.u.dump(" -> Got here! "+$form.closest("[data-panelid]").data('panelid'));
+				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
+				},
 			
+			'flexedit' : function($form,pid)	{
+//				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
+				$form.empty().hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
+				app.ext.admin.u.handleAppEvents(r);
+				},
+			
+			'images' : function($form,pid)	{
+
+		
+					$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
+		//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
+					var $prodImageUL = $("[data-app-role='prodImagesContainer']",$form);
+					$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
+					
+		
+		//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
+					if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
+		//						app.u.dump(" -> More than one sku is present.");
+						$prodImageUL.width('60%'); //width is only applied IF right column (sku imagery) is present.
+						var $container = $("[data-app-role='prodEditSkuImagesContainer']",$form).show();
+						var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
+						var L = skus.length;
+						var $table = $("<table \/>").addClass('gridTable').appendTo($container);
+						for(var i = 0; i < L; i += 1)	{
+							var $tr = app.renderFunctions.transmogrify(skus[i],'prodEditSKUImageTemplate',skus[i])
+							$tr.appendTo($table);
+							}
+						}
+		
+					app.ext.admin.u.handleAppEvents($form);
+		
+		
+		//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
+					$(".sortableImagery",$form).sortable({
+						'items' : 'li:not(.dropzone)',
+						'appendTo' : $form,
+						'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
+						'containment' : $form,
+						'placeholder' : 'ui-state-highlight positionRelative marginRight marginBottom floatLeft',
+						'forcePlaceholderSize' : true,
+						'cursor' : "move",
+						'cursorAt' : { left: 5 },
+						'connectWith' : '.sortableImagery',
+						'stop' : function(event,ui)	{ui.item.addClass('edited')},
+						'remove' : function(event, ui) {
+							ui.item.after(ui.item.clone().addClass('edited'));//clone the dropped item into the new parent at the drop index.
+							$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
+							},
+						'revert' : true
+						});
+		
+					$(".sortableImagery",$form).anydropzone({
+						folder : 'product/'+pid.toLowerCase(),
+						drop : function(files,event,self){
+		
+							for (var i = 0; i < files.length; i++) {
+								var file = files[i];
+								var imageType = /image.*/;
+				
+								if (!file.type.match(imageType)) {
+									continue;
+									}
+								var $target = self.element;
+								var img = document.createElement("img");
+								img.classList.add("obj");
+								img.file = file;
+								if($target.attr('data-app-role') == 'skulist')	{
+									img.height = 35;
+									img.width = 35;
+									}
+								else	{
+									img.height = 75;
+									img.width = 75;
+									}
+								img.classList.add('newMediaFile');
+				
+								
+								$target.children().last().before($("<li \/>").append(img)); //the last child is the 'click here'. put new image before that.
+								var reader = new FileReader();
+								reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+								reader.readAsDataURL(file);
+								}
+		
+							},
+						upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
+						}).append($("<li class='dropzone'>Click or drop file here to add image</li>").on('click',function(){
+							app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
+							}));
+		
+					$form.on('mouseenter','img',function(e){
+						var $target = $(e.target).closest('li');
+						
+						$target.on('mouseleave',function(e){
+							$target.find('span').empty().remove(); //get rid of all children.
+							});
+						
+						$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
+						$("<span \/>")
+							.attr('title','Disassociate image from '+pid)
+							.css({
+								'position':'absolute',
+								'top':'3px',
+								'right':'3px'
+								})
+							.button({icons: {primary: "ui-icon-circle-close"},text: false})
+							.on('click',function(){$(this).closest('li').empty().remove();})
+							.appendTo($target);
+							})
+
+				}, //images
+			'navigation' : function($form,pid)	{
+				$form.hideLoading();
+				app.ext.admin.u.handleAppEvents(r); //before getTree prepend because the tree code uses delegated events. The save button uses old app events tho.
+				$form.prepend(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data['adminProductNavcatList|'+pid]['@PATHS']}));
+
+				}
 			},
 	
 	
@@ -883,116 +1002,7 @@ app.u.handleEventDelegation($target);
 				$r.anycontent({'templateID':'productEditorPanelTemplate_reviews'});
 				return $r;
 				},
-	
-			getImagesPanelContents : function(pid,panelid)	{
-				var r;
-	
-				app.u.dump("BEGIN admin_prodEdit.u.getImagesPanelContents");
-				r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['adminProductDetail|'+pid]);
-	
-	
-	//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
-				var $prodImageUL = $("[data-app-role='prodImagesContainer']",r);
-				$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
-				
-	
-	//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
-				if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
-	//						app.u.dump(" -> More than one sku is present.");
-					$prodImageUL.width('60%'); //width is only applied IF right column (sku imagery) is present.
-					var $container = $("[data-app-role='prodEditSkuImagesContainer']",r).show();
-					var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
-					var L = skus.length;
-					var $table = $("<table \/>").addClass('gridTable').appendTo($container);
-					for(var i = 0; i < L; i += 1)	{
-						var $tr = app.renderFunctions.transmogrify(skus[i],'prodEditSKUImageTemplate',skus[i])
-						$tr.appendTo($table);
-						}
-					}
-	
-				app.ext.admin.u.handleAppEvents(r);
-	
-	
-	//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
-				$(".sortableImagery",r).sortable({
-					'items' : 'li:not(.dropzone)',
-					'appendTo' : r,
-					'cancel' : '.ui-icon', //if an icon is the drag start (such as clear image) do not init sort on element.
-					'containment' : r,
-					'placeholder' : 'ui-state-highlight positionRelative marginRight marginBottom floatLeft',
-					'forcePlaceholderSize' : true,
-					'cursor' : "move",
-					'cursorAt' : { left: 5 },
-					'connectWith' : '.sortableImagery',
-					'stop' : function(event,ui)	{ui.item.addClass('edited')},
-					'remove' : function(event, ui) {
-						ui.item.after(ui.item.clone().addClass('edited'));//clone the dropped item into the new parent at the drop index.
-						$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
-						},
-					'revert' : true
-					});
-	
-				$(".sortableImagery",r).anydropzone({
-					folder : 'product/'+pid.toLowerCase(),
-					drop : function(files,event,self){
-	
-						for (var i = 0; i < files.length; i++) {
-							var file = files[i];
-							var imageType = /image.*/;
-			
-							if (!file.type.match(imageType)) {
-								continue;
-								}
-							var $target = self.element;
-							var img = document.createElement("img");
-							img.classList.add("obj");
-							img.file = file;
-							if($target.attr('data-app-role') == 'skulist')	{
-								img.height = 35;
-								img.width = 35;
-								}
-							else	{
-								img.height = 75;
-								img.width = 75;
-								}
-							img.classList.add('newMediaFile');
-			
-							
-							$target.children().last().before($("<li \/>").append(img)); //the last child is the 'click here'. put new image before that.
-							var reader = new FileReader();
-							reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-							reader.readAsDataURL(file);
-							}
-	
-						},
-					upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
-					}).append($("<li class='dropzone'>Click or drop file here to add image</li>").on('click',function(){
-						app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
-						}));
-	
-				r.on('mouseenter','img',function(e){
-					var $target = $(e.target).closest('li');
-					
-					$target.on('mouseleave',function(e){
-						$target.find('span').empty().remove(); //get rid of all children.
-						});
-					
-					$target.append("<span class='imageIDRef ui-corner-tr small'>image "+($target.index() + 1)+"<\/span>");
-					$("<span \/>")
-						.attr('title','Disassociate image from '+pid)
-						.css({
-							'position':'absolute',
-							'top':'3px',
-							'right':'3px'
-							})
-						.button({icons: {primary: "ui-icon-circle-close"},text: false})
-						.on('click',function(){$(this).closest('li').empty().remove();})
-						.appendTo($target);
-						})
-					
-				return r;
-				},
-	
+
 	//executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
 			handleAddImageToList : function($list)	{
 				app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
