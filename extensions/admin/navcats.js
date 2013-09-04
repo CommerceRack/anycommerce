@@ -225,7 +225,7 @@ Params:
 				
 				return $tree;
 				},
-			
+			// !!! port this over to app.u.handleEventDelegation
 			handleCatTreeDelegation : function($tree)	{
 				$tree.on('click',function(e,p){
 					p = p || {}; //

@@ -209,6 +209,7 @@ app.model.addDispatchToQ({
 					var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
 					$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
 					});
+			//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
 			
 			//make inputs 'know' when they've been added and update the button.
 				app.ext.admin.u.applyEditTrackingToInputs($editorContainer);

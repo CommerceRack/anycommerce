@@ -1,3 +1,25 @@
+/*
+* 201334 -> styles used in the new manager/editor
+*/
+
+.managementCategories{
+	text-align:left;
+	-webkit-column-count: 5;
+	-webkit-column-gap: 12px; 
+	-webkit-column-rule: 0px dotted black;
+	-moz-column-count: 5;
+	-moz-column-gap: 12px;  
+	-moz-column-rule: 0px dotted black;
+	column-count: 5;
+	column-gap: 12px; 
+	column-rule: 0px dotted black;
+	}
+
+
+/*
+END new styles
+*/
+
 
 .productEditorContainer	{width:100%;}
 .productEditorContainer td	{vertical-align:top;}

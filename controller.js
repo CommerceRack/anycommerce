@@ -1239,6 +1239,42 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			}, //loadCSSFile
 
 
+//run from inside the handleEventDelegation function
+			executeEvent : function($target,p){
+				p = p || {};
+				var
+					actionExtension = $target.data('app-click').split('|')[0],
+					actionFunction =  $target.data('app-click').split('|')[1];
+
+				if(actionExtension && actionFunction)	{
+					if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+			//execute the app event.
+						app.ext[actionExtension].e[actionFunction]($target,p);
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
+					}
+				},
+
+//run on a container to manage event delegation.  add a data-app-EVENTTYPE to an element, where EVENTTYPE is = to an event, such as click or change.
+//The value of the data tag should be = "EXTENSION|FUNCTIONNAME" where extension = your extension and FUNCTIONNAME is the name of a function within the 'e' node.
+//This code is used for adding events only, not styling.  Use renderFormats for that or the 'apply' classes.
+//p in event = optional params. can be added when 'trigger' is executed. these are then passed into the app event and can be used to change behavior, if necessary.
+			handleEventDelegation : function($container)	{
+//				app.u.dump(" events are being delegated");
+				$container.on('click',"[data-app-click]",function(e,p){
+					app.u.executeEvent($(e.target),p)
+					});
+				$container.on('change',"[data-app-change]",function(e,p){
+					app.u.executeEvent($(e.target),p)
+					});
+				},
+
+
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
