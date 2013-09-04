@@ -1153,7 +1153,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 // !!! update this to use anycontent.
 		_anyContent : function()	{
-			var $content = false, //what is returned. will either be a jquery object of content or false
+// *** 201336 -> this will now use the anycontent plugin instead of a half-assed version of it.
+/*			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
 //			app.u.dump("anypanel._anyContent");
 			if(o.content)	{
@@ -1182,6 +1183,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 				
 				}
 			return $content;
+			*/
+			this.element.anycontent(this.options);
 			},
 
 		_handleButtons : function($header)	{
