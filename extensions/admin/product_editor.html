@@ -29,11 +29,32 @@
 	<div data-app-role='productManagerVariationsContent' class='displayNone ui-widget'></div>
 	
 	<!-- used for both product lists (management categories) and search/filter results. the template used changes, so no data-bind on tbody. -->
+
 	<div data-app-role='productManagerResultsContent' class='displayNone ui-widget'>
 	
-		<ol data-app-role='productManagerSearchResults'></ol>
-	
+	<table class='fullWidth gridTable applyAnytable ui-widget-content marginBottom' data-app-role='productManagerResultsTable'>
+	<thead>
+	<tr>
+		<th></th>
+		<th>SKU</th>
+		<th>Name</th>
+		<th>Price</th>
+		<th># Variations</th>
+		<th># Children</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-app-role='productManagerSearchResults'>
+	</tbody>
+	</table>
+
+
+	<ul data-app-role='productManagerTaskResults' data-loadstemplate="productManagerTaskItemTemplate" class='noPadOrMargin listStyleNone'></ul><!-- session specific set of products w/ some 'task' associated with them -->
+
 	</div>
+
+
+
 
 
 </div>
@@ -159,20 +180,38 @@
 
 <!-- used for keyword and filtered search -->
 <ul>
-<li id='productManagerResultsItemTemplate' class='ui-widget-content ui-corner-all marginBottom clearfix'>
+<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom clearfix'>
 		
 	<div class='prodThumbContainer floatLeft marginRight marginLeft'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
 	</div>
-	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span>
-
-<button data-app-click='admin_prodEdit|productEditorShow4Results' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Inline</button>
-<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Full View</button>
-
-
+	<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
+<button data-app-click='admin_prodEdit|productEditorShow4Task' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
 </li>
 </ul>
+
+
+
+<table>
+<tr id='prodManagerProductResultsTemplate'>
+	<td>
+	<div class='prodThumbContainer marginRight'>
+ 	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
+ 	</div>
+	</td>
+	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
+	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
+	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
+	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
+	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
+	<td align='right'>
+	<button data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Add as Task</button>
+	<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
+	</td>
+</tr>
+
+</table>
 
 
 

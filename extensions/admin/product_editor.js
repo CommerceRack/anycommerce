@@ -26,7 +26,6 @@ The functions here are designed to work with 'reasonable' size lists of categori
 var admin_prodEdit = function() {
 	var theseTemplates = new Array(
 		'ProductCreateNewTemplate',
-		'productManagerResultsItemTemplate',
 		'productEditorPanelTemplate',
 		'mpControlSpec'
 		);
@@ -139,17 +138,18 @@ var admin_prodEdit = function() {
 							var
 								pid = app.data[_rtag.datapointer].hits.hits[i]['_id'],
 								eleID = 'prodManager_'+pid,
-								$thisLI = $(app.u.jqSelector('#',eleID));
+								$thisLI = $(app.u.jqSelector('#',eleID)),
+								$PMTaskList = $tbody.closest("[data-app-role='productManagerResultsContent']").find("[data-app-role='productManagerTaskResults']");
 							
-							app.u.dump(i+") pid: "+pid);
+//							app.u.dump(i+") pid: "+pid);
 								
-							if($thisLI.length)	{
-								//li is already in list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
-								}
-							else	{
-								$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
-								}
+							$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
 							$tbody.prepend($thisLI);
+							if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
+								$("[data-app-click='admin_prodEdit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
+								//li is already in PM task list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
+								}
+
 							}
 						}
 					}
@@ -1198,6 +1198,7 @@ app.model.dispatchThis('immutable');
 					$container.children().hide(); //hide the other parent divs (landing text, product editor)
 					$("[data-app-role='productManagerResultsContent']",$container).show();
 	//make sure results table has anytable applied.
+					$tbody.empty();
 					if($tbody.parent('table').data('widget-anytable'))	{}
 					else	{
 						$tbody.parent('table').anytable()
@@ -1213,7 +1214,7 @@ app.model.dispatchThis('immutable');
 					var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
 					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
-					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'productManagerResultsItemTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
+					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
 					app.model.dispatchThis();
 					}
 				else	{
@@ -1263,6 +1264,7 @@ app.model.dispatchThis('immutable');
 				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
 				},
 
+//!!! this needs to first move the item into the task list, then open the editor automatically.
 			productEditorShow : function($ele,p)	{
 				if($ele.data('pid'))	{
 					var $container = $ele.closest("[data-app-role='productManager']");
@@ -1274,16 +1276,63 @@ app.model.dispatchThis('immutable');
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
 					}
 				},
+//if it's already in the list, it's removed. If it is not in the list, it's added.
+// !!! most of this code will need to get moved to a utility and executed from within productEditorShow
+// the utility will need to support whether or not to immediately translate. 
+// -> because if we go straight into edit, we are always going to get a clean copy of the product record and should use that to translate.
+			productTaskPidToggle : function($ele,p) {
+				if($ele.data('pid'))	{
+					var pid = $ele.data('pid');
+					var $PMTaskList = $("ul[data-app-role='productManagerTaskResults']",'#productContent');
+					if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
+						$ele.removeClass('ui-state-highlight');
+						$("li[data-pid='"+pid+"']",$PMTaskList).empty().remove();
+						}
+					else	{
+						$ele.addClass('ui-state-highlight');
+						var $li = app.renderFunctions.createTemplateInstance($PMTaskList.data('loadstemplate'));
+						$li.showLoading({'message':'Fetching Product Detail'});
+						$li.attr('data-pid',pid);
+						$PMTaskList.append($li);
+						var _tag = {
+							'datapointer':'adminProductDetail|'+pid,
+							'jqObj' : $li,
+							'callback' : 'anycontent'
+							}
+						if(app.model.fetchData('adminProductDetail|'+pid))	{
+							app.u.handleCallback(_tag);
+							}
+						else	{
+							app.model.addDispatchToQ({
+								'_cmd':'adminProductDetail',
+								'inventory':1,
+								'skus':1,
+								'pid':pid,
+								'_tag':	_tag
+								},'passive');
+							app.model.dispatchThis('passive');
+							
+							}
+						//go fetch the product record and append or prepend this item to the list.
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element with data-app-click.","gMessage":true});
+					}
+				},
 
-			productEditorShow4Results : function($ele,p)	{
+			productEditorShow4Task : function($ele,p)	{
 				//
 				if($ele.data('pid'))	{
 					var $parent = $ele.closest("li");
 					var $PEC = $("[data-app-role='productEditorContainer']:first",$parent); //PE = Product Editor.
-					$PEC.show();
-					$parent.animate({'height':500 + $parent.outerHeight()});
-					$PEC.css({'height':500, 'overflow':'auto','width':'100%'});
-					app.ext.admin_prodEdit.a.showProductEditor($PEC,$ele.data('pid'));
+					if($PEC.children().length)	{
+						$PEC.toggle()
+						}
+					else	{
+						$PEC.show();
+						app.ext.admin_prodEdit.a.showProductEditor($PEC,$ele.data('pid'));
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
