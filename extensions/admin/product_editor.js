@@ -51,9 +51,9 @@ var admin_prodEdit = function() {
 				'navigation' : {'title':'Website Navigation','isLegacy':false,'column':1,'panelCallback':'navigation'},
 				'syndication' : {'title':'Marketplaces (formerly syndication)','isLegacy':false,'panelCallback':'default','column':1},
 				'ciengine' : {'title':'Competitive Intelligence','isLegacy':true,'column':1},
-				'amazon' : {'title':'Amazon Marketplace','isLegacy':true,'column':2},
+				'amazon' : {'title':'Amazon Marketplace','isLegacy':false,'column':2,'panelCallback':'default'},
 				'ebaypower' : {'title':'eBay Powerlister','isLegacy':true,'column':2},
-				'ebay2' : {'title':'eBay','isLegacy':true,'column':2},
+				'ebay' : {'title':'eBay','isLegacy':false,'column':2,'panelCallback':'default'},
 				'listing' : {'title':'HTML Listing','isLegacy':true,'column':2},
 				'doba' : {'title':'Doba Supplier Settings','isLegacy':true,'column':2},
 				'events' : {'title':'Listing Events','isLegacy':true,'column':2},
@@ -299,8 +299,6 @@ app.u.handleEventDelegation($target);
 					}
 				}, //saveProductPanel
 	
-
-	
 			showStoreVariationsManager : function($target)	{
 	//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
 				if($target && $target instanceof jQuery)	{
@@ -508,6 +506,9 @@ app.u.handleEventDelegation($target);
 			'default' : function($form,pid)	{
 				app.u.dump(" -> Got here! "+$form.closest("[data-panelid]").data('panelid'));
 				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
+				
+				$('.applyAnytabs').anytabs();
+				$('.toolTip').tooltip();
 				},
 			
 			'flexedit' : function($form,pid)	{
@@ -515,7 +516,6 @@ app.u.handleEventDelegation($target);
 				$form.empty().hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
 				app.ext.admin.u.handleAppEvents(r);
 				},
-			
 			'images' : function($form,pid)	{
 
 		
@@ -1183,7 +1183,20 @@ app.u.handleEventDelegation($target);
 				app.ext.admin_prodEdit.a.showCreateProductDialog();
 				},
 
-
+			ebayCategoryChooserShow : function($ele,p)	{
+				var pid = $ele.closest("[data-pid]").data('pid');
+				if(pid && ($ele.data('categoryselect') == 'primary' || $ele.data('categoryselect') == 'secondary'))	{
+					app.u.dump(" -> input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+": "+$ele.closest('fieldset').find("input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"']").length);
+					app.ext.admin_syndication.a.showEBAYCategoryChooserInModal(
+						$ele.closest('fieldset').find("input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"']"),
+						{'pid':pid,'categoryselect':$ele.data('categoryselect')},
+						$ele.closest('fieldset').find("[data-app-role='ebayCategory"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"Name']")
+						);
+					}
+				else	{
+					$ele.closest('fieldset').anymessage({'message':'In admin_prodEdit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});
+					}
+				},
 
 			amazonProductDefinitionsShow : function($ele,p)	{
 

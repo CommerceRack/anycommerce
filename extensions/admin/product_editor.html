@@ -613,7 +613,7 @@ OLD PRODUCT EDITOR
 
 
 
-<div id='productEditorPanelTemplate_shipping' >
+<div id='productEditorPanelTemplate_shipping' class='labelsAsBreaks'>
 	<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' /> ounces (use # for pounds)</label>
 	<!-- webdb:ship_fixed -->
 	<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
@@ -711,8 +711,10 @@ OLD PRODUCT EDITOR
 </div>
 
 
+
+
 <div id='productEditorPanelTemplate_sku' class='productPanel panelContents_sku'>
-<table>
+<table class='fullWidth gridTable'>
 <thead>
 <tr>
 	<th>SKU</th>
@@ -724,9 +726,26 @@ OLD PRODUCT EDITOR
 	<th>Weight</th>
 </tr>
 </thead>
-<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:wmsTableRowTemplate;'></tbody>
+<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:skuTableRowTemplate;'></tbody>
 </table>
 </div>
+
+<table>
+<tr id='skuTableRowTemplate'>
+	<td data-bind='var:sku(sku); format:text;'></td>
+	<td><input name="zoovy:prod_mfg" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td><input name="zoovy:prod_upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td><input name="amz:asin" size="4" type="text" data-bind='var:sku(%attribs.amz:asin); format:popVal;'></td>
+	<td><input name="zoovy:base_price" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_price); format:popVal;'></td>
+	<td><input name="zoovy:base_cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
+	<td><input name="zoovy:base_weight" size="4" type="text" data-bind='var:sku(%attribs.zoovy:base_weight); format:popVal;'></td><!-- !!! ask b about this field id -->
+
+</tr>
+</table>
+
+
+
+
 
 
 
@@ -752,6 +771,8 @@ OLD PRODUCT EDITOR
 
 
 </table>
+
+
 
 
 
@@ -833,8 +854,21 @@ This HTML Editor option will be removed altogether in the future.
 
 
 
-<div id='productEditorPanelTemplate_amazon' >
+<div id='productEditorPanelTemplate_amazon' class='labelsAsBreaks'>
 	<h3>Amazon Seller Central v1.7</h3>
+	
+	
+	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
+	<ul>
+		<li><a href='#general' data-app-role='generalTab'>General</a></li>
+		<li><a href='#relateditems' data-app-role='relatedItemsTab'>Related Items</a></li>
+		<li><a href='#history' data-app-role='historyTab'>History</a></li>
+		<li><a href='#summary' data-app-role='summaryTab'>Summary</a></li>
+		<li><a href='#definitions' data-app-role='definitionsTab'>Definitions</a></li>
+	</ul>
+	
+	
+	<section data-anytab-content='general' class='clearfix'>
 	<label>
 		<input type="checkbox" name="amz" data-bind="var: product(amz); format:popVal;"> Allow syndication to Amazon
 	</label>
@@ -931,14 +965,14 @@ This HTML Editor option will be removed altogether in the future.
 
 	<label>
 		<span>ASIN</span>
-		<input type="text" size="20" value="" name="amz:asin" class="text" data-bind="var: product(amz:asin); format:popVal;">
+		<input type="text" size="20" value="" name="amz:asin"  data-bind="var: product(amz:asin); format:popVal;">
 	</label>
 	
 	<div class='label hint'>UPC/MFGID are required, but stored at inventory level - please configure on the inventory panel.</div>
 
 	<label>
 		<span>Manufacturer/brand</span>
-		<input type="text" size="50" value="JVC" name="zoovy:prod_mfg" class="text" data-bind="var: product(zoovy:prod_mfg); format:popVal;">
+		<input type="text" size="50" value="JVC" name="zoovy:prod_mfg"  data-bind="var: product(zoovy:prod_mfg); format:popVal;">
 	</label>
 	<label>
 		<span>Product condition</span>
@@ -949,13 +983,173 @@ This HTML Editor option will be removed altogether in the future.
 		</select>
 	</label>
 
+	<label>
+		<span>Condition note</span>
+		<textarea name="zoovy:prod_condition_note" data-maxlength='200' data-bind="var: product(zoovy:prod_condition_note); format:popVal;"></textarea> !!! needs countdown and max-enforcement.
+	</label>
+
+	<label>
+		<span>Fulfillment latency (in days):</span>
+		<input type="number" min='0' step='1' size="6" value="" name="zoovy:ship_latency" data-bind="var: product(zoovy:ship_latency); format:popVal;">
+	</label>
+	
+	<div class='buttonset alignRight'>
+	<button onclick="savePanel(this,'amazon','VALIDATE');">Validate</button>
+	<button onclick="savePanel(this,'amazon','QUEUE');">Queue Now</button>
+	<button onclick="savePanel(this,'amazon','QUEUE-LATER');">Queue Later</button>
+	<button onclick="savePanel(this,'amazon','REMOVE');">Remove</button>
+	<button onclick="savePanel(this,'amazon','SAVE');">Save</button>
+	</div>
+	</section>
+	
+	
+	<section data-anytab-content='relateditems' class='clearfix'></section>
+	<section data-anytab-content='summary' class='clearfix'></section>
+	<section data-anytab-content='history' class='clearfix'></section>
+	<section data-anytab-content='definitions' class='clearfix'></section>
+	
+	</div>
+	
 </div>
 
 
 
 
 
-<div id='productEditorPanelTemplate_ebay' >
+<div id='productEditorPanelTemplate_ebay' class='labelsAsBreaks' >
+
+
+<label>
+	<span>Category 1</span>
+	<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+	<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+	<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+</label>
+<label>
+	<span>Category 2</span>
+	<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+	<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+	<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
+</label>
+
+ebay store category and launch profile should go here.
+
+<label>
+	<span>eBay title</span>
+	<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+</label>
+<label>
+	<span>eBay subtitle</span>
+	<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+</label>
+
+<h3>Auction Configuration</h3>
+
+<label>
+	<span>Duration</span>
+	<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+		<option value="">-- use profile --</option>
+		<option value="3">3 Day</option>
+		<option value="5">5 Day</option>
+		<option value="7">7 Day</option>
+		<option value="10">10 Day</option>
+	</select>
+</label>
+
+<label>
+	<span>Auction qty</span>
+	<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+</label>
+
+<label>
+	<span>Starting bid</span>
+	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
+</label>
+
+<label>
+	<span>Buy it now</span>
+	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
+</label>
+<label>
+	<span>Reserve price</span>
+	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
+	<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+</label>
+
+<label>
+	<span>eBay gallery</span>
+	<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+		<option value="">-- use profile --</option>
+		<option value="0">never</option>
+		<option value="1">auctions only</option>
+		<option value="2">fixed price only</option>
+		<option value="3">auction + fixed price</option>
+		<option value="8">store only</option>
+		<option value="11">any type</option>
+	</select>	
+</label>
+
+
+<div class='buttonset'>
+	<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
+	<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
+	<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
+</div>
+
+
+
+<h3>Syndicated Listing Configuration</h3>
+
+<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. or do we just add a checkbox.</div>
+
+<label>
+	<span>Fixed price</span>
+	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
+</label>
+<div class='buttonset'>
+<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
+</div>
+
+
+
+
+<div class='buttonset alignRight'>
+	<button>Save</button>
+</div>
+<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+
+
+<table width="100%" border="0">
+	<tbody>
+	
+	<tr>
+		<td class="norm">eBay Store Category:</td>
+		<td><font class="norm"><select name="ebay:storecat">
+		<option value="">No Category/Default</option>
+		
+		</select></font></td>
+	</tr>
+	
+	<tr>
+		<td>Launch Profile:</td>
+		<td><select name="zoovy:profile">
+		<option value="">-- not set --</option>
+		<option value="20130717">20130717</option>
+<option value="BOB">BOB</option>
+<option value="FREDDY">FREDDY</option>
+<option value="MYAPP">MYAPP</option>
+<option value="SNAKE">SNAKE</option>
+<option value="DEFAULT" selected="">-- INVALID: DEFAULT --</option>
+
+		</select></td>
+	</tr>
+</tbody>
+</table>
+<!-- !!! probably not going to need this iframe -->
+		<div id="ebay2preview" style="display: none;">
+		<iframe width="800" height="500" src="" id="ebay2previewiframe" name="ebay2previewiframe"></iframe>
+		</div>
+
 
 </div>
 
