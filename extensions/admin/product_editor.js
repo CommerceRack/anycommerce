@@ -28,7 +28,6 @@ var admin_prodEdit = function() {
 		'ProductCreateNewTemplate',
 		'prodManagerProductResultsTemplate',
 		'prodManagerProductListTemplate',
-		'productListTemplateEditMe',
 		'productEditorPanelTemplate',
 		'mpControlSpec'
 		);
@@ -57,11 +56,11 @@ var admin_prodEdit = function() {
 				'listing' : {'title':'HTML Listing','isLegacy':true,'column':2},
 				'doba' : {'title':'Doba Supplier Settings','isLegacy':true,'column':2},
 				'events' : {'title':'Listing Events','isLegacy':true,'column':2},
-				'xsell' : {'title':'Cross Selling','isLegacy':true,'column':2},
+				'xsell' : {'title':'Cross Selling','isLegacy':false,'column':2,'panelCallback':'default'},
 				'wholesale' : {'title':'Wholesale','isLegacy':true,'column':2},
-				'reviews' : {'title':'Customer Reviews','isLegacy':false,'column':2},
+				'reviews' : {'title':'Customer Reviews','isLegacy':false,'column':2,'panelCallback':'reviews'},
 				'rss' : {'title':'SEO and RSS Tools','isLegacy':false,'panelCallback':'default','column':2},
-				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':true,'column':2}
+				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':false,'column':2,'panelCallback':'default'}
 				},
 
 			flexTypes : {
@@ -120,7 +119,7 @@ var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
 for(var index in panels)	{
 	if(panels[index].isLegacy)	{}
 	else if(panels[index].panelCallback && typeof app.ext.admin_prodEdit.panels[panels[index].panelCallback] == 'function')	{
-		app.u.dump(" -> index "+index+" has a panelCallback defined");
+//		app.u.dump(" -> index "+index+" has a panelCallback defined");
 		app.ext.admin_prodEdit.panels[panels[index].panelCallback]($("[data-panelid='"+index+"']:first",_rtag.jqObj).find('fieldset'),_rtag.pid)
 		}
 	else	{
@@ -180,6 +179,7 @@ for(var index in panels)	{
 			showProductEditor : function($target,pid)	{
 				if($target instanceof jQuery && pid)	{
 
+$target.empty();
 var $col = {};
 $col['1'] = $("<div \/>").addClass('twoColumn').attr('data-app-column',1);
 $col['2'] = $("<div \/>").addClass('twoColumn column2').attr('data-app-column',2);
@@ -238,6 +238,21 @@ app.model.addDispatchToQ({
 		'pid':pid
 		}
 	},'mutable');
+
+app.model.addDispatchToQ({
+	'_cmd':'adminProductReviewList',
+	'PID':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductReviewList|'+pid,
+		'pid':pid
+		}
+	},'mutable');
+
+
+if(app.model.fetchData('adminEBAYProfileList'))	{}
+else	{
+	app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
+	}
 
 //product record, used in most panels.
 app.model.addDispatchToQ({
@@ -518,9 +533,8 @@ app.u.handleEventDelegation($target);
 		panels : {
 //some of the panels, such as general, don't require anything special beyond translation.
 			'default' : function($form,pid)	{
-				app.u.dump(" -> Got here! "+$form.closest("[data-panelid]").data('panelid'));
+//				app.u.dump(" -> Got here! "+$form.closest("[data-panelid]").data('panelid'));
 				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
-				
 				$('.applyAnytabs').anytabs();
 				$('.toolTip').tooltip();
 				},
@@ -528,7 +542,6 @@ app.u.handleEventDelegation($target);
 			'flexedit' : function($form,pid)	{
 //				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
 				$form.empty().hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
-				app.ext.admin.u.handleAppEvents(r);
 				},
 			'images' : function($form,pid)	{
 
@@ -552,9 +565,6 @@ app.u.handleEventDelegation($target);
 							$tr.appendTo($table);
 							}
 						}
-		
-					app.ext.admin.u.handleAppEvents($form);
-		
 		
 		//images are sortable between lists. When an image is dropped, it is cloned in the new location and reverted back in the original.
 					$(".sortableImagery",$form).sortable({
@@ -634,11 +644,12 @@ app.u.handleEventDelegation($target);
 							})
 
 				}, //images
+			'reviews' : function($form,pid)	{
+				$form.hideLoading().append($("<div \/>").anycontent({'templateID':'productEditorPanelTemplate_reviews',datapointer : 'adminProductReviewList|'+pid}));
+				},
 			'navigation' : function($form,pid)	{
 				$form.hideLoading();
-				app.ext.admin.u.handleAppEvents(r); //before getTree prepend because the tree code uses delegated events. The save button uses old app events tho.
 				$form.prepend(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data['adminProductNavcatList|'+pid]['@PATHS']}));
-
 				}
 			},
 	
@@ -676,17 +687,34 @@ app.u.handleEventDelegation($target);
 					$tag.append(data.value[i].prompt)
 					}
 				},
-			
-			assemblyList : function($tag,data)	{
-				for(i in data.value)	{
-					if(i.indexOf(':') == -1)	{} //not a variation. do nothing.
+
+			ebayLaunchProfiles : function($tag,data)	{
+				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
+				if(app.data.adminEBAYProfileList)	{
+					if(app.data.adminEBAYProfileList['@PROFILES'].length)	{
+						var profiles = app.data.adminEBAYProfileList['@PROFILES']; //shortcut.
+						var L = profiles.length, haveMatch = false;
+						
+						for(var i = 0; i < L; i += 1)	{
+							var $option = $("<option \/>").text(profiles[i].PROFILE).val(profiles[i].PROFILE);
+							if(profiles[i].PROFILE == data.value)	{
+								haveMatch = true;
+								$option.prop('selected','selected');
+								}
+							$option.appendTo($tag);
+							}
+						if(haveMatch){}
+						else	{
+							var $option = $("<option \/>").text("-- "+data.value+" -- (invalid)").val(data.value).prop('selected','selected').appendTo($tag);
+							}
+						}
 					else	{
-						$tag.append("<li><label><span>"+i+"</span> <input type='text' name='"+i+"' value='' /></label></li>");
+						$tag.insertAfter($("<div \/>").anymessage({"message":"It appears as though you have no launch profiles. Please create some prior to configuring this product for eBay.",'persistent':true}));
 						}
 					}
-				if($tag.children().length)	{
-					$tag.parent().removeClass('displayNone');
-					}			
+				else	{
+					$tag.insertAfter($("<div \/>").anymessage({"message":"ebay profile list not in memory.","gMessage":true}));
+					}				
 				}
 			
 			}, //renderFormats
@@ -1015,12 +1043,6 @@ app.u.handleEventDelegation($target);
 					}
 				}, //handleStickyTab
 	
-			getReviewsPanelContents : function(pid)	{
-				var $r = $("<div \/>"); //what is returned. either panel contents or false.
-				$r.anycontent({'templateID':'productEditorPanelTemplate_reviews'});
-				return $r;
-				},
-
 	//executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
 			handleAddImageToList : function($list)	{
 				app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
@@ -1036,7 +1058,6 @@ app.u.handleEventDelegation($target);
 	
 				mediaLibrary($img,$("[name='throwAway']",$('#prod_images')),'Select Product Image');
 				},
-	
 	
 			handleCreateNewProduct : function($form)	{
 				
@@ -1150,7 +1171,7 @@ app.model.dispatchThis('immutable');
 	
 			}, //u
 
-//e is for 'events'. This are used in handleAppEvents.
+//e is for 'events'. This are used in handleAppEvents and event delegation (which is replacing handleAppEvents).
 		e : {
 
 // * 201334 -> new product editor.
@@ -1242,33 +1263,56 @@ app.model.dispatchThis('immutable');
 
 			amazonProductDefinitionsShow : function($ele,p)	{
 
-var docid = $ele.closest('form').find("[name='amz:catalog']").val();
-if (docid == '') {
-	alert('please select an amazon product type');
-	}
-else {
-	docid = String('amz.'+docid).toLowerCase();
-	navigateTo(
-		'/biz/product/definition.cgi?_PRODUCT=MODEL04&amp;_DOCID='+docid,
-		{dialog:true,title:'Amazon Product Type'}
-		); /// !!! this'll need to get upgraded too.
-//	savePanel(this,'amazon'); !!! talk to B about this. Need to save before loading the definition editor?
-	}
+				var docid = $ele.closest('form').find("[name='amz:catalog']").val();
+				if (docid == '') {
+					alert('please select an amazon product type');
+					}
+				else {
+					docid = String('amz.'+docid).toLowerCase();
+					navigateTo(
+						'/biz/product/definition.cgi?_PRODUCT=MODEL04&amp;_DOCID='+docid,
+						{dialog:true,title:'Amazon Product Type'}
+						); /// !!! this'll need to get upgraded too.
+				//	savePanel(this,'amazon'); !!! talk to B about this. Need to save before loading the definition editor?
+					}
 
 				},
 
-// END new product editor events
+
+//executed from the save button in the website navigation panel of the product editor.
+			adminProductMacroNavcats : function($ele,p)	{
+				//create an object of safe id's w/ value of 1/0 based on checked/unchecked. ONLY builds cats that have changed.
+				var navcats = app.ext.admin_navcats.u.getPathsArrayFromTree($ele.closest("form"));
+				var $panel = $ele.closest(".panelContents");
+				var pid = $ele.closest(".productPanel").data('pid');
+				$panel.showLoading({'message':'Updating Website Navigation for '+pid});
+				
+				var cmdObj = {
+					'_cmd' : 'adminProductMacro',
+					'pid' : pid,
+					'@updates' : new Array(), //used for sku images
+					'%attribs' : {}, //used for prod images
+					'_tag' : {
+						'callback' : 'showMessaging',
+						'message' : "Your changes have been saved",
+						jqObj : $panel
+						}
+					}
+				
+				for(var index in navcats)	{
+					cmdObj['@updates'].push("NAVCAT-"+(navcats[index] ? 'INSERT' : 'DELETE')+"?path="+index);
+					}
+				//					app.u.dump(" -> updates: "); app.u.dump(updates);
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				app.model.dispatchThis('immutable');
+				}, //adminProductMacroNavcats
+
+
+
+
+// END new/updated product editor events
 
 			
-			"configOptions" : function($t)	{
-				$t.button();
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{navigateTo('/biz/product/options2/index.cgi?product='+pid);}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
-					});
-				}, //configOptions
 
 			"enterSyndicationSpecifics" : function($t)	{
 				$t.button().addClass('smallButton');
@@ -1283,40 +1327,6 @@ else {
 
 
 
-
-//executed from the save button in the website navigation panel of the product editor.
-			adminProductMacroNavcats : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminProductMacroNavcats').on('click.adminProductMacroNavcats',function(event){
-					event.preventDefault();
-//create an object of safe id's w/ value of 1/0 based on checked/unchecked. ONLY builds cats that have changed.
-var navcats = app.ext.admin_navcats.u.getPathsArrayFromTree($btn.closest("form"));
-var $panel = $btn.closest(".panelContents");
-var pid = $btn.closest(".productPanel").data('pid');
-$panel.showLoading({'message':'Updating Website Navigation for '+pid});
-
-var cmdObj = {
-	'_cmd' : 'adminProductMacro',
-	'pid' : pid,
-	'@updates' : new Array(), //used for sku images
-	'%attribs' : {}, //used for prod images
-	'_tag' : {
-		'callback' : 'showMessaging',
-		'message' : "Your changes have been saved",
-		jqObj : $panel
-		}
-	}
-
-for(var index in navcats)	{
-	cmdObj['@updates'].push("NAVCAT-"+(navcats[index] ? 'INSERT' : 'DELETE')+"?path="+index);
-	}
-//					app.u.dump(" -> updates: "); app.u.dump(updates);
-app.model.addDispatchToQ(cmdObj,'immutable');
-app.model.dispatchThis('immutable');
-
-					
-					});
-				},
 
 
 

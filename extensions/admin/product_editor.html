@@ -258,30 +258,6 @@
 
 
 
-<!--
-
-OLD PRODUCT EDITOR
-
--->
-
-
-
-
-
-
-<!-- this template can be used for elastic or traditional product lists. defaultVar should be used for the elastic inputs -->
-<li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
-	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid')); return false;">
-	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
-	</a>
-</li>
-
-
-
-
-
-
-
 
 
 <div id='productEditorPanelTemplate_wms'  class='labelsAsBreaks alignedLabels alignedInputs'>
@@ -326,7 +302,7 @@ OLD PRODUCT EDITOR
 	<td><input name="note" size="25" maxlength="25" type="text"></td>
 	<td><input name="container" size="10" maxlength="10" type="text"></td>
 	<td><input name="origin" size="10" type="text"></td>
-	<td><button >Add</button></td>
+	<td><button >Save</button></td>
 </tr>
 </table>
 
@@ -378,15 +354,15 @@ OLD PRODUCT EDITOR
 <fieldset>
 	<legend>Cross/Up Selling</legend>
 
-	<p><button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
+	<p><button class='applyButton' onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
 	
-	<p><button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
+	<p><button class='applyButton'  onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
 </fieldset>
 
 
-<fieldset data-app-role='assemblyContainer' class='displayNone'>
+<fieldset data-app-role='assemblyContainer'>
 	<legend>Assembly/Kit Components</legend>
-	<ul class='listStyleNone' data-bind="var: product(@inventory); format:assemblyList; extension:admin_prodEdit;">
+	<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
 	</ul>
 </fieldset>
 
@@ -399,6 +375,79 @@ OLD PRODUCT EDITOR
 </div>
 
 
+
+<table>
+<tr id='xsellTableRowTemplate'>
+	<td data-bind='var:sku(sku); format:text;'></td>
+	<td>
+		<input type='text' name='qtyPricing' value='' data-bind='var:sku(%attribs.sku:assembly); format:text;' />
+	</td>
+</tr>
+</table>
+
+
+
+
+<div id='productEditorPanelTemplate_diagnostics'>
+	<div class='floatLeft marginRight marginBottom'>
+		<h3>Change PID</h3>
+		<label>
+			<span>New PID</span>
+			<input type="textbox" name="RENAME_PID" maxlength="20" />
+			<button>Rename</button>
+		</label>
+	</div>
+	
+	<div class='floatLeft marginRight marginBottom'>
+		<h3>Delete Product</h3>
+		<label>
+			<input type="checkbox" name="delimages"> Delete Images
+		</label>
+		<button>Delete</button><!-- open confirm prompt before executing delete -->
+	</div>
+	
+	<div class='floatLeft marginRight marginBottom'>
+		<h3>Clone/Copy Product</h3>
+		<label>
+			<span>New PID</span>
+			<input type='text' maxlength="20" name='CLONE_PID' />
+		</label>
+		<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
+		<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
+		<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
+		<button>Clone</button>
+	</div>
+	
+	
+	<div class='floatLeft marginRight marginBottom'>
+		<h3>Utilities</h3>
+		<button>Debug</button>
+	
+		<hr>
+		
+		<h4>Buy Me Button</h4>
+		Creates an "Add to Cart HTML button" that can be placed on any webpage. <br>
+		<h5>Optional:</h5>
+		Price: $<input type="textbox" name="AMT" size="5"> <br>
+		Min Quantity: <input type="textbox" name="MIN" size="5"><br>
+		Max Quantity: <input type="textbox" name="MAX" size="5"><br>
+		Expires: <input type="textbox" name="EXP" size="6"> (YYYYMMDD)<br>
+		<button>Generate</button>
+	
+	
+	</div>
+
+</div>
+
+
+
+
+<div id='productEditorPanelTemplate_doba' >
+
+<div class='red'>How do we want to handle enable?</div>
+
+
+</div>
 
 
 
@@ -1035,6 +1084,14 @@ This HTML Editor option will be removed altogether in the future.
 ebay store category and launch profile should go here.
 
 <label>
+	<span>Launch profile</span>
+	<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
+	<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+</label>
+
+
+
+<label>
 	<span>eBay title</span>
 	<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
 </label>
@@ -1129,20 +1186,7 @@ ebay store category and launch profile should go here.
 		
 		</select></font></td>
 	</tr>
-	
-	<tr>
-		<td>Launch Profile:</td>
-		<td><select name="zoovy:profile">
-		<option value="">-- not set --</option>
-		<option value="20130717">20130717</option>
-<option value="BOB">BOB</option>
-<option value="FREDDY">FREDDY</option>
-<option value="MYAPP">MYAPP</option>
-<option value="SNAKE">SNAKE</option>
-<option value="DEFAULT" selected="">-- INVALID: DEFAULT --</option>
 
-		</select></td>
-	</tr>
 </tbody>
 </table>
 <!-- !!! probably not going to need this iframe -->
