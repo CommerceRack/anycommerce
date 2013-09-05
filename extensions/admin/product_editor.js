@@ -142,9 +142,11 @@ for(var index in panels)	{
 //P -> an object of params.
 //  -> currently supports 'pid' which, if set, will open the product editor for that pid.
 			showProductManager : function($target,P)	{
+				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
+				app.u.dump(" -> P:"); app.u.dump(P);
 				//for legacy panels:
-				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;
+//				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;
 
 				//always rewrite savePanel. another 'tab' may change the function.
 				//kill any calls in progress so that if setup then product tabs are clicked quickly, setup doesn't get loaded.
@@ -162,10 +164,12 @@ for(var index in panels)	{
 				//no events are delegated on the editor from here. Those get delegated inside showProductEditor so the code for editing is entirely self-contained within that one function (more or less).
 				app.u.handleEventDelegation($('#productTabMainContent'));
 				app.u.handleEventDelegation($("[data-app-role='productManagerResultsTbody']",$target)); //handles the click events on the product list.
-				
 
-
-				if(P.pid)	{app.ext.admin_prodEdit.a.showPanelsFor(P.pid)} //if a pid is specified, immediately show the editor for that pid.
+				if(P.pid)	{
+					var $container = $("#productContent").find("[data-app-role='productManager']");
+					$container.children().hide();
+					app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productManagerEditorContent']",$container).show(),P.pid);
+					} //if a pid is specified, immediately show the editor for that pid.
 				else	{
 					//do nothing. product page template has initial load content.
 					}
@@ -252,7 +256,6 @@ app.model.addDispatchToQ({
 
 
 app.model.dispatchThis('mutable');
-
 app.u.handleEventDelegation($target);
 
 
@@ -268,9 +271,17 @@ app.u.handleEventDelegation($target);
 				if($modal.length < 1)	{
 					$modal = $("<div>").attr({'id':'createProductDialog','title':'Create a New Product'});
 					$modal.appendTo('body');
-					$modal.dialog({width:600,height:500,modal:true,autoOpen:false});
+					$modal.dialog({
+						width:'60%',
+						height: ($('body').height() - 100),
+						modal:true,
+						autoOpen:false
+						});
+					
+					app.u.handleEventDelegation($modal);
 					}
-				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
+				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'));
+				app.u.handleButtons($modal);
 				$modal.dialog('open');
 				}, //showCreateProductDialog
 	
@@ -733,36 +744,40 @@ app.u.handleEventDelegation($target);
 				var $manCatsList = $("[data-app-role='managementCategoryList']",$manCatsContainer);
 				
 //				app.u.dump(" -> $manCatsList.length: "+$manCatsList.length);
-				if($manCatsList.children().length)	{} //already rendered management categories.
+				if($manCatsList.children().length)	{
+//					app.u.dump("Management categories have been rendered already. leave them as they are");
+					} //already rendered management categories.
 				else	{
 					$manCatsContainer.css({'position':'absolute','top':'33px','left':0,'right':0,'z-index':'1000'});
 					var cmdObj = {
-						_cmd : "adminProductManagementCategoryList",
+						_cmd : "adminProductManagementCategoriesComplete",
 						_tag : {
 							callback : function(rd){
 //								app.u.dump(" -> executing callback for management categories request");
 								if(app.model.responseHasErrors(rd)){
+//									app.u.dump(" -> management categories response had errors.");
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									var $ul = $("<ul \/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
-									if(!$.isEmptyObject(app.data.adminProductManagementCategoryList['%CATEGORIES']))	{
+									var $tmp = $("<div\/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
+//									app.u.dump(" -> rd: "); app.u.dump(rd);
+									if(app.data[rd.datapointer]['%CATEGORIES'] && !$.isEmptyObject(app.data[rd.datapointer]['%CATEGORIES']))	{
 										var cats = Object.keys(app.data[rd.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
 										for(var index in cats)	{
-											$ul.append($("<div \/>").addClass('lookLikeLink').attr('data-app-click','admin_prodEdit|managementCatsProdlistShow').data('management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized')));
+											$tmp.append($("<div \/>").addClass('lookLikeLink').attr('data-app-click','admin_prodEdit|managementCatsProdlistShow').data('management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized')));
 											}
-//										app.u.dump(' -> $ul.children().length: '+$ul.children().length);
-										$manCatsList.append($ul.children());
+//										app.u.dump(' -> $tmp.children().length: '+$tmp.children().length);
+										$manCatsList.append($tmp.children());
 										}
 									else	{
 										//successful call, but no management categories exist. do nothing.
 										}
 									}
 								},
-							datapointer : 'adminProductManagementCategoryList'
+							datapointer : 'adminProductManagementCategoriesComplete'
 							}
 						}
-					if(app.model.fetchData('adminProductManagementCategoryList'))	{
+					if(app.model.fetchData('adminProductManagementCategoriesComplete'))	{
 						app.u.handleCallback(cmdObj._tag)
 						}
 					else	{
@@ -1023,35 +1038,53 @@ app.u.handleEventDelegation($target);
 				},
 	
 	
-			handleCreateNewProduct : function(vars)	{
-				var pid = vars.pid;
-				delete vars.pid;
-				$target = $('#createProductDialog');
-				$target.showLoading({'message':'Creating product '+pid});
-				app.ext.admin.calls.adminProductCreate.init(pid,vars,{'callback':function(rd){
-					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						app.u.throwMessage(rd);
-						}
-					else	{
-						$target.empty();
-						$target.append("<p>Thank you, "+pid+" has now been created. What would you like to do next?<\/p>");
-						
-						$("<button \/>").text('Edit '+pid).button().on('click',function(){
-							app.ext.admin_prodEdit.a.showPanelsFor(pid);
-							$target.dialog('close');
-							}).appendTo($target);
-	
-						$("<button \/>").text('Add another product').button().on('click',function(){
-							app.ext.admin_prodEdit.a.showCreateProductDialog();
-							}).appendTo($target);
-						
-						$("<button \/>").text('Close Window').button().on('click',function(){
-							$target.dialog('close');
-							}).appendTo($target);
-						}
-					}});
-				app.model.dispatchThis('immutable');
+			handleCreateNewProduct : function($form)	{
+				
+				if(app.u.validateForm($form))	{
+					var sfo = $form.serializeJSON();
+					var pid = sfo.pid;
+					delete sfo.pid;
+					
+					$target = $('#createProductDialog');
+					$target.showLoading({'message':'Creating product '+pid});
+
+
+app.model.addDispatchToQ({
+	"_cmd":"adminProductCreate",
+	"pid":pid,
+	'%attribs':sfo,
+	"_tag":{
+		'callback':function(rd){
+			$target.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				app.u.throwMessage(rd);
+				}
+			else	{
+				$target.empty();
+				$target.append("<p>Thank you, <b>"+pid+"<\/b> has now been created. What would you like to do next?<\/p>");
+				
+				$("<button \/>").text('Edit '+pid).button().on('click',function(){
+					navigateTo("#!products",{'pid':pid});
+					$target.dialog('close');
+					}).appendTo($target);
+
+				$("<button \/>").text('New Product').button().on('click',function(){
+					app.ext.admin_prodEdit.a.showCreateProductDialog();
+					}).appendTo($target);
+				
+				$("<button \/>").text('Close Window').button().on('click',function(){
+					$target.dialog('close');
+					}).appendTo($target);
+				}
+			}
+		}
+	},'immutable');
+app.model.dispatchThis('immutable');
+
+					}
+				else	{} //validate will handle any error display.
+				
+
 				}, //handleCreateNewProduct
 	
 
@@ -1132,6 +1165,10 @@ app.u.handleEventDelegation($target);
 					},100);
 				},
 
+			productCreateExec : function($ele,p)	{
+				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
+				},
+
 			productEditorShow : function($ele,p)	{
 				if($ele.data('pid'))	{
 					var $container = $ele.closest("[data-app-role='productManager']");
@@ -1149,7 +1186,9 @@ app.u.handleEventDelegation($target);
 				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
 //				$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
-				var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$ele.data('management-category')]).sort();
+				app.u.dump(" -> fetching product for management category: "+$ele.data('management-category'));
+//				app.u.dump(" -> csv: "); app.u.dump(app.data.adminProductManagementCategoriesComplete['%CATEGORIES'][$ele.data('management-category')]);
+				var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoriesComplete['%CATEGORIES'][$ele.data('management-category')]).sort();
 				app.ext.store_prodlist.u.buildProductList({
 					'csv': csv,
 //					'parentID':'prodEditorResultsTbody',

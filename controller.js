@@ -1016,6 +1016,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					$('.applyAnycb',$target).anycb();
 					$('table.applyAnytable',$target).andSelf().anytable(_rtag.anytable || {});
 					$('.applyAnytabs',$target).anytabs();
+					app.u.handleButtons($target);
 					app.u.handleAppEvents($target);
 
 					if(_rtag.applyEditTrackingToInputs)	{
@@ -1242,21 +1243,26 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //run from inside the handleEventDelegation function
 			executeEvent : function($target,p){
 				p = p || {};
-				var
-					actionExtension = $target.data('app-click').split('|')[0],
-					actionFunction =  $target.data('app-click').split('|')[1];
-
-				if(actionExtension && actionFunction)	{
-					if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
-			//execute the app event.
-						app.ext[actionExtension].e[actionFunction]($target,p);
+				if($target && $target instanceof jQuery)	{
+					var
+						actionExtension = $target.data('app-click').split('|')[0],
+						actionFunction =  $target.data('app-click').split('|')[1];
+	
+					if(actionExtension && actionFunction)	{
+						if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+				//execute the app event.
+							app.ext[actionExtension].e[actionFunction]($target,p);
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+						$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
+					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance.",'gMessage':true})
 					}
 				},
 
@@ -1280,7 +1286,30 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					$container.attr('data-is-delegated',true); //is a attribute so that an element can look for it via parent()
 					}
 				},
-
+// a utility for converting to jquery button()s.  use applyButton and optionally set some data attributes for text and icons.
+		handleButtons : function($target)	{
+			app.u.dump("BEGIN app.u.handleButtons");
+			if($target && $target instanceof jQuery)	{
+				$('.applyButton',$target).each(function(index){
+					app.u.dump(" -> index: "+index);
+					var $btn = $(this);
+					$btn.button();
+					if($btn.data('icon-primary'))	{
+						$btn.button( "option", "icons", { primary: $btn.data('icon-primary')} );
+						}
+					if($btn.data('icon-secondary'))	{
+						$btn.button( "option", "icons", { secondary: $btn.data('icon-secondary')} );
+						}
+					if($btn.data('text') == 'false')	{
+						$btn.button( "option", "text", false );
+						}
+					//need to add support for icons and text true/false here. !!!
+					});
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In app.u.handleButtons, $target was empty or not a valid jquery instance. ","gMessage":true});
+				}
+			},
 
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate

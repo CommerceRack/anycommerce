@@ -1036,18 +1036,6 @@ if giftcard is on there, no paypal will appear.
 			},
 
 
-		adminProductCreate  : {
-			init : function(pid,attribs,_tag)	{
-				if(pid && !$.isEmptyObject(attribs))	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminProductCreate|"+pid;
-					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":_tag,"pid":pid,'%attribs':attribs},'immutable');	
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminProductCreate, either pid ["+pid+"] not set of attribs is empty.");
-					}
-				}
-			}, //adminProductCreate
 		adminProductManagementCategoryList : {
 			init : function(_tag,Q)	{
 				_tag = _tag || {};
@@ -4004,7 +3992,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin.vars.tab = 'product';
 					app.ext.admin.u.bringTabIntoFocus('product');
 					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-					app.ext.admin_prodEdit.a.showProductManager($("#productContent"));
+					app.ext.admin_prodEdit.a.showProductManager($("#productContent"),opts);
 					}
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager();

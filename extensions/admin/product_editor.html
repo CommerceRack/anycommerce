@@ -172,7 +172,7 @@
 	<td data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:false;'></td>
 	<td data-bind='var: product(@variations.length); defaultVar: product(_id); format:text;'></td>
 	<td></td>
-	<td><button data-app-click='admin_prodEdit|productEditorShow' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
+	<td><button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
 </tr>
 
 
@@ -189,7 +189,7 @@
 	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
 	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
-	<td align='right'><button data-app-click='admin_prodEdit|productEditorShow' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
+	<td align='right'><button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
 </tr>
 
 </table>
@@ -225,7 +225,7 @@
 
 	<div id='prodCreateMessaging'></div>
 	
-	<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin_prodEdit.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
+	<form name="createNewProductForm" action="#" method="POST" onSubmit="return false;">
 		
 	<fieldset class='marginBottom labelsAsBreaks alignedLabels alignedInputs'>
 		<legend>Required Fields</legend>
@@ -247,7 +247,7 @@
 		
 	</fieldset>		
 			
-	<input type="submit" value=" Save " class='savebutton' border='0' />
+	<button class='applyButton' data-app-click='admin_prodEdit|productCreateExec' data-app-role='saveButton'>Save Product</button>
 	
 	</form>
 
