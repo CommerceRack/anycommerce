@@ -30,21 +30,9 @@
 	
 	<!-- used for both product lists (management categories) and search/filter results. the template used changes, so no data-bind on tbody. -->
 	<div data-app-role='productManagerResultsContent' class='displayNone ui-widget'>
-	<table class='fullWidth gridTable applyAnytable ui-widget-content'>
-	<thead>
-	<tr>
-		<th></th>
-		<th>SKU</th>
-		<th>Name</th>
-		<th>Price</th>
-		<th># Variations</th>
-		<th># Children</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-app-role='productManagerResultsTbody'>
-	</tbody>
-	</table>
+	
+		<ol data-app-role='productManagerSearchResults'></ol>
+	
 	</div>
 
 
@@ -62,11 +50,11 @@
 	<button class='floatRight' data-app-click='admin_prodEdit|storeVariationsShow'>Store Variations</button>
 	<button class='floatRight' data-app-click='admin_prodEdit|adminProductCreateShow'>New Product</button>
 	
-	<button data-app-click='admin_prodEdit|productFiltersShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Filter</button>
-	<button data-app-click='admin_prodEdit|managementCatsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Management Categories</button>
+<!--	<button data-app-click='admin_prodEdit|managementCatsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Management Categories</button> -->
 	<form class='floatLeft marginLeft' action='#' onSubmit='return false'>
 		search<input type='search' name='KEYWORDS' />
 		<button data-app-click='admin_prodEdit|productSearchExec'>go</button>
+		<button data-app-click='admin_prodEdit|productFiltersShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Filter</button>
 	</form>
 	
 	<div data-app-role='productManagerManCats' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
@@ -86,22 +74,22 @@
 		<td class='valignTop alignLeft'>
 		<h3>Tags: </h3>
 		<ul class='tagFilterList listStyleNone'>
-			<li>IS_FRESH</li>
-			<li>IS_NEEDREVIEW</li>
-			<li>IS_HASERRORS</li>
-			<li>IS_CONFIGABLE</li>
+			<li>IS_BESTSELLER</li>
+			<li>IS_CLEARANCE</li>
 			<li>IS_COLORFUL</li>
-			<li>IS_SIZEABLE</li>
+			<li>IS_CONFIGABLE</li>
+			<li>IS_DISCONTINUED</li>
+			<li>IS_FRESH</li>
+			<li>IS_HASERRORS</li>
+			<li>IS_NEEDREVIEW</li>
+			<li>IS_NEWARRIVAL</li>
 			<li>IS_OPENBOX</li>
 			<li>IS_PREORDER</li>
-			<li>IS_DISCONTINUED</li>
-			<li>IS_SPECIALORDER</li>
-			<li>IS_BESTSELLER</li>
+			<li>IS_REFURB</li>
 			<li>IS_SALE</li>
 			<li>IS_SHIPFREE</li>
-			<li>IS_NEWARRIVAL</li>
-			<li>IS_CLEARANCE</li>
-			<li>IS_REFURB</li><!--
+			<li>IS_SIZEABLE</li>
+			<li>IS_SPECIALORDER</li><!--
 			<li>IS_USER1</li>
 			<li>IS_USER2</li>
 			<li>IS_USER3</li>
@@ -115,20 +103,21 @@
 		</td>
 	
 		<td class='valignTop alignLeft'>
+		<h3>Management Categories</h3>
+
+		</td>	
+		<td class='valignTop alignLeft'>
 		<h3>Marketplaces</h3>
 		<ul class='mktFilterList listStyleNone'>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
-			<li data-mktid="GOO">Google</li>
-			<li data-mktid="EBS">eBay Store</li>
+			<li data-mktid="amz">Amazon</li>
+			<li data-mktid="bestbuy">Best Buy</li>
+			<li data-mktid="buy">Buy.com</li>
+			<li data-mktid="buysafe">BuySafe</li>
+			<li data-mktid="hsn">Home Shopping Network</li>
+			<li data-mktid="gbase">Google</li>
+			<li data-mktid="nexttag">NextTag</li>
+			<li data-mktid="pricegrabber">PriceGrabber</li>
+			<li data-mktid="shopping">Shopping.com</li>
 		</ul>
 		</td>
 	
@@ -143,6 +132,16 @@
 		<ul>
 			<li>load launch profiles</li>
 		</ul>
+	
+	
+	<h3>Results</h3>
+	max # of results <select>
+		<option>10</option>
+		<option>25</option>
+		<option>50</option>
+		<option>100</option>
+	</select>
+	
 		</td>
 	
 	
@@ -158,41 +157,22 @@
 
 
 
-<table>
-<!-- used for management categories list -->
-<tr id='prodManagerProductListTemplate' class='loadingBG'>
-		
-	<td>
-	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='35' height='35' />
-	</div>
-	</td>
-	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
-	<td data-bind='var: product(zoovy:prod_name); format:text;'></td>
-	<td data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:false;'></td>
-	<td data-bind='var: product(@variations.length); defaultVar: product(_id); format:text;'></td>
-	<td></td>
-	<td><button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
-</tr>
-
-
 <!-- used for keyword and filtered search -->
-<tr id='prodManagerProductResultsTemplate'>
+<ul>
+<li id='productManagerResultsItemTemplate' class='ui-widget-content ui-corner-all marginBottom clearfix'>
 		
-	<td>
-	<div class='prodThumbContainer'>
+	<div class='prodThumbContainer floatLeft marginRight marginLeft'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
 	</div>
-	</td>
-	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
-	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
-	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
-	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
-	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
-	<td align='right'><button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button></td>
-</tr>
+	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span>
 
-</table>
+<button data-app-click='admin_prodEdit|productEditorShow4Results' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Inline</button>
+<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Full View</button>
+
+
+	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
+</li>
+</ul>
 
 
 
@@ -337,17 +317,21 @@
 		<input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' />
 	</label>
 <br />
-	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
-	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
-	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
 	<label><input name="is:bestseller" type="checkbox" data-bind="var: product(is:bestseller); format:popVal;" class='applyAnycb' /> Best Seller</label>
-	<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
-	<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
-	<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
 	<label><input name="is:clearance" type="checkbox" data-bind="var: product(is:clearance); format:popVal;" class='applyAnycb' /> Clearance </label>
+	<label><input name="is:colorful" type="checkbox" data-bind="var: product(is:colorful); format:popVal;" class='applyAnycb' /> Colorful </label>
+	<label><input name="is:configurable" type="checkbox" data-bind="var: product(is:configurable); format:popVal;" class='applyAnycb' /> Configurable </label>
+	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
+	<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
+	<label><input name="is:openbox" type="checkbox" data-bind="var: product(is:openbox); format:popVal;" class='applyAnycb' /> Open Box </label>
+	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
+	<label><input name="is:refurb" type="checkbox" data-bind="var: product(is:refurb); format:popVal;" class='applyAnycb' /> Refurb </label>
+	<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
+	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
+	<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
+	<label><input name="is:sizeable" type="checkbox" data-bind="var: product(is:sizeable); format:popVal;" class='applyAnycb' /> Sizeable </label>
 </fieldset>
 	</td>
-	
 	
 	<td class='valignTop'>
 	

@@ -26,8 +26,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 var admin_prodEdit = function() {
 	var theseTemplates = new Array(
 		'ProductCreateNewTemplate',
-		'prodManagerProductResultsTemplate',
-		'prodManagerProductListTemplate',
+		'productManagerResultsItemTemplate',
 		'productEditorPanelTemplate',
 		'mpControlSpec'
 		);
@@ -112,6 +111,57 @@ var admin_prodEdit = function() {
 					app.u.dump('BEGIN admin_prodEdit.callbacks.init.onError');
 					}
 				},
+
+
+//the request that uses this as a callback should have the following params set for _tag:
+// parentID, templateID (template used on each item in the results) and datapointer.
+//the request that uses this as a callback should have the following params set for _tag:
+// parentID, templateID (template used on each item in the results) and datapointer.
+		handlePMSearchResults : {
+			onSuccess : function(_rtag)	{
+				app.u.dump("BEGIN myRIA.callbacks.handlePMSearchResults.onSuccess.");
+
+
+				var
+					L = app.data[_rtag.datapointer]['_count'], //number of results in search.
+					$tbody = _rtag.list;
+				
+				
+				if($tbody && $tbody.length)	{
+					$tbody.closest('table').find('th.ui-state-active').removeClass('ui-state-active'); //make sure no header is selected as sort method, as new results will ignore it.
+					$tbody.hideLoading();
+					if(L == 0)	{
+						// !!! What to do here?
+						}
+					else	{
+//loop through the list backwards so that as we add items to the top, the order of the results is preserved.
+						for(var i = (L-1); i >= 0; i -= 1)	{
+							var
+								pid = app.data[_rtag.datapointer].hits.hits[i]['_id'],
+								eleID = 'prodManager_'+pid,
+								$thisLI = $(app.u.jqSelector('#',eleID));
+							
+							app.u.dump(i+") pid: "+pid);
+								
+							if($thisLI.length)	{
+								//li is already in list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
+								}
+							else	{
+								$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
+								}
+							$tbody.prepend($thisLI);
+							}
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handlePMSearchResults, $tbody ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
+					app.u.dump("handlePMSearchResults _rtag.list: "); app.u.dump(_rtag.list);
+					}
+				}
+			},
+
+
+
 			handleProductPanels : {
 				onSuccess : function(_rtag)	{
 var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
@@ -162,7 +212,7 @@ for(var index in panels)	{
 				$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
 				//no events are delegated on the editor from here. Those get delegated inside showProductEditor so the code for editing is entirely self-contained within that one function (more or less).
 				app.u.handleEventDelegation($('#productTabMainContent'));
-				app.u.handleEventDelegation($("[data-app-role='productManagerResultsTbody']",$target)); //handles the click events on the product list.
+				app.u.handleEventDelegation($("[data-app-role='productManagerSearchResults']",$target)); //handles the click events on the product list.
 
 				if(P.pid)	{
 					var $container = $("#productContent").find("[data-app-role='productManager']");
@@ -253,6 +303,34 @@ if(app.model.fetchData('adminEBAYProfileList'))	{}
 else	{
 	app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
 	}
+/*
+not valid _cmds
+app.model.addDispatchToQ({
+	'_cmd':'adminProductAmazonDetail',
+	'pid':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductAmazonDetail|'+pid,
+		'pid':pid
+		}
+	},'mutable');
+
+app.model.addDispatchToQ({
+	'_cmd':'adminProductListingDetail',
+	'pid':pid,
+	'_tag':	{
+		'datapointer' : 'adminProductListingDetail|'+pid,
+		'pid':pid
+		}
+	},'mutable');
+
+
+if(app.model.fetchData('adminEBAYStoreCategoryList'))	{}
+else	{
+	app.model.addDispatchToQ({'_cmd':'adminEBAYStoreCategoryList','_tag': {'datapointer':'adminEBAYStoreCategoryList'}},'mutable');
+	}
+*/
+
+
 
 //product record, used in most panels.
 app.model.addDispatchToQ({
@@ -1116,13 +1194,8 @@ app.model.dispatchThis('immutable');
 
 			prepContentArea4Results : function($container){
 				if($container instanceof jQuery)	{
-					app.ext.admin_prodEdit.u.handleStickyTab('deactivate'); //if a results tab is open, this will clear it. needs to happen any time a new results set is generated.
-				
-					var $tbody = $("[data-app-role='productManagerResultsTbody']",$container);
-	
+					var $tbody = $("[data-app-role='productManagerSearchResults']",$container);
 					$container.children().hide(); //hide the other parent divs (landing text, product editor)
-					$tbody.empty(); //empty previous results.
-					
 					$("[data-app-role='productManagerResultsContent']",$container).show();
 	//make sure results table has anytable applied.
 					if($tbody.parent('table').data('widget-anytable'))	{}
@@ -1139,8 +1212,8 @@ app.model.dispatchThis('immutable');
 				if(obj && obj.KEYWORDS)	{
 					var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
-					$("[data-app-role='productManagerResultsTbody']",$container).showLoading({'message':'Performing search...'})
-					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerResultsTbody']",$container)});
+					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
+					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'productManagerResultsItemTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
 					app.model.dispatchThis();
 					}
 				else	{
@@ -1195,8 +1268,22 @@ app.model.dispatchThis('immutable');
 					var $container = $ele.closest("[data-app-role='productManager']");
 					$container.children().hide();
 					$("[data-app-role='productManagerEditorContent']",$container).show();
-					app.ext.admin_prodEdit.u.handleStickyTab('activate');
 					app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productManagerEditorContent']",$container).show(),$ele.data('pid'));
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
+					}
+				},
+
+			productEditorShow4Results : function($ele,p)	{
+				//
+				if($ele.data('pid'))	{
+					var $parent = $ele.closest("li");
+					var $PEC = $("[data-app-role='productEditorContainer']:first",$parent); //PE = Product Editor.
+					$PEC.show();
+					$parent.animate({'height':500 + $parent.outerHeight()});
+					$PEC.css({'height':500, 'overflow':'auto','width':'100%'});
+					app.ext.admin_prodEdit.a.showProductEditor($PEC,$ele.data('pid'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
@@ -1216,7 +1303,7 @@ app.model.dispatchThis('immutable');
 					'loadsTemplate' : 'prodManagerProductListTemplate',
 					'withVariations' : true,
 					'items_per_page' : 100
-					},$("[data-app-role='productManagerResultsTbody']",$container));
+					},$("[data-app-role='productManagerSearchResults']",$container));
 				},
 			
 			"managementCatsShow" : function($ele,p)	{
@@ -1550,7 +1637,7 @@ if(!$.isEmptyObject(macroUpdates))	{
 							'callback':'handleElasticResults',
 							'extension':'store_search',
 							'datapointer' : 'appPublicSearch|variation|'+varID,
-							'templateID':'prodManagerProductResultsTemplate',
+							'templateID':'productManagerResultsItemTemplate',
 							'list':$('#prodEditorResultsTbody')
 							},
 						"type":"product"
