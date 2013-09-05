@@ -211,6 +211,9 @@ for(var index in panels)	{
 $target.append($col['1']);
 $target.append($col['2']);
 
+
+// !!! for ebay panel, will need the launch profile list as well as their list of ebay store categories.
+
 //get data for flexedit panel.
 app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
 if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
