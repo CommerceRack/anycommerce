@@ -118,7 +118,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				
 				var $list = _rtag.list;
 				if($list && $list.length)	{
-					$list.empty().removeClass('loadingBG').attr('data-app-role','searchResults');
+//*** 201336 -> setting data-app-role on the element was a bad idea. it may have already been set and it doesn't appear to get used at all.
+					$list.empty().removeClass('loadingBG'); //.attr('data-app-role','searchResults');
 					$list.closest('.previewListContainer').find('.resultsHeader').empty().remove(); //remove any previous results multipage headers
 
 					if(L == 0)	{
@@ -175,7 +176,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handleElasticResults, $list was not defined, not a jquery objet or empty (not on DOM).',gMessage:true});
+					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handleElasticResults, $list ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
+					app.u.dump("handleElasticResults _rtag.list: "); app.u.dump(_rtag.list);
 					}
 				}
 			}
