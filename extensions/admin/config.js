@@ -464,7 +464,8 @@ var admin_config = function() {
 						'_tag' : {'datapointer' : 'adminDomainList'}
 						}
 					});
-				app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{'datapointer' : 'adminSiteTemplateList'}},'mutable');
+// * 201336 -> moved this so templates are not requested till template chooser is opened.
+//				app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{'datapointer' : 'adminSiteTemplateList'}},'mutable');
 				app.model.dispatchThis('mutable');
 
 				},//showCouponManager				

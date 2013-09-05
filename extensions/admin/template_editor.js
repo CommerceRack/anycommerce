@@ -249,7 +249,7 @@ var admin_templateEditor = function() {
 				if(!app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars))	{
 
 					var dialogObject = {'showLoading':false};
-					vars.cmd = 'admin'+vars.mode+'TemplateList';
+					vars._cmd = 'admin'+vars.mode+'TemplateList';
 					if(vars.mode == 'Campaign')	{
 						dialogObject.title = 'Campaign Template Chooser';
 						dialogObject.dataAttribs = {'campaignid':vars.campaignid,'mode':vars.mode};
@@ -260,7 +260,7 @@ var admin_templateEditor = function() {
 						}
 					else if(vars.mode == 'EBAYProfile')	{
 						dialogObject.title = 'eBay Template Chooser';
-						vars.cmd = "adminEBAYTemplateList"; //cmd keyword varies slightly from mode.
+						vars._cmd = "adminEBAYTemplateList"; //cmd keyword varies slightly from mode.
 						}
 					else	{} //shouldn't get here.
 
@@ -272,16 +272,17 @@ var admin_templateEditor = function() {
 					vars._tag = {
 						'callback' : 'anycontent',
 						"templateID" : "templateChooserTemplate",
-						'datapointer' : vars.cmd,
+						'datapointer' : vars._cmd,
 						'jqObj' : $D
 						}
 					
-					if(app.model.fetchData(vars._tag.datapointer) == false)	{
-						app.model.addDispatchToQ(vars,'mutable');
-						app.model.dispatchThis('mutable');
+					if(app.model.fetchData(vars._tag.datapointer))	{
+						app.u.handleCallback(vars._tag);
 						}
 					else	{
-						app.u.handleCallback(vars._tag);
+//						app.u.dump(" vars: "); app.u.dump(vars);
+						app.model.addDispatchToQ(vars,'mutable');
+						app.model.dispatchThis('mutable');
 						}
 					
 /*					$D.imagegallery({

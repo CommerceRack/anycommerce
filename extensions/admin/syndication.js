@@ -333,7 +333,8 @@ $extrasTab.show().find('a').text('Tokens & Profiles');
 //go get 
 app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
 app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
-app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
+// * 201336 -> moved this so templates are not requested till template chooser is opened.
+//app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
 app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
 	$target.hideLoading();
 	if(app.model.responseHasErrors(rd)){
