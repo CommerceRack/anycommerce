@@ -130,7 +130,8 @@ var admin_customer = function() {
 						}
 					});
 //get this handy.
-				app.model.addDispatchToQ({'_cmd':'adminCampaignTemplateList','_tag':{'datapointer' : 'adminCampaignTemplateList'}},'mutable');
+// * 201336 -> moved this so templates are not requested till template chooser is opened.
+//				app.model.addDispatchToQ({'_cmd':'adminCampaignTemplateList','_tag':{'datapointer' : 'adminCampaignTemplateList'}},'mutable');
 				app.model.dispatchThis();
 
 				}, //showCampaignManager
