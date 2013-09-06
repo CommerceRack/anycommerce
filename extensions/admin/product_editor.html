@@ -265,15 +265,14 @@
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
 	<ul>
-		<li><a href='#general' data-app-role='generalTab'>General</a></li>
+		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li>
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
-		<li><a href='#reviews' data-app-role='reviewsTab'>Reviews</a></li>
-		<li><a href='#shipping' data-app-role='shippingTab'>Shipping</a></li>
+		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
+		<li><a href='#attributes' data-app-role='attributesTab'>Attributes</a></li>
 		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
-		<li><a href='#navigation' data-app-role='navigationTab'>Navigation</a></li>
-		<li><a href='#sku' data-app-role='skuTab'>SKU/Supplier/Warehouse</a></li>
+		<li><a href='#categorization' data-app-role='categorizationTab'>Categorization</a></li>
+		<li><a href='#variations' data-app-role='variationsTab'>Variations</a></li>
 		<li><a href='#ci' data-app-role='ciTab'>CI</a></li>
-		<li><a href='#rss' data-app-role='rssTab'>Marketing</a></li>
 		<li><a href='#amazon' data-app-role='amazonTab'>Amazon</a></li>
 		<li><a href='#ebay' data-app-role='ebayTab'>eBay</a></li>
 	</ul>
@@ -376,25 +375,10 @@
 		</div>
 	</div>
 
-	</section><!-- /general tab content -->
 
 
-	<section data-anytab-content='navigation' class='clearfix'>
-		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar marginTop">
-		<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
-		</div>
-	</section><!-- /navigation tab content -->
-
-	
-	<section data-anytab-content='reviews' class='clearfix'>
-	<table class='gridTable applyAnytable'>
-		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
-	</table>
-	</section><!-- /reviews tab content -->
-
-
-
-	<section data-anytab-content='shipping' class='clearfix'>
+	<div>
+	<h3>Shipping</h3>
 	<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' /> ounces (use # for pounds)</label>
 	<!-- webdb:ship_fixed -->
 	<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
@@ -456,7 +440,86 @@
 	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
 	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 	</div>
-	</section>
+	</div>
+
+<!-- xsell & tagging -->
+	<div>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+	<legend>Merchandising</legend>
+
+	<label>
+		<span>Promotion Class</span>
+		<input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' />
+	</label>
+<br />
+	<label><input name="is:bestseller" type="checkbox" data-bind="var: product(is:bestseller); format:popVal;" class='applyAnycb' /> Best Seller</label>
+	<label><input name="is:clearance" type="checkbox" data-bind="var: product(is:clearance); format:popVal;" class='applyAnycb' /> Clearance </label>
+	<label><input name="is:colorful" type="checkbox" data-bind="var: product(is:colorful); format:popVal;" class='applyAnycb' /> Colorful </label>
+	<label><input name="is:configurable" type="checkbox" data-bind="var: product(is:configurable); format:popVal;" class='applyAnycb' /> Configurable </label>
+	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
+	<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
+	<label><input name="is:openbox" type="checkbox" data-bind="var: product(is:openbox); format:popVal;" class='applyAnycb' /> Open Box </label>
+	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
+	<label><input name="is:refurb" type="checkbox" data-bind="var: product(is:refurb); format:popVal;" class='applyAnycb' /> Refurb </label>
+	<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
+	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
+	<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
+	<label><input name="is:sizeable" type="checkbox" data-bind="var: product(is:sizeable); format:popVal;" class='applyAnycb' /> Sizeable </label>
+</fieldset>
+	</td>
+	
+	<td class='valignTop'>
+	
+<fieldset>
+	<legend>Cross/Up Selling</legend>
+
+	<p><button class='applyButton' onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
+	
+	<p><button class='applyButton'  onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
+</fieldset>
+
+
+
+	
+	</td>
+</tr>
+</tbody>
+</table>
+</fieldset>
+	</div>
+
+	</section><!-- /general tab content -->
+
+
+	<section data-anytab-content='categorization' class='clearfix'>
+		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar marginTop">
+		<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
+		</div>
+	</section><!-- /navigation tab content -->
+
+	
+	<section data-anytab-content='social' class='clearfix'>
+
+<h2>SEO &amp; RSS</h2>
+	<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+	
+	<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
+	
+	<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
+	
+	<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
+	
+	<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
+	
+	
+	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+	</div>
+
+	<table class='gridTable applyAnytable'>
+		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
+	</table>
+	</section><!-- /reviews tab content -->
 
 
 
@@ -644,7 +707,15 @@
 	
 	
 	
-	<section data-anytab-content='sku' class='clearfix'>
+	<section data-anytab-content='variations' class='clearfix'>
+
+<fieldset data-app-role='assemblyContainer'>
+	<legend>Assembly/Kit Components</legend>
+	<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
+	</ul>
+</fieldset>
+
+
 	<fieldset>
 		<legend>Sku Attributes</legend>
 
@@ -704,83 +775,14 @@
 	<section data-anytab-content='ci' class='clearfix'>
 	Competitive Intelligence.
 	</section>
-
-
-
-	<section data-anytab-content='rss' class='clearfix'>
-
-
-
-<table>
-<tbody>
-<tr>
-	<td class='valignTop'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
-	<legend>Merchandising</legend>
-
-	<label>
-		<span>Promotion Class</span>
-		<input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' />
-	</label>
-<br />
-	<label><input name="is:bestseller" type="checkbox" data-bind="var: product(is:bestseller); format:popVal;" class='applyAnycb' /> Best Seller</label>
-	<label><input name="is:clearance" type="checkbox" data-bind="var: product(is:clearance); format:popVal;" class='applyAnycb' /> Clearance </label>
-	<label><input name="is:colorful" type="checkbox" data-bind="var: product(is:colorful); format:popVal;" class='applyAnycb' /> Colorful </label>
-	<label><input name="is:configurable" type="checkbox" data-bind="var: product(is:configurable); format:popVal;" class='applyAnycb' /> Configurable </label>
-	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
-	<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
-	<label><input name="is:openbox" type="checkbox" data-bind="var: product(is:openbox); format:popVal;" class='applyAnycb' /> Open Box </label>
-	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
-	<label><input name="is:refurb" type="checkbox" data-bind="var: product(is:refurb); format:popVal;" class='applyAnycb' /> Refurb </label>
-	<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
-	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
-	<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
-	<label><input name="is:sizeable" type="checkbox" data-bind="var: product(is:sizeable); format:popVal;" class='applyAnycb' /> Sizeable </label>
-</fieldset>
-	</td>
 	
-	<td class='valignTop'>
-	
-<fieldset>
-	<legend>Cross/Up Selling</legend>
-
-	<p><button class='applyButton' onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
-	
-	<p><button class='applyButton'  onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
-</fieldset>
-
-
-<fieldset data-app-role='assemblyContainer'>
-	<legend>Assembly/Kit Components</legend>
-	<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
-	</ul>
-</fieldset>
-
-	
-	</td>
-</tr>
-</tbody>
-</table>
-</fieldset>
-
-<h2>SEO &amp; RSS</h2>
-	<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
-	
-	<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
-	
-	<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
-	
-	<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
-	
-	<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
-	
-	
-	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	</div>
-
-
+	<section data-anytab-content='attributes' class='clearfix'>
+	Flexedit goes here.
 	</section>
+
+
+
+
 
 
 
