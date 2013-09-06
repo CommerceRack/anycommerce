@@ -26,7 +26,6 @@ The functions here are designed to work with 'reasonable' size lists of categori
 var admin_prodEdit = function() {
 	var theseTemplates = new Array(
 		'ProductCreateNewTemplate',
-		'productEditorPanelTemplate',
 		'mpControlSpec'
 		);
 
@@ -115,72 +114,67 @@ var admin_prodEdit = function() {
 //the request that uses this as a callback should have the following params set for _tag:
 // parentID, templateID (template used on each item in the results) and datapointer.
 
-		handlePMSearchResults : {
-			onSuccess : function(_rtag)	{
-				app.u.dump("BEGIN myRIA.callbacks.handlePMSearchResults.onSuccess.");
-
-
-				var
-					L = app.data[_rtag.datapointer]['_count'], //number of results in search.
-					$tbody = _rtag.list;
-				
-				
-				if($tbody && $tbody.length)	{
-					$tbody.closest('table').find('th.ui-state-active').removeClass('ui-state-active'); //make sure no header is selected as sort method, as new results will ignore it.
-					$tbody.hideLoading();
-					if(L == 0)	{
-						// !!! What to do here?
-						}
-					else	{
-//loop through the list backwards so that as we add items to the top, the order of the results is preserved.
-						for(var i = (L-1); i >= 0; i -= 1)	{
-							var
-								pid = app.data[_rtag.datapointer].hits.hits[i]['_id'],
-								eleID = 'prodManager_'+pid,
-								$thisLI = $(app.u.jqSelector('#',eleID)),
-								$PMTaskList = $tbody.closest("[data-app-role='productManagerResultsContent']").find("[data-app-role='productManagerTaskResults']");
-							
-//							app.u.dump(i+") pid: "+pid);
+			handlePMSearchResults : {
+				onSuccess : function(_rtag)	{
+					app.u.dump("BEGIN myRIA.callbacks.handlePMSearchResults.onSuccess.");
+	
+	
+					var
+						L = app.data[_rtag.datapointer]['_count'], //number of results in search.
+						$tbody = _rtag.list;
+					
+					
+					if($tbody && $tbody.length)	{
+						$tbody.closest('table').find('th.ui-state-active').removeClass('ui-state-active'); //make sure no header is selected as sort method, as new results will ignore it.
+						$tbody.hideLoading();
+						if(L == 0)	{
+							// !!! What to do here?
+							}
+						else	{
+	//loop through the list backwards so that as we add items to the top, the order of the results is preserved.
+							for(var i = (L-1); i >= 0; i -= 1)	{
+								var
+									pid = app.data[_rtag.datapointer].hits.hits[i]['_id'],
+									eleID = 'prodManager_'+pid,
+									$thisLI = $(app.u.jqSelector('#',eleID)),
+									$PMTaskList = $tbody.closest("[data-app-role='productManagerResultsContent']").find("[data-app-role='productManagerTaskResults']");
 								
-							$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
-							$tbody.prepend($thisLI);
-							if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
-								$("[data-app-click='admin_prodEdit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
-								//li is already in PM task list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
+	//							app.u.dump(i+") pid: "+pid);
+									
+								$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
+								$tbody.prepend($thisLI);
+								if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
+									$("[data-app-click='admin_prodEdit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
+									//li is already in PM task list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
+									}
+	
 								}
-
 							}
 						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handlePMSearchResults, $tbody ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
+						app.u.dump("handlePMSearchResults _rtag.list: "); app.u.dump(_rtag.list);
+						}
 					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handlePMSearchResults, $tbody ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
-					app.u.dump("handlePMSearchResults _rtag.list: "); app.u.dump(_rtag.list);
-					}
-				}
-			}, //handlePMSearchResults
-
-
-
-			handleProductPanels : {
+				}, //handlePMSearchResults
+	
+	
+	
+			handleProductEditor : {
 				onSuccess : function(_rtag)	{
-var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
-//					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
-
-app.u.dump(" -> _rtag.renderTaskContainer: "+_rtag.renderTaskContainer);
+	
+	
 if(_rtag.renderTaskContainer)	{
 	_rtag.jqObj.closest("[data-app-role='taskItemContainer']").find("[data-app-role='taskItemPreview']").anycontent({'datapointer':_rtag.datapointer});
 	}
 
-for(var index in panels)	{
-	if(panels[index].isLegacy)	{}
-	else if(panels[index].panelCallback && typeof app.ext.admin_prodEdit.panels[panels[index].panelCallback] == 'function')	{
-//		app.u.dump(" -> index "+index+" has a panelCallback defined");
-		app.ext.admin_prodEdit.panels[panels[index].panelCallback]($("[data-panelid='"+index+"']:first",_rtag.jqObj).find('fieldset'),_rtag.pid)
-		}
-	else	{
-		//ERRROR. either isLegacy or panelCallback must be set. OR panelcallback is defined but doesn't exist.as
-		}
-	}
+_rtag.jqObj.hideLoading();
+_rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','datapointer':_rtag.datapointer});
+
+$('.applyAnytabs',_rtag.jqObj).anytabs();
+	
+	
+	
 					}
 				}
 			}, //callbacks
@@ -225,6 +219,7 @@ for(var index in panels)	{
 				if($target instanceof jQuery && pid)	{
 
 $target.empty();
+/*
 var $col = {};
 $col['1'] = $("<div \/>").addClass('twoColumn').attr('data-app-column',1);
 $col['2'] = $("<div \/>").addClass('twoColumn column2').attr('data-app-column',2);
@@ -263,6 +258,8 @@ $target.append($col['2']);
 
 // !!! for ebay panel, will need the launch profile list as well as their list of ebay store categories.
 
+*/
+
 //get data for flexedit panel.
 app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
 if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
@@ -298,35 +295,6 @@ if(app.model.fetchData('adminEBAYProfileList'))	{}
 else	{
 	app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
 	}
-/*
-not valid _cmds
-app.model.addDispatchToQ({
-	'_cmd':'adminProductAmazonDetail',
-	'pid':pid,
-	'_tag':	{
-		'datapointer' : 'adminProductAmazonDetail|'+pid,
-		'pid':pid
-		}
-	},'mutable');
-
-app.model.addDispatchToQ({
-	'_cmd':'adminProductListingDetail',
-	'pid':pid,
-	'_tag':	{
-		'datapointer' : 'adminProductListingDetail|'+pid,
-		'pid':pid
-		}
-	},'mutable');
-
-
-if(app.model.fetchData('adminEBAYStoreCategoryList'))	{}
-else	{
-	app.model.addDispatchToQ({'_cmd':'adminEBAYStoreCategoryList','_tag': {'datapointer':'adminEBAYStoreCategoryList'}},'mutable');
-	}
-*/
-
-
-
 //product record, used in most panels.
 app.model.addDispatchToQ({
 	'_cmd':'adminProductDetail',
@@ -337,9 +305,10 @@ app.model.addDispatchToQ({
 		'datapointer':'adminProductDetail|'+pid,
 		'pid' : pid,
 		'renderTaskContainer' : vars.renderTaskContainer,
+		'templateID':'productEditorTabbedTemplate',
 		'jqObj' : $target,
 		'extension' : 'admin_prodEdit',
-		'callback' : 'handleProductPanels'
+		'callback' : 'handleProductEditor'
 		}
 	},'mutable');
 
