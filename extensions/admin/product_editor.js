@@ -1223,6 +1223,7 @@ Required params include:
 
 					if(P.mode == 'remove')	{
 						$("li[data-pid='"+P.pid+"']",$taskList).empty().remove();
+
 						}
 					else	{
 

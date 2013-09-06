@@ -200,7 +200,7 @@
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
 	<button data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Add 2 Q</button>
-	<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
+	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
 	</td>
 </tr>
 
