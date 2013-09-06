@@ -1220,16 +1220,19 @@ Required params include:
 
 					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
 					app.u.dump(" -> $taskList.length: "+$taskList.length);
-
+					var $li = $("li[data-pid='"+P.pid+"']",$taskList);
 					if(P.mode == 'remove')	{
-						$("li[data-pid='"+P.pid+"']",$taskList).empty().remove();
-
+						$li.empty().remove();
 						}
 					else	{
+						//product is already in list.
+						if($li.length)	{}
+						else	{
+							var $li = app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
+							$li.attr('data-pid',P.pid);
+							}
+						$taskList.prepend($li); //always put at top of the list.
 
-						var $li = app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
-						$li.attr('data-pid',P.pid);
-						$taskList.prepend($li);
 	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
 							$li.showLoading({'message':'Fetching Product Detail'});
