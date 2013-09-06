@@ -22,14 +22,6 @@
 
 	</div>
 
-	<div data-app-role='productManagerEditorContent' class='displayNone ui-widget'>
-
-	</div>
-	
-	<div data-app-role='productManagerVariationsContent' class='displayNone ui-widget'></div>
-	
-	<!-- used for both product lists (management categories) and search/filter results. the template used changes, so no data-bind on tbody. -->
-
 	<div data-app-role='productManagerResultsContent' class='displayNone ui-widget'>
 	
 	<table class='fullWidth gridTable applyAnytable ui-widget-content marginBottom' data-app-role='productManagerResultsTable'>
@@ -48,12 +40,10 @@
 	</tbody>
 	</table>
 
-
-	<ul data-app-role='productManagerTaskResults' data-loadstemplate="productManagerTaskItemTemplate" class='noPadOrMargin listStyleNone'></ul><!-- session specific set of products w/ some 'task' associated with them -->
-
 	</div>
 
 
+	<ul data-app-role='productContentTaskResults' data-loadstemplate="productManagerTaskItemTemplate" class='noPadOrMargin listStyleNone'></ul><!-- session specific set of products w/ some 'task' associated with them -->
 
 
 
@@ -68,7 +58,7 @@
 <!-- navtabs template -->
 <div id='productEditorNavtabsTemplate' class='clearfix smallPadding' data-app-role='productEditorNavtab'>
 	
-	<button class='floatRight' data-app-click='admin_prodEdit|storeVariationsShow'>Store Variations</button>
+<!--	<button class='floatRight' data-app-click='admin_prodEdit|storeVariationsShow'>Store Variations</button> -->
 	<button class='floatRight' data-app-click='admin_prodEdit|adminProductCreateShow'>New Product</button>
 	
 <!--	<button data-app-click='admin_prodEdit|managementCatsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Management Categories</button> -->
@@ -180,13 +170,16 @@
 
 <!-- used for keyword and filtered search -->
 <ul>
-<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom clearfix'>
+<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom' data-app-role='taskItemContainer'>
+	<div class='clearfix' data-app-role='taskItemPreview'>
+		<div class='prodThumbContainer floatLeft marginRight marginLeft'>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
+		</div>
+		<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
+		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
+		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">X</button>
 		
-	<div class='prodThumbContainer floatLeft marginRight marginLeft'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
 	</div>
-	<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
-<button data-app-click='admin_prodEdit|productEditorShow4Task' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
 </li>
 </ul>
@@ -206,8 +199,8 @@
 	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
-	<button data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Add as Task</button>
-	<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
+	<button data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Add 2 Q</button>
+	<button data-app-click='admin_prodEdit|productEditorShow' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
 	</td>
 </tr>
 

@@ -114,8 +114,7 @@ var admin_prodEdit = function() {
 
 //the request that uses this as a callback should have the following params set for _tag:
 // parentID, templateID (template used on each item in the results) and datapointer.
-//the request that uses this as a callback should have the following params set for _tag:
-// parentID, templateID (template used on each item in the results) and datapointer.
+
 		handlePMSearchResults : {
 			onSuccess : function(_rtag)	{
 				app.u.dump("BEGIN myRIA.callbacks.handlePMSearchResults.onSuccess.");
@@ -158,7 +157,7 @@ var admin_prodEdit = function() {
 					app.u.dump("handlePMSearchResults _rtag.list: "); app.u.dump(_rtag.list);
 					}
 				}
-			},
+			}, //handlePMSearchResults
 
 
 
@@ -166,6 +165,12 @@ var admin_prodEdit = function() {
 				onSuccess : function(_rtag)	{
 var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
 //					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
+
+app.u.dump(" -> _rtag.renderTaskContainer: "+_rtag.renderTaskContainer);
+if(_rtag.renderTaskContainer)	{
+	_rtag.jqObj.closest("[data-app-role='taskItemContainer']").find("[data-app-role='taskItemPreview']").anycontent({'datapointer':_rtag.datapointer});
+	}
+
 for(var index in panels)	{
 	if(panels[index].isLegacy)	{}
 	else if(panels[index].panelCallback && typeof app.ext.admin_prodEdit.panels[panels[index].panelCallback] == 'function')	{
@@ -193,7 +198,7 @@ for(var index in panels)	{
 			showProductManager : function($target,P)	{
 				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
-				app.u.dump(" -> P:"); app.u.dump(P);
+//				app.u.dump(" -> P:"); app.u.dump(P);
 				//for legacy panels:
 //				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;
 
@@ -205,28 +210,18 @@ for(var index in panels)	{
 					app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 					}
 
-				app.ext.admin_prodEdit.u.handleStickyTab('deactivate'); //will stickytab, if open.
 				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
 				app.ext.admin_prodEdit.u.handleManagementCategories();//handleManagementCategories 'may' add a dispatch.
 				$target.empty();
 				$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
-				//no events are delegated on the editor from here. Those get delegated inside showProductEditor so the code for editing is entirely self-contained within that one function (more or less).
-				app.u.handleEventDelegation($('#productTabMainContent'));
-				app.u.handleEventDelegation($("[data-app-role='productManagerSearchResults']",$target)); //handles the click events on the product list.
 
-				if(P.pid)	{
-					var $container = $("#productContent").find("[data-app-role='productManager']");
-					$container.children().hide();
-					app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productManagerEditorContent']",$container).show(),P.pid);
-					} //if a pid is specified, immediately show the editor for that pid.
-				else	{
-					//do nothing. product page template has initial load content.
-					}
+				app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
 
 				app.model.dispatchThis('mutable');
-				},
+				}, //showProductManager
 
-			showProductEditor : function($target,pid)	{
+			showProductEditor : function($target,pid,vars)	{
+				vars = vars || {};
 				if($target instanceof jQuery && pid)	{
 
 $target.empty();
@@ -341,6 +336,7 @@ app.model.addDispatchToQ({
 	'_tag':{
 		'datapointer':'adminProductDetail|'+pid,
 		'pid' : pid,
+		'renderTaskContainer' : vars.renderTaskContainer,
 		'jqObj' : $target,
 		'extension' : 'admin_prodEdit',
 		'callback' : 'handleProductPanels'
@@ -349,14 +345,12 @@ app.model.addDispatchToQ({
 
 
 app.model.dispatchThis('mutable');
-app.u.handleEventDelegation($target);
-
 
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductEditor, either $target is not an instance of jquery or pid is not set.","gMessage":true});
 					}
-				},
+				}, //showProductEditor
 
 
 			showCreateProductDialog : function(){
@@ -1088,39 +1082,7 @@ app.u.handleEventDelegation($target);
 					}
 				return r;
 				}, //flexJSON2JqObj
-	
-			handleStickyTab : function(process)	{
-	//			app.u.dump("BEGIN admin_prodEdit.u.handleStickyTab ["+process+"]");
-				var
-					$target = $('#productListTab'),
-					$table = $('#prodEditorResultsTable')
-	
-				if($target.length)	{
-	//				app.u.dump('sticky tab already exists');
-					if(process == 'activate')	{}
-					else if(process == 'deactivate'){
-	//					app.u.dump(' -> destroy stickytab');
-						$table.stickytab('destroy');
-						}
-					else	{} //unknown process
-	
-					
-					}
-				else if(process == 'activate')	{
-					$table.stickytab({'tabtext':'product results','tabID':'productListTab'});
-	//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-					$('button, a',$table).each(function(){
-						$(this).off('close.stickytab').on('click.closeStickytab',function(){
-							$table.stickytab('close');
-							})
-						})
-	
-					}
-				else	{
-					//do nothing. process is unknown OR de-activate and sticktab not active yet.
-					}
-				}, //handleStickyTab
-	
+
 	//executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
 			handleAddImageToList : function($list)	{
 				app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
@@ -1195,10 +1157,10 @@ app.model.dispatchThis('immutable');
 			prepContentArea4Results : function($container){
 				if($container instanceof jQuery)	{
 					var $tbody = $("[data-app-role='productManagerSearchResults']",$container);
-					$container.children().hide(); //hide the other parent divs (landing text, product editor)
+					$("[data-app-role='productManagerLandingContent']",$container).hide(); //dash board should not be visible in search mode.
 					$("[data-app-role='productManagerResultsContent']",$container).show();
-	//make sure results table has anytable applied.
-					$tbody.empty();
+					$tbody.empty(); //clear results from last search.
+//make sure results table has anytable applied.
 					if($tbody.parent('table').data('widget-anytable'))	{}
 					else	{
 						$tbody.parent('table').anytable()
@@ -1211,7 +1173,8 @@ app.model.dispatchThis('immutable');
 			
 			handleProductKeywordSearch : function(obj)	{
 				if(obj && obj.KEYWORDS)	{
-					var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+					
+					var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
 					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
 					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
@@ -1241,7 +1204,69 @@ app.model.dispatchThis('immutable');
 	//				app.u.dump(" -> type is image based. show image inputs.");
 					$('.imgOnly',$target).removeClass('displayNone');
 					}
-				} //handleOptionEditorInputs
+				}, //handleOptionEditorInputs
+
+/*
+adds the product to the 'product task' list
+Required params include:
+ -> tab: which tab's list this product should be added to. currently, only product is suppported
+ -> pid: the product id in question.
+ -> mode: add, edit, remove
+*/
+
+			addProductAsTask : function(P)	{
+				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
+				if(P.pid && P.tab && P.mode)	{
+
+					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
+					app.u.dump(" -> $taskList.length: "+$taskList.length);
+
+					if(P.mode == 'remove')	{
+						$("li[data-pid='"+P.pid+"']",$taskList).empty().remove();
+						}
+					else	{
+
+						var $li = app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
+						$li.attr('data-pid',P.pid);
+						$taskList.prepend($li);
+	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
+						if(P.mode == 'add')	{
+							$li.showLoading({'message':'Fetching Product Detail'});
+							var _tag = {
+								'datapointer':'adminProductDetail|'+P.pid,
+								'jqObj' : $li,
+								'callback' : 'anycontent'
+								}
+							if(app.model.fetchData('adminProductDetail|'+P.pid))	{
+								app.u.handleCallback(_tag);
+								}
+							else	{
+								app.model.addDispatchToQ({
+									'_cmd':'adminProductDetail',
+									'inventory':1,
+									'skus':1,
+									'pid':P.pid,
+									'_tag':	_tag
+									},'passive');
+								app.model.dispatchThis('passive');
+								}
+							}
+//determine if the item is already in the list and, if so, just edit it.  If not, add and edit.
+//when opening the editor immediately, trigger the 'edit' button. no need to fetch the product data, the editor will do that.
+						else if(P.mode == 'edit')	{
+//							$("[data-app-click='admin_prodEdit|productEditorShow4Task']",$li).trigger('click',{'translateTask':true});
+							app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
+							}
+						else	{
+							//error. unrecognized mode.
+							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, unrecognized mode ["+P.mode+"] passed.","gMessage":true});
+							}
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, required param(s) missing.  P.pid ["+P.pid+"] and P.tab ["+P.tab+"] are required.","gMessage":true});
+					}
+				}
 	
 			}, //u
 
@@ -1264,81 +1289,36 @@ app.model.dispatchThis('immutable');
 				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
 				},
 
-//!!! this needs to first move the item into the task list, then open the editor automatically.
 			productEditorShow : function($ele,p)	{
-				if($ele.data('pid'))	{
-					var $container = $ele.closest("[data-app-role='productManager']");
-					$container.children().hide();
-					$("[data-app-role='productManagerEditorContent']",$container).show();
-					app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productManagerEditorContent']",$container).show(),$ele.data('pid'));
+				app.u.dump("BEGIN admin_prodEdit.e.productEditorShow. (click!)");
+				if($ele.data('pid') && $ele.data('taskmode'))	{
+					$ele.closest("[data-app-role='productManagerResultsContent']").hide();
+					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':$ele.data('taskmode')})
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, either data-pid ["+$ele.data('pid')+"] or data-taskmode ["+$ele.data('taskmode')+"] not set on element.","gMessage":true});
 					}
 				},
 //if it's already in the list, it's removed. If it is not in the list, it's added.
-// !!! most of this code will need to get moved to a utility and executed from within productEditorShow
 // the utility will need to support whether or not to immediately translate. 
 // -> because if we go straight into edit, we are always going to get a clean copy of the product record and should use that to translate.
 			productTaskPidToggle : function($ele,p) {
 				if($ele.data('pid'))	{
-					var pid = $ele.data('pid');
-					var $PMTaskList = $("ul[data-app-role='productManagerTaskResults']",'#productContent');
-					if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
+					if($ele.hasClass('ui-state-highlight'))	{
 						$ele.removeClass('ui-state-highlight');
-						$("li[data-pid='"+pid+"']",$PMTaskList).empty().remove();
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'remove'});
 						}
 					else	{
 						$ele.addClass('ui-state-highlight');
-						var $li = app.renderFunctions.createTemplateInstance($PMTaskList.data('loadstemplate'));
-						$li.showLoading({'message':'Fetching Product Detail'});
-						$li.attr('data-pid',pid);
-						$PMTaskList.append($li);
-						var _tag = {
-							'datapointer':'adminProductDetail|'+pid,
-							'jqObj' : $li,
-							'callback' : 'anycontent'
-							}
-						if(app.model.fetchData('adminProductDetail|'+pid))	{
-							app.u.handleCallback(_tag);
-							}
-						else	{
-							app.model.addDispatchToQ({
-								'_cmd':'adminProductDetail',
-								'inventory':1,
-								'skus':1,
-								'pid':pid,
-								'_tag':	_tag
-								},'passive');
-							app.model.dispatchThis('passive');
-							
-							}
-						//go fetch the product record and append or prepend this item to the list.
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'add'});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element with data-app-click.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element.","gMessage":true});
 					}
 				},
 
-			productEditorShow4Task : function($ele,p)	{
-				//
-				if($ele.data('pid'))	{
-					var $parent = $ele.closest("li");
-					var $PEC = $("[data-app-role='productEditorContainer']:first",$parent); //PE = Product Editor.
-					if($PEC.children().length)	{
-						$PEC.toggle()
-						}
-					else	{
-						$PEC.show();
-						app.ext.admin_prodEdit.a.showProductEditor($PEC,$ele.data('pid'));
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, no data-pid set on element with data-app-click.","gMessage":true});
-					}
-				},
-			
+		
 			"managementCatsProdlistShow" : function($ele,p)	{
 				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
