@@ -264,6 +264,9 @@
 
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
+	<button class='floatRight'>Save</button>
+<!-- 			<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
+ 			-->
 	<ul>
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li>
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
@@ -278,37 +281,145 @@
 	</ul>
 	
 	
-	<section data-anytab-content='general' class='clearfix'>
+	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
 
-
-	<div>
-	
-	
-		<table class='fullWidth'>
-		<tr>
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all'>
+			<button data-app-event="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
+			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead.">Related Product</button>
+			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;" title="Items that can/should be pruchased with this product (ex: batteries)">Accessories</button>
+			<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly' title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
+			<button data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
+			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities.">Debug</button>
 			
-			<td class='labelsAsBreaks prodEditGeneralPanelLeftCol'>
+			
+		</div>
+
+
+		<fieldset class='clearfix'>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost: </span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP: </span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price: </span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
+
+			<div title="Product name" class='threeColumn floatLeft marginBottom'><input class='fullWidth' type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" /></div>
+			<div title="Product description" class='threeColumn floatLeft marginBottom'><textarea class='fullWidth' name='zoovy:prod_desc' value='' data-bind="var: product(zoovy:prod_desc); format:popVal;" placeholder="Product description"></textarea></div>
+			<div title="Product details/specifications" class='threeColumn floatLeft marginBottom'><textarea class='fullWidth' name='zoovy:prod_detail' value='' data-bind="var: product(zoovy:prod_detail); format:popVal;" placeholder="Product details/specifications"></textarea></div>
+		</fieldset>
+
+
+		<fieldset class='clearfix' >
+			<legend>Tagging</legend>
+			<ul class='tagging'>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:bestseller"  data-bind="var: product(is:bestseller); format:popVal;" /> Best Seller</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:shipfree"  data-bind="var: product(is:shipfree); format:popVal;" /> Can Ship Free</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:clearance"  data-bind="var: product(is:clearance); format:popVal;" /> Clearance </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:colorful"  data-bind="var: product(is:colorful); format:popVal;" /> Colorful </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:configurable"  data-bind="var: product(is:configurable); format:popVal;" /> Configurable </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:discontinued"  data-bind="var: product(is:discontinued); format:popVal;" /> Discontinued</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:newarrival"  data-bind="var: product(is:newarrival); format:popVal;" /> New Arrival</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open Box </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:preorder"  data-bind="var: product(is:preorder); format:popVal;" /> Pre-order</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:refurb"  data-bind="var: product(is:refurb); format:popVal;" /> Refurb </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:sale"  data-bind="var: product(is:sale); format:popVal;" /> Sale Item</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:specialorder"  data-bind="var: product(is:specialorder); format:popVal;" /> Special Order</label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name="is:sizeable"  data-bind="var: product(is:sizeable); format:popVal;" /> Sizeable </label></li>
+				<li><label><input type='checkbox' class='applyAnycb' name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popVal;"> Taxable</label></li>
+			</ul>
+		</fieldset>
+		
+
+		<fieldset class='clearfix'>
+			<legend>Shipping</legend>
+
+			<div class='marginBottom clearfix'>
+				<label class='threeColumn displayInlineBlock floatLeft'><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' />oz <span class='toolTip' title="Weight should be entered in ounces or in pounds by using a # symbol.">?</span></label>
 	
-	<img src='blank.gif' width='150' height='150' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;'  />
+				<label class='threeColumn displayInlineBlock floatLeft'><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> <span class='toolTip' title="Only applies if fixed shipping is enabled">?</span></label>
+				
+				<label class='threeColumn displayInlineBlock floatLeft'><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popVal;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
+			</div>			
+			
+			<div class='marginBottom clearfix'>
+			<h4>Ship dimensions</h4>
+			
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
+			
+			</div>
+
+
+			<div class='marginBottom clearfix'>
+				<h4>Ship costs, handling and more</h4>
+
+				<div class='threeColumn floatLeft'>
+				<table class='fullWidth gridTable'>
+				<thead>
+				<tr>
+					<th>Destination</th>
+					<th>1st item</th>
+					<th>2nd item</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>Domestic</td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				<tr>
+					<td>Canadian</td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				<tr>
+					<td>International</td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				</tbody>
+				</table>		
+				</div>
+				
+				<div class='threeColumn floatLeft labelsAsBreaks'>
+					<label><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Promotion Class</span><input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' /></label>
+				</div>
+				
+				<div class='threeColumn floatLeft labelsAsBreaks'>
+					<h4>Export Declaration [SED]</h4>
+					<label><span>Country of origin [ISO Code]:</span><input type='text' name='zoovy:ship_nmfccode' value='' data-bind="var: product(zoovy:ship_nmfccode); format:popVal;" size='6' /></label>
+					<label><span>ATS/harmonized code:</span><input type='text' name='zoovy:ship_harmoncode' value='' data-bind="var: product(zoovy:ship_harmoncode); format:popVal;" size='6' /></label>
 	
-	<label><span>Cost:</span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
-	<label><span>MSRP:</span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' /></label>
-	<label><span>Sale price:</span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
+					<h4>Freight Options</h4>
+					
+					<label><span>NMFC commodity code:</span><input type='text' name='zoovy:ship_mfgcountry' value='' data-bind="var: product(zoovy:ship_mfgcountry); format:popVal;" size='6' /></label>
+					<label><span>Sorting class:</span><input type='text' name='zoovy:ship_sortclass' value='' data-bind="var: product(zoovy:ship_sortclass); format:popVal;" size='6' /></label>
+				</div>
+			</div>
+		</fieldset>
+
+
+		<fieldset data-app-role='productImages' class='clearfix imagesEditor'>
+			<legend>Images</legend>
+			<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+
+			<div class='clearfix marginBottom'>
+				<!-- sku images will get added into this div (with js) -->
+				<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
+				
+				<!-- all the product images -->
+				<ul class='prodImagesContainer paddingNone listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;" data-app-role='prodImagesContainer'></ul>
+			</div>		
+		</fieldset>
 	
-	<label><input type='checkbox' name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popVal;"> Taxable</label>
-	<label><input type='checkbox' name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label>
-	<label><input type='checkbox' name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label>
-	<label><input type='checkbox' name='is:openbox' data-bind="var: product(is:openbox); format:popVal;"> Open box</label>
-	<label><input type='checkbox' name='is:refurb' data-bind="var: product(is:refurb); format:popVal;"> Refurbished</label>
-	
-		</td>
-	
-		<td class='labelsAsBreaks alignedLabels alignedInputs'>
-	<h1 data-bind="var: product(pid); format:text; pretext:SKU: ;"></h1>
-	
-	<label><span>Product name:</span><input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" /></label>
-	
-	
+	<!--
 	<div id="html_you_have_been_warned" class="displayNone warning marginBottom">
 	<b>***COMPATIBILITY ALERT*** HTML Editing is *NOT* Recommended</b>
 	HTML Editors (such as this one) create HTML4 markup code which embed formatting with text content. 
@@ -329,7 +440,7 @@
 	
 	<label><span>Product description:</span><textarea name='zoovy:prod_desc' onFocus=" 	jQuery(this).prop('rows',25); 	if(jQuery().htmlarea && jQuery('#use_html').is(':checked')){	 		jQuery(this).htmlarea({ 			'toolbar':[ 		'bold', 'italic', 'p', '|','h1', 'h2', 'h3', 'h4', '|', 'indent', 'outdent', 'orderedList', 'unorderedList', '|',  		'justifyleft', 'justifycenter','justifyright','|', 		'forecolor','link', 'unlink', 'image'	 		]});	 		} 		" data-bind="var: product(zoovy:prod_desc); format:popVal;" rows='10'></textarea></label>
 	<div class='alignRight'><input type='checkbox' onChange="$('#html_you_have_been_warned').show();" id='use_html'> Use HTML Editor</div>
-	
+	-->
 	<!--
 	<div class='clearfix alignRight'>
 		<div data-app-event="admin_prodEdit|textareaEditorMode" data-ui-target-name="zoovy:prod_desc" class='ui-corner-bottom floatRight'>
@@ -340,181 +451,35 @@
 		</div>
 	</div>
 	-->
-	<label><span>Product detailed description:</span><textarea name='zoovy:prod_detail' data-bind="var: product(zoovy:prod_detail); format:popVal;" rows='10'></textarea></label>
-	
-	
-	
-	
-			</td>
-		</tr>
-		</table>
-		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix ui-widget-buttonbar">
-		<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	<!--	<button data-app-event="admin_prodEdit|configOptions" class='floatLeft marginRight'>Config Options</button> -->
-		<button data-app-event="admin_prodEdit|productVariationsManagerShow" class='floatLeft marginRight'>Product Variations</button>
-		<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly floatLeft marginRight'>Web Page Editor</button>
-		<button data-app-event="admin_prodEdit|viewProductOnWebsite" class='floatLeft marginRight'>Preview</button>
-		</div>
 
-	</div>
-
-
-	<div data-app-role='productImages'>
-		<div class='clearfix marginBottom'>
-			<!-- sku images will get added into this div (with js) -->
-			<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
-			
-			<!-- all the product images -->
-			<ul class=' prodImagesContainer listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;" data-app-role='prodImagesContainer'>
-				
-			</ul>
-		</div>		
-		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-		<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
-		<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
-		</div>
-	</div>
-
-
-
-	<div>
-	<h3>Shipping</h3>
-	<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' /> ounces (use # for pounds)</label>
-	<!-- webdb:ship_fixed -->
-	<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
-	
-	<label><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popVal;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
-	
-	<div class='label clearfix'>
-	<h4>Ship Dimensions</h4>
-	
-	<label class='floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
-	<label class='floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
-	<label class='floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
-	</div>
-	
-	<div class='label clearfix'>
-	<h4>Domestic Shipping</h4>
-	
-	<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></label>
-	<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></label>
-	<label class='floatLeft'><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
-	</div>
-	
-	<div class='label clearfix'>
-	<h4>Canadian Shipping</h4>
-	
-	<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></label>
-	<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></label>
-	</div>
-	
-	<div class='label clearfix'>
-	<h4>International Shipping</h4>
-	
-	<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></label>
-	<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></label>
-	</div>
-	
-	
-	
-	<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
-	
-	<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
-	
-	<div class='label clearfix'>
-	<h4>Export Declaration [SED]</h4>
-	
-	<label class='floatLeft'><span>Country of origin [ISO Code]:</span><input type='text' name='zoovy:ship_nmfccode' value='' data-bind="var: product(zoovy:ship_nmfccode); format:popVal;" size='6' /></label>
-	<label class='floatLeft'><span>ATS/harmonized code:</span><input type='text' name='zoovy:ship_harmoncode' value='' data-bind="var: product(zoovy:ship_harmoncode); format:popVal;" size='6' /></label>
-	</div>
-	
-	
-	<div class='label clearfix'>
-	<h4>Freight Options</h4>
-	
-	<label class='floatLeft'><span>NMFC commodity code:</span><input type='text' name='zoovy:ship_mfgcountry' value='' data-bind="var: product(zoovy:ship_mfgcountry); format:popVal;" size='6' /></label>
-	<label class='floatLeft'><span>Sorting class:</span><input type='text' name='zoovy:ship_sortclass' value='' data-bind="var: product(zoovy:ship_sortclass); format:popVal;" size='6' /></label>
-	</div>
-	
-	
-	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	</div>
-	</div>
-
-<!-- xsell & tagging -->
-	<div>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
-	<legend>Merchandising</legend>
-
-	<label>
-		<span>Promotion Class</span>
-		<input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' />
-	</label>
-<br />
-	<label><input name="is:bestseller" type="checkbox" data-bind="var: product(is:bestseller); format:popVal;" class='applyAnycb' /> Best Seller</label>
-	<label><input name="is:clearance" type="checkbox" data-bind="var: product(is:clearance); format:popVal;" class='applyAnycb' /> Clearance </label>
-	<label><input name="is:colorful" type="checkbox" data-bind="var: product(is:colorful); format:popVal;" class='applyAnycb' /> Colorful </label>
-	<label><input name="is:configurable" type="checkbox" data-bind="var: product(is:configurable); format:popVal;" class='applyAnycb' /> Configurable </label>
-	<label><input name="is:discontinued" type="checkbox" data-bind="var: product(is:discontinued); format:popVal;" class='applyAnycb' /> Discontinued</label>
-	<label><input name="is:newarrival" type="checkbox" data-bind="var: product(is:newarrival); format:popVal;" class='applyAnycb' /> New Arrival</label>
-	<label><input name="is:openbox" type="checkbox" data-bind="var: product(is:openbox); format:popVal;" class='applyAnycb' /> Open Box </label>
-	<label><input name="is:preorder" type="checkbox" data-bind="var: product(is:preorder); format:popVal;" class='applyAnycb' /> Pre-order</label>
-	<label><input name="is:refurb" type="checkbox" data-bind="var: product(is:refurb); format:popVal;" class='applyAnycb' /> Refurb </label>
-	<label><input name="is:sale" type="checkbox" data-bind="var: product(is:sale); format:popVal;" class='applyAnycb' /> Sale Item</label>
-	<label><input name="is:specialorder" type="checkbox" data-bind="var: product(is:specialorder); format:popVal;" class='applyAnycb' /> Special Order</label>
-	<label><input name="is:shipfree" type="checkbox" data-bind="var: product(is:shipfree); format:popVal;" class='applyAnycb' /> Can Ship Free</label>
-	<label><input name="is:sizeable" type="checkbox" data-bind="var: product(is:sizeable); format:popVal;" class='applyAnycb' /> Sizeable </label>
-</fieldset>
-	</td>
-	
-	<td class='valignTop'>
-	
-<fieldset>
-	<legend>Cross/Up Selling</legend>
-
-	<p><button class='applyButton' onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;">Related Product</button> <span class='hint'>Similiar that would be purchased instead.</span></p>
-	
-	<p><button class='applyButton'  onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;">Accessories</button> <span class='hint'>Items that can/should be pruchased with this product (ex: batteries)</span></p>
-</fieldset>
-
-
-
-	
-	</td>
-</tr>
-</tbody>
-</table>
-</fieldset>
-	</div>
 
 	</section><!-- /general tab content -->
 
 
 	<section data-anytab-content='categorization' class='clearfix'>
+
+	
+	
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar marginTop">
 		<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
 		</div>
 	</section><!-- /navigation tab content -->
 
 	
-	<section data-anytab-content='social' class='clearfix'>
+	<section data-anytab-content='social' class='clearfix labelsAsBreaks'>
 
-<h2>SEO &amp; RSS</h2>
-	<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
-	
-	<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
-	
-	<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
-	
-	<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
-	
-	<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
-	
-	
-	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	</div>
+	<fieldset>
+	<legend>SEO &amp; RSS</legend>
+		<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+		
+		<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
+		
+		<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
+		
+		<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
+		
+		<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
+	</fieldset>	
 
 	<table class='gridTable applyAnytable'>
 		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
@@ -535,7 +500,7 @@
 	<label><span>Condition:</span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
 	
 	</div>
-	<table class='fullWidth marginBottom'>
+	<table class='fullWidth gridTable applyAnytable'>
 	<thead>
 	<tr>
 		<th>Syndication to</th>
@@ -688,14 +653,6 @@
 	</tr>
 	</tbody>
 	</table>
-	
-	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	</div>
-
-
-
-
 
 	</section>
 

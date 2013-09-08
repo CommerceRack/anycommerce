@@ -167,6 +167,7 @@ If less is needed, use increments of 4
 */
 
 .noPadOrMargin	{padding:0; margin:0;}
+.paddingNone {padding:0;}
 
 
 /*
@@ -224,7 +225,11 @@ if you want the list responsive, apply the .fluidList class.
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
 td.width1	{width:1%;}
 
-table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}
+/* 201336 -> removed limitations by type so any element could use this class */
+/* table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}*/
+.fullWidth	{width:100%;}
+
+
 iframe.noBorders	{overflow:hidden; border:none;}
 
 iframe.ad-300x250	{height:250px;}
@@ -786,7 +791,7 @@ ICON LIBRARY
 	background: #ffffff;  
 	}  
 
-.threeColumn	{width:31%; margin:0 1%; padding:0;}
+.threeColumn	{width:31%; margin:0 2% 0 0; padding:0;}
 
 /* for a three column layout, where two columns are Narrow and one is Wide (NW) */
 .nwColumnN	{width:19%;}
