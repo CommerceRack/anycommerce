@@ -1281,8 +1281,15 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //a class is added when event delegation is added. The class is checked for when the function is run to prevent double-delegation.
 //a class is used instead of a data-attrib to be more efficient. Since we're adding/removing the class, it's 'safe' to use a class for this.
 			handleEventDelegation : function($container)	{
-//				app.u.dump(" events are being delegated");
-				if($container.hasClass('hasDelegatedEvents') || $container.parent(".hasDelegatedEvents").length >= 1)	{
+				app.u.dump("BEGIN app.u.handleEventDelegation");
+				app.u.dump(" -> $container.data('hasdelegatedevents'): "+$container.data('hasdelegatedevents'));
+				app.u.dump(" -> $container.closest('[data-hasdelegatedevents]').length: "+$container.closest('[data-hasdelegatedevents]').length);
+				app.u.dump(" -> $container.parents('[data-hasdelegatedevents]').length: "+$container.parents('[data-hasdelegatedevents]').length);
+
+				app.u.dump(" -> $container.closest('.delegated').length: "+$container.closest('.delegated').length);
+
+
+				if($container.data('hasdelegatedevents') || $container.closest('[data-hasdelegatedevents]').length >= 1)	{
 					app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
 					}
 				else	{
@@ -1292,7 +1299,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 							app.u.executeEvent($(e.target),$.extend(p,e));
 							});						
 						}
-					$container.addClass('hasDelegatedEvents'); //is a attribute so that an element can look for it via parent()
+					$container.addClass('delegated');
+					$container.attr('data-hasdelegatedevents',true); //is a attribute so that an element can look for it via parent()
 					}
 				},
 

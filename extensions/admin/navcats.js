@@ -212,7 +212,11 @@ Params:
 							},'mutable');
 
 						app.model.dispatchThis('mutable');
-						app.ext.admin_navcats.u.handleCatTreeDelegation($tree); //handles click events
+//SANITY	-> if event delegation occurs here, before $tree is added to the dom, the event delegation script can't look up the DOM to see if events have already been added. thus, dual-delegation could occur (bad).
+//			-> handle delegation by whatever calls getTree. Which is probably the right way to do it anyway since the delegation should occur at a high level. 
+//			-> this issue was discovered in product editor, so any changes to this function and events should be tested there.
+//						app.u.handleEventDelegation($tree); //handles click events
+
 						}
 					else	{
 						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] not set or invalid.','gMessage':true});
@@ -225,33 +229,7 @@ Params:
 				
 				return $tree;
 				},
-			// !!! port this over to app.u.handleEventDelegation
-			handleCatTreeDelegation : function($tree)	{
-				$tree.on('click',function(e,p){
-					p = p || {}; //
-					var $target = $(e.target);
-					if($target.data('app-click'))	{
-//						app.u.dump(" -> $target.data('app-click'): "+$target.data('app-click'));
-						var
-							actionExtension = $target.data('app-click').split('|')[0],
-							actionFunction =  $target.data('app-click').split('|')[1];
-						
-						if(actionExtension && actionFunction)	{
-							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
-//execute the app event.
-								app.ext[actionExtension].e[actionFunction]($target,p);
-								}
-							else	{
-								$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-								}
-							}
-						else	{
-							$('#globalMessaging').anymessage({'message':"In admin_navcats.u.handleCatTreeDelegation, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
-							}
-						
-						}
-					});
-				},
+
 			
 			getPathsArrayFromTree : function($tree)	{
 				var arr = {}; //what is returned. either an object where key = safeid/path and value = 1/0 OR false, if $tree doesn't validate.
