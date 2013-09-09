@@ -638,7 +638,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				$dropzone = this.element,
 				anyfiledrop = this; //inside the event handlers below, 'this' loses context.
 			
-			if($dropzone.data('widget-anydropzone'))	{} //already an anyfileupload
+			if($dropzone.data('widget-anydropzone'))	{} //already an anydropzone
 			else{
 				$dropzone.data('widget-anydropzone',true);
 				if(this.options.status instanceof jQuery)	{
