@@ -170,13 +170,14 @@ Params:
 	
 */
 			getTree : function(mode,vars){
-//				app.u.dump("BEGIN admin_navcats.u.getTree");
+				app.u.dump("BEGIN admin_navcats.u.getTree");
+				app.u.dump(" -> vars: "); app.u.dump(vars);
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 
 				//set some defaults.
 				if(mode)	{
-					if(vars.templateID && vars.navtree)	{
+					if(vars.templateID && vars.path)	{
 						$tree.showLoading({'message':'Fetching category tree'});
 
 						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
@@ -193,7 +194,7 @@ Params:
 						app.model.addDispatchToQ({
 							'detail':'more',
 							'_cmd': 'adminNavcatDetail',
-							'path' : vars.navtree,
+							'path' : vars.path,
 							'navtree' : 'PRT00'+app.vars.partition,
 							'_tag' : {
 								'callback':function(rd){
@@ -202,12 +203,15 @@ Params:
 										$tree.anymessage({'message':rd});
 										}
 									else	{
+										if(app.data[rd.datapointer]._msg_1_type == 'warning')	{
+											$tree.anymessage({'message':rd});
+											}
 										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
 //adds .edited class when inputs change. last so tracking doesn't start till after 'checked' is added.
 										app.ext.admin.u.applyEditTrackingToInputs($tree); 
 										}
 									},
-								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.navtree
+								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.path
 								}
 							},'mutable');
 
@@ -219,7 +223,7 @@ Params:
 
 						}
 					else	{
-						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] not set or invalid.','gMessage':true});
+						$tree.anymessage({'message':'In admin_navcats.u.getTree, vars.templateID ['+vars.templateID+'] or vars.path ['+vars.path+'] not set or invalid.','gMessage':true});
 						}
 
 					}

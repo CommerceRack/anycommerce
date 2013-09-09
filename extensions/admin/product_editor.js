@@ -1265,7 +1265,7 @@ Required params include:
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									$catsContent.append(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data[rd.datapointer]['@PATHS']}));
+									$catsContent.append(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','path':'.','paths':app.data[rd.datapointer]['@PATHS']}));
 									}
 								}
 							}
