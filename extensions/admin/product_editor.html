@@ -170,7 +170,7 @@
 
 <!-- used for the product Queue/task list -->
 <ul>
-<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom' data-app-role='taskItemContainer'>
+<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom smallPadding' data-app-role='taskItemContainer'>
 	<div class='clearfix' data-app-role='taskItemPreview'>
 		<div class='prodThumbContainer floatLeft marginRight marginLeft'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
@@ -252,28 +252,22 @@
 
 
 
-
-
-
-
-
-
-<div id='productEditorTabbedTemplate'>
-
-
-
-	
+<div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
+	<form action='#' onSubmit='return false'>
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
-	<button class='floatRight'>Save</button>
-<!-- 			<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
- 			-->
+	<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+<!--
+These are the old save buttons for the panels.  Here so I know where to get the existing code when the new save is built.  Delete these are they're migrated into the save button.
+<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
+<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
+-->
 	<ul>
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li>
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
 		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
-		<li><a href='#attributes' data-app-role='attributesTab'>Attributes</a></li>
+		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
 		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
-		<li><a href='#categorization' data-app-role='categorizationTab'>Categorization</a></li>
+		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
 		<li><a href='#variations' data-app-role='variationsTab'>Variations</a></li>
 		<li><a href='#ci' data-app-role='ciTab'>CI</a></li>
 		<li><a href='#amazon' data-app-role='amazonTab'>Amazon</a></li>
@@ -283,48 +277,51 @@
 	
 	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
 
-		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all'>
-			<button data-app-event="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
-			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead.">Related Product</button>
-			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;" title="Items that can/should be pruchased with this product (ex: batteries)">Accessories</button>
-			<button data-app-event="admin_prodEdit|webPageEditor" class='showForZoovyOnly' title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
-			<button data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities.">Debug</button>
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button data-app-event="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations." class='floatLeft'>Product Variations</button>
+			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead." class='floatLeft'>Related Product</button>
+			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;" title="Items that can/should be pruchased with this product (ex: batteries)" class='floatLeft'>Accessories</button>
+			<button data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product." class='floatLeft showForZoovyOnly'>Web Page Editor</button>
+			<button data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)" class='floatLeft'>Preview</button>
+			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft'>Debug</button>
 			
 			
 		</div>
 
 
 		<fieldset class='clearfix'>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost: </span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP: </span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price: </span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
 
-			<div title="Product name" class='threeColumn floatLeft marginBottom'><input class='fullWidth' type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" /></div>
-			<div title="Product description" class='threeColumn floatLeft marginBottom'><textarea class='fullWidth' name='zoovy:prod_desc' value='' data-bind="var: product(zoovy:prod_desc); format:popVal;" placeholder="Product description"></textarea></div>
-			<div title="Product details/specifications" class='threeColumn floatLeft marginBottom'><textarea class='fullWidth' name='zoovy:prod_detail' value='' data-bind="var: product(zoovy:prod_detail); format:popVal;" placeholder="Product details/specifications"></textarea></div>
+			<input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" title="Product name" class='threeColumn floatLeft marginBottom' />
+			
+			<textarea data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" name='zoovy:prod_desc' value='' data-bind="var: product(zoovy:prod_desc); format:popVal;" placeholder="Product description" title="Product description" class='threeColumn floatLeft marginBottom'></textarea>
+			
+			<textarea data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" name='zoovy:prod_detail' value='' data-bind="var: product(zoovy:prod_detail); format:popVal;" placeholder="Product details/specifications" title="Product details/specifications" class='threeColumn floatLeft marginBottom'></textarea>
+
 		</fieldset>
 
 
 		<fieldset class='clearfix' >
 			<legend>Tagging</legend>
 			<ul class='tagging'>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:bestseller"  data-bind="var: product(is:bestseller); format:popVal;" /> Best Seller</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:shipfree"  data-bind="var: product(is:shipfree); format:popVal;" /> Can Ship Free</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:clearance"  data-bind="var: product(is:clearance); format:popVal;" /> Clearance </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:colorful"  data-bind="var: product(is:colorful); format:popVal;" /> Colorful </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:configurable"  data-bind="var: product(is:configurable); format:popVal;" /> Configurable </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:discontinued"  data-bind="var: product(is:discontinued); format:popVal;" /> Discontinued</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:newarrival"  data-bind="var: product(is:newarrival); format:popVal;" /> New Arrival</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open Box </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:preorder"  data-bind="var: product(is:preorder); format:popVal;" /> Pre-order</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:refurb"  data-bind="var: product(is:refurb); format:popVal;" /> Refurb </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:sale"  data-bind="var: product(is:sale); format:popVal;" /> Sale Item</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:specialorder"  data-bind="var: product(is:specialorder); format:popVal;" /> Special Order</label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name="is:sizeable"  data-bind="var: product(is:sizeable); format:popVal;" /> Sizeable </label></li>
-				<li><label><input type='checkbox' class='applyAnycb' name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popVal;"> Taxable</label></li>
+				<li><label><input type='checkbox'  name="is:bestseller"  data-bind="var: product(is:bestseller); format:popVal;" /> Best Seller</label></li>
+				<li><label><input type='checkbox'  name="is:shipfree"  data-bind="var: product(is:shipfree); format:popVal;" /> Can Ship Free</label></li>
+				<li><label><input type='checkbox'  name="is:clearance"  data-bind="var: product(is:clearance); format:popVal;" /> Clearance </label></li>
+				<li><label><input type='checkbox'  name="is:colorful"  data-bind="var: product(is:colorful); format:popVal;" /> Colorful </label></li>
+				<li><label><input type='checkbox'  name="is:configurable"  data-bind="var: product(is:configurable); format:popVal;" /> Configurable </label></li>
+				<li><label><input type='checkbox'  name="is:discontinued"  data-bind="var: product(is:discontinued); format:popVal;" /> Discontinued</label></li>
+				<li><label><input type='checkbox'  name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label></li>
+				<li><label><input type='checkbox'  name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label></li>
+				<li><label><input type='checkbox'  name="is:newarrival"  data-bind="var: product(is:newarrival); format:popVal;" /> New Arrival</label></li>
+				<li><label><input type='checkbox'  name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open Box </label></li>
+				<li><label><input type='checkbox'  name="is:preorder"  data-bind="var: product(is:preorder); format:popVal;" /> Pre-order</label></li>
+				<li><label><input type='checkbox'  name="is:refurb"  data-bind="var: product(is:refurb); format:popVal;" /> Refurb </label></li>
+				<li><label><input type='checkbox'  name="is:sale"  data-bind="var: product(is:sale); format:popVal;" /> Sale Item</label></li>
+				<li><label><input type='checkbox'  name="is:specialorder"  data-bind="var: product(is:specialorder); format:popVal;" /> Special Order</label></li>
+				<li><label><input type='checkbox'  name="is:sizeable"  data-bind="var: product(is:sizeable); format:popVal;" /> Sizeable </label></li>
+				<li><label><input type='checkbox'  name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popVal;"> Taxable</label></li>
 			</ul>
 		</fieldset>
 		
@@ -457,28 +454,25 @@
 
 
 	<section data-anytab-content='categorization' class='clearfix'>
-
-	
-	
-		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar marginTop">
-		<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
-		</div>
+		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
 	</section><!-- /navigation tab content -->
 
 	
-	<section data-anytab-content='social' class='clearfix labelsAsBreaks'>
+	<section data-anytab-content='social' class='clearfix'>
 
 	<fieldset>
 	<legend>SEO &amp; RSS</legend>
-		<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
-		
-		<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
-		
-		<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
-		
-		<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
-		
-		<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
+
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn'>
+		<label><span>SEO page title </span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+		<label><span>SEO/RSS keywords <span class='toolTip' title="Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have 'quality over quantity'. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.">?</span></span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
+		</div>
+
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn column2'>
+		<label><span>RSS feed title </span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		<label><span>RSS/Meta short description </span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		</div>
+
 	</fieldset>	
 
 	<table class='gridTable applyAnytable'>
@@ -492,12 +486,12 @@
 
 
 
-	<div class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+	<div class='marginBottom clearfix'>
 	
-	<label><span>Manufacturer:</span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
-	<label><span>Manufacturer ID:</span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
-	<label><span>UPC:</span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
-	<label><span>Condition:</span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
+	<label class='floatLeft marginRight marginBottom'><span>Manufacturer: </span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
+	<label class='floatLeft marginRight marginBottom'><span>Manufacturer ID: </span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
+	<label class='floatLeft marginRight marginBottom'><span>UPC: </span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
+	<label class='floatLeft marginRight marginBottom'><span>Condition: </span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
 	
 	</div>
 	<table class='fullWidth gridTable applyAnytable'>
@@ -732,14 +726,12 @@
 	<section data-anytab-content='ci' class='clearfix'>
 	Competitive Intelligence.
 	</section>
+
+
 	
 	<section data-anytab-content='attributes' class='clearfix'>
-	Flexedit goes here.
+		<div data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
 	</section>
-
-
-
-
 
 
 
@@ -898,134 +890,132 @@
 
 	<section data-anytab-content='ebay' class='clearfix'>
 
-
-<label>
-	<span>Category 1</span>
-	<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
-	<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-	<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-</label>
-<label>
-	<span>Category 2</span>
-	<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
-	<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-	<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
-</label>
-
-ebay store category and launch profile should go here.
-
-<label>
-	<span>Launch profile</span>
-	<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
-	<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
-</label>
-
-
-
-<label>
-	<span>eBay title</span>
-	<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
-</label>
-<label>
-	<span>eBay subtitle</span>
-	<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
-</label>
-
-<h3>Auction Configuration</h3>
-
-<label>
-	<span>Duration</span>
-	<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-		<option value="">-- use profile --</option>
-		<option value="3">3 Day</option>
-		<option value="5">5 Day</option>
-		<option value="7">7 Day</option>
-		<option value="10">10 Day</option>
-	</select>
-</label>
-
-<label>
-	<span>Auction qty</span>
-	<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
-</label>
-
-<label>
-	<span>Starting bid</span>
-	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
-</label>
-
-<label>
-	<span>Buy it now</span>
-	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
-</label>
-<label>
-	<span>Reserve price</span>
-	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
-	<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
-</label>
-
-<label>
-	<span>eBay gallery</span>
-	<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
-		<option value="">-- use profile --</option>
-		<option value="0">never</option>
-		<option value="1">auctions only</option>
-		<option value="2">fixed price only</option>
-		<option value="3">auction + fixed price</option>
-		<option value="8">store only</option>
-		<option value="11">any type</option>
-	</select>	
-</label>
-
-
-<div class='buttonset'>
-	<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
-	<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
-	<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
-</div>
-
-
-
-<h3>Syndicated Listing Configuration</h3>
-
-<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. or do we just add a checkbox.</div>
-
-<label>
-	<span>Fixed price</span>
-	$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
-</label>
-<div class='buttonset'>
-<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
-</div>
-
-
-
-
-<div class='buttonset alignRight'>
-	<button>Save</button>
-</div>
-<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
-
-
-<table width="100%" border="0">
-	<tbody>
-	
-	<tr>
-		<td class="norm">eBay Store Category:</td>
-		<td><font class="norm"><select name="ebay:storecat">
-		<option value="">No Category/Default</option>
+<fieldset class='clearfix marginBottom'>
+	<legend>eBay Categories</legend>
+		<label class='threeColumn floatLeft'>
+			<span>eBay category 1</span>
+			<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+			<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+			<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+		</label>
+		<label class='threeColumn floatLeft'>
+			<span>eBay category 2</span>
+			<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+			<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+			<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
+		</label>
 		
-		</select></font></td>
-	</tr>
+		<label class='threeColumn floatLeft'>
+			<span>eBay Store Category</span>
+			<div class='red'>ebay store categories will go here!!!</div>
+		</label>
+</fieldset>
 
-</tbody>
-</table>
+
+<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
+	<legend>Auction Configurations</legend>
+
+		<div class='threeColumn floatLeft'>
+			<label>
+				<span>Launch profile</span>
+				<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
+				<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+			</label>
+			
+			<label>
+				<span>eBay title</span>
+				<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+			</label>
+	
+			<label>
+				<span>eBay subtitle</span>
+				<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+			</label>
+		</div>
+		
+		<div class='threeColumn floatLeft'>
+
+			<label>
+				<span>Duration</span>
+				<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+					<option value="">-- use profile --</option>
+					<option value="3">3 Day</option>
+					<option value="5">5 Day</option>
+					<option value="7">7 Day</option>
+					<option value="10">10 Day</option>
+				</select>
+			</label>
+	
+			<label>
+				<span>Auction qty</span>
+				<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+			</label>
+
+			<label>
+				<span>eBay gallery</span>
+				<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+					<option value="">-- use profile --</option>
+					<option value="0">never</option>
+					<option value="1">auctions only</option>
+					<option value="2">fixed price only</option>
+					<option value="3">auction + fixed price</option>
+					<option value="8">store only</option>
+					<option value="11">any type</option>
+				</select>	
+			</label>
+
+		</div>
+		
+		<div class='threeColumn floatLeft'>
+		
+			<label>
+				<span>Starting bid</span>
+				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
+			</label>
+			
+			<label>
+				<span>Buy it now</span>
+				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
+			</label>
+			<label>
+				<span>Reserve price</span>
+				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
+				<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+			</label>
+		</div>
+
+
+		<div class='buttonset'>
+			<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
+			<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
+			<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
+		</div>
+
+	</fieldset>
+
+
+	<fieldset class='labelsAsBreaks'>
+		<legend>Syndicated Listing Configuration</legend>
+
+		<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. what attribute do we key off of?</div>
+
+		<label>
+			<span>Fixed price</span>
+			$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
+		</label>
+
+		<div class='buttonset'>
+		<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
+		</div>
+		<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+	</fieldset>
+
 
 	</section>
 	
 	</div>
 
-
+	</form>
 </div>
 
 

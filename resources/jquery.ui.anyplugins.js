@@ -345,32 +345,25 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 		_addEvent2Tabs : function()	{
 			var self = this;
-// * 201318 -> more efficient selector and only 1 loop
-/*
-			this.tabs.find('li').each(function(){
-				$(this).off('click.anytab').on('click.anytab',function(){
-					self.reveal($(this));
-					});
+// *** 201336 -> tab clicks now use delegated events. more efficient.
+			this.tabs.on('click','a',function(event){
+				event.preventDefault();
+				var oldHash = window.location.hash;
+				_ignoreHashChange = true;
+				window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
+				_ignoreHashChange = false;
+				self.reveal($(this).parent());
+				if($(this).data('app-click'))	{
+					app.u.executeEvent($(this),{'type':'click'});
+					}
+				return false;
 				});
-			this.tabs.find('li a').each(function(){
-				$(this).on('click',function(event){
-					event.preventDefault();
+/*			$('a',this.tabs).each(function(){
+				$(this).on('click.anytabs',function(event){
+					app.u.dump('tab clicked!');
 					});
 				});
 */
-			$('a',this.tabs).each(function(){
-				$(this).on('click.anytabs',function(event){
-					var oldHash = window.location.hash;
-					event.preventDefault();
-					app.u.dump('tab clicked!');
-					_ignoreHashChange = true;
-					window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
-					_ignoreHashChange = false;
-					self.reveal($(this).parent());
-					return false;
-					});
-				});
-
 			},
 
 		_addClasses2Tabs : function()	{

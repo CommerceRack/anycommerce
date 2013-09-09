@@ -94,6 +94,7 @@ var admin_navcats = function() {
 						
 
 //					app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
+//go through list of subcats and get detail for each.
 					for(var i = 0; i < L; i += 1)	{
 //						app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
 						var
@@ -103,7 +104,7 @@ var admin_navcats = function() {
 						if(vars.fetchOnly)	{}
 						else	{
 							$container.append($cat);
-							var paths = $container.closest("[data-app-role='categoryTree']").data('paths') || []; //used to 'precheck' items in list.
+							var paths = $container.closest("[data-app-role='categoryTree']").data('paths') || []; //set from getTree. The list of 'paths' to be checked (such as a list of categories a product is in)
 //							app.u.dump(" -> safeID's has a length"); app.u.dump(paths);
 							}
 
@@ -115,7 +116,6 @@ var admin_navcats = function() {
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									
 									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
 //if the category is 'open' in DPS, trigger the click to show the subcats (which will already have been loaded in memory by now)
 									if($.inArray(rd.path,navcatObj) >= 0)	{
@@ -123,8 +123,8 @@ var admin_navcats = function() {
 										}
 //if the category is present in the paths array, that means it should be 'checked'.
 									if($.inArray(rd.path,paths) >= 0)	{
-										app.u.dump("Match! "+rd.path);
-										$(":checkbox[name='"+rd.path+"']",$cat).trigger('click');
+//										app.u.dump("Match! "+rd.path);	app.u.dump(" -> cb.length: "+$(":checkbox[name='"+rd.path+"']",$container).length);
+										$(":checkbox[name='"+rd.path+"']",$container).prop('checked','checked'); //don't use $cat for context, it isn't set if loading from api (vs local storage)
 										}
 
 									}

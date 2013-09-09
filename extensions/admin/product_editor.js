@@ -32,33 +32,6 @@ var admin_prodEdit = function() {
 	var r = {
 
 		vars : {
-//for panels, the key is the panel id. 
-//isLegacy=true will build and save the panel in legacy mode. 
-//if isLegacy=false, panelCallback needs to be set.
-//panelCallback is a pointer to a function in 'panels' of admin_prodedit. is run currently run onload. will likely later run on panel open.
-			panels : {
-				'general' : {'title':'General Product Information','isLegacy':false,'panelCallback':'default','column':1},
-				'images' : {'title':'Images','isLegacy':false,'column':1,'panelCallback':'images'},
-				'flexedit' : {'title':'Custom Fields/Flexedit','isLegacy':false,'column':1,'panelCallback':'flexedit'},
-				'wms' : {'title':'Warehouse Management','isLegacy':false,'column':1,'panelCallback':'default'},
-				'inventory' : {'title':'Inventory 1.0','isLegacy':true,'column':1},
-				'sku' : {'title':'SKU Management','isLegacy':false,'panelCallback':'default','column':1,'panelCallback':'default'},
-				'shipping' : {'title':'Shipping','isLegacy':false,'panelCallback':'default','column':1},
-				'navigation' : {'title':'Website Navigation','isLegacy':false,'column':1,'panelCallback':'navigation'},
-				'syndication' : {'title':'Marketplaces (formerly syndication)','isLegacy':false,'panelCallback':'default','column':1},
-				'ciengine' : {'title':'Competitive Intelligence','isLegacy':true,'column':1},
-				'amazon' : {'title':'Amazon Marketplace','isLegacy':false,'column':2,'panelCallback':'default'},
-				'ebaypower' : {'title':'eBay Powerlister','isLegacy':true,'column':2},
-				'ebay' : {'title':'eBay','isLegacy':false,'column':2,'panelCallback':'default'},
-				'listing' : {'title':'HTML Listing','isLegacy':true,'column':2},
-				'doba' : {'title':'Doba Supplier Settings','isLegacy':true,'column':2},
-				'events' : {'title':'Listing Events','isLegacy':true,'column':2},
-				'xsell' : {'title':'Cross Selling','isLegacy':false,'column':2,'panelCallback':'default'},
-				'wholesale' : {'title':'Wholesale','isLegacy':true,'column':2},
-				'reviews' : {'title':'Customer Reviews','isLegacy':false,'column':2,'panelCallback':'reviews'},
-				'rss' : {'title':'SEO and RSS Tools','isLegacy':false,'panelCallback':'default','column':2},
-				'diagnostics' : {'title':'Troublshooting/Diagnostics/Advanced','isLegacy':false,'column':2,'panelCallback':'default'}
-				},
 
 			flexTypes : {
 				'asin' : {'type':'text'},
@@ -163,16 +136,19 @@ var admin_prodEdit = function() {
 			handleProductEditor : {
 				onSuccess : function(_rtag)	{
 	
-	
+var pid = app.data[_rtag.datapointer].pid;
 if(_rtag.renderTaskContainer)	{
 	_rtag.jqObj.closest("[data-app-role='taskItemContainer']").find("[data-app-role='taskItemPreview']").anycontent({'datapointer':_rtag.datapointer});
 	}
 
 _rtag.jqObj.hideLoading();
-_rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','datapointer':_rtag.datapointer});
+_rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.extend(true,{},app.data[_rtag.datapointer],app.data['adminProductReviewList|'+pid])});
 
-$('.applyAnytabs',_rtag.jqObj).anytabs();
-	
+
+
+app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
+app.u.handleCommonPlugins(_rtag.jqObj);
+app.u.handleButtons(_rtag.jqObj);
 	
 	
 					}
@@ -218,102 +194,42 @@ $('.applyAnytabs',_rtag.jqObj).anytabs();
 				vars = vars || {};
 				if($target instanceof jQuery && pid)	{
 
-$target.empty();
-/*
-var $col = {};
-$col['1'] = $("<div \/>").addClass('twoColumn').attr('data-app-column',1);
-$col['2'] = $("<div \/>").addClass('twoColumn column2').attr('data-app-column',2);
-
-//Loop through the list of panels and display them in the default order.  Then use some JS magic to change the order based on what is in DPS.
-var panels = app.ext.admin_prodEdit.vars.panels; //shortcut.
-//					var panelSequence = app.ext.admin.u.dpsGet('admin_prodEdit',"panelOrder");
-$target.addClass('productEditor'); //this class needs to be present to control panel width.
-for(var index in panels)	{
-	
-	var $panel = app.renderFunctions.createTemplateInstance('productEditorPanelTemplate');
-	$panel.anypanel({
-		'state' : 'persistent',
-		'data' : panels[index],
-		'showClose' : false,
-		'name' : index,
-		'persistent' : true,
-		'wholeHeaderToggle' : false, //disabled for draggable.
-		'dataAttribs' : {
-			'panelid' : index,
-			'pid' : pid
-			},
-		'persistentStateDefault' : 'expand',
-		'showLoading' : false, //loading will be added to the fieldset.
-		'extension' : 'admin_prodEdit'
-		});
-	$panel.attr({'data-pid':pid,'data-panelid':index}).addClass('productEditorPanel');
-	$('fieldset',$panel).anycontent({'templateID' : (panels[index].isLegacy) ? '' : 'productEditorPanelTemplate_'+index});
-	$panel.appendTo($col[panels[index].column])
-
-	}
-
-$target.append($col['1']);
-$target.append($col['2']);
-
-
-// !!! for ebay panel, will need the launch profile list as well as their list of ebay store categories.
-
-*/
-
-//get data for flexedit panel.
-app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
-if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
-else	{
-	app.model.addDispatchToQ({
-		'_cmd':'adminConfigDetail',
-		'flexedit' : 1,
-		'_tag':	{'datapointer':'adminConfigDetail|flexedit'}
-		},'mutable');
-	}
-
-//get data for navigation panel.
-app.model.addDispatchToQ({
-	'_cmd':'adminProductNavcatList',
-	'pid':pid,
-	'_tag':	{
-		'datapointer' : 'adminProductNavcatList|'+pid,
-		'pid':pid
-		}
-	},'mutable');
-
-app.model.addDispatchToQ({
-	'_cmd':'adminProductReviewList',
-	'PID':pid,
-	'_tag':	{
-		'datapointer' : 'adminProductReviewList|'+pid,
-		'pid':pid
-		}
-	},'mutable');
-
-
-if(app.model.fetchData('adminEBAYProfileList'))	{}
-else	{
-	app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
-	}
-//product record, used in most panels.
-app.model.addDispatchToQ({
-	'_cmd':'adminProductDetail',
-	'variations':1,
-	'skus':1,
-	'pid' : pid,
-	'_tag':{
-		'datapointer':'adminProductDetail|'+pid,
-		'pid' : pid,
-		'renderTaskContainer' : vars.renderTaskContainer,
-		'templateID':'productEditorTabbedTemplate',
-		'jqObj' : $target,
-		'extension' : 'admin_prodEdit',
-		'callback' : 'handleProductEditor'
-		}
-	},'mutable');
-
-
-app.model.dispatchThis('mutable');
+					$target.empty().showLoading({'message':'Fetching product record'});
+					$target.attr('data-pid',pid);
+					
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductReviewList',
+						'PID':pid,
+						'_tag':	{
+							'datapointer' : 'adminProductReviewList|'+pid,
+							'pid':pid
+							}
+						},'mutable');
+					
+					
+					if(app.model.fetchData('adminEBAYProfileList'))	{}
+					else	{
+						app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
+						}
+					//product record, used in most panels.
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductDetail',
+						'variations':1,
+						'skus':1,
+						'pid' : pid,
+						'_tag':{
+							'datapointer':'adminProductDetail|'+pid,
+							'pid' : pid,
+							'renderTaskContainer' : vars.renderTaskContainer,
+							'templateID':'productEditorTabbedTemplate',
+							'jqObj' : $target,
+							'extension' : 'admin_prodEdit',
+							'callback' : 'handleProductEditor'
+							}
+						},'mutable');
+					
+					
+					app.model.dispatchThis('mutable');
 
 					}
 				else	{
@@ -341,33 +257,6 @@ app.model.dispatchThis('mutable');
 				$modal.dialog('open');
 				}, //showCreateProductDialog
 	
-		
-	//used for saving compatibility mode panels. app panels have a ui-event
-			saveProductPanel : function(t,panelid,SUB){
-				var $form = $(t).closest("form");
-				var $fieldset = $('fieldset',$form); // a var because its used/modified more than once.
-				var formObj = $form.serializeJSON();
-	
-				//if pid is set as a input in the original form, use it. Otherwise, look for it in data on the container.
-				formObj.pid = formObj.pid || $form.closest('[data-pid]').attr('data-pid');
-				
-				formObj['sub'] = (SUB) ? SUB : 'SAVE';
-				formObj.panel = panelid;
-	
-				if(formObj.pid)	{
-					// fieldset is where data is going to get added, so it gets the loading class.
-					// be sure do this empty AFTER the form serialization occurs.
-					$fieldset.empty().addClass('loadingBG');
-					app.ext.admin.calls.adminUIProductPanelExecute.init(
-						formObj,
-						{'callback':'showDataHTML','extension':'admin','targetID':$fieldset.attr('id')}
-						,'immutable');
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					app.u.throwMessage("Uh oh. an error occured. could not determine what product to update.");
-					}
-				}, //saveProductPanel
 	
 			showStoreVariationsManager : function($target)	{
 	//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
@@ -572,13 +461,6 @@ app.model.dispatchThis('mutable');
 	
 	
 		panels : {
-//some of the panels, such as general, don't require anything special beyond translation.
-			'default' : function($form,pid)	{
-//				app.u.dump(" -> Got here! "+$form.closest("[data-panelid]").data('panelid'));
-				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
-				$('.applyAnytabs').anytabs();
-				$('.toolTip').tooltip();
-				},
 			
 			'flexedit' : function($form,pid)	{
 //				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
@@ -687,12 +569,7 @@ app.model.dispatchThis('mutable');
 				}, //images
 			'reviews' : function($form,pid)	{
 				$form.hideLoading().append($("<div \/>").anycontent({'templateID':'productEditorPanelTemplate_reviews',datapointer : 'adminProductReviewList|'+pid}));
-				},
-			'navigation' : function($form,pid)	{
-				$form.hideLoading();
-				$form.prepend(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data['adminProductNavcatList|'+pid]['@PATHS']}));
-				}
-			},
+				}			},
 	
 	
 	////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -858,7 +735,7 @@ app.model.dispatchThis('mutable');
 				
 				}, //handleManagementCategories
 	
-	
+
 	//type is an input type.  number, select, textarea or something specific to us, like finder, media, etc.
 	//data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
 	//prodData is an optional object. should be adminProductDetail and include %attribs, inventory, etc.
@@ -1188,7 +1065,7 @@ Required params include:
 				if(P.pid && P.tab && P.mode)	{
 
 					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
-					app.u.dump(" -> $taskList.length: "+$taskList.length);
+//					app.u.dump(" -> $taskList.length: "+$taskList.length);
 					var $li = $("li[data-pid='"+P.pid+"']",$taskList);
 					if(P.mode == 'remove')	{
 						$li.empty().remove();
@@ -1227,6 +1104,7 @@ Required params include:
 //determine if the item is already in the list and, if so, just edit it.  If not, add and edit.
 //when opening the editor immediately, trigger the 'edit' button. no need to fetch the product data, the editor will do that.
 						else if(P.mode == 'edit')	{
+//							$li.showLoading({'message':'Fetching Product Detail'});
 //							$("[data-app-click='admin_prodEdit|productEditorShow4Task']",$li).trigger('click',{'translateTask':true});
 							app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
 							}
@@ -1289,6 +1167,85 @@ Required params include:
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element.","gMessage":true});
 					}
+				},
+
+			handleAttributesTabContent : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid'),
+					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
+
+				app.u.dump(" -> $flexContent.length: "+$flexContent.length);
+				app.u.dump(" -> $PE.length: "+$PE.length);
+				app.u.dump(" -> pid: "+pid);
+
+				if($flexContent.children().length)	{
+					app.u.dump(" -> attributes tab clicked. flexcontent not retrieved because content was already loaded.");
+					} //flex content already generated.
+				else	{
+					//get data for flexedit panel. If the system resource for all attribs needs to be fetched, re-request the enabled flexedit attributes list too.
+					var numRequests = app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
+	
+	
+					var cmdObj = {
+							'_cmd':'adminConfigDetail',
+							'flexedit' : 1,
+							'_tag':	{
+								'datapointer':'adminConfigDetail|flexedit',
+								callback : function(rd)	{
+									app.u.dump("GOT HERE!!!!!!!!!!!!!!!");
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
+										}
+									}
+								}
+							}
+					
+					if(numRequests || !app.model.fetchData(cmdObj._tag.datapointer))	{
+						app.u.dump(" -> either global or product flex fields not available. fetch them");
+						$flexContent.showLoading({'message':'Loading attribute data...'})
+						app.model.addDispatchToQ(cmdObj,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						app.u.dump(" -> flexedit data avaiable locally. Execute callback.");
+						app.u.handleCallback(cmdObj._tag);
+						}
+					}
+				},
+
+//executed when the categorization tab is clicked.
+			handleCategorizationTabContent : function($ele,p)	{
+				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
+				var $catsContent = $("section[data-anytab-content='categorization']:first",$PE).find("[data-app-role='categoryListContainer']");
+				var pid = $PE.data('pid');
+				if($catsContent.children().length)	{} //cats are already loaded.
+				else	{
+//get data for navigation panel.
+					$catsContent.showLoading({'message':'Fetching categories for product...'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductNavcatList',
+						'pid':pid,
+						'_tag':	{
+							'datapointer' : 'adminProductNavcatList|'+pid,
+							'pid':pid,
+							'callback' : function(rd)	{
+								$catsContent.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$catsContent.append(app.ext.admin_navcats.u.getTree('chooser',{'templateID':'catTreeItemTemplate','navtree':'.','paths':app.data[rd.datapointer]['@PATHS']}));
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				
 				},
 
 		

@@ -3652,6 +3652,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						}
 					}
 				},
+			
+		
 //run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
 			restoreInputsFromTrackingState : function($context)	{
 				$('.edited',$context).removeClass('edited');
@@ -5479,6 +5481,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 		e : {
+
+			adjustHeightOnFocus : function($ele,p)	{
+				$ele.height('300');
+				},
+
+			restoreHeightOnBlur : function($ele,p)	{
+				$ele.css('height','');
+				},
+
 //used for loading a simple dialog w/ no data translation.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
 //set data-templateid on the button to specify a template.

@@ -1011,11 +1011,8 @@ app.u.throwMessage(responseData); is the default error handler.
 /*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
 // * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
 					$target.anycontent(_rtag);
-// * 201320 -> these are a few commonly used plugins that can now be applied w/out a custom callback.
-					$('.toolTip',$target).tooltip();
-					$('.applyAnycb',$target).anycb();
-					$('table.applyAnytable',$target).andSelf().anytable(_rtag.anytable || {});
-					$('.applyAnytabs',$target).anytabs();
+
+					app.u.handleCommonPlugins($target);
 					app.u.handleButtons($target);
 					app.u.handleAppEvents($target);
 
@@ -1238,15 +1235,26 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				//doh! no filename.
 				}
 			}, //loadCSSFile
-
-
+//The actual event type and the name used on the dom (focus, blur, etc) do not always match. Plus, I have a sneaking feeling we'll end up with differences between browsers.
+//This function can be used to regularize the event type. Wherever possible, we'll map to the jquery event type name.
+			normalizeEventType : function(type){
+				var r = type;
+				if(type == 'focusin')	{
+					r = 'focus';
+					}
+				else if(type == 'focusout')	{
+					r = 'blur';
+					}
+				return r;
+				},
 //run from inside the handleEventDelegation function
 			executeEvent : function($target,p){
 				p = p || {};
-				if($target && $target instanceof jQuery)	{
+				var newEventType = app.u.normalizeEventType(p.type);
+				if($target && $target instanceof jQuery && newEventType && $target.data('app-'+newEventType))	{
 					var
-						actionExtension = $target.data('app-click').split('|')[0],
-						actionFunction =  $target.data('app-click').split('|')[1];
+						actionExtension = $target.data('app-'+newEventType).split('|')[0],
+						actionFunction =  $target.data('app-'+newEventType).split('|')[1];
 	
 					if(actionExtension && actionFunction)	{
 						if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
@@ -1262,7 +1270,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance.",'gMessage':true})
+					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or doesn't have data-app-["+newEventType+"] set["+$target.data('app-'+newEventType)+"] or p.type ["+newEventType+"] is not set.",'gMessage':true})
 					}
 				},
 
@@ -1270,28 +1278,37 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //The value of the data tag should be = "EXTENSION|FUNCTIONNAME" where extension = your extension and FUNCTIONNAME is the name of a function within the 'e' node.
 //This code is used for adding events only, not styling.  Use renderFormats for that or the 'apply' classes.
 //p in event = optional params. can be added when 'trigger' is executed. these are then passed into the app event and can be used to change behavior, if necessary.
+//a class is added when event delegation is added. The class is checked for when the function is run to prevent double-delegation.
+//a class is used instead of a data-attrib to be more efficient. Since we're adding/removing the class, it's 'safe' to use a class for this.
 			handleEventDelegation : function($container)	{
 //				app.u.dump(" events are being delegated");
-				if($container.data('is-delegated') || $container.parent("[data-is-delegated]").length >= 1)	{
-					
+				if($container.hasClass('hasDelegatedEvents') || $container.parent(".hasDelegatedEvents").length >= 1)	{
 					app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
 					}
 				else	{
-					$container.on('click',"[data-app-click]",function(e,p){
-						app.u.executeEvent($(e.target),p)
-						});
-					$container.on('change',"[data-app-change]",function(e,p){
-						app.u.executeEvent($(e.target),p)
-						});
-					$container.attr('data-is-delegated',true); //is a attribute so that an element can look for it via parent()
+					var supportedEvents = new Array("click","change","focus","blur");
+					for(var i = 0; i < supportedEvents.length; i += 1)	{
+						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
+							app.u.executeEvent($(e.target),$.extend(p,e));
+							});						
+						}
+					$container.addClass('hasDelegatedEvents'); //is a attribute so that an element can look for it via parent()
 					}
 				},
+
+			handleCommonPlugins : function($context)	{
+				$('.applyAnycb',$context).anycb();
+				$('.applyAnytable',$context).anytable();
+				$('.toolTip',$context).tooltip();
+				$('.applyAnytabs',$context).anytabs();
+				},
+
 // a utility for converting to jquery button()s.  use applyButton and optionally set some data attributes for text and icons.
 		handleButtons : function($target)	{
-			app.u.dump("BEGIN app.u.handleButtons");
+//			app.u.dump("BEGIN app.u.handleButtons");
 			if($target && $target instanceof jQuery)	{
 				$('.applyButton',$target).each(function(index){
-					app.u.dump(" -> index: "+index);
+//					app.u.dump(" -> index: "+index);
 					var $btn = $(this);
 					$btn.button();
 					if($btn.data('icon-primary'))	{
