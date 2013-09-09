@@ -268,7 +268,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
 		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
 		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
-		<li><a href='#variations' data-app-role='variationsTab'>Variations</a></li>
+		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
 		<li><a href='#ci' data-app-role='ciTab'>CI</a></li>
 		<li><a href='#amazon' data-app-role='amazonTab'>Amazon</a></li>
 		<li><a href='#amazon' data-app-role='buycomTab'>Buy.com</a></li>
@@ -279,7 +279,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
 		<form action='#' onSubmit='return false'>
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button data-app-event="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations." class='floatLeft'>Product Variations</button>
+			<button data-app-click="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations." class='floatLeft'>Product Variations</button>
 			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead." class='floatLeft'>Related Product</button>
 			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;" title="Items that can/should be pruchased with this product (ex: batteries)" class='floatLeft'>Accessories</button>
 			<button data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product." class='floatLeft showForZoovyOnly'>Web Page Editor</button>
@@ -680,6 +680,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 	<section data-anytab-content='variations' class='clearfix'>
+	
+	<div data-app-role='productVariations'></div>
+	
 	<form action='#' onSubmit='return false'>
 	
 	<fieldset data-app-role='assemblyContainer'>
@@ -2186,9 +2189,10 @@ Snacks|Doughnuts<br />
 	<section class='ui-widget-content stdPadding ui-corner-bottom' data-app-role='productVariationManagerContainer'>
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding alignRight marginBottom clearfix'>
 		
-		<button title="Return to Product." data-app-event="admin_prodEdit|variationsBackToProductExec" data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">Back to Product</button>
-		
+<!--		
+			<button title="Return to Product." data-app-event="admin_prodEdit|variationsBackToProductExec" data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">Back to Product</button>
 			<button title="Cancel any unsaved changes to these variations." data-app-event='admin_prodEdit|productVariationsManagerShow'>Cancel Changes</button>
+-->
 			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
 			<button title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
 		</div>

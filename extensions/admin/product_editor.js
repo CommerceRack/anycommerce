@@ -153,7 +153,6 @@ app.ext.admin_prodEdit.u.handleImagesInterface(_rtag.jqObj,pid);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 	
-	
 					}
 				}
 			}, //callbacks
@@ -412,6 +411,7 @@ app.u.handleButtons(_rtag.jqObj);
 				app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
 				
 				if($target instanceof jQuery && pid)	{
+					app.u.dump(" -> $target is valid and pid is set.");
 					$target.empty().anycontent({
 						'templateID':'productVariationManager',
 						'showLoading':false,
@@ -421,8 +421,7 @@ app.u.handleButtons(_rtag.jqObj);
 					$target.showLoading({"message":"Fetching Product Record and Store Variations"});
 	
 	//Need both the product data and the entire sog list. Need both of these to be up to date.
-	app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete'}},'mutable');
-	app.model.addDispatchToQ({'_cmd':'adminProductDetail','variations':1,'skus':1,'pid' : pid,'_tag':{'datapointer':'adminProductDetail|'+pid,'callback':function(rd){
+	app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete','callback':function(rd){
 		$target.hideLoading();
 		if(app.model.responseHasErrors(rd)){
 			$('#globalMessaging').anymessage({'message':rd});
@@ -430,7 +429,7 @@ app.u.handleButtons(_rtag.jqObj);
 		else	{
 	
 			var $prodOptions = $("[data-app-role='productVariationManagerProductContainer']",$target);
-			$prodOptions.anycontent({'data':app.data[rd.datapointer]})
+			$prodOptions.anycontent({'data':app.data['adminProductDetail|'+pid]})
 			$('.gridTable tbody',$prodOptions).sortable({
 				'stop' : function(e,ui){
 					app.u.dump('stop triggered');
@@ -459,7 +458,9 @@ app.u.handleButtons(_rtag.jqObj);
 				})
 			
 			}		
+		
 		}}},'mutable');
+	
 	app.model.dispatchThis('mutable');
 	
 					}
@@ -1272,8 +1273,30 @@ Required params include:
 						},'mutable');
 					app.model.dispatchThis('mutable');
 					}
-				
 				},
+
+			handleVariationsTabContent : function($ele,p)	{
+				app.u.dump("BEGIN admin_prodEdit.e.handleVariationsContent");
+				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
+				var $variationsContent = $("section[data-anytab-content='variations']:first",$PE).find("[data-app-role='productVariations']");
+				if($variationsContent.children().length)	{} //already rendered content.
+				else	{
+					app.u.dump(" -> $PE.length: "+$PE.length);
+					app.ext.admin_prodEdit.a.showProductVariationManager($variationsContent,$PE.data('pid'));
+					}
+				},
+
+/*
+			productVariationsManagerShow : function($ele,p)	{
+				var pid = $ele.closest("[data-pid]").data('pid');
+				app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),pid);
+				}, //productVariationsManagerShow
+*/
+
+
+
+
+
 
 		
 			"managementCatsProdlistShow" : function($ele,p)	{
@@ -2150,7 +2173,7 @@ for(index in variations)	{
 //a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
 			variationsOptionToggle : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});
-				$btn.off('click.productVariationsManagerShow').on('click.productVariationsManagerShow',function(event){
+				$btn.off('click.variationsOptionToggle').on('click.variationsOptionToggle',function(event){
 					event.preventDefault();
 					app.u.dump("Click! $btn.closest([data-app-role='variationsOptionsTbody']).length: "+$btn.closest("[data-app-role='variationsOptionsTbody']").length);
 					
@@ -2165,16 +2188,7 @@ for(index in variations)	{
 						$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
 						}
 					});
-				},
-
-			productVariationsManagerShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.productVariationsManagerShow').on('click.productVariationsManagerShow',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),pid);
-					});
-				} //productVariationsManagerShow
+				}
 			}
 		
 		} //r object.
