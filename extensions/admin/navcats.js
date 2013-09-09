@@ -153,7 +153,7 @@ var admin_navcats = function() {
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required.",'gMessage':true})
+						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required. (fetchonly: "+vars.fetchOnly+")",'gMessage':true});
 					}
 				
 				},

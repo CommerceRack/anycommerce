@@ -207,6 +207,14 @@ app.u.handleButtons(_rtag.jqObj);
 							'datapointer' : 'adminProductReviewList|'+pid,
 							'pid':pid
 							}
+						},'mutable');					
+					app.model.addDispatchToQ({
+						'_cmd':'adminEBAYStoreCategoryList',
+						'PID':pid,
+						'_tag':	{
+							'datapointer' : 'adminProductReviewList|'+pid,
+							'pid':pid
+							}
 						},'mutable');
 					
 					
