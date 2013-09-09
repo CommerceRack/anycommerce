@@ -145,8 +145,10 @@ _rtag.jqObj.hideLoading();
 _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.extend(true,{},app.data[_rtag.datapointer],app.data['adminProductReviewList|'+pid])});
 
 
+$('form',_rtag.jqObj).each(function(){
+	app.ext.admin.u.applyEditTrackingToInputs($(this));
+	});
 
-app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 	

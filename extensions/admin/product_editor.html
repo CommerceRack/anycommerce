@@ -253,9 +253,9 @@
 
 
 <div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
-	<form action='#' onSubmit='return false'>
+	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
-	<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	<button class='floatRight applyButton' data-app-role='saveButton' >Save All Changes</button>
 <!--
 These are the old save buttons for the panels.  Here so I know where to get the existing code when the new save is built.  Delete these are they're migrated into the save button.
 <button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
@@ -276,7 +276,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
-
+		<form action='#' onSubmit='return false'>
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 			<button data-app-event="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations." class='floatLeft'>Product Variations</button>
 			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead." class='floatLeft'>Related Product</button>
@@ -448,18 +448,26 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		</div>
 	</div>
 	-->
-
-
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section><!-- /general tab content -->
 
 
 	<section data-anytab-content='categorization' class='clearfix'>
+	<form action='#' onSubmit='return false'>
 		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
-	</section><!-- /navigation tab content -->
+		<div class='buttonset alignRight'>
+			<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+		</div>
+	</form>
+	</section><!-- /categorization tab content -->
 
 	
+	
 	<section data-anytab-content='social' class='clearfix'>
-
+	<form action='#' onSubmit='return false'>
 	<fieldset>
 	<legend>SEO &amp; RSS</legend>
 
@@ -478,21 +486,25 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<table class='gridTable applyAnytable'>
 		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
 	</table>
-	</section><!-- /reviews tab content -->
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+	<!-- /reviews tab content -->
 
 
 
 	<section data-anytab-content='marketplaces' class='clearfix'>
 
-
-
+	<form action='#' onSubmit='return false'>
 	<div class='marginBottom clearfix'>
-	
-	<label class='floatLeft marginRight marginBottom'><span>Manufacturer: </span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
-	<label class='floatLeft marginRight marginBottom'><span>Manufacturer ID: </span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
-	<label class='floatLeft marginRight marginBottom'><span>UPC: </span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
-	<label class='floatLeft marginRight marginBottom'><span>Condition: </span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
-	
+		
+		<label class='floatLeft marginRight marginBottom'><span>Manufacturer: </span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>Manufacturer ID: </span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>UPC: </span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>Condition: </span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
+		
 	</div>
 	<table class='fullWidth gridTable applyAnytable'>
 	<thead>
@@ -647,25 +659,34 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</tr>
 	</tbody>
 	</table>
-
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 
 	
 	
 	<section data-anytab-content='inventory' class='clearfix'>
-	Inventory will go here.
+	<form action='#' onSubmit='return false'>
+		Inventory will go here.
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 	
 	
 	
 	<section data-anytab-content='variations' class='clearfix'>
-
-<fieldset data-app-role='assemblyContainer'>
-	<legend>Assembly/Kit Components</legend>
-	<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
-	</ul>
-</fieldset>
-
+	<form action='#' onSubmit='return false'>
+	
+	<fieldset data-app-role='assemblyContainer'>
+		<legend>Assembly/Kit Components</legend>
+		<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
+		</ul>
+	</fieldset>
+	
 
 	<fieldset>
 		<legend>Sku Attributes</legend>
@@ -718,19 +739,33 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		
 		</table>
 	</fieldset>
-
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 	
 	
 	
 	<section data-anytab-content='ci' class='clearfix'>
+	<form action='#' onSubmit='return false'>
 	Competitive Intelligence.
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 
 
 	
 	<section data-anytab-content='attributes' class='clearfix'>
-		<div data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
+
+	<form action='#' onSubmit='return false'>
+	<div data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 
 
@@ -889,133 +924,136 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 
 	<section data-anytab-content='ebay' class='clearfix'>
-
-<fieldset class='clearfix marginBottom'>
-	<legend>eBay Categories</legend>
-		<label class='threeColumn floatLeft'>
-			<span>eBay category 1</span>
-			<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
-			<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-			<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-		</label>
-		<label class='threeColumn floatLeft'>
-			<span>eBay category 2</span>
-			<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
-			<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-			<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
-		</label>
-		
-		<label class='threeColumn floatLeft'>
-			<span>eBay Store Category</span>
-			<div class='red'>ebay store categories will go here!!!</div>
-		</label>
-</fieldset>
-
-
-<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
-	<legend>Auction Configurations</legend>
-
-		<div class='threeColumn floatLeft'>
-			<label>
-				<span>Launch profile</span>
-				<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
-				<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+	<form action='#' onSubmit='return false'>
+	
+	<fieldset class='clearfix marginBottom'>
+		<legend>eBay Categories</legend>
+			<label class='threeColumn floatLeft'>
+				<span>eBay category 1</span>
+				<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+				<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+				<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+			</label>
+			<label class='threeColumn floatLeft'>
+				<span>eBay category 2</span>
+				<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+				<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+				<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
 			</label>
 			
-			<label>
-				<span>eBay title</span>
-				<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+			<label class='threeColumn floatLeft'>
+				<span>eBay Store Category</span>
+				<div class='red'>ebay store categories will go here!!!</div>
 			</label>
+	</fieldset>
 	
-			<label>
-				<span>eBay subtitle</span>
-				<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
-			</label>
-		</div>
-		
-		<div class='threeColumn floatLeft'>
-
-			<label>
-				<span>Duration</span>
-				<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-					<option value="">-- use profile --</option>
-					<option value="3">3 Day</option>
-					<option value="5">5 Day</option>
-					<option value="7">7 Day</option>
-					<option value="10">10 Day</option>
-				</select>
-			</label>
 	
-			<label>
-				<span>Auction qty</span>
-				<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
-			</label>
-
-			<label>
-				<span>eBay gallery</span>
-				<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
-					<option value="">-- use profile --</option>
-					<option value="0">never</option>
-					<option value="1">auctions only</option>
-					<option value="2">fixed price only</option>
-					<option value="3">auction + fixed price</option>
-					<option value="8">store only</option>
-					<option value="11">any type</option>
-				</select>	
-			</label>
-
-		</div>
+	<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
+		<legend>Auction Configurations</legend>
+	
+			<div class='threeColumn floatLeft'>
+				<label>
+					<span>Launch profile</span>
+					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
+					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+				</label>
+				
+				<label>
+					<span>eBay title</span>
+					<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+				</label>
 		
-		<div class='threeColumn floatLeft'>
-		
-			<label>
-				<span>Starting bid</span>
-				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
-			</label>
+				<label>
+					<span>eBay subtitle</span>
+					<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+				</label>
+			</div>
 			
+			<div class='threeColumn floatLeft'>
+	
+				<label>
+					<span>Duration</span>
+					<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+						<option value="">-- use profile --</option>
+						<option value="3">3 Day</option>
+						<option value="5">5 Day</option>
+						<option value="7">7 Day</option>
+						<option value="10">10 Day</option>
+					</select>
+				</label>
+		
+				<label>
+					<span>Auction qty</span>
+					<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+				</label>
+	
+				<label>
+					<span>eBay gallery</span>
+					<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+						<option value="">-- use profile --</option>
+						<option value="0">never</option>
+						<option value="1">auctions only</option>
+						<option value="2">fixed price only</option>
+						<option value="3">auction + fixed price</option>
+						<option value="8">store only</option>
+						<option value="11">any type</option>
+					</select>	
+				</label>
+	
+			</div>
+			
+			<div class='threeColumn floatLeft'>
+			
+				<label>
+					<span>Starting bid</span>
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
+				</label>
+				
+				<label>
+					<span>Buy it now</span>
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
+				</label>
+				<label>
+					<span>Reserve price</span>
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
+					<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+				</label>
+			</div>
+	
+	
+			<div class='buttonset'>
+				<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
+				<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
+				<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
+			</div>
+	
+		</fieldset>
+	
+	
+		<fieldset class='labelsAsBreaks'>
+			<legend>Syndicated Listing Configuration</legend>
+	
+			<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. what attribute do we key off of?</div>
+	
 			<label>
-				<span>Buy it now</span>
-				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
+				<span>Fixed price</span>
+				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
 			</label>
-			<label>
-				<span>Reserve price</span>
-				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
-				<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
-			</label>
-		</div>
+	
+			<div class='buttonset'>
+			<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
+			</div>
+			<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+		</fieldset>
 
-
-		<div class='buttonset'>
-			<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
-			<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
-			<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
-		</div>
-
-	</fieldset>
-
-
-	<fieldset class='labelsAsBreaks'>
-		<legend>Syndicated Listing Configuration</legend>
-
-		<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. what attribute do we key off of?</div>
-
-		<label>
-			<span>Fixed price</span>
-			$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
-		</label>
-
-		<div class='buttonset'>
-		<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
-		</div>
-		<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
-	</fieldset>
-
-
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
 	</section>
 	
 	</div>
 
-	</form>
 </div>
 
 
