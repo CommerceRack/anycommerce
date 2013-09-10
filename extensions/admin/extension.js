@@ -3330,20 +3330,18 @@ once multiple instances of the finder can be opened at one time, this will get u
 				
 			showDashboard : function()	{
 				var $content = $("#homeContent");
-				$content.empty().append(app.renderFunctions.createTemplateInstance('dashboardTemplate',{}));
+				$content.empty().anycontent({'templateID':'dashboardTemplate','showLoading':false});
 				app.ext.admin.u.bringTabIntoFocus();
 				app.ext.admin.u.bringTabContentIntoFocus($content);
 				
 //recent news panel.
 				app.model.destroy('appResource|recentnews.json'); //always fetch the most recent news.
-				$('#dashboardColumn1',$content).append($("<div \/>").attr('id','dashboardRecentNewsPanel').anypanel({
-					'header' : 'Recent News',
-					'showClose' : false,
-					'call' : 'appResource',
-					'callParams' : 'recentnews.json',
-					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#dashboardRecentNewsPanel'},
-					'content' : $("<div class='recentNewsContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;' \/>")
-					}));
+				$('#dashboardColumn1',$content).anypanel({
+					'showClose' : false
+					}).showLoading({'message':'Fetching recent news'});
+
+				app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'anycontent','jqObj':$('#dashboardColumn1')},'mutable'); //total sales
+
 
 //quickstats ogms.
 				var $salesReportPanel = $("<div \/>").anypanel({

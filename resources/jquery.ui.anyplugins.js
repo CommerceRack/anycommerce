@@ -1143,8 +1143,17 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 				}
 			},
-// !!! update this to use anycontent.
 		_anyContent : function()	{
+			o = this.options;
+			var $content;
+			if(o.content)	{
+				$content = o.content;
+				}
+			else	{
+				this.element.anycontent(this.options);
+				}
+			
+			
 // *** 201336 -> this will now use the anycontent plugin instead of a half-assed version of it.
 /*			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
@@ -1174,9 +1183,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 			else	{
 				
 				}
-			return $content;
 			*/
-			this.element.anycontent(this.options);
+			return $content;
+
 			},
 
 		_handleButtons : function($header)	{

@@ -318,7 +318,7 @@ else	{
 						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$custEditorTarget.anymessage({"message":"CID "+obj.CID+" is not valid"});
+						$custEditorTarget.anymessage({"message":"CID "+obj.CID+" is not valid.  This may mean there is no record for this customer."});
 						}
 					}
 				else	{

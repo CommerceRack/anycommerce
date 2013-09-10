@@ -230,7 +230,10 @@ LANDING PAGE
 </article>
 
 <div id='dashboardTemplate' class='page pageLanding clearfix'>
-	<div class="lpColumn" id="dashboardColumn1"></div>  
+	<div class="lpColumn" id="dashboardColumn1">
+		<h2>Recent News</h2>
+		<div class='recentNewsContainer' class='ui-widget-content' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;'></div>
+	</div>  
 	<div class="lpColumn" id="dashboardColumn2">
 		<div class='marginBottom alignCenter'>
 		<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'></iframe>
