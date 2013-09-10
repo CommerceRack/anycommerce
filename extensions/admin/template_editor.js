@@ -1546,9 +1546,9 @@ var $input = $(app.u.jqSelector('#',ID));
 						$D.dialog('open');
 						
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
-							$('form',$D).append("<input type='hidden' name='mode' value='"+data.profile+"' \/>");
+							$('form',$D).append("<input type='hidden' name='mode' value='"+mode+"' \/>");
 							if(mode == 'EBAYProfile')	{
-								$('form',$D).append("<input type='hidden' name='profile' value='"+mode+"' \/>");
+								$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
 								}
 							else if(mode == 'Campaign')	{
 								$('form',$D).append("<input type='hidden' name='campaignid' value='"+data.campaignid+"' \/>");
