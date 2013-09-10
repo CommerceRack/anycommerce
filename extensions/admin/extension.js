@@ -3989,7 +3989,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
 //					app.u.dump("end of loadNativeApp  else statement -> #! orders");
 					}
-				else if(path == '#!products')	{
+				else if(path == '#!product')	{
 //					app.u.dump("Go to product editor");
 // ** 201336 -> new product editor.
 //					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
