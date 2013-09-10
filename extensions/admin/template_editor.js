@@ -1546,8 +1546,9 @@ var $input = $(app.u.jqSelector('#',ID));
 						$D.dialog('open');
 						
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
+							$('form',$D).append("<input type='hidden' name='mode' value='"+data.profile+"' \/>");
 							if(mode == 'EBAYProfile')	{
-								$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
+								$('form',$D).append("<input type='hidden' name='profile' value='"+mode+"' \/>");
 								}
 							else if(mode == 'Campaign')	{
 								$('form',$D).append("<input type='hidden' name='campaignid' value='"+data.campaignid+"' \/>");
@@ -1557,7 +1558,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 							else	{}
 							
-							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminEBAYProfileFileUpload');	
+							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminFileUpload');	
 							}
 						else	{
 							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)});

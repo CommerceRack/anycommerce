@@ -824,19 +824,24 @@ if(selector && mode)	{
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
-		'adminEBAYProfileFileUpload' : function(data,textStatus)	{
+		'adminFileUpload' : function(data,textStatus)	{
 			app.u.dump("Got to adminEBAYProfileFileUpload success.");
 			$selector.showLoading({"message":"uncompressing and distributing zip file. This may take a minute. You may safely close the 'eBay Template Zip File Upload' window (do not close the browser) and we will alert you when this has finished."});
 //			app.u.dump(" -> data: "); app.u.dump(data);
 			var
 				L = data.length,
-				profile = $("[name='profile']",$selector).val();
+				profile = $("[name='profile']",$selector).val(),
+				domain = $("[name='domain']",$selector).val(),
+				campaignid = $("[name='campaignid']",$selector).val(),
+				mode = $("[name='mode']",$selector).val();
 
 			for(var i = 0; i < L; i += 1)	{
 				app.model.addDispatchToQ({
-					'_cmd':'adminEBAYProfileFileUpload',
+					'_cmd':'admin'+mode+'FileUpload',
 					'fileguid' : data[i].fileguid,
 					'FILENAME' : data[i].filename,
+					'CAMPAIGNID' : campaignid,
+					'DOMAIN' : domain,
 					'PROFILE' : profile
 					},'mutable');
 
