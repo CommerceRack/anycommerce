@@ -1,4 +1,10 @@
 
+/* filterList is also used as a selector to make the filters selectable */
+#navTabs .filterList	{
+	padding:0;
+	margin:6px 12px 12px 12px;
+	}
+
 
 /*
 General tab
@@ -87,28 +93,6 @@ General tab
 	width: inherit; 
 	}
 
-
-
-
-
-
-/*
-Categorization tab
-*/
-
-
-.managementCategories{
-	text-align:left;
-	-webkit-column-count: 5;
-	-webkit-column-gap: 12px; 
-	-webkit-column-rule: 0px dotted black;
-	-moz-column-count: 5;
-	-moz-column-gap: 12px;  
-	-moz-column-rule: 0px dotted black;
-	column-count: 5;
-	column-gap: 12px; 
-	column-rule: 0px dotted black;
-	}
 
 
 

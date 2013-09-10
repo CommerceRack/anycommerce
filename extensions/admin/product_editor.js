@@ -101,7 +101,8 @@ var admin_prodEdit = function() {
 						$tbody.closest('table').find('th.ui-state-active').removeClass('ui-state-active'); //make sure no header is selected as sort method, as new results will ignore it.
 						$tbody.hideLoading();
 						if(L == 0)	{
-							// !!! What to do here?
+							//the thead th for colspan is to ensure td spans entire table. The brs are just for a little whitespace around the messaging to help it stand out.
+							$tbody.append("<tr><td colspan='"+$tbody.parent().find("thead th").length+"'><br \/>No Results found matching your keyword/filter.<br \/></td><\/tr>");
 							}
 						else	{
 	//loop through the list backwards so that as we add items to the top, the order of the results is preserved.
@@ -183,7 +184,6 @@ app.u.handleButtons(_rtag.jqObj);
 					}
 
 				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
-				app.ext.admin_prodEdit.u.handleManagementCategories();//handleManagementCategories 'may' add a dispatch.
 				$target.empty();
 				$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
 
@@ -471,22 +471,7 @@ app.u.handleButtons(_rtag.jqObj);
 	
 			},
 	
-	
-		panels : {
-			
-			'flexedit' : function($form,pid)	{
-//				$form.anycontent({'data':app.data['adminProductDetail|'+pid],'translateOnly':true});
-				$form.empty().hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
-				},
-			'images' : function($form,pid)	{
 
-		
-
-				}, //images
-			'reviews' : function($form,pid)	{
-				$form.hideLoading().append($("<div \/>").anycontent({'templateID':'productEditorPanelTemplate_reviews',datapointer : 'adminProductReviewList|'+pid}));
-				}			},
-	
 	
 	////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
@@ -512,7 +497,6 @@ app.u.handleButtons(_rtag.jqObj);
 						}
 					}
 				},
-			
 
 			bigListOptions : function($tag,data){
 				var L = data.value.length;
@@ -568,13 +552,11 @@ app.u.handleButtons(_rtag.jqObj);
 				$div.anycontent({'templateID':'productEditorNavtabsTemplate','data':{}});
 				$div.appendTo($navtabs);
 
-				$('button',$div).each(function(){
-					var $button = $(this);
-					$button.button();
-					if($button.data('app-class'))	{
-						$button.button({text: ($button.data('app-text')) ? true : false,icons: {primary: $button.data('app-class')}})
-						}
-					});
+				
+				app.ext.admin_prodEdit.u.handleManagementCategoryFilters();//handleManagementCategoryFilters 'may' add a dispatch.
+				app.ext.admin_prodEdit.u.handleLaunchProfileFilters();//handleManagementCategoryFilters 'may' add a dispatch.
+				
+				app.u.handleButtons($navtabs);
 
 
 				var $filterMenu = $navtabs.find("[data-app-role='productManagerFilters']");
@@ -582,15 +564,14 @@ app.u.handleButtons(_rtag.jqObj);
 				//set css for management categories menu.
 				
 			
-				$('.mktFilterList, .tagFilterList',$filterMenu).selectable();
-				$('button',$filterMenu).button();
+				$('.filterList',$filterMenu).selectable();
 				$( ".sliderRange" ).slider({
 					range: true,
 					min: 0,
-					max: 500,
-					values: [ 75, 300 ],
+					max: 3000,
+					values: [ 0, 3000 ],
 					slide: function( event, ui ) {
-						$("[data-app-role='priceFilterRange']",$filterMenu).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+						$("[data-app-role='priceFilterRange']:first",$navtabs).text( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
 						}
 					});
 				$( "[data-app-role='priceFilterRange']" ).val( "$" + $( ".sliderRange" ).slider( "values", 0 ) + " - $" + $( ".sliderRange" ).slider( "values", 1 ) );
@@ -599,18 +580,16 @@ app.u.handleButtons(_rtag.jqObj);
 				},
 
 //** 201334 -> for new product manager interface.
-			handleManagementCategories : function()	{
-//				app.u.dump("BEGIN admin_prodEdit.u.handleManagementCategories");
+			handleManagementCategoryFilters : function()	{
+//				app.u.dump("BEGIN admin_prodEdit.u.handleManagementCategoryFilters");
 				var $navtabs = $('#navTabs');// tabs container
-				var $manCatsContainer = $navtabs.find("[data-app-role='productManagerManCats']");
-				var $manCatsList = $("[data-app-role='managementCategoryList']",$manCatsContainer);
+				var $manCatsList = $("[data-app-role='managementCategoryList']",$navtabs);
 				
 //				app.u.dump(" -> $manCatsList.length: "+$manCatsList.length);
 				if($manCatsList.children().length)	{
 //					app.u.dump("Management categories have been rendered already. leave them as they are");
 					} //already rendered management categories.
 				else	{
-					$manCatsContainer.css({'position':'absolute','top':'33px','left':0,'right':0,'z-index':'1000'});
 					var cmdObj = {
 						_cmd : "adminProductManagementCategoriesComplete",
 						_tag : {
@@ -621,12 +600,12 @@ app.u.handleButtons(_rtag.jqObj);
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									var $tmp = $("<div\/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
+									var $tmp = $("<ul \/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
 //									app.u.dump(" -> rd: "); app.u.dump(rd);
 									if(app.data[rd.datapointer]['%CATEGORIES'] && !$.isEmptyObject(app.data[rd.datapointer]['%CATEGORIES']))	{
 										var cats = Object.keys(app.data[rd.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
 										for(var index in cats)	{
-											$tmp.append($("<div \/>").addClass('lookLikeLink').attr('data-app-click','admin_prodEdit|managementCatsProdlistShow').data('management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized')));
+											$tmp.append($("<li data-elastic-term='"+cats[index]+"' \/>").data('management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized')));
 											}
 //										app.u.dump(' -> $tmp.children().length: '+$tmp.children().length);
 										$manCatsList.append($tmp.children());
@@ -649,7 +628,55 @@ app.u.handleButtons(_rtag.jqObj);
 					
 					}
 				
-				}, //handleManagementCategories
+				}, //handleManagementCategoryFilters
+			
+			handleLaunchProfileFilters : function()	{
+//				app.u.dump("BEGIN admin_prodEdit.u.handleLaunchProfileFilters");
+				var $navtabs = $('#navTabs');// tabs container
+				var $profileList = $("[data-app-role='launchProfileList']",$navtabs);
+				
+				if($profileList.children().length)	{
+//					app.u.dump("Launch Profiles have been rendered already. leave them as they are");
+					} //already rendered management categories.
+				else	{
+					var cmdObj = {
+						_cmd : "adminEBAYProfileList",
+						_tag : {
+							callback : function(rd){
+//								app.u.dump(" -> executing callback for management categories request");
+								if(app.model.responseHasErrors(rd)){
+//									app.u.dump(" -> management categories response had errors.");
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									var $tmp = $("<ul \/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
+//									app.u.dump(" -> rd: "); app.u.dump(rd);
+									if(app.data[rd.datapointer]['@PROFILES'] && !$.isEmptyObject(app.data[rd.datapointer]['@PROFILES']))	{
+										var profiles = app.data[rd.datapointer]['@PROFILES'] // Object.keys(app.data[rd.datapointer]['@PROFILES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+										for(var i = 0; i < profiles.length; i += 1)	{
+											$tmp.append($("<li data-elastic-term='"+profiles[i].PROFILE+"' \/>").text((profiles[i].PROFILE.toLowerCase())));
+											}
+										$profileList.append($tmp.children());
+										}
+									else	{
+										//successful call, but no management categories exist. do nothing.
+										}
+									}
+								},
+							datapointer : 'adminEBAYProfileList'
+							}
+						}
+					if(app.model.fetchData('adminEBAYProfileList'))	{
+						app.u.handleCallback(cmdObj._tag)
+						}
+					else	{
+						app.model.addDispatchToQ(cmdObj,'mutable');
+						}
+
+					
+					}
+				
+				}, //handleLaunchProfileFilters
 	
 			handleImagesInterface : function($context,pid)	{
 
@@ -1021,6 +1048,70 @@ app.model.dispatchThis('immutable');
 				
 
 				}, //handleCreateNewProduct
+
+
+			buildElasticTerms : function($obj,attr)	{
+				
+				var r = false; //what is returned. will be term or terms object if valid.
+				if($obj.length == 1)	{
+					r = {term:{}};
+					r.term[attr] = $obj.data('elastic-term').toLowerCase();
+					}
+				else if($obj.length > 1)	{
+					r = {terms:{}};
+					r.terms[attr] = new Array();
+					$obj.each(function(){
+						r.terms[attr].push($(this).data('elastic-term'));
+						});
+					}
+				else	{
+					//nothing is checked.
+					}
+				return r;
+				},
+
+			buildPriceRange4Filter : function($form)	{
+//				app.u.dump("BEGIN admin_prodEdit.u.buildPriceRange4Filter");
+				var r = false;
+				var $slider = $('.sliderRange',$form);
+				if($slider.length > 0)	{
+					r = {"range":{}}
+				//if data-min and/or data-max are not set, use the sliders min/max value, respectively.
+					r.range[$slider.closest('fieldset').attr('data-elastic-key')] = {
+						"from" : $slider.slider('values', 0 ) * 100,
+						"to" : $slider.slider("values",1) * 100
+						}
+					}
+//				app.u.dump(" -> r: "); app.u.dump(r);
+				return r;
+				},
+				
+			buildElasticFilters : function($form)	{
+
+				var filters = {
+					"and" : [] //push on to this the values from each fieldset.
+					}//query
+				
+				
+				var priceRange = app.ext.admin_prodEdit.u.buildPriceRange4Filter($form);
+				if(priceRange)	{filters.and.push(priceRange)}
+				
+				
+				$('.filterList',$form).each(function(){
+					if(app.ext.admin_prodEdit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')))	{
+						filters.and.push(app.ext.admin_prodEdit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')));
+						}	
+					});
+				
+				//and requires at least 2 inputs, so add a match_all.
+				//if there are no filters, don't add it. the return is also used to determine if any filters are present
+				if(filters.and.length == 1)	{
+					filters.and.push({match_all:{}})
+					}
+				return filters;				
+				
+				},
+
 	
 
 //hides the other children in the manager template (such as the landing page content or a product that is being edited.)
@@ -1153,17 +1244,48 @@ Required params include:
 		e : {
 
 // * 201334 -> new product editor.
-			"productFiltersShow" : function($ele,p)	{
+			productFiltersShow : function($ele,p)	{
 				var $filterMenu = $ele.closest("[data-app-role='productEditorNavtab']").find("[data-app-role='productManagerFilters']");
 				$filterMenu.slideDown();
 //hide filter if anything is clicked.
-				setTimeout(function(){
+/*				setTimeout(function(){
+//close the filter menu if a click occurs outside of the filter menu itself. The 'one' handles the close, the stopPropogation handles making sure the click is outside the menu.
+					$filterMenu.on('click',function(event){
+						event.stopPropagation();
+						});
 					 $( document ).one( "click", function() {
 						$filterMenu.slideUp('fast');
 						});
 					},100);
-				},
+*/				},
+			
+			productFiltersExec : function($ele,p)	{
+//				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
+				var query = {
+					"mode":"elastic-native",
+					"size":50,
+					"filter" : app.ext.admin_prodEdit.u.buildElasticFilters($ele.closest('form'))
+					}//query
 
+				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
+				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
+				$ele.parent().find("[data-app-click='admin_prodEdit|productFiltersClose']").trigger('click');
+				app.ext.store_search.calls.appPublicProductSearch.init(query,{
+					'callback':'handlePMSearchResults',
+					'extension':'admin_prodEdit',
+					'datapointer' : 'productManagerFilterSearch',
+					'templateID':'prodManagerProductResultsTemplate',
+					'list':$("[data-app-role='productManagerSearchResults']",$container)
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				
+//				app.u.dump(" -> query: "); app.u.dump(query);
+
+				},
+			productFiltersClose : function($ele,p)	{
+				$ele.closest("[data-app-role='productManagerFilters']").slideUp();
+				},
 			productCreateExec : function($ele,p)	{
 				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
 				},

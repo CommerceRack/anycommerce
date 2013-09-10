@@ -1251,6 +1251,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			executeEvent : function($target,p){
 				p = p || {};
 				var newEventType = app.u.normalizeEventType(p.type);
+				app.u.dump(" ----> handle eventExecution ["+newEventType+"]");
 				if($target && $target instanceof jQuery && newEventType && $target.data('app-'+newEventType))	{
 					var
 						actionExtension = $target.data('app-'+newEventType).split('|')[0],

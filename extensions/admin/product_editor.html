@@ -59,48 +59,45 @@
 <div id='productEditorNavtabsTemplate' class='clearfix smallPadding' data-app-role='productEditorNavtab'>
 	
 <!--	<button class='floatRight' data-app-click='admin_prodEdit|storeVariationsShow'>Store Variations</button> -->
-	<button class='floatRight' data-app-click='admin_prodEdit|adminProductCreateShow'>New Product</button>
+	<button data-app-click='admin_prodEdit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
 	
 <!--	<button data-app-click='admin_prodEdit|managementCatsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Management Categories</button> -->
 	<form class='floatLeft marginLeft' action='#' onSubmit='return false'>
-		search<input type='search' name='KEYWORDS' />
-		<button data-app-click='admin_prodEdit|productSearchExec'>go</button>
-		<button data-app-click='admin_prodEdit|productFiltersShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true'>Filter</button>
+		search <input type='search' name='KEYWORDS' />
+		<button data-app-click='admin_prodEdit|productSearchExec' class='applyButton'>go</button>
+		<button data-app-click='admin_prodEdit|productFiltersShow' class='applyButton' data-icon-primary='ui-icon-triangle-1-s' data-text='true'>Filter</button>
 	</form>
 	
-	<div data-app-role='productManagerManCats' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
-		<div class='alignRight buttonset'>
-			<button>Cancel</button>
-		</div>	
-		<div data-app-role='managementCategoryList' class='managementCategories'></div>
-	</div>	
+
 	
 	<div data-app-role='productManagerFilters' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
+	<form action='#' onSubmit='return false'>
 	<div class='alignRight buttonset'>
-		<button>Cancel</button>
-		<button>Filter</button>
+		<button data-app-click='admin_prodEdit|productFiltersClose' class='applyButton'>Cancel</button>
+		<button data-app-click='admin_prodEdit|productFiltersExec' class='applyButton'>Filter</button>
 	</div>
 	<table class='fullWidth'>
 	<tr>
 		<td class='valignTop alignLeft'>
-		<h3>Tags: </h3>
-		<ul class='tagFilterList listStyleNone'>
-			<li>IS_BESTSELLER</li>
-			<li>IS_CLEARANCE</li>
-			<li>IS_COLORFUL</li>
-			<li>IS_CONFIGABLE</li>
-			<li>IS_DISCONTINUED</li>
-			<li>IS_FRESH</li>
-			<li>IS_HASERRORS</li>
-			<li>IS_NEEDREVIEW</li>
-			<li>IS_NEWARRIVAL</li>
-			<li>IS_OPENBOX</li>
-			<li>IS_PREORDER</li>
-			<li>IS_REFURB</li>
-			<li>IS_SALE</li>
-			<li>IS_SHIPFREE</li>
-			<li>IS_SIZEABLE</li>
-			<li>IS_SPECIALORDER</li><!--
+		<fieldset data-elastic-key='tags'>
+		<legend>Tags: </legend>
+		<ul class='filterList listStyleNone' data-app-role='tagsList'>
+			<li data-elastic-term='IS_BESTSELLER'>Bestseller</li>
+			<li data-elastic-term='IS_CLEARANCE'>Clearance</li>
+			<li data-elastic-term='IS_COLORFUL'>Colorful</li>
+			<li data-elastic-term='IS_CONFIGABLE'>Configurable</li>
+			<li data-elastic-term='IS_DISCONTINUED'>Discontinued</li>
+			<li data-elastic-term='IS_FRESH'>Fresh</li>
+			<li data-elastic-term='IS_HASERRORS'>Has Errors</li>
+			<li data-elastic-term='IS_NEEDREVIEW'>Needs Review</li>
+			<li data-elastic-term='IS_NEWARRIVAL'>New Arrival</li>
+			<li data-elastic-term='IS_OPENBOX'>Open Box</li>
+			<li data-elastic-term='IS_PREORDER'>Preorder</li>
+			<li data-elastic-term='IS_REFURB'>Refurb</li>
+			<li data-elastic-term='IS_SALE'>Sale</li>
+			<li data-elastic-term='IS_SHIPFREE'>Ships Free</li>
+			<li data-elastic-term='IS_SIZEABLE'>Sizeable</li>
+			<li data-elastic-term='IS_SPECIALORDER'>Special Order</li><!--
 			<li>IS_USER1</li>
 			<li>IS_USER2</li>
 			<li>IS_USER3</li>
@@ -110,43 +107,50 @@
 			<li>IS_USER7</li>
 			<li>IS_USER8</li>
 			<li>IS_USER9</li>-->
-		</ul>	
+		</ul>
+		</fieldset>
 		</td>
-	
-		<td class='valignTop alignLeft'>
-		<h3>Management Categories</h3>
 
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='mancats'>
+			<legend>Management Categories</legend>
+			<ul class='filterList listStyleNone' data-app-role='managementCategoryList'></ul>
+		</fieldset>
 		</td>	
 		<td class='valignTop alignLeft'>
-		<h3>Marketplaces</h3>
-		<ul class='mktFilterList listStyleNone'>
-			<li data-mktid="amz">Amazon</li>
-			<li data-mktid="bestbuy">Best Buy</li>
-			<li data-mktid="buy">Buy.com</li>
-			<li data-mktid="buysafe">BuySafe</li>
-			<li data-mktid="hsn">Home Shopping Network</li>
-			<li data-mktid="gbase">Google</li>
-			<li data-mktid="nexttag">NextTag</li>
-			<li data-mktid="pricegrabber">PriceGrabber</li>
-			<li data-mktid="shopping">Shopping.com</li>
+		<fieldset data-elastic-key='marketplaces'>
+		<legend>Marketplaces</legend>
+		<ul class='filterList listStyleNone'>
+			<li data-elastic-term="AMZ">Amazon</li>
+			<li data-elastic-term="BST">Best Buy</li>
+			<li data-elastic-term="BUY">Buy.com</li>
+			<li data-elastic-term="CJ">Commission Junction</li>
+<!--			<li data-elastic-term="buysafe">BuySafe</li> -->
+			<li data-elastic-term="HSN">Home Shopping Network</li>
+			<li data-elastic-term="GOO">Google</li>
+			<li data-elastic-term="NXT">NextTag</li>
+			<li data-elastic-term="PGR">PriceGrabber</li>
+<!--			<li data-elastic-term="shopping">Shopping.com</li> -->
 		</ul>
+		</fieldset>
+		</td>
+		
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='profile'>
+		<legend>Launch Profiles</legend>
+		<ul class='filterList listStyleNone' data-app-role='launchProfileList'>
+		</ul>
+		</fieldset>
 		</td>
 	
 		<td class='valignTop alignLeft'>
-		<h3>Price Range</h3>
-	<p>
-	<label for="amount">Price range:</label>
-	<input type="text" data-app-role='priceFilterRange' />
-	<div class="sliderRange"></div>
-	</p>
-		<br />	
-		<ul>
-			<li>load launch profiles</li>
-		</ul>
-	
+	<fieldset data-elastic-key='base_price'>
+		<legend>Price Range <span data-app-role='priceFilterRange'></span></legend>
+		<div class="sliderRange"></div>
+	</fieldset>
 	
 	<h3>Results</h3>
-	max # of results <select>
+	max # of results <select name='max'>
 		<option>10</option>
 		<option>25</option>
 		<option>50</option>
@@ -158,7 +162,7 @@
 	
 	</tr>
 	</table>
-	
+	</form>
 	</div>
 
 
