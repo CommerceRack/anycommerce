@@ -1261,16 +1261,19 @@ Required params include:
 			
 			productFiltersExec : function($ele,p)	{
 //				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
-				var query = {
-					"mode":"elastic-native",
-					"size":50,
-					"filter" : app.ext.admin_prodEdit.u.buildElasticFilters($ele.closest('form'))
-					}//query
 
-				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='productManager']");
 				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
 				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
 				$ele.parent().find("[data-app-click='admin_prodEdit|productFiltersClose']").trigger('click');
+//				app.u.dump("name='size'.length: "+$("select[name='size']",'#navTabs').length+" and val: "+$("select[name='size']",'#navTabs').val());
+				var query = {
+					"mode":"elastic-native",
+					"size": $("select[name='size']",'#navTabs').val() || 50,
+					"filter" : app.ext.admin_prodEdit.u.buildElasticFilters($ele.closest('form'))
+					}//query
+				
+				
 				app.ext.store_search.calls.appPublicProductSearch.init(query,{
 					'callback':'handlePMSearchResults',
 					'extension':'admin_prodEdit',

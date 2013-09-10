@@ -58,10 +58,7 @@
 <!-- navtabs template -->
 <div id='productEditorNavtabsTemplate' class='clearfix smallPadding' data-app-role='productEditorNavtab'>
 	
-<!--	<button class='floatRight' data-app-click='admin_prodEdit|storeVariationsShow'>Store Variations</button> -->
 	<button data-app-click='admin_prodEdit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
-	
-<!--	<button data-app-click='admin_prodEdit|managementCatsShow' data-app-class='ui-icon-triangle-1-s' data-app-text='true' class='floatLeft marginRight'>Management Categories</button> -->
 	<form class='floatLeft marginLeft' action='#' onSubmit='return false'>
 		search <input type='search' name='KEYWORDS' />
 		<button data-app-click='admin_prodEdit|productSearchExec' class='applyButton'>go</button>
@@ -73,6 +70,7 @@
 	<div data-app-role='productManagerFilters' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
 	<form action='#' onSubmit='return false'>
 	<div class='alignRight buttonset'>
+		<button>Clear All Filters</button>
 		<button data-app-click='admin_prodEdit|productFiltersClose' class='applyButton'>Cancel</button>
 		<button data-app-click='admin_prodEdit|productFiltersExec' class='applyButton'>Filter</button>
 	</div>
@@ -150,9 +148,9 @@
 	</fieldset>
 	
 	<h3>Results</h3>
-	max # of results <select name='max'>
+	max # of results <select name='size'>
 		<option>10</option>
-		<option>25</option>
+		<option selected='selected'>25</option>
 		<option>50</option>
 		<option>100</option>
 	</select>
