@@ -143,8 +143,8 @@
 	
 		<td class='valignTop alignLeft'>
 	<fieldset data-elastic-key='base_price'>
-		<legend>Price Range <span data-app-role='priceFilterRange'></span></legend>
-		<div class="sliderRange"></div>
+		<legend>Price Range <span data-app-role='priceFilterRange'>$0 - $3000</span></legend>
+		<div class="sliderRange marginLeft marginRight"></div>
 	</fieldset>
 	
 	<h3>Results</h3>
@@ -179,7 +179,8 @@
 		</div>
 		<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
-		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">X</button>
+		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Remove</button>
+		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Close</button>
 		
 	</div>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
@@ -201,8 +202,8 @@
 	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
-	<button data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Add 2 Q</button>
-	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
+	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-tag' data-text='false'>Add 2 Q</button>
+	<button class='applyButton' data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
 	</td>
 </tr>
 
@@ -1012,16 +1013,16 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			
 				<label>
 					<span>Starting bid</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; showZero:true;">
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
 				</label>
 				
 				<label>
 					<span>Buy it now</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; showZero:true;">
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
 				</label>
 				<label>
 					<span>Reserve price</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; showZero:true;">
+					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
 					<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
 				</label>
 			</div>
@@ -1043,7 +1044,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 			<label>
 				<span>Fixed price</span>
-				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; showZero:true;">
+				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
 	
 			<div class='buttonset'>
@@ -1729,8 +1730,8 @@ time.
 	<td class='column3' data-app-role='variationSettingsContainer'>
 <!-- high level settings -->
 	<fieldset class='stdPadding'>
-	
-		<input type='hidden' name='id' value='' data-bind="var: variation(id); format:popVal;" />
+<!-- * 201336 -> added  hideZero:true; to id for variations w/ 00 as id -->
+		<input type='hidden' name='id' value='' data-bind="var: variation(id); format:popVal; hideZero:false;" />
 		<input type='hidden' name='type' value='' data-bind="var: variation(type); format:popVal;" />
 		<input type='hidden' name='inv' value='0' data-bind="var: variation(inv); format:popVal;" />
 	
@@ -2198,9 +2199,9 @@ Snacks|Doughnuts<br />
 			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
 			<button title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
 		</div>
-		<table>
+		<table class='fullWidth'>
 		<tr>
-			<td>
+			<td class='valignTop'>
 			<div class='marginRight' data-app-role='productVariationManagerProductContainer'>
 		<h2>Product Variations</h2>
 		<table class='gridTable fullWidth marginTop'>
@@ -2218,7 +2219,7 @@ Snacks|Doughnuts<br />
 		</table>
 			</div>
 			</td>
-			<td>
+			<td class='valignTop'>
 			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
 		<h2>Store Variations</h2>
 		<table class='gridTable fullWidth marginTop'>
@@ -2271,7 +2272,7 @@ Snacks|Doughnuts<br />
 	<div data-bind="var: variation(inv); format:showIfSet;" class='displayNone'>Inventory-able</div>
 	</td>
 	<td data-bind="var: variation(options.length); format:text;"></td>
-	<td data-bind="var: variation(id); format:text;"></td>
+	<td data-bind="var: variation(id); hideZero:false; format:text;"></td>
 </tr>
 
 </td>

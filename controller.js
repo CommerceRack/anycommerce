@@ -1323,7 +1323,9 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					if($btn.data('icon-secondary'))	{
 						$btn.button( "option", "icons", { secondary: $btn.data('icon-secondary')} );
 						}
-					if($btn.data('text') == 'false')	{
+					
+					if($btn.data('text') === false)	{
+//						app.u.dump(" -> $btn.data('text'): "+$btn.data('text'));
 						$btn.button( "option", "text", false );
 						}
 					//need to add support for icons and text true/false here. !!!

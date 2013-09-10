@@ -380,6 +380,8 @@ setTimeout(function(){
 // -> builder.
 // -> product editor.
 // -> setup tab.
+//P.eleSelector -> an element ID for an input.
+//P.imageID -> the ID of the image thumbnail.
 
 			showMediaLib : function(P){
 				var $target = $('#mediaModal');
@@ -480,7 +482,7 @@ setTimeout(function(){
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
-//				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
+				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
 				var newFilename = (set2Blank === true) ? '' : fileInfo.path; //set2Blank
@@ -497,6 +499,7 @@ setTimeout(function(){
 				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src || mediaData.mode == 'kissTemplate'))	{
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
+						app.u.dump(" -> we have everything we need to proceed. Proceed.");
 						var $image = (mediaData.mode == 'kissTemplate') ? $('iframe',$('#templateEditor')).contents().find(mediaData.imageID) : $(mediaData.imageID);
 						var oldSrc = $image.src;
 						app.u.dump(" -> $image.length: "+$image.length);

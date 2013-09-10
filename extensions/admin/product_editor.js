@@ -121,7 +121,7 @@ var admin_prodEdit = function() {
 									$("[data-app-click='admin_prodEdit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
 									//li is already in PM task list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
 									}
-	
+								app.u.handleButtons($thisLI);
 								}
 							}
 						}
@@ -150,7 +150,7 @@ $('form',_rtag.jqObj).each(function(){
 	app.ext.admin.u.applyEditTrackingToInputs($(this));
 	});
 
-app.ext.admin_prodEdit.u.handleImagesInterface(_rtag.jqObj,pid);
+app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 	
@@ -312,7 +312,7 @@ app.u.handleButtons(_rtag.jqObj);
 	//				app.u.dump(" -> varObj:"); app.u.dump(varObj);
 	// * 201332 -> make sure ispog is set.
 					varObj.ispog = varObj.ispog || (varObj.id && varObj.id.charAt(0) == '#') ? true : false;
-					
+//					app.u.dump(" -> varObj.id: "+varObj.id);
 					$r.data({
 						'variationtype':varObj.type,
 						'variationmode':mode,
@@ -795,9 +795,9 @@ app.u.handleButtons(_rtag.jqObj);
 	//data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
 	//prodData is an optional object. should be adminProductDetail and include %attribs, inventory, etc.
 			flexBuildInput : function(type,data,prodData)	{
-	//			app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
+				app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
 			
-			//	app.u.dump('TYPE: '+type); app.u.dump(data);
+				app.u.dump('TYPE: '+type); app.u.dump(data);
 				var $r;
 				
 				if(data.sku)	{
@@ -898,9 +898,10 @@ app.u.handleButtons(_rtag.jqObj);
 						$btn.appendTo($r);
 						}
 					else if(type == 'image')	{
-						var $input = $("<input \/>",{'type':'hidden','name':data.id}).val(prodData['%attribs'][data.id]);
+						var $input = $("<input \/>",{'type':'hidden','name':data.id,'id':'input_'+app.u.guidGenerator()}).val(prodData['%attribs'][data.id]);
 	//					app.u.dump(" -> prodData['%attribs'][data.id]: "+prodData['%attribs'][data.id]);
 						var $image = $(app.u.makeImage({'w':'75','h':'75','alt':'','tag':true,'name':(prodData['%attribs'][data.id] || null)}));
+						$image.attr('id','image_'+app.u.guidGenerator());
 		
 						//return false; 				
 						$input.appendTo($r);
@@ -908,7 +909,10 @@ app.u.handleButtons(_rtag.jqObj);
 						
 						$("<button \/>").button().on('click',function(event){
 							event.preventDefault();
-							mediaLibrary($image,$input,'');
+							app.ext.admin_medialib.a.showMediaLib({
+								'eleSelector' : "#"+$input.attr('id'),
+								'imageID' : "#"+$image.attr('id')
+								});
 							}).text('Select').appendTo($r);
 						
 						$("<button \/>").button().on('click',function(event){
@@ -1267,13 +1271,19 @@ Required params include:
 				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
 				$ele.parent().find("[data-app-click='admin_prodEdit|productFiltersClose']").trigger('click');
 //				app.u.dump("name='size'.length: "+$("select[name='size']",'#navTabs').length+" and val: "+$("select[name='size']",'#navTabs').val());
+
+				var keywords = $("[name='KEYWORDS']","#navTabs").val();
 				var query = {
-					"mode":"elastic-native",
-					"size": $("select[name='size']",'#navTabs').val() || 50,
+					'type' : 'product',
+					"mode" : "elastic-native",
+					"size" : $("select[name='size']",'#navTabs').val() || 25,
 					"filter" : app.ext.admin_prodEdit.u.buildElasticFilters($ele.closest('form'))
 					}//query
-				
-				
+				if(keywords)	{
+					query.query =  {"query_string" : {'query':keywords}};
+					}
+//				app.u.dump(" -> query:"); app.u.dump(query);
+
 				app.ext.store_search.calls.appPublicProductSearch.init(query,{
 					'callback':'handlePMSearchResults',
 					'extension':'admin_prodEdit',
@@ -1794,6 +1804,9 @@ if(!$.isEmptyObject(macroUpdates))	{
 						variationData = $btn.closest('.variationEditorContainer').data(),
 						sfo = {}, 
 						variationID = $("[name='id']",$form).val();
+					
+					app.u.dump(" -> $([name='id'],$form).length: "+$("[name='id']",$form).length);
+					app.u.dump(" -> variationID: "+variationID);
 
 					if(variationData.variationmode == 'product')	{
 						sfo._cmd ='adminProductPOGUpdate';
@@ -1803,8 +1816,14 @@ if(!$.isEmptyObject(macroUpdates))	{
 						sfo['%sog'] = app.data['adminProductDetail|'+sfo.pid]['@variations'];
 //if guid is present, use it.  That means this was a pog just added to the product.
 						var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
-						$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
-						sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
+// * 201336 -> added validating to ensure index is set. also, 00 IS a valid sog id, so that needs to be supported.
+						if(index || Number(index) == 0)	{
+							$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
+							sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'Unable to determine index (sog id = '+variationID+').','gMessage':true});
+							}
 						}
 					else	{
 						sfo._cmd ='adminSOGUpdate';
@@ -1816,7 +1835,9 @@ if(!$.isEmptyObject(macroUpdates))	{
 
 //data for saving options in a 'select' based option requires some manipulation to get into '@options' array.
 					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
-						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
+//						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
+//						app.u.dump(" -> index: "+index);
+//						app.u.dump(" -> sfo['%sog']: "); app.u.dump(sfo['%sog']);
 						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
 							else	{
