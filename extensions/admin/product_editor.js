@@ -1193,6 +1193,13 @@ Required params include:
 					if(P.mode == 'remove')	{
 						$li.empty().remove();
 						}
+					else if(P.mode == 'close')	{
+						$("[data-app-role='productEditorContainer']",$li).slideUp('fast',function(){
+							$(this).empty(); //empty this so that data is re-obtained when re-opened (allows for a fairly easy refresh process)
+							});
+						$("button[data-taskmode='close']",$li).hide();
+						$("button[data-taskmode='edit']",$li).show();
+						}
 					else	{
 						//product is already in list.
 						if($li.length)	{}
@@ -1204,6 +1211,10 @@ Required params include:
 
 	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
+
+							$("button[data-taskmode='close']",$li).hide();
+							$("button[data-taskmode='edit']",$li).show();
+
 							$li.showLoading({'message':'Fetching Product Detail'});
 							var _tag = {
 								'datapointer':'adminProductDetail|'+P.pid,
@@ -1227,6 +1238,8 @@ Required params include:
 //determine if the item is already in the list and, if so, just edit it.  If not, add and edit.
 //when opening the editor immediately, trigger the 'edit' button. no need to fetch the product data, the editor will do that.
 						else if(P.mode == 'edit')	{
+							$("button[data-taskmode='close']",$li).show();
+							$("button[data-taskmode='edit']",$li).hide();
 //							$li.showLoading({'message':'Fetching Product Detail'});
 //							$("[data-app-click='admin_prodEdit|productEditorShow4Task']",$li).trigger('click',{'translateTask':true});
 							app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
@@ -1262,7 +1275,7 @@ Required params include:
 						});
 					},100);
 */				},
-			
+
 			productFiltersExec : function($ele,p)	{
 //				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
 
@@ -1296,23 +1309,29 @@ Required params include:
 //				app.u.dump(" -> query: "); app.u.dump(query);
 
 				},
+
 			productFiltersClose : function($ele,p)	{
 				$ele.closest("[data-app-role='productManagerFilters']").slideUp();
 				},
+
 			productCreateExec : function($ele,p)	{
 				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
 				},
 
+//executed from within the queue/task list when edit, remove or close is pushed.
 			productEditorShow : function($ele,p)	{
 				app.u.dump("BEGIN admin_prodEdit.e.productEditorShow. (click!)");
 				if($ele.data('pid') && $ele.data('taskmode'))	{
+					var mode = $ele.data('taskmode');
 					$ele.closest("[data-app-role='productManagerResultsContent']").hide();
-					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':$ele.data('taskmode')})
+					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':mode});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, either data-pid ["+$ele.data('pid')+"] or data-taskmode ["+$ele.data('taskmode')+"] not set on element.","gMessage":true});
 					}
 				},
+
+//executed from within the search results.
 //if it's already in the list, it's removed. If it is not in the list, it's added.
 // the utility will need to support whether or not to immediately translate. 
 // -> because if we go straight into edit, we are always going to get a clean copy of the product record and should use that to translate.
@@ -1421,56 +1440,37 @@ Required params include:
 					}
 				},
 
-/*
-			productVariationsManagerShow : function($ele,p)	{
-				var pid = $ele.closest("[data-pid]").data('pid');
-				app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),pid);
+//The variations tab is hidden unless the item has variations. However, since variations can't be added except from within that tab, there needs to be a mechanism for showing the tab. this is it.
+			productVariationsTabShow : function($ele,p)	{
+				$ele.closest("[data-app-role='productEditorContainer']").find("[data-app-role='variationsTab']").trigger('click').parent().show();
 				}, //productVariationsManagerShow
-*/
-
-
-
-
-
-
-		
-			"managementCatsProdlistShow" : function($ele,p)	{
-				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
-//				$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
-				app.u.dump(" -> fetching product for management category: "+$ele.data('management-category'));
-//				app.u.dump(" -> csv: "); app.u.dump(app.data.adminProductManagementCategoriesComplete['%CATEGORIES'][$ele.data('management-category')]);
-				var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoriesComplete['%CATEGORIES'][$ele.data('management-category')]).sort();
-				app.ext.store_prodlist.u.buildProductList({
-					'csv': csv,
-//					'parentID':'prodEditorResultsTbody',
-					'loadsTemplate' : 'prodManagerProductListTemplate',
-					'withVariations' : true,
-					'items_per_page' : 100
-					},$("[data-app-role='productManagerSearchResults']",$container));
-				},
 			
-			"managementCatsShow" : function($ele,p)	{
-				app.u.dump(" -> BEGIN admin_prodEdit.e.managementCatsShow");
-				var $menu = $ele.closest("[data-app-role='productEditorNavtab']").find("[data-app-role='productManagerManCats']:first");
-				app.u.dump(" -> $menu.length: "+$menu.length);
-				$menu.slideDown();
-//hide menu if anything is clicked.
-				setTimeout(function(){
-					 $( document ).one( "click", function() {
-						$menu.slideUp('fast');
-						});
-					},100);
+			productAttributeFinderShow : function($ele,p)	{
+				if($ele.data('attribute'))	{
+					app.ext.admin.a.showFinderInModal('PRODUCT',$ele.closest("[data-pid]").data('pid'),$ele.data('attribute'));
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productAttributeFinderShow, data-attribute not set on event element.","gMessage":true});
+					}
 				},
+
+
+			webPageEditor : function($ele,p)	{
+				var pid = $(this).closest("[data-pid]").data('pid');
+				if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
+				else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
+				}, //webPageEditor
+
+			viewProductOnWebsite : function($ele,p)	{
+				var pid = $(this).closest("[data-pid]").data('pid');
+				if(pid)	{app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/")}
+				else	{$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});}
+				}, //viewProductOnWebsite
+
+
 
 			productSearchExec : function($ele,p)	{
 				app.ext.admin_prodEdit.u.handleProductKeywordSearch($ele.closest('form').serializeJSON());
-				},
-
-			storeVariationsShow : function($ele,p)	{
-				var $container = $("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-				$container.children().hide();
-				app.ext.admin_prodEdit.a.showStoreVariationsManager($("[data-app-role='productManagerVariationsContent']",$container).show());
 				},
 
 			adminProductCreateShow : function($ele,p)	{
@@ -1492,6 +1492,8 @@ Required params include:
 					}
 				},
 
+
+/*
 			amazonProductDefinitionsShow : function($ele,p)	{
 
 				var docid = $ele.closest('form').find("[name='amz:catalog']").val();
@@ -1538,7 +1540,7 @@ Required params include:
 				app.model.dispatchThis('immutable');
 				}, //adminProductMacroNavcats
 
-
+*/
 
 
 // END new/updated product editor events
@@ -1634,7 +1636,7 @@ Required params include:
 				},
 
 //not currently in use. planned for when html4/5, wiki and text editors are available.
-			"textareaEditorMode" : function($t)	{
+/*			"textareaEditorMode" : function($t)	{
 //				$t.addClass('ui-widget-header ui-corner-bottom');
 				$("button :first",$t).addClass('ui-corner-left');
 				$("button :last",$t).addClass('ui-corner-right');
@@ -1673,31 +1675,10 @@ Required params include:
 						});
 					});
 				}, //textareaEditorMode
-
-			"viewProductOnWebsite" : function($t)	{
-				$t.button();
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{window.open("http://"+app.vars.domain+"/product/"+pid+"/")}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
-					});
-				}, //viewProductOnWebsite
-
-			"webPageEditor" : function($t)	{
-				$t.button();
-				$t.off('click.webPageEditor').on('click.webPageEditor',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
-					});
-				}, //webPageEditor
+*/
 
 
-
-
-
+// ### this is the legacy product save action.
 			serializeAndAdminProductUpdate : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
 				$t.button();
@@ -2095,10 +2076,11 @@ app.model.dispatchThis('mutable');
 				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
 					vars = vars || {};
 					
-//					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
+					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
+					app.u.dump(" -> $btn.data('variationmode'): "+$btn.data('variationmode'));
 					
 					if($btn.data('variationmode') == 'store')	{
-						$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]));
+						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]));
 						}
 					else if($btn.data('variationmode') == 'product')	{
 						var data, variationID = $btn.closest('tr').data('id');
@@ -2314,7 +2296,7 @@ for(index in variations)	{
 					app.model.dispatchThis('immutable');
 					
 					});
-				},
+				}, //productVariationsUpdateExec
 
 //a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
 			variationsOptionToggle : function($btn)	{
@@ -2334,8 +2316,8 @@ for(index in variations)	{
 						$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
 						}
 					});
-				}
-			}
+				} //variationsOptionToggle
+			} //Events
 		
 		} //r object.
 	return r;

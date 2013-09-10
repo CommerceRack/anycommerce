@@ -3216,7 +3216,8 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
-//path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
+//path - category safe id or product SKU
+//attribute - ex: zoovy:accessory_products
 //vars is for variables. eventually, path and attrib should be move into the vars object.
 //vars will be used to contain all the 'chooser' variables.
 			showFinderInModal : function(findertype,path,attrib,vars)	{
@@ -3885,6 +3886,9 @@ and all .someClass are hidden (value of data-panel-selector)
 
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!globalVariations')	{
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!publicFiles')	{
 					app.ext.admin_medialib.u.showPublicFiles(path,opts);

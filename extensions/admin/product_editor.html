@@ -179,9 +179,8 @@
 		</div>
 		<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
+		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Close</button>
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Remove</button>
-		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Close</button>
-		
 	</div>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
 </li>
@@ -274,23 +273,14 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
 		<li><a href='#ci' data-app-role='ciTab'>CI</a></li>
 		<li><a href='#amazon' data-app-role='amazonTab'>Amazon</a></li>
-		<li><a href='#amazon' data-app-role='buycomTab'>Buy.com</a></li>
+		<li><a href='#buycom' data-app-role='buycomTab'>Buy.com</a></li>
 		<li><a href='#ebay' data-app-role='ebayTab'>eBay</a></li>
 	</ul>
 	
 	
 	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
 		<form action='#' onSubmit='return false'>
-		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button data-app-click="admin_prodEdit|productVariationsManagerShow" title="Add/remove/update store or product specific variations." class='floatLeft'>Product Variations</button>
-			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:related_products'); return false;" title="Similiar that would be purchased instead." class='floatLeft'>Related Product</button>
-			<button onClick="app.ext.admin.a.showFinderInModal('PRODUCT','ASSEMBLY','zoovy:accessory_products'); return false;" title="Items that can/should be pruchased with this product (ex: batteries)" class='floatLeft'>Accessories</button>
-			<button data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product." class='floatLeft showForZoovyOnly'>Web Page Editor</button>
-			<button data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)" class='floatLeft'>Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft'>Debug</button>
-			
-			
-		</div>
+
 
 
 		<fieldset class='clearfix'>
@@ -452,9 +442,19 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		</div>
 	</div>
 	-->
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-	</div>
+
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
+			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
+			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
+			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft'>Debug</button>
+			
+			
+		</div>
+
 	</form>
 	</section><!-- /general tab content -->
 
