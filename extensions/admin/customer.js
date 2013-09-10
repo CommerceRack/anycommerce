@@ -219,10 +219,11 @@ var admin_customer = function() {
 
 //in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
 			showCustomerEditor : function($custEditorTarget,obj)	{
-				
-				if($custEditorTarget && typeof $custEditorTarget == 'object')	{
+				obj = obj || {};
+				if($custEditorTarget && $custEditorTarget instanceof jQuery)	{
 					$custEditorTarget.empty();
-					if(obj && obj.CID)	{
+// * 201336 -> don't allow 0 as a CID.
+					if(Number(obj.CID) > 0)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 // ** 201320 -> added support for partition to be passed in. allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
 						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || app.vars.partition},{},'mutable');
@@ -317,7 +318,7 @@ else	{
 						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$custEditorTarget.anymessage({"message":"In admin_customer.a.showCustomerEditor, CID was not passed"});
+						$custEditorTarget.anymessage({"message":"CID "+obj.CID+" is not valid"});
 						}
 					}
 				else	{
