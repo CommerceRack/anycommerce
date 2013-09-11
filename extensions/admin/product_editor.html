@@ -755,7 +755,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<label>
 		<span>Amazon product type</span>
-		<select name="amz:catalog" id="amz:catalog" data-bind="var: product(amz); format:popVal;">
+		<select name='amz:catalog' data-bind="var: product(amz); format:popVal;">
 			<option value="">-- Not Set --</option>
 			<option value="EXISTING">Existing (use ASIN/UPC/ISBN)</option>
 			<option value="APPAREL">Apparel - Shoes, Handbags, Sunglasses/Eyewear</option>
@@ -833,7 +833,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<option value="WIRELESS.WIRELESSACCESSORIES">Wireless Accessories</option>
 			<option value="WIRELESS.WIRELESSDOWNLOADS">Wireless Downloads</option>
 		</select>
-		<button data-app-click="admin_prodEdit|amazonProductDefinitionsShow">Edit Type</button>
+		<button data-app-click="admin_prodEdit|amazonProductDefinitionsShow">Edit Specifics</button>
 	</label>
 	
 	<label>
@@ -899,9 +899,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
 
 		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
-		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE">Queue Now</button>
-		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE-LATER">Queue Later</button>
-		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="REMOVE">Remove</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE">Queue Now</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE-LATER">Queue Later</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="REMOVE">Remove</button>
 	</div>
 
 	</form>

@@ -3996,7 +3996,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin.vars.tab = 'product';
 					app.ext.admin.u.bringTabIntoFocus('product');
 					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-					app.ext.admin_prodEdit.a.showProductManager($("#productContent"),opts);
+					app.ext.admin_prodEdit.a.showProductManager(opts);
 					}
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager();
@@ -4084,7 +4084,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 // ** 201336 -> new product editor.
 //					app.ext.admin_prodEdit.u.showProductEditor(path,P);
-					app.ext.admin_prodEdit.a.showProductManager($target);					
+					app.ext.admin_prodEdit.a.showProductManager(P);					
 					}
 				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
 					app.ext.admin.u.bringTabIntoFocus('kpi');

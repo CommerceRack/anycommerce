@@ -136,12 +136,15 @@ For the list of available params, see the 'options' object below.
 
 
 		_getFormattedMessage : function(instance)	{
-//			app.u.dump(" -> _getFormattedMessage executed");
+			app.u.dump(" -> _getFormattedMessage executed");
 			var o = this.options, //shortcut
 			msg = o.message || o, //shortcut to the message itself. if message blank, options are used, which may contain the response data errors (_msgs, err etc)
 			msgDetails = "", //used for iseerr (server side error) and ise/no response
-			$r, //what is returned.
+			$r = $(), //what is returned.
 			amcss = {'margin':'0','paddingBottom':'5px'} //anyMessageCSS - what's applied to P (or each P in the case of _msgs)
+
+//			app.u.dump(' -> msg: '); app.u.dump(msg);
+
 			
 			if(!msg)	{
 //				app.u.dump(" -> msg is blank. could be that message is being handled as a method.");
@@ -203,16 +206,6 @@ For the list of available params, see the 'options' object below.
 					}
 
 //the validate order request returns a list of issues.
-				else if(msg['@MSGS'])	{
-					var L = msg['@MSGS'].length;
-//					console.dir("Got to @issues, length: "+L);
-					$r = $("<ul \/>"); //adds a left margin to make multiple messages all align.
-					for(var i = 0; i < L; i += 1)	{
-						$r.append("<li>"+msg['@MSGS'][i]['_']+": "+msg['@MSGS'][i]['+']+"<\/li>");
-						}
-					}
-
-//the validate order request returns a list of issues.
 				else if(msg['@issues'])	{
 					var L = msg['@issues'].length;
 //					console.dir("Got to @issues, length: "+L);
@@ -224,6 +217,20 @@ For the list of available params, see the 'options' object below.
 				else	{
 //					$r = $("<p \/>").addClass('anyMessage').text('An unknown error has occured');
 					} //unknown data format
+				
+				
+				
+//A message could contain a _msg for success AND @MSGS. always display what is in @MSGS.
+				if(msg['@MSGS'])	{
+					var L = msg['@MSGS'].length;
+					console.dir("Got to @MSGS, length: "+L);
+					$msgs = $("<ul \/>"); //adds a left margin to make multiple messages all align.
+					for(var i = 0; i < L; i += 1)	{
+						$msgs.append("<li>"+msg['@MSGS'][i]['_']+": "+msg['@MSGS'][i]['+']+"<\/li>");
+						}
+					$msgs.appendTo($r);
+					}
+				
 				}
 			else	{
 //				app.u.dump(" -> app.u.formatResponsethis.span 'else' hit. Should not have gotten to this point");

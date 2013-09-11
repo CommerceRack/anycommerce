@@ -169,28 +169,19 @@ app.u.handleButtons(_rtag.jqObj);
 //$target -> a jquery instance of where the manager should show up.
 //P -> an object of params.
 //  -> currently supports 'pid' which, if set, will open the product editor for that pid.
-			showProductManager : function($target,P)	{
+			showProductManager : function(P)	{
 				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
+				var $target = $("#productContent");
 //				app.u.dump(" -> P:"); app.u.dump(P);
-				//for legacy panels:
-//				window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;
-
-				//always rewrite savePanel. another 'tab' may change the function.
-				//kill any calls in progress so that if setup then product tabs are clicked quickly, setup doesn't get loaded.
-				
-				if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
-					app.u.dump("request in progress. Aborting.");
-					app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
-					}
 
 				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
-				$target.empty();
-				$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
-
-				app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
-
-				app.model.dispatchThis('mutable');
+				
+				if($target.children().length)	{} //product manager only gets rendered once and ONLY within the product tab.
+				else	{
+					$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
+					app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
+					}
 				}, //showProductManager
 
 			showProductEditor : function($target,pid,vars)	{
@@ -1435,62 +1426,7 @@ if($editedInputs.length)	{
 					}
 				},
 
-			adminProductMacroAmazonExec : function($ele,p)	{
-				var
-					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
-					pid = $PE.data('pid');
 
-				if($ele.data('verb'))	{
-					app.model.addDispatchToQ({
-						'_cmd':'adminProductMacro',
-						'pid' : pid,
-						'@updates' : ["AMAZON?"+data('verb')],
-						'_tag':	{
-							'callback':function(rd)	{
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									alert('create a dialog and put content here');
-									}
-								}
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroAmazonExec, no data-verb set on triggering element.","gMessage":true});
-					}
-				},
-
-			adminProductAmazonValidateExec : function($ele,p)	{
-				var
-					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
-					pid = $PE.data('pid');
-				
-				app.model.addDispatchToQ({
-	'_cmd':'adminProductAmazonValidate',
-	'pid' : pid,
-	'_tag':	{
-		'datapointer' : 'adminProductAmazonValidate|'+pid,
-		'callback':function(rd)	{
-
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	//success content goes here.
-	alert('create a dialog and put content here');
-	}
-
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-				
-				},
 
 //executed from within the search results.
 //if it's already in the list, it's removed. If it is not in the list, it's added.
@@ -1580,17 +1516,8 @@ app.model.dispatchThis('mutable');
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid'),
-					$content = $("[data-app-role='amazonDetailTbody']",$PE);
+					$content = $("[data-app-role='amazonDetailTbody']",$PE).empty(); //refresh content each time tab is loaded.
 
-
-				if($content.children().length)	{
-					app.u.dump(" -> Amazon tab clicked. content not retrieved because content was already loaded.");
-					} //flex content already generated.
-				else	{
-					//get data for flexedit panel. If the system resource for all attribs needs to be fetched, re-request the enabled flexedit attributes list too.
-//					var numRequests = app.ext.admin.calls.appResource.init('definitions/amz/'+app.data+'.json',{},'mutable');
-	
-//					$content.showLoading({'message':'Fetching Amazon status details'});
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductAmazonDetail',
 						'pid' : pid,
@@ -1601,7 +1528,7 @@ app.model.dispatchThis('mutable');
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
-					}
+
 				},
 
 //executed when the categorization tab is clicked.
@@ -1645,6 +1572,90 @@ app.model.dispatchThis('mutable');
 					}
 				},
 
+//executed on the queueu and remove buttons.
+			adminProductMacroAmazonExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+
+				if($ele.data('verb'))	{
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductMacro',
+						'pid' : pid,
+						'@updates' : ["AMAZON?"+data('verb')],
+						'_tag':	{
+							'callback':function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									alert('create a dialog and put content here');
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroAmazonExec, no data-verb set on triggering element.","gMessage":true});
+					}
+				},
+
+//executed on the 'validate' button. Gives a report of whether or not this product needs anything to be successfully syndicated.
+			adminProductAmazonValidateExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+				
+				app.model.addDispatchToQ({
+	'_cmd':'adminProductAmazonValidate',
+	'pid' : pid,
+	'_tag':	{
+		'datapointer' : 'adminProductAmazonValidate|'+pid,
+		'callback':function(rd)	{
+
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	//success content goes here.
+var $D = app.ext.admin.i.dialogCreate({
+	'title':'Amazon Validation for '+pid
+	}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
+$D.dialog('open');
+$D.anymessage({'message':app.data[rd.datapointer],'persistent':true}); //will be @MSGS array.
+	}
+
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+				
+				},
+
+			amazonProductDefinitionsShow : function($ele,p)	{
+				var $catalog = $ele.closest('form').find("select[name='amz:catalog']"); //Amazon Product Type
+				if($catalog.length && $catalog.val())	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Amazon Specifics'
+						}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
+					$D.dialog('open');
+					$D.showLoading({"message":"Fetching definitions file"});
+					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{},'mutable');
+					app.model.dispatchThis('mutable');
+					
+					}
+				else if($catalog.length)	{
+					//choose a catalog first.
+					 $ele.closest('form').anymessage({'message':'Please choose a catalog first.'})
+					}
+				else	{
+					//unable to find catalog
+					}
+				},
+
 //The variations tab is hidden unless the item has variations. However, since variations can't be added except from within that tab, there needs to be a mechanism for showing the tab. this is it.
 			productVariationsTabShow : function($ele,p)	{
 				$ele.closest("[data-app-role='productEditorContainer']").find("[data-app-role='variationsTab']").trigger('click').parent().show();
@@ -1659,17 +1670,6 @@ app.model.dispatchThis('mutable');
 					}
 				},
 
-/*			tagImageForRemove : function($ele,p)	{
-//if this class is already present, the button is set for delete already. unset the delete.
-					if($ele.hasClass('ui-state-error'))	{
-						$ele.removeClass('ui-state-error').parents('li').removeClass('edited').removeClass('rowTaggedForRemove')
-						}
-					else	{
-						$ele.addClass('ui-state-error').closest('li').addClass('edited').addClass('rowTaggedForRemove')
-						}
-					app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));
-				},
-*/
 			webPageEditor : function($ele,p)	{
 				var pid = $(this).closest("[data-pid]").data('pid');
 				if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
@@ -1792,22 +1792,6 @@ app.model.dispatchThis('mutable');
 
 
 // END new/updated product editor events
-
-			
-// !!! This will need to be updated.
-			"enterSyndicationSpecifics" : function($t)	{
-				$t.button().addClass('smallButton');
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid'),
-					syndicateTo = $(this).data('ui-syndicateto');
-					if(pid && syndicateTo)	{navigateTo("/biz/product/definition.cgi?_PRODUCT="+pid+"&amp;_DOCID="+syndicateTo+".listing",{dialog:true});}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
-					});
-				}, //enterSyndicationSpecifics
-
-
-
 
 
 //not currently in use. planned for when html4/5, wiki and text editors are available.
