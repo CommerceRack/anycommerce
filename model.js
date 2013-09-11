@@ -986,6 +986,16 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 					default:
 						if(Number(responseData['errid']) > 0) {r = true;}
 						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
+// *** 201336 -> mostly impacts admin UI. @MSGS is another mechanism for alerts that needs to be checked.
+						else if(responseData['@MSGS'] && responseData['@MSGS'].length)	{
+							var L = responseData['@MSGS'].length;
+							for(var i = 0; i < L; i += 1)	{
+								if(responseData['@MSGS'][i]['!'] == 'ERROR')	{
+									r = true;
+									break; //if we have an error, exit early.
+									}
+								}
+							}
 						else if(responseData['@RESPONSES'] && responseData['@RESPONSES'].length)	{
 							var L = responseData['@RESPONSES'].length;
 							for(var i = 0; i < L; i += 1)	{
