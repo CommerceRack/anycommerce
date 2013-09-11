@@ -9,6 +9,9 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201336
 ADMIN
  -> New product manager/editor interfaces.
+ 	-> no longer support buy.com DBMaps.
+	-> no longer have definitions for marketplaces (except amazon)
+
  -> fixed some bug in variations, flexedit (images) and more.
  -> global variations moved to setup.
 

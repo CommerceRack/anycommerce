@@ -32,7 +32,7 @@ var admin_prodEdit = function() {
 	var r = {
 
 		vars : {
-
+// legacy type means 'this field is no longer used'. should not get an editor. it's deprecated and the attribute will eventually be removed.
 			flexTypes : {
 				'asin' : {'type':'text'},
 				'textbox' : { 'type' : 'text'},
@@ -64,7 +64,7 @@ var admin_prodEdit = function() {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-	
+
 		callbacks : {
 	//executed when extension is loaded. should include any validation that needs to occur.
 			init : {
@@ -148,6 +148,7 @@ _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.exte
 
 $('form',_rtag.jqObj).each(function(){
 	app.ext.admin.u.applyEditTrackingToInputs($(this));
+	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>")
 	});
 
 app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
@@ -155,7 +156,7 @@ app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 	
 					}
-				}
+				} //handleProductEditor
 			}, //callbacks
 
 
@@ -498,6 +499,18 @@ app.u.handleButtons(_rtag.jqObj);
 					}
 				},
 
+			amazonIs : function($tag,data)	{
+				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
+				var is = data.value['%IS'];
+				var $output = $("<span \/>");
+				for(index in is)	{
+//					if(is[index])	{
+						$output.append(index+": "+is[index]+" ");
+//						}
+					}
+				$tag.append($output);
+				},
+
 			bigListOptions : function($tag,data){
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
@@ -758,7 +771,6 @@ app.u.handleButtons(_rtag.jqObj);
 								reader.readAsDataURL(file);
 								app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //updates the save button change count.
 								}
-		
 							},
 						upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
 						}).append($("<li class='dropzone'>Click or drop file here to add image</li>").on('click',function(){
@@ -781,7 +793,17 @@ app.u.handleButtons(_rtag.jqObj);
 								'right':'3px'
 								})
 							.button({icons: {primary: "ui-icon-circle-close"},text: false})
-							.on('click',function(){$(this).closest('li').empty().remove();})
+							.on('click',function(){
+								var $li = $(this).closest('li');
+								$li.hide();
+								//add edited to this li and each li thereafter. they'll get shifted down (image9 becomes image8) on save.
+								$("li",$li.parent()).not('.dropzone').each(function(index){
+									if(index >= $li.index())	{
+										$(this).addClass('edited');
+										}
+									});
+								app.ext.admin.u.handleSaveButtonByEditedClass($li.closest('form'));
+								}) //don't remove, just hide. allows save script to determine how many images were present to 'remove'
 							.appendTo($target);
 							})
 
@@ -1253,9 +1275,91 @@ Required params include:
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, required param(s) missing.  P.pid ["+P.pid+"] and P.tab ["+P.tab+"] are required.","gMessage":true});
 					}
-				}
+				} //addProductAsTask
 	
 			}, //u
+
+//kinda like a macrobuilder, but the params are different.
+//no handler here should execute a dispatch.
+//each dispatch should be added to the immutable Q.
+		saveHandlers : {
+
+//a simple save to handle attributes that are set w/ form inputs.
+			attributes : function($form)	{
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'%attribs' : {},
+					_tag : {
+						callback : 'showMessaging',
+						jqObj : $form
+						}
+					}
+//the :input pseudo selector will match all form field types.
+var $editedInputs = $(':input.edited',$form);
+if($editedInputs.length)	{
+	$editedInputs.each(function(){
+		cmdObj['%attribs'][$(this).attr('name')] = this.value;
+		})
+	cmdObj._tag.message = "Saved "+$editedInputs.length+" attribute changes";
+	app.u.dump(" -> cmdObj for attributes:"); app.u.dump(cmdObj);
+	}
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				},
+			
+			prodImages : function($form)	{
+
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					'_cmd' : 'adminProductMacro',
+					'pid' : pid,
+					'%attribs' : {}, //used for prod images
+					'_tag' : {
+						'callback' : 'showMessaging',
+						jqObj : $form
+						}
+					}
+				
+				var imgIndex = 0; //used for setting which prod_image attribute is set.
+				var $prodImageUL = $("[data-app-role='prodImagesContainer']",$form);
+				//loop through all the li's, even those not edited, so that imgIndex is accurate.
+				//can't use the li index() because there are hidden (removed) li's.
+				$("li:visible",$prodImageUL).not('.dropzone').each(function(){
+					imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images are present.
+				//	app.u.dump(" -> imgIndex: "+imgIndex);
+					if($(this).hasClass('edited'))	{
+						var $img = $(this).find('img').first();
+						if($img.length && $img.data('filename'))	{
+							//image either an original OR added w/ media lib.
+							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
+							}
+						else if($img.length == 0)	{
+							//if the media lib was opened, but closed w/out a selection being made, there could be a leftover 'blank'.
+							}
+						else	{
+							//uh oh. something went wrong. Whether shuffled, added w/ media lib or using dropzone, data-filename should be set.
+							// !!! what to do?
+							}
+						}
+					})
+				//app.u.dump(" -> finished w/ setting images. now handle emptying.");
+				//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
+				if(imgIndex < ($prodImageUL.children().not('.dropzone').length))	{
+					var L = ($prodImageUL.children().not('.dropzone').length) - imgIndex;
+				//	app.u.dump(" -> L: "+L);
+					for(var i = 0; i < L; i += 1)	{
+						imgIndex++; //increment before to pick up after we left off.
+				//		app.u.dump(" -> imgIndex: "+imgIndex);
+						cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
+						}
+					}
+				//app.u.dump(" -> cmdObj for prodImages:"); app.u.dump(cmdObj);
+				app.model.addDispatchToQ(cmdObj,'immutable');
+
+				} //prodImages
+
+			}, //saveProductByTab
 
 //e is for 'events'. This are used in handleAppEvents and event delegation (which is replacing handleAppEvents).
 		e : {
@@ -1331,6 +1435,63 @@ Required params include:
 					}
 				},
 
+			adminProductMacroAmazonExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+
+				if($ele.data('verb'))	{
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductMacro',
+						'pid' : pid,
+						'@updates' : ["AMAZON?"+data('verb')],
+						'_tag':	{
+							'callback':function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									alert('create a dialog and put content here');
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroAmazonExec, no data-verb set on triggering element.","gMessage":true});
+					}
+				},
+
+			adminProductAmazonValidateExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+				
+				app.model.addDispatchToQ({
+	'_cmd':'adminProductAmazonValidate',
+	'pid' : pid,
+	'_tag':	{
+		'datapointer' : 'adminProductAmazonValidate|'+pid,
+		'callback':function(rd)	{
+
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	//success content goes here.
+	alert('create a dialog and put content here');
+	}
+
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+				
+				},
+
 //executed from within the search results.
 //if it's already in the list, it's removed. If it is not in the list, it's added.
 // the utility will need to support whether or not to immediately translate. 
@@ -1375,7 +1536,6 @@ Required params include:
 							'_tag':	{
 								'datapointer':'adminConfigDetail|flexedit',
 								callback : function(rd)	{
-									app.u.dump("GOT HERE!!!!!!!!!!!!!!!");
 									if(app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
 										}
@@ -1396,6 +1556,51 @@ Required params include:
 						app.u.dump(" -> flexedit data avaiable locally. Execute callback.");
 						app.u.handleCallback(cmdObj._tag);
 						}
+					}
+				},
+			
+			handleEbayTabContent : function($ele,p)	{
+				
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductEBAYDetail',
+						'pid' : pid,
+						'_tag':	{
+							'datapointer':'adminProductAmazonDetail|'+pid
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+				
+				}, //handleEbayTabContent
+			
+			handleAmazonTabContent : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid'),
+					$content = $("[data-app-role='amazonDetailTbody']",$PE);
+
+
+				if($content.children().length)	{
+					app.u.dump(" -> Amazon tab clicked. content not retrieved because content was already loaded.");
+					} //flex content already generated.
+				else	{
+					//get data for flexedit panel. If the system resource for all attribs needs to be fetched, re-request the enabled flexedit attributes list too.
+//					var numRequests = app.ext.admin.calls.appResource.init('definitions/amz/'+app.data+'.json',{},'mutable');
+	
+//					$content.showLoading({'message':'Fetching Amazon status details'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductAmazonDetail',
+						'pid' : pid,
+						'_tag':	{
+							'datapointer':'adminProductAmazonDetail|'+pid,
+							callback : 'anycontent',
+							jqObj : $content
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 					}
 				},
 
@@ -1454,7 +1659,17 @@ Required params include:
 					}
 				},
 
-
+/*			tagImageForRemove : function($ele,p)	{
+//if this class is already present, the button is set for delete already. unset the delete.
+					if($ele.hasClass('ui-state-error'))	{
+						$ele.removeClass('ui-state-error').parents('li').removeClass('edited').removeClass('rowTaggedForRemove')
+						}
+					else	{
+						$ele.addClass('ui-state-error').closest('li').addClass('edited').addClass('rowTaggedForRemove')
+						}
+					app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));
+				},
+*/
 			webPageEditor : function($ele,p)	{
 				var pid = $(this).closest("[data-pid]").data('pid');
 				if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
@@ -1466,8 +1681,6 @@ Required params include:
 				if(pid)	{app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/")}
 				else	{$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});}
 				}, //viewProductOnWebsite
-
-
 
 			productSearchExec : function($ele,p)	{
 				app.ext.admin_prodEdit.u.handleProductKeywordSearch($ele.closest('form').serializeJSON());
@@ -1492,6 +1705,38 @@ Required params include:
 					}
 				},
 
+// Didn't use macrobuilders because they're designed for making 1 _cmd
+// The product save may execute more than one. We want lots of littls saves here as opposed to 1 big one.
+// set data-save-handler="" on the button. a comma separated list is supported. the values should match a function in admin_prodEdit.saveHandlers
+			adminProductMacroSaveHandlersExec : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if($form instanceof jQuery && $ele.data('save-handlers'))	{
+					if(app.u.validateForm($form))	{
+						var
+							handlers = $ele.data('save-handlers').split(',');
+							L = handlers.length;
+						
+						$form.showLoading({'message':'Saving Changes...'});
+						for(var i = 0; i < L; i += 1)	{
+							if(typeof app.ext.admin_prodEdit.saveHandlers[handlers[i]] == 'function')	{
+								app.ext.admin_prodEdit.saveHandlers[handlers[i]]($form);
+								}
+							else	{
+								$form.anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, saveHandlers."+handlers[i]+" is not a function.","gMessage":true});
+								}
+							}
+//dispatch is skipped when 'save all tabs' button is pressed. 
+						if(p.skipDispatch)	{}
+						else	{
+							app.model.dispatchThis('immutable');
+							}
+						}
+					else	{} //validateForm handles error display.
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, either unable to determine $form ["+$form.length+"] or data-save-handlers ["+$ele.data('save-handlers')+"] not set on button, both of which are required.","gMessage":true});
+					}
+				},
 
 /*
 			amazonProductDefinitionsShow : function($ele,p)	{
@@ -1543,10 +1788,13 @@ Required params include:
 */
 
 
+
+
+
 // END new/updated product editor events
 
 			
-
+// !!! This will need to be updated.
 			"enterSyndicationSpecifics" : function($t)	{
 				$t.button().addClass('smallButton');
 				$t.off('click.configOptions').on('click.configOptions',function(event){
@@ -1561,79 +1809,6 @@ Required params include:
 
 
 
-
-
-			"saveProdImagesPanel" : function($btn)	{
-				$btn.button();
-				$btn.off('click.saveProdImagesPanel').on('click.saveProdImagesPanel',function(event){
-					event.preventDefault();
-
-					var $panel = $btn.closest(".panelContents");
-					
-					var cmdObj = {
-						'_cmd' : 'adminProductUpdate',
-						'pid' : $('#panel_images').data('pid'),
-						'@updates' : new Array(), //used for sku images
-						'%attribs' : {}, //used for prod images
-						'_tag' : {
-							'callback' : 'showMessaging',
-							'message' : "Your changes have been saved",
-							jqObj : $panel
-							}
-						}
-					
-					
-					
-					//sku-specific imagery.
-					$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$panel).each(function(){
-						var sku = $(this).data('sku');
-						var images = "";
-						var $images = $('img',$(this));
-					//	app.u.dump($images);
-						for(i = 0; i < 3; i += 1)	{
-							if($images[i])	{
-								images += "&zoovy:prod_image"+(i + 1)+"="+$($images[i]).data('filename');
-								}
-							else	{
-								images += "&zoovy:prod_image"+(i + 1)+"="; //set to blank to 'erase' anything that may have been deleted.
-								}
-							}
-						
-						cmdObj['@updates'].push("SET-SKU?SKU="+sku+images);
-					//	app.u.dump(" -> sku: "+sku);
-					
-						});
-					
-					//Generic product imagery
-					var imgIndex = 0;
-					var $prodImageUL = $("[data-app-role='prodImagesContainer']",$panel);
-					$("[data-app-role='prodImagesContainer'] img",$panel).each(function(){
-						var $img = $(this);
-						imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images were present.
-						if($img.data('filename'))	{
-							//image either an original OR added w/ media lib.
-							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
-							}
-						else	{
-							//this is a 'new' image, that was dropped in.
-							}
-						
-						})
-					//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
-					if(imgIndex < ($prodImageUL.children().length))	{
-						var L = $prodImageUL.children().length - imgIndex;
-						for(var i = 0; i <= L; i += 1)	{
-							imgIndex++; //increment before to pick up after we left off.
-							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
-							}
-						}
-					//app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-					
-					app.model.addDispatchToQ(cmdObj,'immutable');
-					app.model.dispatchThis('immutable');
-
-					});
-				},
 
 //not currently in use. planned for when html4/5, wiki and text editors are available.
 /*			"textareaEditorMode" : function($t)	{
@@ -1677,75 +1852,6 @@ Required params include:
 				}, //textareaEditorMode
 */
 
-
-// ### this is the legacy product save action.
-			serializeAndAdminProductUpdate : function($t)	{
-//				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
-				$t.button();
-
-				$t.off('click.serializeAndAdminProductUpdate').on('click.serializeAndAdminProductUpdate',function(event){
-					event.preventDefault();
-					var $btn = $(this),
-					pid = $btn.closest("[data-pid]").data('pid'),
-					$panel = $btn.closest("[data-panelid]")
-					panelid = $panel.data('panelid'),
-					formJSON = $btn.parents('form').serializeJSON({'cb':true}); //cb true handles making on = 1 and blank/unset = 0.
-
-					if(pid && panelid && !$.isEmptyObject(formJSON))	{
-						$panel.showLoading({'message':'Updating product '+pid});
-//						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
-var macroUpdates = new Array();
-$('input.handleAsSku',$panel).each(function(){
-	var $input = $(this);
-	macroUpdates.push("SET-SKU?SKU="+$input.attr('name').split('|')[1]+"&"+$input.attr('name').split('|')[0]+"="+$input.val());
-	})
-
-if(!$.isEmptyObject(macroUpdates))	{
-	app.model.addDispatchToQ({
-		'pid':pid,
-		'@updates':macroUpdates,
-		'_cmd': 'adminProductMacro',
-		'_tag' : {}
-		},'immutable');
-	}
-
-						app.model.addDispatchToQ({
-							'pid':pid,
-							'%attribs':formJSON,
-							'_cmd': 'adminProductUpdate',
-							'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
-							},'immutable');	
-
-
-
-						app.model.addDispatchToQ({
-							'_cmd':'adminProductDetail',
-							'inventory':1,
-							'skus':1,
-							'pid':pid,
-							'_tag':	{
-								'datapointer' : 'adminProductDetail|'+pid,
-								'callback':function(responseData){
-									$panel.hideLoading();
-									if(app.model.responseHasErrors(responseData)){
-										app.u.throwMessage(responseData);
-										}
-									else	{
-										$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
-						//								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
-										$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.
-										}
-									}
-								}
-							},'immutable');
-							app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("In productEdit.u.uiActions, unable to determine pid ["+pid+"] and/or panelid ["+panelid+"] and/or formJSON is empty (see console)");
-						app.u.dump(formJSON);
-						}
-					});
-				}, //serializeAndAdminProductUpdate
 			
 			variationSearchByIDExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});

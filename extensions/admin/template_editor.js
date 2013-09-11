@@ -1687,6 +1687,40 @@ else	{
 						});
 					
 					},
+//USES DELEGATED EVENTS
+				adminEBAYProfilePreviewShow : function($ele,p)	{
+						var $D = app.ext.admin.i.dialogCreate({"title":"Auction Template Preview"});
+						$D.dialog('open');
+//this is used in the product editor 
+var pid = $ele.closest("[data-pid]").data('pid');
+var profile = $ele.closest('form').find("[name='zoovy:profile']").val();
+
+if(profile && pid)	{
+
+	app.model.addDispatchToQ({
+		'_cmd':'adminEBAYProfilePreview',
+		'pid' : pid,
+		'PROFILE' : profile,
+		'_tag':	{
+			'datapointer' : 'adminEBAYProfilePreview',
+			'callback':function(rd)	{
+				$D.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					$D.anymessage({'message':rd});
+					}
+				else	{
+					$D.append(app.data[rd.datapointer].html)
+					}
+				}
+			}
+		},'immutable');
+	app.model.dispatchThis('immutable');
+	}
+else	{
+	$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.adminEBAYProfilePreviewShow, either pid ["+pid+"] or profile ["+profile+"] not set. Both are required.","gMessage":true});
+	}
+
+					},
 
 				templateEditorIframeResizeExec : function($ele)	{
 					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));

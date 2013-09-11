@@ -112,7 +112,7 @@
 		<td class='valignTop alignLeft'>
 		<fieldset data-elastic-key='mancats'>
 			<legend>Management Categories</legend>
-			<ul class='filterList listStyleNone' data-app-role='managementCategoryList'></ul>
+			<ul data-app-role='managementCategoryList' class='filterList listStyleNone'></ul>
 		</fieldset>
 		</td>	
 		<td class='valignTop alignLeft'>
@@ -202,7 +202,7 @@
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
 	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-tag' data-text='false'>Add 2 Q</button>
-	<button class='applyButton' data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
+	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
 	</td>
 </tr>
 
@@ -271,17 +271,15 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
 		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
 		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
-		<li><a href='#ci' data-app-role='ciTab'>CI</a></li>
-		<li><a href='#amazon' data-app-role='amazonTab'>Amazon</a></li>
+<!--		<li><a href='#ci' data-app-role='ciTab'>CI</a></li> -->
+		<li><a href='#amazon' data-app-role='amazonTab' data-app-click="admin_prodEdit|handleAmazonTabContent">Amazon</a></li>
 		<li><a href='#buycom' data-app-role='buycomTab'>Buy.com</a></li>
-		<li><a href='#ebay' data-app-role='ebayTab'>eBay</a></li>
+		<li><a href='#ebay' data-app-role='ebayTab' data-app-click="admin_prodEdit|handleEbayTabContent">eBay</a></li>
 	</ul>
 	
 	
 	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
 		<form action='#' onSubmit='return false'>
-
-
 
 		<fieldset class='clearfix'>
 			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
@@ -444,7 +442,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	-->
 
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+			<button data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
 			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
@@ -514,72 +512,48 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<thead>
 	<tr>
 		<th>Syndication to</th>
-		<th>Configure</th>
-		<th></th>
-		<th>Note/Reason</th>
+		<th data-anytable-nosort='true'>Special</th>
+		<th data-anytable-nosort='true'>Note/Reason</th>
 	</tr>
 	</thead>
 	<tbody>
 	
 	<tr>
 		<td><label><input type="checkbox" name="gbase:ts" data-bind="var: product(gbase:ts); format:popVal;"> GoogleBase:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='googlebase'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="gbase:note" maxlength="60" size="60" data-bind="var: product(gbase:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="bizrate:ts" data-bind="var: product(bizrate:ts); format:popVal;"> BizRate:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='bizrate'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="bizrate:note" maxlength="60" size="60" data-bind="var: product(bizrate:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popVal;"> eBay:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='ebay'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="ebay:note" maxlength="60" size="60" data-bind="var: product(ebay:note); format:popVal;"></td>
 	</tr>
-	<!--
-	<tr>
-		<td><label><input type="checkbox" name="yshop:ts" data-bind="var: product(yshop:ts); format:popVal;"> Yahoo Shopping:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='yshop'>Enter Specifics</button></td>
-		<td></td>
-		<td><input type="text" value="" name="yshop:note" maxlength="60" size="60" data-bind="var: product(yshop:note); format:popVal;"></td>
-	</tr>
-	-->
 	<tr>
 		<td><label><input type="checkbox" name="pricegrabber:ts" data-bind="var: product(pricegrabber:ts); format:popVal;"> PriceGrabber:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='pricegrabber'>Enter Specifics</button></td>
 		<td>Qty: <input size=4 type="text" name="pricegrabber:quantity" data-bind="var: product(pricegrabber:quantity); format:popVal;"></td>
 		<td><input type="text" value="" name="pricegrabber:note" maxlength="60" size="60" data-bind="var: product(pricegrabber:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="shopping:ts" data-bind="var: product(shopping:ts); format:popVal;"> Shopping.com:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='shopping'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="shopping:note" maxlength="60" size="60" data-bind="var: product(shopping:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="nextag:ts" data-bind="var: product(nextag:ts); format:popVal;"> NextTag:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='nextag'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="nextag:note" maxlength="60" size="60" data-bind="var: product(nextag:note); format:popVal;"></td>
 	</tr>
-	<!--
-	<tr>
-		<td><label><input type="checkbox" name="mysimon:ts" data-bind="var: product(mysimon:ts); format:popVal;"> MySimon:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='mysimon'>Enter Specifics</button></td>
-		<td></td>
-		<td><input type="text" value="" name="mysimon:note" maxlength="60" size="60" data-bind="var: product(mysimon:note); format:popVal;"></td>
-	</tr>
-	-->
 	<tr>
 		<td><label><input type="checkbox" name="pronto:ts" data-bind="var: product(pronto:ts); format:popVal;"> Pronto:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='~pronto'>Enter Specifics</button></td>
 		<td></td>
 		<td><input type="text" value="" name="pronto:note" maxlength="60" size="60" data-bind="var: product(pronto:note); format:popVal;"></td>
 	</tr>
@@ -587,13 +561,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<td><label><input type="checkbox" name="thefind:ts" data-bind="var: product(thefind:ts); format:popVal;"> theFind:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="thefind:note" maxlength="60" size="60" data-bind="var: product(thefind:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="become:ts" data-bind="var: product(become:ts); format:popVal;"> Become:</label></td>
-		<td></td>
 		<td></td>
 		<td><input type="text" value="" name="become:note" maxlength="60" size="60" data-bind="var: product(become:note); format:popVal;"></td>
 	</tr>
@@ -601,13 +573,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<td><label><input type="checkbox" name="smarter:ts" data-bind="var: product(smarter:ts); format:popVal;"> Smarter:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="smarter:note" maxlength="60" size="60" data-bind="var: product(smarter:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="dijipop:ts" data-bind="var: product(dijipop:ts); format:popVal;"> DijiPop:</label></td>
-		<td></td>
 		<td></td>
 		<td><input type="text" value="" name="dijipop:note" maxlength="60" size="60" data-bind="var: product(dijipop:note); format:popVal;"></td>
 	</tr>
@@ -615,27 +585,23 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<td><label><input type="checkbox" name="linkshare:ts" data-bind="var: product(linkshare:ts); format:popVal;"> LinkShare:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="linkshare:note" maxlength="60" size="60" data-bind="var: product(linkshare:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="amzpa:ts" data-bind="var: product(amzpa:ts); format:popVal;"> Amazon Product Ads:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="amzpa:note" maxlength="60" size="60" data-bind="var: product(amzpa:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="overstock:ts" data-bind="var: product(overstock:ts); format:popVal;"> OverStock:</label></td>
-		<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='overstock'>Enter Specifics</button></td>
 		<td><input size=4 type="hidden" name="overstock:quantity" value="1"></td>
 		<td><input type="text" value="" name="overstock:note" maxlength="60" size="60" data-bind="var: product(overstock:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="bing:ts" data-bind="var: product(bing:ts); format:popVal;"> Bing:</label></td>
-		<td></td>
 		<td>Commission: <input size=4 type="number" name="bing:commission" data-bind="var: product(bing:commission); format:popVal;" step='0.01' min='0'>%</td>
 		<td><input type="text" value="" name="bing:note" maxlength="60" size="60" data-bind="var: product(bing:note); format:popVal;"></td>
 	</tr>
@@ -644,13 +610,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<td><label><input type="checkbox" name="sears:ts" data-bind="var: product(sears:ts); format:popVal;"> Sears:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="sears:note" maxlength="60" size="60" data-bind="var: product(sears:note); format:popVal;"></td>
 	</tr>
 	
 	<tr>
 		<td><label><input type="checkbox" name="newegg:ts" data-bind="var: product(newegg:ts); format:popVal;"> Newegg:</label></td>
-		<td></td>
 		<td></td>
 		<td><input type="text" value="" name="newegg:note" maxlength="60" size="60" data-bind="var: product(newegg:note); format:popVal;"></td>
 	</tr>
@@ -658,13 +622,12 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<td><label><input type="checkbox" name="arp:ts" data-bind="var: product(arp:ts); format:popVal;"> Amazon Repricing:</label></td>
 		<td></td>
-		<td></td>
 		<td><input type="text" value="" name="arp:note" maxlength="60" size="60" data-bind="var: product(arp:note); format:popVal;"></td>
 	</tr>
 	</tbody>
 	</table>
 	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+		<button data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -776,23 +739,16 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</section>
 
 
+	<section data-anytab-content='buycom' class='clearfix'>
+	Per SKU, need a buy.com SKU/UPC input. -> buycom:sku
+	</section>
 
 	<section data-anytab-content='amazon' class='clearfix'>
+	<form action='#' onSubmit='return false'>
 
-
-	<h3>Amazon Seller Central v1.7</h3>
+	<h2>Amazon Seller Central v1.7</h2>
 	
-	
-	<b class='red'>Not done yet. related items will be a button that opens a dialog. Clicking an PID in that list adds it to the TaskQ.</b>
-	<ul>
-		<li><a href='#general' data-app-role='generalTab'>General</a></li>
-		<li><a href='#relateditems' data-app-role='relatedItemsTab'>Related Items</a></li>
-		<li><a href='#history' data-app-role='historyTab'>History</a></li>
-		<li><a href='#summary' data-app-role='summaryTab'>Summary</a></li>
-		<li><a href='#definitions' data-app-role='definitionsTab'>Definitions</a></li>
-	</ul>
-	
-	
+	<fieldset class='labelsAsBreaks'>
 	<label>
 		<input type="checkbox" name="amz" data-bind="var: product(amz); format:popVal;"> Allow syndication to Amazon
 	</label>
@@ -916,16 +872,39 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<span>Fulfillment latency (in days):</span>
 		<input type="number" min='0' step='1' size="6" value="" name="zoovy:ship_latency" data-bind="var: product(zoovy:ship_latency); format:popVal;">
 	</label>
+	</fieldset>
+	
+	<fieldset>
+	<legend>Amazon Marketplace Status</legend>
+	<table class='fullWidth gridTable applyAnytable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>PID</th>
+		<th>Status</th>
+		<th>Relationship</th>
+		<th>UUID</th>
+		<th>UUID Type</th>
+		<th>Changed Since Attempt</th>
+		<th>Details</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: amazon(@DETAIL); format:processList; loadsTemplate:amazonDetailRowTemplate;" data-app-role='amazonDetailTbody'>
+	
+	</tbody>
+	</table>
+	</fieldset>
 	
 	<div class='buttonset alignRight'>
-	<button onclick="savePanel(this,'amazon','VALIDATE');">Validate</button>
-	<button onclick="savePanel(this,'amazon','QUEUE');">Queue Now</button>
-	<button onclick="savePanel(this,'amazon','QUEUE-LATER');">Queue Later</button>
-	<button onclick="savePanel(this,'amazon','REMOVE');">Remove</button>
-	<button onclick="savePanel(this,'amazon','SAVE');">Save</button>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+
+		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
+		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE">Queue Now</button>
+		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE-LATER">Queue Later</button>
+		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="REMOVE">Remove</button>
 	</div>
 
-
+	</form>
 	</section>
 
 
@@ -961,7 +940,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<div class='threeColumn floatLeft'>
 				<label>
 					<span>Launch profile</span>
-					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;"></select>
+					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
 					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
 				</label>
 				
@@ -1029,7 +1008,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 			<div class='buttonset'>
-				<button onclick="var d=new Date(); jQuery('#ebay2previewiframe').prop('src','/biz/setup/ebay/wizardpreview.cgi?'+app.ext.admin.u.uiCompatAuthKVP()+'&amp;PID=MODEL04&amp;r='+d.getTime()); jQuery('#ebay2preview').toggle();" >Preview</button>
+				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" >Preview</button>
 				<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
 				<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
 			</div>
@@ -1077,6 +1056,22 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 <!-- templates used for process list inside the product editor template -->
 
 <table>
+
+<!--
+used in the amzon panel for the details.
+AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
+-->
+<tr id='amazonDetailRowTemplate'>
+	<td data-bind="var: detail(SKU); format:text;"></td>
+	<td data-bind="var: detail(PID); format:text;"></td>
+	<td data-bind="var: detail(AMZ_SYNC); format:text;"></td>
+	<td data-bind="var: detail(AMZ_RELATIONSHIP); format:text;"></td>
+	<td data-bind="var: detail(AMZ_UUID); format:text;"></td>
+	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
+	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
+	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
+</tr>
+
 <tr id='wmsTableRowTemplate'>
 	<td data-bind='var:sku(loc); format:text;'></td>
 	<td><input name="qty" size="4" type="text"></td>
