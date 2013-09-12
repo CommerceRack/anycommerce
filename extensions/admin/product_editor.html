@@ -853,7 +853,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 	<label>
 		<span>Condition note</span>
-		<textarea name="zoovy:prod_condition_note" data-maxlength='200' data-bind="var: product(zoovy:prod_condition_note); format:popVal;"></textarea> !!! needs countdown and max-enforcement.
+		<textarea name="zoovy:prod_condition_note" data-maxlength='200' data-bind="var: product(zoovy:prod_condition_note); format:popVal;" data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur"></textarea>
 	</label>
 
 	<label>
@@ -883,14 +883,17 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</table>
 	</fieldset>
 	
+	<fieldset>
+	<div class='ebayMacroUpdateMessaging'></div>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
 		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE">Queue Now</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE-LATER">Queue Later</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="REMOVE">Remove</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?QUEUE">Queue Now</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?QUEUE-LATER">Queue Later</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?REMOVE">Remove</button>
 	</div>
+	</fieldset>
 
 	</form>
 	</section>
@@ -1033,8 +1036,8 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		
 				<div class='buttonset'>
 					<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
-					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Auction</button>
-					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-CREATE-AUCTION" >Create Listing</button>
+					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION">Test Auction</button>
+					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Listing</button>
 				</div>
 		
 			</fieldset>
@@ -1051,7 +1054,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			</label>
 	
 			<div class='buttonset'>
-			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Syndication</button>
+			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION">Test Syndication</button>
 			</div>
 			<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
 		</fieldset>

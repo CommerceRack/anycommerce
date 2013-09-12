@@ -132,7 +132,25 @@ var admin_prodEdit = function() {
 					}
 				}, //handlePMSearchResults
 	
+// !!! this needs to support a template being passed in w/ a destination for where flex gets added. maybe a data-bind w/ a flex renderformat?.
+//or maybe, for now, a specific template is used and force the content into a fieldset.
+			flex2HTMLEditor : {
+				onSuccess : function(_rtag)	{
+//					app.u.dump("BEGIN admin_prodEdit.callbacks.flex2HTMLEditor");
+					var pid = _rtag.pid;
+					app.u.dump(" -> PID: "+pid);
+if(_rtag.jqObj)	{
+//	app.u.dump(" -> jqObj IS defined");
+	_rtag.jqObj.hideLoading();
+	_rtag.jqObj.append(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data[_rtag.datapointer].contents,app.data['adminProductDetail|'+pid]));
 	
+	if(_rtag.jqObj.hasClass('ui-dialog-content'))	{
+		_rtag.jqObj.dialog('option','height',($('body').height() - 200));
+		_rtag.jqObj.dialog('option','position','center');
+		}
+	}
+					}
+				},
 	
 			handleProductEditor : {
 				onSuccess : function(_rtag)	{
@@ -493,12 +511,12 @@ app.u.handleButtons(_rtag.jqObj);
 
 var L = data.value.length;
 for(var i = 0; i < L; i += 1)	{
-	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'adminProductMacroEBAYExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
+	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'adminProductMacroExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
 	}
 				},
 
 			amazonIs : function($tag,data)	{
-				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
+//				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
 				var is = data.value['%IS'];
 				var $output = $("<span \/>");
 				for(index in is)	{
@@ -824,9 +842,13 @@ for(var i = 0; i < L; i += 1)	{
 	//data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
 	//prodData is an optional object. should be adminProductDetail and include %attribs, inventory, etc.
 			flexBuildInput : function(type,data,prodData)	{
-				app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
-			
-				app.u.dump('TYPE: '+type); app.u.dump(data);
+//				app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
+				
+				//create empty product object if one isn't passed.
+				prodData = prodData || {}; 
+				prodData['%attribs'] = prodData['%attribs'] || {}; //this'll keep JS errors from occuring w/out constantly checking for attribs b4 the %attribs.attribute.
+				
+//				app.u.dump('TYPE: '+type); app.u.dump(data);
 				var $r;
 				
 				if(data.sku)	{
@@ -983,16 +1005,19 @@ for(var i = 0; i < L; i += 1)	{
 				}, //flexBuildInput
 	
 			flexJSON2JqObj : function(thisFlex,prodData)	{
+				app.u.dump("BEGIN admin_prodEdit.u.flexJSONJqObj");
+				app.u.dump(" -> prodData: "); app.u.dump(prodData);
+
 				var r = $("<div \/>");; //what is returned. Either a chunk of html or an error message.
 				if(thisFlex && typeof thisFlex === 'object')	{
-					
+//					app.u.dump(" -> thisFlex is an object");
 					var	L = thisFlex.length;
 					prodData = prodData || {};
-						
-					
+//					app.u.dump(" -> thisFlex: "); app.u.dump(thisFlex);
+//					app.u.dump(" -> L: "+L);
 					for(var i = 0; i < L; i += 1)	{
 						if(thisFlex[i].id)	{
-	//						app.u.dump("ID: "+thisFlex[i].id);
+//							app.u.dump("ID: "+thisFlex[i].id);
 							var gfo = app.data['appResource|product_attribs_all.json'].contents[thisFlex[i].id] || {}; //Global Flex Object. may be empty for custom attributes.
 							var type = thisFlex[i].type || gfo.type;
 							if(type && app.ext.admin_prodEdit.vars.flexTypes[type] && app.ext.admin_prodEdit.vars.flexTypes[type].type)	{
@@ -1492,7 +1517,7 @@ if($editedInputs.length)	{
 
 //executed from within the queue/task list when edit, remove or close is pushed.
 			productEditorShow : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.productEditorShow. (click!)");
+//				app.u.dump("BEGIN admin_prodEdit.e.productEditorShow. (click!)");
 				if($ele.data('pid') && $ele.data('taskmode'))	{
 					var mode = $ele.data('taskmode');
 					$ele.closest("[data-app-role='productManagerResultsContent']").hide();
@@ -1620,14 +1645,14 @@ else	{
 	var $thes = $("[name='amz:thesaurus']",$fieldset);
 	var selectedThes = app.data['adminProductDetail|'+pid]['%attribs']['amz:thesaurus'] || "";
 
-	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
-	app.u.dump(" -> $thesaurus select length: "+$thes.length);
-	app.u.dump(" -> selectedThes: "+selectedThes);
+//	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
+//	app.u.dump(" -> $thesaurus select length: "+$thes.length);
+//	app.u.dump(" -> selectedThes: "+selectedThes);
 
 	
 	//build the thesaurii dropdown.
 	for(var index in app.data[rd.datapointer]['%thesaurus'])	{
-		app.u.dump(" -> index: "+index);
+//		app.u.dump(" -> index: "+index);
 		$thes.append("<option value='"+app.data[rd.datapointer]['%thesaurus'][index]+"'>"+app.data[rd.datapointer]['%thesaurus'][index]+"<\/option>");
 		}
 	if(selectedThes && $("[value='"+selectedThes+"']",$thes).length)	{
@@ -1691,39 +1716,6 @@ else	{
 				},
 
 
-
-//executed on the queueu and remove buttons.
-			adminProductMacroAmazonExec : function($ele,p)	{
-				var
-					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
-					pid = $PE.data('pid');
-
-				if($ele.data('verb'))	{
-
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Amazon status change'
-						}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
-					$D.dialog('open');
-					$D.showLoading({'message':'Updating status for '+pid+' to '+$ele.data('verb')});
-
-					app.model.addDispatchToQ({
-						'_cmd':'adminProductMacro',
-						'pid' : pid,
-						'@updates' : ["AMAZON?"+$ele.data('verb')],
-						'_tag':	{
-							'callback':'showMessaging',
-							'message' : 'status has been changed',
-							'jqObj' : $D
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroAmazonExec, no data-verb set on triggering element.","gMessage":true});
-					}
-				}, //adminProductMacroAmazonExec
-
 //executed on the 'validate' button. Gives a report of whether or not this product needs anything to be successfully syndicated.
 			adminProductAmazonValidateExec : function($ele,p)	{
 				var
@@ -1756,6 +1748,7 @@ else	{
 
 			amazonProductDefinitionsShow : function($ele,p)	{
 				var $catalog = $ele.closest('form').find("select[name='amz:catalog']"); //Amazon Product Type
+				var pid = $ele.closest('form').find("select[name='pid']"); //Amazon Product Type
 				if($catalog.length && $catalog.val())	{
 					var $D = app.ext.admin.i.dialogCreate({
 						'title':'Amazon Specifics'
@@ -1763,9 +1756,17 @@ else	{
 					$D.dialog('open');
 					$D.showLoading({"message":"Fetching definitions file"});
 					app.model.destroy("appResource|definitions/amz/"+$catalog.val()+'.json');
-					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{},'mutable');
-					app.model.dispatchThis('mutable');
 					
+					app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
+
+					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{
+						'callback' : 'flex2HTMLEditor',
+						'extension' : 'admin_prodEdit',
+						'pid':pid,
+						jqObj : $D
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					//flexJSON2JqObj
 					}
 				else if($catalog.length)	{
 					//choose a catalog first.
@@ -1778,7 +1779,7 @@ else	{
 
 
 			
-			adminProductMacroEBAYExec : function($ele,p)	{
+			adminProductMacroExec : function($ele,p)	{
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');

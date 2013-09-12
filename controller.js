@@ -1929,10 +1929,11 @@ app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
 							}
 						else	{} //field is not required and blank.
 						}
-					else if($input.attr('maxlength') && $input.val().length > $input.attr('maxlength'))	{
+//* 201336 -> technically, maxlength isnt supported on a text area. so data-maxlength is used instead.
+					else if(($input.attr('maxlength') && $input.val().length > $input.attr('maxlength')) || ($input.attr('data-maxlength') && $input.val().length > $input.attr('data-maxlength')))	{
 						r = false;
 						$input.addClass('ui-state-error');
-						$input.after($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+						$input.after($span.text('allows a max of '+($input.attr('maxlength') || $input.attr('data-maxlength'))+' characters'));
 						removeClass($input);
 						}
 //** 201318 -> error was being reported incorrectly.
