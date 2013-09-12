@@ -1022,73 +1022,90 @@ app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"
 				}, //appAdminTicketCreateExec
 
 
+
+
+
+//uses the new delegated events model. when reviews is upgraded, remove the _DE and update all the templates.
+			adminProductReviewUpdateShow_DE : function($ele,p)	{
+				var
+					RID = $ele.closest('tr').data('id'),
+					PID = $ele.closest("[data-pid]").data('pid'),
+					$panel;
+				if($ele.data('edit-mode') == 'panel')	{
+					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'reviewAddUpdateTemplate',
+						'panelID' : 'review_'+RID,
+						'header' : 'Edit Review: '+RID,
+						'handleAppEvents' : true,
+						'data' : app.data.adminProductReviewList['@REVIEWS'][$ele.closest('tr').data('obj_index')]
+						});
+					
+					$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+					
+					}
+				else if($ele.data('edit-mode') == 'dialog')	{
+					$panel = app.ext.admin.i.dialogCreate({
+						'title':'Edit Review',
+						'templateID':'reviewAddUpdateTemplate',
+						'data' : app.data['adminProductReviewList|'+PID]['@REVIEWS'][$ele.closest('tr').data('obj_index')],
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$panel.dialog('open');
+					}
+				else	{
+					
+					$('#globalMessaging').anymessage({'message':'In admin_customer.e.adminProductReviewUpdateShow, invalid edit mode ['+$ele.data('edit-mode')+'] (must be dialog or panel) on button','gMessage':true});
+					
+					}
+				
+				if($panel)	{
+					$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+					}
+				}, //adminProductReviewUpdateShow
+
+
+// * 201336 -> needed a version of this code for delegated events. Rather than copy/paste a big chunk of code, the core of this was moved into adminProductReviewUpdateShowDE, which is executed on click.
+// The delegated events model was necessary for the new product editor.
 			adminProductReviewUpdateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.adminProductReviewUpdateShow').on('click.adminProductReviewUpdateShow',function(event){
 					event.preventDefault();
-					var
-						RID = $btn.closest('tr').data('id'),
-						PID = $btn.closest('tr').data('pid'),
-						$panel;
-					if($btn.data('edit-mode') == 'panel')	{
-						$panel = app.ext.admin.i.DMIPanelOpen($btn,{
-							'templateID' : 'reviewAddUpdateTemplate',
-							'panelID' : 'review_'+RID,
-							'header' : 'Edit Review: '+RID,
-							'handleAppEvents' : true,
-							'data' : app.data.adminProductReviewList['@REVIEWS'][$btn.closest('tr').data('obj_index')]
-							});
-						
-						$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-						
-						}
-					else if($btn.data('edit-mode') == 'dialog')	{
-						$panel = app.ext.admin.i.dialogCreate({
-							'title':'Edit Review',
-							'templateID':'reviewAddUpdateTemplate',
-							'data' : app.data['adminProductReviewList|'+PID]['@REVIEWS'][$btn.closest('tr').data('obj_index')],
-							'showLoading':false //will get passed into anycontent and disable showLoading.
-							});
-						$panel.dialog('open');
-						}
-					else	{
-						
-						$('#globalMessaging').anymessage({'message':'In admin_customer.e.adminProductReviewUpdateShow, invalid edit mode ['+$btn.data('edit-mode')+'] (must be dialog or panel) on button','gMessage':true});
-						
-						}
-					
-					if($panel)	{
-						$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-						$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
-						}
+					app.ext.admin_customer.e.adminProductReviewUpdateShowDE($btn,{});
 					});
 				}, //adminProductReviewUpdateShow
 			
-			
+
+			reviewRemoveConfirm_DE : function($ele,p)	{
+				var 
+					$tr = $ele.closest('tr'),
+					data = $tr.data(),
+					$D = $ele.closest('.ui-dialog-content');
+
+				app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(vars,$D){
+					$D.showLoading({"message":"Deleting Review"});
+					app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
+						$D.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							$D.dialog('close');
+							$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
+							$tr.empty().remove(); //removes row for list.
+							}
+						}}},'immutable');
+				app.model.dispatchThis('immutable');
+					}});
+				}, //reviewRemoveConfirm
+
+// * 201336 -> needed a version of this code for delegated events. Rather than copy/paste a big chunk of code, the core of this was moved into reviewRemoveConfirm_DE, which is executed on click.
+// The delegated events model was necessary for the new product editor.
 			reviewRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.reviewRemoveConfirm').on('click.reviewRemoveConfirm',function(event){
 					event.preventDefault();
-					var 
-						$tr = $btn.closest('tr'),
-						data = $tr.data(),
-						$D = $btn.closest('.ui-dialog-content');
-
-					app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(vars,$D){
-						$D.showLoading({"message":"Deleting Review"});
-						app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
-							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$D.dialog('close');
-								$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
-								$tr.empty().remove(); //removes row for list.
-								}
-							}}},'immutable');
-					app.model.dispatchThis('immutable');
-						}});
+					app.ext.admin_customer.e.reviewRemoveConfirm_DE($btn,{})
 					})
 				}, //reviewRemoveConfirm
 			

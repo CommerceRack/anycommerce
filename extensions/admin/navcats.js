@@ -207,8 +207,8 @@ Params:
 											$tree.anymessage({'message':rd});
 											}
 										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
-//adds .edited class when inputs change. last so tracking doesn't start till after 'checked' is added.
-										app.ext.admin.u.applyEditTrackingToInputs($tree); 
+// SANITY-> if applyEditTrackingToInputs is desired, add it outside this to the parent container.
+//										app.ext.admin.u.applyEditTrackingToInputs($tree); 
 										}
 									},
 								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.path

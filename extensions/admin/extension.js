@@ -3701,9 +3701,13 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 // ** 201334 -> instead of applying the tracking to each input, the event is delegated on to $context. This is more efficient (in terms of memory)
 
 				$context.off('click.trackform').on('click.trackform',":checkbox",function(event){
+//					app.u.dump(" -> checkbox was clicked.");
 					var $input = $(this);
-					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
+					if($input.hasClass('skipTrack')){
+//						app.u.dump(" -> skipTrack enabled.");
+						} //allows for a field to be skipped.
 					else	{
+//						app.u.dump(" -> toggling edited class.");
 						$input.toggleClass('edited');
 						app.ext.admin.u.handleSaveButtonByEditedClass($context);
 						}
@@ -3733,7 +3737,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						app.ext.admin.u.handleSaveButtonByEditedClass($context);
 						}
 					});					
-
+				$context.attr('data-applied-inputtracking',true); //is attribute so we can easily inspect on the dom.
 				}, //applyEditTrackingToInputs
 
 

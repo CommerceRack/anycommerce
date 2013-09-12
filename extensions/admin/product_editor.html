@@ -257,7 +257,7 @@
 <div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
-	<button class='floatRight applyButton' data-app-role='saveButton' >Save All Changes</button>
+	<button class='floatRight' data-app-role='saveButton' >Save All Changes</button>
 <!--
 These are the old save buttons for the panels.  Here so I know where to get the existing code when the new save is built.  Delete these are they're migrated into the save button.
 <button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
@@ -442,7 +442,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	-->
 
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
 			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
@@ -457,46 +457,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</section><!-- /general tab content -->
 
 
-	<section data-anytab-content='categorization' class='clearfix'>
-	<form action='#' onSubmit='return false'>
-		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
-		<div class='buttonset alignRight'>
-			<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-		</div>
-	</form>
-	</section><!-- /categorization tab content -->
-
 	
-	
-	<section data-anytab-content='social' class='clearfix'>
-	<form action='#' onSubmit='return false'>
-	<fieldset>
-	<legend>SEO &amp; RSS</legend>
-
-		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn'>
-		<label><span>SEO page title </span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
-		<label><span>SEO/RSS keywords <span class='toolTip' title="Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have 'quality over quantity'. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.">?</span></span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
-		</div>
-
-		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn column2'>
-		<label><span>RSS feed title </span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
-		<label><span>RSS/Meta short description </span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
-		</div>
-
-	</fieldset>	
-
-	<table class='gridTable applyAnytable'>
-		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;'></tbody>
-	</table>
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-	</div>
-	</form>
-	</section>
-	<!-- /reviews tab content -->
-
-
-
 	<section data-anytab-content='marketplaces' class='clearfix'>
 
 	<form action='#' onSubmit='return false'>
@@ -508,7 +469,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<label class='floatLeft marginRight marginBottom'><span>Condition: </span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
 		
 	</div>
-	<table class='fullWidth gridTable applyAnytable'>
+	<table class='fullWidth gridTable applyAnytable marginBottom'>
 	<thead>
 	<tr>
 		<th>Syndication to</th>
@@ -627,11 +588,53 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</tbody>
 	</table>
 	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
-	</section>
+	</section><!-- /marketplaces tab content -->
+	
+	
+	
+	<section data-anytab-content='social' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	<fieldset>
+	<legend>SEO &amp; RSS</legend>
 
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn'>
+		<label><span>SEO page title </span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+		<label><span>SEO/RSS keywords <span class='toolTip' title="Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have 'quality over quantity'. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.">?</span></span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		</div>
+
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn column2'>
+		<label><span>RSS feed title </span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100'  /></label>
+		<label><span>RSS/Meta short description </span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		</div>
+
+	</fieldset>	
+
+	<table class='gridTable applyAnytable' data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">
+		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsTableRowTemplate;'></tbody>
+	</table>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /social tab content -->
+
+
+	
+	<section data-anytab-content='attributes' class='clearfix'>
+
+	<form action='#' onSubmit='return false'>
+	
+	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
+	
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /attributes tab content -->
+	
 	
 	
 	<section data-anytab-content='inventory' class='clearfix'>
@@ -641,8 +644,19 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
-	</section>
-	
+	</section><!-- /inventory tab content -->
+
+
+
+	<section data-anytab-content='categorization' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="navigation">Save <span class='numChanges'></span> Changes</button>
+		</div>
+	</form>
+	</section><!-- /categorization tab content -->
+
 	
 	
 	<section data-anytab-content='variations' class='clearfix'>
@@ -709,53 +723,27 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		
 		</table>
 	</fieldset>
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
 	
 	
-	
-	<section data-anytab-content='ci' class='clearfix'>
-	<form action='#' onSubmit='return false'>
-	Competitive Intelligence.
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-	</div>
-	</form>
-	</section>
-
-
-	
-	<section data-anytab-content='attributes' class='clearfix'>
-
-	<form action='#' onSubmit='return false'>
-	<div data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-	</div>
-	</form>
-	</section>
-
-
-	<section data-anytab-content='buycom' class='clearfix'>
-	Per SKU, need a buy.com SKU/UPC input. -> buycom:sku
-	</section>
 
 	<section data-anytab-content='amazon' class='clearfix'>
 	<form action='#' onSubmit='return false'>
 
 	<h2>Amazon Seller Central v1.7</h2>
 	
-	<fieldset class='labelsAsBreaks'>
+	<fieldset class='labelsAsBreaks' data-app-role='amazonAttributes'>
 	<label>
-		<input type="checkbox" name="amz" data-bind="var: product(amz); format:popVal;"> Allow syndication to Amazon
+		<input type="checkbox" name="amz" data-bind="var: product(amz); format:popVal;" class='applyAnycb' /> Allow syndication to Amazon
 	</label>
 	
 	<label>
 		<span>Amazon product type</span>
-		<select name='amz:catalog' data-bind="var: product(amz); format:popVal;">
+		<select name='amz:catalog' data-bind="var: product(amz:catalog); format:popVal;">
 			<option value="">-- Not Set --</option>
 			<option value="EXISTING">Existing (use ASIN/UPC/ISBN)</option>
 			<option value="APPAREL">Apparel - Shoes, Handbags, Sunglasses/Eyewear</option>
@@ -838,8 +826,8 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<label>
 		<span>Thesaurus profile</span>
-		<select name="amz:thesaurus" data-bind="var: product(amz:thesaurus); format:popVal;">
-			<option>NOT DONE YET</option>
+		<select name='amz:thesaurus' data-bind="var: detail(%thesaurus); format:optionsAsList;">
+			<option value=''>none selected</option>
 		</select>
 	</label>
 
@@ -895,10 +883,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</table>
 	</fieldset>
 	
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
-		<button class='floatLeft' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
 		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE">Queue Now</button>
 		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="QUEUE-LATER">Queue Later</button>
 		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroAmazonExec' data-verb="REMOVE">Remove</button>
@@ -906,6 +894,40 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 	</form>
 	</section>
+
+	<section data-anytab-content='ci' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	Competitive Intelligence.
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+
+
+	<section data-anytab-content='buycom' class='clearfix'>
+	
+	<form action='#' onSubmit='return false'>
+	
+	<fieldset class='marginBottom'>
+	
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Buy.com SKU/UPC</th>
+	</tr>
+	</thead>
+	<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:buycomSkuRowTemplate;'></tbody>
+	</table>
+	</fieldset>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+
+
 
 
 
@@ -1071,6 +1093,27 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
 	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
 </tr>
+
+
+<tr id='buycomSkuRowTemplate'>
+	<td data-bind="var: detail(sku); format:text;"></td>
+	<td><input type='text' name='buycom:sku' data-bind="var:product(buycom:sku); format:popVal;" /></td>
+</tr>
+
+<tr id='reviewsTableRowTemplate'>
+	<td><span data-bind="var: giftcard(APPROVED_GMT); format: hideIfSet;"><input type='checkbox' /></span></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(PID); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
+	<td class='alignRight'>
+	<button data-app-click='admin_customer|reviewRemoveConfirm_DE' data-icon-primary="ui-icon-trash"  data-text='true'>Delete Review</button>
+	<button data-app-click='admin_customer|adminProductReviewUpdateShow_DE' data-icon-primary="ui-icon-pencil"  data-text='true' data-edit-mode='dialog'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
+	</td>
+</tr>
+
+
 
 <tr id='wmsTableRowTemplate'>
 	<td data-bind='var:sku(loc); format:text;'></td>

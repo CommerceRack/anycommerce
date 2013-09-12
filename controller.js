@@ -1082,7 +1082,7 @@ app.u.throwMessage(responseData); is the default error handler.
 						}
 //you can't restore AND empty. it's empty, there's nothing to restore.
 					else if(_rtag.restoreInputsFromTrackingState)	{
-						app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj)
+						app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj);
 						}
 					}
 				if(macroResponses && macroResponses['@RESPONSES'])	{
@@ -2934,7 +2934,7 @@ return $r;
 				$tag.hide(); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
-
+//EX:  data-bind='var: (@LIST);format:optionsFromList; text:pretty; value:safeid;'
 		optionsFromList : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormats.optionsFromList.  data.value: "); app.u.dump(data.value);
 //			var L = data.value.length;
