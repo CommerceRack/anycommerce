@@ -1856,7 +1856,7 @@ VALIDATION
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
 // if you do any validation outside of this and use anymessage to report those errors, you'll need to clear them yourself.
 		validateForm : function($form)	{
-//			app.u.dump("BEGIN admin.u.validateForm");
+			app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
 
 				
@@ -1869,10 +1869,12 @@ VALIDATION
 				$('input, select, textarea',$form).each(function(){
 					var
 						$input = $(this),
-						radios = new Array(),
+						radios = new Array(), //stores a list of which radio inputs are required.
 						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
+
+app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
 
 //					if($input.prop('type') != 'radio')	{
 //						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')
@@ -1893,7 +1895,7 @@ VALIDATION
 						if($input.attr('required') && $.inArray($input.attr('name'), radios) == -1)	{radios.push($input.attr('name'))}
 						}
 //only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
-					else if($input.prop('type') == 'url' && $input.val())	{
+					else if($input.attr('type') == 'url' && $input.val())	{
 						var urlregex = new RegExp("^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
 						if (urlregex.test($input.val())) {}
 						else	{
@@ -1903,6 +1905,17 @@ VALIDATION
 							$("<span class='toolTip' title='A url must be formatted as http, https, or ftp ://www.something.com/net/org/etc'>?<\/span>").tooltip().appendTo($span);
 							}
 						}
+
+// * 201336 -> make sure a number input is a number.
+					else if($input.attr('type') == 'number' && $input.val())	{
+						if (Number($input.val())) {}
+						else	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.after($span.text('not a number. '));
+							}
+						}
+
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						//only 'error' if field is required. otherwise, show warning
 // ** 201330 -> field was erroring if email was invalid even if field was not required.						

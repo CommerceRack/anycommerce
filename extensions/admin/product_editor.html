@@ -934,110 +934,110 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<section data-anytab-content='ebay' class='clearfix'>
 	<form action='#' onSubmit='return false'>
 	
-	<fieldset class='clearfix marginBottom'>
-		<legend>eBay Categories</legend>
-
-			<label class='threeColumn floatLeft'>
-				<span>eBay category 1</span>
-				<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
-				<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-				<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-			</label>
-
-			<label class='threeColumn floatLeft'>
-				<span>eBay category 2</span>
-				<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
-				<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-				<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-			</label>
-			
-			<label class='threeColumn floatLeft' data-app-role='ebayStoreCategoryContainer'>
-				<span>eBay Store Category</span>
-				<select name="ebay:storecat" data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
-			</label>
-	</fieldset>
+		<fieldset class='clearfix marginBottom'>
+			<legend>eBay Categories</legend>
 	
+				<label class='threeColumn floatLeft'>
+					<span>eBay category 1</span>
+					<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+					<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+					<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+				</label>
 	
-	<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
-		<legend>Auction Configurations</legend>
-			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
-			<div class='threeColumn floatLeft'>
-				<label>
-					<span>Launch profile</span>
-					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
-					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+				<label class='threeColumn floatLeft'>
+					<span>eBay category 2</span>
+					<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+					<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
+					<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
 				</label>
 				
-				<label>
-					<span>eBay title</span>
-					<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+				<label class='threeColumn floatLeft' data-app-role='ebayStoreCategoryContainer'>
+					<span>eBay Store Category</span>
+					<select name="ebay:storecat" data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 				</label>
-		
-				<label>
-					<span>eBay subtitle</span>
-					<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
-				</label>
-			</div>
-			
-			<div class='threeColumn floatLeft'>
-	
-				<label>
-					<span>Duration</span>
-					<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-						<option value="">-- use profile --</option>
-						<option value="3">3 Day</option>
-						<option value="5">5 Day</option>
-						<option value="7">7 Day</option>
-						<option value="10">10 Day</option>
-					</select>
-				</label>
-		
-				<label>
-					<span>Auction qty</span>
-					<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
-				</label>
-	
-				<label>
-					<span>eBay gallery</span>
-					<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
-						<option value="">-- use profile --</option>
-						<option value="0">never</option>
-						<option value="1">auctions only</option>
-						<option value="2">fixed price only</option>
-						<option value="3">auction + fixed price</option>
-						<option value="8">store only</option>
-						<option value="11">any type</option>
-					</select>	
-				</label>
-	
-			</div>
-			
-			<div class='threeColumn floatLeft'>
-			
-				<label>
-					<span>Starting bid</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
-				</label>
-				
-				<label>
-					<span>Buy it now</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
-				</label>
-				<label>
-					<span>Reserve price</span>
-					$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
-					<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
-				</label>
-			</div>
-	
-	
-			<div class='buttonset'>
-				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Auction</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-CREATE-AUCTION" >Create Listing</button>
-			</div>
-	
 		</fieldset>
+	
+	
+		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
+			<legend>Auction Configurations</legend>
+				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
+				<div class='threeColumn floatLeft'>
+					<label>
+						<span>Launch profile</span>
+						<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
+						<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+					</label>
+					
+					<label>
+						<span>eBay title</span>
+						<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+					</label>
+			
+					<label>
+						<span>eBay subtitle</span>
+						<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+					</label>
+				</div>
+				
+				<div class='threeColumn floatLeft'>
+		
+					<label>
+						<span>Duration</span>
+						<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+							<option value="">-- use profile --</option>
+							<option value="3">3 Day</option>
+							<option value="5">5 Day</option>
+							<option value="7">7 Day</option>
+							<option value="10">10 Day</option>
+						</select>
+					</label>
+			
+					<label>
+						<span>Auction qty</span>
+						<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+					</label>
+		
+					<label>
+						<span>eBay gallery</span>
+						<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+							<option value="">-- use profile --</option>
+							<option value="0">never</option>
+							<option value="1">auctions only</option>
+							<option value="2">fixed price only</option>
+							<option value="3">auction + fixed price</option>
+							<option value="8">store only</option>
+							<option value="11">any type</option>
+						</select>	
+					</label>
+		
+				</div>
+				
+				<div class='threeColumn floatLeft'>
+				
+					<label>
+						<span>Starting bid</span>
+						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
+					</label>
+					
+					<label>
+						<span>Buy it now</span>
+						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
+					</label>
+					<label>
+						<span>Reserve price</span>
+						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
+						<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+					</label>
+				</div>
+		
+		
+				<div class='buttonset'>
+					<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
+					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Auction</button>
+					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-CREATE-AUCTION" >Create Listing</button>
+				</div>
+		
+			</fieldset>
 	
 	
 		<fieldset class='labelsAsBreaks'>

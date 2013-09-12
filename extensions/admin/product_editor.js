@@ -1876,7 +1876,7 @@ else	{
 // set data-save-handler="" on the button. a comma separated list is supported. the values should match a function in admin_prodEdit.saveHandlers
 			adminProductMacroSaveHandlersExec : function($ele,p)	{
 				var $form = $ele.closest('form');
-				if($form instanceof jQuery && $ele.data('save-handlers'))	{
+				if($form.length && $ele.data('save-handlers'))	{
 					if(app.u.validateForm($form))	{
 						var
 							handlers = $ele.data('save-handlers').split(',');
