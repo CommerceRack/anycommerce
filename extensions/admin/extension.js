@@ -2540,6 +2540,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'; }
+// * 201336 -> here to solve an issue when refresh is clicked after a traditional anchor has changed the hash. it would cause the init to load w/ an error (app still ran, but not a good way to start).
+					else if (path.substr(0,1) == "#") {
+						path = "#!dashboard";
+						mode = 'app';
+						}
 					else	{}
 					
 					if(mode)	{
@@ -2609,27 +2614,46 @@ else	{
 
 if($target && $target.length)	{
 
-	if($target && $target.data('anycontent'))	{
-		$target.anycontent('destroy');
-		}
-
 	if(opts.dialog)	{
 		app.ext.admin.u.handleShowSection(path,opts,$target); 
 		}
 	else	{
 		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
 		if(mode == 'app')	{
+//			app.u.dump(" -> showUI mode = app");
 			app.ext.admin.u.loadNativeApp(path,opts,$target);
 			}
 		else if(mode == 'legacy')	{
+//			app.u.dump(" -> showUI mode = legacy");
 			app.ext.admin.u.handleShowSection(path,opts,$target);
 			}
 		else if(mode == 'tabClick')	{
+//			app.u.dump(" -> showUI mode = tabClick");
 //determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
-			if(opts.tab == app.ext.admin.vars.tab)	{reloadTab = 1; } //tab clicked from a page within that tab. show new content.
-			if ($target.children().length === 0)	{ reloadTab = 1; } //no content presently in target. load it.
-			if(reloadTab)	{app.ext.admin.u.handleShowSection(path,opts,$target);}
-			else	{} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
+			if(opts.tab == app.ext.admin.vars.tab)	{
+//				app.u.dump(" -> targeted tab and open tab match.");
+				reloadTab = 1; //tab clicked from a page within that tab. show new content.
+				}
+			app.u.dump(" -> $target.children().length: "+$target.children().length);
+			if ($target.children().length === 0)	{
+//				app.u.dump(" -> no content presently in target. targetID = "+$target.attr('id')+" and $target.length: "+$target.length);
+				reloadTab = 1; //no content presently in target. load it.
+				} 
+			if(reloadTab)	{
+//* 201336 -> moved this code down. It nukes any data set by anycontent. It was being run much earlier but should only be run if new content is being added. it empties the tab contents.
+				if($target && $target.data('anycontent'))	{
+//					app.u.dump(" -> execute anycontent('destroy')");
+					$target.anycontent('destroy');
+					}
+				app.ext.admin.u.handleShowSection(path,opts,$target);
+				}
+			else	{
+				app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
+				//when RETURNING to the product page, build navtabs again (search).
+				if(opts.tab == 'product')	{
+					app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+					}
+				} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
 			}
 		else	{}// should never get here. error case for mode not being set is already passed.
 		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
