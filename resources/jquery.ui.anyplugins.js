@@ -386,7 +386,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 		_addClasses2Tabs : function()	{
 			this.tabs.addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix').css({'padding-left':'0px'});
 			this.tabs.find('a').addClass('ui-tabs-anchor').attr('role','presentation');
-			this.tabs.find('li').addClass('ui-state-default ui-corner-top');
+// * 201336 -> wanted a data reference on the li of the tab that was consistent. can be used to show or hide tab, if needed.
+			this.tabs.find('li').each(function(){
+				$(this).addClass('ui-state-default ui-corner-top');
+				$(this).attr('data-anytabs-tab',$(this).find('a').first().attr('href').substr(1));
+				});
 			},
 //create a container div and add each content panel to it.
 		_handleContent : function()	{
