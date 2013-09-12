@@ -667,7 +667,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<fieldset data-app-role='assemblyContainer'>
 		<legend>Assembly/Kit Components</legend>
-		<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; loadsTemplate:xsellTableRowTemplate;">
+		<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; sku:1; loadsTemplate:xsellTableRowTemplate;">
 		</ul>
 	</fieldset>
 	
@@ -687,7 +687,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<th>Weight</th>
 		</tr>
 		</thead>
-		<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:skuTableRowTemplate;'></tbody>
+		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;'></tbody>
 		</table>
 	</fieldset>
 
@@ -706,7 +706,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:wmsTableRowTemplate;'></tbody>
+		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:wmsTableRowTemplate;'></tbody>
 		
 		<tfoot>
 		<tr>
@@ -918,7 +918,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<th>Buy.com SKU/UPC</th>
 	</tr>
 	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; loadsTemplate:buycomSkuRowTemplate;'></tbody>
+	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;'></tbody>
 	</table>
 	</fieldset>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
@@ -936,29 +936,31 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<fieldset class='clearfix marginBottom'>
 		<legend>eBay Categories</legend>
+
 			<label class='threeColumn floatLeft'>
 				<span>eBay category 1</span>
-				<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+				<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
 				<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
 				<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
 			</label>
+
 			<label class='threeColumn floatLeft'>
 				<span>eBay category 2</span>
-				<input type="text" size="9" value="" onchange="this.value = validated('.0123456789',this.value)" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+				<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
 				<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow'>Chooser</button>
-				<span data-app-role='ebayCategory2Name'></span><!-- populated w/ pretty ebay cat name upon selection -->
+				<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
 			</label>
 			
-			<label class='threeColumn floatLeft'>
+			<label class='threeColumn floatLeft' data-app-role='ebayStoreCategoryContainer'>
 				<span>eBay Store Category</span>
-				<div class='red'>ebay store categories will go here!!!</div>
+				<select name="ebay:storecat" data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 			</label>
 	</fieldset>
 	
 	
 	<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels'>
 		<legend>Auction Configurations</legend>
-	
+			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 			<div class='threeColumn floatLeft'>
 				<label>
 					<span>Launch profile</span>
@@ -1030,9 +1032,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 			<div class='buttonset'>
-				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" >Preview</button>
-				<button onclick="savePanel(this,'ebay2','TEST-AUCTION');" >Test Auction</button>
-				<button onclick="savePanel(this,'ebay2','CREATE-AUCTION');" >Create Listing</button>
+				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Auction</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-CREATE-AUCTION" >Create Listing</button>
 			</div>
 	
 		</fieldset>
@@ -1040,34 +1042,56 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 		<fieldset class='labelsAsBreaks'>
 			<legend>Syndicated Listing Configuration</legend>
-	
-			<div class='red'>@JT -> need to show 'is enabled' or 'is not enabled'. what attribute do we key off of?</div>
+			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
+			<div data-bind="var: product(ebay:ts); format:hideIfSet; hideZero:false;" class=' red marginBottom'>Syndication is disabled for this product.</div>
 	
 			<label>
 				<span>Fixed price</span>
-				$<input type="number" step='.01' min='0' size="6" value="" onchange="this.value = validated('0123456789.',this.value)" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				$<input type="number" step='.01' min='0' size="6" value="" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
 	
 			<div class='buttonset'>
-			<button onclick="savePanel(this,'ebay2','TEST-SYNDICATION');" >Test Syndication</button>
+			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroEBAYExec" data-ebay-macro="EBAY-TEST-AUCTION">Test Syndication</button>
 			</div>
 			<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
 		</fieldset>
 
-	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+
+		<fieldset>
+			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->
+			<div data-app-role='ebayStatusDetails'>
+			<table class='fullWidth gridTable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Is GTC</th>
+				<th>Class</th>
+				<th>Category</th>
+				<th>Created</th>
+				<th>Launched</th>
+				<th>DispatchID</th>
+				<th>Profile</th>
+				<th>Start Qty</th>
+				<th>Remaining</th>
+				<th>BIN Price</th>
+				<th data-anytable-nosort='true'></th>
+				<th data-anytable-nosort='true'></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: ebay(@LISTINGS); format:processList; loadsTemplate:ebayDetailRowTemplate;"></tbody>
+			</table>
+			</div>
+		</fieldset>
+
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
 	
 	</div>
-
 </div>
-
-
-
-
-
+</div>
 
 
 
@@ -1078,6 +1102,28 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 <!-- templates used for process list inside the product editor template -->
 
 <table>
+
+
+
+
+<tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
+	<td data-bind="var: detail(PRODUCT); format:text;"></td>
+	<td data-bind="var: detail(IS_GTC); format:text;"></td>
+	<td data-bind="var: detail(CLASS); format:text;"></td>
+	<td data-bind="var: detail(CATEGORY); format:text;"></td>
+	<td data-bind="var: detail(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: detail(LAUNCHED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: detail(DISPATCHID); format:text;"></td>
+	<td data-bind="var: detail(PROFILE); format:text;"></td>
+	<td data-bind="var: detail(QUANTITY); format:text;"></td>
+	<td data-bind="var: detail(ITEMS_REMAIN); format:text;"></td>
+	<td data-bind="var: detail(BUY_IT_NOW); format:text;"></td>
+	<td><!-- view button? --></td>
+	<td data-bind="var: detail(@MACROS); format:macros2Buttons; extension:admin_prodEdit;">
+	</td>
+</tr>
+
+
 
 <!--
 used in the amzon panel for the details.
@@ -1093,6 +1139,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
 	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
 </tr>
+
+
+
 
 
 <tr id='buycomSkuRowTemplate'>

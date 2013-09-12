@@ -138,6 +138,7 @@ var admin_prodEdit = function() {
 				onSuccess : function(_rtag)	{
 	
 var pid = app.data[_rtag.datapointer].pid;
+
 //this will render the 'quickview' above the product itself. This is only run if 'edit' is clicked directly from the search results.
 if(_rtag.renderTaskContainer)	{
 	app.u.handleButtons(_rtag.jqObj.closest("[data-app-role='taskItemContainer']").find("[data-app-role='taskItemPreview']").anycontent({'datapointer':_rtag.datapointer}));
@@ -146,6 +147,10 @@ if(_rtag.renderTaskContainer)	{
 _rtag.jqObj.hideLoading();
 _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.extend(true,{},app.data[_rtag.datapointer],app.data['adminProductReviewList|'+pid])});
 
+//If the item has variations, show the variations tab.
+if(!$.isEmptyObject(app.data[_rtag.datapointer]['%variations']))	{
+	$("[data-app-role='variationsTab']",_rtag.jqObj).closest('li').show();
+	}
 
 $('form',_rtag.jqObj).each(function(){
 	app.ext.admin.u.applyEditTrackingToInputs($(this));
@@ -200,13 +205,7 @@ app.u.handleButtons(_rtag.jqObj);
 							'pid':pid
 							}
 						},'mutable');					
-					app.model.addDispatchToQ({
-						'_cmd':'adminEBAYStoreCategoryList',
-						'PID':pid,
-						'_tag':	{
-							'datapointer' : 'adminEBAYStoreCategoryList'
-							}
-						},'mutable');
+					
 					
 					
 					if(app.model.fetchData('adminEBAYProfileList'))	{}
@@ -469,7 +468,7 @@ app.u.handleButtons(_rtag.jqObj);
 	
 	
 		renderFormats : {
-			
+
 			prodImages : function($tag,data)	{
 	//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
 				var L = data.bindData.max || 99;
@@ -488,6 +487,14 @@ app.u.handleButtons(_rtag.jqObj);
 						else	{break;} //exit once a blank is hit.
 						}
 					}
+				},
+
+			macros2Buttons : function($tag,data)	{
+
+var L = data.value.length;
+for(var i = 0; i < L; i += 1)	{
+	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'adminProductMacroEBAYExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
+	}
 				},
 
 			amazonIs : function($tag,data)	{
@@ -1570,12 +1577,22 @@ if($editedInputs.length)	{
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');
-
+					app.model.addDispatchToQ({
+						'_cmd':'adminEBAYStoreCategoryList',
+						'_tag':	{
+							'datapointer' : 'adminEBAYStoreCategoryList',
+							'callback' : 'anycontent',
+							'jqObj' : $("[data-app-role='ebayStoreCategoryContainer']",$PE)
+							}
+						},'mutable');
+//product specific marketplace details.
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductEBAYDetail',
 						'pid' : pid,
 						'_tag':	{
-							'datapointer':'adminProductAmazonDetail|'+pid
+							'datapointer':'adminProductEBAYDetail|'+pid,
+							'callback' : 'anycontent',
+							'jqObj' : $("[data-app-role='ebayStatusDetails']",$PE)
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
@@ -1675,9 +1692,6 @@ else	{
 
 
 
-
-
-
 //executed on the queueu and remove buttons.
 			adminProductMacroAmazonExec : function($ele,p)	{
 				var
@@ -1748,6 +1762,7 @@ else	{
 						}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
 					$D.dialog('open');
 					$D.showLoading({"message":"Fetching definitions file"});
+					app.model.destroy("appResource|definitions/amz/"+$catalog.val()+'.json');
 					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{},'mutable');
 					app.model.dispatchThis('mutable');
 					
@@ -1760,6 +1775,51 @@ else	{
 					//unable to find catalog
 					}
 				}, //amazonProductDefinitionsShow
+
+
+			
+			adminProductMacroEBAYExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+
+				if($ele.is('button'))	{
+					if($ele.hasClass('ui-button'))	{
+						$ele.button('disable');
+						$ele.data('original-icon',$ele.button( "option", "icons" ));
+						$ele.button( "option", "icons", { primary: "wait", secondary: "" } ); //add or update icon to 'wait', which is a small loading graphic.
+						}
+					else	{$ele.prop('disabled','disabled');}
+					}
+
+				app.model.addDispatchToQ({
+					'_cmd' : 'adminProductMacro',
+					'pid' : pid,
+					'@updates' : [$ele.data('ebay-macro')], //used for sku images
+					'_tag' : {
+						'callback' : function(rd)	{
+$ele.button( "option", "icons", $ele.data('original-icon') );
+	if($ele.is('button'))	{
+		if($ele.hasClass('ui-button'))	{
+			$ele.button('enable');
+			$ele.button( "option", "icons", $ele.data('original-icon') ); //add or update icon to 'wait', which is a small loading graphic.
+			}
+		else	{$ele.prop('disabled','').removeProp('disabled');}
+		}
+if(app.model.responseHasErrors(rd)){
+	$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({'message':rd});
+	}
+else	{
+	//clear existing messaging and display.
+	$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
+	}
+							}
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+
+				
+				},
 
 //The variations tab is hidden unless the item has variations. However, since variations can't be added except from within that tab, there needs to be a mechanism for showing the tab. this is it.
 			productVariationsTabShow : function($ele,p)	{
@@ -1798,12 +1858,13 @@ else	{
 			ebayCategoryChooserShow : function($ele,p)	{
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid && ($ele.data('categoryselect') == 'primary' || $ele.data('categoryselect') == 'secondary'))	{
-					app.u.dump(" -> input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+": "+$ele.closest('fieldset').find("input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"']").length);
-					app.ext.admin_syndication.a.showEBAYCategoryChooserInModal(
-						$ele.closest('fieldset').find("input[name='ebay:category"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"']"),
-						{'pid':pid,'categoryselect':$ele.data('categoryselect')},
-						$ele.closest('fieldset').find("[data-app-role='ebayCategory"+($ele.data('categoryselect') == 'primary' ? '' : '2')+"Name']")
-						);
+					
+					var $container = $ele.closest('label');
+					var $input = $(':input:first',$container);
+					var $catName = $("[data-app-role='ebayCategoryName']",$container);
+										
+					app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':pid,'categoryselect':$ele.data('categoryselect')},$catName)
+
 					}
 				else	{
 					$ele.closest('fieldset').anymessage({'message':'In admin_prodEdit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});

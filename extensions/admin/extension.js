@@ -3692,7 +3692,22 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //* 201334 -> no need to re-apply. event tracking is now delegated, so it's always on.
 //				this.applyEditTrackingToInputs($context); 
 				},
-
+/*
+This is the start of a fucntion that will get executed from within the delegated events in applyEditTrackingToInputs
+It will support some pre-set commands to make updates to elements outside the form/context.
+One example would be if data-anytab is set on the form, it'll load hte # of changes into the corresponding tab.
+			handleFormBasedTrackingEvents : function($form)	{
+				if($form.data('tab'))	{
+					var $container = $form.closest("[data-keeper-container]");
+					if($container.length)	{
+						var $tab = $("[data-anytabs-tab='"+$form.data('tab')+"']:first",$container);
+						}
+					else	{
+						$form.anymessage({"message":"In admin.u.handleFormBasedTrackingEvents, data-tab was set on the form, but no container was found.","gMessage":true});
+						}
+					}
+				},
+*/			
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
 //will also update a .numChanges selector with the number of elements within the context that have edited on them.
 //will also 'enable' the parent button of that class.

@@ -1709,7 +1709,9 @@ if(profile && pid)	{
 					$D.anymessage({'message':rd});
 					}
 				else	{
-					$D.append(app.data[rd.datapointer].html)
+					$D.append(app.data[rd.datapointer].html);
+					$D.dialog('option', 'height', ($('body').height() - 100));
+					$D.dialog('option', 'position', 'center');
 					}
 				}
 			}

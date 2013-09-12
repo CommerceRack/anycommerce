@@ -11,6 +11,7 @@ ADMIN
  -> New product manager/editor interfaces.
  	-> no longer support buy.com DBMaps.
 	-> no longer have definitions for marketplaces (except amazon)
+	-> powerlister in product went away.
 
  -> fixed some bug in variations, flexedit (images) and more.
  -> global variations moved to setup.

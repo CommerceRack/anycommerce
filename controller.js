@@ -3272,12 +3272,20 @@ $tmp.empty().remove();
 				int = 0;
 //				app.u.dump(" -> data.value.length: "+data.value.length);
 				for(var i in data.value)	{
+// * 201336 -> mostly for use in admin. for processing the %sku object and subbing in the default attribs when there are no inventoryable variations.
+//if SKU is set, that means we're dealing with sku-level data.  if the sku does NOT have a :, we use the product %attribs
+					if(data.bindData.sku)	{
+						if(data.value[i].sku && data.value[i].sku.indexOf(':') < 0)	{
+							data.value[i]['%attribs'] = app.data['adminProductDetail|'+data.value[i].sku]['%attribs']
+							}
+						}
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
 					else	{
 //if data.value was an associative array....
 // ** 201320 -> needed processList to support indexed arrays AND associative arrays.
 // ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
 						if(data.value[i] && typeof data.value[i] === 'object')	{
+
 							if(!data.value[i].index && isNaN(i)) {data.value[i].index = i} //add an 'index' field to the data. handy for hashes (like in flexedit) where the index is something useful to have in the display.
 							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 							if($o instanceof jQuery)	{
