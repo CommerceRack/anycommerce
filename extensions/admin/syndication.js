@@ -229,7 +229,7 @@ var admin_syndication = function() {
 							if(vars.pathid = $path.attr('id'))	{} //value for input id is set in if.
 							else	{
 								vars.pathid = 'span_'+app.u.guidGenerator();
-								$input.attr('id',vars.pathid)
+								$path.attr('id',vars.pathid)
 								}
 							}
 
@@ -600,7 +600,9 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 									}
 								}
 							if(data.inputid)	{
-								$(app.u.jqSelector('#',data.inputid)).val(categoryid).effect('highlight', {}, 2500);
+								//This 'update' is triggered when a leaf is selected that has no item specifics.
+								$(app.u.jqSelector('#',data.inputid)).val(categoryid).effect('highlight', {}, 2500).addClass('edited');
+								app.ext.admin.u.handleSaveButtonByEditedClass($(app.u.jqSelector('#',data.inputid)).closest('form')); //updates the save button change count.
 								$chooser.dialog('close');
 								}
 							else	{
@@ -1242,7 +1244,8 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 							}
 
 						//update the original input.
-						$(app.u.jqSelector('#',data.inputid)).val(categoryid);					
+						$(app.u.jqSelector('#',data.inputid)).val(categoryid).addClass('edited');
+						app.ext.admin.u.handleSaveButtonByEditedClass($(app.u.jqSelector('#',data.inputid)).closest('form')); //updates the save button change count.
 						
 						app.model.destroy("adminEBAYCategory|"+app.model.version+"|"+data.pid+"|0"); //this data changes as a result of the product update.
 						// ^ this works??
