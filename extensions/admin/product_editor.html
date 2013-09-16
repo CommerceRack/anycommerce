@@ -177,7 +177,10 @@
 		<div class='prodThumbContainer floatLeft marginRight marginLeft'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image0); defaultVar: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
 		</div>
-		<span data-bind='var: product(zoovy:prod_name); format:text;'></span>
+		
+		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
+		<div data-bind='var: product(pid); format:text;'></div>
+		
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Close</button>
 		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Remove</button>
@@ -821,7 +824,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<option value="WIRELESS.WIRELESSACCESSORIES">Wireless Accessories</option>
 			<option value="WIRELESS.WIRELESSDOWNLOADS">Wireless Downloads</option>
 		</select>
-		<button data-app-click="admin_prodEdit|amazonProductDefinitionsShow">Edit Specifics</button>
+		<button data-app-click="admin_prodEdit|amazonProductDefinitionsShow" class='applyButton'>Edit Specifics</button>
 	</label>
 	
 	<label>
@@ -1211,6 +1214,24 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 </tr>
 
 </table>
+
+
+
+
+
+
+
+
+<!-- used for cases where a flex dialog is opened, such as amazon specifics -->
+	<div id='productEditorFlexTemplate'>
+	<form action='#' onSubmit='return false'>
+		<fieldset data-app-role='flexContainer' class='alignedLabels labelsAsBreaks'></fieldset><!-- gets it's own container within tab because eventually this tab will have more content -->
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		</div>
+	</form>
+	</div><!-- /categorization tab content -->
+
 
 
 
@@ -2275,20 +2296,8 @@ Snacks|Doughnuts<br />
 
 
 <div id='productVariationManager' class='ui-widget' data-app-role='productVariationManager'><!-- in product variations mode, PID will be set on this element -->
-	<div class='ui-widget-header ui-corner-top clearfix stdPadding'>
-		<h3 class='floatRight' data-bind="var:variation(pid); format:text; pretext:Product: ;"></h3>
-		<h1>Product Variation Manager</h1>
-	</div>
-	<section class='ui-widget-content stdPadding ui-corner-bottom' data-app-role='productVariationManagerContainer'>
-		<div class='buttonset ui-corner-all ui-widget-content smallPadding alignRight marginBottom clearfix'>
-		
-<!--		
-			<button title="Return to Product." data-app-event="admin_prodEdit|variationsBackToProductExec" data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">Back to Product</button>
-			<button title="Cancel any unsaved changes to these variations." data-app-event='admin_prodEdit|productVariationsManagerShow'>Cancel Changes</button>
--->
-			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
-			<button title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
-		</div>
+	<section data-app-role='productVariationManagerContainer'>
+
 		<table class='fullWidth'>
 		<tr>
 			<td class='valignTop'>
@@ -2327,6 +2336,14 @@ Snacks|Doughnuts<br />
 			</td>
 		</tr>
 		</table>
+
+		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
+			<button class='floatRight' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
+
+			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
+		</div>
+
+
 	</section>
 </div>
 

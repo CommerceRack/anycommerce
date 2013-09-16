@@ -142,16 +142,28 @@ var admin_prodEdit = function() {
 if(_rtag.jqObj)	{
 //	app.u.dump(" -> jqObj IS defined");
 	_rtag.jqObj.hideLoading();
-	_rtag.jqObj.append(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data[_rtag.datapointer].contents,app.data['adminProductDetail|'+pid]));
+	_rtag.jqObj.anycontent(_rtag);
+
+	_rtag.jqObj.find("[data-app-role='flexContainer']").append(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data[_rtag.datapointer].contents,app.data['adminProductDetail|'+pid]));
+	
+//hidden pid input is used by save. must come after the 'anycontent' above or form won't be set.
+	_rtag.jqObj.find('form').append("<input type='hidden' name='pid' value='"+pid+"' \/>");
+
+	app.u.handleEventDelegation(_rtag.jqObj);
+	app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
+	app.u.handleCommonPlugins(_rtag.jqObj);
+	app.u.handleButtons(_rtag.jqObj);
 	
 	if(_rtag.jqObj.hasClass('ui-dialog-content'))	{
 		_rtag.jqObj.dialog('option','height',($('body').height() - 200));
 		_rtag.jqObj.dialog('option','position','center');
 		}
+
 	}
 					}
 				},
-	
+
+
 			handleProductEditor : {
 				onSuccess : function(_rtag)	{
 	
@@ -172,7 +184,7 @@ if(!$.isEmptyObject(app.data[_rtag.datapointer]['%variations']))	{
 
 $('form',_rtag.jqObj).each(function(){
 	app.ext.admin.u.applyEditTrackingToInputs($(this));
-	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>")
+	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 	});
 
 app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
@@ -511,7 +523,7 @@ app.u.handleButtons(_rtag.jqObj);
 
 var L = data.value.length;
 for(var i = 0; i < L; i += 1)	{
-	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'adminProductMacroExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
+	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
 	}
 				},
 
@@ -1643,26 +1655,29 @@ if(app.model.responseHasErrors(rd)){
 else	{
 	//success content goes here.
 	var $thes = $("[name='amz:thesaurus']",$fieldset);
-	var selectedThes = app.data['adminProductDetail|'+pid]['%attribs']['amz:thesaurus'] || "";
+	if($thes.children().length > 1)	{} //already added these.
+	else	{
+		var selectedThes = app.data['adminProductDetail|'+pid]['%attribs']['amz:thesaurus'] || "";
 
 //	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
 //	app.u.dump(" -> $thesaurus select length: "+$thes.length);
 //	app.u.dump(" -> selectedThes: "+selectedThes);
 
 	
-	//build the thesaurii dropdown.
-	for(var index in app.data[rd.datapointer]['%thesaurus'])	{
-//		app.u.dump(" -> index: "+index);
-		$thes.append("<option value='"+app.data[rd.datapointer]['%thesaurus'][index]+"'>"+app.data[rd.datapointer]['%thesaurus'][index]+"<\/option>");
+		//build the thesaurii dropdown.
+		for(var index in app.data[rd.datapointer]['%thesaurus'])	{
+	//		app.u.dump(" -> index: "+index);
+			$thes.append("<option value='"+app.data[rd.datapointer]['%thesaurus'][index]+"'>"+app.data[rd.datapointer]['%thesaurus'][index]+"<\/option>");
+			}
+		if(selectedThes && $("[value='"+selectedThes+"']",$thes).length)	{
+			//match found! set is as selected.
+			$thes.val(selectedThes)
+			}
+		else if(selectedThes)	{
+			$thes.insertAfter("Thesaurus "+selectedThes+" is no longer available");
+			}
+		else	{} //no thesaurus has been selected 
 		}
-	if(selectedThes && $("[value='"+selectedThes+"']",$thes).length)	{
-		//match found! set is as selected.
-		$thes.val(selectedThes)
-		}
-	else if(selectedThes)	{
-		$thes.insertAfter("Thesaurus "+selectedThes+" is no longer available");
-		}
-	else	{} //no thesaurus has been selected 
 
 	//interpret the marketplace status table.
 	$mktStatusTbody.anycontent({'datapointer':rd.datapointer});
@@ -1748,7 +1763,7 @@ else	{
 
 			amazonProductDefinitionsShow : function($ele,p)	{
 				var $catalog = $ele.closest('form').find("select[name='amz:catalog']"); //Amazon Product Type
-				var pid = $ele.closest('form').find("select[name='pid']"); //Amazon Product Type
+				var pid = $ele.closest('form').find("input[name='pid']").val();
 				if($catalog.length && $catalog.val())	{
 					var $D = app.ext.admin.i.dialogCreate({
 						'title':'Amazon Specifics'
@@ -1761,6 +1776,7 @@ else	{
 
 					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{
 						'callback' : 'flex2HTMLEditor',
+						'templateID' : 'productEditorFlexTemplate',
 						'extension' : 'admin_prodEdit',
 						'pid':pid,
 						jqObj : $D
@@ -1812,6 +1828,7 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	//clear existing messaging and display.
+	if(!rd._msg_1_txt && $.isEmptyObject(rd['@MSGS']))	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
 	$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
 	}
 							}
