@@ -1319,7 +1319,7 @@ Required params include:
 	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
 
-							if($ele.is('tr'))	{
+							if($ele && $ele.is('tr'))	{
 								//This is the search result tr.
 								var $tmpTable = $("<table \/>"); //need a tmp table. orphan TR's are treated inconsistently between browsers.
 								var $tr = $ele.data('clone') ? $ele.clone() : $ele; //setting data-clone allows for the item to be left in the row (ex: amazon marketplace status) or removed from row (ex: search results) when being animated.
@@ -1680,9 +1680,9 @@ if($editedInputs.length)	{
 					pid = $PE.data('pid'),
 					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
 
-				app.u.dump(" -> $flexContent.length: "+$flexContent.length);
-				app.u.dump(" -> $PE.length: "+$PE.length);
-				app.u.dump(" -> pid: "+pid);
+//				app.u.dump(" -> $flexContent.length: "+$flexContent.length);
+//				app.u.dump(" -> $PE.length: "+$PE.length);
+//				app.u.dump(" -> pid: "+pid);
 
 				if($flexContent.children().length)	{
 					app.u.dump(" -> attributes tab clicked. flexcontent not retrieved because content was already loaded.");
@@ -2037,31 +2037,37 @@ else	{
 					}
 
 				if(cmdObj['@updates'].length)	{
+					$('body').showLoading({'message':'Updating product...'});
 					cmdObj._tag.callback = function(rd)	{
+						$('body').hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$ele.closest('.appMessaging').anymessage({"message":rd});
 							}
 						else	{
+
 //if assigning a new pid or removing pid, remove the product from the task list.
-							if(verb == 'CLONE' || verb == 'NUKE')	{
+							if(verb == 'RENAME' || verb == 'NUKE')	{
 								$tasklist = $("[data-app-role='productContentTaskResults']",'#productContent');
 								if($("li[data-pid='"+pid+"']",$tasklist).length)	{
 									$("li[data-pid='"+pid+"']",$tasklist).empty().remove();
 									}
 								}
 //if new pid or clone, add item to task list.
-							if(verb = 'CLONE' || verb == 'RENAME')	{
-								app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'});
+							if(verb == 'CLONE' || verb == 'RENAME')	{
+								app.ext.admin_prodEdit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
 								}
-							
+
+
 							if(verb == 'CLONE')	{
 								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been cloned and the clone was added to your product task list'));
 								}
 							else if(verb == 'NUKE')	{
-								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been removed from your store'));
+								$('#globalMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been removed from your store'));
+								$ele.closest('.ui-dialog-content').dialog('close');
 								}
 							else if(verb == 'RENAME')	{
-								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been assigned a new pid and added to your product task list.'));
+								$('#globalMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been assigned a new pid and added to your product task list.'));
+								$ele.closest('.ui-dialog-content').dialog('close');
 								}
 							else	{} //non-supported verb error would already have been displayed by now.
 							}

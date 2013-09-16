@@ -178,14 +178,16 @@
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image0); defaultVar: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
 		</div>
 		
-		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
-		<div data-bind='var: product(pid); format:text;'></div>
-		
 		<button title="Open editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
 		
 		<button title="Close editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
 		
 		<button title="Remove this item from Q" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
+		
+		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
+		<div data-bind='var: product(pid); format:text;'></div>
+		<div data-bind='var: product(zoovy:prod_mfg); format:text; pretext: mfg: ;'></div>
+
 		
 	</div>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
@@ -209,7 +211,7 @@
 	</td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
-	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add 2 Q</button>
+	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
 	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-pencil"  data-text='false'>Edit Now</button>
 	</td>
 </tr>
@@ -453,7 +455,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft applyButton' data-app-click='admin_prodEdit|showProductDebuggerInDialog'>Debug</button>
+			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft applyButton' data-app-click='admin_prodEdit|showProductDebuggerInDialog'>Clone/Rename/Delete</button>
 			
 			
 		</div>
@@ -1277,15 +1279,16 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-<div id='productDebuggerTemplate'>
-	<div class='appMessaging'></div>
+<div id='productDebuggerTemplate' class='appMessaging'>
+
+	<p>The buttons below are for advanced users.  There is no undo. Use with caution.</p>
 	<section class='clearfix marginBottom'>
 		
 		<fieldset class='floatRight marginLeft marginBottom labelsAsBreaks'>
 			<legend>Clone/Copy Product</legend>
 			<label>
 				<span>New PID</span>
-				<input type='text' maxlength="20" name='NEWIDD' />
+				<input type='text' maxlength="20" name='NEWID' />
 			</label>
 			<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
 			<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>

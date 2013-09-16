@@ -71,6 +71,8 @@ var admin = function() {
 			// YOUTUBE RELEASE VIDEO:
 			versionMetaData : {
 				'youtubeVideoIDs' : {
+					'201336':'UOfn6tiQqiw',
+					'201334':'FUO0NALw6sI',
 					'201332':'tKQ_SJzjbXI',
 					'201330':'fEWSsblLQ94'
 					}
