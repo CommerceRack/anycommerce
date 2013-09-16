@@ -3289,8 +3289,8 @@ $tmp.empty().remove();
 // * 201336 -> mostly for use in admin. for processing the %sku object and subbing in the default attribs when there are no inventoryable variations.
 //if SKU is set, that means we're dealing with sku-level data.  if the sku does NOT have a :, we use the product %attribs
 					if(data.bindData.sku)	{
-						if(data.value[i].sku && data.value[i].sku.indexOf(':') < 0)	{
-							data.value[i]['%attribs'] = app.data['adminProductDetail|'+data.value[i].sku]['%attribs']
+						if(data.value[i] && data.value[i].sku && data.value[i].sku.indexOf(':') < 0)	{
+							data.value[i]['%attribs'] = (app.data['adminProductDetail|'+data.value[i].sku]) ? app.data['adminProductDetail|'+data.value[i].sku]['%attribs'] : {};
 							}
 						}
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}

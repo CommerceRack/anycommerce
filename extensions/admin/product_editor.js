@@ -1129,10 +1129,10 @@ app.model.addDispatchToQ({
 				}
 			else	{
 				$target.empty();
-				$target.append("<p>Thank you, <b>"+pid+"<\/b> has now been created. What would you like to do next?<\/p>");
-				
+				$target.append("<p>Thank you, <b>"+pid+"<\/b> has now been created and added to your product task list. What would you like to do next?<\/p>");
+				app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'});
 				$("<button \/>").text('Edit '+pid).button().on('click',function(){
-					navigateTo("#!products",{'pid':pid});
+					app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'edit'});
 					$target.dialog('close');
 					}).appendTo($target);
 
@@ -1288,7 +1288,7 @@ Required params include:
 			addProductAsTask : function(P,$ele)	{
 				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
 				if(P.pid && P.tab && P.mode)	{
-
+					
 					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
 //					app.u.dump(" -> $taskList.length: "+$taskList.length);
 					var $li = $("li[data-pid='"+P.pid+"']",$taskList);
@@ -1362,6 +1362,7 @@ Required params include:
 //determine if the item is already in the list and, if so, just edit it.  If not, add and edit.
 //when opening the editor immediately, trigger the 'edit' button. no need to fetch the product data, the editor will do that.
 						else if(P.mode == 'edit')	{
+							$("[data-app-role='productManagerLandingContent']",'#productContent').hide(); //make sure default content is hidden once in editor.
 							$("button[data-taskmode='close']",$li).show();
 							$("button[data-taskmode='edit']",$li).hide();
 							//if the li was in the list (already visible), just open the editor.
@@ -1633,6 +1634,16 @@ if($editedInputs.length)	{
 
 			productFiltersClose : function($ele,p)	{
 				$ele.closest("[data-app-role='productManagerFilters']").slideUp();
+				},
+
+			productFiltersClear : function($ele,p)	{
+				var $filterMenu = $ele.closest("[data-app-role='productManagerFilters']");
+				$(".ui-selected",$filterMenu).removeClass('ui-selected ui-selectee');
+				$('.sliderRange',$filterMenu).each(function(){
+					var $slider = $(this);
+					$slider.slider("values", 0, $slider.slider('option','min'));
+					$slider.slider("values", 1, $slider.slider('option','max'));
+					});
 				},
 
 			productCreateExec : function($ele,p)	{
