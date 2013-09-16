@@ -177,6 +177,7 @@ if(_rtag.renderTaskContainer)	{
 _rtag.jqObj.hideLoading();
 _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.extend(true,{},app.data[_rtag.datapointer],app.data['adminProductReviewList|'+pid])});
 
+
 //If the item has variations, show the variations tab.
 if(!$.isEmptyObject(app.data[_rtag.datapointer]['%variations']))	{
 	$("[data-app-role='variationsTab']",_rtag.jqObj).closest('li').show();
@@ -190,7 +191,11 @@ $('form',_rtag.jqObj).each(function(){
 app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
-	
+
+//if the merchant has flex fields enabled, show the attributes tab. needs to be after the handleCommonPlugins function so that tabs have already been generated.
+if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminConfigDetail|flexedit']['%flexedit']))	{
+	$("[data-anytabs-tab='attributes']",_rtag.jqObj).show();
+	}	
 					}
 				} //handleProductEditor
 			}, //callbacks
@@ -236,12 +241,19 @@ app.u.handleButtons(_rtag.jqObj);
 							}
 						},'mutable');					
 					
-					
-					
-					if(app.model.fetchData('adminEBAYProfileList'))	{}
+//get the list of flexfields. used to determine whether or not attributes tab should show up.					
+					if(app.model.fetchData('adminConfigDetail|flexedit'))	{}
 					else	{
-						app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
-						}
+						app.model.addDispatchToQ({
+							'_cmd':'adminConfigDetail',
+							'flexedit' : 1,
+							'_tag':	{
+								'datapointer':'adminConfigDetail|flexedit'
+								}
+							},'mutable');						
+						}				
+					
+
 					//product record, used in most panels.
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductDetail',
@@ -724,16 +736,15 @@ for(var i = 0; i < L; i += 1)	{
 				if(pid && $context && $context instanceof jQuery)	{
 					pid = pid.toString(); //treat pid as string. 'could' be treated as number if no letters.
 
-		//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate images are 'blanked' out.
+//once translated, tag the product imagery container with the current # of images. This is used in the save to make sure if there are fewer images at save than what was present at start, the appropriate image attributes are 'blanked' out.
 					var $prodImageUL = $("[data-app-role='prodImagesContainer']",$context);
 					$prodImageUL.attr('data-numpics',$prodImageUL.children().length);
 					
 		
-		//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
-					if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length > 1)	{
-		//						app.u.dump(" -> More than one sku is present.");
-						$prodImageUL.width('60%'); //width is only applied IF right column (sku imagery) is present.
-						var $container = $("[data-app-role='prodEditSkuImagesContainer']",$context).show();
+//@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
+					var $container = $("[data-app-role='prodEditSkuImagesContainer']",$context).show();
+//only run through SKU specific images if this is being run on variations tab and only do it once (or each sku could be shown multple times)
+					if($container.length && !$container.children().length)	{	
 						var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
 						var L = skus.length;
 						var $table = $("<table \/>").addClass('gridTable').appendTo($container);
@@ -765,6 +776,7 @@ for(var i = 0; i < L; i += 1)	{
 							},
 						'remove' : function(event, ui) {
 							ui.item.after(ui.item.clone().addClass('edited'));//clone the dropped item into the new parent at the drop index.
+							ui.item.parent().find('.dropzone').appendTo(ui.item.parent()); //always put the dropzone at the end of the list. possible in drag to add image after the dropzone.
 							$(this).sortable('cancel'); //cancel the move so the image stays where it was originally.
 							},
 						'revert' : true
@@ -1249,7 +1261,7 @@ Required params include:
  -> mode: add, edit, remove
 */
 
-			addProductAsTask : function(P)	{
+			addProductAsTask : function(P,$ele)	{
 				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
 				if(P.pid && P.tab && P.mode)	{
 
@@ -1257,7 +1269,11 @@ Required params include:
 //					app.u.dump(" -> $taskList.length: "+$taskList.length);
 					var $li = $("li[data-pid='"+P.pid+"']",$taskList);
 					if(P.mode == 'remove')	{
-						$li.empty().remove();
+						$li.slideUp('fast',function(){
+							$li.empty().remove();
+							});
+//if the product is in the search results list, make sure the toggle button is not highlighted.
+						$(app.u.jqSelector('#','prodManager_'+P.pid)).find("[data-app-click='admin_prodEdit|productTaskPidToggle']").removeClass('ui-state-highlight');
 						}
 					else if(P.mode == 'close')	{
 						$("[data-app-role='productEditorContainer']",$li).slideUp('fast',function(){
@@ -1267,10 +1283,11 @@ Required params include:
 						$("button[data-taskmode='edit']",$li).show();
 						}
 					else	{
-						//product is already in list.
-						if($li.length)	{}
+						
+						if($li.length)	{}//product is already in list.
 						else	{
 							var $li = app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
+							$li.hide();
 							$li.attr('data-pid',P.pid);
 							}
 						$taskList.prepend($li); //always put at top of the list.
@@ -1278,6 +1295,23 @@ Required params include:
 	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
 
+							if($ele.is('tr'))	{
+								//This is the search result tr.
+								var $tmpTable = $("<table \/>"); //need a tmp table. orphan TR's are treated inconsistently between browsers.
+								var $tr = $ele.data('clone') ? $ele.clone() : $ele; //setting data-clone allows for the item to be left in the row (ex: amazon marketplace status) or removed from row (ex: search results) when being animated.
+								
+								$tmpTable.addClass('gridTable').css({'z-index':'1000','position':'absolute','width':$ele.width()}).css($ele.offset());
+								$tmpTable.appendTo($(document.body));
+								$tr.appendTo($tmpTable);
+							//	if($ele.data('clone'))	{$tmpTable.css('background','red'); die()};
+								$tmpTable.animate($li.parent().offset(),'slow',function(){
+									$li.show();
+									$tmpTable.hide();
+									});
+								}
+							else	{
+								$li.show();
+								}
 							$("button[data-taskmode='close']",$li).hide();
 							$("button[data-taskmode='edit']",$li).show();
 
@@ -1306,8 +1340,12 @@ Required params include:
 						else if(P.mode == 'edit')	{
 							$("button[data-taskmode='close']",$li).show();
 							$("button[data-taskmode='edit']",$li).hide();
-//							$li.showLoading({'message':'Fetching Product Detail'});
-//							$("[data-app-click='admin_prodEdit|productEditorShow4Task']",$li).trigger('click',{'translateTask':true});
+							//if the li was in the list (already visible), just open the editor.
+							//If it wasn't, animate the LI coming into the list. The animate will mask a bit of the loading time.
+							if($li.is(':visible'))	{}
+							else	{
+								$li.slideDown();
+								}
 							app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
 							}
 						else	{
@@ -1327,6 +1365,9 @@ Required params include:
 //no handler here should execute a dispatch.
 //each dispatch should be added to the immutable Q.
 		saveHandlers : {
+
+
+
 
 //a simple save to handle attributes that are set w/ form inputs.
 			attributes : function($form)	{
@@ -1466,6 +1507,10 @@ if($editedInputs.length)	{
 
 			}, //saveProductByTab
 
+
+
+
+
 //e is for 'events'. This are used in handleAppEvents and event delegation (which is replacing handleAppEvents).
 		e : {
 
@@ -1533,7 +1578,7 @@ if($editedInputs.length)	{
 				if($ele.data('pid') && $ele.data('taskmode'))	{
 					var mode = $ele.data('taskmode');
 					$ele.closest("[data-app-role='productManagerResultsContent']").hide();
-					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':mode});
+					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':mode},$ele.closest('li'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, either data-pid ["+$ele.data('pid')+"] or data-taskmode ["+$ele.data('taskmode')+"] not set on element.","gMessage":true});
@@ -1550,11 +1595,11 @@ if($editedInputs.length)	{
 				if($ele.data('pid'))	{
 					if($ele.hasClass('ui-state-highlight'))	{
 						$ele.removeClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'remove'});
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'remove'},$ele.closest('tr'));
 						}
 					else	{
 						$ele.addClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'add'});
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'add'},$ele.closest('tr'));
 						}
 					}
 				else	{
@@ -1576,36 +1621,20 @@ if($editedInputs.length)	{
 					app.u.dump(" -> attributes tab clicked. flexcontent not retrieved because content was already loaded.");
 					} //flex content already generated.
 				else	{
-					//get data for flexedit panel. If the system resource for all attribs needs to be fetched, re-request the enabled flexedit attributes list too.
-					var numRequests = app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable');
-	
-	
-					var cmdObj = {
-							'_cmd':'adminConfigDetail',
-							'flexedit' : 1,
-							'_tag':	{
-								'datapointer':'adminConfigDetail|flexedit',
-								callback : function(rd)	{
-									if(app.model.responseHasErrors(rd)){
-										$('#globalMessaging').anymessage({'message':rd});
-										}
-									else	{
-										$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
-										}
-									}
+					$flexContent.showLoading({'message':'Loading attribute data...'})
+					//The list of which fields are enabled for this merchant is already retrieved as part of edit product.
+					app.ext.admin.calls.appResource.init('product_attribs_all.json',{
+						callback : function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
 								}
 							}
-					
-					if(numRequests || !app.model.fetchData(cmdObj._tag.datapointer))	{
-						app.u.dump(" -> either global or product flex fields not available. fetch them");
-						$flexContent.showLoading({'message':'Loading attribute data...'})
-						app.model.addDispatchToQ(cmdObj,'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						app.u.dump(" -> flexedit data avaiable locally. Execute callback.");
-						app.u.handleCallback(cmdObj._tag);
-						}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+	
 					}
 				},
 			
@@ -1614,6 +1643,12 @@ if($editedInputs.length)	{
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');
+
+					if(app.model.fetchData('adminEBAYProfileList'))	{}
+					else	{
+						app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
+						}
+
 					app.model.addDispatchToQ({
 						'_cmd':'adminEBAYStoreCategoryList',
 						'_tag':	{
@@ -1723,6 +1758,9 @@ else	{
 				app.u.dump("BEGIN admin_prodEdit.e.handleVariationsContent");
 				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
 				var $variationsContent = $("section[data-anytab-content='variations']:first",$PE).find("[data-app-role='productVariations']");
+				
+				app.ext.admin_prodEdit.u.handleImagesInterface($("section[data-anytab-content='variations']:first",$PE),$PE.data('pid'));
+				
 				if($variationsContent.children().length)	{} //already rendered content.
 				else	{
 					app.u.dump(" -> $PE.length: "+$PE.length);
@@ -1888,6 +1926,19 @@ else	{
 					$ele.closest('fieldset').anymessage({'message':'In admin_prodEdit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});
 					}
 				}, //ebayCategoryChooserShow
+
+
+			adminProductMacroSaveAllTabsExec : function($ele,p)	{
+				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
+				
+				$('form',$PE).each(function (index)	{
+					app.u.dump(" -> "+index+" form");
+//					app.u.dump(" -> save button length: "+$("[data-app-role='saveButton']",this).length);
+//skipDispatch tells the individual save buttons to not dispatch themselves. We'll do one dispatch at the end.
+					$("[data-app-role='saveButton']",this).trigger('click',{'skipDispatch':true});
+					app.model.dispatchThis('immutable');
+					});
+				},
 
 // Didn't use macrobuilders because they're designed for making 1 _cmd
 // The product save may execute more than one. We want lots of littls saves here as opposed to 1 big one.

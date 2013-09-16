@@ -35,7 +35,6 @@ General tab
 
 
 /* for the sku-specific imagery */
-.imagesEditor .skusImagesContainer	{float:right; display:none; width:35%;}
 .imagesEditor .skusImagesContainer ul	{display:inline-block; min-height:35px;}
 
 

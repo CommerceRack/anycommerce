@@ -27,13 +27,13 @@
 	<table class='fullWidth gridTable applyAnytable ui-widget-content marginBottom' data-app-role='productManagerResultsTable'>
 	<thead>
 	<tr>
-		<th></th>
+		<th data-anytable-nosort='true'></th>
 		<th>SKU</th>
 		<th>Name</th>
 		<th>Price</th>
-		<th># Variations</th>
+		<th>Has Variations</th>
 		<th># Children</th>
-		<th></th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tbody data-app-role='productManagerSearchResults'>
@@ -181,9 +181,12 @@
 		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
 		<div data-bind='var: product(pid); format:text;'></div>
 		
-		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit</button>
-		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Close</button>
-		<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Remove</button>
+		<button title="Open editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
+		
+		<button title="Close editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
+		
+		<button title="Remove this item from Q" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
+		
 	</div>
 	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
 </li>
@@ -201,11 +204,13 @@
 	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
 	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
 	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
-	<td class='hideInMinimalMode' data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
+	<td class='hideInMinimalMode'>
+	<span class='ui-icon ui-icon-check displayNone'  data-bind='var:product(pogs); format:showIfSet;'></span>
+	</td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
-	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-tag' data-text='false'>Add 2 Q</button>
-	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">Edit Now</button>
+	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add 2 Q</button>
+	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-pencil"  data-text='false'>Edit Now</button>
 	</td>
 </tr>
 
@@ -260,7 +265,7 @@
 <div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
-	<button class='floatRight' data-app-role='saveButton' >Save All Changes</button>
+	<button class='floatRight applyButton' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveAllTabsExec">Save All Changes</button>
 <!--
 These are the old save buttons for the panels.  Here so I know where to get the existing code when the new save is built.  Delete these are they're migrated into the save button.
 <button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
@@ -270,7 +275,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li>
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
 		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
-		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
+		<li class='displayNone'><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
 		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
 		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
 		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
@@ -403,9 +408,6 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
 
 			<div class='clearfix marginBottom'>
-				<!-- sku images will get added into this div (with js) -->
-				<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
-				
 				<!-- all the product images -->
 				<ul class='prodImagesContainer paddingNone listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;" data-app-role='prodImagesContainer'></ul>
 			</div>		
@@ -668,12 +670,18 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<form action='#' onSubmit='return false'>
 	
+	<fieldset class='imagesEditor floatRight marginLeft'>
+		<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+		<legend>Sku Images</legend>
+		<!-- sku images will get added into this div (with js) -->
+		<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
+	</fieldset>
+	
 	<fieldset data-app-role='assemblyContainer'>
 		<legend>Assembly/Kit Components</legend>
 		<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; sku:1; loadsTemplate:xsellTableRowTemplate;">
 		</ul>
 	</fieldset>
-	
 
 	<fieldset>
 		<legend>Sku Attributes</legend>
@@ -877,7 +885,8 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<th>UUID</th>
 		<th>UUID Type</th>
 		<th>Changed Since Attempt</th>
-		<th>Details</th>
+		<th data-anytable-nosort='true'>Details</th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: amazon(@DETAIL); format:processList; loadsTemplate:amazonDetailRowTemplate;" data-app-role='amazonDetailTbody'>
@@ -1135,8 +1144,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 used in the amzon panel for the details.
 AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 -->
-<tr id='amazonDetailRowTemplate'>
-	<td data-bind="var: detail(SKU); format:text;"></td>
+<tr id='amazonDetailRowTemplate' data-clone='true'>
+	<td data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(pid); format:assignAttribute; attribute:data-pid;" class='lookLikeLink'>
+	<span data-bind="var: detail(SKU); format:text;" ></span>
+	</td>
 	<td data-bind="var: detail(PID); format:text;"></td>
 	<td data-bind="var: detail(AMZ_SYNC); format:text;"></td>
 	<td data-bind="var: detail(AMZ_RELATIONSHIP); format:text;"></td>
@@ -1144,6 +1155,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
 	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
+	<td><button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add 2 Q</button></td>
 </tr>
 
 
@@ -1163,8 +1175,8 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
 	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
 	<td class='alignRight'>
-	<button data-app-click='admin_customer|reviewRemoveConfirm_DE' data-icon-primary="ui-icon-trash"  data-text='true'>Delete Review</button>
-	<button data-app-click='admin_customer|adminProductReviewUpdateShow_DE' data-icon-primary="ui-icon-pencil"  data-text='true' data-edit-mode='dialog'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
+	<button data-app-click='admin_customer|reviewRemoveConfirm_DE' data-icon-primary="ui-icon-trash"  data-text='false' class='applyButton'>Delete Review</button>
+	<button data-app-click='admin_customer|adminProductReviewUpdateShow_DE' data-icon-primary="ui-icon-pencil"  data-text='false' data-edit-mode='dialog' class='applyButton'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
 	</td>
 </tr>
 
