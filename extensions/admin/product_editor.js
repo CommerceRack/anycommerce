@@ -309,8 +309,12 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 				if($target instanceof jQuery && P.pid)	{
 					
 //$target.showLoading({"message":"Fetching product debug info"});
-$target.anycontent({'templateID':'productDebuggerTemplate','showLoading':false}); //
-					
+$target.anycontent({'templateID':'productDebuggerTemplate','showLoading':false}).attr('data-pid',P.pid); //
+
+app.u.handleCommonPlugins($target);
+app.u.handleButtons($target);
+app.u.handleEventDelegation($target);
+
 					}
 				else if($target instanceof jQuery)	{
 					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, no pid passed in P.","gMessage":true});
@@ -1832,6 +1836,7 @@ else	{
 				},
 
 
+
 //executed on the 'validate' button. Gives a report of whether or not this product needs anything to be successfully syndicated.
 			adminProductAmazonValidateExec : function($ele,p)	{
 				var
@@ -1990,10 +1995,10 @@ else	{
 					}
 				}, //ebayCategoryChooserShow
 
-
+//executed when the 'debug' button is pushed.
 			showProductDebuggerInDialog : function($ele,p)	{
 				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
-				var pid = $ele.closest("form").find("input[name='pid']");
+				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
 					app.u.dump(" -> have pid. proceed.");
 					app.ext.admin_prodEdit.a.showProductDebugger(app.ext.admin.i.dialogCreate({
@@ -2003,6 +2008,78 @@ else	{
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductDebuggerInDialog, unable to ascertain PID.','gMessage':true});
+					}
+				},
+
+
+
+			handlePIDCloneChangeRemoveExec : function($ele,p)	{
+				var pid = $ele.closest("[data-pid]").data('pid');
+				var verb = $ele.data('verb');
+				
+				if(pid && verb)	{
+
+				var sfo = $ele.closest('fieldset').serializeJSON({'cb':true});
+				
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'@updates' : new Array(),
+					_tag : {}
+					}
+				
+				if(verb == 'CLONE' || verb == 'RENAME' || verb == 'NUKE')	{
+					cmdObj['@updates'].push(verb+"?"+$.param(sfo));
+					}
+				else	{
+					//invalid verb.
+					$ele.closest('.appMessaging').anymessage({"message":'In admin_prodEdit.e.handlePIDCloneChangeRemoveExec, invalid data-verb specified on element.','gMessage':true});
+					}
+
+				if(cmdObj['@updates'].length)	{
+					cmdObj._tag.callback = function(rd)	{
+						if(app.model.responseHasErrors(rd)){
+							$ele.closest('.appMessaging').anymessage({"message":rd});
+							}
+						else	{
+//if assigning a new pid or removing pid, remove the product from the task list.
+							if(verb == 'CLONE' || verb == 'NUKE')	{
+								$tasklist = $("[data-app-role='productContentTaskResults']",'#productContent');
+								if($("li[data-pid='"+pid+"']",$tasklist).length)	{
+									$("li[data-pid='"+pid+"']",$tasklist).empty().remove();
+									}
+								}
+//if new pid or clone, add item to task list.
+							if(verb = 'CLONE' || verb == 'RENAME')	{
+								app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'});
+								}
+							
+							if(verb == 'CLONE')	{
+								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been cloned and the clone was added to your product task list'));
+								}
+							else if(verb == 'NUKE')	{
+								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been removed from your store'));
+								}
+							else if(verb == 'RENAME')	{
+								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been assigned a new pid and added to your product task list.'));
+								}
+							else	{} //non-supported verb error would already have been displayed by now.
+							}
+						
+						
+						} // end callback.
+					
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					app.model.dispatchThis('immutable');
+					
+					}
+
+		
+
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.handlePIDCloneChangeRemoveExec, either unable to ascertain pid ['+pid+'] or data-verb ['+$ele.data('verb')+'] not set on element.','gMessage':true});
 					}
 				},
 

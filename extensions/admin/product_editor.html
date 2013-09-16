@@ -1278,38 +1278,39 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 <div id='productDebuggerTemplate'>
-
+	<div class='appMessaging'></div>
 	<section class='clearfix marginBottom'>
-		<div class='floatLeft marginRight marginBottom'>
-			<h3>Change PID</h3>
+		
+		<fieldset class='floatRight marginLeft marginBottom labelsAsBreaks'>
+			<legend>Clone/Copy Product</legend>
 			<label>
 				<span>New PID</span>
-				<input type="textbox" name="RENAME_PID" maxlength="20" />
-				<button>Rename</button>
-			</label>
-		</div>
-		
-		<div class='floatLeft marginRight marginBottom'>
-			<h3>Delete Product</h3>
-			<label>
-				<input type="checkbox" name="delimages"> Delete Images
-			</label>
-			<button>Delete</button><!-- open confirm prompt before executing delete -->
-		</div>
-		
-		<div class='floatLeft marginRight marginBottom'>
-			<h3>Clone/Copy Product</h3>
-			<label>
-				<span>New PID</span>
-				<input type='text' maxlength="20" name='CLONE_PID' />
+				<input type='text' maxlength="20" name='NEWIDD' />
 			</label>
 			<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
 			<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
 			<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
-			<button>Clone</button>
-		</div>
+			<button data-verb='CLONE' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Clone Product</button>
+		</fieldset>
+
+		<fieldset class='marginRight marginBottom labelsAsBreaks'>
+			<legend>Change PID</legend>
+			<label>
+				<span>New PID</span>
+				<input type="textbox" name="NEWID" maxlength="20" />
+			</label>
+			<button  data-verb='RENAME' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Rename Product</button>
+		</fieldset>
+		
+		<fieldset class='marginRight marginBottom labelsAsBreaks'>
+			<legend>Delete Product</legend>
+			<label>
+				<input type="checkbox" name="IMAGES"> Delete Images
+			</label>
+			<button data-verb='NUKE' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Delete Product</button><!-- open confirm prompt before executing delete -->
+		</fieldset>
 	</section>
-	
+	<!--
 	<section>
 	<label>
 		<span>Debug report</span>
@@ -1326,7 +1327,8 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 		</select>
 	</label>
 	<button>View Report</button>
-	</section>	
+	</section>
+	-->
 	
 
 </div>
