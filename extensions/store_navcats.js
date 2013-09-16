@@ -421,7 +421,8 @@ templateID - the template id used (from app.templates)
 						for(var i = 0; i < L; i += 1)	{
 							if(data.value[i].pretty[0] != '!')	{
 								var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
-								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':parentID,'catsafeid':data.value[i].id}));
+// ** 201336+ appNavcatDetail id param changed to path -mc
+								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':parentID,'catsafeid':data.value[i].path}));
 								numRequests += app.ext.store_navcats.calls[call].init(data.value[i].id,{'parentID':parentID,'callback':'translateTemplate'});
 								}
 							}
