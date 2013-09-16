@@ -132,8 +132,6 @@ var admin_prodEdit = function() {
 					}
 				}, //handlePMSearchResults
 	
-// !!! this needs to support a template being passed in w/ a destination for where flex gets added. maybe a data-bind w/ a flex renderformat?.
-//or maybe, for now, a specific template is used and force the content into a fieldset.
 			flex2HTMLEditor : {
 				onSuccess : function(_rtag)	{
 //					app.u.dump("BEGIN admin_prodEdit.callbacks.flex2HTMLEditor");
@@ -196,6 +194,10 @@ app.u.handleButtons(_rtag.jqObj);
 if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminConfigDetail|flexedit']['%flexedit']))	{
 	$("[data-anytabs-tab='attributes']",_rtag.jqObj).show();
 	}	
+
+if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
+	$("[name='zoovy:inv_enable']",_rtag.jqObj).prop('checked','checked');
+	}
 					}
 				} //handleProductEditor
 			}, //callbacks
@@ -258,6 +260,7 @@ if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminCon
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductDetail',
 						'variations':1,
+						'inventory' : 1,
 						'skus':1,
 						'pid' : pid,
 						'_tag':{
@@ -299,6 +302,23 @@ if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminCon
 				app.u.handleButtons($modal);
 				$modal.dialog('open');
 				}, //showCreateProductDialog
+	
+			
+			showProductDebugger : function($target,P)	{
+				P = P || {};
+				if($target instanceof jQuery && P.pid)	{
+					
+//$target.showLoading({"message":"Fetching product debug info"});
+$target.anycontent({'templateID':'productDebuggerTemplate','showLoading':false}); //
+					
+					}
+				else if($target instanceof jQuery)	{
+					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, no pid passed in P.","gMessage":true});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductDebugger, $target is not a valid instance of jquery.",'gMessage':true})
+					}
+				},
 	
 	
 			showStoreVariationsManager : function($target)	{
@@ -1394,6 +1414,49 @@ if($editedInputs.length)	{
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}, //attributes
 
+//INVENTORY?SKU=XXXXX&unlimited, which is a checkbox at the product level.
+			inventory : function($form)	{
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'@updates' : new Array(),
+					_tag : {
+						callback : 'showMessaging',
+						message : '', //set to blank. based on what actions occur, message is appended to.
+						restoreInputsFromTrackingState : true,
+						jqObj : $form
+						}
+					}
+
+
+				if($("[name='zoovy:inv_enable']",$form).hasClass('edited'))	{
+					cmdObj['@updates'].push("INVENTORY?UNLIMITED="+($("[name='zoovy:inv_enable']",$form).is(':checked') ? 1 : 0));
+					cmdObj._tag.message += "Changed unlimited inventory setting.<br>";
+					}
+				
+// loop through all the inventory rows and check to see if any have been edited.
+// this seemed a better approach than using .edited because loc, is/was all need to be set and this way we don't need to check if an update was already logged.
+				var records = 0;
+				$("[data-app-role='inventoryTbody'] tr",$form).each(function(){
+					var $tr = $(this);
+					//if any input for the record has been updated, update qty and loc.
+					if($('.edited',$tr).length){
+						records ++;
+						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']").val()+"&LOC="+$("input[name='loc']").val());
+						}
+					});
+				
+				if(records)	{
+					cmdObj._tag.message += "Updated "+records+" inventory records.";
+					}
+
+
+
+app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				}, //inventory
+
 			navigation : function($form)	{
 				if($('.edited',$form).length)	{
 					var pid = $("input[name='pid']",$form).val();
@@ -1927,6 +1990,21 @@ else	{
 					}
 				}, //ebayCategoryChooserShow
 
+
+			showProductDebuggerInDialog : function($ele,p)	{
+				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
+				var pid = $ele.closest("form").find("input[name='pid']");
+				if(pid)	{
+					app.u.dump(" -> have pid. proceed.");
+					app.ext.admin_prodEdit.a.showProductDebugger(app.ext.admin.i.dialogCreate({
+						'title' : 'Debugger for '+pid,
+						'showLoading' : false
+						}).dialog('open'),{'pid':pid});
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductDebuggerInDialog, unable to ascertain PID.','gMessage':true});
+					}
+				},
 
 			adminProductMacroSaveAllTabsExec : function($ele,p)	{
 				var $PE = $ele.closest("[data-app-role='productEditorContainer']");

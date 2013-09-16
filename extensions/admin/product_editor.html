@@ -453,7 +453,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-event="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft'>Debug</button>
+			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft applyButton' data-app-click='admin_prodEdit|showProductDebuggerInDialog'>Debug</button>
 			
 			
 		</div>
@@ -644,9 +644,27 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<section data-anytab-content='inventory' class='clearfix'>
 	<form action='#' onSubmit='return false'>
-		Inventory will go here.
+	
+	<label>
+		<input type='checkbox' name='zoovy:inv_enable' />
+		Unlimited inventory
+	</label>
+	
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Location</th>
+		<th>QTY</th>
+	</tr>
+	</thead>
+	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:inventoryRowTemplate;' data-app-role='inventoryTbody'></tbody>
+	</table>
+		
+		
+		
 	<div class='buttonset alignRight'>
-		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="inventory">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /inventory tab content -->
@@ -1119,6 +1137,12 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 <table>
 
 
+<tr id='inventoryRowTemplate'>
+	<td data-bind="var: detail(sku); format:text;"></td>
+	<td><input type='text' name='loc' data-bind="var:product(loc); format:popVal;" size='20' /></td>
+	<td><input type='text' name='qty' data-bind="var:product(qty); format:popVal; hideZero:false;" size='5' /></td>
+</tr>
+
 
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
@@ -1253,80 +1277,62 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-<div id='productEditorPanelTemplate_diagnostics'>
-	<div class='floatLeft marginRight marginBottom'>
-		<h3>Change PID</h3>
-		<label>
-			<span>New PID</span>
-			<input type="textbox" name="RENAME_PID" maxlength="20" />
-			<button>Rename</button>
-		</label>
-	</div>
-	
-	<div class='floatLeft marginRight marginBottom'>
-		<h3>Delete Product</h3>
-		<label>
-			<input type="checkbox" name="delimages"> Delete Images
-		</label>
-		<button>Delete</button><!-- open confirm prompt before executing delete -->
-	</div>
-	
-	<div class='floatLeft marginRight marginBottom'>
-		<h3>Clone/Copy Product</h3>
-		<label>
-			<span>New PID</span>
-			<input type='text' maxlength="20" name='CLONE_PID' />
-		</label>
-		<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
-		<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
-		<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
-		<button>Clone</button>
-	</div>
-	
-	
-	<div class='floatLeft marginRight marginBottom'>
-		<h3>Utilities</h3>
-		<button>Debug</button>
-	
-		<hr>
+<div id='productDebuggerTemplate'>
+
+	<section class='clearfix marginBottom'>
+		<div class='floatLeft marginRight marginBottom'>
+			<h3>Change PID</h3>
+			<label>
+				<span>New PID</span>
+				<input type="textbox" name="RENAME_PID" maxlength="20" />
+				<button>Rename</button>
+			</label>
+		</div>
 		
-		<h4>Buy Me Button</h4>
-		Creates an "Add to Cart HTML button" that can be placed on any webpage. <br>
-		<h5>Optional:</h5>
-		Price: $<input type="textbox" name="AMT" size="5"> <br>
-		Min Quantity: <input type="textbox" name="MIN" size="5"><br>
-		Max Quantity: <input type="textbox" name="MAX" size="5"><br>
-		Expires: <input type="textbox" name="EXP" size="6"> (YYYYMMDD)<br>
-		<button>Generate</button>
+		<div class='floatLeft marginRight marginBottom'>
+			<h3>Delete Product</h3>
+			<label>
+				<input type="checkbox" name="delimages"> Delete Images
+			</label>
+			<button>Delete</button><!-- open confirm prompt before executing delete -->
+		</div>
+		
+		<div class='floatLeft marginRight marginBottom'>
+			<h3>Clone/Copy Product</h3>
+			<label>
+				<span>New PID</span>
+				<input type='text' maxlength="20" name='CLONE_PID' />
+			</label>
+			<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
+			<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
+			<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
+			<button>Clone</button>
+		</div>
+	</section>
 	
+	<section>
+	<label>
+		<span>Debug report</span>
+		<select>
+			<option value=''>please choose</option>
+			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
+			<option value='@AMAZON_SKU_LIST'>Amazon SKU list</option>
+			<option value='@DIAGNOSTICS'>Diagnostics</option>
+			<option value='@INVENTORY'>Inventory</option>
+			<option value='@INVENTORY_LOG'>Inventory log</option>
+			<option value='@INVENTORY_OTHER'>Inventory (other)</option>
+			<option value='@NAVCATS'>Navcats</option>
+			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
+		</select>
+	</label>
+	<button>View Report</button>
+	</section>	
 	
-	</div>
 
 </div>
 
 
 
-
-
-
-
-
-
-
-<div id='productEditorPanelTemplate_flexedit' >
-	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	</div>
-</div>
-
-
-
-
-
-<div id='productEditorPanelTemplate_ebay' class='labelsAsBreaks' >
-
-
-</div>
 
 
 
