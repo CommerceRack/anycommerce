@@ -1252,26 +1252,37 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				p = p || {};
 				var newEventType = app.u.normalizeEventType(p.type);
 				app.u.dump(" ----> handle eventExecution ["+newEventType+"]");
-				if($target && $target instanceof jQuery && newEventType && $target.data('app-'+newEventType))	{
-					var
-						actionExtension = $target.data('app-'+newEventType).split('|')[0],
-						actionFunction =  $target.data('app-'+newEventType).split('|')[1];
-	
-					if(actionExtension && actionFunction)	{
-						if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
-				//execute the app event.
-							app.ext[actionExtension].e[actionFunction]($target,p);
+
+				if($target && $target instanceof jQuery && newEventType)	{
+					
+					if($target.data('app-'+newEventType))	{}
+					else	($target = $target.closest("[data-app-"+newEventType+"]")); //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
+					
+					if($target.data('app-'+newEventType))	{
+						var
+							actionExtension = $target.data('app-'+newEventType).split('|')[0],
+							actionFunction =  $target.data('app-'+newEventType).split('|')[1];
+		
+						if(actionExtension && actionFunction)	{
+							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+					//execute the app event.
+								app.ext[actionExtension].e[actionFunction]($target,p);
+								}
+							else	{
+								$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+								}
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-							}
+							$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true});
+							}						
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true})
+						$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target doesn't have data-app-["+newEventType+"] set["+$target.data('app-'+newEventType)+"].",'gMessage':true})
+						//
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or doesn't have data-app-["+newEventType+"] set["+$target.data('app-'+newEventType)+"] or p.type ["+newEventType+"] is not set.",'gMessage':true})
+					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+newEventType+"] is not set.",'gMessage':true})
 					}
 				},
 
