@@ -1917,9 +1917,9 @@ app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
 							}
 						}
 
-// * 201336 -> make sure a number input is a number.
+// * 201336 -> make sure a number input has a numerical value.
 					else if($input.attr('type') == 'number' && $input.val())	{
-						if (Number($input.val())) {}
+						if (!isNaN($input.val())) {}
 						else	{
 							r = false;
 							$input.addClass('ui-state-error');
