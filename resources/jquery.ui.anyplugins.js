@@ -1096,9 +1096,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 			settingsMenu : {}
 			},
 		_init : function(){
-			var self = this,
-			o = self.options, //shortcut
-			$t = self.element;
+			var
+				self = this,
+				o = self.options, //shortcut
+				$t = self.element;
 			
 //			app.u.dump("BEGIN anypanel._init");
 //			app.u.dump(" -> options: "); app.u.dump(o);
@@ -1165,8 +1166,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 				}
 			},
 		_anyContent : function()	{
-			o = this.options;
-			var $content;
+			var 
+				o = this.options,
+				$content;
+
 			if(o.content)	{
 				$content = o.content;
 				}
@@ -1210,12 +1213,12 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 
 		_handleButtons : function($header)	{
-			var	self = this,
-			$t = self.element,
-			o = this.options,
-			buttonStyles = {'float':'right','width':'20px','height':'20px','padding':0,'margin':'2px'}; //classes applied to each of the buttons.
-			
-			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent()); 
+			var
+				self = this,
+				$t = self.element,
+				o = this.options,
+				buttonStyles = {'float':'right','width':'20px','height':'20px','padding':0,'margin':'2px'}, //classes applied to each of the buttons.
+				$buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent()); 
 
 //button to 'close' (removes from dom) the panel.			
 			if(o.showClose)	{
