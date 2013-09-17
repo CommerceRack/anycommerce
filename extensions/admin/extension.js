@@ -2812,7 +2812,10 @@ else	{
 
 			showDownloads : function($target)	{
 				$target.anycontent({'templateID':'downloadsPageTemplate','showLoading':false});
-				$('section',$target).anypanel();
+				$('section',$target).anypanel({
+					showClose:false,
+					wholeHeaderToggle:false
+					});
 				app.u.handleEventDelegation($target);
 				app.ext.admin.u.applyEditTrackingToInputs($target);
 				app.u.handleCommonPlugins($target);
