@@ -908,6 +908,10 @@ for(var i = 0; i < L; i += 1)	{
 					var L = prodData['@skus'].length;
 	//				app.u.dump(" -> data.id: "+data.id);
 					for(var i = 0; i < L; i += 1)	{
+//for cases where there are no inventory-able variations present.
+						if(data.value[i] && data.value[i].sku && data.value[i].sku.indexOf(':') < 0)	{
+							data.value[i]['%attribs'] = (app.data['adminProductDetail|'+data.value[i].sku]) ? app.data['adminProductDetail|'+data.value[i].sku]['%attribs'] : {};
+							}
 						$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
 						}
 					}
