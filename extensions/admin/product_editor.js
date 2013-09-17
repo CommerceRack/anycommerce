@@ -559,7 +559,7 @@ app.u.handleEventDelegation($target);
 
 var L = data.value.length;
 for(var i = 0; i < L; i += 1)	{
-	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-ebay-macro':data.value[i].cmd}).appendTo($tag);
+	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
 	}
 				},
 
