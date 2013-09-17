@@ -656,8 +656,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<thead>
 	<tr>
 		<th>SKU</th>
+		<th>Name</th>
 		<th>Location</th>
 		<th>QTY</th>
+		<th>Description</th>
 	</tr>
 	</thead>
 	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:inventoryRowTemplate;' data-app-role='inventoryTbody'></tbody>
@@ -769,7 +771,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<fieldset class='labelsAsBreaks' data-app-role='amazonAttributes'>
 	<label>
-		<input type="checkbox" name="amz" data-bind="var: product(amz); format:popVal;" class='applyAnycb' /> Allow syndication to Amazon
+		<input type="checkbox" name="amz:ts" data-bind="var: product(amz:ts); format:popVal;" class='applyAnycb' /> Allow syndication to Amazon
 	</label>
 	
 	<label>
@@ -988,7 +990,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				
 				<label class='threeColumn floatLeft' data-app-role='ebayStoreCategoryContainer'>
 					<span>eBay Store Category</span>
-					<select name="ebay:storecat" data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
+					<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 				</label>
 		</fieldset>
 	
@@ -1142,8 +1144,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 <tr id='inventoryRowTemplate'>
 	<td data-bind="var: detail(sku); format:text;"></td>
+	<td data-bind="var: product(zoovy:sku_pogdesc); format:text;"></td>
 	<td><input type='text' name='loc' data-bind="var:product(loc); format:popVal;" size='20' /></td>
 	<td><input type='text' name='qty' data-bind="var:product(qty); format:popVal; hideZero:false;" size='5' /></td>
+	<td data-bind="var: product(zoovy:sku_pogdetail); format:text;"></td>
 </tr>
 
 

@@ -1736,8 +1736,15 @@ if($editedInputs.length)	{
 						'_cmd':'adminEBAYStoreCategoryList',
 						'_tag':	{
 							'datapointer' : 'adminEBAYStoreCategoryList',
-							'callback' : 'anycontent',
-							'jqObj' : $("[data-app-role='ebayStoreCategoryContainer']",$PE)
+							'callback' : function(rd){
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	//success content goes here.
+	$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("input[name='ebay:storecat']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
+	}
+								}
 							}
 						},'mutable');
 //product specific marketplace details.
