@@ -43,6 +43,83 @@ var admin_batchJob = function() {
 				}
 			},
 		
+		showReport : {
+			onSuccess : function(_rtag){
+				if(_rtag.jqObj && _rtag.jqObj instanceof jQuery)	{
+
+
+
+var 
+	L = app.data[_rtag.datapointer]['@HEAD'].length,
+	reportElementID = 'batchReport_'+app.data[_rtag.datapointer].guid
+	tableHeads = new Array();
+
+if(app.data[_rtag.datapointer]['@BODY'] && app.data[_rtag.datapointer]['@BODY'].length)	{
+//google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
+//								app.u.dump(" -> app.data[_rtag.datapointer]['@BODY'][0].length: "+app.data[_rtag.datapointer]['@BODY'][0].length);
+//								app.u.dump(" -> app.data[_rtag.datapointer]['@HEAD'][0].length: "+app.data[_rtag.datapointer]['@HEAD'][0].length);
+	if(app.data[_rtag.datapointer]['@BODY'][0].length == app.data[_rtag.datapointer]['@HEAD'].length)	{
+//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
+		for(var i = 0; i < L; i += 1)	{
+			tableHeads.push(app.data[_rtag.datapointer]['@HEAD'][i].name);
+			}
+
+		var $expBtn = $("<button \/>").text('Export to CSV').button().addClass('floatRight').on('click',function(){
+//										$('.google-visualization-table-table').toCSV();  //exports just the page in focus.
+			var L = app.data[_rtag.datapointer]['@BODY'].length;
+			//first row of CSV is the headers.
+			var csv = $.map(app.data[_rtag.datapointer]['@HEAD'],function(val){
+					return '"'+val.name+'"';
+					})
+
+			for(var i = 0; i < L; i += 1)	{
+				csv += "\n"+$.map(app.data[_rtag.datapointer]['@BODY'][i],function(val){
+//												return '"'+((val == null) ? '' : escape(val))+'"';
+					return '"'+((val == null) ? '' : val.replace(/"/g,'""'))+'"'; //don't return 'null' into report.
+					})
+				}
+			
+			app.ext.admin.u.fileDownloadInModal({
+				'skipDecode':true,
+				'filename':app.data[_rtag.datapointer].title+'.csv',
+				'mime_type':'text/csv',
+				'body':csv});
+			}).appendTo(_rtag.jqObj);
+
+
+		_rtag.jqObj.append("<h1>"+(app.data[_rtag.datapointer].title || "")+"<\/h1>");
+		_rtag.jqObj.append("<h2>"+(app.data[_rtag.datapointer].subtitle || "")+"<\/h2>");
+		_rtag.jqObj.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
+		_rtag.jqObj.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+		
+
+		app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[_rtag.datapointer]['@BODY']);
+		app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+		
+		}
+	else	{
+		var errorDetails = "";
+		_rtag.jqObj.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This is likely due to an old report being opened in the new report interface. <b>Please re-run the report and open the new copy.</b>  If the error persist, please report to support with batch ID.','persistent':true});
+		}
+	
+	
+	}
+else	{
+	_rtag.jqObj.anymessage({'message':'There are no rows/data in this report.','persistent':true});
+	}
+
+_rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
+
+
+
+
+					}
+				else	{
+					// throw warning here.
+					}
+				}
+			},
+		
 		showBatchJobStatus : {
 			onSuccess : function(tagObj){
 				if(tagObj.parentID)	{
@@ -132,76 +209,7 @@ app.model.dispatchThis('mutable');
 					$target.empty();
 					$target.showLoading({'message':'Generating Report'}); //run after the empty or the loading gfx gets removed.
 //					app.u.dump(" -> $target and vars.guid are set.");
-					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':function(rd)	{
-						if(app.model.responseHasErrors(rd)){
-							$target.hideLoading();
-							$target.anymessage({'message':rd});
-							}
-						else	{
-							var L = app.data[rd.datapointer]['@HEAD'].length,
-							reportElementID = 'batchReport_'+vars.guid
-							tableHeads = new Array();
-							
-							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
-//google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
-//								app.u.dump(" -> app.data[rd.datapointer]['@BODY'][0].length: "+app.data[rd.datapointer]['@BODY'][0].length);
-//								app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datapointer]['@HEAD'][0].length);
-								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'].length)	{
-//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
-									for(var i = 0; i < L; i += 1)	{
-										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
-										}
-
-									var $expBtn = $("<button \/>").text('Export to CSV').button().addClass('floatRight').on('click',function(){
-//										$('.google-visualization-table-table').toCSV();  //exports just the page in focus.
-										var L = app.data[rd.datapointer]['@BODY'].length;
-										//first row of CSV is the headers.
-										var csv = $.map(app.data[rd.datapointer]['@HEAD'],function(val){
-												return '"'+val.name+'"';
-												})
-
-										for(var i = 0; i < L; i += 1)	{
-											csv += "\n"+$.map(app.data[rd.datapointer]['@BODY'][i],function(val){
-//												return '"'+((val == null) ? '' : escape(val))+'"';
-												return '"'+((val == null) ? '' : val.replace(/"/g,'""'))+'"'; //don't return 'null' into report.
-												})
-											}
-										
-										app.ext.admin.u.fileDownloadInModal({
-											'skipDecode':true,
-											'filename':app.data[rd.datapointer].title+'.csv',
-											'mime_type':'text/csv',
-											'body':csv});
-										}).appendTo($target);
-
-
-									$target.append("<h1>"+app.data[rd.datapointer].title || ""+"<\/h1>");
-									$target.append("<h2>"+app.data[rd.datapointer].subtitle || ""+"<\/h2>");
-									$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
-									$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
-									
-
-									app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
-									app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
-									
-									}
-								else	{
-									var errorDetails = "";
-									for(index in vars)	{
-										errorDetails += "<br>"+index+": "+vars[index];
-										}
-									$target.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This is likely due to an old report being opened in the new report interface. <b>Please re-run the report and open the new copy.</b>  If the error persist, please report to support with the following error details:'+errorDetails,'persistent':true});
-									}
-								
-								
-								}
-							else	{
-								$target.anymessage({'message':'There are no rows/data in this report.','persistent':true});
-								}
-							
-							$target.hideLoading(); //this is after drawTable, which may take a moment.
-							}
-						}},'mutable'); app.model.dispatchThis('mutable');
+					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':'showReport','jqObj':$target,'extension':'admin_batchJob'},'mutable'); app.model.dispatchThis('mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else	{
