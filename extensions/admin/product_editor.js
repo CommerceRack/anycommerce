@@ -1720,7 +1720,39 @@ if($editedInputs.length)	{
 	
 					}
 				},
-			
+
+
+			handleInventoryTabContent : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid'),
+					$tbody = $("[data-app-role='inventoryTbody']",$PE);
+				if(pid && $tbody.length)	{
+					$tbody.showLoading({"message":"Fetching inventory record for product "+pid});
+					app.model.addDispatchToQ({
+						"_cmd":"adminProductInventoryDetail",
+						"pid":pid,
+						"_tag": {
+							"datapointer" : "adminProductInventoryDetail|"+pid,
+							"callback" : function(rd){
+$tbody.hideLoading();
+if(app.model.responseHasErrors(rd)){
+	$tbody.closest('form').anymessage({'message':rd});
+	}
+else	{
+	//success content goes here.
+	//is the index of %skus in inventoryDetail and the index of @skus in adminProductDetail guaranteed to match?
+	}
+								}
+							}
+						},"mutable");
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.handleAttributesTabContent, either pid ["+pid+"] not set or $content ["+$content.length+"] has no length.","gMessage":true});
+					}
+				},
+
 			handleEbayTabContent : function($ele,p)	{
 				
 				var
@@ -1806,6 +1838,7 @@ else	{
 
 	//interpret the marketplace status table.
 	$mktStatusTbody.anycontent({'datapointer':rd.datapointer});
+	app.u.handleButtons($mktStatusTbody);
 	}
 								}
 							}
@@ -1881,7 +1914,8 @@ else	{
 								$D.anymessage({'message':rd});
 								}
 							else	{
-							$D.anymessage({'message':app.data[rd.datapointer],'persistent':true}); //will be @MSGS array.
+								$D.anymessage({'message':app.data[rd.datapointer],'persistent':true}); //will be @MSGS array.
+								$D.dialog('option','height',($('body').height() > 550 ? 500 : ($('body').height() - 50)));
 								}
 							}
 						}
@@ -1959,7 +1993,7 @@ else	{
 									}
 								else	{
 									//clear existing messaging and display.
-									if(!rd._msg_1_txt && $.isEmptyObject(rd['@MSGS']))	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
+									if(!rd._msg_1_txt && !rd['@MSGS'].length)	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
 									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
 									}
 								}

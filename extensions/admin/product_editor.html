@@ -1,7 +1,5 @@
 
 
-
-
 <div id='productManagerLandingContentTemplate' class='ui-widget' data-app-role='productManager'>
 
 	<!-- do not change this ID. used a lot -->
@@ -278,7 +276,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
 		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
 		<li class='displayNone'><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
-		<li><a href='#inventory' data-app-role='skuTab'>Inventory</a></li>
+		<li><a href='#inventory' data-app-role='inventoryTab' data-app-click="admin_prodEdit|handleInventoryTabContent" >Inventory</a></li>
 		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
 		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
 <!--		<li><a href='#ci' data-app-role='ciTab'>CI</a></li> -->
@@ -648,23 +646,23 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<form action='#' onSubmit='return false'>
 	
 	<label>
-		<input type='checkbox' name='zoovy:inv_enable' />
-		Unlimited inventory
+		<input type='checkbox' name='zoovy:inv_enable' data-bind="var:product(zoovy:inv_enable); format:popVal;" />
+		Allow overselling !!!
 	</label>
 	
-	<table class='gridTable'>
+	<table class='gridTable fullWidth applyAnytable'>
 	<thead>
 	<tr>
 		<th>SKU</th>
 		<th>Name</th>
-		<th>Location</th>
+		<th data-anytable-nosort='true'>Locations</th>
 		<th>QTY</th>
 		<th>Description</th>
 	</tr>
 	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:inventoryRowTemplate;' data-app-role='inventoryTbody'></tbody>
+	<tbody data-app-role='inventoryTbody'></tbody><!-- inventory contents must not get rendered w/ the rest of the product. the template is loaded into this container IF the tab is clicked -->
 	</table>
-		
+
 		
 		
 	<div class='buttonset alignRight'>
@@ -923,9 +921,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
 		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?QUEUE">Queue Now</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?QUEUE-LATER">Queue Later</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON?REMOVE">Remove</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE">Queue Now</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER">Queue Later</button>
+		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE">Remove</button>
 	</div>
 	</fieldset>
 
@@ -1088,7 +1086,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			</label>
 	
 			<div class='buttonset'>
-			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION">Test Syndication</button>
+			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
 			</div>
 			<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
 		</fieldset>
@@ -1187,7 +1185,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
 	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
-	<td><button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add 2 Q</button></td>
+	<td><button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button></td>
 </tr>
 
 
