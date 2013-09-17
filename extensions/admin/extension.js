@@ -1777,6 +1777,7 @@ if giftcard is on there, no paypal will appear.
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 $('title').append(" - release: "+app.vars.release).prepend(document.domain+' - ');
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
+app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/downloads.html',['downloadsPageTemplate']);
 
 
 //SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
@@ -2809,7 +2810,14 @@ else	{
 
 
 
-
+			showDownloads : function($target)	{
+				$target.anycontent({'templateID':'downloadsPageTemplate','showLoading':false});
+				$('section',$target).anypanel();
+				app.u.handleEventDelegation($target);
+				app.ext.admin.u.applyEditTrackingToInputs($target);
+				app.u.handleCommonPlugins($target);
+				app.u.handleButtons($target);
+				},
 
 
 			showSitesTab : function($target)	{
@@ -3912,13 +3920,13 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!help')	{
-					$('#supportContent').empty(); //here just for testing. won't need at deployment.
+					$('#supportContent').empty();
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
 					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
 					}
 				else if(path == '#!support')	{
-					$('#supportContent').empty(); //here just for testing. won't need at deployment.
+					$('#supportContent').empty();
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
 					app.ext.admin_support.a.showTicketManager($('#supportContent'));
@@ -3928,7 +3936,12 @@ and all .someClass are hidden (value of data-panel-selector)
 				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 
-
+				else if(path == '#!downloads')	{
+					$('#homeContent').empty();
+					this.bringTabIntoFocus('home');
+					this.bringTabContentIntoFocus($('#homeContent'));
+					app.ext.admin.a.showDownloads($('#homeContent'));
+					}
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}

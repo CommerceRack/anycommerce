@@ -535,6 +535,18 @@ var admin_support = function() {
 					});
 				}, //showFileAttachmentModal
 
+//uses new delegated events model.
+			showHelpDocInDialog : function($ele,p)	{
+				var docID = $ele.data('docid');
+				if(docID)	{
+					app.ext.admin_support.a.showHelpDocInDialog(docID);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetailInDialog, unable to determine docID.','gMessage':true});
+					}
+				},
+
+
 //used on a button in the search interface. allows merchant to open the doc in a dialog, for portability.
 //button should be hidden when webdoc itself opened in dialog.
 			showHelpDetailInDialog : function($ele)	{
