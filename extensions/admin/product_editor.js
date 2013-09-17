@@ -1747,7 +1747,7 @@ if($editedInputs.length)	{
 						'_tag':	{
 							'datapointer':'adminProductEBAYDetail|'+pid,
 							'callback' : 'anycontent',
-							'jqObj' : $("[data-app-role='ebayStatusDetails']",$PE)
+							'jqObj' : $("[data-app-role='ebayStatusDetails']",$PE).empty() //clear any rows. important if you've moved away and back to tab.
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');

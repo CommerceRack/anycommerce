@@ -1095,10 +1095,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<fieldset>
 			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->
 			<div data-app-role='ebayStatusDetails'>
-			<table class='fullWidth gridTable'>
+			<table class='fullWidth gridTable applyAnytable'>
 			<thead>
 			<tr>
 				<th>SKU</th>
+				<th>eBay Item #</th>
 				<th>Is GTC</th>
 				<th>Class</th>
 				<th>Category</th>
@@ -1149,6 +1150,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
 	<td data-bind="var: detail(PRODUCT); format:text;"></td>
+	<td data-bind="var: detail(EBAY_ID); format:text;"></td>
 	<td data-bind="var: detail(IS_GTC); format:text;"></td>
 	<td data-bind="var: detail(CLASS); format:text;"></td>
 	<td data-bind="var: detail(CATEGORY); format:text;"></td>
