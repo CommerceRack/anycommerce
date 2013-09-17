@@ -178,8 +178,10 @@ var admin_support = function() {
 						$target.showLoading({'message':'Fetching help documentation...'});
 
 						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':function(rd){
+							app.u.dump(" -> RD: "); app.u.dump(rd);
+							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
+								$target.anymessage({'message':rd});
 								}
 							else	{
 								$target.anycontent({'templateID':'helpDocumentTemplate','datapointer':rd.datapointer});

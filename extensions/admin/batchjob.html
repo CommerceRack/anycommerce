@@ -11,6 +11,8 @@
 	<div>
 		<span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span>
 		<span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span>
+		<div data-bind="var: batchjob(records_warn); format:text; pretext:Warnings: ; hideZero:false;"></div>
+		<div data-bind="var: batchjob(records_error); format:text; pretext:Errors: ; hideZero:false;"></div>
 	</div>
 
 	<p class='marginBottom' data-bind="var: batchjob(status_msg); format:text;"></p>
