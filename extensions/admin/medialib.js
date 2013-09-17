@@ -508,7 +508,8 @@ setTimeout(function(){
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
 							'alt':fileInfo.Name,
 							'data-filename':newFilename
-							});
+							}).parent().addClass('edited'); //parent (usually an li) gets the edited class. if u need to change this, update product editor.
+						app.ext.admin.u.handleSaveButtonByEditedClass($image.closest('form'));
 						}
 //update form element
 					if(mediaData.eleSelector){
