@@ -642,6 +642,7 @@ for(var i = 0; i < L; i += 1)	{
 				
 			
 				$('.filterList',$filterMenu).selectable();
+				$('.filterList li',$filterMenu).addClass('pointer');
 				$( ".sliderRange" ).slider({
 					range: true,
 					min: 0,
@@ -1921,43 +1922,47 @@ else	{
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');
 
-				if($ele.is('button'))	{
-					if($ele.hasClass('ui-button'))	{
-						$ele.button('disable');
-						$ele.data('original-icon',$ele.button( "option", "icons" ));
-						$ele.button( "option", "icons", { primary: "wait", secondary: "" } ); //add or update icon to 'wait', which is a small loading graphic.
-						}
-					else	{$ele.prop('disabled','disabled');}
-					}
+				if($ele.data('macro-cmd') && pid)	{
 
-				app.model.addDispatchToQ({
-					'_cmd' : 'adminProductMacro',
-					'pid' : pid,
-					'@updates' : [$ele.data('ebay-macro')], //used for sku images
-					'_tag' : {
-						'callback' : function(rd)	{
-$ele.button( "option", "icons", $ele.data('original-icon') );
-	if($ele.is('button'))	{
-		if($ele.hasClass('ui-button'))	{
-			$ele.button('enable');
-			$ele.button( "option", "icons", $ele.data('original-icon') ); //add or update icon to 'wait', which is a small loading graphic.
-			}
-		else	{$ele.prop('disabled','').removeProp('disabled');}
-		}
-if(app.model.responseHasErrors(rd)){
-	$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({'message':rd});
-	}
-else	{
-	//clear existing messaging and display.
-	if(!rd._msg_1_txt && $.isEmptyObject(rd['@MSGS']))	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
-	$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
-	}
+					if($ele.is('button'))	{
+						if($ele.hasClass('ui-button'))	{
+							$ele.button('disable');
+							$ele.data('original-icon',$ele.button( "option", "icons" ));
+							$ele.button( "option", "icons", { primary: "wait", secondary: "" } ); //add or update icon to 'wait', which is a small loading graphic.
 							}
+						else	{$ele.prop('disabled','disabled');}
 						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
 
-				
+					app.model.addDispatchToQ({
+						'_cmd' : 'adminProductMacro',
+						'pid' : pid,
+						'@updates' : [$ele.data('macro-cmd')], //used for sku images
+						'_tag' : {
+							'callback' : function(rd)	{
+								$ele.button( "option", "icons", $ele.data('original-icon') );
+									if($ele.is('button'))	{
+										if($ele.hasClass('ui-button'))	{
+											$ele.button('enable');
+											$ele.button( "option", "icons", $ele.data('original-icon') ); //add or update icon to 'wait', which is a small loading graphic.
+											}
+										else	{$ele.prop('disabled','').removeProp('disabled');}
+										}
+								if(app.model.responseHasErrors(rd)){
+									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//clear existing messaging and display.
+									if(!rd._msg_1_txt && $.isEmptyObject(rd['@MSGS']))	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
+									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroExec, either pid ["+pid+"] or data-macro-cmd ["+$ele.data('macro-cmd')+"] is not set and both are required.","gMessage":true});
+					}
 				},
 
 //The variations tab is hidden unless the item has variations. However, since variations can't be added except from within that tab, there needs to be a mechanism for showing the tab. this is it.
@@ -1975,15 +1980,20 @@ else	{
 				}, //productAttributeFinderShow
 
 			webPageEditor : function($ele,p)	{
-				var pid = $(this).closest("[data-pid]").data('pid');
-				if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
+				var pid = $ele.closest("[data-pid]").data('pid');
+				if(pid)	{navigateTo('/biz/vstore/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
 				else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
 				}, //webPageEditor
 
 			viewProductOnWebsite : function($ele,p)	{
-				var pid = $(this).closest("[data-pid]").data('pid');
-				if(pid)	{app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/")}
-				else	{$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});}
+				app.u.dump("BEGIN admin_prodEdit.e.viewProductOnWebsite");
+				var pid = $ele.closest("[data-pid]").data('pid');
+				if(pid)	{
+					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/");
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});
+					}
 				}, //viewProductOnWebsite
 
 			productSearchExec : function($ele,p)	{
@@ -2009,6 +2019,7 @@ else	{
 					$ele.closest('fieldset').anymessage({'message':'In admin_prodEdit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});
 					}
 				}, //ebayCategoryChooserShow
+
 
 //executed when the 'debug' button is pushed.
 			showProductDebuggerInDialog : function($ele,p)	{
@@ -2071,7 +2082,6 @@ else	{
 							if(verb == 'CLONE' || verb == 'RENAME')	{
 								app.ext.admin_prodEdit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
 								}
-
 
 							if(verb == 'CLONE')	{
 								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been cloned and the clone was added to your product task list'));

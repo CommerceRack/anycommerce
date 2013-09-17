@@ -4435,7 +4435,13 @@ and all .someClass are hidden (value of data-panel-selector)
 				}, //rewriteLink
 
 			linkOffSite : function(url){
-				window.open(url);
+				app.u.dump("BEGIN admin.u.linkOffSite to "+url);
+				if(url)	{
+					window.open(url);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.u.linkOffSite, no URL passed.","gMessage":true});
+					}
 				},
 
 //used when an element in the builder is saved.
