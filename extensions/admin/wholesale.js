@@ -300,8 +300,15 @@ app.model.dispatchThis('mutable');
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
-			'ZONE-CREATE-LOCATIONS' : function(sfo)	{
-				die()
+			'ZONE-CREATE' : function(sfo)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminWarehouseMacro',
+					'WAREHOUSE' : sfo.CODE,
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
 				},
 			'WAREHOUSE-UPDATE' : function(sfo)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
@@ -390,6 +397,27 @@ TRACKINGSET ->
 					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
 				}, //warehouseCreateShow
+
+			wholesaleZoneCreateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.wholesaleZoneCreateShow').on('click.wholesaleZoneCreateShow',function(event){
+					event.preventDefault();
+					var CODE = $btn.closest('form').find("input[name='CODE']").val();
+					if(CODE)	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Add a New Zone',
+							'templateID' : 'warehouseAddLocationTemplate',
+							'data' : {'WAREHOUSE_CODE':CODE},
+							appendTo : $btn.closest('.ui-anypanel-content'),
+							'showLoading' : false
+							});
+						$D.dialog('open');
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true})
+						}
+					});
+				},
 
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});

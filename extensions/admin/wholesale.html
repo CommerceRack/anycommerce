@@ -868,8 +868,9 @@
 
 </fieldset>
 
-<div class='buttonset alignRight'>
-	<button data-app-event="admin|processForm">Save</button>
+<div class='buttonset '>
+	<button data-app-event='admin_wholesale|wholesaleZoneCreateShow'>Add New Zone</button>
+	<button class='floatRight' data-app-event="admin|processForm">Save</button>
 </div>
 
 </form>
@@ -901,6 +902,85 @@
 
 
 </div>
+
+
+
+
+
+<div id='warehouseAddLocationTemplate'>
+
+<h1>Add a New Warehouse Location</h1>
+
+<form action='#' onSubmit='return false'>
+
+<input type='hidden' name='WAREHOUSE' value='' data-bind="var: warehouse(WAREHOUSE_CODE); format:popVal;" /><!-- required for adding a location -->
+
+<input type='hidden' name='_macrobuilder' value='ZONE-CREATE' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='The new location has been added.' />
+
+
+
+<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<label>
+		<span>Zone</span>
+		<input type='text' name='ZONE' value='' required='required' />
+	</label>
+	
+	<label>
+		<span>Zone type</span>
+		<select name='type' required='required' data-panel-selector=".warehouseZoneTypeInputs">
+			<option value=''>please choose</option>
+			<option value='standard' data-show-panel='warehouseZoneTypeStandard'>standard (row/shelf/bin)</option>
+			<option value='receiving'>receiving</option>
+		</select>
+	</label>
+
+<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option
+<div data-panel-id='warehouseZoneTypeStandard' class='displayNone warehouseZoneTypeInputs'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<td>Row</td>
+		<td>Shelf</td>
+		<td>Slot</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td><input type='number' name='ROW' value='' size='5' required='required' /></td>
+		<td><input type='text' name='BEGIN_SHELF' value='' size='5' required='required' /></td>
+		<td><input type='text' name='END_SHELF' value='' size='5' required='required' /></td>
+		<td><input type='text' name='BEGIN_SLOT' value='' size='20' required='required' /></td>
+		<td><input type='text' name='END_SLOT' value='' size='20' required='required' /></td>
+		<td><button>Delete Row</button></td>
+	</tr>
+	</tbody>
+	<tfoot>
+	<tr>
+		<td colspan='3'>
+		<button>Add New Row</button>
+		</td>
+	</tr>
+	</tfoot>
+	</table>
+</div>
+ -->
+	
+</fieldset>
+
+<div class='buttonset'>
+	<button data-app-event='admin|processForm'>Save Location</button>
+</div>
+
+</form>
+
+
+</div>
+
+
 
 
 
