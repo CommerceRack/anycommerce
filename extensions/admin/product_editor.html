@@ -655,7 +655,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<tr>
 		<th>SKU</th>
 		<th>Name</th>
-		<th data-anytable-nosort='true'>Locations</th>
+		<th data-anytable-nosort='true'>Details</th>
 		<th>QTY</th>
 		<th>Description</th>
 	</tr>
@@ -1132,6 +1132,25 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 
 
+<!--
+used in the inventory panel when 'show detail' is clicked for a specific sku
+OR when the inventory panel for a product WITHOUT inventory-able options shows up.
+-->
+<div id='inventoryDetailTemplate' class='clearfix' data-app-role='inventoryDetailContainer'>
+<table class='gridTable fullWidth marginTop marginBottom'>
+<thead>
+<tr>
+	<th></th>
+	<th>Origin</th>
+	<th>Qty</th>
+	<th>Base Type</th>
+	<th>Note</th>
+</tr>
+</thead>
+<tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
+</table>
+</div>
+
 
 
 
@@ -1143,15 +1162,21 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 <tr id='inventoryRowTemplate'>
 	<td data-bind="var: detail(sku); format:text;"></td>
 	<td data-bind="var: product(zoovy:sku_pogdesc); format:text;"></td>
-	<td class='alignRight'>
-		<button>show</button>
-		<button>add</button>
-		</td>
-	<td><input type='text' name='qty' data-bind="var:product(qty); format:popVal; hideZero:false;" size='5' /></td>
+	<td><span data-bind="var:detail(%SUMMARY.available); format:popVal; hideZero:false;"></span></td>
 	<td data-bind="var: product(zoovy:sku_pogdetail); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-click='admin_prodEdit|inventoryDetailsToggle' class='applyButton' data-icon-primary='ui-icon-circle-triangle-s' data-text='false'>Show</button>
+		<button>add</button>
+	</td>
 </tr>
 
-
+<tr id='inventoryDetailRowTemplate'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td data-bind="var: detail(ORIGIN); format:text;"></td>
+	<td data-bind="var: detail(QTY); format:text;"></td>
+	<td data-bind="var: detail(BASE_TYPE); format:text;"></td>
+	<td data-bind="var: detail(NOTE); format:text;"></td>
+</tr>
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
 	<td data-bind="var: detail(PRODUCT); format:text;"></td>

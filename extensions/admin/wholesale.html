@@ -868,16 +868,68 @@
 
 </fieldset>
 
+
+<fieldset class='hideForCreate'>
+	<table class='fullWidth gridTable'><!-- table will be sortable. do not anytableify this -->
+	<caption class='smallPadding ui-widget-header borderNone'>Standard Zones</caption>
+	<thead>
+	<tr>
+		<th></th>
+		<th>Code</th>
+		<th>Name</th>
+		<th>Row</th>
+		<th>Shelf Start</th>
+		<th>End</th>
+		<th>Slot Start</th>
+		<th>End</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: warehouse(@ZONES); format:processList; loadsTemplate:wholesaleZoneStandardRowTemplate; filter:ZONE_TYPE;filterby:STANDARD;">
+	</tbody>
+	<tfoot>
+	<tr>
+		<th colspan='9' class='alignRight'><button data-loadstemplate="wholesaleZoneStandardRowTemplate" data-app-event='admin_wholesale|wholesaleZoneAddRow'>Add Row</button></th>
+	</tr>
+	</tfoot>
+	</table>
+</fieldset>
+
+<fieldset class='hideForCreate'>
+	<table class='fullWidth gridTable'><!-- table will be sortable. do not anytableify this -->
+	<caption class='smallPadding ui-widget-header borderNone'>Receiving Zones</caption>
+	<thead>
+	<tr>
+		<th></th>
+		<th>Code</th>
+		<th>Name</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: warehouse(@ZONES); format:processList; loadsTemplate:wholesaleZoneReceivingRowTemplate; filter:ZONE_TYPE;filterby:RECEIVING;">
+	</tbody>
+	<tfoot>
+	<tr>
+		<th colspan='9' class='alignRight'><button data-loadstemplate="wholesaleZoneStandardRowTemplate" data-app-event='admin_wholesale|wholesaleZoneAddRow'>Add Row</button></th>
+	</tr>
+	</tfoot>
+	</table>
+</fieldset>
+
 <div class='buttonset '>
-	<button data-app-event='admin_wholesale|wholesaleZoneCreateShow'>Add New Zone</button>
+	<button data-app-event='admin_wholesale|wholesaleZoneCreateShow' class='hideForCreate'>Add New Zone</button><!-- hidden in 'create' mode -->
 	<button class='floatRight' data-app-event="admin|processForm">Save</button>
 </div>
 
 </form>
+</div>
+
+
 
 
 
 <table>
+<!-- used for list of warehouses -->
 <tr id='warehouseResultsRowTemplate'>
 	<td data-bind="var: warehouse(ID); format:text;"></td>
 	<td data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></td>
@@ -893,15 +945,27 @@
 	</td>
 </tr>
 
+<!-- used in warehouse detail for each 'standard' zone type -->
+<tr id='wholesaleZoneStandardRowTemplate'>
+	<td data-bind="var: location(ZONE_CODE); format:popVal;"></td>
+	<td><input type='text' name='ROW' value='' size='20' data-bind="var: location(ZONE_TITLE); format:popVal;" /></td>
+	<td><input type='number' name='ROW' value='' size='5' required='required' data-bind="var: location(ROW); format:popVal;" /></td>
+	<td><input type='text' name='BEGIN_SHELF' value='' size='5' required='required' data-bind="var: location(BEGIN_SHELF); format:popVal;" /></td>
+	<td><input type='text' name='END_SHELF' value='' size='5' required='required' data-bind="var: location(END_SHELF); format:popVal;" /></td>
+	<td><input type='text' name='BEGIN_SLOT' value='' size='5' required='required' data-bind="var: location(BEGIN_SLOT); format:popVal;" /></td>
+	<td><input type='text' name='END_SLOT' value='' size='5' required='required' data-bind="var: location(END_SLOT); format:popVal;" /></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Row</button></td>
+</tr>
 
-
-
-
+<!-- used in warehouse detail for each 'receiving' zone type -->
+<tr id='wholesaleZoneStandardRowTemplate'>
+	
+	<td data-bind="var: location(ZONE_CODE); format:popVal;"></td>
+	<td><input type='text' name='ROW' value='' size='20' data-bind="var: location(ZONE_TITLE); format:popVal;" /></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Row</button></td>
+</tr>
 </table>
 
-
-
-</div>
 
 
 
@@ -938,37 +1002,7 @@
 		</select>
 	</label>
 
-<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option
-<div data-panel-id='warehouseZoneTypeStandard' class='displayNone warehouseZoneTypeInputs'>
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<td>Row</td>
-		<td>Shelf</td>
-		<td>Slot</td>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td><input type='number' name='ROW' value='' size='5' required='required' /></td>
-		<td><input type='text' name='BEGIN_SHELF' value='' size='5' required='required' /></td>
-		<td><input type='text' name='END_SHELF' value='' size='5' required='required' /></td>
-		<td><input type='text' name='BEGIN_SLOT' value='' size='20' required='required' /></td>
-		<td><input type='text' name='END_SLOT' value='' size='20' required='required' /></td>
-		<td><button>Delete Row</button></td>
-	</tr>
-	</tbody>
-	<tfoot>
-	<tr>
-		<td colspan='3'>
-		<button>Add New Row</button>
-		</td>
-	</tr>
-	</tfoot>
-	</table>
-</div>
- -->
-	
+
 </fieldset>
 
 <div class='buttonset'>

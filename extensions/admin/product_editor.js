@@ -1736,21 +1736,30 @@ if($editedInputs.length)	{
 						"_tag": {
 							"datapointer" : "adminProductInventoryDetail|"+pid,
 							"callback" : function(rd){
-$tbody.hideLoading();
-if(app.model.responseHasErrors(rd)){
-	$tbody.closest('form').anymessage({'message':rd});
-	}
-else	{
-	var skus = app.data['adminProductDetail|'+pid]['@skus'];
-	var L = skus.length;
-	for(var i = 0; i < L; i += 1)	{
-		$tbody.anycontent({
-			"templateID":"inventoryRowTemplate",
-			dataAttribs : {'sku' : skus[i].sku}, //will apply these as data- to each row.
-			data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
-			}).find('button').data('sku',skus[i].sku);
-		}
-	}
+								$tbody.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$tbody.closest('form').anymessage({'message':rd});
+									}
+								else	{
+									//if an item has no inventory-able options, go straight to showing the detail.
+									if(app.data['adminProductDetail|'+pid]['@skus'].length == 1 && app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(":") < 0)	{
+										$tbody.closest('table').replaceWith(app.renderFunctions.createTemplateInstance('inventoryDetailTemplate'));
+										app.renderFunctions.translateSelector($tbody,{'@DETAIL':app.data[rd.datapointer]['%INVENTORY'][app.data['adminProductDetail|'+pid]['@skus'][0].sku]});
+										}
+									//if inventory-able options are present, a list of sku's is shown and the detail is available on click.
+									else	{
+										var skus = app.data['adminProductDetail|'+pid]['@skus'];
+										var L = skus.length;
+										for(var i = 0; i < L; i += 1)	{
+											$tbody.anycontent({
+												"templateID":"inventoryRowTemplate",
+												dataAttribs : {'sku' : skus[i].sku}, //will apply these as data- to each row.
+												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
+												}).find('button').data('sku',skus[i].sku);
+											}
+										}
+									}
+									app.u.handleButtons($tbody);
 								}
 							}
 						},"mutable");
@@ -1899,6 +1908,36 @@ else	{
 					}
 				},
 
+			
+			inventoryDetailsToggle : function($ele,p)	{
+				var $target = $ele.parent();
+				var sku = $ele.data('sku');
+				var pid = sku.split(':')[0];
+				var $icon = $ele.find('.ui-icon');
+				app.u.dump(" -> $icon.length: "+$icon.length);
+				if(sku)	{
+					//details are visible. close them and nuke the table.
+					if($icon.hasClass('ui-icon-circle-triangle-n'))	{
+						$icon.removeClass('ui-icon-circle-triangle-n').addClass('ui-icon-circle-triangle-s');
+						$("[data-app-role='inventoryDetailContainer']",$target).hide();
+						}
+					else	{
+						$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-n');
+						if($("[data-app-role='inventoryDetailContainer']",$target).length)	{
+							$("[data-app-role='inventoryDetailContainer']",$target).show();
+							}
+						else	{
+							$target.anycontent({
+								'templateID' : 'inventoryDetailTemplate',
+								'data' : {'@DETAIL':app.data['adminProductInventoryDetail|'+pid]['%INVENTORY'][sku]}
+								});
+							}
+						}
+					}
+				else	{
+					$target.anymessage({"message":"In admin_prodEdit.e.inventoryDetailsShow, data('pid') not set on trigger element.","gMessage":true});
+					}
+				},
 
 
 //executed on the 'validate' button. Gives a report of whether or not this product needs anything to be successfully syndicated.

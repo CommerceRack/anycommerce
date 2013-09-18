@@ -3295,6 +3295,14 @@ $tmp.empty().remove();
 			if(data.bindData.loadsTemplate && typeof data.value === 'object')	{
 				var $o, //recycled. what gets added to $tag for each iteration.
 				int = 0;
+				
+				var filter = data.bindData.filter;
+				var filterby = data.bindData.filterby;
+				if(!filterby)	{
+					if(filter)	{app.u.dump("In process list, a 'filter' was passed, but no filterby was specified, so the filter was ignored.\ndatabind: \n"+$tag.data('bind'),'warn');}
+					filter = undefined;
+					} //can't run a filter without a filterby. filter is keyed off of later.
+				
 //				app.u.dump(" -> data.value.length: "+data.value.length);
 				for(var i in data.value)	{
 // * 201336 -> mostly for use in admin. for processing the %sku object and subbing in the default attribs when there are no inventoryable variations.
@@ -3306,29 +3314,38 @@ $tmp.empty().remove();
 						}
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
 					else	{
+						//if no filter is declared, proceed. 
+						//This allows process list to only show matches
+						if(!filter || (filter && data.value[i][filter] == filterby))	{
 //if data.value was an associative array....
 // ** 201320 -> needed processList to support indexed arrays AND associative arrays.
 // ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
-						if(data.value[i] && typeof data.value[i] === 'object')	{
-
-							if(!data.value[i].index && isNaN(i)) {data.value[i].index = i} //add an 'index' field to the data. handy for hashes (like in flexedit) where the index is something useful to have in the display.
-							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
-							if($o instanceof jQuery)	{
-								if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
-								else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
-								$tag.append($o);
+							if(data.value[i] && typeof data.value[i] === 'object')	{
+	
+								if(!data.value[i].index && isNaN(i)) {data.value[i].index = i} //add an 'index' field to the data. handy for hashes (like in flexedit) where the index is something useful to have in the display.
+								$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
+								if($o instanceof jQuery)	{
+									if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
+									else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
+									$tag.append($o);
+									}
+								else	{
+									//well that's not good.
+									app.u.dump("$o:"); app.u.dump($o);
+									}
 								}
 							else	{
-								//well that's not good.
-								app.u.dump("$o:"); app.u.dump($o);
+								$o = app.renderFunctions.transmogrify({'value':data.value[i],'key':i},data.bindData.loadsTemplate,{'value':data.value[i],'key':i});
+								$tag.append($o);
+								$o.attr('data-obj_index',i);
+	//							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
 								}
+							
 							}
 						else	{
-							$o = app.renderFunctions.transmogrify({'value':data.value[i],'key':i},data.bindData.loadsTemplate,{'value':data.value[i],'key':i});
-							$tag.append($o);
-							$o.attr('data-obj_index',i);
-//							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
+							//value does not match filter.
 							}
+						
 						}
 					int += 1;				
 					}

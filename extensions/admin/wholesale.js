@@ -399,6 +399,7 @@ TRACKINGSET ->
 						'templateID':'warehouseAddUpdateTemplate',
 						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
+					$(".hideForCreate",$D).hide();
 					$D.dialog('open');
 //These fields are used for processForm on save.
 					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
@@ -421,7 +422,22 @@ TRACKINGSET ->
 						$D.dialog('open');
 						}
 					else	{
-						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true})
+						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
+						}
+					});
+				},
+
+			wholesaleZoneAddRow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.wholesaleZoneAddRow').on('click.wholesaleZoneAddRow',function(event){
+					event.preventDefault();
+					if($btn.data('loadstemplate'))	{
+						var $tr = app.renderFunctions.createTemplateInstance($btn.data('loadstemplate'));
+						$btn.closest('table').find('tbody:first').append($tr);
+						app.u.handleAppEvents($tr);
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneAddRow, no data-loadstemplate specified on trigger element.",'gMessage':true})
 						}
 					});
 				},
