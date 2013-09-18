@@ -1110,7 +1110,7 @@ $D.dialog('open');
 								}
 
 							$panel.attr({'data-domainname':domainname,'data-domain':domainname}); //### start using domainname instead of domain as much as possible. format in reponse changed.
-							app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':domainname,'_tag':{'datapointer':'adminDomainDiagnostics|'+domainname}},'mutable');
+							
 							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
 	
 							app.model.addDispatchToQ({
@@ -1118,7 +1118,7 @@ $D.dialog('open');
 								'DOMAINNAME':domainname,
 								'_tag':	{
 									'datapointer' : 'adminDomainDetail|'+domainname,
-									'extendByDatapointers' : ['adminDomainDiagnostics|'+domainname,'adminConfigDetail|prts'],
+									'extendByDatapointers' : ['adminConfigDetail|prts'],
 									'callback':function(rd){
 										if(app.model.responseHasErrors(rd)){
 											$panel.anymessage({'message':rd});
@@ -1934,7 +1934,21 @@ app.model.dispatchThis('immutable');
 					event.preventDefault();
 					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
 					})
+				},
+
+//delegated events
+
+			adminDomainDiagnosticsShow : function($ele,p)	{
+				if($ele.data('domainname'))	{
+					app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':$ele.data('domainname'),'_tag':{'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),'callback':'anycontent','jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").showLoading({'message':'Fetching domain diagnostics'})}},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_config.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
+					}
 				}
+
+
 			} //e [app Events]
 		} //r object.
 	return r;

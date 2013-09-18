@@ -3271,12 +3271,12 @@ Coming Soon
 
 <div id='domainUpdateTemplate'>
 
-	<div data-app-role="tabContainer" class='applyAnytabs'>
+	<div data-app-role='tabContainer' class='applyAnytabs'>
 	<ul>
 		<li><a href='#domainGeneral'>General</a></li>
 		<li><a href='#domainEmail'>Email</a></li>
 		<li><a href='#domainEvents'>Events</a></li>
-		<li><a href='#domainDiagnostics'>Diagnostics</a></li>
+		<li><a href='#domainDiagnostics' data-app-click="admin_config|adminDomainDiagnosticsShow" data-bind='var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domainname;'>Diagnostics</a></li>
 <!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
 	</ul>
 	
