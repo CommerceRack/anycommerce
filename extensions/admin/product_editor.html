@@ -650,20 +650,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		Allow overselling !!!
 	</label>
 	
-	<table class='gridTable fullWidth applyAnytable'>
-	<thead>
-	<tr>
-		<th>SKU</th>
-		<th>Name</th>
-		<th data-anytable-nosort='true'>Details</th>
-		<th>QTY</th>
-		<th>Description</th>
-	</tr>
-	</thead>
-	<tbody data-app-role='inventoryTbody'></tbody><!-- inventory contents must not get rendered w/ the rest of the product. the template is loaded into this container IF the tab is clicked -->
-	</table>
-
-		
+	
+	<div data-app-role='inventoryContainer'></div>
+	
 		
 	<div class='buttonset alignRight'>
 		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="inventory">Save <span class='numChanges'></span> Changes</button>
@@ -1138,17 +1127,39 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 -->
 <div id='inventoryDetailTemplate' class='clearfix' data-app-role='inventoryDetailContainer'>
 <table class='gridTable fullWidth marginTop marginBottom'>
+<caption data-bind="var: detail(header); format:text;"></caption>
 <thead>
 <tr>
 	<th></th>
-	<th>Origin</th>
-	<th>Qty</th>
-	<th>Base Type</th>
-	<th>Note</th>
+	<th class='alignLeft'>Origin</th>
+	<th class='alignLeft'>Qty</th>
+	<th class='alignLeft'>Base Type</th>
+	<th class='alignLeft'>Note</th>
 </tr>
 </thead>
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
+<tfoot>
+<tr>
+	<th colspan='5' class='alignRight'><button>Add Location</button></th>
+</tr>
+</tfoot>
 </table>
+</div>
+
+<!-- used in the inventory panel when inventory-able options are displayed. -->
+<div id='inventorySKUDetailTemplate'>
+	<table class='gridTable fullWidth applyAnytable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Name</th>
+		<th data-anytable-nosort='true'>Details</th>
+		<th>QTY</th>
+		<th>Description</th>
+	</tr>
+	</thead>
+	<tbody data-app-role='inventoryTbody'></tbody><!-- inventory contents must not get rendered w/ the rest of the product. the template is loaded into this container IF the tab is clicked -->
+	</table>
 </div>
 
 
@@ -1171,11 +1182,11 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 </tr>
 
 <tr id='inventoryDetailRowTemplate'>
-	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
-	<td data-bind="var: detail(ORIGIN); format:text;"></td>
-	<td data-bind="var: detail(QTY); format:text;"></td>
-	<td data-bind="var: detail(BASE_TYPE); format:text;"></td>
-	<td data-bind="var: detail(NOTE); format:text;"></td>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
+	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
+	<td class='alignLeft' data-bind="var: detail(QTY); format:text;"></td>
+	<td class='alignLeft' data-bind="var: detail(BASE_TYPE); format:text;"></td>
+	<td class='alignLeft' data-bind="var: detail(NOTE); format:text;"></td>
 </tr>
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>

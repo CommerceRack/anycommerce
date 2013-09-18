@@ -1387,7 +1387,45 @@ Required params include:
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, required param(s) missing.  P.pid ["+P.pid+"] and P.tab ["+P.tab+"] are required.","gMessage":true});
 					}
-				} //addProductAsTask
+				}, //addProductAsTask
+
+//$target is where the inventory detail report is going to show up.  must be a valid jquery object.
+//vars can contain a mode. Right now, it's optional. may be necessary when it comes time to save.
+			handleInventoryDetail : function($target,sku,vars)	{
+				vars = vars || {};
+				if($target instanceof jQuery)	{
+					if(sku)	{
+						const PID = sku.split(':')[0]; //the Product ID.
+						//Verify the inventory record for this product is available.
+						if(app.data['adminProductInventoryDetail|'+PID])	{
+							vars.sku = sku; //set on vars for dataAttribs.
+							$target.anycontent({
+								'templateID' : 'inventoryDetailTemplate',
+								'dataAttribs' : vars,
+								'data' : {
+									'header' : vars.header || "",
+									'@DETAIL' : app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]
+									},
+								'showLoading' : false
+								});
+							$('tbody:first',$target).sortable({
+								'stop' : function(){
+									$(this).addClass('edited');
+									}
+								});
+							}
+						else	{
+							$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|'+"+PID+"] not in memory.","gMessage":true});
+							}
+						}
+					else	{
+						$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, sku not passed.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, $target is not a valid instance of jQuery.","gMessage":true});
+					}
+				}
 	
 			}, //u
 
@@ -1726,28 +1764,32 @@ if($editedInputs.length)	{
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid'),
-					$tbody = $("[data-app-role='inventoryTbody']",$PE);
+					$invContainer = $("[data-app-role='inventoryContainer']",$PE);
 
-				if(pid && $tbody.length)	{
-					$tbody.showLoading({"message":"Fetching inventory record for product "+pid});
+				if(pid && $invContainer.length)	{
+					$invContainer.showLoading({"message":"Fetching inventory record for product "+pid});
 					app.model.addDispatchToQ({
 						"_cmd":"adminProductInventoryDetail",
 						"pid":pid,
 						"_tag": {
 							"datapointer" : "adminProductInventoryDetail|"+pid,
 							"callback" : function(rd){
-								$tbody.hideLoading();
+								$invContainer.hideLoading();
 								if(app.model.responseHasErrors(rd)){
-									$tbody.closest('form').anymessage({'message':rd});
+									$invContainer.anymessage({'message':rd});
 									}
 								else	{
 									//if an item has no inventory-able options, go straight to showing the detail.
 									if(app.data['adminProductDetail|'+pid]['@skus'].length == 1 && app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(":") < 0)	{
-										$tbody.closest('table').replaceWith(app.renderFunctions.createTemplateInstance('inventoryDetailTemplate'));
-										app.renderFunctions.translateSelector($tbody,{'@DETAIL':app.data[rd.datapointer]['%INVENTORY'][app.data['adminProductDetail|'+pid]['@skus'][0].sku]});
+//										$tbody.closest('table').replaceWith(app.renderFunctions.createTemplateInstance('inventoryDetailTemplate'));
+										app.ext.admin_prodEdit.u.handleInventoryDetail($invContainer,app.data['adminProductDetail|'+pid]['@skus'][0].sku,{'mode':'pid'});
+//										app.renderFunctions.translateSelector($tbody,{'@DETAIL':app.data[rd.datapointer]['%INVENTORY'][app.data['adminProductDetail|'+pid]['@skus'][0].sku]});
 										}
 									//if inventory-able options are present, a list of sku's is shown and the detail is available on click.
 									else	{
+// !!! this section and what data gets passed into the anycontent in the loop will likely need updating once %SUMMARY is available and %INVENTORY changes to %DETAIL
+										$invContainer.append(app.renderFunctions.createTemplateInstance('inventorySKUDetailTemplate'));
+										var $tbody = $("[data-app-role='inventoryTbody']",$invContainer);
 										var skus = app.data['adminProductDetail|'+pid]['@skus'];
 										var L = skus.length;
 										for(var i = 0; i < L; i += 1)	{
@@ -1757,9 +1799,9 @@ if($editedInputs.length)	{
 												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
 												}).find('button').data('sku',skus[i].sku);
 											}
+										app.u.handleButtons($tbody);
 										}
 									}
-									app.u.handleButtons($tbody);
 								}
 							}
 						},"mutable");
@@ -1909,13 +1951,16 @@ else	{
 				},
 
 			
+			inventoryDetailAddNew : function($ele,p)	{
+				
+				},
+			
 			inventoryDetailsToggle : function($ele,p)	{
-				var $target = $ele.parent();
-				var sku = $ele.data('sku');
-				var pid = sku.split(':')[0];
-				var $icon = $ele.find('.ui-icon');
-				app.u.dump(" -> $icon.length: "+$icon.length);
-				if(sku)	{
+				var
+					$target = $ele.parent(),
+					$icon = $ele.find('.ui-icon');
+
+				if($ele.data('sku'))	{
 					//details are visible. close them and nuke the table.
 					if($icon.hasClass('ui-icon-circle-triangle-n'))	{
 						$icon.removeClass('ui-icon-circle-triangle-n').addClass('ui-icon-circle-triangle-s');
@@ -1927,10 +1972,7 @@ else	{
 							$("[data-app-role='inventoryDetailContainer']",$target).show();
 							}
 						else	{
-							$target.anycontent({
-								'templateID' : 'inventoryDetailTemplate',
-								'data' : {'@DETAIL':app.data['adminProductInventoryDetail|'+pid]['%INVENTORY'][sku]}
-								});
+							app.ext.admin_prodEdit.u.handleInventoryDetail($target,$ele.data('sku'),{'mode':'sku'});
 							}
 						}
 					}
