@@ -89,7 +89,7 @@ var admin_prodEdit = function() {
 
 			handlePMSearchResults : {
 				onSuccess : function(_rtag)	{
-					app.u.dump("BEGIN myRIA.callbacks.handlePMSearchResults.onSuccess.");
+//					app.u.dump("BEGIN admin_prodEdit.callbacks.handlePMSearchResults.onSuccess");
 	
 	
 					var
@@ -213,7 +213,7 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 //P -> an object of params.
 //  -> currently supports 'pid' which, if set, will open the product editor for that pid.
 			showProductManager : function(P)	{
-				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
+//				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
 				var $target = $("#productContent");
 //				app.u.dump(" -> P:"); app.u.dump(P);
@@ -584,7 +584,7 @@ for(var i = 0; i < L; i += 1)	{
 				},
 
 			ebayLaunchProfiles : function($tag,data)	{
-				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
+//				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
 				if(app.data.adminEBAYProfileList)	{
 					if(app.data.adminEBAYProfileList['@PROFILES'].length)	{
 						var profiles = app.data.adminEBAYProfileList['@PROFILES']; //shortcut.
@@ -757,7 +757,7 @@ for(var i = 0; i < L; i += 1)	{
 				}, //handleLaunchProfileFilters
 	
 			handleImagesInterface : function($context,pid)	{
-				app.u.dump("BEGIN admin_prodEdit.u.handleImagesInterface.  pid: "+pid);
+//				app.u.dump("BEGIN admin_prodEdit.u.handleImagesInterface.  pid: "+pid);
 				if(pid && $context && $context instanceof jQuery)	{
 					pid = pid.toString(); //treat pid as string. 'could' be treated as number if no letters.
 
@@ -1291,7 +1291,7 @@ Required params include:
 */
 
 			addProductAsTask : function(P,$ele)	{
-				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
+//				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
 				if(P.pid && P.tab && P.mode)	{
 					
 					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
@@ -1727,6 +1727,7 @@ if($editedInputs.length)	{
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid'),
 					$tbody = $("[data-app-role='inventoryTbody']",$PE);
+
 				if(pid && $tbody.length)	{
 					$tbody.showLoading({"message":"Fetching inventory record for product "+pid});
 					app.model.addDispatchToQ({
@@ -1740,8 +1741,15 @@ if(app.model.responseHasErrors(rd)){
 	$tbody.closest('form').anymessage({'message':rd});
 	}
 else	{
-	//success content goes here.
-	//is the index of %skus in inventoryDetail and the index of @skus in adminProductDetail guaranteed to match?
+	var skus = app.data['adminProductDetail|'+pid]['@skus'];
+	var L = skus.length;
+	for(var i = 0; i < L; i += 1)	{
+		$tbody.anycontent({
+			"templateID":"inventoryRowTemplate",
+			dataAttribs : {'sku' : skus[i].sku}, //will apply these as data- to each row.
+			data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
+			}).find('button').data('sku',skus[i].sku);
+		}
 	}
 								}
 							}
