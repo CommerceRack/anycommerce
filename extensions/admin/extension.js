@@ -5501,6 +5501,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					modal: true,
 					width : '90%',
 					autoOpen : false,
+					appendTo : vars.appendTo || "",
 					close: function(event, ui)	{
 						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
 //						app.u.dump('got into dialog.close - destroy.');

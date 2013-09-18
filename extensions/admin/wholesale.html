@@ -915,7 +915,7 @@
 
 <input type='hidden' name='WAREHOUSE' value='' data-bind="var: warehouse(WAREHOUSE_CODE); format:popVal;" /><!-- required for adding a location -->
 
-<input type='hidden' name='_macrobuilder' value='ZONE-CREATE' />
+<input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/jqObjEmpty' value='true' />
 <input type='hidden' name='_tag/message' value='The new location has been added.' />
@@ -931,9 +931,9 @@
 	
 	<label>
 		<span>Zone type</span>
-		<select name='type' required='required' data-panel-selector=".warehouseZoneTypeInputs">
+		<select name='ZONE_TYPE' required='required'>
 			<option value=''>please choose</option>
-			<option value='standard' data-show-panel='warehouseZoneTypeStandard'>standard (row/shelf/bin)</option>
+			<option value='standard'>standard (row/shelf/bin)</option>
 			<option value='receiving'>receiving</option>
 		</select>
 	</label>

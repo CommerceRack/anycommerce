@@ -1123,13 +1123,14 @@ Additional a settings button can be added which will contain a dropdown of selec
 				self._handleButtons($header);
 			
 				$content = self._anyContent();
+				
 //* 201320 -> if _anyContent returned false, this caused a js error.
 				if($content && $content.length)	{$content.appendTo($t);} //content generated via template of some kind.
 				else if(o.title)	{$content = $t.children(":first");} //no content yet, title specified. use first child.
 				else	{$content = $t.children(":nth-child(2)");} //no content. first child is title. second child is content.
 				
-				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
-				
+				$content.addClass('ui-widget-content ui-corner-bottom stdPadding ui-anypanel-content').css('borderTop','0'); //content area.
+
 				if(o.call && typeof app.ext.admin.calls[o.call] == 'object')	{
 					if(o.callParams)	{
 						app.ext.admin.calls[o.call].init(o.callParams,o._tag,o.Q);
@@ -1177,7 +1178,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				this.element.anycontent(this.options);
 				}
 			
-			$content.addClass('ui-anypanel-content');
+			
 // *** 201336 -> this will now use the anycontent plugin instead of a half-assed version of it.
 /*			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;

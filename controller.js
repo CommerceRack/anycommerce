@@ -1867,7 +1867,7 @@ VALIDATION
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
 // if you do any validation outside of this and use anymessage to report those errors, you'll need to clear them yourself.
 		validateForm : function($form)	{
-			app.u.dump("BEGIN admin.u.validateForm");
+//			app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
 
 				
@@ -1885,7 +1885,7 @@ VALIDATION
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 
-app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
+//app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
 
 //					if($input.prop('type') != 'radio')	{
 //						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')

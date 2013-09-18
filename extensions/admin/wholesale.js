@@ -303,12 +303,19 @@ app.model.dispatchThis('mutable');
 			'ZONE-CREATE' : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
+app.u.dump("got here");
 				var newSfo = {
 					'_cmd':'adminWarehouseMacro',
-					'WAREHOUSE' : sfo.CODE,
+					'WAREHOUSE' : sfo.WAREHOUSE,
 					'_tag':sfo._tag,
 					'@updates':new Array()
-					}; 
+					};
+				delete sfo.WAREHOUSE;
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push('ZONE-CREATE?'+$.param(sfo));
+				
+				return newSfo;
 				},
 			'WAREHOUSE-UPDATE' : function(sfo)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
@@ -408,7 +415,7 @@ TRACKINGSET ->
 							'title' : 'Add a New Zone',
 							'templateID' : 'warehouseAddLocationTemplate',
 							'data' : {'WAREHOUSE_CODE':CODE},
-							appendTo : $btn.closest('.ui-anypanel-content'),
+							appendTo : $btn.closest('.ui-anypanel-content'), //This adds the dialog as a child to the anypanel content. That means the dialog can look up the DOM tree to 'find' things.
 							'showLoading' : false
 							});
 						$D.dialog('open');
