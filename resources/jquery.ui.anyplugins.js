@@ -1177,7 +1177,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				this.element.anycontent(this.options);
 				}
 			
-			
+			$content.addClass('ui-anypanel-content');
 // *** 201336 -> this will now use the anycontent plugin instead of a half-assed version of it.
 /*			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
