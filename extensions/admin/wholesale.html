@@ -1288,42 +1288,64 @@ for updateing inventory records per pid/sku (setting location)
 
 	</section>
 
-	<section class='slimLeftContentSection ui-widget ui-widget-content ui-corner smallPadding' data-app-role='slimLeftContentSection'>
-
+	<section class='slimLeftContentSection ui-widget'>
+		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>Warehouse Utilities</h1>
+		<div data-app-role='slimLeftContentSection' class='ui-widget-content stdPadding'>
+			<ul class='noPadOrMargin listStyleNone' data-bind="var: warehouses(@WAREHOUSES); format:processList; loadsTemplate:warehouseUtilityWarehouseItemTemplate;"></ul>
+		</div>
 	</section>
 
 
 </div>
 
 
-<div id='warehouseUtilityTemplate_inventoryLookup'>
-<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+<ul>
+	<li id='warehouseUtilityWarehouseItemTemplate' class='smallPadding' data-app-click='admin_wholesale|warehouseUtilityWarehouseSelect' data-bind='var: warehouse(WAREHOUSE_CODE); format:assignAttribute; attribute:data-geo;'>
+		<span data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></span> - 
+		<span data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></span>
+	</li>
+</ul>
+
+<div id='warehouseUtilityTemplate_inventoryLookup' data-app-role='warehouseUtilityContainer'>
+<h1>Get Inventory Location by SKUs</h1>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginBottom'>
 
 <label>
-	<span>Skus</span>
-	<textarea name='skus' cols='40' rows='10'></textarea>
+	<span>Skus <span class='toolTip' title="Input a comma separated list of skus.">?</span></span>
+	<textarea name='skus' cols='40' rows='10' required='required'></textarea>
 </label>
-<div class='hint'>one per line</div>
 
-<button>Lookup</button>
-
+<button data-app-click="admin_wholesale|warehouseUtilitySearchMacroExec" class='applyButton'>Lookup</button>
 </form>
+
+<table class='fullWidth gridTable applyAnytable'>
+<thead>
+	<th>Stuff</th>
+</thead>
+<tbody data-app-role='warehouseUtilityResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:warehouseUtilityResultsRowTemplate;"></tbody>
+</table>
+
+
+
+
 </div>
 
-<div id='warehouseUtilityTemplate_inventoryAdd2Locations'>
-
-<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 
 <table>
-<tbody class='displayNone'>
-<tr>
-	<td>SKU</td>
-	<td><input name='sku' value='' size='25' /></td>
-	<td>Location</td>
-	<td><input name='location' value='' size='25' /></td>
-	<td><button>Set as a Location</button></td>
+<tr id='warehouseUtilityResultsRowTemplate'>
+	<td data-bind="var: sku(sku); format:text;"></td>
 </tr>
-</tbody>
+</table>
+
+
+
+
+<div id='warehouseUtilityTemplate_inventoryAdd2Locations'>
+<h1>Add Inventory to Location by SKU</h1>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+
+
+<table>
 <tr>
 	<td>SKU</td>
 	<td><input name='sku' value='' size='25' /></td>

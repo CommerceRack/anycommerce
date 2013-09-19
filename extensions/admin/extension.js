@@ -5588,22 +5588,29 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(event){
 					event.preventDefault();
-//					app.u.dump("trying to process the form");
-					var $form = $btn.closest('form');
-					
-					if(app.u.validateForm($form))	{					
-						if(app.ext.admin.a.processForm($form,'immutable',vars))	{
-							$form.showLoading({'message':'Updating...'});	
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							//processForm will handle error display.
-							}
-						}
-					else	{} //validateForm handles error display.
-					
+					app.ext.admin.e.submitForm($btn,vars);
 					});
 				},
+
+
+			
+//for delegated events. Also triggered by process form.
+			submitForm : function($ele,p)	{
+				var $form = $ele.closest('form');
+				
+				if(app.u.validateForm($form))	{					
+					if(app.ext.admin.a.processForm($form,'immutable',p))	{
+						$form.showLoading({'message':'Updating...'});	
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						//processForm will handle error display.
+						}
+					}
+				else	{} //validateForm handles error display.
+				},
+
+
 
 			controlFormSubmit : function($btn)	{
 				$btn.button();

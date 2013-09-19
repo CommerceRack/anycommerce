@@ -56,6 +56,24 @@ var admin_wholesale = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN admin_wholesale.callbacks.init.onError');
 				}
+			},
+		wholesaleSearchResults: {
+			onSuccess : function(_rtag)	{
+				if(_rtag.jqObj)	{
+					if(_rtag.datapointer && app.data[_rtag.datapointer])	{
+						if(app.data[_rtag.datapointer]['@ROWS'].length)	{}
+						else	{
+							_rtag.jqObj.anymessage({"message":"There were zero items returns in your search of warehouse "+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
+							}
+						}
+					else	{
+						_rtag.jqObj.anymessage({"message":"In admin_wholesale.callbacks.wholesaleSearchResults, either _rtag.datapointer ["+_rtag.datapointer+"] is empty or app.data[rd.datapointer] [typeof: "+typeof app.data[rd.datapointer]+"] is empty.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.callbacks.wholesaleSearchResults, no jqObj specified in _tag/_rtag.","gMessage":true});
+					}
+				}
 			}
 		}, //callbacks
 
@@ -91,6 +109,18 @@ var admin_wholesale = function() {
 			showWarehouseUtilities : function($target){
 				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'warehouseUtilityInterfaceTemplate','data':{}});
+				$target.showLoading({'message':'Fetching list of warehouses'})
+				app.model.addDispatchToQ({
+						'_cmd' : 'adminWarehouseList',
+						'_tag' : {
+							'datapointer':'adminWarehouseList',
+							'callback': 'anycontent',
+							'translateOnly' : true,
+							'jqObj' : $target
+							}
+						},'mutable');
+				app.model.dispatchThis('mutable');
+				
 				$("[data-app-role='slimLeftNav']",$target).accordion();
 				//target is likely a tab and I don't want to delegate to a tab at this time.
 				app.u.handleEventDelegation($("[data-app-role='slimLeftNav']",$target));
@@ -504,23 +534,70 @@ app.u.dump("got here");
 
 
 
+			warehouseUtilityWarehouseSelect : function($ele,p)	{
+//				app.u.dump(" -> $ele.data('warehouse_code'): "+$ele.data('warehouse_code'));
+				if($ele.data('warehouse_code'))	{
+					$ele.closest("[data-app-role='slimLeftContainer']").data("geo",$ele.data('warehouse_code')).find("h1").text("Warehouse "+$ele.data('warehouse_code')); //set the geo attribute to the warehouse id. this is used for all the warehouse utilities till changed.
+					$ele.parent().find('.ui-selected').removeClass('ui-selected');
+					$ele.addClass('ui-selected');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseUtilityWarehouseSelect, warehouse_code not set on trigger element.","gMessage":true});
+					}
+				},
+
+			warehouseUtilitySearchMacroExec : function($ele,p)	{
+				var $tbody = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityResultsTbody']");
+				var $form =$ele.closest('form');
+				$tbody.empty(); //the results should stack w/ each search. clear them.
+				$tbody.closest('table').show(); //table is hidden by default so the thead doesn't show up when unnecessary.
+
+				if(app.u.validateForm($form))	{
+					app.model.addDispatchToQ({
+						'_cmd':'adminWarehouseInventoryQuery',
+						'GEO' : $ele.closest("[data-app-role='slimLeftContainer']").data("geo"),
+						'SKUS' : $("textarea[name='skus']",$form).val(),
+						'_tag':	{
+							'datapointer' : 'adminWarehouseInventoryQuery',
+							'callback':'wholesaleSearchResults',
+							'extension' : 'admin_wholesale',
+							jqObj : $tbody
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else {} //form validation handles error display.
+				//
+				},
 
 //triggered when one of the li's in the warehouseUtility nav menu is clicked. opens a specific utility, based on data-utility.
 			warehouseUtilityShow : function($ele,p)	{
-				
-				$ele.closest("[data-app-role='slimLeftNav']").find('li.ui-state-focus').removeClass('ui-state-focus');
-				$ele.addClass('ui-state-focus');
+				var $slimLeft = $ele.closest("[data-app-role='slimLeftContainer']");
 				var $target = $ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentSection']");
 				
-				if($ele.data('utility'))	{
-					$target.empty();
-					$target.anycontent({
-						'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
-						'showLoading' : false
-						});
+				if($slimLeft.data('geo'))	{
+
+					$ele.closest("[data-app-role='slimLeftNav']").find('li.ui-state-focus').removeClass('ui-state-focus');
+					$ele.addClass('ui-state-focus');
+					
+					if($ele.data('utility'))	{
+						$target.empty();
+						$target.anycontent({
+							'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
+							'showLoading' : false
+							});
+						$('form',$target).append("<input type='hidden' name='GEO' value='"+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"' />");
+						app.u.handleCommonPlugins($target);
+						app.u.handleButtons($target);
+						}
+					else	{
+						$target.anymessage({"message":"In admin_wholesale.e.warehouseUtilityShow, data-utility not set on trigger element.","gMessage":true})
+						}
+
+
 					}
 				else	{
-					$target.anymessage({"message":"In admin_wholesale.e.warehouseUtilityShow, data-utility not set on trigger element.","gMessage":true})
+					$target.anymessage({"message":"Please select a warehouse from the list below prior to selecting a utility."})
 					}
 				},
 
