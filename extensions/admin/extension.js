@@ -2527,7 +2527,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
-// app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
@@ -2543,11 +2544,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'; }
-// * 201336 -> here to solve an issue when refresh is clicked after a traditional anchor has changed the hash. it would cause the init to load w/ an error (app still ran, but not a good way to start).
-					else if (path.substr(0,1) == "#") {
-						path = "#!dashboard";
-						mode = 'app';
-						}
 					else	{}
 					
 					if(mode)	{
@@ -2666,8 +2662,10 @@ else	{
 	app.u.throwGMessage("Warning! In in showUI, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
 	}
 						} //end 'if' for mode.
-					else	{
-						app.u.throwGMessage("Warning! unable to determine 'mode' in admin.a.showUI. path: "+path);	
+					else	{	
+						app.ext.admin.a.showUI("#!dashboard");
+						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.showUI.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
+
 						}
 					
 					}
