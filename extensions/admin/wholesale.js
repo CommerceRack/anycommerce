@@ -88,6 +88,15 @@ var admin_wholesale = function() {
 				app.model.dispatchThis('mutable');
 				},
 
+			showWarehouseUtilities : function($target){
+				$target.intervaledEmpty();
+				$target.anycontent({'templateID':'warehouseUtilityInterfaceTemplate','data':{}});
+				$("[data-app-role='slimLeftNav']",$target).accordion();
+				//target is likely a tab and I don't want to delegate to a tab at this time.
+				app.u.handleEventDelegation($("[data-app-role='slimLeftNav']",$target));
+				app.u.handleEventDelegation($("[data-app-role='slimLeftContentSection']",$target));
+				},
+
 			
 			showPriceSchedules : function($target)	{
 				$target.empty();
@@ -300,6 +309,7 @@ app.model.dispatchThis('mutable');
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				}, //adminWarehouseMacroCreate
+
 			'ZONE-CREATE' : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
@@ -316,7 +326,8 @@ app.u.dump("got here");
 				newSfo['@updates'].push('ZONE-CREATE?'+$.param(sfo));
 				
 				return newSfo;
-				},
+				}, //ZONE-CREATE
+
 			'WAREHOUSE-UPDATE' : function(sfo)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
 				sfo = sfo || {};
@@ -332,21 +343,7 @@ app.u.dump("got here");
 				newSfo['@updates'].push('WAREHOUSE-UPDATE?'+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
-				}, //adminWarehouseMacroCreate
-
-
-	
-/*
-macros:
-SET
-OURSET
-ORDERSET -> 
-SHIPSET ->
-INVENTORYSET ->
-TRACKINGSET ->
-
-*/
-			
+				}, //WAREHOUSE-UPDATE
 			
 			adminSupplierMacro : function(sfo,$form)	{
 				sfo = sfo || {};
@@ -504,6 +501,32 @@ TRACKINGSET ->
 					$('form',$D).first().append("<input type='hidden' name='CODE' value='"+CODE+"' \/><input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE-LOCATIONS'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The zone has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
 				}, //warehouseZoneCreateShow
+
+
+
+
+//triggered when one of the li's in the warehouseUtility nav menu is clicked. opens a specific utility, based on data-utility.
+			warehouseUtilityShow : function($ele,p)	{
+				
+				$ele.closest("[data-app-role='slimLeftNav']").find('li.ui-state-focus').removeClass('ui-state-focus');
+				$ele.addClass('ui-state-focus');
+				var $target = $ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentSection']");
+				
+				if($ele.data('utility'))	{
+					$target.empty();
+					$target.anycontent({
+						'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
+						'showLoading' : false
+						});
+					}
+				else	{
+					$target.anymessage({"message":"In admin_wholesale.e.warehouseUtilityShow, data-utility not set on trigger element.","gMessage":true})
+					}
+				},
+
+
+
+
 
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */

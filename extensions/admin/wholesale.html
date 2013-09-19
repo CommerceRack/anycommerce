@@ -1256,3 +1256,77 @@ Promotions and Coupons are DIFFERENT merchandising strategies. If you do not wan
 
 
 </div>
+
+
+
+
+
+<!--
+
+WAREHOUSE UTITLITIES
+for updateing inventory records per pid/sku (setting location)
+
+-->
+
+
+<div id='warehouseUtilityInterfaceTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+	
+
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+		
+		<h4>Inventory</h4>
+		<ul>
+			<li data-utility='inventoryLookup' data-app-click="admin_wholesale|warehouseUtilityShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
+			<li data-utility='inventoryAdd2Locations' data-app-click="admin_wholesale|warehouseUtilityShow" title="Add SKU's to existing WMS locations.">Add to Locations</li><!--
+			<li data-plugin='inventory_Change_locations'>Change locations</li>-->
+		</ul>
+	
+		<h4>More JT Awesomeness</h4>
+		<ul>
+			<li>Coming soon</li>
+		</ul>
+
+	</section>
+
+	<section class='slimLeftContentSection ui-widget ui-widget-content ui-corner smallPadding' data-app-role='slimLeftContentSection'>
+
+	</section>
+
+
+</div>
+
+
+<div id='warehouseUtilityTemplate_inventoryLookup'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+
+<label>
+	<span>Skus</span>
+	<textarea name='skus' cols='40' rows='10'></textarea>
+</label>
+<div class='hint'>one per line</div>
+
+<button>Lookup</button>
+
+</form>
+</div>
+
+<div id='warehouseUtilityTemplate_inventoryAdd2Locations'>
+
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+
+<table>
+<tr>
+	<td>SKU</td>
+	<td><input name='sku' value='' size='25' /></td>
+	<td>Location</td>
+	<td><input name='location' value='' size='25' /></td>
+	<td><button>Set as a Location</button></td>
+</tr>
+</table>
+
+
+
+</form>
+
+</div>
+

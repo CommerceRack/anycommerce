@@ -4006,6 +4006,9 @@ and all .someClass are hidden (value of data-panel-selector)
 				else if(path == '#!warehouseManager')	{
 					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!warehouseUtilities')	{
+					app.ext.admin_wholesale.a.showWarehouseUtilities($target);
+					}
 				else if(path == '#!reviewsManager')	{
 					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}

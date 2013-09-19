@@ -1951,9 +1951,6 @@ else	{
 				},
 
 			
-			inventoryDetailAddNew : function($ele,p)	{
-				
-				},
 			
 			inventoryDetailsToggle : function($ele,p)	{
 				var
