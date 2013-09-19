@@ -688,15 +688,9 @@ app.model.dispatchThis('mutable');
 							'ticketid':ticketID,
 							'_tag':	{
 								'datapointer' : 'adminTicketDetail|'+ticketID,
-								'callback':function(rd){
-									if(app.model.responseHasErrors(rd)){
-										app.u.throwMessage(rd);
-										}
-									else	{		
-										$panel.anycontent({'data':$.extend(true,{},app.data[rd.datapointer],app.data['adminTicketFileList|'+ticketID])});
-										app.u.handleAppEvents($panel);
-										}
-									}
+								'callback': 'anycontent',
+								'jqObj' : $target,
+								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
 								}
 							},'mutable');
 						app.model.dispatchThis('mutable');
