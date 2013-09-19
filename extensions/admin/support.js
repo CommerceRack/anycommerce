@@ -681,6 +681,7 @@ app.model.dispatchThis('mutable');
 							}).prependTo($target);
 						
 						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
+						$panel.slideDown('fast',function(){$target.showLoading({'message':'Fetching Ticket Details.'});});
 						
 						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
 						app.model.addDispatchToQ({
@@ -694,7 +695,6 @@ app.model.dispatchThis('mutable');
 								}
 							},'mutable');
 						app.model.dispatchThis('mutable');
-						$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
 
 
 						}
