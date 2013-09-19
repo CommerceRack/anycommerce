@@ -73,7 +73,7 @@ var admin_prodEdit = function() {
 					app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/product_editor.css','product_editor_styles']);
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
 	//				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor. odd. this function doesn't exist. commented out by JT on 2012-11-27
-					window.editProduct = app.ext.admin_prodEdit.a.showPanelsFor;
+
 					return r;
 					},
 				onError : function()	{

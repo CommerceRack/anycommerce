@@ -835,7 +835,7 @@
 	</label>
 	<label>
 		<span>Warehouse Code:</span>
-		<input type="text" value="" name="CODE" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' data-bind='var:warehouse(WAREHOUSE_CODE); format:popVal;' />
+		<input type="text" value="" name="GEO" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' data-bind='var:warehouse(GEO); format:popVal;' />
 		<span class='toolTip' title="A 3 digit code consisting of letters A-Z and 0-9. Warehouse code will usually be the three digit code for the nearest airport.">?</span>
 	</label>
 	
@@ -874,14 +874,9 @@
 	<caption>Standard Zones</caption>
 	<thead>
 	<tr>
-		<th></th>
 		<th>Code</th>
 		<th>Name</th>
-		<th>Row</th>
-		<th>Shelf Start</th>
-		<th>End</th>
-		<th>Slot Start</th>
-		<th>End</th>
+		<th>Type</th>
 		<th></th>
 	</tr>
 	</thead>
@@ -895,29 +890,8 @@
 	</table>
 </fieldset>
 
-<fieldset class='hideForCreate'>
-	<table class='fullWidth gridTable applyAnytable'>
-	<caption>Receiving Zones</caption>
-	<thead>
-	<tr>
-		<th></th>
-		<th>Code</th>
-		<th>Name</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: warehouse(@ZONES); format:processList; loadsTemplate:wholesaleZoneReceivingRowTemplate; filter:ZONE_TYPE;filterby:RECEIVING;">
-	</tbody>
-	<tfoot>
-	<tr>
-		<th colspan='9' class='alignRight'><button data-loadstemplate="wholesaleZoneStandardRowTemplate" data-app-event='admin_wholesale|wholesaleZoneAddRow'>Add Row</button></th>
-	</tr>
-	</tfoot>
-	</table>
-</fieldset>
-
 <div class='buttonset '>
-	<button data-app-event='admin_wholesale|wholesaleZoneCreateShow' class='hideForCreate'>Add New Zone</button><!-- hidden in 'create' mode -->
+	<button data-app-event='admin_wholesale|warehouseZoneCreateShow' class='hideForCreate'>Add New Zone</button><!-- hidden in 'create' mode -->
 	<button class='floatRight' data-app-event="admin|processForm">Save</button>
 </div>
 
@@ -931,8 +905,7 @@
 <table>
 <!-- used for list of warehouses -->
 <tr id='warehouseResultsRowTemplate'>
-	<td data-bind="var: warehouse(ID); format:text;"></td>
-	<td data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></td>
+	<td data-bind="var: warehouse(GEO); format:text;"></td>
 	<td data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></td>
 	<td data-bind="var: warehouse(WAREHOUSE_STATE); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: warehouse(WAREHOUSE_ZIP); format:text;" class='hideInDetailMode'></td>
@@ -947,26 +920,22 @@
 
 <!-- used in warehouse detail for each 'standard' zone type -->
 <tr id='wholesaleZoneStandardRowTemplate'>
-	<td data-bind="var: location(ZONE_CODE); format:popVal;"></td>
-	<td><input type='text' name='ROW' value='' size='20' data-bind="var: location(ZONE_TITLE); format:popVal;" /></td>
+	<td data-bind="var: location(ZONE); format:text;"></td>
+	<td data-bind="var: location(ZONE_TITLE); format:text;" /></td>
+	<td data-bind="var: location(ZONE_TYPE); format:text;" /></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Zone</button></td>
+</tr>
+
+
+</table>
+
+<!--
 	<td><input type='number' name='ROW' value='' size='5' required='required' data-bind="var: location(ROW); format:popVal;" /></td>
 	<td><input type='text' name='BEGIN_SHELF' value='' size='5' required='required' data-bind="var: location(BEGIN_SHELF); format:popVal;" /></td>
 	<td><input type='text' name='END_SHELF' value='' size='5' required='required' data-bind="var: location(END_SHELF); format:popVal;" /></td>
 	<td><input type='text' name='BEGIN_SLOT' value='' size='5' required='required' data-bind="var: location(BEGIN_SLOT); format:popVal;" /></td>
 	<td><input type='text' name='END_SLOT' value='' size='5' required='required' data-bind="var: location(END_SLOT); format:popVal;" /></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Row</button></td>
-</tr>
-
-<!-- used in warehouse detail for each 'receiving' zone type -->
-<tr id='wholesaleZoneStandardRowTemplate'>
-	
-	<td data-bind="var: location(ZONE_CODE); format:popVal;"></td>
-	<td><input type='text' name='ROW' value='' size='20' data-bind="var: location(ZONE_TITLE); format:popVal;" /></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Row</button></td>
-</tr>
-</table>
-
-
+	-->
 
 
 
@@ -977,7 +946,7 @@
 
 <form action='#' onSubmit='return false'>
 
-<input type='hidden' name='WAREHOUSE' value='' data-bind="var: warehouse(WAREHOUSE_CODE); format:popVal;" /><!-- required for adding a location -->
+<input type='hidden' name='GEO' value='' data-bind="var: warehouse(GEO); format:popVal;" /><!-- required for adding a location -->
 
 <input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -990,18 +959,27 @@
 	
 	<label>
 		<span>Zone</span>
-		<input type='text' name='ZONE' value='' required='required' />
+		<input type='text' name='ZONE' value='' maxlength="3" size='3' required='required' />
+	</label>
+	<label>
+		<span>Zone title</span>
+		<input type="text" size="50" maxlength="100" name="ZONE_TITLE" value="" />
+		<span class='toolTip' title="An optional title describing the zone">?</span>
 	</label>
 	
 	<label>
 		<span>Zone type</span>
 		<select name='ZONE_TYPE' required='required'>
 			<option value=''>please choose</option>
-			<option value='standard'>standard (row/shelf/bin)</option>
-			<option value='receiving'>receiving</option>
+			<option value='STANDARD'>standard (row/shelf/bin)</option>
+			<option value='RECEIVING'>receiving</option>
 		</select>
 	</label>
-
+	<label>
+		<span>Zone preference</span>
+		<input type="number" step='1' min='0' size="3" maxlength="3" name="ZONE_PREFERENCE" value="" />
+		<span class='toolTip' title="Zones with a higher preference are picked from first.">?</span>
+	</label>
 
 </fieldset>
 
@@ -1176,91 +1154,6 @@ Promotions and Coupons are DIFFERENT merchandising strategies. If you do not wan
 
 
 
-<div id='warehouseZoneCreateUpdateTemplate'>
-
-<form action='#' onSubmit="return false" class='labelsAsBreaks'>
-<fieldset>
-
-	<label>
-		<span>Warehouse Code</span>
-		<span data-bind="var: warehouse(code);format:text;"></span>
-	</label>
-	<label>
-		<span>Zone Code</span>
-		<input type="text" size="3" maxlength="3" name="ZONE_CODE" value="" />
-		<span class='toolTip' title="Each zone should have a unique 3 digit code that designates that area. Pick lists and associated policies will vary by zone - some smaller warehouses may have only a single zone.">?</span>
-	</label>
-
-	<label>
-		<span>Zone Title</span>
-		<input type="text" size="50" maxlength="50" name="ZONE_TITLE" value="" />
-		<span class='toolTip' title="An optional title describing the zone">?</span>
-	</label>
-	<label>
-		<span>Zone Preference</span>
-		<input type="text" size="3" maxlength="3" name="ZONE_PREFERENCE" value="" />
-		<span class='toolTip' title="Zones with a higher preference are picked from first.">?</span>
-	</label>
-
-	<label>
-		<span>Zone Type</span>
-		<select name="ZONE_TYPE" data-app-event='admin|showSiblingFieldset'>
-			<option value="RECEIVING">Receiving Zone: Useful for cross dock shipping</option>
-			<option value="STANDARD">Standard: Row/Shelf/Bin</option>
-		</select>
-	</label>
-
-</fieldset>
-
-<!-- fieldsets for rule type selection go here -->
-	<div data-app-role='connectorFieldsetContainer'>
-	
-	<fieldset data-app-role='RECEIVING' class='displayNone'>
-	<!-- no locations for receiving -->
-	</fieldset>
-	
-	<fieldset data-app-role='STANDARD' class='displayNone'>
-		<legend>Locations</legend>
-
-<div class='floatRight'>
-<table>
-<tbody>
-<tr>
-	<td>Begin</td>
-	<td>Row: <input type="text" maxlength="3" size="3" name="begin-row"> (ex: 1A)</td>
-	<td>Shelf: <input type="text" maxlength="3" size="3" name="begin-shelf"> (ex: S1)</td>
-	<td>Slot: <input type="text" maxlength="3" size="3" name="begin-slot"> (ex: 00)</td>
-</tr>
-<tr>
-	<td>End</td>
-	<td>Row: <input type="text" maxlength="3" size="3" name="end-row"> (ex: 1B)</td>
-	<td>Shelf: <input type="text" maxlength="3" size="3" name="end-shelf"> (ex: S9)</td>
-	<td>Slot: <input type="text" maxlength="3" size="3" name="end-slot"> (ex: 99)</td>
-</tr>
-</tbody>
-</table>
-<p class="hint">Note: warehouse positions are sorted/picked alphanumerically (ex: 1-11 would be sorted: 1,10,11,2,3,4,5,6,7,8,9) so it is often better to use leading zeros (ex. 001 instead of 1) to make sorting easier.</p>
-</div>
-
-
-<div class='floatLeft'>
-
-</div>
-
-
-
-	</fieldset>
-	</div>
-
-</form>
-
-
-</div>
-
-
-
-
-
 <!--
 
 WAREHOUSE UTITLITIES
@@ -1301,8 +1194,8 @@ for updateing inventory records per pid/sku (setting location)
 
 
 <ul>
-	<li id='warehouseUtilityWarehouseItemTemplate' class='smallPadding pointer' data-app-click='admin_wholesale|warehouseUtilityWarehouseSelect' data-bind='var: warehouse(WAREHOUSE_CODE); format:assignAttribute; attribute:data-geo;'>
-		<span data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></span> - 
+	<li id='warehouseUtilityWarehouseItemTemplate' class='smallPadding pointer' data-app-click='admin_wholesale|warehouseUtilityWarehouseSelect' data-bind='var: warehouse(GEO); format:assignAttribute; attribute:data-geo;'>
+		<span data-bind="var: warehouse(GEO); format:text;"></span> - 
 		<span data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></span>
 	</li>
 </ul>
@@ -1322,11 +1215,11 @@ for updateing inventory records per pid/sku (setting location)
 <table class='fullWidth gridTable applyAnytable'>
 <thead>
 	<th>SKU</th>
-	<th>QTY</th>
+	<th>Qty</th>
 	<th>geo</th>
 	<th>zone</th>
 	<th>pos</th>
-	<th>NOTE</th>
+	<th>Note</th>
 </thead>
 <tbody data-app-role='warehouseUtilityResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:warehouseUtilityResultsRowTemplate;"></tbody>
 </table>

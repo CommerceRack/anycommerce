@@ -97,7 +97,7 @@ var admin_wholesale = function() {
 						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
 						"<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"
 						],
-					'thead' : ['ID','Code','Title','State','Zip','Latency','Cutoff','Created',''],
+					'thead' : ['Code','Title','State','Zip','Latency','Cutoff','Created',''],
 					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminWarehouseList',
@@ -343,14 +343,13 @@ app.model.dispatchThis('mutable');
 			'ZONE-CREATE' : function(sfo)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
-app.u.dump("got here");
 				var newSfo = {
 					'_cmd':'adminWarehouseMacro',
-					'WAREHOUSE' : sfo.WAREHOUSE,
+					'GEO' : sfo.GEO,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					};
-				delete sfo.WAREHOUSE;
+				delete sfo.GEO;
 				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
 				delete sfo._macrobuilder;
 				newSfo['@updates'].push('ZONE-CREATE?'+$.param(sfo));
@@ -433,26 +432,7 @@ app.u.dump("got here");
 					});
 				}, //warehouseCreateShow
 
-			wholesaleZoneCreateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-				$btn.off('click.wholesaleZoneCreateShow').on('click.wholesaleZoneCreateShow',function(event){
-					event.preventDefault();
-					var CODE = $btn.closest('form').find("input[name='CODE']").val();
-					if(CODE)	{
-						var $D = app.ext.admin.i.dialogCreate({
-							'title' : 'Add a New Zone',
-							'templateID' : 'warehouseAddLocationTemplate',
-							'data' : {'WAREHOUSE_CODE':CODE},
-							appendTo : $btn.closest('.ui-anypanel-content'), //This adds the dialog as a child to the anypanel content. That means the dialog can look up the DOM tree to 'find' things.
-							'showLoading' : false
-							});
-						$D.dialog('open');
-						}
-					else	{
-						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
-						}
-					});
-				},
+
 
 			wholesaleZoneAddRow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
@@ -469,23 +449,36 @@ app.u.dump("got here");
 					});
 				},
 
+
+
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
 					event.preventDefault();
-					var	CODE = $btn.closest('tr').data('warehouse_code');
+					var	GEO = $btn.closest('tr').data('geo');
 					
 					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'warehouseAddUpdateTemplate',
-						'panelID' : 'warehouse_'+CODE,
-						'header' : 'Edit Warehouse: '+CODE,
-						'data' : app.data.adminWarehouseList['@WAREHOUSES'][$btn.closest('tr').data('obj_index')],
+						'panelID' : 'warehouse_'+GEO,
+						'header' : 'Edit Warehouse: '+GEO,
 						'handleAppEvents' : false
 						});
-					$("[name='CODE']",$panel).closest('label').hide(); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+					$("[name='GEO']",$panel).closest('label').hide().val(GEO); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
 					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-//					$('.buttonset',$panel).prepend("<button data-app-event='admin_wholesale|warehouseZoneCreateShow'>Add Zone<\/button>");
-					app.u.handleAppEvents($panel);
+
+					app.model.addDispatchToQ({
+						'_cmd':'adminWarehouseDetail',
+						'GEO' : GEO,
+						'_tag':	{
+							'datapointer' : 'adminWarehouseDetail|'+GEO,
+							'callback':"anycontent",
+							'jqObj' : $('.ui-anypanel-content',$panel).showLoading({'message':'Fetching details for warehouse '+GEO}),
+							'translateOnly' : true
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+
+
 					});
 				}, //warehouseDetailDMIPanel
 
@@ -494,16 +487,16 @@ app.u.dump("got here");
 				$btn.off('click.warehouseRemoveExec').on('click.warehouseRemoveExec',function(event){
 					event.preventDefault();
 					
-					var CODE = $btn.closest('tr').data('warehouse_code');
+					var GEO = $btn.closest('tr').data('geo');
 					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'message':'Are you sure you want to delete warehouse '+CODE+'? There is no undo for this action.',
+						'message':'Are you sure you want to delete warehouse '+GEO+'? There is no undo for this action.',
 						'removeButtonText' : 'Delete Warehouse',
 						'removeFunction':function(vars,$modal){
-							var $panel = $(app.u.jqSelector('#','warehouse_'+CODE));
+							var $panel = $(app.u.jqSelector('#','warehouse_'+GEO));
 							if($panel.length)	{
 								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
 								}
-							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','WAREHOUSE':CODE,'@updates':["WAREHOUSE-DELETE"]},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','GEO':GEO,'@updates':["WAREHOUSE-DELETE"]},'immutable');
 							app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
 							app.model.dispatchThis('immutable');
 							$modal.dialog('close');
@@ -514,36 +507,42 @@ app.u.dump("got here");
 					});
 				}, //warehouseRemoveConfirm
 
-			warehouseZoneCreateShow : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.warehouseZoneCreateShow').on('click.warehouseZoneCreateShow',function(event){
+
+
+			warehouseZoneCreateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.wholesaleZoneCreateShow').on('click.wholesaleZoneCreateShow',function(event){
 					event.preventDefault();
-					
-					var CODE = $btn.closest('form').find("[name='CODE']").val();
-					
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Zone For Warehouse '+CODE,
-						'templateID':'warehouseZoneCreateUpdateTemplate',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$D.dialog('open');
-//These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='CODE' value='"+CODE+"' \/><input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-CREATE-LOCATIONS'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The zone has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
+					var GEO = $btn.closest('form').find("input[name='GEO']").val();
+					if(GEO)	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Add a New Zone',
+							'templateID' : 'warehouseAddLocationTemplate',
+							'data' : {'GEO':GEO},
+							appendTo : $btn.closest('.ui-anypanel-content'), //This adds the dialog as a child to the anypanel content. That means the dialog can look up the DOM tree to 'find' things.
+							'showLoading' : false
+							});
+						$D.dialog('open');
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
+						}
 					});
-				}, //warehouseZoneCreateShow
+				},
+
 
 
 ////////////////  WMS UTILITIES
 
 			warehouseUtilityWarehouseSelect : function($ele,p)	{
-//				app.u.dump(" -> $ele.data('warehouse_code'): "+$ele.data('warehouse_code'));
-				if($ele.data('warehouse_code'))	{
-					$ele.closest("[data-app-role='slimLeftContainer']").data("geo",$ele.data('warehouse_code')).find("h1").text("Warehouse "+$ele.data('warehouse_code')); //set the geo attribute to the warehouse id. this is used for all the warehouse utilities till changed.
+//				app.u.dump(" -> $ele.data('geo'): "+$ele.data('geo'));
+				if($ele.data('geo'))	{
+					$ele.closest("[data-app-role='slimLeftContainer']").data("geo",$ele.data('geo')).find("h1").text("Warehouse "+$ele.data('geo')); //set the geo attribute to the warehouse id. this is used for all the warehouse utilities till changed.
 					$ele.parent().find('.ui-selected').removeClass('ui-selected');
 					$ele.addClass('ui-selected');
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseUtilityWarehouseSelect, warehouse_code not set on trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseUtilityWarehouseSelect, geo not set on trigger element.","gMessage":true});
 					}
 				}, //warehouseUtilityWarehouseSelect
 
