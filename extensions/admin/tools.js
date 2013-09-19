@@ -412,6 +412,38 @@ $target.append("<br \/>");
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
+			rawJSONRequestExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
+					event.preventDefault();
+					var JSONString = $btn.closest('form').find("[name='JSON']").val();
+					app.u.dump(" -> myJSON: "+JSONString);
+					var validJSON = false;
+					try	{
+//						app.u.dump(" -> attempting to validate json");
+						app.u.dump(" -> JSON.parse(JSONString): "+JSON.parse(JSONString));
+					//Run some code here
+						validJSON = JSON.parse(JSONString);
+						}
+					catch(err) {
+					//Handle errors here
+						}
+//					app.u.dump(" -> jsonParse(myJSON): "); app.u.dump(validJSON);
+					if(typeof validJSON === 'object')	{
+						if(app.model.addDispatchToQ(validJSON,'mutable'))	{
+							app.model.dispatchThis('mutable');
+							}
+						else	{
+							$btn.closest('form').anymessage({"message":"The query could not be dispatched. Be sure you have a _cmd set in your query."})
+							}
+						
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"The query is not a valid json object. Use a service like jsonLint to validate your JSON if necessary.<br>hint: You must use double quotes around your values."})
+						}
+				});
+			},
+			
 			inspectorExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
