@@ -57,6 +57,7 @@ var admin_wholesale = function() {
 				app.u.dump('BEGIN admin_wholesale.callbacks.init.onError');
 				}
 			},
+
 		wholesaleSearchResults: {
 			onSuccess : function(_rtag)	{
 				if(_rtag.jqObj)	{
@@ -127,7 +128,6 @@ var admin_wholesale = function() {
 				app.u.handleEventDelegation($("[data-app-role='slimLeftContentSection']",$target));
 				},
 
-			
 			showPriceSchedules : function($target)	{
 				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
@@ -149,8 +149,7 @@ var admin_wholesale = function() {
 					});
 				app.model.dispatchThis('mutable');
 				},
-			
-			
+
 			showOrganizationManager : function($target,vars)	{
 //				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
 				vars = vars || {};
@@ -170,7 +169,7 @@ var admin_wholesale = function() {
 					}
 				
 				}, //showOrganizationManager
-			
+
 			showOrganizationEditor : function($target,vars)	{
 				app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
 				if($target && vars && vars.orgID)	{
@@ -200,7 +199,7 @@ var admin_wholesale = function() {
 					$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showOrganizationUpdate, unable to determine orgID.','gMessage':true});
 					}
 				},
-			
+
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
 			showSupplierManager : function($target)	{
 				app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for create and update.
@@ -286,7 +285,6 @@ app.model.dispatchThis('mutable');
 					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or VENDORID ['+VENDORID+'] undefined','gMessage':true});
 					}
 				} //showSupplierEditor
-
 
 			}, //a [actions]
 
@@ -533,6 +531,7 @@ app.u.dump("got here");
 				}, //warehouseZoneCreateShow
 
 
+////////////////  WMS UTILITIES
 
 			warehouseUtilityWarehouseSelect : function($ele,p)	{
 //				app.u.dump(" -> $ele.data('warehouse_code'): "+$ele.data('warehouse_code'));
@@ -544,7 +543,7 @@ app.u.dump("got here");
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseUtilityWarehouseSelect, warehouse_code not set on trigger element.","gMessage":true});
 					}
-				},
+				}, //warehouseUtilityWarehouseSelect
 
 			warehouseUtilitySearchMacroExec : function($ele,p)	{
 				var $tbody = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityResultsTbody']");
@@ -567,8 +566,7 @@ app.u.dump("got here");
 					app.model.dispatchThis('mutable');
 					}
 				else {} //form validation handles error display.
-				//
-				},
+				}, //warehouseUtilitySearchMacroExec
 
 //triggered when one of the li's in the warehouseUtility nav menu is clicked. opens a specific utility, based on data-utility.
 			warehouseUtilityShow : function($ele,p)	{
@@ -581,29 +579,64 @@ app.u.dump("got here");
 					$ele.addClass('ui-state-focus');
 					
 					if($ele.data('utility'))	{
-						$target.empty();
-						$target.anycontent({
-							'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
-							'showLoading' : false
+						$target.slideUp('fast',function(){
+							$target.empty().anycontent({
+								'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
+								'showLoading' : false
+								}).slideDown('fast');
+							$('form',$target).append("<input type='hidden' name='GEO' value='"+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"' />");
+							app.u.handleCommonPlugins($target);
+							app.u.handleButtons($target);
 							});
-						$('form',$target).append("<input type='hidden' name='GEO' value='"+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"' />");
-						app.u.handleCommonPlugins($target);
-						app.u.handleButtons($target);
 						}
 					else	{
 						$target.anymessage({"message":"In admin_wholesale.e.warehouseUtilityShow, data-utility not set on trigger element.","gMessage":true})
 						}
-
-
 					}
 				else	{
 					$target.anymessage({"message":"Please select a warehouse from the list below prior to selecting a utility."})
 					}
+				}, //warehouseUtilityShow
+
+			warehouseUtilitySetSKULocation : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					var sfo = $form.serializeJSON();
+					sfo.uuid = app.u.guidGenerator();
+					var $li = $("<li \/>");
+					var $ul = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityLocationUpdateLog']");
+					app.u.dump(" -> $ul.length: "+$ul.length);
+					$li.html("<span class='ui-icon wait'></span> "+ sfo.SKU + " into " + sfo.LOC).prependTo($ul);
+					$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku.
+					
+					var updates = new Array();
+					updates.push("ADD?"+$.param(sfo));
+					
+					app.model.addDispatchToQ({
+						'_cmd':'adminWarehouseMacro',
+						'@updates' : updates,
+						'_tag':	{
+							'callback':function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('.ui-icon',$li).removeClass('wait').addClass('ui-state-error ui-icon-alert');
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$('.ui-icon',$li).removeClass('wait').addClass('ui-icon-check');
+									//success content goes here.
+									}
+								}
+							}
+						},'immutable');
+					app.model.dispatchThis('immutable');
+
+					}
+				else	{
+					//form validation 
+					}
 				},
 
-
-
-
+//////////////////// SUPPLIERS
 
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
