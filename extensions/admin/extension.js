@@ -2527,8 +2527,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
-app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
+//app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+//app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
@@ -2633,7 +2633,7 @@ if($target && $target.length)	{
 //				app.u.dump(" -> targeted tab and open tab match.");
 				reloadTab = 1; //tab clicked from a page within that tab. show new content.
 				}
-			app.u.dump(" -> $target.children().length: "+$target.children().length);
+//			app.u.dump(" -> $target.children().length: "+$target.children().length);
 			if ($target.children().length === 0)	{
 //				app.u.dump(" -> no content presently in target. targetID = "+$target.attr('id')+" and $target.length: "+$target.length);
 				reloadTab = 1; //no content presently in target. load it.

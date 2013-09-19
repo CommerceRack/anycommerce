@@ -83,10 +83,14 @@ var admin_navcats = function() {
 //vars MUST contain templateID.
 //vars.fetchonly allows for getTree to 'get' all the data, but not display it right away. used when tree initially loads.
 			getSubcats : function(subcats,$container,vars)	{
+//				app.u.dump("BEGIN admin_navcats.u.getSubcats. $container.length: "+$container.length);
+//				app.u.dump(" -> subcats:"); app.u.dump(subcats);
+//				app.u.dump(" -> vars: "); app.u.dump(vars);
+
 				var r = 0; //what is returned. will be # of dispatches added to Q.
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
-				
+
 					var
 						L = subcats.length,
 						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition), //list of 'open' categories from localStorage.
@@ -154,6 +158,7 @@ var admin_navcats = function() {
 					}
 				else	{
 						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required. (fetchonly: "+vars.fetchOnly+")",'gMessage':true});
+						die();
 					}
 				
 				},
@@ -170,8 +175,8 @@ Params:
 	
 */
 			getTree : function(mode,vars){
-				app.u.dump("BEGIN admin_navcats.u.getTree");
-				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				app.u.dump("BEGIN admin_navcats.u.getTree");
+//				app.u.dump(" -> vars: "); app.u.dump(vars);
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 
@@ -180,7 +185,7 @@ Params:
 					if(vars.templateID && vars.path)	{
 						$tree.showLoading({'message':'Fetching category tree'});
 
-						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition);
+						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
 //						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
 
 //						var $controls = $("<div \/>").addClass("ui-widget ui-corner-top ui-widget-header smallPadding alignRight clearfix").appendTo($tree);

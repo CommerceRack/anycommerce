@@ -136,7 +136,7 @@ For the list of available params, see the 'options' object below.
 
 
 		_getFormattedMessage : function(instance)	{
-			app.u.dump(" -> _getFormattedMessage executed");
+//			app.u.dump(" -> _getFormattedMessage executed");
 			var o = this.options, //shortcut
 			msg = o.message || o, //shortcut to the message itself. if message blank, options are used, which may contain the response data errors (_msgs, err etc)
 			msgDetails = "", //used for iseerr (server side error) and ise/no response
