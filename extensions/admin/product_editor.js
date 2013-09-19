@@ -2279,7 +2279,20 @@ else	{
 							app.model.dispatchThis('immutable');
 							}
 						}
-					else	{} //validateForm handles error display.
+					else	{
+						$("<div \/>").anymessage({
+							"containerClass" : "ui-state-error",
+							"message":"Doh! The form did not validate. Please populate/change the necessary fields, which are now highlighted."
+							})
+						.appendTo('body')
+						.css({'z-index':'1000','width':'300'})
+						.position({
+							my : "right bottom",
+							at : "right top",
+							of: $ele
+							});
+						$ele.button('disable').removeClass('ui-state-highlight');
+						} //validateForm handles error display for the specific fields.
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, either unable to determine $form ["+$form.length+"] or data-save-handlers ["+$ele.data('save-handlers')+"] not set on button, both of which are required.","gMessage":true});
