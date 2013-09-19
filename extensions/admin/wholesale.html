@@ -1321,7 +1321,12 @@ for updateing inventory records per pid/sku (setting location)
 
 <table class='fullWidth gridTable applyAnytable'>
 <thead>
-	<th>Stuff</th>
+	<th>SKU</th>
+	<th>QTY</th>
+	<th>geo</th>
+	<th>zone</th>
+	<th>pos</th>
+	<th>NOTE</th>
 </thead>
 <tbody data-app-role='warehouseUtilityResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:warehouseUtilityResultsRowTemplate;"></tbody>
 </table>
@@ -1334,7 +1339,12 @@ for updateing inventory records per pid/sku (setting location)
 
 <table>
 <tr id='warehouseUtilityResultsRowTemplate'>
-	<td data-bind="var: sku(sku); format:text;"></td>
+	<td data-bind="var: sku(SKU); format:text;"></td>
+	<td data-bind="var: sku(QTY); format:text;"></td>
+	<td data-bind="var: sku(WMS_GEO); format:text;"></td>
+	<td data-bind="var: sku(WMS_ZONE); format:text;"></td>
+	<td data-bind="var: sku(WMS_POS); format:text;"></td>
+	<td data-bind="var: sku(NOTE); format:text;"></td>
 </tr>
 </table>
 
@@ -1348,7 +1358,7 @@ for updateing inventory records per pid/sku (setting location)
 <tr>
 	<td>SKU</td>
 	<td><input type='text' name='SKU' value='' size='25' required='required' /></td>
-	<td>Location</td>
+	<td>Zone*Position</td>
 	<td><input type='text' name='LOC' value='' size='25'  required='required' /></td>
 	<td>Qty</td>
 	<td>+<input type='number' min='0' step='1' name='QTY' value='' size='25'  required='required' /></td>

@@ -62,13 +62,15 @@ var admin_wholesale = function() {
 			onSuccess : function(_rtag)	{
 				if(_rtag.jqObj)	{
 					if(_rtag.datapointer && app.data[_rtag.datapointer])	{
-						if(app.data[_rtag.datapointer]['@ROWS'].length)	{}
+						if(app.data[_rtag.datapointer]['@ROWS'].length)	{
+							_rtag.jqObj.anycontent(_rtag);
+							}
 						else	{
-							_rtag.jqObj.anymessage({"message":"There were zero items returns in your search of warehouse "+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
+							$('#globalMessaging').anymessage({"message":"There were zero items returns in your search of warehouse "+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
 							}
 						}
 					else	{
-						_rtag.jqObj.anymessage({"message":"In admin_wholesale.callbacks.wholesaleSearchResults, either _rtag.datapointer ["+_rtag.datapointer+"] is empty or app.data[rd.datapointer] [typeof: "+typeof app.data[rd.datapointer]+"] is empty.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_wholesale.callbacks.wholesaleSearchResults, either _rtag.datapointer ["+_rtag.datapointer+"] is empty or app.data[rd.datapointer] [typeof: "+typeof app.data[rd.datapointer]+"] is empty.","gMessage":true});
 						}
 					}
 				else	{
@@ -602,27 +604,29 @@ app.u.dump("got here");
 				var $form = $ele.closest('form');
 				if(app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
-					sfo.uuid = app.u.guidGenerator();
+					sfo.UUID = app.u.guidGenerator();
 					var $li = $("<li \/>");
 					var $ul = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityLocationUpdateLog']");
-					app.u.dump(" -> $ul.length: "+$ul.length);
-					$li.html("<span class='ui-icon wait'></span> "+ sfo.SKU + " into " + sfo.LOC).prependTo($ul);
-					$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku.
+					$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY+" " + sfo.LOC).prependTo($ul);
+
+//					$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku. //!!! commented out for testing.
 					
 					var updates = new Array();
-					updates.push("ADD?"+$.param(sfo));
+					updates.push("SKU-LOCATION-ADD?"+$.param(sfo));
 					
 					app.model.addDispatchToQ({
 						'_cmd':'adminWarehouseMacro',
+						'GEO' : $ele.closest("[data-app-role='slimLeftContainer']").data("geo"),
 						'@updates' : updates,
 						'_tag':	{
 							'callback':function(rd)	{
+								$('.wait',$li).addClass('ui-icon').removeClass('wait')
 								if(app.model.responseHasErrors(rd)){
-									$('.ui-icon',$li).removeClass('wait').addClass('ui-state-error ui-icon-alert');
+									$('.ui-icon',$li).addClass('ui-state-error ui-icon-alert');
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									$('.ui-icon',$li).removeClass('wait').addClass('ui-icon-check');
+									$('.ui-icon',$li).addClass('ui-icon-check');
 									//success content goes here.
 									}
 								}
