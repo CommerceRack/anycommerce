@@ -97,10 +97,11 @@ var admin_wholesale = function() {
 						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
 						"<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"
 						],
-					'thead' : ['Code','Title','State','Zip','Latency','Cutoff','Created',''],
-					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
+					'thead' : ['Code','Zone','Title','type','Preference',''],
+					'tbodyDatabind' : "var: users(@ROWS); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminWarehouseList',
+						'zones' : 1,
 						'_tag' : {
 							'datapointer':'adminWarehouseList'
 							}
@@ -313,7 +314,19 @@ app.model.dispatchThis('mutable');
 					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
 
 					}
-				} //wholesaleScheduleSelect
+				}, //wholesaleScheduleSelect
+			warehouseCodeOrZone : function($tag,data)	{
+//			app.u.dump(data.value); die();
+				if(data.value._OBJECT == 'GEO')	{
+					$tag.text(data.value.GEO);
+					}
+				else if(data.value._OBJECT == 'ZONE')	{
+					
+					}
+				else	{
+					$tag.text("Unrecognized _object");// something new?
+					}
+				}
 			}, //renderFormats
 		
 		
@@ -357,13 +370,45 @@ app.model.dispatchThis('mutable');
 				return newSfo;
 				}, //ZONE-CREATE
 
+			'ZONE-POSITIONS' : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminWarehouseMacro',
+					'GEO' : sfo.GEO,
+					'ZONE' : sfo.ZONE, //alertnatively, ZONE 'can' be specified on the update itself, if multiple zones are being updated in the same place.
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+			
+				$("[data-table='ZONE_STANDARD'] tbody",$form).find('tr.edited').each(function(){
+					var $tr = $(this);
+					if($tr.hasClass('rowTaggedForRemove') && $tr.hasClass('isNewRow'))	{
+						//is a new row that is tagged for delete. don't do anything with it.
+						}
+					else if($tr.hasClass('rowTaggedForRemove'))	{
+						newSfo['@updates'].push('ZONE-POSITIONS-DELETE?'+$.param(app.u.getWhitelistedObject($tr.data(),['uuid'])));
+						}
+					else	{
+						if(!$tr.data('uuid')){$tr.data('uuid',app.u.guidGenerator())}
+						newSfo['@updates'].push('ZONE-POSITIONS-ADD?'+$.param(app.u.getWhitelistedObject($tr.data(),['row','shelf','shelf_end','slot','slot_end','uuid'])));
+						}
+					});
+				
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+				return newSfo;
+				
+				},
+
 			'WAREHOUSE-UPDATE' : function(sfo)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminWarehouseMacro',
-					'WAREHOUSE' : sfo.CODE,
+					'GEO' : sfo.GEO,
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					}; 
@@ -455,28 +500,65 @@ app.model.dispatchThis('mutable');
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
 					event.preventDefault();
-					var	GEO = $btn.closest('tr').data('geo');
+					var data = $btn.closest('tr').data();
 					
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'warehouseAddUpdateTemplate',
-						'panelID' : 'warehouse_'+GEO,
-						'header' : 'Edit Warehouse: '+GEO,
-						'handleAppEvents' : false
-						});
-					$("[name='GEO']",$panel).closest('label').hide().val(GEO); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-
-					app.model.addDispatchToQ({
-						'_cmd':'adminWarehouseDetail',
-						'GEO' : GEO,
-						'_tag':	{
-							'datapointer' : 'adminWarehouseDetail|'+GEO,
-							'callback':"anycontent",
-							'jqObj' : $('.ui-anypanel-content',$panel).showLoading({'message':'Fetching details for warehouse '+GEO}),
-							'translateOnly' : true
+					if(data._object == 'GEO' || data._object == 'ZONE')	{
+//these are the shared values for the DMI panel.
+						var panelObj = {
+							'panelID' : 'warehouse_'+data.geo,
+							'handleAppEvents' : true
 							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
+
+						if(data._object == 'ZONE')	{
+							panelObj.templateID = 'warehouseZoneStandardTemplate';
+							panelObj.header = 'Edit Zone: '+data.zone;
+							}
+						else	{
+							panelObj.templateID = 'warehouseAddUpdateTemplate';
+							panelObj.header = 'Edit Warehouse: '+data.geo;
+							}
+						
+						var $panel = app.ext.admin.i.DMIPanelOpen($btn,panelObj);
+
+						if(data._object == 'GEO')	{
+							$("[name='GEO']",$panel).closest('label').hide().val(data.geo); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+							$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+							}
+						else	{
+							$('form',$panel).append("<input type='hidden' name='GEO' value='"+data.geo+"' />");
+							$('form',$panel).append("<input type='hidden' name='ZONE' value='"+data.zone+"' />");
+							}
+						$panel.showLoading({'message':'Fetching warehouse details'});
+						app.model.addDispatchToQ({
+							'_cmd':'adminWarehouseDetail',
+							'GEO' : data.geo,
+							'_tag':	{
+								'datapointer' : 'adminWarehouseDetail|'+data.geo,
+								'callback':function(rd)	{
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	//success content goes here.
+	if(data._object == 'GEO')	{
+		$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
+		}
+	else	{
+		$panel.anycontent({
+			'translateOnly':true,
+			'data':app.data[rd.datapointer]['%ZONES'][data.zone]
+			});
+		app.u.handleAppEvents($panel);
+		}
+	}
+									}
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseDetailDMIPanel, unrecognized data._object ["+data._object+"]. Must be GEO or ZONE.","gMessage":true});
+						}
 
 
 					});

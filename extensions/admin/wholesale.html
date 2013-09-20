@@ -869,27 +869,6 @@
 </fieldset>
 
 
-<fieldset class='hideForCreate'>
-	<table class='fullWidth gridTable applyAnytable'>
-	<caption>Standard Zones</caption>
-	<thead>
-	<tr>
-		<th>Code</th>
-		<th>Name</th>
-		<th>Type</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: warehouse(@ZONES); format:processList; loadsTemplate:wholesaleZoneStandardRowTemplate; filter:ZONE_TYPE;filterby:STANDARD;">
-	</tbody>
-	<tfoot>
-	<tr>
-		<th colspan='9' class='alignRight'><button data-loadstemplate="wholesaleZoneStandardRowTemplate" data-app-event='admin_wholesale|wholesaleZoneAddRow'>Add Row</button></th>
-	</tr>
-	</tfoot>
-	</table>
-</fieldset>
-
 <div class='buttonset '>
 	<button data-app-event='admin_wholesale|warehouseZoneCreateShow' class='hideForCreate'>Add New Zone</button><!-- hidden in 'create' mode -->
 	<button class='floatRight' data-app-event="admin|processForm">Save</button>
@@ -900,18 +879,75 @@
 
 
 
+<div id='warehouseZoneStandardTemplate'>
+
+<form action='#' onSubmit='return false'>
+<input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-POSITIONS' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='true' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+
+
+<fieldset class='clearfix'>
+
+	<div class='twoColumn'>
+	<table data-app-role='dataTable' data-table='ZONE_STANDARD' class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Row</th>
+		<th>Shelf Begin</th>
+		<th>End</th>
+		<th>Slot Begin</th>
+		<th>End</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@POSITIONS); format:processList; loadsTemplate:zonePositionRowTemplate_STANDARD;"></tbody>
+	</table>
+	</div>
+
+	<div class='twoColumn column2 labelsAsBreaks alignedLabels'>
+		<input type='hidden' name='uuid' value='' /><!-- if an editor is introduced, populate this field w/ the rest of the form -->
+		<label><span>Row</span><input type='number' name='row' value='' size='5' data-bind="var: location(row); format:popVal;" class='skipTrack' /></label>
+		<label><span>Shelf begin</span><input type='text' name='shelf' value='' size='5' data-bind="var: location(shelf); format:popVal;" class='skipTrack' /></label>
+		<label><span>Shelf end</span><input type='text' name='shelf_end' value='' size='5' data-bind="var: location(shelf_end); format:popVal;" class='skipTrack' /></label>
+		<label><span>Slot begin</span><input type='text' name='slot' value='' size='5' data-bind="var: location(slot); format:popVal;" class='skipTrack' /></label>
+		<label><span>Slot end</span><input type='text' name='slot_end' value='' size='5' data-bind="var: location(slot_end); format:popVal;" class='skipTrack' /></label>
+		<button data-app-event="admin_config|dataTableAddExec">Apply Position</button>
+	</div>
+</fieldset>
+
+<button data-app-event='admin|processForm'>Save Changes</button>
+
+</form>
+
+
+</div>
+
+
 
 
 <table>
+
+<!-- used in the standard zone position data-table -->
+<tr id='zonePositionRowTemplate_STANDARD'>
+	<td data-bind="var: location(row); format:text;"></td>
+	<td data-bind="var: location(shelf); format:text;"></td>
+	<td data-bind="var: location(shelf_end); format:text;"></td>
+	<td data-bind="var: location(slot); format:text;"></td>
+	<td data-bind="var: location(slot_end); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Zone</button></td>
+</tr>
+
+
+
 <!-- used for list of warehouses -->
 <tr id='warehouseResultsRowTemplate'>
-	<td data-bind="var: warehouse(GEO); format:text;"></td>
-	<td data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></td>
-	<td data-bind="var: warehouse(WAREHOUSE_STATE); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: warehouse(WAREHOUSE_ZIP); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: warehouse(SHIPPING_CUTOFF_HOUR_PST); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: warehouse(SHIPPING_LATENCY_IN_DAYS); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: warehouse(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="useParentData:true; format:warehouseCodeOrZone; extension:admin_wholesale;"></td>
+	<td data-bind="var: warehouse(ZONE); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_TITLE); defaultVar:(ZONE_TITLE); format:text;"></td>
+	<td data-bind="var: warehouse(ZONE_TYPE); format:text;"></td>
+	<td data-bind="var: warehouse(ZONE_PREFERENCE); format:text;"></td>
 	<td class='alignRight'>
 <button data-app-event="admin_wholesale|warehouseRemoveConfirm">Remove</button>
 <button data-app-event="admin_wholesale|warehouseDetailDMIPanel">Edit</button>
@@ -928,14 +964,6 @@
 
 
 </table>
-
-<!--
-	<td><input type='number' name='ROW' value='' size='5' required='required' data-bind="var: location(ROW); format:popVal;" /></td>
-	<td><input type='text' name='BEGIN_SHELF' value='' size='5' required='required' data-bind="var: location(BEGIN_SHELF); format:popVal;" /></td>
-	<td><input type='text' name='END_SHELF' value='' size='5' required='required' data-bind="var: location(END_SHELF); format:popVal;" /></td>
-	<td><input type='text' name='BEGIN_SLOT' value='' size='5' required='required' data-bind="var: location(BEGIN_SLOT); format:popVal;" /></td>
-	<td><input type='text' name='END_SLOT' value='' size='5' required='required' data-bind="var: location(END_SLOT); format:popVal;" /></td>
-	-->
 
 
 
