@@ -1392,12 +1392,16 @@ Required params include:
 //$target is where the inventory detail report is going to show up.  must be a valid jquery object.
 //vars can contain a mode. Right now, it's optional. may be necessary when it comes time to save.
 			handleInventoryDetail : function($target,sku,vars)	{
+				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
 				vars = vars || {};
 				if($target instanceof jQuery)	{
+					app.u.dump(" -> have a valid jquery target");
 					if(sku)	{
+						app.u.dump(" -> have a sku ["+sku+"]");
 						const PID = sku.split(':')[0]; //the Product ID.
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
+							app.u.dump(" -> Inventory record is in memory.");
 							vars.sku = sku; //set on vars for dataAttribs.
 							$target.anycontent({
 								'templateID' : 'inventoryDetailTemplate',
