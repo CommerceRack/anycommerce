@@ -79,7 +79,7 @@ if(app.data[_rtag.datapointer]['@BODY'] && app.data[_rtag.datapointer]['@BODY'].
 					})
 				}
 			
-			app.ext.admin.u.fileDownloadInModal({
+			app.u.fileDownloadInModal({
 				'skipDecode':true,
 				'filename':app.data[_rtag.datapointer].title+'.csv',
 				'mime_type':'text/csv',
@@ -277,8 +277,7 @@ app.model.addDispatchToQ({
 	'base64' : '1',
 	'_tag':	{
 		'datapointer' : 'adminBatchJobDownload', //big dataset returned. only keep on in memory.
-		'callback' : 'fileDownloadInModal',
-		'extension' : 'admin'
+		'callback' : 'fileDownloadInModal'
 		}
 	},'mutable');
 app.model.dispatchThis('mutable');

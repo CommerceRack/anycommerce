@@ -1312,7 +1312,6 @@ app.model.addDispatchToQ({
 	'export' : 'REWRITES',
 	'_tag':	{
 		'callback':'fileDownloadInModal',
-		'extension':'admin',
 		'filename' : 'rewrites.csv',
 		'datapointer':'adminCSVExport|REWRITE',
 		'jqObj' : $btn.parent()
@@ -1334,7 +1333,6 @@ app.model.addDispatchToQ({
 	'_tag':	{
 		'callback':'fileDownloadInModal',
 		'datapointer':'adminCSVExport|CATEGORY',
-		'extension':'admin',
 		'filename' : 'categories.csv',
 		'jqObj' : $btn.parent()
 		}

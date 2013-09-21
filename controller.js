@@ -983,6 +983,20 @@ app.u.throwMessage(responseData); is the default error handler.
 	callbacks : {
 		
 
+		fileDownloadInModal : {
+			onSuccess : function(_rtag)	{
+				app.u.fileDownloadInModal({
+					'filename':app.data[_rtag.datapointer].FILENAME || _rtag.filename,
+					'mime_type':app.data[_rtag.datapointer].MIMETYPE,
+					'body':app.data[_rtag.datapointer].body,
+					'skipDecode':_rtag.skipDecode || false
+					});
+				if(_rtag.jqObj && _rtag.jqObj instanceof jQuery)	{
+					_rtag.jqObj.hideLoading();
+					}
+				}
+			},
+
 
 		handleNewSession : {
 //app.vars.cartID is set in the method. no need to set it here.
@@ -1235,6 +1249,86 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				//doh! no filename.
 				}
 			}, //loadCSSFile
+
+
+
+
+//vars requires MIME_TYPE and body.
+//vars.filename is optional
+//opted to force this into a modal to reduce the likely of a bunch of unused blobs remaining on the DOM.
+//the dialog will empty/remove itself when closed.
+			fileDownloadInModal : function(vars)	{
+				vars = vars || {};
+				if(vars.mime_type && vars.body)	{
+					var filename = vars.filename || 'file';
+					const MIME_TYPE = vars.mime_type;
+	
+					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+					$D.dialog({
+						'modal' : true,
+						'width' : 300,
+						'height' : 200,
+						close: function(event, ui)	{
+							$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
+	//						app.u.dump('got into dialog.close - destroy.');
+							$(this).dialog('destroy');
+							$(this).intervaledEmpty(1000,1);
+							} //will remove from dom on close
+						});
+
+	// this worked, but not an ideal solution. we like blob better.
+//			var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(vars.body);
+//			var $a = $('<a>',{'download':filename || 'file',"href":uri}).text('download me data style').appendTo($D);
+//			$("<br \/>").appendTo($D);
+	
+//if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
+//content returned on an API call will be base 64 encoded. app-generated content (report csv's) will not.
+//app.u.dump("vars.skipdecode: "+vars.skipDecode);
+
+					var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
+//					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
+						// Use typed arrays to convert the binary data to a Blob
+						//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
+						var arraybuffer = new ArrayBuffer(file.length);
+						var L = file.length;
+						var view = new Uint8Array(arraybuffer);
+						for (var i=0; i < L; i++) {
+							view[i] = file.charCodeAt(i) & 0xff;
+							}
+						var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
+//						}
+//					else	{
+//						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
+//						}
+					
+					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+
+					$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
+						var a = this;
+						a.textContent = 'Downloaded';
+						a.dataset.disabled = true;
+						$D.dialog('close');
+						// Need a small delay for the revokeObjectURL to work properly.
+						//revokeObjectURL causes browser to drop reference to the file.
+						setTimeout(function() {
+							window.URL.revokeObjectURL(a.href);
+							$D.empty().remove(); //nuke dialog.
+							}, 1500);
+						});
+
+					
+					$a.appendTo($D);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.u.fileDownloadInModal, either mime_type ["+vars.mime_type+"] or body ["+typeof vars.body+"] not passed.","gMessage":true});
+					}
+
+				},
+
+
+
+
+
 //The actual event type and the name used on the dom (focus, blur, etc) do not always match. Plus, I have a sneaking feeling we'll end up with differences between browsers.
 //This function can be used to regularize the event type. Wherever possible, we'll map to the jquery event type name.
 			normalizeEventType : function(type){

@@ -747,8 +747,7 @@ $target.append("<br \/>");
 						'_tag':	{
 							'datapointer' : 'adminPrivateFileDownload', //big dataset returned. only keep on in memory.
 							'callback' : 'fileDownloadInModal',
-							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
-							'extension' : 'admin'
+							'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
@@ -765,8 +764,7 @@ $target.append("<br \/>");
 						'_tag':	{
 							'datapointer' : 'adminPlatformLogDownload', //big dataset returned. only keep on in memory.
 							'callback' : 'fileDownloadInModal',
-							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
-							'extension' : 'admin'
+							'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
