@@ -1598,7 +1598,6 @@ app.u.dump(" -> data: "); app.u.dump(data);
 								'base64' : true,
 								'_tag' : {
 									'callback':'fileDownloadInModal',
-									'extension':'admin',
 									'datapointer':'templateZipDownload',
 									'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
 									}

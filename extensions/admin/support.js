@@ -456,7 +456,6 @@ var admin_support = function() {
 						'_tag':	{
 							'callback':'fileDownloadInModal',
 							'datapointer':'adminTicketFileGet',
-							'extension':'admin',
 							'jqObj' : $('#supportContent')
 							}
 						},'mutable');
