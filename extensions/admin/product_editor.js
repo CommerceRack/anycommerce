@@ -1491,7 +1491,9 @@ if($editedInputs.length)	{
 					//if any input for the record has been updated, update qty and loc.
 					if($('.edited',$tr).length){
 						records ++;
-						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']").val()+"&LOC="+$("input[name='loc']").val());
+//						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']").val()+"&LOC="+$("input[name='loc']").val());
+// *** 201338 -> bug fix.  no context on qty/loc inputs causing wrong values to be sent.
+						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']", $tr).val()+"&LOC="+$("input[name='loc']", $tr).val());
 						}
 					});
 				
@@ -1501,7 +1503,7 @@ if($editedInputs.length)	{
 
 
 
-app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+// app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}, //inventory
 
