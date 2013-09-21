@@ -413,12 +413,21 @@ account being billed for the time necessary to diagnose and repair the issue.
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='INVENTORY'>
 <fieldset>
-	<label><input type='radio' name='TYPE' value='inventory.simple'> Simple Inventory (%SKU,%INVENTORY,%LOCATION,%MIN_QTY)</label>
-	<label><input type='radio' name='TYPE' checked value='inventory'> Inventory (user specified header)</label>
+	<label><input type='radio' name='HEADERS' checked value='BASETYPE=SIMPLE'> SIMPLE (%SKU,%QTY,%NOTE,%COST)</label>
+	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=AAA'> WMS GEO:AAA (%SKU,%WMS_ZONE,%WMS_POS,%NOTE,%QTY,%COST)</label>
+	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=ABC'> WMS GEO:ABC </label>
+	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=DEF'> WMS GEO:DEF </label>
+	<label><input type='radio' name='HEADERS' value='BASETYPE=SUPPLIER|SUPPLIER_ID=123'> SUPPLIER ID:123 (%SKU,%QTY,%COST,%SUPPLIER_SKU) </label>
+	<label><input type='radio' name='HEADERS' value=''> Advanced Cmd's &amp; Multi-type (requires %CMD, %BASETYPE, etc.)</label>
+
+	<br>	
+
+<!--
 	<label><input type="checkbox" name="ENABLEINVENTORY"> Enable Inventory for each SKU imported</label>
 	<label><input type="checkbox" name="STRIPDASH"> Strip Dashes from SKU field.</label>
-	<label><input type="checkbox" name="CHECKSKU"> Check/Verify SKU's exist.</label>
-	<div class='formFieldHelp'>(define advanced variables in the header)</div>
+-->
+	<label><input type="checkbox" name="INCREMENTAL"> Incremental: Treat %QTY as ADD/SUB (+/-) instead of SET.</label>
+	<label><input type="checkbox" name="CHECKSKU"> Skip Invalid: Verify PID's exist and SKU's are valid.</label>
 </fieldset>
 
 <!-- adds the file upload area -->
