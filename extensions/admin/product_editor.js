@@ -300,6 +300,7 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 					}
 				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'));
 				app.u.handleButtons($modal);
+				app.ext.admin.u.handleFormConditionalDelegation($('form',$modal));
 				$modal.dialog('open');
 				}, //showCreateProductDialog
 	
