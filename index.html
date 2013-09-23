@@ -59,6 +59,9 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="jquery-ui-1.10.1.custom.min.css" />
 <link rel="stylesheet" type="text/css" href="_cubworld_styles.css" />
 
+<!-- FONTS --> 
+<link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
+
 <link rel="SHORTCUT ICON" href="favicon-app.ico" />
 <link rel="ICON" href="favicon-app.ico" />
 
@@ -168,7 +171,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.new-arrivals'});" class="pointer headerBarLink">NEW ARRIVALS</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.new-arrivals'});" src="img/catNavRow1/cw12_n_newarr-129x19.png" alt="New Arrivals" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.100_years_of_wrigley_field'});">NEW: 100 Years of Wrigley Field</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-accessories'});">Accessories</div>
@@ -185,7 +191,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts'});" class="pointer headerBarLink">SHIRTS</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts'});" src="img/catNavRow1/cw12_n_shirts-83x19.png" alt="Shirts" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-shirts.infant-toddler-newborn'});">Newborn / Infant / Toddler</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-shirts.kids'});">Youth / Child </div>
@@ -203,7 +212,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys'});" class="pointer headerBarLink">JERSEYS</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys'});" src="img/catNavRow1/cw12_n_jerseys-94x19.png" alt="Jerseys" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-jerseys.all-star_game'});">All-Star Game</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-jerseys.alternate'});">Alternate</div>
@@ -223,20 +235,26 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+			<div onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts'});" class="pointer headerBarLink">SWEATSHIRTS</div>
+			<!--
 			<img onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts'});" src="img/catNavRow1/cw12_n_sweatshirts-132x19.png" alt="Sweatshirts" />
-				<div class="dropdown displayNone">
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.institutional-team-gear'});">Institutional Team Gear</div>
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.jackets'});">Jackets</div>
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.kids'});">Kids</div>
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.men'});">Men</div>
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.women'});">Women</div>
-					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.z_custom_design_studio'});">NEW: Custom Sweatshirt Shop</div>
-				</div>
+			-->
+			<div class="dropdown displayNone">
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.institutional-team-gear'});">Institutional Team Gear</div>
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.jackets'});">Jackets</div>
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.kids'});">Kids</div>
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.men'});">Men</div>
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.women'});">Women</div>
+				<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.new-arrivals.z_custom_design_studio'});">NEW: Custom Sweatshirt Shop</div>
+			</div>
 		</div>
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.chicago-cubs-hats'});" class="pointer headerBarLink">HATS</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.chicago-cubs-hats'});" src="img/catNavRow1/cw12_n_hats-61x19.png" alt="Hats" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-hats.47-brand'});">47 Brand</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-hats.adjustable'});">Adjustable</div>
@@ -256,7 +274,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories'});" class="pointer headerBarLink">ACCESSORIES</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories'});" src="img/catNavRow1/cw12_n_accessories-131x19.png" alt="Accessories" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-accessories.kids'});">Kids</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent());  return showContent('category',{'navcat':'.chicago-cubs-accessories.men'});">Men</div>
@@ -266,7 +287,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" 
 			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
 			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<div onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs'});" class="pointer headerBarLink noBarRight">SOUVENIRS</div>
+				<!--
 				<img onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs'});" src="img/catNavRow1/cw12_n_souveniers-99x19.png" alt="Souvenirs" />
+				-->
 				<div class="dropdown displayNone">
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent()); return showContent('category',{'navcat':'.chicago-cubs-souvenirs.books-movies-music'});">Books / Movies / Music</div>
 					<div class="dropdownLink pointer" onClick="app.ext.cubworld.a.hideDropDownOnSelect($(this).parent().parent()); return showContent('category',{'navcat':'.chicago-cubs-souvenirs.cubs-auto-acessories'});">Auto</div>
@@ -287,12 +311,42 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 	</div>
 	
 	<div id="catNavRow2">
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise'});"><img src="img/catNavRow2/cw12_n_wringlyfield-93x12.png" alt="Wrigley Field" /></div>
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.on-field-gear'});"><img src="img/catNavRow2/cw12_n_onfieldgear-93x12.png" alt="On Field Gear" /></div>
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs'});"><img src="img/catNavRow2/cw12_n_vintageapprl-111x12.png" alt="Vintage Apparel" /></div>
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.sports-world-gift-cards'});"><img src="img/catNavRow2/cw12_n_giftcards-72x12.png" alt="Gift Cards" /></div>
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel'});"><img src="img/catNavRow2/cw12_n_chicagoteam-100x12.png" alt="Chicago Teams" /></div>
-		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise'});"><img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" /></div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise'});">
+			WRIGLEY FIELD
+			<!--
+			<img src="img/catNavRow2/cw12_n_wringlyfield-93x12.png" alt="Wrigley Field" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.on-field-gear'});">
+			ON FIELD GEAR
+			<!--
+			<img src="img/catNavRow2/cw12_n_onfieldgear-93x12.png" alt="On Field Gear" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs'});">
+			VINTAGE APPAREL
+			<!--
+			<img src="img/catNavRow2/cw12_n_vintageapprl-111x12.png" alt="Vintage Apparel" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.sports-world-gift-cards'});">
+			GIFT CARDS
+			<!--
+			<img src="img/catNavRow2/cw12_n_giftcards-72x12.png" alt="Gift Cards" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel'});">
+			CHICAGO TEAMS
+			<!--
+			<img src="img/catNavRow2/cw12_n_chicagoteam-100x12.png" alt="Chicago Teams" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise'});">
+			CLEARANCE
+			<!--
+			<img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" />
+			-->
+		</div>
 	</div>
 	
 	<div id="catNavRow3">
@@ -1700,7 +1754,7 @@ this will likely become more flexible in the future. ###
 </table>
 
 <div class="prodDescContainer alignJustify">
-	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99); format:imageURL;' height='100' />
+	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99); format:imageURL;' width="160" height="100" />
 	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 </div>
 
@@ -1907,8 +1961,8 @@ this will likely become more flexible in the future. ###
 -->
 </table>
 
-<div class="prodDescContainer">
-	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99); format:imageURL;'  width="300" height='100' />
+<div class="prodDescContainer alignJustify">
+	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99);format:imageURL;'  width="160" height="100" />
 	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 </div>
 

@@ -338,20 +338,30 @@ HEADER STYLES
 
 #catNavRow1{
 	position: absolute;
-	left: 40px;
-	bottom: 80px;
+	left: 32px;
+	bottom: 78px;
 }
+
 #catNavRow2 {
 	position: absolute;
-	bottom: 42px;
+	bottom: 47px;
 	left: 30px;
 }
 
 #catNavRow3 {
 	position: absolute;
-	bottom: 14px;
-	left: 30px;
+	bottom: 16px;
+	left: 36px;
 }
+
+.headerBarLink {	font-family: Francois One;}
+
+#catNavRow1 .headerBarLink{ font-size: 1.2em; color:#004997; text-shadow: 1px 1px 1px white; padding: 0px 8px;border-right: 1px solid white;}
+#catNavRow1 .headerBarLink:hover{ color:#A40000;}
+#catNavRow1 .headerBarLink.noBarRight{border-right: none;}
+
+#catNavRow2 .headerBarLink{color:white; font-size: .9em;}
+#catNavRow2 .headerBarLink:hover{color:#B40000;}
 
 #catNavRow1 > div {
 	float: left;
@@ -384,7 +394,7 @@ HEADER STYLES
 	z-index:99999;
 }
 #catNavRow1 > div > .dropdown {
-	top: 24px;
+	top: 28px;
 	left:0px;
 	width: 260px;
 }
