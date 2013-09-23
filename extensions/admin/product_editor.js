@@ -559,7 +559,7 @@ app.u.handleEventDelegation($target);
 
 var L = data.value.length;
 for(var i = 0; i < L; i += 1)	{
-	$("<button \/>").text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+	$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
 	}
 				},
 
@@ -1964,13 +1964,14 @@ else	{
 							}
 						},'mutable');
 //product specific marketplace details.
+					$("[data-app-role='ebayStatusTbody']",$PE).empty() //clear any rows. important if you've moved away and back to tab.
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductEBAYDetail',
 						'pid' : pid,
 						'_tag':	{
 							'datapointer':'adminProductEBAYDetail|'+pid,
 							'callback' : 'anycontent',
-							'jqObj' : $("[data-app-role='ebayStatusDetails']",$PE).empty() //clear any rows. important if you've moved away and back to tab.
+							'jqObj' : $("[data-app-role='ebayStatusDetails']",$PE)
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
