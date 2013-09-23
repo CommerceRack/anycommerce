@@ -241,7 +241,8 @@ app.model.dispatchThis('mutable');
 
 //NOTE -> the batch_exec will = REPORT for reports.
 			showReport : function($btn)	{
-				if($btn.closest('tr').data('batch_exec') == 'REPORT' && $btn.closest('tr').data('status').indexOf('END') >= 0)	{
+
+				if($btn.closest('tr').data('batch_exec').split('/')[0] == 'REPORT' && $btn.closest('tr').data('status').indexOf('END') >= 0)	{
 					$btn.button({text: false,icons: {primary: "ui-icon-image"}}).show();
 					$btn.off('click.showReport').on('click.showReport',function(event){
 						event.preventDefault();
@@ -267,7 +268,7 @@ app.model.dispatchThis('mutable');
 
 
 			showDownload : function($btn)	{
-				if($btn.closest('tr').data('batch_exec') == 'EXPORT' && $btn.closest('tr').data('status').indexOf('END-SUCCESS') >= 0)	{
+				if($btn.closest('tr').data('batch_exec').split('/')[0] == 'EXPORT' && $btn.closest('tr').data('status').indexOf('END-SUCCESS') >= 0)	{
 					$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}}).show();
 					$btn.off('click.showDownload').on('click.showDownload',function(event){
 						event.preventDefault();
