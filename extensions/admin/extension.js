@@ -3707,7 +3707,11 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 								}
 							
 							if($input.data('input-format').indexOf('alphanumeric') > -1)	{
-								$input.val($input.val().replace(/\W/g, ''));
+								$input.val($input.val().replace(/\W/, '','g'));
+								}							
+							
+							if($input.data('input-format').indexOf('pid') > -1)	{
+								$input.val($input.val().replace(/[^\w\-_]+/, '','g'));
 								}
 							
 							}

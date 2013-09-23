@@ -234,7 +234,7 @@
 	<fieldset class='marginBottom labelsAsBreaks alignedLabels alignedInputs'>
 		<legend>Required Fields</legend>
 	
-		<label><span>Product ID/SKU: </span><input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' data-input-format='alphanumeric' /></label>
+		<label><span>Product ID/SKU: </span><input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' data-input-format='pid' /></label>
 		<label ><span>Product Name: </span><INPUT TYPE="text" NAME="zoovy:prod_name"  maxlength="55" VALUE="" required='required' /></label>
 		<label ><span>Sell For Price: </span>$<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></label>
 				
@@ -645,11 +645,6 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<section data-anytab-content='inventory' class='clearfix'>
 	<form action='#' onSubmit='return false'>
 	
-	<label>
-		<input type='checkbox' name='zoovy:inv_enable' data-bind="var:product(zoovy:inv_enable); format:popVal;" />
-		Allow overselling !!!
-	</label>
-	
 	
 	<div data-app-role='inventoryContainer'></div>
 	
@@ -904,6 +899,13 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<form action='#' onSubmit='return false'>
 	
+	<fieldset data-app-role='buyAttributes'>
+	<label>
+		<input type="checkbox" name="buy:ts" data-bind="var: product(buy:ts); format:popVal;" class='applyAnycb' /> Allow syndication to Buy.com
+	</label>
+	</fieldset>	
+
+	
 	<fieldset class='marginBottom'>
 	
 	<table class='gridTable'>
@@ -1109,12 +1111,16 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 	<th class='alignLeft'>Base Type</th>
 	<th class='alignLeft'>Location</th>
 	<th class='alignLeft'>Note</th>
+	<th></th>
 </tr>
 </thead>
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
 <tfoot>
 <tr>
-	<th colspan='8'><button class='floatRight'>Add Simple</button></th>
+	<th colspan='9'>
+	<button class='floatRight applyButton' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
+	<button class='floatRight applyButton' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
+	</th>
 </tr>
 </tfoot>
 </table>
@@ -1139,15 +1145,31 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 
 
 <!--
-!!! these are the inputs for adding a simple inventory record.
+!!! these are the inputs for adding a simple or constant or some other 'type' of inventory record.
 1 record per product.
 if it already has a simple, lock the button
 -->
-<div id='prodEditSimpleInventoryTemplate'>
+<div id='addInventoryDetailTemplate'>
 
-Note
-Qty
+<form action='#' onSubmit='return false'>
 
+
+
+<fieldset>
+<label>
+	<span>Quantity</span>
+	<input type='number' step='1' value='' required='required' />
+</label>
+
+<label>
+	<span>Note</span>
+	<input type='text' name='note' value='' />
+</label>
+</fieldset>
+
+<button data-app-click='admin|submitForm'>Save</button>
+
+</form>
 
 </div>
 
@@ -1185,7 +1207,10 @@ Qty
 	<span data-bind="var: detail(NOTE); format:text;"></span>
 	<span>EDIT NOTE button</span>
 	</td>
-	<td>DELETE button</td>
+	<td>
+	<button data-app-event="admin|tagRowForRemove">Delete Detail</button>
+	<button>Update Detail Note</button>
+	</td>
 </tr>
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
@@ -1232,7 +1257,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 <tr id='buycomSkuRowTemplate'>
 	<td data-bind="var: detail(sku); format:text;"></td>
-	<td><input type='text' name='buycom:sku' data-bind="var:product(buycom:sku); format:popVal;" /></td>
+	<td><input type='text' name='sku:buy_sku' data-bind="var:product(sku:buy_sku); format:popVal;" /></td>
 </tr>
 
 <tr id='reviewsTableRowTemplate'>
@@ -1264,10 +1289,10 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 <tr id='skuTableRowTemplate'>
 	<td data-bind='var:sku(sku); format:text;'></td>
 	<td data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:text;'></td>
-	<td><input name="zoovy:prod_mfg" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
-	<td><input name="zoovy:prod_upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
-	<td><input name="amz:asin" size="4" type="text" data-bind='var:sku(%attribs.amz:asin); format:popVal;'></td>
-	<td><select name="zoovy:prod_cond" data-bind='var:sku(%attribs.zoovy:prod_cond); format:popVal;'>
+	<td><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.sku:mfgid); format:popVal;'></td>
+	<td><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.sku:upc); format:popVal;'></td>
+	<td><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
+	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
 		<option value="NEW">New</option>
 		<option value="OPEN">Open</option>
 		<option value="REFURB">Refurb</option>
@@ -1277,9 +1302,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 		<option value="DAMAGED">Damaged</option>
 		<option value="UNINSPECTED">Uninspected</option>
 	</select></td>
-	<td><input name="zoovy:base_price" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_price); format:popVal;'></td>
-	<td><input name="zoovy:base_cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
-	<td><input name="zoovy:base_weight" size="4" type="text" data-bind='var:sku(%attribs.zoovy:base_weight); format:popVal;'></td><!-- !!! ask b about this field id -->
+	<td><input name="sku:price" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
+	<td><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.sku:cost); format:popVal;'></td>
+	<td><input name="sku:weight" size="4" type="text" data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
 
 </tr>
 
@@ -1957,7 +1982,7 @@ time.
 			<input type="checkbox" name="zoom"  data-bind="var: variation(height); format:popVal;" />
 			Enable click to zoom
 		</label>
-		
+
 		<label>
 			<span>Image type</span>
 			<select name="img_type" data-bind="var: variation(img_type); format:popVal;">

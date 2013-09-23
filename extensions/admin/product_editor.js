@@ -1395,16 +1395,16 @@ Required params include:
 //$target is where the inventory detail report is going to show up.  must be a valid jquery object.
 //vars can contain a mode. Right now, it's optional. may be necessary when it comes time to save.
 			handleInventoryDetail : function($target,sku,vars)	{
-				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
+//				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
 				vars = vars || {};
 				if($target instanceof jQuery)	{
-					app.u.dump(" -> have a valid jquery target");
+//					app.u.dump(" -> have a valid jquery target");
 					if(sku)	{
-						app.u.dump(" -> have a sku ["+sku+"]");
+//						app.u.dump(" -> have a sku ["+sku+"]");
 						var PID = sku.split(':')[0]; //the Product ID.
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
-							app.u.dump(" -> Inventory record is in memory.");
+//							app.u.dump(" -> Inventory record is in memory.");
 							vars.sku = sku; //set on vars for dataAttribs.
 							$target.anycontent({
 								'templateID' : 'inventoryDetailTemplate',
@@ -1920,7 +1920,7 @@ if($editedInputs.length)	{
 												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
 												}).find('button').data('sku',skus[i].sku);
 											}
-										app.u.handleButtons($tbody);
+										app.u.handleButtons($tbody.parent('table'));
 										}
 									}
 								}
@@ -2422,7 +2422,33 @@ else	{
 				},
 
 
+//executed when the 'debug' button is pushed.
+			addDetailType2SKUShow : function($ele,p)	{
+//				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
+				
+				if($ele.data('detail-type'))	{
+					var pid = $ele.closest("form").find("input[name='pid']").val();
+					var sku = $ele.closest("[data-sku]").data('sku');
+					if(pid && sku)	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Add Detail Record for '+sku,
+							'showLoading' : false,
+							'templateID' : 'addInventoryDetailTemplate',
+							'appendTo' : $ele.closest("[data-app-role='productEditorContainer']")
+							});
 
+						$D.append("<input name='PID' value='"+pid+"' type='hidden' /><input name='SKU' value='"+sku+"' type='hidden' /><input name='TYPEE' value='"+$ele.data('detail-type')+"' type='hidden' />");
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.addDetailType2SKUShow, unable to ascertain PID ['+pid+'] and/or SKU ['+sku+'].','gMessage':true});
+						}
+					}
+				else	{
+					
+					}
+
+				},
 
 // END new/updated product editor events
 
