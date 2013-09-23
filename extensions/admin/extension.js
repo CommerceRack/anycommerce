@@ -3662,8 +3662,9 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 						}
 					});
 
-
-				$context.off('keyup.trackform').on('keyup.trackform',"input, textarea",function(event){
+// * 201338 -> mouseup added to this
+// mouseup event present because a right click of 'paste' does not trigger keyup.
+				$context.off('keyup.trackform').on('keyup.trackform mouseup.trackform',"input, textarea",function(event){
 					var $input = $(this);
 					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
 					else if($input.is(':checkbox'))	{
