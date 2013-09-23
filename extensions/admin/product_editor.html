@@ -1158,16 +1158,14 @@ if it already has a simple, lock the button
 <fieldset>
 <label>
 	<span>Quantity</span>
-	<input type='number' step='1' value='' required='required' />
+	<input type='number' step='1' value='' name='QTY' required='required' />
 </label>
 
 <label>
 	<span>Note</span>
-	<input type='text' name='note' value='' />
+	<input type='text' name='NOTE' value='' />
 </label>
 </fieldset>
-
-<button data-app-click='admin|submitForm'>Save</button>
 
 </form>
 
@@ -1195,7 +1193,7 @@ if it already has a simple, lock the button
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
 	<td class='alignLeft' >
-		<input data-bind="var: detail(QTY); format:popVal;" name='qty' />
+		<input data-bind="var: detail(QTY); format:popVal;" name='QTY' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
 	<td class='alignLeft'>
@@ -1204,12 +1202,10 @@ if it already has a simple, lock the button
 	<span data-bind="var: detail(WMS_POS); format:text;"></span>
 	</td>
 	<td class='alignLeft'>
-	<span data-bind="var: detail(NOTE); format:text;"></span>
-	<span>EDIT NOTE button</span>
+	<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" />
 	</td>
 	<td>
-	<button data-app-event="admin|tagRowForRemove">Delete Detail</button>
-	<button>Update Detail Note</button>
+	<button>Delete Detail</button>
 	</td>
 </tr>
 

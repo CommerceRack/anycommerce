@@ -1543,34 +1543,31 @@ Required params include:
 						}
 					}
 
-
-				if($("[name='zoovy:inv_enable']",$form).hasClass('edited'))	{
-					cmdObj['@updates'].push("INVENTORY?UNLIMITED="+($("[name='zoovy:inv_enable']",$form).is(':checked') ? 1 : 0));
-					cmdObj._tag.message += "Changed unlimited inventory setting.<br>";
-					}
-				
 // loop through all the inventory rows and check to see if any have been edited.
 // this seemed a better approach than using .edited because loc, is/was all need to be set and this way we don't need to check if an update was already logged.
 				var records = 0;
-				$("[data-app-role='inventoryTbody'] tr",$form).each(function(){
+				$("[data-app-role='inventoryDetailContainer'] tbody tr",$form).each(function(){
+					app.u.dump(" -> into the tr");
 					var $tr = $(this);
 					//if any input for the record has been updated, update qty and loc.
 					if($('.edited',$tr).length){
+						app.u.dump(" -> Found an edited record! "+$tr.data('sku'));
 						records ++;
 //						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']").val()+"&LOC="+$("input[name='loc']").val());
 // *** 201338 -> bug fix.  no context on qty/loc inputs causing wrong values to be sent.
-						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']", $tr).val()+"&LOC="+$("input[name='loc']", $tr).val());
+						cmdObj['@updates'].push("INV-"+$tr.data('basetype')-"UUID-SET?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='QTY']", $tr).val()+"&NOTE="+$("input[name='NOTE']", $tr).val());
+						
+						// ["INV-"+$ele.data('detail-type')+"-SKU-ADD?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())]
+						
 						}
 					});
 				
 				if(records)	{
 					cmdObj._tag.message += "Updated "+records+" inventory records.";
+					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
-
-
-
-// app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
-				app.model.addDispatchToQ(cmdObj,'immutable');
+app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+				
 				}, //inventory
 
 			navigation : function($form)	{
@@ -1920,7 +1917,9 @@ if($editedInputs.length)	{
 												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
 												}).find('button').data('sku',skus[i].sku);
 											}
-										app.u.handleButtons($tbody.parent('table'));
+										app.u.handleButtons($invContainer);
+// !!! check inventory records for simple or contstant and if one exists, hide the respective 'create' button.
+										
 										}
 									}
 								}
@@ -2427,18 +2426,47 @@ else	{
 //				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
 				
 				if($ele.data('detail-type'))	{
+					
 					var pid = $ele.closest("form").find("input[name='pid']").val();
 					var sku = $ele.closest("[data-sku]").data('sku');
 					if(pid && sku)	{
+						var $PE = $ele.closest("[data-app-role='productEditorContainer']");
 						var $D = app.ext.admin.i.dialogCreate({
 							'title' : 'Add Detail Record for '+sku,
 							'showLoading' : false,
 							'templateID' : 'addInventoryDetailTemplate',
-							'appendTo' : $ele.closest("[data-app-role='productEditorContainer']")
+							'appendTo' : $PE
 							});
+//add the 'save' button
+						$D.dialog( "option", "buttons", [ { text: "Save", click: function() {
+							if(app.u.validateForm($('form',$D)))	{
+$D.showLoading({"message":"Creating inventory record"});
+app.model.addDispatchToQ({
+	_cmd : 'adminProductMacro',
+	pid : pid,
+	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+	_tag : {
+		callback : function(rd){
+			$D.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$D.anymessage({'message':rd});
+				}
+			else	{			
+				$D.dialog('close');
+				$("[data-anytabs-tab='inventory']:first a",$PE).trigger('click');
+				$ele.closest('form').anymessage({'message':'Updated inventory record'});
+				}
+			}
+		}
+	},"immutable");
+app.model.dispatchThis("immutable");
 
-						$D.append("<input name='PID' value='"+pid+"' type='hidden' /><input name='SKU' value='"+sku+"' type='hidden' /><input name='TYPEE' value='"+$ele.data('detail-type')+"' type='hidden' />");
+
+								}
+							else	{}
+							}}]);
 						$D.dialog('open');
+						
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.addDetailType2SKUShow, unable to ascertain PID ['+pid+'] and/or SKU ['+sku+'].','gMessage':true});
