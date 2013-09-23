@@ -605,6 +605,8 @@ else	{
 							'showLoading' : false
 							});
 						$D.dialog('open');
+						
+						$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 						}
 					else	{
 						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
