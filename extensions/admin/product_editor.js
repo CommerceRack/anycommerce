@@ -1781,20 +1781,21 @@ if($editedInputs.length)	{
 							"datapointer" : "adminProductInventoryDetail|"+pid,
 							"callback" : function(rd){
 								$invContainer.hideLoading();
+ //clear any existing inventory records or clicking back into the tab will append and duplicates will show up.
+								$invContainer.empty()
 								if(app.model.responseHasErrors(rd)){
 									$invContainer.anymessage({'message':rd});
 									}
 								else	{
-									//if an item has no inventory-able options, go straight to showing the detail.
+//if an item has no inventory-able options, go straight to showing the detail.
 									if(app.data['adminProductDetail|'+pid]['@skus'].length == 1 && app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(":") < 0)	{
-//										$tbody.closest('table').replaceWith(app.renderFunctions.createTemplateInstance('inventoryDetailTemplate'));
+
 										app.ext.admin_prodEdit.u.handleInventoryDetail($invContainer,app.data['adminProductDetail|'+pid]['@skus'][0].sku,{'mode':'pid'});
-//										app.renderFunctions.translateSelector($tbody,{'@DETAIL':app.data[rd.datapointer]['%INVENTORY'][app.data['adminProductDetail|'+pid]['@skus'][0].sku]});
 										}
-									//if inventory-able options are present, a list of sku's is shown and the detail is available on click.
+//if inventory-able options are present, a list of sku's is shown and the detail is available on click.
 									else	{
-// !!! this section and what data gets passed into the anycontent in the loop will likely need updating once %SUMMARY is available and %INVENTORY changes to %DETAIL
 										$invContainer.append(app.renderFunctions.createTemplateInstance('inventorySKUDetailTemplate'));
+
 										var $tbody = $("[data-app-role='inventoryTbody']",$invContainer);
 										var skus = app.data['adminProductDetail|'+pid]['@skus'];
 										var L = skus.length;
