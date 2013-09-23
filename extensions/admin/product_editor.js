@@ -465,10 +465,10 @@ app.u.handleEventDelegation($target);
 	
 	// opened when editing a product. shows enabled options and ability to add store variations to product.
 			showProductVariationManager : function($target,pid)	{
-				app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
+//				app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
 				
 				if($target instanceof jQuery && pid)	{
-					app.u.dump(" -> $target is valid and pid is set.");
+//					app.u.dump(" -> $target is valid and pid is set.");
 					$target.empty().anycontent({
 						'templateID':'productVariationManager',
 						'showLoading':false,
@@ -1616,6 +1616,7 @@ if($editedInputs.length)	{
 						'@updates' : new Array(), //used for sku images
 						'_tag' : {
 							'callback' : 'showMessaging',
+							'message' : "SKU image updates have saved",
 							jqObj : $form
 							}
 						}
@@ -1628,12 +1629,12 @@ if($editedInputs.length)	{
 							}
 						else {} //no edits in this row.
 						});
-					
+//					app.u.dump(" -> cmdObj for skuImages:"); app.u.dump(cmdObj);
+					if(cmdObj['@updates'].length)	{
+						app.model.addDispatchToQ(cmdObj,'immutable');
+						}
 					}
 				else	{} //no changes to sku imagery.
-//					app.u.dump(" -> cmdObj for skuImages:"); app.u.dump(cmdObj);
-					app.model.addDispatchToQ(cmdObj,'immutable');
-
 
 				},
 
@@ -1649,12 +1650,13 @@ if($editedInputs.length)	{
 						'%attribs' : app.ext.admin_prodEdit.u.handleImageSave($prodImageUL,'pid'), //used for prod images
 						'_tag' : {
 							'callback' : 'showMessaging',
+							"message" : "Product image updates have saved",
 							jqObj : $form
 							}
 						}
-					
-					var imgIndex = 0; //used for setting which prod_image attribute is set.
-					
+					if(!$.isEmptyObject(cmdObj['%attribs']))	{
+						app.model.addDispatchToQ(cmdObj,'immutable');
+						}				
 
 					}
 				else	{} //no changes to the images. that's fine.
@@ -1669,6 +1671,7 @@ if($editedInputs.length)	{
 					'@updates' : new Array(),
 					_tag : {
 						callback : 'showMessaging',
+						"message" : "SKU attribute changes have saved.",
 						restoreInputsFromTrackingState : true,
 						jqObj : $form
 						}
@@ -1678,7 +1681,7 @@ if($editedInputs.length)	{
 $("[data-app-role='assemblyContainer'] input.edited",$form).each(function(){
 	var SKU = $(this).closest("[data-sku]").data('sku');
 	if(SKU)	{
-		cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&sku:assembly="+$(this).value());
+		cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&sku:assembly="+$(this).val());
 		}
 	else	{
 		$(this).closest('fieldset').anymessage({"message":"In admin_prodEdit.saveHandlers.sku, unable to ascertain sku","gMessage":true});
@@ -1705,7 +1708,11 @@ else	{} //no changes in sku attribs.
 
 
 //app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
-				app.model.addDispatchToQ(cmdObj,'immutable');
+				//The save button that exectutes this also runs skuImages. So it's possible this was run without any sku attribs changes 
+				//to avoid an API error (no @updates set), only add to Q if updates are present.
+				if(cmdObj['@updates'].length)	{
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
 				}, //buycom, //prodImages
 				
 			buycom : function($form)	{
@@ -2055,7 +2062,7 @@ else	{
 				},
 
 			handleVariationsTabContent : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.handleVariationsContent");
+//				app.u.dump("BEGIN admin_prodEdit.e.handleVariationsContent");
 				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
 				var $variationsContent = $("section[data-anytab-content='variations']:first",$PE).find("[data-app-role='productVariations']");
 				
@@ -2063,7 +2070,7 @@ else	{
 				
 				if($variationsContent.children().length)	{} //already rendered content.
 				else	{
-					app.u.dump(" -> $PE.length: "+$PE.length);
+//					app.u.dump(" -> $PE.length: "+$PE.length);
 					app.ext.admin_prodEdit.a.showProductVariationManager($variationsContent,$PE.data('pid'));
 					}
 				},
