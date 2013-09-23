@@ -97,7 +97,7 @@ var admin_wholesale = function() {
 						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
 						"<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"
 						],
-					'thead' : ['Code','Zone','Title','type','Preference',''],
+					'thead' : ['Code','Zone','Title','Zone Type','Preference','# Positions',''],
 					'tbodyDatabind' : "var: users(@ROWS); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminWarehouseList',
@@ -569,16 +569,42 @@ else	{
 				$btn.off('click.warehouseRemoveExec').on('click.warehouseRemoveExec',function(event){
 					event.preventDefault();
 					
-					var GEO = $btn.closest('tr').data('geo');
+					var $tr = $btn.closest('tr');
+					var GEO = $tr.data('geo');
 					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'message':'Are you sure you want to delete warehouse '+GEO+'? There is no undo for this action.',
-						'removeButtonText' : 'Delete Warehouse',
+						'message':'Are you sure you want to delete '+($tr.data('_object') == 'GEO' ? (" warehouse "+GEO) : (" zone "+$tr.data('zone')))+'? There is no undo for this action.',
+						'removeButtonText' : 'Delete',
 						'removeFunction':function(vars,$modal){
 							var $panel = $(app.u.jqSelector('#','warehouse_'+GEO));
 							if($panel.length)	{
 								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
 								}
-							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','GEO':GEO,'@updates':["WAREHOUSE-DELETE"]},'immutable');
+							
+							if($tr.data('_object') == 'ZONE')	{
+								app.model.addDispatchToQ({
+									'_cmd':'adminWarehouseMacro',
+									'GEO' : GEO,
+									'_tag': {
+										'callback' : 'showMessaging',
+										'jqObj' : $('#globalMessaging'),
+										'message' : 'Zone '+$tr.data('zone')+' has been deleted.'
+										},
+									'@updates':["ZONE-DELETE?ZONE="+$tr.data('zone')]
+									},'immutable');
+								}
+							else	{
+								app.model.addDispatchToQ({
+									'_cmd':'adminWarehouseMacro',
+									'GEO':GEO,
+									'_tag': {
+										'callback' : 'showMessaging',
+										'jqObj' : $('#globalMessaging'),
+										'message' : 'Warehouse '+GEO+' has been deleted.'
+										},
+									'@updates':["WAREHOUSE-DELETE"]},'immutable');
+								}
+							
+							
 							app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
 							app.model.dispatchThis('immutable');
 							$modal.dialog('close');

@@ -948,6 +948,7 @@
 	<td data-bind="var: warehouse(WAREHOUSE_TITLE); defaultVar:(ZONE_TITLE); format:text;"></td>
 	<td data-bind="var: warehouse(ZONE_TYPE); format:text;"></td>
 	<td data-bind="var: warehouse(ZONE_PREFERENCE); format:text;"></td>
+	<td data-bind="var: warehouse(@POSITIONS.length); format:text;"></td>
 	<td class='alignRight'>
 <button data-app-event="admin_wholesale|warehouseRemoveConfirm">Remove</button>
 <button data-app-event="admin_wholesale|warehouseDetailDMIPanel">Edit</button>
