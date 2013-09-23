@@ -1213,7 +1213,8 @@ for updateing inventory records per pid/sku (setting location)
 	<section class='slimLeftContentSection ui-widget'>
 		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>Warehouse Utilities</h1>
 		<div data-app-role='slimLeftContentSection' class='ui-widget-content stdPadding'>
-			<p>Please select a warehouse from the list below prior to using a WMS utility</p>
+			<p data-bind="var: warehouses(@ROWS); format:showIfSet;" class='displayNone'>Please select a warehouse from the list below prior to using a WMS utility.</p>
+			<p data-bind="var: warehouses(@ROWS); format:hideIfSet;">It appears you have not created any warehouses. Please create a warehouse through utilities &#187; warehouse manager prior to using this interface.</p>
 			<ul class='noPadOrMargin listStyleNone' data-bind="var: warehouses(@ROWS); format:processList; loadsTemplate:warehouseUtilityWarehouseItemTemplate;"></ul>
 		</div>
 	</section>

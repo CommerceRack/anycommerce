@@ -903,7 +903,7 @@ var $input = $(app.u.jqSelector('#',ID));
 				handleTemplateSave : function($D)	{
 
 					if($D instanceof jQuery)	{
-						const mode = $D.data('mode');
+						var mode = $D.data('mode');
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
 	
 							$D.showLoading({'message':'Saving changes'});

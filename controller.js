@@ -1261,7 +1261,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				vars = vars || {};
 				if(vars.mime_type && vars.body)	{
 					var filename = vars.filename || 'file';
-					const MIME_TYPE = vars.mime_type;
+					var MIME_TYPE = vars.mime_type;
 	
 					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
 					$D.dialog({
