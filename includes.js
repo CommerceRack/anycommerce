@@ -1152,8 +1152,10 @@ $.fn.serializeJSON = function(options){
 	var $form = $(this);
 	options = options || {}
 	options.cb = options.cb || false;
+	//allows for a different selector to be passed, such as :input.edited
+	options.selector = options.selector || ":input";
 
-	$form.find('input, select, textarea, datalist, keygen, output').each(function(){
+	$(options.selector,$form).each(function(){
 		var val;
 //		app.u.dump(" -> this.type: "+this.type);
 		if(!this.name){return}; //early exit if name not set, which is required.

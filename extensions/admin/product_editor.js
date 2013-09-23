@@ -1513,23 +1513,18 @@ Required params include:
 				var cmdObj = {
 					_cmd : 'adminProductUpdate',
 					pid : pid,
-					'%attribs' : {},
+					'%attribs' : $form.serializeJSON({'selector' : ':input.edited' , 'cb' : true}),
 					_tag : {
 						callback : 'showMessaging',
 						restoreInputsFromTrackingState : true,
+						'message' : 'Attributes have been saved.',
 						jqObj : $form
 						}
 					}
-//the :input pseudo selector will match all form field types.
-var $editedInputs = $(':input.edited',$form);
-if($editedInputs.length)	{
-	$editedInputs.each(function(){
-		cmdObj['%attribs'][$(this).attr('name')] = this.value;
-		})
-	cmdObj._tag.message = "Saved "+$editedInputs.length+" attribute changes";
-//	app.u.dump(" -> cmdObj for attributes:"); app.u.dump(cmdObj);
-	}
-				app.model.addDispatchToQ(cmdObj,'immutable');
+//	app.u.dump(" -> cmdObj for attributes:"); app.u.dump(cmdObj); 
+				if(!$.isEmptyObject(cmdObj['%attribs']))	{
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
 				}, //attributes
 
 //INVENTORY?SKU=XXXXX&unlimited, which is a checkbox at the product level.
