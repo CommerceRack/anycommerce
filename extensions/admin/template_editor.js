@@ -989,7 +989,7 @@ var $input = $(app.u.jqSelector('#',ID));
 				handleTemplateSelect : function(vars)	{
 					vars = vars || {};
 					var $TC = $('#templateChooser');
-					const mode = $TC.data('mode'); //should never get changed through this code.
+					var mode = $TC.data('mode'); //should never get changed through this code.
 					
 					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
 						if(vars.SUBDIR)	{
@@ -1402,7 +1402,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						var
 							templateName = $('#templateName').val(),
 							$D = $('#templateEditor');
-						const mode = $D.data('mode');
+						var mode = $D.data('mode');
 						
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
 
@@ -1459,7 +1459,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					app.u.dump("BEGIN admin_templateEditor.e.templateChooserPreview");
 					var $chooser = $("#templateChooser");
 					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
-					const mode = $chooser.data('mode');
+					var mode = $chooser.data('mode');
 					
 					if(mode)	{
 						app.u.dump(" --> mode is set ("+mode+")");
@@ -1534,7 +1534,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
-						const mode = $btn.data('mode');
+						var mode = $btn.data('mode');
 						var data = $btn.closest('.buttonset').data();
 						
 						var $D = app.ext.admin.i.dialogCreate({
@@ -1588,7 +1588,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 					$btn.off('click.containerZipDownloadExec').on('click.containerZipDownloadExec',function(){
 
-						const mode = $btn.data('mode');
+						var mode = $btn.data('mode');
 						var data = $btn.closest('.buttonset').data();
 app.u.dump(" -> data: "); app.u.dump(data);
 						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{

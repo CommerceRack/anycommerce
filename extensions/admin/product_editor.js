@@ -1398,7 +1398,7 @@ Required params include:
 					app.u.dump(" -> have a valid jquery target");
 					if(sku)	{
 						app.u.dump(" -> have a sku ["+sku+"]");
-						const PID = sku.split(':')[0]; //the Product ID.
+						var PID = sku.split(':')[0]; //the Product ID.
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
 							app.u.dump(" -> Inventory record is in memory.");

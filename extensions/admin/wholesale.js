@@ -765,7 +765,7 @@ app.model.dispatchThis('mutable');
 
 					event.preventDefault();
 					
-					const VENDORID = $btn.closest('tr').data('code');
+					var VENDORID = $btn.closest('tr').data('code');
 					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
 					
 					var $D = app.ext.admin.i.dialogConfirmRemove({
@@ -1085,7 +1085,7 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 
 $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrderListShow',function(event){
 	event.preventDefault();
-	const VENDORID = $btn.closest("[data-code]").data('code');
+	var VENDORID = $btn.closest("[data-code]").data('code');
 	
 	if(VENDORID)	{
 
@@ -1295,7 +1295,7 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.priceScheduleUpdateShow').on('click.priceScheduleUpdateShow',function(event){
 					event.preventDefault();
-					const SID = $btn.closest('tr').data('sid'); //schedule id
+					var SID = $btn.closest('tr').data('sid'); //schedule id
 					
 					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'priceScheduleUpdateTemplate',
