@@ -679,7 +679,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<form action='#' onSubmit='return false'>
 	
-	<fieldset class='imagesEditor floatRight marginLeft'>
+	<fieldset class='imagesEditor floatRight marginLeft'><!-- prodImagesContainer container used in both pid and sku based image save -->
 		<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
 		<legend>Sku Images</legend>
 		<!-- sku images will get added into this div (with js) -->
@@ -699,52 +699,23 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<thead>
 		<tr>
 			<th>SKU</th>
+			<th>Desc</th>
 			<th>Mfg ID</th>
 			<th>UPC</th>
 			<th>ASIN</th>
+			<th>Condition</th>
 			<th>Price</th>
 			<th>Base Cost</th>
 			<th>Weight</th>
 		</tr>
 		</thead>
-		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;'></tbody>
+		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
 		</table>
 	</fieldset>
 
-	<fieldset>
-		<legend>Warehouses</legend>
-		<table class='gridTable applyAnytable'>
-		<thead>
-		<tr>
-			<th>Location</th>
-			<th>Qty</th>
-			<th>Condition</th>
-			<th>Cost</th>
-			<th>Note</th>
-			<th>Container</th>
-			<th>Origin</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:wmsTableRowTemplate;'></tbody>
-		
-		<tfoot>
-		<tr>
-			<td><input name="loc" size="15" type="text"></td>
-			<td><input name="qty" size="4" type="text"></td>
-			<td><select name="cond"><option value="NEW">NEW</option><option value="OPEN">OPEN</option><option value="REFURB">REFURB</option><option value="SREFURB">SREFURB</option><option value="USED">USED</option><option value="OTHER">OTHER</option><option value="DAMAGED">DAMAGED</option><option value="UNINSPECTED">UNINSPECTED</option></select></td>
-			<td><input name="cost" size="4" maxlength="4" type="text"></td>
-			<td><input name="note" size="25" maxlength="25" type="text"></td>
-			<td><input name="container" size="10" maxlength="10" type="text"></td>
-			<td><input name="origin" size="10" type="text"></td>
-			<td><button >Add</button></td>
-		</tr>
-		</tfoot>
-		
-		</table>
-	</fieldset>
+
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -1143,7 +1114,7 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
 <tfoot>
 <tr>
-	<th colspan='8'><button class='floatRight'>Add Location</button></th>
+	<th colspan='8'><button class='floatRight'>Add Simple</button></th>
 </tr>
 </tfoot>
 </table>
@@ -1167,6 +1138,19 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 
 
 
+<!--
+!!! these are the inputs for adding a simple inventory record.
+1 record per product.
+if it already has a simple, lock the button
+-->
+<div id='prodEditSimpleInventoryTemplate'>
+
+Note
+Qty
+
+
+</div>
+
 
 <!-- templates used for process list inside the product editor template -->
 
@@ -1188,14 +1172,20 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 	<td class='alignLeft' data-bind="var: detail(SKU); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
-	<td class='alignLeft' data-bind="var: detail(QTY); format:text;"></td>
+	<td class='alignLeft' >
+		<input data-bind="var: detail(QTY); format:popVal;" name='qty' />
+	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
 	<td class='alignLeft'>
 	<span data-bind="var: detail(WMS_GEO); format:text;"></span>
 	<span data-bind="var: detail(WMS_ZONE); format:text;"></span>
 	<span data-bind="var: detail(WMS_POS); format:text;"></span>
 	</td>
-	<td class='alignLeft' data-bind="var: detail(NOTE); format:text;"></td>
+	<td class='alignLeft'>
+	<span data-bind="var: detail(NOTE); format:text;"></span>
+	<span>EDIT NOTE button</span>
+	</td>
+	<td>DELETE button</td>
 </tr>
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
@@ -1260,33 +1250,33 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-<tr id='wmsTableRowTemplate'>
-	<td data-bind='var:sku(loc); format:text;'></td>
-	<td><input name="qty" size="4" type="text"></td>
-	<td><select name="cond"><option value="NEW">NEW</option><option value="OPEN">OPEN</option><option value="REFURB">REFURB</option><option value="SREFURB">SREFURB</option><option value="USED">USED</option><option value="OTHER">OTHER</option><option value="DAMAGED">DAMAGED</option><option value="UNINSPECTED">UNINSPECTED</option></select></td>
-	<td><input name="cost" size="4" maxlength="4" type="text"></td>
-	<td><input name="note" size="25" maxlength="25" type="text"></td>
-	<td><input name="container" size="10" maxlength="10" type="text"></td>
-	<td><input name="origin" size="10" type="text"></td>
-	<td><button >Save</button></td>
-</tr>
-
 
 
 <!-- used for assemblies -->
 <tr id='xsellTableRowTemplate'>
 	<td data-bind='var:sku(sku); format:text;'></td>
 	<td>
-		<input type='text' name='qtyPricing' value='' data-bind='var:sku(%attribs.sku:assembly); format:text;' />
+		<input type='text' name='sku:assembly' value='' data-bind='var:sku(%attribs.sku:assembly); format:text;' />
 	</td>
 </tr>
 
 <!-- used for sku-specific attributes -->
 <tr id='skuTableRowTemplate'>
 	<td data-bind='var:sku(sku); format:text;'></td>
+	<td data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:text;'></td>
 	<td><input name="zoovy:prod_mfg" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
 	<td><input name="zoovy:prod_upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
 	<td><input name="amz:asin" size="4" type="text" data-bind='var:sku(%attribs.amz:asin); format:popVal;'></td>
+	<td><select name="zoovy:prod_cond" data-bind='var:sku(%attribs.zoovy:prod_cond); format:popVal;'>
+		<option value="NEW">New</option>
+		<option value="OPEN">Open</option>
+		<option value="REFURB">Refurb</option>
+		<option value="SREFURB">SRefurb</option>
+		<option value="USED">Used</option>
+		<option value="OTHER">Other</option>
+		<option value="DAMAGED">Damaged</option>
+		<option value="UNINSPECTED">Uninspected</option>
+	</select></td>
 	<td><input name="zoovy:base_price" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_price); format:popVal;'></td>
 	<td><input name="zoovy:base_cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
 	<td><input name="zoovy:base_weight" size="4" type="text" data-bind='var:sku(%attribs.zoovy:base_weight); format:popVal;'></td><!-- !!! ask b about this field id -->

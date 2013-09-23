@@ -482,7 +482,7 @@ setTimeout(function(){
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
-				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
+//				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
 				var newFilename = (set2Blank === true) ? '' : fileInfo.path; //set2Blank
@@ -499,10 +499,10 @@ setTimeout(function(){
 				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src || mediaData.mode == 'kissTemplate'))	{
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
-						app.u.dump(" -> we have everything we need to proceed. Proceed.");
+//						app.u.dump(" -> we have everything we need to proceed. Proceed.");
 						var $image = (mediaData.mode == 'kissTemplate') ? $('iframe',$('#templateEditor')).contents().find(mediaData.imageID) : $(mediaData.imageID);
 						var oldSrc = $image.src;
-						app.u.dump(" -> $image.length: "+$image.length);
+//						app.u.dump(" -> $image.length: "+$image.length);
 //						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
@@ -518,9 +518,9 @@ setTimeout(function(){
 //however, didn't want to assume it was broken everywhere so a check was added.
 						var correctedSelector = mediaData.eleSelector;
 						if(mediaData.eleSelector.indexOf('#') == -1)	{
-							app.u.dump(" -> # some dumbass called medialib but used selector \'"+mediaData.eleSelector+"\'! i will *attempt* to fix it.");
+//							app.u.dump(" -> # some dumbass called medialib but used selector \'"+mediaData.eleSelector+"\'! i will *attempt* to fix it.");
 							correctedSelector = app.u.jqSelector('#',mediaData.eleSelector);
-							app.u.dump(" -> correctedSelector.length: "+$(correctedSelector).length);
+//							app.u.dump(" -> correctedSelector.length: "+$(correctedSelector).length);
 							}
 //						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);
@@ -787,9 +787,9 @@ else	{
 
 			convertFormToJQFU : function(selector,mode)	{
 
-app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
-app.u.dump(" -> selector: "+selector);
-app.u.dump(" -> mode: "+mode);
+//app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
+//app.u.dump(" -> selector: "+selector);
+//app.u.dump(" -> mode: "+mode);
 
 //'use strict';
 
@@ -910,7 +910,7 @@ if(selector && mode)	{
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
 	
 	function fileuploadstopped() {
-		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+//		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 	
 		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
@@ -920,7 +920,7 @@ if(selector && mode)	{
 	
 	//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 	if(mode == 'mediaLibrary')	{
-		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
+//		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
 	// Enable iframe cross-domain access via redirect option:

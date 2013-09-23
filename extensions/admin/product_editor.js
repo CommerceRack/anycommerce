@@ -768,8 +768,10 @@ for(var i = 0; i < L; i += 1)	{
 		
 //@skus will always have one record. Sku specific imagery are only necessary if MORE than one sku is present and, even then, the record for the pid itself doesn't need sku specific images. if an item DOES have options, 'pid' ( by itself ) won't appear in the inventory record.
 					var $container = $("[data-app-role='prodEditSkuImagesContainer']",$context).show();
-//only run through SKU specific images if this is being run on variations tab and only do it once (or each sku could be shown multple times)
-					if($container.length && !$container.children().length)	{	
+					
+//only run through SKU specific images if this is being run on variations tab
+					if($container.length)	{
+						$container.empty();
 						var skus = app.data['adminProductDetail|'+pid]['@skus']; //shortcut
 						var L = skus.length;
 						var $table = $("<table \/>").addClass('gridTable').appendTo($container);
@@ -1332,7 +1334,7 @@ Required params include:
 								$tmpTable.addClass('gridTable').css({'z-index':'1000','position':'absolute','width':$ele.width()}).css($ele.offset());
 								$tmpTable.appendTo($(document.body));
 								$tr.appendTo($tmpTable);
-							//	if($ele.data('clone'))	{$tmpTable.css('background','red'); die()};
+							//	if($ele.data('clone'))	{$tmpTable.css('background','red');
 								$tmpTable.animate($li.parent().offset(),'slow',function(){
 									$li.show();
 									$tmpTable.hide();
@@ -1429,7 +1431,71 @@ Required params include:
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, $target is not a valid instance of jQuery.","gMessage":true});
 					}
+				},
+			
+			
+			handleImageSave : function($prodImageUL,mode)	{
+				var r; //what is returned. a string for sku (updates) and an object (attribs) for pid
+				if(mode == 'sku' || mode == 'pid')	{
+					
+					if(mode == 'sku')	{r = "SET-SKU?SKU="+$prodImageUL.closest("[data-sku]").data('sku')}
+					else	{r = {}}
+					
+					var imgIndex = 0; //used for setting which prod_image attribute is set.
+//loop through all the li's, even those not edited, so that imgIndex is accurate.
+//can't use the li index() because there are hidden (removed) li's.
+					$("li:visible",$prodImageUL).not('.dropzone').each(function(){
+						imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images are present.
+//						app.u.dump(" -> imgIndex: "+imgIndex);
+						if($(this).hasClass('edited'))	{
+							var $img = $(this).find('img').first();
+							if($img.length && $img.data('filename'))	{
+								//image either an original OR added w/ media lib.
+								if(mode == 'sku')	{
+									r += "&zoovy:prod_image"+(imgIndex)+"="+$img.data('filename');
+									}
+								else	{
+									cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
+									}
+								}
+							else if($img.length == 0)	{
+								//if the media lib was opened, but closed w/out a selection being made, there could be a leftover 'blank'.
+								}
+							else	{
+								//uh oh. something went wrong. Whether shuffled, added w/ media lib or using dropzone, data-filename should be set.
+								// !!! what to do?
+								}
+							}
+						})
+
+					//app.u.dump(" -> finished w/ setting images. now handle emptying.");
+					//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
+					if(mode == 'sku') {} //all sku images are deleted at outset, so movement and remove have no impact at this point.
+					else	{
+						if(imgIndex < ($prodImageUL.children().not('.dropzone').length))	{
+							var L = ($prodImageUL.children().not('.dropzone').length) - imgIndex;
+						//	app.u.dump(" -> L: "+L);
+							for(var i = 0; i < L; i += 1)	{
+								imgIndex++; //increment before to pick up after we left off.
+	//							app.u.dump(" -> imgIndex: "+imgIndex);
+								r['zoovy:prod_image'+(imgIndex)] = "";
+								}
+							}
+	//					app.u.dump(" -> cmdObj for prodImages:"); app.u.dump(cmdObj);
+						}
+//					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
+				else	{
+					$prodImageUL.insertBefore($("<div \/>").anymessage({
+						'message':'In admin_prodEdit.u.handleImageSave, invalid mode ['+mode+'] passed. must be pid or sku.',
+						'gMessage':true
+						}));
+					
+					r = false;
+					}
+				return r;
 				}
+			
 	
 			}, //u
 
@@ -1541,6 +1607,36 @@ if($editedInputs.length)	{
 					}
 				}, //navigation
 
+			skuImages : function($form)	{
+				if($("[data-app-role='prodEditSkuImagesContainer'] .edited",$form).length)	{
+					var pid = $("input[name='pid']",$form).val();
+					var cmdObj = {
+						'_cmd' : 'adminProductMacro',
+						'pid' : pid,
+						'@updates' : new Array(), //used for sku images
+						'_tag' : {
+							'callback' : 'showMessaging',
+							jqObj : $form
+							}
+						}
+					$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$form).each(function(){
+						var $tr = $(this);
+						if($('.edited',$tr).length)	{
+							//clear all the sku images.
+							cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest("[data-sku]").data('sku')+"&zoovy:prod_image1=&zoovy:prod_image2=&zoovy:prod_image3="); 
+							cmdObj['@updates'].push(app.ext.admin_prodEdit.u.handleImageSave($('ul:first',$tr),'sku'))
+							}
+						else {} //no edits in this row.
+						});
+					
+					}
+				else	{} //no changes to sku imagery.
+//					app.u.dump(" -> cmdObj for skuImages:"); app.u.dump(cmdObj);
+					app.model.addDispatchToQ(cmdObj,'immutable');
+
+
+				},
+
 			prodImages : function($form)	{
 
 				var $prodImageUL = $("[data-app-role='prodImagesContainer']",$form);
@@ -1550,7 +1646,7 @@ if($editedInputs.length)	{
 					var cmdObj = {
 						'_cmd' : 'adminProductUpdate',
 						'pid' : pid,
-						'%attribs' : {}, //used for prod images
+						'%attribs' : app.ext.admin_prodEdit.u.handleImageSave($prodImageUL,'pid'), //used for prod images
 						'_tag' : {
 							'callback' : 'showMessaging',
 							jqObj : $form
@@ -1559,43 +1655,58 @@ if($editedInputs.length)	{
 					
 					var imgIndex = 0; //used for setting which prod_image attribute is set.
 					
-					//loop through all the li's, even those not edited, so that imgIndex is accurate.
-					//can't use the li index() because there are hidden (removed) li's.
-					$("li:visible",$prodImageUL).not('.dropzone').each(function(){
-						imgIndex++; //incremented at the beginning so that after all the loops, we have an accurate count of how many images are present.
-					//	app.u.dump(" -> imgIndex: "+imgIndex);
-						if($(this).hasClass('edited'))	{
-							var $img = $(this).find('img').first();
-							if($img.length && $img.data('filename'))	{
-								//image either an original OR added w/ media lib.
-								cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
-								}
-							else if($img.length == 0)	{
-								//if the media lib was opened, but closed w/out a selection being made, there could be a leftover 'blank'.
-								}
-							else	{
-								//uh oh. something went wrong. Whether shuffled, added w/ media lib or using dropzone, data-filename should be set.
-								// !!! what to do?
-								}
-							}
-						})
-					//app.u.dump(" -> finished w/ setting images. now handle emptying.");
-					//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
-					if(imgIndex < ($prodImageUL.children().not('.dropzone').length))	{
-						var L = ($prodImageUL.children().not('.dropzone').length) - imgIndex;
-					//	app.u.dump(" -> L: "+L);
-						for(var i = 0; i < L; i += 1)	{
-							imgIndex++; //increment before to pick up after we left off.
-					//		app.u.dump(" -> imgIndex: "+imgIndex);
-							cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = "";
-							}
-						}
-					//app.u.dump(" -> cmdObj for prodImages:"); app.u.dump(cmdObj);
-					app.model.addDispatchToQ(cmdObj,'immutable');
+
 					}
 				else	{} //no changes to the images. that's fine.
 
 				}, //prodImages
+// executed from the save button in the variations panel. called sku because it doesn't impact add/removing variations, just updating attribs for each option.
+			sku : function($form)	{
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'@updates' : new Array(),
+					_tag : {
+						callback : 'showMessaging',
+						restoreInputsFromTrackingState : true,
+						jqObj : $form
+						}
+					}
+
+//handle any assembly updates. currenly, each row only has one input, so keying off that input (if .edited present) is best.
+$("[data-app-role='assemblyContainer'] input.edited",$form).each(function(){
+	var SKU = $(this).closest("[data-sku]").data('sku');
+	if(SKU)	{
+		cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&sku:assembly="+$(this).value());
+		}
+	else	{
+		$(this).closest('fieldset').anymessage({"message":"In admin_prodEdit.saveHandlers.sku, unable to ascertain sku","gMessage":true});
+		}
+	})
+
+//the :input pseudo selector will match all form field types.
+var $tbody = $("[data-app-role='prodEditSkuAttribsTbody']",$form);
+//high level check to see if any updates occured within sku attribs.
+if($('.edited',$tbody).length)	{
+	$tbody.children().each(function(){
+		var $tr = $(this);
+		var SKU = $(this).closest("[data-sku]").data('sku');
+		if($('.edited',$tr).length)	{
+			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON())); //if any input changed, all are updated.
+			}
+		else	{} //no updates in this row.
+		});
+	}
+else	{} //no changes in sku attribs.
+
+// !!! need to save sku imagery too.
+
+
+
+//app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				}, //buycom, //prodImages
 				
 			buycom : function($form)	{
 				var pid = $("input[name='pid']",$form).val();
