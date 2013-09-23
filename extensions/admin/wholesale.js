@@ -321,7 +321,7 @@ app.model.dispatchThis('mutable');
 					$tag.text(data.value.GEO);
 					}
 				else if(data.value._OBJECT == 'ZONE')	{
-					
+					$tag.append("<span class='ui-icon ui-icon-arrow-1-e marginLeft'></span>")
 					}
 				else	{
 					$tag.text("Unrecognized _object");// something new?
@@ -498,70 +498,76 @@ app.model.dispatchThis('mutable');
 
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
-					event.preventDefault();
-					var data = $btn.closest('tr').data();
+				
+				if($btn.closest('tr').data('zone_type') == 'RECEIVING')	{
+					$btn.hide();
+					}
+				else	{
+					$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
+						event.preventDefault();
+						var data = $btn.closest('tr').data();
 					
-					if(data._object == 'GEO' || data._object == 'ZONE')	{
-//these are the shared values for the DMI panel.
-						var panelObj = {
-							'panelID' : 'warehouse_'+data.geo,
-							'handleAppEvents' : true
-							}
-
-						if(data._object == 'ZONE')	{
-							panelObj.templateID = 'warehouseZoneStandardTemplate';
-							panelObj.header = 'Edit Zone: '+data.zone;
-							}
-						else	{
-							panelObj.templateID = 'warehouseAddUpdateTemplate';
-							panelObj.header = 'Edit Warehouse: '+data.geo;
-							}
-						
-						var $panel = app.ext.admin.i.DMIPanelOpen($btn,panelObj);
-
-						if(data._object == 'GEO')	{
-							$("[name='GEO']",$panel).closest('label').hide().val(data.geo); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-							$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-							}
-						else	{
-							$('form',$panel).append("<input type='hidden' name='GEO' value='"+data.geo+"' />");
-							$('form',$panel).append("<input type='hidden' name='ZONE' value='"+data.zone+"' />");
-							}
-						$panel.showLoading({'message':'Fetching warehouse details'});
-						app.model.addDispatchToQ({
-							'_cmd':'adminWarehouseDetail',
-							'GEO' : data.geo,
-							'_tag':	{
-								'datapointer' : 'adminWarehouseDetail|'+data.geo,
-								'callback':function(rd)	{
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	//success content goes here.
-	if(data._object == 'GEO')	{
-		$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
+						if(data._object == 'GEO' || data._object == 'ZONE')	{
+	//these are the shared values for the DMI panel.
+							var panelObj = {
+								'panelID' : 'warehouse_'+data.geo,
+								'handleAppEvents' : true
+								}
+	
+							if(data._object == 'ZONE')	{
+								panelObj.templateID = 'warehouseZoneStandardTemplate';
+								panelObj.header = 'Edit Zone: '+data.zone;
+								}
+							else	{
+								panelObj.templateID = 'warehouseAddUpdateTemplate';
+								panelObj.header = 'Edit Warehouse: '+data.geo;
+								}
+							
+							var $panel = app.ext.admin.i.DMIPanelOpen($btn,panelObj);
+	
+							if(data._object == 'GEO')	{
+								$("[name='GEO']",$panel).closest('label').hide().val(data.geo); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+								$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+								}
+							else	{
+								$('form',$panel).append("<input type='hidden' name='GEO' value='"+data.geo+"' />");
+								$('form',$panel).append("<input type='hidden' name='ZONE' value='"+data.zone+"' />");
+								}
+							$panel.showLoading({'message':'Fetching warehouse details'});
+							app.model.addDispatchToQ({
+								'_cmd':'adminWarehouseDetail',
+								'GEO' : data.geo,
+								'_tag':	{
+									'datapointer' : 'adminWarehouseDetail|'+data.geo,
+									'callback':function(rd)	{
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
 		}
 	else	{
-		$panel.anycontent({
-			'translateOnly':true,
-			'data':app.data[rd.datapointer]['%ZONES'][data.zone]
-			});
-		app.u.handleAppEvents($panel);
+		//success content goes here.
+		if(data._object == 'GEO')	{
+			$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
+			}
+		else	{
+			$panel.anycontent({
+				'translateOnly':true,
+				'data':app.data[rd.datapointer]['%ZONES'][data.zone]
+				});
+			app.u.handleAppEvents($panel);
+			}
 		}
-	}
+										}
 									}
-								}
-							},'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseDetailDMIPanel, unrecognized data._object ["+data._object+"]. Must be GEO or ZONE.","gMessage":true});
-						}
-
-
-					});
+								},'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						else	{
+							$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseDetailDMIPanel, unrecognized data._object ["+data._object+"]. Must be GEO or ZONE.","gMessage":true});
+							}
+	
+	
+						});
+					}
 				}, //warehouseDetailDMIPanel
 
 			warehouseRemoveConfirm : function($btn)	{
