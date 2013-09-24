@@ -1416,8 +1416,25 @@ Required params include:
 								'showLoading' : false
 								});
 							$('tbody:first',$target).sortable({
-								'stop' : function(){
-									$(this).addClass('edited');
+								'start' : function(event,ui)	{
+									if(ui.item.attr('data-starting-index'))	{} //already been moved once.
+									else{
+										ui.item.attr('data-starting-index',ui.item.index())
+										}
+									},
+								'stop' : function(event,ui){
+									ui.item.addClass('edited');
+									//if an item from the top of the list was dragged down, everything below the original index gets an 'edited' class because their preference all changes.
+									var changeFromIndex = ( ui.item.index() > ui.item.data('startingIndex')) ? ui.item.data('startingIndex') : ui.item.index();
+									app.u.dump(" -> changeFromIndex: "+changeFromIndex);
+									//each item after this one in the list of rows gets tagged as edited so it's preference can be adjusted.
+									ui.item.closest('tbody').children().each(function(){
+										app.u.dump(" -> $(this).index: "+$(this).index());
+										if($(this).index() >= changeFromIndex)	{
+											$(this).addClass('edited');
+											}
+										});
+									app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form')); //updates the save button change count.
 									}
 								});
 
@@ -1425,10 +1442,10 @@ Required params include:
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
 							if(!$.isEmptyObject(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]))	{
 								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','SIMPLE'))	{
-									$("button[data-detail-type='SIMPLE']",$target).attr({'disabled':'disabled','title':'Only one simple inventory detail record is allowed per sku'});
+									$("button[data-detail-type='SIMPLE']",$target).attr({'title':'Only one simple inventory detail record is allowed per sku'}).button('disable');
 									}
 								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','CONSTANT')) {
-									$("button[data-detail-type='CONSTANT']",$target).attr({'disabled':'disabled','title':'Only one constant inventory detail record is allowed per sku'});
+									$("button[data-detail-type='CONSTANT']",$target).attr({'title':'Only one constant inventory detail record is allowed per sku'}).button('disable');
 									}
 								}
 
@@ -1550,7 +1567,7 @@ Required params include:
 					'@updates' : new Array(),
 					_tag : {
 						callback : 'showMessaging',
-						message : '', //set to blank. based on what actions occur, message is appended to.
+						message : 'Inventory records updated.',
 						restoreInputsFromTrackingState : true,
 						jqObj : $form
 						}
@@ -1558,8 +1575,7 @@ Required params include:
 
 // loop through all the inventory rows and check to see if any have been edited.
 // this seemed a better approach than using .edited because loc, is/was all need to be set and this way we don't need to check if an update was already logged.
-				var records = 0;
-				$("[data-app-role='inventoryDetailContainer'] tbody tr",$form).each(function(){
+				$("[data-app-role='inventoryDetailContainer'] tbody",$form).children().each(function(){
 					app.u.dump(" -> into the tr");
 					var $tr = $(this);
 					if($tr.hasClass('rowTaggedForRemove'))	{
@@ -1567,18 +1583,30 @@ Required params include:
 						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-NUKE?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty'));
 						}
 					//if any input for the record has been updated, update qty and loc.
-					else if($('.edited',$tr).length){
-						app.u.dump(" -> Found an edited record! "+$tr.data('sku'));
-						records ++;
-						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='QTY']", $tr).val()+"&NOTE="+$("input[name='NOTE']", $tr).val());
+					else {
+						var $qty = $("input[name='QTY']", $tr);
+						var $note = $("input[name='NOTE']",$tr);
+						
+						if($qty.hasClass('edited'))	{
+							//The quantity input doesn't match what was set at time of load. update quantities.
+							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty')+"&IS="+$qty.val());
+							}
+
+						if($note.hasClass('edited'))	{
+							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-ANNOTATE?UUID="+$tr.data('uuid')+"&NOTE="+$note.val());
+							}
+
+						if($tr.hasClass('edited'))	{
+							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&PREFERENCE="+(100 - $tr.index()));
+							}
 						}
 					});
+
+//				app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
 				
-				if(records)	{
-					cmdObj._tag.message += "Updated "+records+" inventory records.";
+				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
-app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
 				
 				}, //inventory
 
@@ -1605,7 +1633,9 @@ app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
 						cmdObj['@updates'].push("NAVCAT-"+(navcats[index] ? 'INSERT' : 'DELETE')+"?path="+index);
 						}
 //					app.u.dump(" -> cmdObj for navigation:"); app.u.dump(cmdObj);
-					app.model.addDispatchToQ(cmdObj,'immutable');
+					if(cmdObj['@updates'].length)	{
+						app.model.addDispatchToQ(cmdObj,'immutable');
+						}
 					}
 				else	{
 					//no changes in navcats.
