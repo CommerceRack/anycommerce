@@ -1010,21 +1010,27 @@ app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"
 			appAdminTicketCreateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateExec').on('click.appAdminTicketCreateExec',function(event){
-				event.preventDefault();
-				
-				var
-					$form = $btn.closest('form'),
-					sfo = $form.serializeJSON();
-					sfo._cmd = 'adminAppTicketCreate';
-					sfo._tag = {
-						'callback' : 'showMessaging',
-						'jqObjEmpty': true,
-						'jqObj' : $form,
-						'message' : 'The ticket has been created.'
+					event.preventDefault();
+					
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
+						sfo._cmd = 'adminAppTicketCreate';
+						sfo._tag = {
+							'callback' : 'showMessaging',
+							'jqObjEmpty': true,
+							'jqObj' : $form,
+							'message' : 'The ticket has been created.'
+							}
+					if(sfo.phone || sfo.email || sfo.orderid)	{
+						$form.showLoading({'message':'Creating CRM Ticket'});
+						app.model.addDispatchToQ(sfo,'immutable');
+						app.model.dispatchThis('immutable');
+						
 						}
-				$form.showLoading({'message':'Creating CRM Ticket'});
-				app.model.addDispatchToQ(sfo,'immutable');
-				app.model.dispatchThis('immutable');
+					else	{
+						
+						}
 
 					});
 				}, //appAdminTicketCreateExec
