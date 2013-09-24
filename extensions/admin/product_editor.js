@@ -1569,6 +1569,7 @@ Required params include:
 						callback : 'showMessaging',
 						message : 'Inventory records updated.',
 						restoreInputsFromTrackingState : true,
+						removeFromDOMItemsTaggedForDelete : true,
 						jqObj : $form
 						}
 					}
@@ -2230,6 +2231,10 @@ else	{
 							}
 						else	{$ele.prop('disabled','disabled');}
 						}
+//used on the 'test auction' button. could be used elsewhere.
+					if($ele.data('trigger') == 'save')	{
+						$ele.closest('form').find("button[data-app-role='saveButton']:first").trigger('click',{'skipDispatch':true});
+						}
 
 					app.model.addDispatchToQ({
 						'_cmd' : 'adminProductMacro',
@@ -2255,8 +2260,8 @@ else	{
 									}
 								}
 							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
+						},'immutable'); //is immutable because 'trigger' may execute a save button, which will execute an immutable request.
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroExec, either pid ["+pid+"] or data-macro-cmd ["+$ele.data('macro-cmd')+"] is not set and both are required.","gMessage":true});
