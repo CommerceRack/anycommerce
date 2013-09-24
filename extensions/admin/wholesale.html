@@ -1200,27 +1200,25 @@ for updateing inventory records per pid/sku (setting location)
 		<h4>Receiving</h4>
 		<ul>
 			<li>Manifested (coming soon)</li>
-			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|whimShow" title="Add SKU's to existing WMS locations.">Unmanifested</li>
-			<!--
-			<li data-plugin='inventory_Change_locations'>Change locations</li>-->
+			<li data-utility='receiving_unmanifested' class='pointer' data-app-click="admin_wholesale|whimShow" title="Add SKU's to existing WMS locations.">Unmanifested</li>
 		</ul>
 
 		<h4>Picking</h4>
 		<ul>
-			<li>Batch(coming soon)</li>
+			<li>Batch (coming soon)</li>
 			<li>Invoice(s)(coming soon)</li>
 		</ul>
 
 		<h4>Counting</h4>
 		<ul>
-			<li>Verify(coming soon)</li>
-			<li>Zone Suggest(coming soon)</li>
+			<li>Verify (coming soon)</li>
+			<li>Zone Suggest (coming soon)</li>
 		</ul>
 
 		<h4>Fix Mistakes</h4>
 		<ul>
 			<li>Move Location (coming soon)</li>
-			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|whimShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
+			<li data-utility='fix_locationLookup' class='pointer' data-app-click="admin_wholesale|whimShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
 			<li>GEO Selection (coming soon)</li>
 		</ul>
 
@@ -1246,7 +1244,38 @@ for updateing inventory records per pid/sku (setting location)
 	</li>
 </ul>
 
-<div id='whimTemplate_inventoryLookup' data-app-role='whimContainer'>
+
+
+
+<div id='whimTemplate_picking_batch' data-app-role='whimContainer'>
+<h1>Batch</h1>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginBottom'>
+
+<label>
+	<span>Batch # <span class='toolTip' title="Leave blank for a list of all open batches.">?</span></span>
+	<input type='search' name='batch' ></textarea>
+</label>
+
+<button>Lookup</button>
+</form>
+
+<table class='fullWidth gridTable applyAnytable'>
+<thead>
+	<th>SKU</th>
+	<th>Qty</th>
+	<th>geo</th>
+	<th>zone</th>
+	<th>pos</th>
+	<th>Note</th>
+</thead>
+<tbody data-app-role='whimResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:whimResultsRowTemplate;"></tbody>
+</table>
+</div>
+
+
+
+
+<div id='whimTemplate_fix_locationLookup' data-app-role='whimContainer'>
 <h1>Get Inventory Location by SKUs</h1>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginBottom'>
 
@@ -1269,11 +1298,10 @@ for updateing inventory records per pid/sku (setting location)
 </thead>
 <tbody data-app-role='whimResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:whimResultsRowTemplate;"></tbody>
 </table>
-
-
-
-
 </div>
+
+
+
 
 
 <table>
@@ -1290,7 +1318,7 @@ for updateing inventory records per pid/sku (setting location)
 
 
 
-<div id='whimTemplate_inventoryAdd2Locations' data-app-role='whimContainer'>
+<div id='whimTemplate_receiving_unmanifested' data-app-role='whimContainer'>
 <h1>Add Inventory to Location by SKU</h1>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 <table>

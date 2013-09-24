@@ -1133,9 +1133,9 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 	<tr>
 		<th>SKU</th>
 		<th>Name</th>
-		<th data-anytable-nosort='true'>Details</th>
 		<th>QTY</th>
 		<th>Description</th>
+		<th></th>
 	</tr>
 	</thead>
 	<tbody data-app-role='inventoryTbody'></tbody><!-- inventory contents must not get rendered w/ the rest of the product. the template is loaded into this container IF the tab is clicked -->
@@ -1202,7 +1202,7 @@ if it already has a simple, lock the button
 	<span data-bind="var: detail(WMS_POS); format:text;"></span>
 	</td>
 	<td class='alignLeft'>
-		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" class='fullWidth' maxlength="25" />
+		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" size='25' maxlength="25" />
 	</td>
 	<td class='alignRight'>
 		<button data-app-click='admin|tagRow4Remove' data-icon-primary='ui-icon-circle-close' data-text='false' class='applyButton'>Delete Detail</button>
