@@ -1198,8 +1198,9 @@ for updateing inventory records per pid/sku (setting location)
 		
 		<h4>Receiving</h4>
 		<ul>
-			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
-			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Add SKU's to existing WMS locations.">Add to Locations</li><!--
+			<li>Manifested</li>
+			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Add SKU's to existing WMS locations.">Unmanifested</li>
+			<!--
 			<li data-plugin='inventory_Change_locations'>Change locations</li>-->
 		</ul>
 
@@ -1217,7 +1218,8 @@ for updateing inventory records per pid/sku (setting location)
 
 		<h4>Fix Mistakes</h4>
 		<ul>
-			<li>Find Locations</li>
+			<li>Move Location</li>
+			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
 			<li>GEO Selection</li>
 		</ul>
 
