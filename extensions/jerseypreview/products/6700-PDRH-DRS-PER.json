@@ -4,16 +4,16 @@
 		"size" : 28,
 		"charSize" : 12,
 		"radius" : 190,
-		"color" : "244B74",
-		"strokeColor" : "FFFFFF",
+		"color" : "000C32",
+		"strokeColor" : "AE9149",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
 		"y" : 50
 	},
 	"number" : {
 		"size" : 65,
-		"color" : "BC3833",
-		"strokeColor" : "FFFFFF",
+		"color" : "000C32",
+		"strokeColor" : "AE9149",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
 		"y" : 50
