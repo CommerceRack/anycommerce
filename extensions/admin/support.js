@@ -99,8 +99,8 @@ var admin_support = function() {
 
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
-				if(app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.release])	{
-					app.ext.admin.vars.versionMetaData.youtubeVideoID = app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.release];
+				if(app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version])	{
+					app.ext.admin.vars.versionMetaData.youtubeVideoID = app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version];
 					}
 					
 				var $D = app.ext.admin.i.dialogCreate({
