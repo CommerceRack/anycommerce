@@ -622,25 +622,24 @@ UTILITIES PAGE TEMPLATE
 	
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Customer Retention &amp; Management</h3>
+		<h3>Customers</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		
 		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager</a><br />
-		<div class="helper marginBottom">Find or create a customer record for your website.</div>
+		<div class="helper marginBottom">Find or create a customer record for your website</div>
+
+		<a href="#" onClick="navigateTo('#!priceSchedules'); return false;">Wholesale Pricing Schedules <!-- (beta) --></a>
+		<div class="helper marginBottom">Create separate price lists for your wholesale customers</div>
+		
+		<a href="#" onClick="navigateTo('#!organizationManager'); return false;">Organization Manager</a>
+		<div class="helper marginBottom">Create / Manage Organizations for wholesale/b2b/resale</div>
 		
 		<a href="#" onClick="navigateTo('#!giftcardManager'); return false;">GiftCard Manager</a>
-		<div class="helper marginBottom">Create / Manage GiftCards.</div>
+		<div class="helper marginBottom">Create / Manage GiftCards</div>
+	
 
-		<a href="#" onClick="navigateTo('#!campaignManager'); return false;">Campaign Manager</a>
-		<div class="helper marginBottom">Setup campaigns to send newsletters, push notifications, sms, etc.</div>
-
-		<a href="#" onClick="navigateTo('#!reviewsManager'); return false;">Reviews</a>
-		<div class="helper marginBottom">Approve customer reviews of your products.</div>
-		
-		<a href="#" onClick="navigateTo('/biz/manage/faqs/index.cgi'); return false;">Frequently Asked Questions</a>
-		<div class="helper marginBottom">Help shoppers by answering common questions.</div>
 		
 		</div>
 	</div>
@@ -652,14 +651,12 @@ UTILITIES PAGE TEMPLATE
 		</div>
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
-			<div class="helper marginBottom">A list of recently run batches, including reports and syndication 'publishes'.</div>
+			<div class="helper marginBottom">A list of recently run batches, including reports and syndication published files</div>
 
-			<a href="#" onClick="navigateTo('#!warehouseUtilities'); return false;">Warehouse Utilities</a><br />
-			<div class="helper marginBottom">A variety of utilities for managing product locations.</div>
 			
 						
 			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;">CSV Import Utility</a><br />
-			<div class="helper marginBottom">Import data from a variety of formats.</div>
+			<div class="helper marginBottom">Import data from a variety of formats</div>
 <!--
 			<a href="#" onClick="navigateTo('#!ciEngineAgentManager'); return false;">Agent Manager</a><br />
 			<div class="helper marginBottom">Manage repricing agents.</div>
@@ -672,31 +669,27 @@ UTILITIES PAGE TEMPLATE
 	<td width="33%" valign="top">
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Wholesale &amp; Warehouse</h3>
+		<h3>Inventory &amp; Supply Chain</h3>
 		</div>
 
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		
-		<a href="#" onClick="navigateTo('#!organizationManager'); return false;">Organization Manager</a>
-		<div class="helper marginBottom">Create / Manage Organizations for wholesale/b2b/resale.</div>
+		<a href="#" onClick="navigateTo('#!supplierManager'); return false;">Suppliers &amp; 3PL</a>
+<!--		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain</a> -->
+		<div class="helper marginBottom">Track inventory, pricing and orders with your suppliers or 3PL (Third Party Logistics)</div>
+		
+		<a href="#" onClick="navigateTo('#!warehouseManager'); return false;">Warehouse(s)</a>
+		<div class="helper marginBottom">Configure Warehouse geo locations and wms zones</div>
 
-		<a href="#" onClick="navigateTo('#!supplierManager'); return false;">Supplier Management <!-- (beta) --></a>
-<!--		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain Management</a> -->
-		<div class="helper marginBottom">Track inventory, pricing and orders with your suppliers.</div>
-		
-<!--		<a href="#" onClick="navigateTo('/biz/manage/schedules/index.cgi'); return false;">Wholesale Pricing Schedules</a> -->
-		<a href="#" onClick="navigateTo('#!priceSchedules'); return false;">Wholesale Pricing Schedules <!-- (beta) --></a>
-		<div class="helper marginBottom">Create separate price lists for your wholesale customers.</div>
-		
-		<a href="#" onClick="navigateTo('#!warehouseManager'); return false;">Warehouses</a>
-		<div class="helper marginBottom">Warehouse Management</div>
-		
+		<a href="#" onClick="navigateTo('#!warehouseUtilities'); return false;">WHIM : <b>W</b>are<b>H</b>ouse <b>I</b>nventory <b>M</b>anagement</a><br />
+		<div class="helper marginBottom">Utility intended for day-to-day use by warehouse employees equipped with a 
+		barcode scanner attached to a tablet, or notebook pc</div>
+				
 		</div>
-	</div>
-
+	</div>		
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>eBay &amp; Marketplace</h3>
+		<h3>Marketplace</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
@@ -709,15 +702,30 @@ UTILITIES PAGE TEMPLATE
 		<div class="helper marginBottom">Automatically raise/lower amazon prices based on competitors pricing.</div>
 		-->
 		<a href="#" onClick="navigateTo('#!eBayListingsReport'); return false;">Listing &amp; Event Reports</a>
-		<div class="helper marginBottom">Listing Events are created anytime a listing is created, modified, or implicitly ended.</div>		
+		<div class="helper marginBottom">Listing Events are created anytime a listing is created, modified, or implicitly ended</div>		
 		
 		</div>
 	</div>
-	
-	</td>
-	
-	<td width="33%" valign="top">
 
+	<td width="33%" valign="top">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Social &amp; Communications</h3>
+		</div>
+
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+
+		<a href="#" onClick="navigateTo('#!campaignManager'); return false;">Campaigns</a>
+		<div class="helper marginBottom">Setup campaigns to send newsletters, push notifications, sms, etc</div>
+
+		<a href="#" onClick="navigateTo('#!reviewsManager'); return false;">Reviews</a>
+		<div class="helper marginBottom">Approve customer reviews of your products</div>
+		
+		<a href="#" onClick="navigateTo('/biz/manage/faqs/index.cgi'); return false;">Frequently Asked Questions</a>
+		<div class="helper marginBottom">Help shoppers by answering common questions</div>
+		
+		</div>
+	</div>	
 	
 	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
@@ -733,23 +741,23 @@ yoink!
 
 <!--		<a href="#" onClick="navigateTo('/biz/manage/csvexport/index.cgi'); return false;">Product Export</a><br /> -->
 		<a href="#" onClick="navigateTo('#!productExport'); return false;">Product Export</a><br />
-		<div class="helper marginBottom">Exports products into a CSV file.</div>
+		<div class="helper marginBottom">Exports products into a CSV file</div>
 	
 		<a href="#" onClick="navigateTo('#!productPowerTool'); return false;">Product Power Tool</a><br />
-		<div class="helper marginBottom">Modify multiple product attributes in mass.</div>
+		<div class="helper marginBottom">Modify multiple product attributes in mass</div>
 <!--
 broke.	
 		<a href="#" onClick="navigateTo('/biz/manage/archive/index.cgi'); return false;">Archive Orders</a><br />
-		<div class="helper marginBottom">Hide completed orders.</div>
+		<div class="helper marginBottom">Hide completed orders</div>
 
 		<a href="#" onClick="navigateTo('/biz/manage/diskspace/index.cgi'); return false;">Disk Space Manager</a><br />
-		<div class="helper marginBottom">Manage the amount of disk space in use by your account.</div>	
+		<div class="helper marginBottom">Manage the amount of disk space in use by your account</div>	
 	
 		<a href="#" onClick="navigateTo('/biz/syndication/sitemap/index.cgi'); return false;">Static Google SiteMap</a><br />
-		<div class="helper marginBottom">Configure nightly generation of a static sitemap file.</div>	
+		<div class="helper marginBottom">Configure nightly generation of a static sitemap file</div>	
 -->		
 		<a href="#" onClick="navigateTo('#!manageFlexedit'); return false;">Manage Flexedit Fields (beta)</a><br />
-		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor.</div>
+		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor</div>
 	
 		<a href="#" onClick="navigateTo('#!accountUtilities'); return false;">Tech Support Utils <!-- (beta) --></a>
 		<div class="helper marginBottom"></div>

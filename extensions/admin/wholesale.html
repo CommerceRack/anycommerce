@@ -1196,22 +1196,35 @@ for updateing inventory records per pid/sku (setting location)
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 		
-		<h4>Inventory</h4>
+		<h4>Receiving</h4>
 		<ul>
 			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
 			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Add SKU's to existing WMS locations.">Add to Locations</li><!--
 			<li data-plugin='inventory_Change_locations'>Change locations</li>-->
 		</ul>
 
-		<h4>More JT Awesomeness</h4>
+		<h4>Picking</h4>
 		<ul>
-			<li>Coming soon</li>
+			<li>Batch</li>
+			<li>Invoice(s)</li>
+		</ul>
+
+		<h4>Counting</h4>
+		<ul>
+			<li>Verify</li>
+			<li>Zone Suggest</li>
+		</ul>
+
+		<h4>Fix Mistakes</h4>
+		<ul>
+			<li>Find Locations</li>
+			<li>GEO Selection</li>
 		</ul>
 
 	</section>
 
 	<section class='slimLeftContentSection ui-widget'>
-		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>Warehouse Utilities</h1>
+		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>Warehouse	Utilities</h1>
 		<div data-app-role='slimLeftContentSection' class='ui-widget-content stdPadding'>
 			<p data-bind="var: warehouses(@ROWS); format:showIfSet;" class='displayNone'>Please select a warehouse from the list below prior to using a WMS utility.</p>
 			<p data-bind="var: warehouses(@ROWS); format:hideIfSet;">It appears you have not created any warehouses. Please create a warehouse through utilities &#187; warehouse manager prior to using this interface.</p>
