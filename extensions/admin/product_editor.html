@@ -1118,8 +1118,8 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <tfoot>
 <tr>
 	<th colspan='9'>
-	<button class='floatRight applyButton' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
-	<button class='floatRight applyButton' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
 	</th>
 </tr>
 </tfoot>
@@ -1193,7 +1193,7 @@ if it already has a simple, lock the button
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
 	<td class='alignLeft' >
-		<input data-bind="var: detail(QTY); format:popVal;" name='QTY' />
+		<input data-bind="var: detail(QTY); format:popVal;" name='QTY' size='6' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
 	<td class='alignLeft'>
@@ -1202,10 +1202,10 @@ if it already has a simple, lock the button
 	<span data-bind="var: detail(WMS_POS); format:text;"></span>
 	</td>
 	<td class='alignLeft'>
-	<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" />
+		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" class='fullWidth' />
 	</td>
-	<td>
-	<button>Delete Detail</button>
+	<td class='alignRight'>
+		<button data-app-click='admin|tagRow4Remove' data-icon-primary='ui-icon-circle-close' data-text='false' class='applyButton'>Delete Detail</button>
 	</td>
 </tr>
 

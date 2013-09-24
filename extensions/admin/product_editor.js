@@ -1420,6 +1420,19 @@ Required params include:
 									$(this).addClass('edited');
 									}
 								});
+
+							app.u.handleButtons($target);
+//only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
+							if(!$.isEmptyObject(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]))	{
+								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','SIMPLE'))	{
+									$("button[data-detail-type='SIMPLE']",$target).attr({'disabled':'disabled','title':'Only one simple inventory detail record is allowed per sku'});
+									}
+								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','CONSTANT')) {
+									$("button[data-detail-type='CONSTANT']",$target).attr({'disabled':'disabled','title':'Only one constant inventory detail record is allowed per sku'});
+									}
+								}
+
+
 							}
 						else	{
 							$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|'+"+PID+"] not in memory.","gMessage":true});
@@ -1549,16 +1562,15 @@ Required params include:
 				$("[data-app-role='inventoryDetailContainer'] tbody tr",$form).each(function(){
 					app.u.dump(" -> into the tr");
 					var $tr = $(this);
+					if($tr.hasClass('rowTaggedForRemove'))	{
+						records ++;
+						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-NUKE?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty'));
+						}
 					//if any input for the record has been updated, update qty and loc.
-					if($('.edited',$tr).length){
+					else if($('.edited',$tr).length){
 						app.u.dump(" -> Found an edited record! "+$tr.data('sku'));
 						records ++;
-//						cmdObj['@updates'].push("INVENTORY?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='qty']").val()+"&LOC="+$("input[name='loc']").val());
-// *** 201338 -> bug fix.  no context on qty/loc inputs causing wrong values to be sent.
-						cmdObj['@updates'].push("INV-"+$tr.data('basetype')-"UUID-SET?SKU="+$tr.data('sku')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='QTY']", $tr).val()+"&NOTE="+$("input[name='NOTE']", $tr).val());
-						
-						// ["INV-"+$ele.data('detail-type')+"-SKU-ADD?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())]
-						
+						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty')+"&IS="+$("input[name='QTY']", $tr).val()+"&NOTE="+$("input[name='NOTE']", $tr).val());
 						}
 					});
 				
@@ -1898,13 +1910,16 @@ if($editedInputs.length)	{
 									$invContainer.anymessage({'message':rd});
 									}
 								else	{
+
 //if an item has no inventory-able options, go straight to showing the detail.
 									if(app.data['adminProductDetail|'+pid]['@skus'].length == 1 && app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(":") < 0)	{
-
+										// SANITY -> PID mode.
+//all the magic happens in the handleInventoryDetail function. It'll be run on the pid and per sku in sku mode.
 										app.ext.admin_prodEdit.u.handleInventoryDetail($invContainer,app.data['adminProductDetail|'+pid]['@skus'][0].sku,{'mode':'pid'});
 										}
 //if inventory-able options are present, a list of sku's is shown and the detail is available on click.
 									else	{
+										// SANITY -> SKU mode.
 										$invContainer.append(app.renderFunctions.createTemplateInstance('inventorySKUDetailTemplate'));
 
 										var $tbody = $("[data-app-role='inventoryTbody']",$invContainer);
@@ -1917,9 +1932,7 @@ if($editedInputs.length)	{
 												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
 												}).find('button').data('sku',skus[i].sku);
 											}
-										app.u.handleButtons($invContainer);
-// !!! check inventory records for simple or contstant and if one exists, hide the respective 'create' button.
-										
+										app.u.handleButtons($tbody);
 										}
 									}
 								}
@@ -2419,6 +2432,7 @@ else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, either unable to determine $form ["+$form.length+"] or data-save-handlers ["+$ele.data('save-handlers')+"] not set on button, both of which are required.","gMessage":true});
 					}
 				},
+
 
 
 //executed when the 'debug' button is pushed.

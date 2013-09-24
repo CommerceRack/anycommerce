@@ -5829,32 +5829,37 @@ not in use
 //The .edited class is used to key off of to see it's ben edited.
 //The .rowTaggedForRemove class is used to know what action was taken. Thought being later other classesmay be applied (update, new, etc)
 //The customer manager keys off of the ui-state0error, so don't change that w/out updating
-			tagRowForRemove : function($btn)	{
+			tagRowForRemove : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-closethick"},text: false});
 				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
 					event.preventDefault();
-					
-//if this class is already present, the button is set for delete already. unset the delete.
-//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
-					if($btn.hasClass('ui-state-error'))	{
-// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-							$(this).button('enable');
-							}); //enable the other buttons
-						$btn.button('enable');
-						}
-					else	{
-//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
-						$btn.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-//							app.u.dump(" -> $(this).text(): "+$(this).text());
-							$(this).button('disable')
-							}); //disable the other buttons
-						$btn.button('enable');
-
-						}
-					app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest("form"));
+					app.ext.admin.e.tagRow4Remove($btn,vars)
 					});
 				}, //tagRowForRemove
+
+//used for delegated events and is triggered by app-event tagRowForRemove
+			tagRow4Remove : function($ele,p)	{
+//if this class is already present, the button is set for delete already. unset the delete.
+//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+				if($ele.hasClass('ui-state-error'))	{
+// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
+					$ele.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+						$(this).button('enable');
+						}); //enable the other buttons
+					$ele.button('enable');
+					}
+				else	{
+//adding the 'edited' class does NOT change the row (due to odd/even class) , but does let the save changes button record the accurate # of updates.
+					$ele.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+//							app.u.dump(" -> $(this).text(): "+$(this).text());
+						$(this).button('disable')
+						}); //disable the other buttons
+					$ele.button('enable');
+
+					}
+				app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));				
+				},
+			
 //make sure button is withing the table. tfoot is good.
 			tagAllRowsForRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-closethick"},text: true});
