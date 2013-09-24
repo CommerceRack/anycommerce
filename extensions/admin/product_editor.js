@@ -2449,6 +2449,19 @@ else	{
 								$form.anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, saveHandlers."+handlers[i]+" is not a function.","gMessage":true});
 								}
 							}
+//when a save occurs, we should update the product record in memory as well.
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductDetail',
+						'variations':1,
+						'inventory' : 1,
+						'skus':1,
+						'pid' : pid,
+						'_tag':{
+							'datapointer':'adminProductDetail|'+pid,
+							'pid' : pid
+							}
+						},'immutable');
+
 //dispatch is skipped when 'save all tabs' button is pressed. 
 						if(p.skipDispatch)	{}
 						else	{
@@ -3126,6 +3139,19 @@ for(index in variations)	{
 						});
 					
 					app.model.addDispatchToQ(cmdObj,'immutable');
+
+					app.model.addDispatchToQ({
+						'_cmd':'adminProductDetail',
+						'variations':1,
+						'inventory' : 1,
+						'skus':1,
+						'pid' : cmdObj.pid,
+						'_tag':{
+							'datapointer':'adminProductDetail|'+cmdObj.pid,
+							'pid' : cmdObj.pid
+							}
+						},'immutable');
+
 					app.model.dispatchThis('immutable');
 					
 					});
