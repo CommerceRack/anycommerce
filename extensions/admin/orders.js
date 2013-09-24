@@ -105,7 +105,7 @@ var admin_orders = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
 				
 				app.ext.admin_orders.u.handleOrderListTab('init');
-				
+
 				return r;
 				},
 			onError : function()	{
@@ -134,14 +134,6 @@ var admin_orders = function() {
 				}
 			},
 
-
-
-
-
-
-
-
-
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
@@ -157,8 +149,6 @@ var admin_orders = function() {
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
-
-
 
 //executed per order lineitem on a sendmail macro for order update.
 // on success, if the row is still selected, change the icon from loading back to selected. if not selected, drop icon
@@ -183,9 +173,6 @@ var admin_orders = function() {
 				app.u.throwMessage(responseData);
 				}		
 			}, //handleSendEmail
-			
-			
-
 
 		handleSendEmailFromEdit : {
 			onSuccess : function(tagObj)	{
@@ -193,9 +180,6 @@ var admin_orders = function() {
 				app.u.throwMessage(app.u.successMsgObject("Your email has been sent."));
 				}
 			}, //handleSendEmail
-			
-
-
 
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
@@ -264,27 +248,6 @@ var $cmenu; //recyled. stors the context menu for an order.
 
 var $tbody = $("<tbody \/>"); //used to store all the rows so the dom only gets updated once.
 
-var $emailMenu = $("<menu label='Send email message '>");
-for(var key in app.ext.admin_orders.vars.emailMessages)	{
-	$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).data('msg',key).on('click',function(){
-//		app.u.dump(" -> send "+$(this).data('msg')+" msg for order "+$(this).parent().data('orderid'));
-		if($(this).data('msg') == 'CUSTOMMESSAGE')	{
-			var orderID = $(this).parent().data('orderid');
-			var prt = $(this).parent().data('prt');
-			app.ext.admin_orders.a.showCustomMailEditor(orderID,prt);
-			}
-		else	{
-			app.ext.admin_orders.u.sendOrderMail($(this).parent().data('orderid'),$(this).data('msg'),$row);
-			app.model.dispatchThis('immutable');
-			}
-		}).appendTo($emailMenu);
-	}
-
-
-
-
-
-
 
 if(L)	{
 	app.u.dump(" -> ordersData.length (L): "+L);
@@ -292,6 +255,7 @@ if(L)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
 		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerDetail call.
 		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
+		app.ext.admin.u.handleAppEvents($row);
 		$tbody.append($row);
 		}
 // didn't use a replace because I didn't want to lose the properties already on target maintain them in two locations.
@@ -299,46 +263,66 @@ if(L)	{
 
 var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS'); //index of payment status column. used in flagOrderAsPaid. here so lookup only occurs once.
 
+function pools2Object()	{
+	var r = {};
+	var pools = app.ext.admin_orders.vars.pools;
+	var L = pools.length;
+	for(var i = 0; i < L; i += 1)	{
+		r["order_pool_change|"+pools[i]] = {"name": pools[i]};
+		}
+	return r;
+	}
+
+function messages2Object()	{
+	var r = {};
+	for(var key in app.ext.admin_orders.vars.emailMessages)	{
+		r["customer_email|"+key] = {'name' : app.ext.admin_orders.vars.emailMessages[key]}
+		}
+	return r;
+	}
 
 
+$.contextMenu({
+	'selector' : '.adminOrderLineItem',
+	'callback' : function(key,options)	{
+		//executed when a menu option is clicked.
+//		app.u.dump(" -> contextMenu key: "+key);
+//		app.u.dump(" -> ID: "+$(this).attr('id'));
+		app.ext.admin_orders.u.handleOrderListCMenu(key,$(this),{'statusColID':statusColID});
+		},
+	'events' : {
+		'hide' : function()	{
+			$(this).removeClass('ui-state-highlight');
+			},
+		'show' : function(){
+			$(this).addClass('ui-state-highlight');
+			}
+		},
+	'items' : {
+		"customer_edit": {name: "Edit Customer"},
+		"ticket_create": {name: "Create CRM Ticket"},
+		"customer_email": {
+			"name": "Email Customer", 
+			"items": messages2Object()
+            },
+		"sep1": "---------",
+		"order_flagaspaid": {name: "Flag as Paid"},
+		"order_pool_change": {name: "Change Pool",
+			"items": pools2Object()
+			}
+		}
+	});
 
-
+/*
 //adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updating fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
 	$('.adminOrderLineItem').each(function(){
-		var $row = $(this);
-		var rowID = $row.attr('id');
-		var orderid = $row.data('orderid');
-		var $cmenu = $("<menu \/>").attr({'type':'context','id':'contextMenuOrders_'+orderid}).addClass('showcase displayNone');
-		$cmenu.append("<h3 style='margin:0; padding:0;'>"+orderid+"<\/h3><hr \/>");
-		
-//		$("<command \/>").attr('label','Payment details').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-//		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Edit customer').on('click',function(){navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+$row.data('cid'),{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?ACTION=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
-		
-		$("<hr \/>").appendTo($cmenu);
-
-
-		$cmenu.append($emailMenu.clone(true).attr({'data-orderid':orderid,'data-prt':$row.data('prt')}));
-
-		$("<hr \/>").appendTo($cmenu);
-		
-		var $poolMenu = $("<menu label='Change pool to: '>");
-		for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
-			$("<command \/>").attr('label',app.ext.admin_orders.vars.pools[i]).on('click',function(){
-				app.ext.admin_orders.u.changeOrderPool($row,$(this).attr('label'),statusColID);
-				app.model.dispatchThis('immutable');
-				}).appendTo($poolMenu);
-			}
-		$cmenu.append($poolMenu);
-		
-		$("<command \/>").attr('label','Flag as paid').on('click',function(){
-			app.ext.admin_orders.u.flagOrderAsPaid($row,statusColID);
-			app.model.dispatchThis('immutable');
-			}).appendTo($cmenu);
 		$.contextMenu({
-			selector: "#"+rowID,
+			selector: "#contextMenu4Orders",
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				window.console && console.log(m) || alert(m); 
+				},
 //the events change the row bg color on right click init. helps indicate which row is hightlighted AND that only that row will be affected.
 			events : {
 				show : function(){
@@ -350,9 +334,10 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 				},
 			items: $.contextMenu.fromMenu($cmenu)
 			});
-		app.ext.admin.u.handleAppEvents($row);
+
+		
 		}); //orderlineitem.each
-	
+*/	
 //note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
 //because it requires a slight drag before the 'select' is triggered.
 	$target.selectable({
@@ -1082,6 +1067,52 @@ else	{
 
 		u : {
 
+		handleOrderListCMenu : function(action,$row,vars)	{
+			app.u.dump("BEGIN handleOrderListCMenu. action: "+action);
+			if(action)	{
+				var verb = action.split("|")[0];
+				switch(verb)	{
+					case 'customer_edit':
+						var $D = app.ext.admin.i.dialogCreate({'title':'Edit Customer','showLoading':false});
+						$D.dialog('open');
+						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':$row.data("cid")});
+						break;
+					
+					case 'ticket_create':
+						app.ext.admin_customer.a.showCRMTicketCreateInDialog({
+							'orderid':$row.data('orderid')
+							});
+						break;
+					
+					case 'customer_email':
+						var MSG = action.split('|')[1];
+						if(MSG == 'CUSTOMMESSAGE')	{
+							app.ext.admin_orders.a.showCustomMailEditor($row.data('orderid'),$row.data('prt'));
+							}
+						else	{
+							app.ext.admin_orders.u.sendOrderMail($row.data('orderid'),MSG,$row);
+							app.model.dispatchThis('immutable');
+							}
+						break;
+					
+					case 'order_flagaspaid':
+						app.ext.admin_orders.u.flagOrderAsPaid($row,vars.statusColID);
+						app.model.dispatchThis('immutable');
+						break;
+					
+					case 'order_pool_change':
+						app.ext.admin_orders.u.changeOrderPool($row,action.split('|')[1],vars.statusColID);
+						app.model.dispatchThis('immutable');
+						break;
+					
+					default:
+					$('#globalMessaging').anymessage({"message":"In admin_orders.u.handleOrderListCMenu (triggered by a click in a contextual menu in the orders interface), undefined verb ("+verb+") from action ("+action+").","gMessage":true});
+					}
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In admin_orders.u.handleOrderListCMenu (triggered by a click in a contextual menu in the orders interface), undefined action ("+action+").","gMessage":true});
+				}
+			},
 
 		handleOrderListTab : function(process)	{
 //			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
@@ -1108,30 +1139,30 @@ else	{
 			},
 
 
-			submitFilter : function()	{
+		submitFilter : function()	{
 
-				$('#orderListTableBody').empty(); //this is targeting the table body.
-				$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
-				var obj = {}
-				obj.LIMIT = Number($('#filterLimit').val()) || 30;
-				$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
-					var val = $(this).find('.ui-selected').attr('data-filtervalue');
-					if(val){
-						obj[$(this).attr('data-filter')]=val
-						}
-					});
-				if($.isEmptyObject(obj))	{
-					app.u.throwMessage('Please select at least one filter criteria');
+			$('#orderListTableBody').empty(); //this is targeting the table body.
+			$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
+			var obj = {}
+			obj.LIMIT = Number($('#filterLimit').val()) || 30;
+			$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
+				var val = $(this).find('.ui-selected').attr('data-filtervalue');
+				if(val){
+					obj[$(this).attr('data-filter')]=val
 					}
-				else	{
+				});
+			if($.isEmptyObject(obj))	{
+				app.u.throwMessage('Please select at least one filter criteria');
+				}
+			else	{
 //						app.u.dump(" -> filter change is getting set locally.");
-					app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
+				app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
 //						app.u.dump("Filter Obj: "); app.u.dump(obj);
-					app.model.destroy('adminOrderList'); //clear local storage to ensure request
-					app.ext.admin_orders.a.showOrderList(obj);
-					}
+				app.model.destroy('adminOrderList'); //clear local storage to ensure request
+				app.ext.admin_orders.a.showOrderList(obj);
+				}
 
-				},
+			},
 
 //https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Bitwise_Operators
 

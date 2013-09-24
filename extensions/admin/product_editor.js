@@ -1395,16 +1395,16 @@ Required params include:
 //$target is where the inventory detail report is going to show up.  must be a valid jquery object.
 //vars can contain a mode. Right now, it's optional. may be necessary when it comes time to save.
 			handleInventoryDetail : function($target,sku,vars)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
+				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
 				vars = vars || {};
 				if($target instanceof jQuery)	{
-//					app.u.dump(" -> have a valid jquery target");
+					app.u.dump(" -> have a valid jquery target");
 					if(sku)	{
-//						app.u.dump(" -> have a sku ["+sku+"]");
+						app.u.dump(" -> have a sku ["+sku+"]");
 						var PID = sku.split(':')[0]; //the Product ID.
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
-//							app.u.dump(" -> Inventory record is in memory.");
+							app.u.dump(" -> Inventory record is in memory: "); app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
 							vars.sku = sku; //set on vars for dataAttribs.
 							$target.anycontent({
 								'templateID' : 'inventoryDetailTemplate',
@@ -1576,7 +1576,7 @@ Required params include:
 // loop through all the inventory rows and check to see if any have been edited.
 // this seemed a better approach than using .edited because loc, is/was all need to be set and this way we don't need to check if an update was already logged.
 				$("[data-app-role='inventoryDetailContainer'] tbody",$form).children().each(function(){
-					app.u.dump(" -> into the tr");
+//					app.u.dump(" -> into the tr");
 					var $tr = $(this);
 					if($tr.hasClass('rowTaggedForRemove'))	{
 						records ++;
@@ -1589,7 +1589,7 @@ Required params include:
 						
 						if($qty.hasClass('edited'))	{
 							//The quantity input doesn't match what was set at time of load. update quantities.
-							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty')+"&IS="+$qty.val());
+							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty')+"&QTY="+$qty.val());
 							}
 
 						if($note.hasClass('edited'))	{
@@ -1597,7 +1597,7 @@ Required params include:
 							}
 
 						if($tr.hasClass('edited'))	{
-							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-SET?UUID="+$tr.data('uuid')+"&PREFERENCE="+(100 - $tr.index()));
+							cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-PREFERENCE?UUID="+$tr.data('uuid')+"&PREFERENCE="+(100 - $tr.index()));
 							}
 						}
 					});
@@ -1954,14 +1954,22 @@ if($editedInputs.length)	{
 
 										var $tbody = $("[data-app-role='inventoryTbody']",$invContainer);
 										var skus = app.data['adminProductDetail|'+pid]['@skus'];
+//										app.u.dump(" -> skus: "); app.u.dump(skus);
 										var L = skus.length;
+										app.u.dump(" -> skus.length: "+skus.length);
 										for(var i = 0; i < L; i += 1)	{
+											var thisSku = skus[i].sku;
+											app.u.dump(" -> thisSku: "+thisSku);
 											$tbody.anycontent({
 												"templateID":"inventoryRowTemplate",
-												dataAttribs : {'sku' : skus[i].sku}, //will apply these as data- to each row.
-												data : $.extend(true,skus[i],{'%INVENTORY':app.data[rd.datapointer]['%INVENTORY'][skus[i].sku]})
-												}).find('button').data('sku',skus[i].sku);
+												dataAttribs : {'sku' : thisSku}, //will apply these as data- to each row.
+												data : $.extend(true,skus[i],{'%INVENTORY':(app.data[rd.datapointer]['%INVENTORY'][thisSku] || {} )})
+												})
 											}
+										//add the SKU to each button in each row.
+										$tbody.children().each(function(){
+											$('button',$(this)).attr('data-sku',$(this).data('sku'));
+											});
 										app.u.handleButtons($tbody);
 										}
 									}

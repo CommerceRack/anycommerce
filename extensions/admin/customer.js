@@ -116,6 +116,16 @@ var admin_customer = function() {
 				app.model.dispatchThis();
 				},
 
+			showCRMTicketCreateInDialog : function(data)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Create CRM Ticket',
+					'templateID':'crmManagerTicketCreateTemplate',
+					'data':data
+					});
+				app.u.handleAppEvents($D);
+				$D.dialog('open');
+				},
+
 			showCampaignManager : function($target)	{
 				$target.empty();
 				var $table = app.ext.admin.i.DMICreate($target,{
@@ -993,9 +1003,7 @@ app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
 					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({'templateID':'crmManagerTicketCreateTemplate','data':{'orderid':$btn.data('orderid')}});
-					app.u.handleAppEvents($D);
-					$D.dialog('open');
+					app.ext.admin_customer.a.showCRMTicketCreateInDialog({'orderid':$btn.data('orderid')});
 					});
 				}, //appAdminTicketCreateShow
 

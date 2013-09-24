@@ -16,7 +16,7 @@
     margin:0; 
     padding:0;
     
-    min-width: 120px;
+    min-width: 160px;
     max-width: 250px;
     display: inline-block;
     position: absolute;
@@ -36,7 +36,7 @@
 }
 
 .context-menu-item {
-    padding: 2px 2px 2px 24px;
+    padding: 4px 2px 4px 24px;
     background-color: #EEE;
     position: relative;
     -webkit-user-select: none;
