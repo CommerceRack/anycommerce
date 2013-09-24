@@ -1518,7 +1518,7 @@ Account utilities / support tools
 
 
 .flexeditMasterListContainer .hideInMasterList	{display:none;} /* these fields will become visible once dragged over to the enabled column */
-
+.flexeditEnabledListContainer .hideInEnabledList	{display:none;} /* these fields will become visible once dragged over to the enabled column */
 
 
 

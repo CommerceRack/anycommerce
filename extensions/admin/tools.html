@@ -772,7 +772,7 @@ has to be within the fieldset to for data-table to work right.
 
 
 
-<div id='manageFlexeditTemplate'>
+<div id='manageFlexeditTemplate' data-app-role='flexeditManager'>
 <h1>Product Flexedit Manager</h1>
 	
 	<div class='ui-widget twoColumn'>
@@ -780,8 +780,8 @@ has to be within the fieldset to for data-table to work right.
 		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
 			
 			<fieldset>
-			<table data-app-role='dataTable' class=' fullWidth gridTable'>
-			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' >
+			<table data-app-role='dataTable' class=' fullWidth gridTable flexeditEnabledListContainer'>
+			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' data-app-role='flexeditEnabledListTbody' >
 			
 			</tbody>
 			</table>
@@ -852,7 +852,8 @@ has to be within the fieldset to for data-table to work right.
 			<span data-bind='var:flexedit(index); format:text; pretext:(; posttext:);'></span>
 		</div>
 	</td>
-	<td class='hideInMasterList alignRight'>
+	<td class='alignRight'>
+<!--		<button data-app-event="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList applyButton'>Add to Enabled List</button> -->
 		<button data-app-event="admin|tagRowForRemove" class='hideInMasterList'>Remove Field</button>
 		<button data-app-event='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList'>Update Attribute</button>
 	</td>

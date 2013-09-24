@@ -1095,8 +1095,13 @@ app.u.throwMessage(responseData); is the default error handler.
 						_rtag.jqObj.empty();
 						}
 //you can't restore AND empty. it's empty, there's nothing to restore.
-					else if(_rtag.restoreInputsFromTrackingState)	{
-						app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj);
+					else {
+						if(_rtag.restoreInputsFromTrackingState)	{
+							app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj);
+							}
+						if(_rtag.removeFromDOMItemsTaggedForDelete)	{
+							app.ext.admin.u.removeFromDOMItemsTaggedForDelete(_rtag.jqObj);
+							}
 						}
 					}
 				if(macroResponses && macroResponses['@RESPONSES'])	{

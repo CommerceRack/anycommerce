@@ -662,7 +662,7 @@ $target.append("<br \/>");
 				$btn.off('click.flexeditAttributesFullListShow').on('click.flexeditAttributesFullListShow',function(event){
 					event.preventDefault();
 					var $tbody = $btn.closest("[data-app-role='flexeditMasterListContainer']").find("[data-app-role='flexeditAttributeListTbody']");
-					$tbody.intervaledEmpty()
+					$tbody.empty()
 					$tbody.parent().showLoading({'message':'Fetching full attribute list'});
 
 					app.ext.admin.calls.appResource.init('product_attribs_all.json',{
@@ -674,6 +674,10 @@ $target.append("<br \/>");
 								}
 							else	{
 								$tbody.anycontent({'datapointer':rd.datapointer});
+//started implementing a button for 'move this to enabled list'.  Worked fine on the short list of attribs. dies on the full list.
+//the issue is handleAppEvents.  Once this uses delegated events, it should work fine (handlebuttons did run w/out dying).
+//however, can't migrate this yet because the data-table format uses app events, not delegated, and I don't want two copies of that.
+//								app.u.handleButtons($tbody);
 								}
 							},
 						'datapointer':'appResource|product_attribs_all.json'
@@ -681,6 +685,15 @@ $target.append("<br \/>");
 //				app.model.dispatchThis('mutable');
 
 
+					});
+				},
+
+			flexeditAttributeAdd2EnabledList : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false}).off('click.flexeditAttributeUpdateShow').on('click.flexeditAttributeUpdateShow',function(event){
+					event.preventDefault();
+					var $tr = $btn.closest('tr');
+//					app.u.dump(" -> $btn.closest('form').find(tbody[data-app-role='flexeditEnabledListTbody']:first): "+$btn.closest('form').find("[data-app-role='flexeditEnabledListTbody']:first").length);
+					$btn.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr)
 					});
 				},
 

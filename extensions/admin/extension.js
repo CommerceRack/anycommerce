@@ -3626,6 +3626,13 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //* 201334 -> no need to re-apply. event tracking is now delegated, so it's always on.
 //				this.applyEditTrackingToInputs($context); 
 				},
+			
+			removeFromDOMItemsTaggedForDelete : function($context)	{
+				$('tr.rowTaggedForRemove',$context).each(function(){
+					$(this).empty().remove();
+					})
+				},
+			
 /*
 This is the start of a fucntion that will get executed from within the delegated events in applyEditTrackingToInputs
 It will support some pre-set commands to make updates to elements outside the form/context.
