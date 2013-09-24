@@ -1404,7 +1404,7 @@ Required params include:
 						var PID = sku.split(':')[0]; //the Product ID.
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
-							app.u.dump(" -> Inventory record is in memory: "); app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
+							app.u.dump(" -> Inventory record is in memory."); // app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
 							vars.sku = sku; //set on vars for dataAttribs.
 							$target.anycontent({
 								'templateID' : 'inventoryDetailTemplate',
@@ -1452,7 +1452,7 @@ Required params include:
 
 							}
 						else	{
-							$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|'+"+PID+"] not in memory.","gMessage":true});
+							$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|"+PID+"'] not in memory.","gMessage":true});
 							}
 						}
 					else	{
@@ -1579,7 +1579,6 @@ Required params include:
 //					app.u.dump(" -> into the tr");
 					var $tr = $(this);
 					if($tr.hasClass('rowTaggedForRemove'))	{
-						records ++;
 						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-NUKE?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty'));
 						}
 					//if any input for the record has been updated, update qty and loc.
