@@ -459,7 +459,8 @@ templateID - the template id used (from app.templates)
 //!!! hhhmm.. needs fixin. need to compensate 'i' for hidden categories.
 					for(var i = 0; i < size; i +=1)	{
 						if(subcatDetail[i].pretty[0] != '!')	{
-							catSafeID = subcatDetail[i].id;
+// *** 201338 appNavcatDetail response format changed from id to path -mc
+							catSafeID = subcatDetail[i].path;
 							o += "<li><a href='#' onClick=\"showContent('category',{'navcat':'"+catSafeID+"'}); return false;\">"+subcatDetail[i].pretty+ "<\/a><\/li>";
 							}
 						}
