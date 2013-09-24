@@ -56,7 +56,7 @@ var admin_wholesale = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN admin_wholesale.callbacks.init.onError');
 				}
-			},
+			}, //INIT
 
 		wholesaleSearchResults: {
 			onSuccess : function(_rtag)	{
@@ -77,7 +77,7 @@ var admin_wholesale = function() {
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.callbacks.wholesaleSearchResults, no jqObj specified in _tag/_rtag.","gMessage":true});
 					}
 				}
-			}
+			} //wholesaleSearchResults
 		}, //callbacks
 
 
@@ -108,17 +108,30 @@ var admin_wholesale = function() {
 						}
 					});
 				app.model.dispatchThis('mutable');
-				},
+				}, //showWarehouseManager
 
 			showWarehouseUtilities : function($target){
 				$target.intervaledEmpty();
-				$target.anycontent({'templateID':'warehouseUtilityInterfaceTemplate','data':{}});
+				$target.anycontent({'templateID':'whimInterfaceTemplate','data':{}});
 				$target.showLoading({'message':'Fetching list of warehouses'})
 				app.model.addDispatchToQ({
 						'_cmd' : 'adminWarehouseList',
 						'_tag' : {
 							'datapointer':'adminWarehouseList',
-							'callback': 'anycontent',
+							'callback': function(rd)	{
+if(app.model.responseHasErrors(rd)){
+	$target.anymessage({'message':rd});
+	}
+else	{
+	$target.anycontent(rd);
+	var whim = app.ext.admin.u.dpsGet('admin_wholesale','whim') || {};
+//	app.u.dump(" -> dps.whim: "); app.u.dump(whim);
+	if(whim.geo)	{
+		$("[data-geo='666']",$target).trigger('click',{'skipDPSUpdate':true})
+		}
+	}
+
+								},
 							'translateOnly' : true,
 							'jqObj' : $target
 							}
@@ -315,6 +328,7 @@ app.model.dispatchThis('mutable');
 
 					}
 				}, //wholesaleScheduleSelect
+
 			warehouseCodeOrZone : function($tag,data)	{
 //			app.u.dump(data.value); die();
 				if(data.value._OBJECT == 'GEO')	{
@@ -453,7 +467,7 @@ app.model.dispatchThis('mutable');
 				
 				
 				return newSfo
-				}
+				} //adminSupplierMacro
 			}, //macroBuilders
 
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
@@ -492,9 +506,7 @@ app.model.dispatchThis('mutable');
 						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneAddRow, no data-loadstemplate specified on trigger element.",'gMessage':true})
 						}
 					});
-				},
-
-
+				}, //wholesaleZoneAddRow
 
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -540,22 +552,22 @@ app.model.dispatchThis('mutable');
 								'_tag':	{
 									'datapointer' : 'adminWarehouseDetail|'+data.geo,
 									'callback':function(rd)	{
-	if(app.model.responseHasErrors(rd)){
-		$('#globalMessaging').anymessage({'message':rd});
-		}
-	else	{
-		//success content goes here.
-		if(data._object == 'GEO')	{
-			$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
-			}
-		else	{
-			$panel.anycontent({
-				'translateOnly':true,
-				'data':app.data[rd.datapointer]['%ZONES'][data.zone]
-				});
-			app.u.handleAppEvents($panel);
-			}
-		}
+										if(app.model.responseHasErrors(rd)){
+											$('#globalMessaging').anymessage({'message':rd});
+											}
+										else	{
+											//success content goes here.
+											if(data._object == 'GEO')	{
+												$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
+												}
+											else	{
+												$panel.anycontent({
+													'translateOnly':true,
+													'data':app.data[rd.datapointer]['%ZONES'][data.zone]
+													});
+												app.u.handleAppEvents($panel);
+												}
+											}
 										}
 									}
 								},'mutable');
@@ -621,8 +633,6 @@ app.model.dispatchThis('mutable');
 					});
 				}, //warehouseRemoveConfirm
 
-
-
 			warehouseZoneCreateShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 				$btn.off('click.wholesaleZoneCreateShow').on('click.wholesaleZoneCreateShow',function(event){
@@ -644,26 +654,37 @@ app.model.dispatchThis('mutable');
 						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
 						}
 					});
-				},
+				}, //warehouseZoneCreateShow
 
 
 
-////////////////  WMS UTILITIES
+////////////////  WMS UTILITIES AKA:			 		WHIM
 
-			warehouseUtilityWarehouseSelect : function($ele,p)	{
+
+
+			whimWarehouseSelect : function($ele,p)	{
 //				app.u.dump(" -> $ele.data('geo'): "+$ele.data('geo'));
+				p = p || {};
 				if($ele.data('geo'))	{
 					$ele.closest("[data-app-role='slimLeftContainer']").data("geo",$ele.data('geo')).find("h1").text("Warehouse "+$ele.data('geo')); //set the geo attribute to the warehouse id. this is used for all the warehouse utilities till changed.
 					$ele.parent().find('.ui-selected').removeClass('ui-selected');
 					$ele.addClass('ui-selected');
+// a click is triggered when the page is loaded on the warehouse last opened. In that case, we want all code executed except a dpsSet
+// it's already set because dps is where the page load got the geo from in the firstplace
+					if(p.skipDPSUpdate)	{}
+					else	{
+						var whim = app.ext.admin.u.dpsGet('admin_wholesale',"whim") || {};
+						whim.geo = $ele.data('geo');
+						app.ext.admin.u.dpsSet('admin_wholesale',"whim",whim);
+						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseUtilityWarehouseSelect, geo not set on trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.whimWarehouseSelect, geo not set on trigger element.","gMessage":true});
 					}
-				}, //warehouseUtilityWarehouseSelect
+				}, //whimWarehouseSelect
 
-			warehouseUtilitySearchMacroExec : function($ele,p)	{
-				var $tbody = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityResultsTbody']");
+			whimSearchMacroExec : function($ele,p)	{
+				var $tbody = $ele.closest("[data-app-role='whimContainer']").find("[data-app-role='whimResultsTbody']");
 				var $form =$ele.closest('form');
 				$tbody.empty(); //the results should stack w/ each search. clear them.
 				$tbody.closest('table').show(); //table is hidden by default so the thead doesn't show up when unnecessary.
@@ -683,10 +704,10 @@ app.model.dispatchThis('mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else {} //form validation handles error display.
-				}, //warehouseUtilitySearchMacroExec
+				}, //whimSearchMacroExec
 
-//triggered when one of the li's in the warehouseUtility nav menu is clicked. opens a specific utility, based on data-utility.
-			warehouseUtilityShow : function($ele,p)	{
+//triggered when one of the li's in the whim nav menu is clicked. opens a specific utility, based on data-utility.
+			whimShow : function($ele,p)	{
 				var $slimLeft = $ele.closest("[data-app-role='slimLeftContainer']");
 				var $target = $ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentSection']");
 				
@@ -698,7 +719,7 @@ app.model.dispatchThis('mutable');
 					if($ele.data('utility'))	{
 						$target.slideUp('fast',function(){
 							$target.empty().anycontent({
-								'templateID' : 'warehouseUtilityTemplate_'+$ele.data('utility'),
+								'templateID' : 'whimTemplate_'+$ele.data('utility'),
 								'showLoading' : false
 								}).slideDown('fast');
 							$('form',$target).append("<input type='hidden' name='GEO' value='"+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"' />");
@@ -707,21 +728,21 @@ app.model.dispatchThis('mutable');
 							});
 						}
 					else	{
-						$target.anymessage({"message":"In admin_wholesale.e.warehouseUtilityShow, data-utility not set on trigger element.","gMessage":true})
+						$target.anymessage({"message":"In admin_wholesale.e.whimShow, data-utility not set on trigger element.","gMessage":true})
 						}
 					}
 				else	{
 					$target.anymessage({"message":"Please select a warehouse from the list below prior to selecting a utility."})
 					}
-				}, //warehouseUtilityShow
+				}, //whimShow
 
-			warehouseUtilitySetSKULocation : function($ele,p)	{
+			whimSetSKULocation : function($ele,p)	{
 				var $form = $ele.closest('form');
 				if(app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
 					sfo.UUID = app.u.guidGenerator();
 					var $li = $("<li \/>");
-					var $ul = $ele.closest("[data-app-role='warehouseUtilityContainer']").find("[data-app-role='warehouseUtilityLocationUpdateLog']");
+					var $ul = $ele.closest("[data-app-role='whimContainer']").find("[data-app-role='whimLocationUpdateLog']");
 					$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY+" " + sfo.LOC).prependTo($ul);
 
 //					$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku. //!!! commented out for testing.

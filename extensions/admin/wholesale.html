@@ -1191,7 +1191,7 @@ for updateing inventory records per pid/sku (setting location)
 -->
 
 
-<div id='warehouseUtilityInterfaceTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+<div id='whimInterfaceTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
 	
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
@@ -1199,7 +1199,7 @@ for updateing inventory records per pid/sku (setting location)
 		<h4>Receiving</h4>
 		<ul>
 			<li>Manifested</li>
-			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Add SKU's to existing WMS locations.">Unmanifested</li>
+			<li data-utility='inventoryAdd2Locations' class='pointer' data-app-click="admin_wholesale|whimShow" title="Add SKU's to existing WMS locations.">Unmanifested</li>
 			<!--
 			<li data-plugin='inventory_Change_locations'>Change locations</li>-->
 		</ul>
@@ -1219,18 +1219,18 @@ for updateing inventory records per pid/sku (setting location)
 		<h4>Fix Mistakes</h4>
 		<ul>
 			<li>Move Location</li>
-			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|warehouseUtilityShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
+			<li data-utility='inventoryLookup' class='pointer' data-app-click="admin_wholesale|whimShow" title="Enter a single or multiple skus and the WMS locations for each will appear.">Location lookup</li>
 			<li>GEO Selection</li>
 		</ul>
 
 	</section>
 
 	<section class='slimLeftContentSection ui-widget'>
-		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>Warehouse	Utilities</h1>
+		<h1 class='ui-corner-top ui-widget-header stdPadding' data-app-role='pageTitle'>WHIM</h1>
 		<div data-app-role='slimLeftContentSection' class='ui-widget-content stdPadding'>
 			<p data-bind="var: warehouses(@ROWS); format:showIfSet;" class='displayNone'>Please select a warehouse from the list below prior to using a WMS utility.</p>
 			<p data-bind="var: warehouses(@ROWS); format:hideIfSet;">It appears you have not created any warehouses. Please create a warehouse through utilities &#187; warehouse manager prior to using this interface.</p>
-			<ul class='noPadOrMargin listStyleNone' data-bind="var: warehouses(@ROWS); format:processList; loadsTemplate:warehouseUtilityWarehouseItemTemplate;"></ul>
+			<ul class='noPadOrMargin listStyleNone' data-bind="var: warehouses(@ROWS); format:processList; loadsTemplate:whimWarehouseItemTemplate;"></ul>
 		</div>
 	</section>
 
@@ -1239,13 +1239,13 @@ for updateing inventory records per pid/sku (setting location)
 
 
 <ul>
-	<li id='warehouseUtilityWarehouseItemTemplate' class='smallPadding pointer' data-app-click='admin_wholesale|warehouseUtilityWarehouseSelect' data-bind='var: warehouse(GEO); format:assignAttribute; attribute:data-geo;'>
+	<li id='whimWarehouseItemTemplate' class='smallPadding pointer' data-app-click='admin_wholesale|whimWarehouseSelect' data-bind='var: warehouse(GEO); format:assignAttribute; attribute:data-geo;'>
 		<span data-bind="var: warehouse(GEO); format:text;"></span> - 
 		<span data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></span>
 	</li>
 </ul>
 
-<div id='warehouseUtilityTemplate_inventoryLookup' data-app-role='warehouseUtilityContainer'>
+<div id='whimTemplate_inventoryLookup' data-app-role='whimContainer'>
 <h1>Get Inventory Location by SKUs</h1>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginBottom'>
 
@@ -1254,7 +1254,7 @@ for updateing inventory records per pid/sku (setting location)
 	<textarea name='skus' cols='40' rows='10' required='required'></textarea>
 </label>
 
-<button data-app-click="admin_wholesale|warehouseUtilitySearchMacroExec" class='applyButton'>Lookup</button>
+<button data-app-click="admin_wholesale|whimSearchMacroExec" class='applyButton'>Lookup</button>
 </form>
 
 <table class='fullWidth gridTable applyAnytable'>
@@ -1266,7 +1266,7 @@ for updateing inventory records per pid/sku (setting location)
 	<th>pos</th>
 	<th>Note</th>
 </thead>
-<tbody data-app-role='warehouseUtilityResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:warehouseUtilityResultsRowTemplate;"></tbody>
+<tbody data-app-role='whimResultsTbody' data-bind="var: inventory(@ROWS); format:processList; loadsTemplate:whimResultsRowTemplate;"></tbody>
 </table>
 
 
@@ -1276,7 +1276,7 @@ for updateing inventory records per pid/sku (setting location)
 
 
 <table>
-<tr id='warehouseUtilityResultsRowTemplate'>
+<tr id='whimResultsRowTemplate'>
 	<td data-bind="var: sku(SKU); format:text;"></td>
 	<td data-bind="var: sku(QTY); format:text;"></td>
 	<td data-bind="var: sku(WMS_GEO); format:text;"></td>
@@ -1289,7 +1289,7 @@ for updateing inventory records per pid/sku (setting location)
 
 
 
-<div id='warehouseUtilityTemplate_inventoryAdd2Locations' data-app-role='warehouseUtilityContainer'>
+<div id='whimTemplate_inventoryAdd2Locations' data-app-role='whimContainer'>
 <h1>Add Inventory to Location by SKU</h1>
 <form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 <table>
@@ -1301,12 +1301,12 @@ for updateing inventory records per pid/sku (setting location)
 	<td>Qty</td>
 	<td>+<input type='number' min='0' step='1' name='QTY' value='' size='25'  required='required' /></td>
 	
-	<td><button class='applyButton' data-app-click="admin_wholesale|warehouseUtilitySetSKULocation">Set as a Location</button></td>
+	<td><button class='applyButton' data-app-click="admin_wholesale|whimSetSKULocation">Set as a Location</button></td>
 </tr>
 </table>
 </form>
 
-<ul data-app-role='warehouseUtilityLocationUpdateLog'></ul>
+<ul data-app-role='whimLocationUpdateLog'></ul>
 
 </div>
 
