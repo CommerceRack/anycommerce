@@ -65,8 +65,9 @@
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
 			<ul id='orderListFilterMarket' class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
-				<li data-filtervalue='EBF' data-app-event='admin_orders|orderListFiltersUpdate'>eBay</li>
 				<li data-filtervalue='AMZ' data-app-event='admin_orders|orderListFiltersUpdate'>Amazon</li>
+				<li data-filtervalue='EBF' data-app-event='admin_orders|orderListFiltersUpdate'>eBay</li>
+				<li data-filtervalue='GOO' data-app-event='admin_orders|orderListFiltersUpdate'>Google</li>
 			</ul>
 			</section>
 
@@ -107,7 +108,7 @@
 	</td>
 	
 	<td class='mainCol'><!-- ordersView class will change to itemsView when in items mode -->
-	<div id='ordersInterfaceMainColumn' class='orderListMode'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
+	<div id='ordersInterfaceMainColumn' class='orderListMode' data-mode='order'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
 	
 		<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 	
@@ -116,12 +117,11 @@
 				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateSelectAll'>Select All</button>
 				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 		
-				
-				<div class='floatLeft marginLeft bulkEditMenu'>
+				<div class='floatLeft marginLeft bulkEditMenu hideInItemListMode'>
 				<ul data-ui-role='admin_orders|orderUpdateBulkEditMenu'>
 					<li><a href='#'>Action</a>
 					<ul>
-						<li><a href='#'>Change pool to</a>
+						<li class='hideInItemListMode'><a href='#'>Change pool to</a>
 						<ul>
 							<li><a href='#POOL|RECENT'>Recent</a></li>
 							<li><a href='#POOL|PENDING'>Pending</a></li>
@@ -133,28 +133,31 @@
 							<li><a href='#POOL|DELETED'>Cancelled</a></li>
 						</ul></li>
 	
-						<li><a href='#'>Print</a>
+						<li class='hideInItemListMode'><a href='#'>Print</a>
 						<ul>
 							<li><a href='#PRNT|INVOICE'>Invoices</a></li>
 							<li><a href='#PRNT|PACKSLIP'>Packing slips</a></li>
 						</ul>
 						</li>
 	
-						<li><a href='#'>Send email</a>
+						<li class='hideInItemListMode'><a href='#'>Send email</a>
 						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
 						</ul>
 						</li>
 	
-						<li><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
-	
+						<li class='hideInItemListMode'><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
+						
+						<li class='hideInOrderListMode'><a href='#BTCH|ADDBATCHID'>Do something awesome</a></li>
+						
 					</ul>
 					</li>
 				</ul>
 				</div>
+				
 	
 			</div>
 			<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
-			<table id="orderListTable" class='gridTable '>
+			<table id="orderListTable" class='gridTable ' data-app-role='orderListTable'>
 			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 			<thead>
 			<tr>
@@ -173,12 +176,12 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
+			<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;" data-app-role='orderListTbody'></tbody>
 			</table>
 			</div>
 	
 			<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
-			<table class='gridTable fullWidth' data-app-role='itemListTable'>
+			<table id='itemListTable' class='gridTable fullWidth' data-app-role='itemListTable'>
 			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 			<thead>
 			<tr>
@@ -195,7 +198,7 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
+			<tbody id="itemListTableBody" data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
 			</table>
 			</div>
 	

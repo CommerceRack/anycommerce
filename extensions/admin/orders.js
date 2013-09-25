@@ -313,41 +313,6 @@ $.contextMenu({
 		}
 	});
 
-//note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
-//because it requires a slight drag before the 'select' is triggered.
-	$target.selectable({
-		filter: 'tr',
-		stop: function(){
-			$( "tr", this ).each(function() {
-				var $row = $(this);
-//handle the icon.
-				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
-				else if($row.hasClass('ui-selected'))	{
-					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
-//make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
-					$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
-						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
-						})
-					}
-				else	{
-					$('td:eq(0)',$row).html(""); //empty status icon container.
-					$('td:eq(1) span',$row).removeClass('lookLikeLink').off('mousedown.orderLink'); //remove clickable link
-					}
-				
-				
-				
-				});
-			if($(".ui-selected",$(this)).length > 0)	{
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
-				}
-			else	{
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").hide();
-				}
-			}
-		});
-
-	$('#orderListTable').anytable(); //make table headers sortable.
-
 	}
 else	{
 	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
@@ -406,7 +371,8 @@ else	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_'+P.targetID},'orderManagerTemplate',app.ext.admin_orders.vars));
-				
+// SANITY: the template is now on the DOM in target. you can now safely affect it.
+
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
 				
 				
@@ -421,81 +387,78 @@ $("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).on('click','a
 	else	{
 		var command = $(this).attr('href').substring(1), //will = POOL|PENDING or  PRNT|INVOICE
 		actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
-		app.u.dump(" -> actionType: "+actionType);
-		app.u.dump(" -> command: "+command);
+//		app.u.dump(" -> actionType: "+actionType);
+//		app.u.dump(" -> command: "+command);
 		if(actionType)	{
 			switch(actionType)	{
 				case 'POOL':
-				app.ext.admin_orders.u.bulkChangeOrderPool(command);
-				app.model.dispatchThis('immutable');
-				break;
+					app.ext.admin_orders.u.bulkChangeOrderPool(command);
+					app.model.dispatchThis('immutable');
+					break;
 				
 				case 'PMNT':
-				app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
-				app.model.dispatchThis('immutable');
-				break;
+					app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
+					app.model.dispatchThis('immutable');
+					break;
 				
 				case 'MAIL':
-				app.ext.admin_orders.u.bulkSendOrderMail(command);
-				break;
+					app.ext.admin_orders.u.bulkSendOrderMail(command);
+					break;
 				
 				case 'PRNT':
-				app.ext.admin_orders.u.bulkOrdersPrint(command);
-				break;
-				
+					app.ext.admin_orders.u.bulkOrdersPrint(command);
+					break;
+
+				case 'BTCH':
+					alert('woot!');
+					break;
+
 				default:
 					app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
 				}
 			}
 		}
 	});
+
+//note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
+//because it requires a slight drag before the 'select' is triggered.
+	$("table[data-app-role='orderListTable']:first, table[data-app-role='itemListTable']:first",$target).selectable({
+		filter: 'tr',
+		stop: function(){
+			app.u.dump(" -> selectable 'stop' has been triggered");
+			// in this context, 'this' is the table selectable was applied to.
+			$( "tr", this ).each(function() {
+				var $row = $(this);
+//handle the icon.
+				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
+				else if($row.hasClass('ui-selected'))	{
+					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
+					if($('#ordersInterfaceMainColumn','#ordersContent').data('mode') == 'order')	{
+//make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
+						$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
+							$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
+							})
+						}
+					}
+				else	{
+					$('td:eq(0)',$row).html(""); //empty status icon container.
+					$('td:eq(1) span',$row).removeClass('lookLikeLink').off('mousedown.orderLink'); //remove clickable link
+					}
 				
-/*				
-// 1 item in the menu can be selected at a time, but the 'proceed' button is what actually makes the changes. the ui-selected class is used to determine action
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu'] a",$target).each(
-					function(){$(this).on('click',function(event){
-						event.preventDefault();
-						if($(this).children('ul').length == 1)	{
-//if the li has a child list, do nothing on click, the children contain the actions.
-//							app.u.dump(" -> selected command has children.");
-							} 
-						else	{
-							var command = $(this).attr('href').substring(1), //will = POOL|PENDING or  PRNT|INVOICE
-							actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
-							app.u.dump(" -> actionType: "+actionType);
-							app.u.dump(" -> command: "+command);
-							if(actionType)	{
-								switch(actionType)	{
-									case 'POOL':
-									app.ext.admin_orders.u.bulkChangeOrderPool(command);
-									app.model.dispatchThis('immutable');
-									break;
-									
-									case 'PMNT':
-									app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
-									app.model.dispatchThis('immutable');
-									break;
-									
-									case 'MAIL':
-									app.ext.admin_orders.u.bulkSendOrderMail(command);
-									break;
-									
-									case 'PRNT':
-									app.ext.admin_orders.u.bulkOrdersPrint(command);
-									break;
-									
-									default:
-										app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
-									}
-	
-								}
-							else{
-//do nothing. parent menu was clicked. this easily happens by accident, so no warning message displayed.
-								}
-							}
-						})
-					});
-*/
+				});
+			if($(".ui-selected",$(this)).length > 0)	{
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
+				}
+			else	{
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").hide();
+				}
+			}
+		});
+
+	$("table[data-app-role='orderListTable']:first",$target).anytable(); //make table headers sortable.
+	$("table[data-app-role='itemListTable']:first",$target).anytable(); //make table headers sortable.
+				
+
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
 
 //check to see which index in accordian was open last.
@@ -1168,7 +1131,7 @@ else	{
 
 		submitFilter : function()	{
 //* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
-			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode'); //make sure we're in 'orders' mode.
+			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode').data('mode','order'); //make sure we're in 'orders' mode.
 			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
 			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
 			var obj = {}
@@ -1751,7 +1714,7 @@ $('.editable',$container).each(function(){
 			"itemListFilterUpdate" : function($ele){
 				$ele.off('click.itemListFilterUpdate').on('click.itemListFilterUpdate',function(event){
 					event.preventDefault();
-					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').addClass('itemListMode').removeClass('orderListMode'); //make sure we're in 'orders' mode.
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').addClass('itemListMode').removeClass('orderListMode').data('mode','item'); //make sure we're in 'orders' mode.
 					var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
 					$mainCol.showLoading({'message':'Fetching item list'});
 					
@@ -2007,17 +1970,7 @@ $('.editable',$container).each(function(){
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
 				
-			"orderListUpdateDeselectAll" : function($btn)	{
-				$btn.button();
-				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(event){
-					event.preventDefault();
-//if an item is being updated, this will still 'select' it, but will not change the wait icon.
-					$('#orderListTableBody tr').each(function() {
-						$(this).removeClass("ui-selected").addClass("ui-unselecting");
-						});
-					$('#orderListTableBody').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
-					});
-				}, //orderListUpdateDeselectAll
+
 
 
 			"orderPrintInvoice" : function($btn){
@@ -2166,32 +2119,35 @@ else	{
 
 				}, //orderEmailShowMessageList
 
-/*			"orderTicketCreate" : function($btn)	{
-				$btn.button();
-				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){
-					event.preventDefault();
-					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-					if(orderID)	{
-						navigateTo("/biz/crm/index.cgi?ACTION=CREATE&orderid="+orderID);
-						$btn.closest('.ui-dialog-content').dialog('close'); //close the modal, if in a modal.
-						}
-					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.orderTicketCreate, unable to navigate to because order id could not be determined.");
-						}
-					});
-				}, //orderTicketCreate
-*/
 			"orderListUpdateSelectAll" : function($btn)	{
 				$btn.button();
 				$btn.off('click.orderListUpdateSelectAll').on('click.orderListUpdateSelectAll',function(event){
 					event.preventDefault();
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+					var $tbody = $("[data-app-role='"+$mainCol.data('mode')+"ListTbody']",$mainCol);
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
-					$('#orderListTableBody tr').each(function() {
+					$('tr',$tbody).each(function() {
 						$(this).addClass("ui-selected").removeClass("ui-unselecting");
 						});
-					$('#orderListTableBody').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
+ // trigger the mouse stop event (this will select all .ui-selecting elements, and deselect all .ui-unselecting elements)
+					$tbody.closest('table').data("ui-selectable")._mouseStop(null);
 					});
 				}, //orderListUpdateSelectAll
+
+			"orderListUpdateDeselectAll" : function($btn)	{
+				$btn.button();
+				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(event){
+					event.preventDefault();
+					app.u.dump('deselect all');
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+					var $tbody = $("[data-app-role='"+$mainCol.data('mode')+"ListTbody']",$mainCol);
+//if an item is being updated, this will still 'select' it, but will not change the wait icon.
+					$('tr',$tbody).each(function() {
+						$(this).removeClass("ui-selected");
+						});
+					$tbody.closest('table').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
+					});
+				}, //orderListUpdateDeselectAll
 
 			"orderSearch" : function($btn)	{
 				$btn.button();
