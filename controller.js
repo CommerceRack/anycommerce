@@ -3506,15 +3506,16 @@ $tmp.empty().remove();
 			return r;
 			}, //writeLocal
 		
-		readLocal : function(key)	{
+		readLocal : function(key,location)	{
+			location = location || 'local';
 		//	app.u.dump("GETLOCAL: key = "+key);
-			if(typeof localStorage == 'undefined')	{
+			if(typeof window[location+'Storage'] == 'undefined')	{
 				return app.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
 				}
 			else	{
 				var value = null;
 				try{
-					value = localStorage.getItem(key);
+					value = window[location+'Storage'].getItem(key);
 					}
 				catch(e)	{
 					//app.u.dump("Local storage does not appear to be available. e = ");
