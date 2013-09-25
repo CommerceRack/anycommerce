@@ -503,6 +503,7 @@ $("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).on('click','a
 				settings.active = settings.active || 0; //default to search.
 				$(".searchAndFilterContainer",$target).accordion({
 					heightStyle: "content",
+					collapsible: true,
 					active : settings.active,
 					change : function(e,ui)	{
 						app.ext.admin.u.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.

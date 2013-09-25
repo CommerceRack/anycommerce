@@ -456,8 +456,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product debugging tools, including clone, delete and some utilities." class='floatLeft applyButton' data-app-click='admin_prodEdit|showProductDebuggerInDialog'>Clone/Rename/Delete</button>
-			
+			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
+			<!--
+			<button title="Open a dialog with some debug tools." class='floatLeft applyButton'  data-templateid='productDebuggerTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Debug</button>
+			-->
 			
 		</div>
 
@@ -1343,9 +1345,30 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-
-
 <div id='productDebuggerTemplate' class='appMessaging'>
+
+	<form action='#' onsubmit="return false">
+	<label>
+		<span>Debug report</span>
+		<select>
+			<option value=''>please choose</option>
+			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
+			<option value='@AMAZON_SKU_LIST'>Amazon SKU list</option>
+			<option value='@DIAGNOSTICS'>Diagnostics</option>
+			<option value='@INVENTORY'>Inventory</option>
+			<option value='@INVENTORY_LOG'>Inventory log</option>
+			<option value='@NAVCATS'>Navcats</option>
+			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
+		</select>
+	</label>
+	<button>View Report</button>
+	</form>
+
+	<div data-app-role='reportsContent'></div>
+	
+</div>
+
+<div id='productCCDTemplate' class='appMessaging'><!-- ccd = clone, change and delete -->
 
 	<p>The buttons below are for advanced users.  There is no undo. Use with caution.</p>
 	<section class='clearfix marginBottom'>
@@ -1379,26 +1402,6 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<button data-verb='NUKE' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Delete Product</button><!-- open confirm prompt before executing delete -->
 		</fieldset>
 	</section>
-	<!--
-	<section>
-	<label>
-		<span>Debug report</span>
-		<select>
-			<option value=''>please choose</option>
-			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
-			<option value='@AMAZON_SKU_LIST'>Amazon SKU list</option>
-			<option value='@DIAGNOSTICS'>Diagnostics</option>
-			<option value='@INVENTORY'>Inventory</option>
-			<option value='@INVENTORY_LOG'>Inventory log</option>
-			<option value='@NAVCATS'>Navcats</option>
-			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
-		</select>
-	</label>
-	<button>View Report</button>
-	</section>
-	-->
-	
-
 </div>
 
 

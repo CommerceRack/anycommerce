@@ -307,10 +307,10 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 			
 			showProductDebugger : function($target,P)	{
 				P = P || {};
-				if($target instanceof jQuery && P.pid)	{
+				if($target instanceof jQuery && P.pid && P.templateID)	{
 					
 //$target.showLoading({"message":"Fetching product debug info"});
-$target.anycontent({'templateID':'productDebuggerTemplate','showLoading':false}).attr('data-pid',P.pid); //
+$target.anycontent({'templateID':P.templateID,'showLoading':false}).attr('data-pid',P.pid); //
 
 app.u.handleCommonPlugins($target);
 app.u.handleButtons($target);
@@ -318,7 +318,7 @@ app.u.handleEventDelegation($target);
 
 					}
 				else if($target instanceof jQuery)	{
-					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, no pid passed in P.","gMessage":true});
+					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, either no pid ["+P.pid+"] and/or no templateid ["+P.templateID+"] passed. both are required.","gMessage":true});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductDebugger, $target is not a valid instance of jquery.",'gMessage':true})
@@ -2331,18 +2331,18 @@ else	{
 
 
 //executed when the 'debug' button is pushed.
-			showProductDebuggerInDialog : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
+			showProductTemplateInDialog : function($ele,p)	{
+				app.u.dump("BEGIN admin_prodEdit.e.showProductTemplateInDialog (click!)");
 				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
 					app.u.dump(" -> have pid. proceed.");
 					app.ext.admin_prodEdit.a.showProductDebugger(app.ext.admin.i.dialogCreate({
 						'title' : 'Debugger for '+pid,
 						'showLoading' : false
-						}).dialog('open'),{'pid':pid});
+						}).dialog('open'),{'pid':pid,'templateID':$ele.data('templateid')});
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductDebuggerInDialog, unable to ascertain PID.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductTemplateInDialog, unable to ascertain PID.','gMessage':true});
 					}
 				},
 
@@ -2499,7 +2499,7 @@ else	{
 
 //executed when the 'debug' button is pushed.
 			addDetailType2SKUShow : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.showProductDebuggerInDialog (click!)");
+//				app.u.dump("BEGIN admin_prodEdit.e.addDetailType2SKUShow (click!)");
 				
 				if($ele.data('detail-type'))	{
 					

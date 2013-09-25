@@ -8,77 +8,85 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201338
 ADMIN
- -> New inventory system
-	-> Update to inventory panel in product.
-	-> Change to variations panel in product.
-	-> Updates to warehouse interface (now support zones/positions
- -> New 'WHIM' (in utilities) interface for working with inventory.
- 	-> receiving/unmanifested: assign a sku to a zone/position.
-	-> fix mistakes/location lookup: enter sku/skus and get a list of locations
+New inventory system
+	Update to inventory panel in product.
+	Change to variations panel in product.
+	Updates to warehouse interface (now support zones/positions
+New 'WHIM' (in utilities) interface for working with inventory.
+ 	receiving/unmanifested: assign a sku to a zone/position.
+	fix mistakes/location lookup: enter sku/skus and get a list of locations
+update to online order manager
+	improved load time and reduced memory consumption.
+	new 'items' menu (for pick lists, preorders, backorders).
 
- -> Update to contextual menus in orders (order list now loads faster).
- -> several bug fixes in new product editor.
- -> bug fix in support (update ticket working again).	
+several bug fixes in new product editor.
+ 	ebay
+	buy.com
+	amazon (more to come here)
+	checkbox based attributes now saving.
+
+bug fix in support (update ticket working again).
+update to task list manager. will display up to 100 active tasks and tasks completed in last three days.
 
 
 201336
 ADMIN
- -> New product manager/editor interfaces.
- 	-> no longer support buy.com DBMaps.
-	-> no longer have definitions for marketplaces (except amazon)
-	-> powerlister in product went away.
+New product manager/editor interfaces.
+ 	no longer support buy.com DBMaps.
+	no longer have definitions for marketplaces (except amazon)
+	powerlister in product went away.
 
- -> fixed some bug in variations, flexedit (images) and more.
- -> global variations moved to setup.
+fixed some bug in variations, flexedit (images) and more.
+global variations moved to setup.
 
 PLUGINS
- -> some updates to anypanel (uses anycontent now)
+some updates to anypanel (uses anycontent now)
 
 
 201334
 ADMIN
- -> domain manager out of beta
- -> new 'sites' interface
- -> new 'edit' site for domain apps
- -> bug fixes in campaign/ebay template download.
- -> amz thesaurus bug fixes.
- -> bug fixes in supplier interface (handling)
- -> bug fix in coupons begin/expire
+domain manager out of beta
+new 'sites' interface
+new 'edit' site for domain apps
+bug fixes in campaign/ebay template download.
+amz thesaurus bug fixes.
+bug fixes in supplier interface (handling)
+bug fix in coupons begin/expire
 
 
 201332
 ADMIN
- -> new domain config interface
- -> fixes to variations
- -> fixes to handling and insurance
- -> fixes to shipping rules
- -> fixes to flexedit manager
- -> fixes to flexedit in product
- -> fixes to campaigns
- -> 'choose domain' dialog will only show favorites IF favorites are configured.
- -> new 'images' panel in product editor.
- -> new eBay Item Specifics form (with @RECOMMENDATIONS). Old XSLT piece not used any more.
+new domain config interface
+fixes to variations
+fixes to handling and insurance
+fixes to shipping rules
+fixes to flexedit manager
+fixes to flexedit in product
+fixes to campaigns
+'choose domain' dialog will only show favorites IF favorites are configured.
+new 'images' panel in product editor.
+new eBay Item Specifics form (with @RECOMMENDATIONS). Old XSLT piece not used any more.
 
 
 301330
 ADMIN
- -> new options in customer search (schedule, account manager and account type)
- -> new options in organization search (schedule, account type)
- -> new interface for price schedules
- -> everywhere schedule is referenced in the UI got updated (syndication, organizations, etc)
- -> new interface for account utilities (that interface formerly known as tech tools)
+new options in customer search (schedule, account manager and account type)
+new options in organization search (schedule, account type)
+new interface for price schedules
+everywhere schedule is referenced in the UI got updated (syndication, organizations, etc)
+new interface for account utilities (that interface formerly known as tech tools)
  	disk usage and inventory event queue are in the 'logs' section.
- -> "Inventory Lookup" in utilities moved to 'vstore' in setup.
- -> new interface for vendors
- -> new flexedit manager interface in utilities
- -> flexedit panel in product editor upgraded to full app
- -> fixed bugs in powertool
+"Inventory Lookup" in utilities moved to 'vstore' in setup.
+new interface for vendors
+new flexedit manager interface in utilities
+flexedit panel in product editor upgraded to full app
+fixed bugs in powertool
 
 
 301324
 popCheckbox and popRadio are retired. popVal will now handle all input types. all files were updated.
- -> https://github.com/zoovy/AnyCommerce-Development/commit/877a5a382f629150aedfcaa9087b0f37d1667a92
- -> https://github.com/zoovy/AnyCommerce-Development/commit/a6c2fbff7ad08c077842e38100c2dbe7dfc93f6f
+https://github.com/zoovy/AnyCommerce-Development/commit/877a5a382f629150aedfcaa9087b0f37d1667a92
+https://github.com/zoovy/AnyCommerce-Development/commit/a6c2fbff7ad08c077842e38100c2dbe7dfc93f6f
 
 
 
