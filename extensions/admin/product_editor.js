@@ -1602,7 +1602,8 @@ Required params include:
 						}
 					});
 
-//				app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+				app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+//				app.u.dump(" -> cmdObj._tag: "); app.u.dump(cmdObj._tag);
 				
 				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
