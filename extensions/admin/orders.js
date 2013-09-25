@@ -233,7 +233,7 @@ var admin_orders = function() {
 
 
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
-$('body').hideLoading();
+$('#ordersInterfaceMainColumn','#ordersContent').hideLoading().removeData('activeRequestUUID');
 
 //ucomment this in button instead of auto-submit mode. button class changed once filter changes occur (but before button is pressed). this resets button.
 //$("[data-app-event='admin_orders|orderListFiltersUpdateButton']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
@@ -596,7 +596,7 @@ $order.attr('data-order-view-parent',orderID); //put this on the parent so that 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append($order);
 
-$('body').showLoading({'message':'Fetching order'});
+var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').showLoading({'message':'Fetching order'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
@@ -605,7 +605,7 @@ app.model.destroy('adminOrderPaymentMethods'); //though not stored in local, be 
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 //	app.u.dump("Executing callback for adminOrderDetail");
 	
-	$('body').hideLoading();
+	$mainCol.hideLoading();
 	if(app.model.responseHasErrors(responseData)){
 		if(responseData._rtag && responseData._rtag.selector)	{
 			$(app.u.jqSelector(responseData._rtag.selector[0],responseData._rtag.selector.substring(1))).empty();
@@ -719,14 +719,22 @@ else	{
 
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
+			//
 			app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
-				$('body').showLoading({'message':'Requesting up to date order list.'});
+				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
+				if($mainCol.data('activeRequestUUID'))	{
+					app.model.abortRequest('mutable',$mainCol.data('activeRequestUUID'))
+					}
+				else	{
+					//if an active request was in progress, showLoading is already running.
+					$mainCol.showLoading({'message':'Requesting up to date order list.'});
+					}
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
 				app.model.destroy('adminOrderList'); //always refresh list.
 				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'});
-				app.model.dispatchThis();
+					$mainCol.data('activeRequestUUID',app.model.dispatchThis('mutable'));
 				}
 			else	{
 				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
@@ -1159,7 +1167,7 @@ else	{
 
 		submitFilter : function()	{
 //* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
-			$('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode'); //make sure we're in 'orders' mode.
+			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode'); //make sure we're in 'orders' mode.
 			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
 			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
 			var obj = {}
@@ -1744,7 +1752,7 @@ $('.editable',$container).each(function(){
 					event.preventDefault();
 					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').addClass('itemListMode').removeClass('orderListMode'); //make sure we're in 'orders' mode.
 					var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
-					$tbody.showLoading({'message':'Fetching item list'});
+					$mainCol.showLoading({'message':'Fetching item list'});
 					
 					$tbody.intervaledEmpty(); //clear any previous results
 					
@@ -1755,6 +1763,7 @@ $('.editable',$container).each(function(){
 								'datapointer' : 'adminOrderItemList',
 								'limit' : 100,
 								'callback':function(rd){
+									$mainCol.hideLoading();
 									if(app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
 										}

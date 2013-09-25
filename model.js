@@ -183,7 +183,9 @@ function zoovyModel() {
 				r = false;
 			else	{
 				STATUS = STATUS === undefined ? 'UNSET' : STATUS; //a default, mostly to help track down that this function was run without a status set.
-				app.q[QID][UUID]._tag.status = STATUS;
+				if(app.q[QID] && app.q[QID][UUID])	{
+					app.q[QID][UUID]._tag.status = STATUS;
+					}
 				}
 			return r;
 			},

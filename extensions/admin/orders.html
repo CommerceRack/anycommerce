@@ -111,98 +111,101 @@
 	</div>
 	</td>
 	
-	<td class='mainCol orderListMode' id='ordersInterfaceMainColumn'><!-- ordersView class will change to itemsView when in items mode -->
-	<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
-
-		<div class='ui-widget-header ui-corner-tr clearfix'>
-			<button class='floatRight' data-app-event="admin_orders|orderCreate">Create Order</button>
-			<button class='floatLeft' data-app-event='admin_orders|orderListUpdateSelectAll'>Select All</button>
-			<button class='floatLeft' data-app-event='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+	<td class='mainCol orderListMode'><!-- ordersView class will change to itemsView when in items mode -->
+	<div id='ordersInterfaceMainColumn'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
 	
-			
-			<div class='floatLeft marginLeft bulkEditMenu'>
-			<ul data-ui-role='admin_orders|orderUpdateBulkEditMenu'>
-				<li><a href='#'>Action</a>
-				<ul>
-					<li><a href='#'>Change pool to</a>
+		<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
+	
+			<div class='ui-widget-header ui-corner-tr clearfix'>
+				<button class='floatRight' data-app-event="admin_orders|orderCreate">Create Order</button>
+				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateSelectAll'>Select All</button>
+				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+		
+				
+				<div class='floatLeft marginLeft bulkEditMenu'>
+				<ul data-ui-role='admin_orders|orderUpdateBulkEditMenu'>
+					<li><a href='#'>Action</a>
 					<ul>
-						<li><a href='#POOL|RECENT'>Recent</a></li>
-						<li><a href='#POOL|PENDING'>Pending</a></li>
-						<li><a href='#POOL|REVIEW'>Review</a></li>
-						<li><a href='#POOL|HOLD'>Hold</a></li>
-						<li><a href='#POOL|APPROVED'>Approved</a></li>
-						<li><a href='#POOL|PROCESS'>Process</a></li>
-						<li><a href='#POOL|COMPLETED'>Completed</a></li>
-						<li><a href='#POOL|DELETED'>Cancelled</a></li>
-					</ul></li>
-
-					<li><a href='#'>Print</a>
-					<ul>
-						<li><a href='#PRNT|INVOICE'>Invoices</a></li>
-						<li><a href='#PRNT|PACKSLIP'>Packing slips</a></li>
+						<li><a href='#'>Change pool to</a>
+						<ul>
+							<li><a href='#POOL|RECENT'>Recent</a></li>
+							<li><a href='#POOL|PENDING'>Pending</a></li>
+							<li><a href='#POOL|REVIEW'>Review</a></li>
+							<li><a href='#POOL|HOLD'>Hold</a></li>
+							<li><a href='#POOL|APPROVED'>Approved</a></li>
+							<li><a href='#POOL|PROCESS'>Process</a></li>
+							<li><a href='#POOL|COMPLETED'>Completed</a></li>
+							<li><a href='#POOL|DELETED'>Cancelled</a></li>
+						</ul></li>
+	
+						<li><a href='#'>Print</a>
+						<ul>
+							<li><a href='#PRNT|INVOICE'>Invoices</a></li>
+							<li><a href='#PRNT|PACKSLIP'>Packing slips</a></li>
+						</ul>
+						</li>
+	
+						<li><a href='#'>Send email</a>
+						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
+						</ul>
+						</li>
+	
+						<li><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
+	
 					</ul>
 					</li>
-
-					<li><a href='#'>Send email</a>
-					<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
-					</ul>
-					</li>
-
-					<li><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
-
 				</ul>
-				</li>
-			</ul>
+				</div>
+	
 			</div>
-
+			<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
+			<table id="orderListTable" class='gridTable '>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th></th>
+				<th data-name='ORDERID' title='Order ID'>Order ID</th>
+				<th data-name='ORDER_BILL_NAME' title='Billing full name'>Customer</th>
+				<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='Order total'>Total</th>
+				<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='# Items'>Items</th>
+				<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='Payment method'>Method</th>
+				<th data-name='ORDER_PAYMENT_STATUS' title='Order payment status'>Status</th>
+				<th class='hideInMinimalMode' data-name='CREATED_GMT' title='Date order created'>Created</th>
+				<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='Shipping destination'>Dest.</th>
+				<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='Fraud review status'>Fraud</th>
+				<th data-name='FLAGS' title='Flags'>Flags</th>
+				<th data-name='REVIEW_STATUS' title='Order status'>Pool</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
+			</table>
+			</div>
+	
+			<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
+			<table class='gridTable fullWidth' data-app-role='itemListTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th></th>
+				<th title='SKU'>SKU</th>
+				<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
+				<th title='Pick order ID'>Pick Order ID</th>
+				<th class='hideInMinimalMode' title='Marketplace reference ID'>Mkt Ref ID</th>
+				<th class='hideInMinimalMode' title='Inventory record base type'>Base Type</th>
+				<th title='Supplier'>Supplier</th>
+				<th title='WMS Geo'>Geo</th>
+				<th title='WMS Zone'>Zone</th>
+				<th title='WMS Position'>Position</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
+			</table>
+			</div>
+	
+	
 		</div>
-		<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
-		<table id="orderListTable" class='gridTable '>
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th></th>
-			<th data-name='ORDERID' title='Order ID'>Order ID</th>
-			<th data-name='ORDER_BILL_NAME' title='Billing full name'>Customer</th>
-			<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='Order total'>Total</th>
-			<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='# Items'>Items</th>
-			<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='Payment method'>Method</th>
-			<th data-name='ORDER_PAYMENT_STATUS' title='Order payment status'>Status</th>
-			<th class='hideInMinimalMode' data-name='CREATED_GMT' title='Date order created'>Created</th>
-			<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='Shipping destination'>Dest.</th>
-			<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='Fraud review status'>Fraud</th>
-			<th data-name='FLAGS' title='Flags'>Flags</th>
-			<th data-name='REVIEW_STATUS' title='Order status'>Pool</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
-		</table>
-		</div>
-
-		<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
-		<table class='gridTable fullWidth' data-app-role='itemListTable'>
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th></th>
-			<th title='SKU'>SKU</th>
-			<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
-			<th title='Pick order ID'>Pick Order ID</th>
-			<th class='hideInMinimalMode' title='Marketplace reference ID'>Mkt Ref ID</th>
-			<th class='hideInMinimalMode' title='Inventory record base type'>Base Type</th>
-			<th title='Supplier'>Supplier</th>
-			<th title='WMS Geo'>Geo</th>
-			<th title='WMS Zone'>Zone</th>
-			<th title='WMS Position'>Position</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
-		</table>
-		</div>
-
-
 	</div>
 	</td>
 </tr>
