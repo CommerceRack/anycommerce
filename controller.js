@@ -2022,7 +2022,19 @@ VALIDATION
 
 // * 201336 -> make sure a number input has a numerical value.
 					else if($input.attr('type') == 'number' && $input.val())	{
-						if (!isNaN($input.val())) {}
+						if (!isNaN($input.val())) {
+							if($input.attr('min') && ($input.val() < $input.attr('min')))	{
+								r = false;
+								$input.addClass('ui-state-error');
+								$input.after($span.text('minimum value of '+$input.attr('min')+'. '));
+								}
+							else if($input.attr('max') && ($input.val() > $input.attr('max')))	{
+								r = false;
+								$input.addClass('ui-state-error');
+								$input.after($span.text('max value of '+$input.attr('max')+'. '));
+								}
+							else	{}
+							}
 						else	{
 							r = false;
 							$input.addClass('ui-state-error');

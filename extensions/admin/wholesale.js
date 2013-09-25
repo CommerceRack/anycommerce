@@ -443,7 +443,7 @@ app.model.dispatchThis('mutable');
 					}
 				
 				var
-					cmds = new Array("SET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"), //ourset is left out intentionally. see below.
+					cmds = new Array("SET","ORDERSET","SHIPSET","INVENTORYSET","TRACKINGSET"), //The list of valid fieldsets to save. OURSET is left out intentionally. see below.
 					L = cmds.length;
 				
 				for(var i = 0; i < L; i += 1)	{
@@ -464,8 +464,8 @@ app.model.dispatchThis('mutable');
 					newSfo['@updates'].push("OURSET?"+$.param($oursetFieldset.serializeJSON({'cb':true})));
 					}
 				else	{} //no changes.
-				
-				
+
+//				app.u.dump(newSfo['@updates']);
 				return newSfo
 				} //adminSupplierMacro
 			}, //macroBuilders
