@@ -160,6 +160,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$target.empty().showLoading();
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
 				app.ext.admin_task.u.handleListButtons($target);
+				$("[data-app-role='taskManagerListTable']:first",$target).anytable();
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
 				app.model.destroy('adminTaskList');
 				app.ext.admin.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');

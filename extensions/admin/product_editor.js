@@ -1770,12 +1770,12 @@ else	{} //no changes in sku attribs.
 
 
 //the :input pseudo selector will match all form field types.
-var $editedInputs = $("[data-app-role='buySkus'] :input.edited",$form);
-if($editedInputs.length)	{
-	$editedInputs.each(function(){
-		cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest('tr').data('sku')+"&"+$(this).attr('name')+"="+this.value);
-		})
-	}
+				var $editedInputs = $("[data-app-role='buySkus'] :input.edited",$form);
+				if($editedInputs.length)	{
+					$editedInputs.each(function(){
+						cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest('tr').data('sku')+"&"+$(this).attr('name')+"="+this.value);
+						})
+					}
 
 //app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
 				app.model.addDispatchToQ(cmdObj,'immutable');
