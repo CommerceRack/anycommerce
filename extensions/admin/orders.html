@@ -186,7 +186,6 @@
 		<thead>
 		<tr>
 			<th></th>
-			<th data-name='ORDERID' title='order id'>Order ID</th>
 			<th title='SKU'>SKU</th>
 			<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
 			<th title='Pick order ID'>Pick Order ID</th>
@@ -246,7 +245,6 @@
 
 <tr id='adminOrdersItemLineItem'>
 	<td class='statusIcon'></td>
-	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(SKU);format:text;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(PICK_BATCHID);format:text;'></span></td>
 	<td><span data-bind='var:order(PICK_ORDERID);format:paystatus;extension:admin_orders;'></span></td>

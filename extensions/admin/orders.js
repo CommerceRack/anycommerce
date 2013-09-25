@@ -1753,6 +1753,7 @@ $('.editable',$container).each(function(){
 							'_cmd':'adminOrderItemList',
 							'_tag':	{
 								'datapointer' : 'adminOrderItemList',
+								'limit' : 100,
 								'callback':function(rd){
 									if(app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
