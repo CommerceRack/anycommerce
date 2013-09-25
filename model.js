@@ -170,6 +170,7 @@ function zoovyModel() {
 //				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = tmp;
 				r = uuid;
+				app.storageFunctions.writeLocal("dispatch_"+uuid, JSON.stringify(tmp),'session'); //save a copy of each dispatch to sessionStorage for entymologist
 				}
 			return r;
 			},// addDispatchToQ
@@ -533,6 +534,9 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			if(responseData && !$.isEmptyObject(responseData))	{
 				var uuid = responseData['_uuid'];
 				var QID = QID || this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
+				
+				app.storageFunctions.writeLocal("response_"+uuid, JSON.stringify(responseData),'session'); //save a copy of each dispatch to sessionStorage for entymologist
+				
 //				app.u.dump(" -> responseData is set. UUID: "+uuid);
 //if the error is on the parent/piped request, no qid will be set.
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
