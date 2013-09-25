@@ -108,7 +108,29 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 		updateTaskList : {
 			onSuccess : function(tagObj){
 				app.u.dump("BEGIN admin_task.callbacks.updateTaskList.onSuccess");
-				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),app.data[tagObj.datapointer]); //populate content.
+				//limit the number of results.  This is to keep the browser from crashing on HUGE tasks lists.
+				var inc = 0;
+				var tasks = app.data[tagObj.datapointer]['@TASKS'];
+				var filteredTasks = new Array();
+				var L = tasks.length;
+				
+				for(var i = 0; i < L; i++)	{
+					if(Number(tasks[i].completed_gmt) > 0 && (app.u.unixNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
+						app.u.dump("completed more than three days ago");
+						} //don't include tasks completed more than a few days ago
+					else	{
+						//tasks completed in the last 3 days do not count against the 100 task max. so the user gets 100 active tasks.
+						if(Number(tasks[i].completed_gmt) > 0)	{}
+						else	{
+							inc++;
+							}
+						filteredTasks.push(tasks[i])
+						}
+					if(inc >= 100)	{break;} //exit after 100. limits displayed tasks to 100.
+					}
+
+				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),{'@filteredtasks':filteredTasks}); //populate content.
+				
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 				app.ext.admin_task.u.handleListButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
 				var $list = $('#taskListContainer');
@@ -139,6 +161,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
 				app.ext.admin_task.u.handleListButtons($target);
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
+				app.model.destroy('adminTaskList');
 				app.ext.admin.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //showTaskManager
@@ -192,6 +215,11 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				else	{} // no due data and not completed. do nothing.
 				}
 			}, //renderFormats
+
+
+
+
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 

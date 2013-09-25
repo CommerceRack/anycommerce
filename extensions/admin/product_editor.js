@@ -630,8 +630,8 @@ for(var i = 0; i < L; i += 1)	{
 				$div.anycontent({'templateID':'productEditorNavtabsTemplate','data':{}});
 				$div.appendTo($navtabs);
 
-				
-				app.ext.admin_prodEdit.u.handleManagementCategoryFilters();//handleManagementCategoryFilters 'may' add a dispatch.
+// commented out till management categories get added to elastic.				
+//				app.ext.admin_prodEdit.u.handleManagementCategoryFilters();//handleManagementCategoryFilters 'may' add a dispatch.
 				app.ext.admin_prodEdit.u.handleLaunchProfileFilters();//handleManagementCategoryFilters 'may' add a dispatch.
 				
 				app.u.handleButtons($navtabs);
