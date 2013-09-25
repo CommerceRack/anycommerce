@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -281,7 +281,7 @@ function messages2Object()	{
 	return r;
 	}
 
-
+// * 201338 -> updated contextual menu library and the code here. MUCH more efficient method. page loaded faster after this enhancement.
 $.contextMenu({
 	'selector' : '.adminOrderLineItem',
 	'callback' : function(key,options)	{
@@ -313,31 +313,6 @@ $.contextMenu({
 		}
 	});
 
-/*
-//adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updating fast enough.	
-//this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
-	$('.adminOrderLineItem').each(function(){
-		$.contextMenu({
-			selector: "#contextMenu4Orders",
-			callback: function(key, options) {
-				var m = "clicked: " + key;
-				window.console && console.log(m) || alert(m); 
-				},
-//the events change the row bg color on right click init. helps indicate which row is hightlighted AND that only that row will be affected.
-			events : {
-				show : function(){
-					$(this).addClass('ui-state-highlight');
-					},
-				hide : function(){
-					$(this).removeClass('ui-state-highlight');
-					}
-				},
-			items: $.contextMenu.fromMenu($cmenu)
-			});
-
-		
-		}); //orderlineitem.each
-*/	
 //note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
 //because it requires a slight drag before the 'select' is triggered.
 	$target.selectable({
@@ -433,6 +408,49 @@ else	{
 				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_'+P.targetID},'orderManagerTemplate',app.ext.admin_orders.vars));
 				
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
+				
+				
+//template is on the DOM.  Let's add some functionality to it.				
+//when Order Manager is upgraded to use delegated events, update this.
+$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).on('click','a',function(event){
+	event.preventDefault();
+	if($(this).children('ul').length == 1)	{
+//if the li has a child list, do nothing on click, the children contain the actions.
+		app.u.dump(" -> selected command has children.");
+		} 
+	else	{
+		var command = $(this).attr('href').substring(1), //will = POOL|PENDING or  PRNT|INVOICE
+		actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
+		app.u.dump(" -> actionType: "+actionType);
+		app.u.dump(" -> command: "+command);
+		if(actionType)	{
+			switch(actionType)	{
+				case 'POOL':
+				app.ext.admin_orders.u.bulkChangeOrderPool(command);
+				app.model.dispatchThis('immutable');
+				break;
+				
+				case 'PMNT':
+				app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
+				app.model.dispatchThis('immutable');
+				break;
+				
+				case 'MAIL':
+				app.ext.admin_orders.u.bulkSendOrderMail(command);
+				break;
+				
+				case 'PRNT':
+				app.ext.admin_orders.u.bulkOrdersPrint(command);
+				break;
+				
+				default:
+					app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
+				}
+			}
+		}
+	});
+				
+/*				
 // 1 item in the menu can be selected at a time, but the 'proceed' button is what actually makes the changes. the ui-selected class is used to determine action
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu'] a",$target).each(
 					function(){$(this).on('click',function(event){
@@ -477,7 +495,7 @@ else	{
 							}
 						})
 					});
-
+*/
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
 
 //check to see which index in accordian was open last.
@@ -707,7 +725,7 @@ else	{
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
 				app.model.destroy('adminOrderList'); //always refresh list.
-				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
+				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'});
 				app.model.dispatchThis();
 				}
 			else	{
@@ -1140,11 +1158,12 @@ else	{
 
 
 		submitFilter : function()	{
-
-			$('#orderListTableBody').empty(); //this is targeting the table body.
-			$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
+//* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
+			$('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode'); //make sure we're in 'orders' mode.
+			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
+			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
 			var obj = {}
-			obj.LIMIT = Number($('#filterLimit').val()) || 30;
+			obj.LIMIT = Number($('#filterLimit','#ordersContent').val()) || 30;
 			$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
 				var val = $(this).find('.ui-selected').attr('data-filtervalue');
 				if(val){
@@ -1430,7 +1449,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 // app.ext.admin_orders.u.unSelectRow()
 			unSelectRow : function($row){
 				$row.removeClass("ui-selected").addClass("ui-unselecting");
-				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
+				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
 				},
 
 			
@@ -1723,6 +1742,12 @@ $('.editable',$container).each(function(){
 			"itemListFilterUpdate" : function($ele){
 				$ele.off('click.itemListFilterUpdate').on('click.itemListFilterUpdate',function(event){
 					event.preventDefault();
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').addClass('itemListMode').removeClass('orderListMode'); //make sure we're in 'orders' mode.
+					var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
+					$tbody.showLoading({'message':'Fetching item list'});
+					
+					$tbody.intervaledEmpty(); //clear any previous results
+					
 					if($ele.data('filtervalue'))	{
 						var cmdObj = {
 							'_cmd':'adminOrderItemList',
@@ -1734,7 +1759,7 @@ $('.editable',$container).each(function(){
 										}
 									else	{
 										//success content goes here.
-										alert('woot!');
+										$tbody.anycontent(rd)
 										}
 									}
 								}
@@ -2188,7 +2213,7 @@ else	{
       }}
 	}
 
-app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem','keyword':frmObj.keyword},'immutable');
+app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':frmObj.keyword},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}

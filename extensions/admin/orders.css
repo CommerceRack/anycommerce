@@ -10,6 +10,24 @@ ORDER MANAGER
 
 */
 
+
+/*
+
+for new orders/items view feature
+
+*/
+
+
+.orderListMode .hideInOrderListMode	{display:none;}
+.itemListMode .hideInItemListMode	{display:none;}
+
+
+
+
+
+
+
+
 /*
 order list
 */

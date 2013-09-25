@@ -85,10 +85,10 @@
 		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<ul class='noPadOrMargin listStyleNone filterGroup'>
-				<li data-filtervalue='pick_noroute' data-app-event='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
-				<li data-filtervalue='pick_unshipped' data-app-event='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
 				<li data-filtervalue='backorder' data-app-event='admin_orders|itemListFilterUpdate'>Backorder</li>
 				<li data-filtervalue='preorder' data-app-event='admin_orders|itemListFilterUpdate'>Preorder</li>
+				<li data-filtervalue='pick_noroute' data-app-event='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
+				<li data-filtervalue='pick_unshipped' data-app-event='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
 			</ul>
 <!--
 			<h4>Filter by Supplier</h4>
@@ -111,7 +111,7 @@
 	</div>
 	</td>
 	
-	<td class='mainCol'>
+	<td class='mainCol orderListMode' id='ordersInterfaceMainColumn'><!-- ordersView class will change to itemsView when in items mode -->
 	<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 
 		<div class='ui-widget-header ui-corner-tr clearfix'>
@@ -156,29 +156,54 @@
 			</div>
 
 		</div>
-		<div id='orderListTableContainer' class='ui-widget-content ui-corner-br'>
-		<table id="orderListTable" class='gridTable'>
+		<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
+		<table id="orderListTable" class='gridTable '>
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
 			<th></th>
-			<th data-name='ORDERID' title='order id'>order id</th>
-			<th data-name='ORDER_BILL_NAME' title='billing full name'>customer</th>
-			<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='order total'>total</th>
-			<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='order total'>items</th>
-			<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
-			<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
-			<th class='hideInMinimalMode' data-name='CREATED_GMT' title='date order created'>created</th>
-			<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
-			<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
-			<th data-name='FLAGS' title='fraud review status'>flags</th>
-			<th data-name='REVIEW_STATUS' title='order status'>pool</th>
+			<th data-name='ORDERID' title='Order ID'>Order ID</th>
+			<th data-name='ORDER_BILL_NAME' title='Billing full name'>Customer</th>
+			<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='Order total'>Total</th>
+			<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='# Items'>Items</th>
+			<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='Payment method'>Method</th>
+			<th data-name='ORDER_PAYMENT_STATUS' title='Order payment status'>Status</th>
+			<th class='hideInMinimalMode' data-name='CREATED_GMT' title='Date order created'>Created</th>
+			<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='Shipping destination'>Dest.</th>
+			<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='Fraud review status'>Fraud</th>
+			<th data-name='FLAGS' title='Flags'>Flags</th>
+			<th data-name='REVIEW_STATUS' title='Order status'>Pool</th>
 			<th></th>
 		</tr>
 		</thead>
 		<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
 		</table>
 		</div>
+
+		<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
+		<table class='gridTable fullWidth' data-app-role='itemListTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th></th>
+			<th data-name='ORDERID' title='order id'>Order ID</th>
+			<th title='SKU'>SKU</th>
+			<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
+			<th title='Pick order ID'>Pick Order ID</th>
+			<th class='hideInMinimalMode' title='Marketplace reference ID'>Mkt Ref ID</th>
+			<th class='hideInMinimalMode' title='Inventory record base type'>Base Type</th>
+			<th title='Supplier'>Supplier</th>
+			<th title='WMS Geo'>Geo</th>
+			<th title='WMS Zone'>Zone</th>
+			<th title='WMS Position'>Position</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
+		</table>
+		</div>
+
+
 	</div>
 	</td>
 </tr>
@@ -192,7 +217,7 @@
 
 <!-- used for order lineitem in orderList template -->
 <table>
-<tr id='adminOrderLineItem' class='adminOrderLineItem' >
+<tr id='adminOrdersOrderLineItem' class='adminOrderLineItem' >
 	<td class='statusIcon'></td>
 	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
@@ -219,8 +244,25 @@
 </tr>
 
 
+<tr id='adminOrdersItemLineItem'>
+	<td class='statusIcon'></td>
+	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
+	<td><span data-bind='var:order(SKU);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(PICK_BATCHID);format:text;'></span></td>
+	<td><span data-bind='var:order(PICK_ORDERID);format:paystatus;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(MARKET_REFID);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(BASETYPE);format:text;'></span></td>
+	<td><span data-bind='var:order(SUPPLIER);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_GEO);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_ZONE);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_POSITION);format:text;'></span></td>
+	<td NOWRAP class='alignRight'>
+	
+	</td>
+</tr>
+
 </table>
-<!-- /adminOrderLineItem -->
+
 
 
 
