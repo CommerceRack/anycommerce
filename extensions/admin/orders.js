@@ -374,6 +374,7 @@ else	{
 // SANITY: the template is now on the DOM in target. you can now safely affect it.
 
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
+				$("[data-ui-role='admin_orders|itemUpdateBulkEditMenu']",$target).menu().hide();
 				
 				
 //template is on the DOM.  Let's add some functionality to it.				
@@ -427,7 +428,8 @@ $("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).on('click','a
 		stop: function(){
 			app.u.dump(" -> selectable 'stop' has been triggered");
 			// in this context, 'this' is the table selectable was applied to.
-			$( "tr", this ).each(function() {
+			var $table = $(this);
+			$( "tr", $table ).each(function() {
 				var $row = $(this);
 //handle the icon.
 				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
@@ -447,10 +449,16 @@ $("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).on('click','a
 				
 				});
 			if($(".ui-selected",$(this)).length > 0)	{
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
+				if($table.data('app-role') == 'itemListTable')	{
+					$("[data-ui-role='admin_orders|itemUpdateBulkEditMenu']",$target).show().effect("highlight", {},1000);
+					}
+				else	{
+					$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).show().effect("highlight", {},1000);
+					}
 				}
 			else	{
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").hide();
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).hide();
+				$("[data-ui-role='admin_orders|itemUpdateBulkEditMenu']",$target).hide();
 				}
 			}
 		});
@@ -1131,7 +1139,9 @@ else	{
 
 		submitFilter : function()	{
 //* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
-			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').removeClass('itemListMode').addClass('orderListMode').data('mode','order'); //make sure we're in 'orders' mode.
+			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+			app.ext.admin_orders.u.changeOMMode('order');
+
 			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
 			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
 			var obj = {}
@@ -1680,6 +1690,19 @@ $('.editable',$container).each(function(){
 					app.ext.admin.calls.adminOrderDetail.init(obj.orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
 					app.model.dispatchThis('mutable');
 				
+				},
+
+			changeOMMode : function(mode)	{
+				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+				if(mode == 'order')	{
+					$mainCol.removeClass('itemListMode').addClass('orderListMode').data('mode','order');
+					}
+				else if (mode == 'item')	{
+					$mainCol.removeClass('orderListMode').addClass('itemListMode').data('mode','item');
+					}
+				else	{
+					$mainCol.anymessage({'message':'In admin_orders.u.changeOMMode, invalid mode ['+mode+'] set. must be order or item.','gMessage':true});
+					}
 				}
 
 
@@ -1714,7 +1737,10 @@ $('.editable',$container).each(function(){
 			"itemListFilterUpdate" : function($ele){
 				$ele.off('click.itemListFilterUpdate').on('click.itemListFilterUpdate',function(event){
 					event.preventDefault();
-					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent').addClass('itemListMode').removeClass('orderListMode').data('mode','item'); //make sure we're in 'orders' mode.
+
+					app.ext.admin_orders.u.changeOMMode('item');
+
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
 					var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
 					$mainCol.showLoading({'message':'Fetching item list'});
 					
@@ -2153,13 +2179,19 @@ else	{
 				$btn.button();
 				$btn.off('click.orderSearch').on('click.orderSearch',function(event){
 					event.preventDefault();
-					var frmObj = $btn.closest('form').serializeJSON(),
-					query;
+					
+					var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
+					app.ext.admin_orders.u.changeOMMode('order');
+					
+					var
+						frmObj = $btn.closest('form').serializeJSON(),
+						query;
+					
 					if(frmObj.keyword)	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
-						$('body').showLoading({'message':'Searching orders...'});
+						$mainCol.showLoading({'message':'Searching orders...'});
 if(frmObj.isDetailedSearch == 'on')	{
 	query = {'size':Number(frmObj.size) || 30,'filter' : {
 	'or' : [
