@@ -1720,6 +1720,36 @@ $('.editable',$container).each(function(){
 					}
 				},
 			
+			"itemListFilterUpdate" : function($ele){
+				$ele.off('click.itemListFilterUpdate').on('click.itemListFilterUpdate',function(event){
+					event.preventDefault();
+					if($ele.data('filtervalue'))	{
+						var cmdObj = {
+							'_cmd':'adminOrderItemList',
+							'_tag':	{
+								'datapointer' : 'adminOrderItemList',
+								'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										//success content goes here.
+										alert('woot!');
+										}
+									}
+								}
+							}
+						
+						cmdObj[$ele.data('filtervalue')] = 1;
+						app.model.addDispatchToQ(cmdObj,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_orders.e.itemListFilterUpdate, data-filtervalue not set on trigger element.","gMessage":true});
+						}
+					});
+				},
+			
 			"orderListFiltersUpdate" : function($ele)	{
 				$ele.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
 					app.ext.admin_orders.u.submitFilter();

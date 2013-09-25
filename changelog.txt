@@ -8,7 +8,17 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201338
 ADMIN
- -> Up
+ -> New inventory system
+	-> Update to inventory panel in product.
+	-> Change to variations panel in product.
+	-> Updates to warehouse interface (now support zones/positions
+ -> New 'WHIM' (in utilities) interface for working with inventory.
+ 	-> receiving/unmanifested: assign a sku to a zone/position.
+	-> fix mistakes/location lookup: enter sku/skus and get a list of locations
+
+ -> Update to contextual menus in orders (order list now loads faster).
+ -> several bug fixes in new product editor.
+ -> bug fix in support (update ticket working again).	
 
 
 201336

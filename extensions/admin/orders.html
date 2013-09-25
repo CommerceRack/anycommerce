@@ -75,10 +75,39 @@
 	
 		</div>
 	
+	
+		<h2>Items</h2>
+		<!--
+		adminOrderItemList
+		backorder=1
+		preorder=1
+		 -->
+		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
+			<section class='clearfix'>
+			<ul class='noPadOrMargin listStyleNone filterGroup'>
+				<li data-filtervalue='pick_noroute' data-app-event='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
+				<li data-filtervalue='pick_unshipped' data-app-event='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
+				<li data-filtervalue='backorder' data-app-event='admin_orders|itemListFilterUpdate'>Backorder</li>
+				<li data-filtervalue='preorder' data-app-event='admin_orders|itemListFilterUpdate'>Preorder</li>
+			</ul>
+<!--
+			<h4>Filter by Supplier</h4>
+			<ul>
+				<li>Supplier List</li>
+			</ul>
+			<h4>Filter by Date Range</h4>
+			<ul>
+				<li>From: </li>
+				<li>To: </li>
+			</ul>
+-->			
+			</section>
+		</div>
 
+<!--
 		<h2>Report</h2>
 		<div>Coming Soon!</div>
-
+-->
 	</div>
 	</td>
 	

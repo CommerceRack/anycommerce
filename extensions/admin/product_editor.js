@@ -2437,8 +2437,9 @@ else	{
 				if($form.length && $ele.data('save-handlers'))	{
 					if(app.u.validateForm($form))	{
 						var
-							handlers = $ele.data('save-handlers').split(',');
-							L = handlers.length;
+							handlers = $ele.data('save-handlers').split(','),
+							L = handlers.length,
+							pid = $ele.closest("form").find("input[name='pid']").val();
 						
 						$form.showLoading({'message':'Saving Changes...'});
 						for(var i = 0; i < L; i += 1)	{
