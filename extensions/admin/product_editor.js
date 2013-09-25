@@ -1756,22 +1756,27 @@ else	{} //no changes in sku attribs.
 				var cmdObj = {
 					_cmd : 'adminProductMacro',
 					pid : pid,
+					'%attribs' : $("[data-app-role='buyAttributes']",$form).serializeJSON({'selector' : ':input.edited' , 'cb' : true}),
 					'@updates' : new Array(),
 					_tag : {
 						callback : 'showMessaging',
+						message : 'Saved changes to buy.com panel',
 						restoreInputsFromTrackingState : true,
 						jqObj : $form
 						}
 					}
+
+
+
+
 //the :input pseudo selector will match all form field types.
-var $editedInputs = $(':input.edited',$form);
+var $editedInputs = $("[data-app-role='buySkus'] :input.edited",$form);
 if($editedInputs.length)	{
 	$editedInputs.each(function(){
 		cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest('tr').data('sku')+"&"+$(this).attr('name')+"="+this.value);
 		})
-	cmdObj._tag.message = "Saved "+$editedInputs.length+" attribute changes";
-//	app.u.dump(" -> cmdObj for attributes:"); app.u.dump(cmdObj);
 	}
+
 //app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				} //buycom
