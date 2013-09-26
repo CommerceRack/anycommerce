@@ -23,7 +23,26 @@
 </fieldset>
 </form>
 		</div>
+
+
+
 	
+	
+		<h2>Item Filters</h2>
+		<div data-app-role='admin_orders|orderListFiltersUpdate'>
+			<section class='clearfix'>
+			<ul class='noPadOrMargin listStyleNone filterGroup'>
+				<li data-filtervalue='backorder' data-app-click='admin_orders|itemListFilterUpdate'>Backorder</li>
+				<li data-filtervalue='preorder' data-app-click='admin_orders|itemListFilterUpdate'>Preorder</li>
+				<li data-filtervalue='pick_noroute' data-app-click='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
+				<li data-filtervalue='pick_unshipped' data-app-click='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
+			</ul>
+			</section>
+		</div>
+
+
+
+
 		<h2>Order Filters</h2>	
 		<div data-app-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
@@ -31,6 +50,8 @@
 			<ul id='orderListFilterPool' class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
 				<li data-filtervalue='RECENT' data-app-click='admin_orders|orderListFiltersUpdate'>Recent</li>
 				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='PREORDER' data-app-click='admin_orders|orderListFiltersUpdate'>Preorder</li>
+				<li data-filtervalue='BACKORDER' data-app-click='admin_orders|orderListFiltersUpdate'>Backorder</li>
 				<li data-filtervalue='REVIEW' data-app-click='admin_orders|orderListFiltersUpdate'>Review</li>
 				<li data-filtervalue='HOLD' data-app-click='admin_orders|orderListFiltersUpdate'>Hold</li>
 				<li data-filtervalue='APPROVED' data-app-click='admin_orders|orderListFiltersUpdate'>Approved</li><!-- add this to li for auto-submit:  data-app-click='admin_orders|orderListFiltersUpdate' -->
@@ -74,30 +95,6 @@
 			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' class='smallInput' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
 	
 		</div>
-	
-	
-		<h2>Item Filters</h2>
-		<div data-app-role='admin_orders|orderListFiltersUpdate'>
-			<section class='clearfix'>
-			<ul class='noPadOrMargin listStyleNone filterGroup'>
-				<li data-filtervalue='backorder' data-app-click='admin_orders|itemListFilterUpdate'>Backorder</li>
-				<li data-filtervalue='preorder' data-app-click='admin_orders|itemListFilterUpdate'>Preorder</li>
-				<li data-filtervalue='pick_noroute' data-app-click='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
-				<li data-filtervalue='pick_unshipped' data-app-click='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
-			</ul>
-<!--
-			<h4>Filter by Supplier</h4>
-			<ul>
-				<li>Supplier List</li>
-			</ul>
-			<h4>Filter by Date Range</h4>
-			<ul>
-				<li>From: </li>
-				<li>To: </li>
-			</ul>
--->			
-			</section>
-		</div>
 
 <!--
 		<h2>Report</h2>
@@ -125,6 +122,8 @@
 						<ul>
 							<li><a href='#POOL|RECENT' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Recent</a></li>
 							<li><a href='#POOL|PENDING' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Pending</a></li>
+							<li><a href='#POOL|PREORDER' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Preorder</a></li>
+							<li><a href='#POOL|BACKORDER' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Backorder</a></li>
 							<li><a href='#POOL|REVIEW' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Review</a></li>
 							<li><a href='#POOL|HOLD' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Hold</a></li>
 							<li><a href='#POOL|APPROVED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Approved</a></li>

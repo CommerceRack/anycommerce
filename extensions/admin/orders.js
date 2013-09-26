@@ -33,7 +33,7 @@ var admin_orders = function() {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	vars : {
-		"pools" : ['RECENT','PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
+		"pools" : ['RECENT','PENDING','PREORDER','BACKORDER','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
 		"emailMessages" : {
 			'ORDER.CONFIRM':'Order created',
