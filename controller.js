@@ -1424,31 +1424,34 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				},
 
 // a utility for converting to jquery button()s.  use applyButton and optionally set some data attributes for text and icons.
-		handleButtons : function($target)	{
+			handleButtons : function($target)	{
 //			app.u.dump("BEGIN app.u.handleButtons");
-			if($target && $target instanceof jQuery)	{
-				$('.applyButton',$target).each(function(index){
+				if($target && $target instanceof jQuery)	{
+					$('.applyButton',$target).each(function(index){
 //					app.u.dump(" -> index: "+index);
-					var $btn = $(this);
-					$btn.button();
-					if($btn.data('icon-primary'))	{
-						$btn.button( "option", "icons", { primary: $btn.data('icon-primary')} );
-						}
-					if($btn.data('icon-secondary'))	{
-						$btn.button( "option", "icons", { secondary: $btn.data('icon-secondary')} );
-						}
-					
-					if($btn.data('text') === false)	{
-//						app.u.dump(" -> $btn.data('text'): "+$btn.data('text'));
-						$btn.button( "option", "text", false );
-						}
-					//need to add support for icons and text true/false here. !!!
-					});
-				}
-			else	{
-				$('#globalMessaging').anymessage({"message":"In app.u.handleButtons, $target was empty or not a valid jquery instance. ","gMessage":true});
-				}
-			},
+						var $btn = $(this);
+						$btn.button();
+// SANITY -> $btn may NOT be on the DOM when this is run.
+						if($btn.data('icon-primary') && $btn.data('icon-secondary'))	{
+							$btn.button( "option", "icons", { primary: $btn.data('icon-primary'), secondary: $btn.data('icon-secondary')} );
+							}
+						else if($btn.data('icon-primary'))	{
+							$btn.button( "option", "icons", { primary: $btn.data('icon-primary')} );
+							}
+						else if($btn.data('icon-secondary'))	{
+							$btn.button( "option", "icons", { secondary: $btn.data('icon-secondary')} );
+							}
+						else	{} //no icon specified.
+						
+						if($btn.data('text') === false)	{
+							$btn.button( "option", "text", false );
+							}
+						});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In app.u.handleButtons, $target was empty or not a valid jquery instance. ","gMessage":true});
+					}
+				},
 
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
@@ -2532,99 +2535,102 @@ later, it will handle other third party plugins as well.
 // ### NOTE! SANITY ! WHATEVER - app.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the app.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
 
 		getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
-			app.u.dump(" -> USING OLD VERSION of getSupplementalPaymentInputs. CHANGE TO NEW in cco");
-			//NOTE -> this function wasn't just deleted because extensive testing needs to occur to the checkouts/UI and I'm still in dev on the new version of the function.
-//				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
-//				app.u.dump(" -> data:"); app.u.dump(data);
 			var $o; //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
-			$o = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental");
-			var safeid = ''; //used in echeck loop. recycled in loop.
-			var tmp = ''; //tmp var used to put together string of html to append to $o
-			
-			var payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
-			
-			app.u.dump(" -> paymentID.substr(0,6): "+paymentID.substr(0,7));
-			if(paymentID.substr(0,7) == 'WALLET:')	{
-				paymentID = 'WALLET';
-				}			
-			app.u.dump(" -> PAYMENTID: "+paymentID);
-			switch(paymentID)	{
-//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
-//expiration is less of a concern
-				case 'PAYPALEC' :
+			if(paymentID)	{
+				app.u.dump(" -> USING OLD VERSION of getSupplementalPaymentInputs. CHANGE TO NEW in cco");
+				//NOTE -> this function wasn't just deleted because extensive testing needs to occur to the checkouts/UI and I'm still in dev on the new version of the function.
+	//				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
+	//				app.u.dump(" -> data:"); app.u.dump(data);
 				
-				//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
-					break;
-				case 'CREDIT':
-					tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment/CC' id='payment-cc' class=' creditCard' value='";
-					if(data['payment/CC']){tmp += data['payment/CC']}
-					tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/li>";
+				$o = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental");
+				var safeid = ''; //used in echeck loop. recycled in loop.
+				var tmp = ''; //tmp var used to put together string of html to append to $o
+				
+				var payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
+				
+	//			app.u.dump(" -> paymentID.substr(0,6): "+paymentID.substr(0,7));
+				if(paymentID.substr(0,7) == 'WALLET:')	{
+					paymentID = 'WALLET';
+					}			
+				app.u.dump(" -> PAYMENTID: "+paymentID);
+				switch(paymentID)	{
+	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
+	//expiration is less of a concern
+					case 'PAYPALEC' :
 					
-					tmp += "<li><label>Expiration<\/label><select name='payment/MM' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
-					tmp += app.u.getCCExpMonths(data['payment/MM']);
-					tmp += "<\/select>";
-					tmp += "<select name='payment/YY' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
-					
-					tmp += "<li><label for='payment/CV'>CVV/CID<\/label><input type='text' size='4' name='payment/CV' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
-					if(data['payment/CV']){tmp += data['payment/CV']}
-					tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
-					
-					if(isAdmin === true)	{
-						tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
-						tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
-						tmp += "<li class='hint'>Use refund action in transaction history to issue refund.<\/li>"
-						}
-					
-					
-					break;
-
-					case 'WALLET':
+					//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
+						break;
+					case 'CREDIT':
+						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment/CC' id='payment-cc' class=' creditCard' value='";
+						if(data['payment/CC']){tmp += data['payment/CC']}
+						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/li>";
+						
+						tmp += "<li><label>Expiration<\/label><select name='payment/MM' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += app.u.getCCExpMonths(data['payment/MM']);
+						tmp += "<\/select>";
+						tmp += "<select name='payment/YY' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
+						
+						tmp += "<li><label for='payment/CV'>CVV/CID<\/label><input type='text' size='4' name='payment/CV' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						if(data['payment/CV']){tmp += data['payment/CV']}
+						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
+						
 						if(isAdmin === true)	{
-							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
-							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+							tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
+							tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
+							tmp += "<li class='hint'>Use refund action in transaction history to issue refund.<\/li>"
 							}
-						else	{$o = false;} //inputs are only present in admin interface.
-					break;
-					
-					case 'CASH':
-					case 'MO':
-					case 'CHECK':
-					case 'PICKUP':
-//will output a flag as paid checkbox ONLY in the admin interface.
-//if this param is passed in a store, it will do nothing.
-					if(isAdmin === true)	{
-						tmp += payStatusCB;
-						}
-					break;
-
-				case 'PO':
-					tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' value='";
-					if(data['payment/PO'])
-							tmp += data['payment/PO'];
-					tmp += "' /><\/li>";
-					if(isAdmin === true)	{
-						tmp += payStatusCB;
-						}
-					break;
-
-				case 'ECHECK':
-					var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
-					for(var key in echeckFields) {
-						safeid = app.u.makeSafeHTMLId(key);
-//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
-//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-						tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck'  value='";
-//if the value for this field is set in the data object (cart or invoice), set it here.
-						if(data[key])
-							tmp += data[key];
+						
+						
+						break;
+	
+						case 'WALLET':
+							if(isAdmin === true)	{
+								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+								tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+								}
+							else	{$o = false;} //inputs are only present in admin interface.
+						break;
+						
+						case 'CASH':
+						case 'MO':
+						case 'CHECK':
+						case 'PICKUP':
+	//will output a flag as paid checkbox ONLY in the admin interface.
+	//if this param is passed in a store, it will do nothing.
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
+						break;
+	
+					case 'PO':
+						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' value='";
+						if(data['payment/PO'])
+								tmp += data['payment/PO'];
 						tmp += "' /><\/li>";
-						}
-					break;
-				default:
-//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
-					$o = false; //return false if there is no supplemental fields
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
+						break;
+	
+					case 'ECHECK':
+						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
+						for(var key in echeckFields) {
+							safeid = app.u.makeSafeHTMLId(key);
+	//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
+	//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
+							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck'  value='";
+	//if the value for this field is set in the data object (cart or invoice), set it here.
+							if(data[key])
+								tmp += data[key];
+							tmp += "' /><\/li>";
+							}
+						break;
+					default:
+	//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
+						$o = false; //return false if there is no supplemental fields
+					}
+				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
 				}
-			if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
 			return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);

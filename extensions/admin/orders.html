@@ -8,7 +8,7 @@
 
 		<h2>Order Search</h2>
 		<div>
-<form class='labelsAsBreaks'>
+<form class='labelsAsBreaks' onsubmit="return false" action='#'>
 <fieldset>
 
 	<label>
@@ -18,25 +18,25 @@
 	<label><input type='checkbox' name='isDetailedSearch' />detailed search</label>
 	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
 
-	<button data-app-event="admin_orders|orderSearch">Show Results</button>
+	<button data-app-click="admin_orders|orderSearch" class='applyButton'>Show Results</button>
 
 </fieldset>
 </form>
 		</div>
 	
 		<h2>Order Filters</h2>	
-		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
+		<div data-app-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
 			<ul id='orderListFilterPool' class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
-				<li data-filtervalue='RECENT' data-app-event='admin_orders|orderListFiltersUpdate'>Recent</li>
-				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
-				<li data-filtervalue='REVIEW' data-app-event='admin_orders|orderListFiltersUpdate'>Review</li>
-				<li data-filtervalue='HOLD' data-app-event='admin_orders|orderListFiltersUpdate'>Hold</li>
-				<li data-filtervalue='APPROVED' data-app-event='admin_orders|orderListFiltersUpdate'>Approved</li><!-- add this to li for auto-submit:  data-app-event='admin_orders|orderListFiltersUpdate' -->
-				<li data-filtervalue='PROCESS' data-app-event='admin_orders|orderListFiltersUpdate'>Process</li>
-				<li data-filtervalue='COMPLETED' data-app-event='admin_orders|orderListFiltersUpdate'>Completed</li>
-				<li data-filtervalue='DELETED' data-app-event='admin_orders|orderListFiltersUpdate'>Cancelled</li>
+				<li data-filtervalue='RECENT' data-app-click='admin_orders|orderListFiltersUpdate'>Recent</li>
+				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='REVIEW' data-app-click='admin_orders|orderListFiltersUpdate'>Review</li>
+				<li data-filtervalue='HOLD' data-app-click='admin_orders|orderListFiltersUpdate'>Hold</li>
+				<li data-filtervalue='APPROVED' data-app-click='admin_orders|orderListFiltersUpdate'>Approved</li><!-- add this to li for auto-submit:  data-app-click='admin_orders|orderListFiltersUpdate' -->
+				<li data-filtervalue='PROCESS' data-app-click='admin_orders|orderListFiltersUpdate'>Process</li>
+				<li data-filtervalue='COMPLETED' data-app-click='admin_orders|orderListFiltersUpdate'>Completed</li>
+				<li data-filtervalue='DELETED' data-app-click='admin_orders|orderListFiltersUpdate'>Cancelled</li>
 			</ul>
 			</section>
 
@@ -44,10 +44,10 @@
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
 			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_VERB'>
-				<li data-filtervalue='PAID' data-app-event='admin_orders|orderListFiltersUpdate'>Paid</li>
-				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
-				<li data-filtervalue='DENIED' data-app-event='admin_orders|orderListFiltersUpdate'>Denied</li>
-				<li data-filtervalue='ERROR' data-app-event='admin_orders|orderListFiltersUpdate'>Error</li>
+				<li data-filtervalue='PAID' data-app-click='admin_orders|orderListFiltersUpdate'>Paid</li>
+				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='DENIED' data-app-click='admin_orders|orderListFiltersUpdate'>Denied</li>
+				<li data-filtervalue='ERROR' data-app-click='admin_orders|orderListFiltersUpdate'>Error</li>
 			</ul>
 			</section>
 			
@@ -55,9 +55,9 @@
 			<section class='clearfix'>
 			<h4>Payment Type:</h4>
 			<ul id='orderListFilterPaymentType' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_METHOD'>
-				<li data-filtervalue='PAYPAL' data-app-event='admin_orders|orderListFiltersUpdate'>PayPal</li>
-				<li data-filtervalue='CASH' data-app-event='admin_orders|orderListFiltersUpdate'>Cash</li>
-				<li data-filtervalue='CRED' data-app-event='admin_orders|orderListFiltersUpdate'>Credit</li>
+				<li data-filtervalue='PAYPAL' data-app-click='admin_orders|orderListFiltersUpdate'>PayPal</li>
+				<li data-filtervalue='CASH' data-app-click='admin_orders|orderListFiltersUpdate'>Cash</li>
+				<li data-filtervalue='CRED' data-app-click='admin_orders|orderListFiltersUpdate'>Credit</li>
 			</ul>
 			</section>
 			
@@ -65,26 +65,25 @@
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
 			<ul id='orderListFilterMarket' class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
-				<li data-filtervalue='AMZ' data-app-event='admin_orders|orderListFiltersUpdate'>Amazon</li>
-				<li data-filtervalue='EBF' data-app-event='admin_orders|orderListFiltersUpdate'>eBay</li>
-				<li data-filtervalue='GOO' data-app-event='admin_orders|orderListFiltersUpdate'>Google</li>
+				<li data-filtervalue='AMZ' data-app-click='admin_orders|orderListFiltersUpdate'>Amazon</li>
+				<li data-filtervalue='EBF' data-app-click='admin_orders|orderListFiltersUpdate'>eBay</li>
+				<li data-filtervalue='GOO' data-app-click='admin_orders|orderListFiltersUpdate'>Google</li>
 			</ul>
 			</section>
 
-			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3'  data-app-event='admin_orders|orderListFilterLimitUpdate' /></label></div>
-<!--			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdateButton'>Show Results</button> -->
+			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' class='smallInput' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
 	
 		</div>
 	
 	
 		<h2>Item Filters</h2>
-		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
+		<div data-app-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<ul class='noPadOrMargin listStyleNone filterGroup'>
-				<li data-filtervalue='backorder' data-app-event='admin_orders|itemListFilterUpdate'>Backorder</li>
-				<li data-filtervalue='preorder' data-app-event='admin_orders|itemListFilterUpdate'>Preorder</li>
-				<li data-filtervalue='pick_noroute' data-app-event='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
-				<li data-filtervalue='pick_unshipped' data-app-event='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
+				<li data-filtervalue='backorder' data-app-click='admin_orders|itemListFilterUpdate'>Backorder</li>
+				<li data-filtervalue='preorder' data-app-click='admin_orders|itemListFilterUpdate'>Preorder</li>
+				<li data-filtervalue='pick_noroute' data-app-click='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
+				<li data-filtervalue='pick_unshipped' data-app-click='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
 			</ul>
 <!--
 			<h4>Filter by Supplier</h4>
@@ -113,40 +112,40 @@
 		<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 	
 			<div class='ui-widget-header ui-corner-tr clearfix'>
-				<button class='floatRight' data-app-event="admin_orders|orderCreate">Create Order</button>
-				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateSelectAll'>Select All</button>
-				<button class='floatLeft' data-app-event='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+				<button class='floatRight applyButton' onClick="showUI('#!orderCreate');">Create Order</button>
+				<button class='floatLeft applyButton' data-app-click='admin_orders|orderListUpdateSelectAll'>Select All</button>
+				<button class='floatLeft applyButton' data-app-click='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 		
 				<!-- bulk edit menu for orders -->
 				<div class='floatLeft marginLeft bulkEditMenu hideInItemListMode'>
-				<ul data-ui-role='admin_orders|orderUpdateBulkEditMenu'>
+				<ul data-app-role='admin_orders|orderUpdateBulkEditMenu'>
 					<li><a href='#'>Action</a>
 					<ul>
 						<li><a href='#'>Change pool to</a>
 						<ul>
-							<li><a href='#POOL|RECENT'>Recent</a></li>
-							<li><a href='#POOL|PENDING'>Pending</a></li>
-							<li><a href='#POOL|REVIEW'>Review</a></li>
-							<li><a href='#POOL|HOLD'>Hold</a></li>
-							<li><a href='#POOL|APPROVED'>Approved</a></li>
-							<li><a href='#POOL|PROCESS'>Process</a></li>
-							<li><a href='#POOL|COMPLETED'>Completed</a></li>
-							<li><a href='#POOL|DELETED'>Cancelled</a></li>
+							<li><a href='#POOL|RECENT' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Recent</a></li>
+							<li><a href='#POOL|PENDING' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Pending</a></li>
+							<li><a href='#POOL|REVIEW' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Review</a></li>
+							<li><a href='#POOL|HOLD' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Hold</a></li>
+							<li><a href='#POOL|APPROVED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Approved</a></li>
+							<li><a href='#POOL|PROCESS' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Process</a></li>
+							<li><a href='#POOL|COMPLETED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Completed</a></li>
+							<li><a href='#POOL|DELETED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Cancelled</a></li>
 						</ul></li>
 	
 						<li><a href='#'>Print</a>
 						<ul>
-							<li><a href='#PRNT|INVOICE'>Invoices</a></li>
-							<li><a href='#PRNT|PACKSLIP'>Packing slips</a></li>
+							<li><a href='#PRNT|INVOICE' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Invoices</a></li>
+							<li><a href='#PRNT|PACKSLIP' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Packing slips</a></li>
 						</ul>
 						</li>
-	
+
 						<li><a href='#'>Send email</a>
 						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
 						</ul>
 						</li>
 	
-						<li><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
+						<li><a href='#PMNT|FLAGASPAID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Flag as paid</a></li>
 	
 					</ul>
 					</li>
@@ -155,10 +154,10 @@
 				
 				<!-- bulk menu for items -->
 				<div class='floatLeft marginLeft bulkEditMenu hideInOrderListMode'>
-				<ul data-ui-role='admin_orders|itemUpdateBulkEditMenu'>
+				<ul data-app-role='admin_orders|itemUpdateBulkEditMenu'>
 					<li><a href='#'>Action</a>
 					<ul>
-						<li class='hideInOrderListMode'><a href='#BTCH|ADDBATCHID'>Do something awesome</a></li>
+						<li class='hideInOrderListMode'><a href='#BTCH|ADDBATCHID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Do something awesome</a></li>
 					</ul>
 					</li>
 				</ul>
@@ -198,6 +197,7 @@
 			<tr>
 				<th></th>
 				<th title='SKU'>SKU</th>
+				<th title='SKU'>Order ID</th>
 				<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
 				<th title='Pick order ID'>Pick Order ID</th>
 				<th class='hideInMinimalMode' title='Marketplace reference ID'>Mkt Ref ID</th>
@@ -242,14 +242,18 @@
 	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td NOWRAP class='alignRight'>
-	<button data-app-event='admin_orders|orderUpdateShowEditor'  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
-	<button class='hideInMinimalMode' data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
-	<menu class='displayNone orderQuickviewMenu'>
+
+	<button data-app-click='admin_orders|orderUpdateShowEditor' data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+
+	<button class='hideInMinimalMode applyButton' data-app-click="admin_orders|orderQuickviewShow" data-text='false' data-icon-primary='ui-icon-gear' data-icon-secondary='ui-icon-triangle-1-s' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
+	
+	<menu class='displayNone orderQuickviewMenu' >
 		<h3>Quickview</h3>
-		<li data-app-event="admin_orders|qvOrderInvoice">Invoice</li>
-		<li data-app-event="admin_orders|qvOrderNotes">Order Notes</li>
-		<li data-app-event="admin_orders|qvTrackingHistory">Shipping/Tracking</li>
-		<li data-app-event="admin_orders|qvEventHistory">Event History</li>
+		<!-- if these aren't buttons, the event doesn't bubble up, due to some stop propagation in the selectable. however, to control styling, button() not applied. -->
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="invoice">Invoice</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="orderNotes">Order Notes</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="trackingHistory">Shipping/Tracking</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="eventHistory">Event History</button></li>
 	</menu>
 	</td>
 </tr>
@@ -258,6 +262,7 @@
 <tr id='adminOrdersItemLineItem'>
 	<td class='statusIcon'></td>
 	<td><span data-bind='var:order(SKU);format:text;'></span></td>
+	<td><span data-bind='var:order(OUR_ORDERID);format:text;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(PICK_BATCHID);format:text;'></span></td>
 	<td><span data-bind='var:order(PICK_ORDERID);format:paystatus;extension:admin_orders;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(MARKET_REFID);format:text;'></span></td>
@@ -296,7 +301,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<hgroup class='floatLeft marginRight'>
 		<h1 data-bind="var:order(our/orderid);format:text;"></h1>
-		<h2>Order Pool: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-ui-role='orderUpdatePool'></select></h2>
+		<h2>Order Pool: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-app-role='orderUpdatePool'></select></h2>
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ; hideZero:false;"></h3>
 		<div data-bind="var:order(our/profile);format:text; pretext: profile: ;"></div>
 		<div data-bind="var:order(our/domain);format:text; pretext: domain: ;"></div>
@@ -310,14 +315,14 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div class='floatRight marginRight marginLeft shipAddressContainer topCol'>
 	<h4>Shipping Address</h4>
-<div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
+<div data-app-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
 <!--	<button class='smallButton' data-app-event="admin_orders|addressEdit">edit</button> -->
 	</div>
 
 
 	<div class='floatRight marginLeft billAddressContainer topCol'>
 	<h4>Billing Address</h4>
-	<div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
+	<div data-app-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
 <!-- 	<button class='smallButton' data-app-event="admin_orders|addressEdit">edit</button> -->
 	</div>
 
@@ -414,25 +419,25 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div data-app-role='orderNotes'>
 	<h2>Notes</h2>
-	<section class='notes' data-ui-role='orderUpdateNotesContainer'>
+	<section class='notes' data-app-role='orderUpdateNotesContainer'>
 	
 	<div class='orderNotesContainer clearfix marginBottom'>
 	
 		<div class='floatLeft marginRight noteContainer'>
 			<h3>Public Order Notes</h3>
-			<div class='editable' data-bind='var:order(want/order_notes);format:text;' data-ui-role='admin_orders|SETPUBLICNOTE'></div>
+			<div class='editable' data-bind='var:order(want/order_notes);format:text;' data-app-role='admin_orders|SETPUBLICNOTE'></div>
 		</div>
 
 		<div class='floatRight marginLeft noteContainer'>
 			<h3>Private Order Notes:</h3>
-			<div class='editable' data-bind='var:order(flow/private_notes);format:text;' data-ui-role='admin_orders|SETPRIVATENOTE'></div>
+			<div class='editable' data-bind='var:order(flow/private_notes);format:text;' data-app-role='admin_orders|SETPRIVATENOTE'></div>
 		</div>
 	
 	</div>
 
 	<div class='customerNotes' id='customerInformation'>
 		<h3>Customer Notes: </h3>
-		<div class='editable marginBottom'  data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
+		<div class='editable marginBottom'  data-app-role='admin_orders|ADDCUSTOMERNOTE'></div>
 		<table class='gridTable marginTop'>
 		<tbody data-bind='var:order(@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
 		</tbody>
@@ -445,9 +450,9 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div data-app-role='orderPaymentInfo'>
 	<h2>Payment Information</h2>
-	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-ui-role='orderUpdatePaymentMethodsContainer'>
+	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-app-role='orderUpdatePaymentMethodsContainer'>
 	
-	<div class='rightCol' data-ui-role='orderUpdateAddPaymentContainer'>
+	<div class='rightCol' data-app-role='orderUpdateAddPaymentContainer'>
 
 <form>
 	<fieldset>
@@ -484,13 +489,13 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div data-app-role='orderShippingInfo'>
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;"></section>
+	<section class='trackingInformation clearfix' data-app-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;"></section>
 	</div>
 
 	
 	<div data-app-role='orderHistory'>
 	<h2>History</h2>
-	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer' data-bind="loadsTemplate:orderEventsHistoryContainerTemplate; format:loadsTemplate;"></section>
+	<section class='historyInformation'  data-app-role='orderUpdateHistoryContainer' data-bind="loadsTemplate:orderEventsHistoryContainerTemplate; format:loadsTemplate;"></section>
 	</div>
 
 	

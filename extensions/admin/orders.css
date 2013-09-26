@@ -156,6 +156,9 @@ ul.paybySupplemental	{margin-top:0;}
 .orderQuickviewMenu li	{border-top:1px solid #E4E4E4; padding: 3px;}
 .orderQuickviewContent .orderContentsTable, .orderQuickviewContent .gridTable	{width:100%;}
 
+.orderQuickviewMenu button	{border:0; background:none; padding:0; margin:0; text-align:right; cursor:pointer;}
+
+
 
 /* custom email tool */
 .orderEmailCustomMessage ul	{width:150px;}
