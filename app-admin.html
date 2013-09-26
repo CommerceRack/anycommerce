@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -81,7 +81,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 	<h3>One moment please while we load our app</h3>
 
 	<div class='alignCenter'>
-	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+	<progress id="appPreViewProgressBar" max="100" value="0"></progress><br />
 	</div>
 	<div id='appPreViewProgressText'>0% Complete</div>
 
@@ -140,9 +140,9 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		</div>
 
 
-		</div>
 	</div>
 </div>
+
 
 	
 	
@@ -155,8 +155,8 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<label><span>First Name: </span><input type='text' name='firstname' required='required' /></label>
 		<label><span>Last Name: </span><input type='text' name='lastname' required='required' /></label>
 		<label><span>Email: </span><input type='email' name='email' required='required' /></label>
-		<label><span>Company/DBA: </span><input type='text' name='company' maxlength="30" required='required' /><div class='helper alignRight'>company name will be your username. 10 char limit</div></label>
-		<label><span>Domain: </span><input type='url' name='domain' required='required' value='http://' /></label>
+		<label><span>Company/DBA: </span><input type='text' name='company' maxlength="30" required='required' /><span class='helper alignRight'>company name will be your username. 10 char limit</span></label>
+		<label><span>Domain: </span><input type='url' name='domain' required='required' placeholder='http://' value="" /></label>
 		<label><span>Phone: </span><input type='tel' name='phone' required='required' size='10' /></label>
 		<div class='stdPadding lookLikeLink' data-app-event='admin|authShowLogin'> &#187; back to login</div>
 		<div class='alignRight'>
@@ -200,68 +200,68 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 				<span class='text'>Setup</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="setup?animFunc=fwd" data-animation-mouseout="setup?animFunc=back"></span>
-				<span class='animIcon' data-animation="setup?imgsrc=app-admin/images/header_anime/setup_sprite.png&frameCount=16&startFrame=0&width=55&height=55&x1=70&y=0&frameDur=60" ></span>
+				<span class='animIcon' data-animation="setup?imgsrc=app-admin/images/header_anime/setup_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=55&amp;height=55&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='sitesTab' onClick="navigateTo('#:sites');">
 				<span class='text'>Sites</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="sites?animFunc=loop" data-animation-mouseout="sites?animFunc=stop&animCallback=goToFirstFrame"></span>
-				<span class='animIcon' data-animation="sites?imgsrc=app-admin/images/header_anime/sites_sprite.png&frameCount=16&startFrame=0&width=42&height=32&xGap=5&x1=70&y=0&frameDur=120" ></span>
+				<span class="animator" data-animation-mouseenter="sites?animFunc=loop" data-animation-mouseout="sites?animFunc=stop&amp;animCallback=goToFirstFrame"></span>
+				<span class='animIcon' data-animation="sites?imgsrc=app-admin/images/header_anime/sites_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=42&amp;height=32&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=120" ></span>
 			</li>
 			<li class='productTab' onClick="navigateTo('#:product');">
 				<span class='text'>Product</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="products?animFunc=loop" data-animation-mouseout="products?animFunc=stop&animCallback=goToFirstFrame"></span>
-				<span class='animIcon' data-animation="products?imgsrc=app-admin/images/header_anime/products_sprite.png&frameCount=15&startFrame=0&width=45&height=39&xGap=5&x1=70&y=0&frameDur=120" ></span>
+				<span class="animator" data-animation-mouseenter="products?animFunc=loop" data-animation-mouseout="products?animFunc=stop&amp;animCallback=goToFirstFrame"></span>
+				<span class='animIcon' data-animation="products?imgsrc=app-admin/images/header_anime/products_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=45&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=120" ></span>
 			</li>
 			<li class='ordersTab' onClick="navigateTo('#:orders');">
 				<span class='text'>Orders</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="orders?animFunc=fwd&start=0"></span>
-				<span class='animIcon' data-animation="orders?imgsrc=app-admin/images/header_anime/orders_sprite.png&frameCount=13&startFrame=12&width=61&height=42&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="orders?animFunc=fwd&amp;start=0"></span>
+				<span class='animIcon' data-animation="orders?imgsrc=app-admin/images/header_anime/orders_sprite.png&amp;frameCount=13&amp;startFrame=12&amp;width=61&amp;height=42&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='crmTab' onClick="navigateTo('#:crm');">
 				<span class='text'>CRM</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="crm?animFunc=fwd" data-animation-mouseout="crm?animFunc=back"></span>
-				<span class='animIcon' data-animation="crm?imgsrc=app-admin/images/header_anime/crm_sprite.png&frameCount=16&startFrame=0&width=62&height=36&xGap=5&x1=65&y=0&frameDur=60" ></span>
+				<span class='animIcon' data-animation="crm?imgsrc=app-admin/images/header_anime/crm_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=62&amp;height=36&amp;xGap=5&amp;x1=65&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='syndicationTab' onClick="navigateTo('#:syndication');">
 				<span class='text'>Marketplaces</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="marketplaces?animFunc=fwd&start=0"></span>
-				<span class='animIcon' data-animation="marketplaces?imgsrc=app-admin/images/header_anime/marketplaces_sprite.png&frameCount=15&startFrame=14&width=60&height=39&xGap=5&x1=70&y=0&frameDur=60"></span>
+				<span class="animator" data-animation-mouseenter="marketplaces?animFunc=fwd&amp;start=0"></span>
+				<span class='animIcon' data-animation="marketplaces?imgsrc=app-admin/images/header_anime/marketplaces_sprite.png&amp;frameCount=15&amp;startFrame=14&amp;width=60&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60"></span>
 			</li>
 			<li class='reportsTab' onClick="navigateTo('#:reports');">
 				<span class='text'>Reports</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="reports?animFunc=fwd&start=0"></span>
-				<span class='animIcon' data-animation="reports?imgsrc=app-admin/images/header_anime/reports_sprite.png&frameCount=15&startFrame=14&width=33&height=39&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="reports?animFunc=fwd&amp;start=0"></span>
+				<span class='animIcon' data-animation="reports?imgsrc=app-admin/images/header_anime/reports_sprite.png&amp;frameCount=15&amp;startFrame=14&amp;width=33&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='kpiTab' onClick="navigateTo('#:kpi');">
 				<span class='text'>KPI</span>
 				<span class='icon'></span>
-				<span class="animator" data-animation-mouseenter="kpi?animFunc=loop&start=0" data-animation-mouseout="kpi?animFunc=stop&animCallback=goToFirstFrame" ></span>
-				<span class='animIcon' data-animation="kpi?imgsrc=app-admin/images/header_anime/kpi_sprite.png&frameCount=33&startFrame=0&width=41&height=32&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class="animator" data-animation-mouseenter="kpi?animFunc=loop&amp;start=0" data-animation-mouseout="kpi?animFunc=stop&amp;animCallback=goToFirstFrame" ></span>
+				<span class='animIcon' data-animation="kpi?imgsrc=app-admin/images/header_anime/kpi_sprite.png&amp;frameCount=33&amp;startFrame=0&amp;width=41&amp;height=32&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='utilitiesTab' onClick="navigateTo('#:utilities');">
 				<span class='text'>Utilities</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="utilities?animFunc=fwd" data-animation-mouseout="utilities?animFunc=back"></span>
-				<span class='animIcon' data-animation="utilities?imgsrc=app-admin/images/header_anime/utilities_sprite.png&frameCount=15&startFrame=0&width=53&height=53&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class='animIcon' data-animation="utilities?imgsrc=app-admin/images/header_anime/utilities_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=53&amp;height=53&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 <!--			<li class='supportTab' onClick="navigateTo('/biz/support/index.cgi');"><span class='text'>Support</span><span class='icon'></span></li> -->
 			<li class='supportTab' onClick="navigateTo('#!support',{'tab':'support'});">
 				<span class='text'>Support</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="support?animFunc=fwd" data-animation-mouseout="support?animFunc=back"></span>
-				<span class='animIcon' data-animation="support?imgsrc=app-admin/images/header_anime/support_sprite.png&frameCount=15&startFrame=0&width=38&height=38&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class='animIcon' data-animation="support?imgsrc=app-admin/images/header_anime/support_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=38&amp;height=38&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 			<li class='messagesTab' onClick="app.ext.admin.u.toggleMessagePane();">
 				<span class='text'>Messages</span>
 				<span class='messageCount'></span>
 				<span class="animator" data-animation-mouseenter="messages?animFunc=fwd" data-animation-mouseout="messages?animFunc=back"></span>
-				<span class='animIcon' data-animation="messages?imgsrc=app-admin/images/header_anime/messages_sprite.png&frameCount=15&startFrame=0&width=45&height=45&xGap=5&x1=70&y=0&frameDur=60" ></span>
+				<span class='animIcon' data-animation="messages?imgsrc=app-admin/images/header_anime/messages_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=45&amp;height=45&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 		</ul>
 		<div id='messagesContent' class='displayNone'>
