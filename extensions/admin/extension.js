@@ -980,7 +980,7 @@ if giftcard is on there, no paypal will appear.
 			}, //adminOrderPaymentMethods
 			
 //updating an order is a critical function and should ALWAYS be immutable.
-		adminOrderUpdate : {
+		adminOrderMacro : {
 			init : function(orderID,updates,_tag)	{
 				var r = 0;
 				if(orderID)	{
@@ -988,19 +988,19 @@ if giftcard is on there, no paypal will appear.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminOrderUpdate, orderID not passed.");
+					app.u.throwGMessage("In admin.calls.adminOrderMacro, orderID not passed.");
 					}
 				return r;
 				},
 			dispatch : function(orderID,updates,_tag)	{
 				cmdObj = {};
-				cmdObj._cmd = 'adminOrderUpdate';
+				cmdObj._cmd = 'adminOrderMacro';
 				cmdObj.orderid = orderID;
 				cmdObj['@updates'] = updates;
 				cmdObj._tag = _tag || {};
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
-			}, //adminOrderUpdate
+			}, //adminOrderMacro
 		adminOrderSearch : {
 			init : function(elasticObj, _tag, Q)	{
 				this.dispatch(elasticObj,_tag,Q);

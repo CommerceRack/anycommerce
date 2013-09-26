@@ -964,14 +964,20 @@ for(var i = 0; i < L; i += 1)	{
 						if(data.options)	{
 							var L = data.options.length;
 							
-							
+							var haveMatch = false;
 							for(var i = 0; i < L; i += 1)	{
-								$select.append($("<option \/>",{'value':data.options[i].v}).text(data.options[i].p));
+								var $option = $("<option \/>",{'value':data.options[i].v}).text(data.options[i].p);
+								if(data.options[i].v == prodData['%attribs'][data.id])	{
+									$option.prop('selected','selected');
+									haveMatch = true;
+									}
+								$select.append($option);
 								}
 							
 							$select.val(prodData['%attribs'][data.id] || "");
 			// now take a look and see if the value set for this attrib is valid. respond accordingly.
-							if($("option[value='"+prodData['%attribs'][data.id]+"']").length)	{} //value exists, no worries.
+							app.u.dump("option[value='"+prodData['%attribs'][data.id]+"'].length: "+$("option[value='"+prodData['%attribs'][data.id]+"']").length);
+							if(haveMatch)	{} //value exists, no worries.
 							else if(data.type == 'selectreset')	{ //selected value isn't valid. reset to first option.
 								$r.anymessage({'message':'The value for '+data.id+' was invalid and this input requires a valid match. On save, this value will change to '+data.options[0].v});
 								$select.val(data.options[0].v)
@@ -1916,6 +1922,7 @@ else	{} //no changes in sku attribs.
 								}
 							else	{
 								$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
+								$flexContent.find('form').append("<input type='hidden' name='pid' value='"+pid+"' />");
 								}
 							}
 						},'mutable');
