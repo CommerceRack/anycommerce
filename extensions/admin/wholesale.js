@@ -947,11 +947,11 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 						('tbody',$form).empty();
 						app.model.addDispatchToQ(cmdObj,'immutable');
 						app.model.addDispatchToQ({
-							_cmd : 'adminSupplierProductList',
+							_cmd : 'adminSupplierInventoryList',
 							FILTER : 'OPEN',
 							VENDORID : VENDORID,
 							_tag : {
-								datapointer : 'adminSupplierProductList|'+VENDORID,
+								datapointer : 'adminSupplierInventoryList|'+VENDORID,
 								callback : 'anycontent',
 								jqObj : $('tbody',$form)
 								}
@@ -1138,9 +1138,9 @@ $btn.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
 			}
 		else if($btn.data('mode') == 'product')	{
-			cmdObj._cmd = 'adminSupplierProductList';
+			cmdObj._cmd = 'adminSupplierInventoryList';
 //			cmdObj.FILTER = 'OPEN';
-			cmdObj._tag.datapointer = 'adminSupplierProductList|'+VENDORID;
+			cmdObj._tag.datapointer = 'adminSupplierInventoryList|'+VENDORID;
 			}
 		else {} //should never get here. unrecognized mode.
 		

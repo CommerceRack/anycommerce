@@ -2415,6 +2415,14 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 	renderFormats : {
 
+			macros2Buttons : function($tag,data)	{
+				var L = data.value.length;
+				for(var i = 0; i < L; i += 1)	{
+					$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+					}
+				},
+				
+				
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {
 				OGMS : 'Total sales',

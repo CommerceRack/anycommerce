@@ -607,16 +607,12 @@ The following templates are used in the 'order detail' modal/view.
 	<td>
 		<button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button>
 		<button data-app-event="admin_orders|orderItemRemove">Remove From Order</button>
-		<button data-app-role='itemSupplierRoutingButton' class='displayNone'>Set Supplier Routing</button>
-		<span>
-		<button data-app-event='admin_orders|triggerSiblingButtonMenu' data-app-role='itemChangeStatusButton'>Change Status</button>
-		<button data-app-event='admin_orders|itemRoutingShow' data-app-role='itemChangeStatus2DoneButton' data-item-status='DONE'>Set to Done</button>
-		<menu>
-			<li>Done</li>
-			<li>More Done</li>
-			<li>Even More Done</li>
+		<button data-app-event='admin_orders|routingDialogShow' data-app-role='itemSupplierRoutingButton' class='displayNone'>Route</button>
+		<button data-app-event='admin_orders|inventoryDetailOptionsShow' data-app-role='inventoryDetailOptionsButton'>Update</button>
+		<menu data-app-role='basetypeMenu'>
+			<li><a href="#" data-verb='DONE' data-app-event='admin_orders|inventoryDetailOptionsExec'>Done</a></li>
+			<li><a href="#" data-verb='RESET' data-app-event='admin_orders|inventoryDetailOptionsExec'>Reset</a></li>
 		</menu>
-		</span>
 		</td>
 	<td></td>
 </tr>

@@ -1126,7 +1126,7 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
 <tfoot>
 <tr>
-	<th colspan='9'>
+	<th colspan='10'>
 	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
 	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
 	</th>
@@ -1233,7 +1233,7 @@ if it already has a simple, lock the button
 	<td data-bind="var: detail(ITEMS_REMAIN); format:text;"></td>
 	<td data-bind="var: detail(BUY_IT_NOW); format:text;"></td>
 	<td><!-- view button? --></td>
-	<td data-bind="var: detail(@MACROS); format:macros2Buttons; extension:admin_prodEdit;">
+	<td data-bind="var: detail(@MACROS); format:macros2Buttons; extension:admin;">
 	</td>
 </tr>
 

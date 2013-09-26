@@ -589,27 +589,33 @@ app.ext.admin.u.handleAppEvents($order);
 				var invDetail = orderData['%INVDETAIL'][orderData['@ITEMS'][i].uuid]
 				if(invDetail)	{
 					var $tr = $("[data-uuid='"+orderData['@ITEMS'][i].uuid+"']",$table) ;// used for context.
+					var $menu = $("menu[data-app-role='basetypeMenu']",$tr);
+					$('li',$menu).hide();  //hide all the items in the base type menu. show as needed. li is used to hide (as opposed to using anchor) otherwise extra spacing occurs
 					//done means done. no adjusting price or quantity at this point.
 					if(invDetail.BASETYPE == "DONE")	{
 						$tr.attr('title','This item has been shipped. It is no longer editable');
 						$('button',$tr).button('disable');
 						$(':input',$tr).prop('disabled','disabled');
 						}
-					//allow them to set the supplier routing.
-					else if(invDetail.BASETYPE == 'PICK' && invDetail.PICK_ROUTE == 'TBD')	{
-						$("[data-app-role='supplierRoutingButton']",$tr).show();
-						}
-					//allow them to change the items status
-					else if(invDetail.BASETYPE == 'PICK' && (invDetail.PICK_ROUTE == 'SUPPLIER' || invDetail.PICK_ROUTE == 'WMS'))	{
-						$("[data-app-role='itemChangeStatusButton']",$tr).show();
-						}
 					else if(invDetail.BASETYPE == 'UNPAID')	{
-						$("[data-app-role='itemChangeStatus2DoneButton']",$tr).button('disable');
+						$("button[data-app-role='inventoryDetailOptionsButton']",$tr).button('disable').attr('title',"This item is unpaid. The base type can not be modified.");
 						}
-					else if(invDetail.BASETYPE == 'BACKORDER' || invDetail.BASETYPE == 'PREORDER'){
-						// allow reset to pick and pick_tbd
+					else	{
+						
+						if(invDetail.BASETYPE == 'PICK' && invDetail.PICK_ROUTE == 'TBD')	{
+							$("button[data-app-role='itemSupplierRoutingButton']",$tr).show(); //allow them to set the supplier routing.
+							$("a[data-verb='DONE']",$menu).parent().show();
+							}
+						else if(invDetail.BASETYPE == 'PICK' && (invDetail.PICK_ROUTE == 'SUPPLIER' || invDetail.PICK_ROUTE == 'WMS'))	{
+							$("a[data-verb='RESET']",$menu).parent().show();
+							}
+						else if(invDetail.BASETYPE == 'BACKORDER' || invDetail.BASETYPE == 'PREORDER'){
+							$("a[data-verb='RESET']",$menu).parent().show();
+							}
+						else	{
+							$("a[data-verb='DONE']",$menu).parent().show();
+							}
 						}
-					else	{}
 					
 					//
 					}
@@ -2533,18 +2539,13 @@ else	{
 					});
 				}, //orderUpdateAddTracking
 
-			triggerSiblingButtonMenu : function($ele)	{
-				$ele.button({'text':true});
-				$ele.off('click.triggerSiblingButtonMenu').on('click.triggerSiblingButtonMenu',function(e){
-					e.preventDefault();
-					$ele.next('button').trigger('click');
-					});
-				
-				},
 
-			itemRoutingShow : function($ele)	{
-				$ele.button({icons: {primary: "ui-icon-triangle-1-s"},text: false});
-				$ele.parent().buttonset().find('menu').menu().css({'position':'absolute','width':'200px','z-index':'10000'}).hide()
+			
+			
+
+			inventoryDetailOptionsShow : function($ele)	{
+				$ele.button({icons: {secondary: "ui-icon-triangle-1-s"},text: true});
+				$ele.parent().find('menu').menu().css({'position':'absolute','width':'200px','z-index':'10000'}).hide()
 				$ele.off('click.itemHandleRoutingExec').on('click.itemHandleRoutingExec',function(e){
 					e.preventDefault();
 					var $menu = $ele.parent().find('menu')
@@ -2555,45 +2556,73 @@ else	{
 						});
 					//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
 					setTimeout(function(){$(document).one( "click", function() {$menu.hide();});},1000);
-//app.ext.admin.calls.adminOrderMacro.init($ele.closest("[data-orderid]").data('orderid'),["ITEMSTATUS?STATUS="+$ele.data('item-status')],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
-//app.model.dispatchThis('immutable');
-
 					});
-				// !!! not done yet.  
+ 
 				},
 
 
-//this is the action for the quickview 'parent' button. The list of choices is part of the template, not generated here.
-			"orderUpdateQuickview" : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
-				$btn.parent().css('position','relative');
-				var $menu = $btn.parent().find('menu');
-				$menu.menu().hide();
-				$menu.css({'position':'absolute','width':'200px','z-index':'10000'}).parent().css('position','relative');
+			inventoryDetailOptionsExec : function($ele)	{
+				$ele.off('click.itemHandleRoutingExec').on('click.itemHandleRoutingExec',function(e){
+					e.preventDefault();
+					var uuid = $ele.closest("[data-uuid]").data('uuid');
+					var orderID = $ele.closest("[data-orderid]").data('orderid');
+					/*
+								<li data-basetype='DONE'>Done</li>
+			<li data-pick_route='TBD'>TBD</li>
+			<li data-basetype='PICK'>PICK</li>
+			<li data-basetype='PICK_TBD'>PICK_TBD</li>
+			*/
+					if($ele.data('verb'))	{
+						if(uuid && orderID)	{
+							var cmd;
+							if($ele.data('verb') == 'RESET')	{
+								cmd = "ITEM-UUID-RESET?"
+								}
+							else	{
+								cmd = "ITEM-UUID-DONE?"
+								}
+							cmd += "UUID="+uuid;
+//							app.u.dump(" -> CMD: "+cmd);
+							app.ext.admin.calls.adminOrderMacro.init(orderID,[cmd],{});
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]"),'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$ele.closest('form').anymessage({"message":"In admin_orders.e.inventoryDetailOptionsExec, unable to ascertain the item uuid ["+uuid+"] and/or orderid ["+orderID+"]. Both are required.","gMessage":true});
+							}
+						}
+					else	{
+						$ele.closest('form').anymessage({"message":"In admin_orders.e.inventoryDetailOptionsExec, data-verb ["+$ele.data('verb')+"] not set on trigger element.","gMessage":true});
+						}
+					});
+ 
+				},
+
+
+			routingDialogShow : function($ele)	{
+				$ele.button(); //{icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: true}
+				$ele.off('click.itemHandleRoutingExec').on('click.itemHandleRoutingExec',function(e){
+					e.preventDefault();
+					var orderID = $ele.closest("[data-orderid]").data('orderid');
+					var uuid = $ele.closest("[data-uuid]").data('uuid');
+					if(orderID && uuid)	{
+						app.model.addDispatchToQ({
+							'_cmd':'adminOrderRouteList',
+							'orderid' : orderID,
+							'uuid' : uuid,
+							'_tag':	{
+								'datapointer' : 'adminOrderRouteList|'+orderID,
+								'callback':''
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_orders.e.routingDialogShow, unable to ascertain the order id ["+orderID+"] and/or the uuid ["+uuid+"].","gMessage":true});
+						}
+					})
 				
-				$menu.find('command').each(function(){
-					$(this).css('display','block');
-					$(this).click(function(event){
-						app.u.dump('got here');
-						$menu.hide();
-						});
-					});
-
-				$btn.off('click.orderUpdateQuickview').on('click.orderUpdateQuickview',function(event){
-					event.preventDefault();
-					app.u.dump('button was clicked.');
-					$menu.show().position({
-						my: "right top",
-						at: "right bottom",
-						of: this
-						});
-					//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
-					setTimeout(function(){$(document).one( "click", function() {$menu.hide();});},1000);
-					});
-				$btn.parent().buttonset();
-				} //orderUpdateQuickview
-
-
+				}
 
 
 			} //buttonActions

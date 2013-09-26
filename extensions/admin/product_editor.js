@@ -556,13 +556,7 @@ app.u.handleEventDelegation($target);
 					}
 				},
 
-			macros2Buttons : function($tag,data)	{
 
-var L = data.value.length;
-for(var i = 0; i < L; i += 1)	{
-	$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
-	}
-				},
 
 			amazonIs : function($tag,data)	{
 //				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
@@ -1442,9 +1436,12 @@ Required params include:
 										});
 									app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form')); //updates the save button change count.
 									}
-								});
+								}).find("tr[data-basetype='_ASM_']").each(function(){
+									$(":input",$(this)).prop('disabled','disabled');
+									$('button',$(this)).prop('disabled','disabled');
+									});
 
-							app.u.handleButtons($target);
+							app.u.handleButtons($target); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
 							if(!$.isEmptyObject(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]))	{
 								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','SIMPLE'))	{
