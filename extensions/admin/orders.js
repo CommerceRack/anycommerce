@@ -2606,13 +2606,23 @@ else	{
 					var orderID = $ele.closest("[data-orderid]").data('orderid');
 					var uuid = $ele.closest("[data-uuid]").data('uuid');
 					if(orderID && uuid)	{
+						
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Routing options for '+uuid,
+							'showLoading' : false
+							});
+						$D.append("<table><tbody data-bind='var: routes(@ROWS); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
+						$D.dialog('open');
+												
 						app.model.addDispatchToQ({
 							'_cmd':'adminOrderRouteList',
 							'orderid' : orderID,
 							'uuid' : uuid,
 							'_tag':	{
 								'datapointer' : 'adminOrderRouteList|'+orderID,
-								'callback':''
+								'callback':'anycontent',
+								'translateOnly' : true,
+								'jqObj' : $D
 								}
 							},'mutable');
 						app.model.dispatchThis('mutable');
