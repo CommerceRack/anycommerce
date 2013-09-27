@@ -1118,7 +1118,7 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 	<th class='alignLeft'>Origin</th>
 	<th class='alignLeft'>Qty</th>
 	<th class='alignLeft'>Base Type</th>
-	<th class='alignLeft'>Location</th>
+	<th class='alignLeft'>Location/Supplier</th>
 	<th class='alignLeft'>Note</th>
 	<th></th>
 </tr>
@@ -1210,6 +1210,7 @@ if it already has a simple, lock the button
 	<span data-bind="var: detail(WMS_GEO); format:text;"></span>
 	<span data-bind="var: detail(WMS_ZONE); format:text;"></span>
 	<span data-bind="var: detail(WMS_POS); format:text;"></span>
+	<span data-bind="var: detail(SUPPLIER); format:text;"></span>
 	</td>
 	<td class='alignLeft'>
 		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" size='25' maxlength="25" />

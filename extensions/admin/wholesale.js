@@ -745,8 +745,6 @@ app.model.dispatchThis('mutable');
 					var $ul = $ele.closest("[data-app-role='whimContainer']").find("[data-app-role='whimLocationUpdateLog']");
 					$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY+" " + sfo.LOC).prependTo($ul);
 
-//					$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku. //!!! commented out for testing.
-					
 					var updates = new Array();
 					updates.push("SKU-LOCATION-ADD?"+$.param(sfo));
 					
@@ -759,9 +757,10 @@ app.model.dispatchThis('mutable');
 								$('.wait',$li).addClass('ui-icon').removeClass('wait')
 								if(app.model.responseHasErrors(rd)){
 									$('.ui-icon',$li).addClass('ui-state-error ui-icon-alert');
-									$('#globalMessaging').anymessage({'message':rd});
+									$li.anymessage({'message':rd,'persistant':true});
 									}
 								else	{
+									$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku.
 									$('.ui-icon',$li).addClass('ui-icon-check');
 									//success content goes here.
 									}
@@ -777,6 +776,81 @@ app.model.dispatchThis('mutable');
 				},
 
 //////////////////// SUPPLIERS
+
+
+			adminSupplierInventoryAddShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.adminSupplierInventoryAddShow').on('click.adminSupplierInventoryAddShow',function(event){
+					event.preventDefault();
+					var vendor = $btn.closest('tr').data('code');
+					if(vendor)	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title':'Add Inventory for supplier '+vendor,
+							'templateID':'supplierInventoryAddTemplate',
+							'showLoading':false //will get passed into anycontent and disable showLoading.
+							});
+						$D.find('form').append("<input type='hidden' name='vendor' value='"+vendor+"' />")
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
+						}
+					
+					});
+				},
+
+
+// There is a function in WHIM that is VERY similar to this.  Once supplier is using delegated events instead of appevents, combine the two ###
+			adminSupplierInventoryAddExec : function($btn)	{
+				
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.adminSupplierInventoryAddShow').on('click.adminSupplierInventoryAddShow',function(event){
+					event.preventDefault();
+
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var
+							sfo = $form.serializeJSON(),
+							$li = $("<li \/>");
+
+						if(sfo.vendor)	{
+							sfo.UUID = app.u.guidGenerator();
+							$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY).prependTo($btn.closest("[data-app-role='supplierInventoryUpdateContainer']").find("[data-app-role='supplierInventoryUpdateLog']"));
+							
+							app.model.addDispatchToQ({
+								'_cmd':'adminSupplierAction',
+								'VENDORID' : sfo.vendor,
+								'@updates' : ["SKU:LINK?"+$.param(sfo)],
+								'_tag':	{
+									'callback':function(rd)	{
+										$('.wait',$li).addClass('ui-icon').removeClass('wait')
+										if(app.model.responseHasErrors(rd)){
+											$('.ui-icon',$li).addClass('ui-state-error ui-icon-alert');
+											$li.anymessage({'message':rd,'persistant':true});
+											}
+										else	{
+											$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku.
+											$('.ui-icon',$li).addClass('ui-icon-check');
+											//success content goes here.
+											}
+										}
+									}
+								},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$form.anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddExec, unable to ascertain vendor (should be a hidden input in form)","gMessage":"true"})
+							}
+	
+						}
+					else	{
+						//form validation 
+						}				
+					
+					});
+				
+				},
 
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
@@ -939,7 +1013,7 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 						}
 
 					$(":checkbox:checked",$form).each(function(){
-						cmdObj['@updates'].push("PRODUCT:DELINK?sku="+$(this).attr('name'));
+						cmdObj['@updates'].push("PRODUCT:UNLINK?sku="+$(this).attr('name'));
 						})
 					
 					if(cmdObj['@updates'].length)	{
