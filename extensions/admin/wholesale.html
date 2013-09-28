@@ -180,7 +180,12 @@
 	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
+<<<<<<< HEAD
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' 	data-mode='product'>Inventory</button>
+=======
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierInventoryAddShow'>Add Inventory</button>
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
+>>>>>>> c51e98a87a150cfe6c796a3d1bf8788fd2291391
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
@@ -214,6 +219,33 @@
 
 
 
+
+
+<div id='supplierInventoryAddTemplate' data-app-role='supplierInventoryUpdateContainer'>
+
+<form action='#' onsubmit="return false">
+<fieldset class='labelsAsBreaks'>
+
+	<label>
+		<span>SKU</span>
+		<input type='text' name='SKU' value='' />
+		<span class='toolTip' title="This field is 'sku', not product id. If the product has inventory-able options, you must enter the entire sku."></span>
+	</label>
+
+	
+	<label>
+		<span>Quantity</span>
+		<input type='number' step='1' min='0' name='QTY' value='0' />
+	</label>
+
+	<button data-app-event="admin_wholesale|adminSupplierInventoryAddExec">Add</button>
+</fieldset>
+</form>
+
+
+<ul data-app-role='supplierInventoryUpdateLog'></ul>
+
+</div>
 
 
 
