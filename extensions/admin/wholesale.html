@@ -180,7 +180,7 @@
 	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' 	data-mode='product'>Inventory</button>
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
@@ -460,8 +460,7 @@
 			<div class='clearfix'>
 			<p class='hint'>The contents of this panel are transmitted to Supplier with every order.</p>
 			<fieldset data-app-role='OURSET'>
-		
-			
+						
 				<label>
 					<span>Company name</span>
 					<input name='company_name' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.company_name); format:popVal;' />
@@ -507,13 +506,38 @@
 					<input name='email' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(%OUR.email); format:popVal;' />
 				</label>
 				
+				<label><span>Role</span>
+				<select name='FORMAT' data-bind="var:vendor(FORMAT); format:popVal;">
+					<option value='NONE'>None / Disabled</option>
+					<option value='STOCK'>Stock/Vendor : orders are shipped from vendor to your warehouse(s)</option>
+					<option value='DROPSHIP'>Dropship : orders will be shipped to customer out of vendors inventory</option>
+					<option value='FULFILL'>Fulfillment/3PL : outsourced warehouse/logistics services</option>
+					<option value='RIVER'>River : transmits wire-speed copies of all orders for integrations</option>
+				</select>
+				</label>
 		
 			</fieldset>
+
 			
 			</div>
 		</div><!-- /general panel -->
 
-
+		<div class='panel labelsAsBreaks alignedLabels' data-panel-id='supplierOurFBAConfig' class='displayNone supplierOurFBAConfig'>
+			<h2>FBA Configuration</h2>
+			<div class='clearfix'>
+			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>
+			<fieldset data-app-role='OURSET'>				
+				<label>
+					<span>FBA Marketplace ID</span>
+					<input name='fba_marketplaceid' data-bind='var:supplier(%OUR.fba_marketplaceid); format:popVal;' />
+				</label>
+				<label>
+					<span>FBA Merchant ID</span>
+					<input name='fba_merchantid' data-bind='var:supplier(%OUR.fba_merchantid); format:popVal;' />
+				</label>
+			</fieldset>
+			</div>
+		</div>
 
 <!--
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='productUpdates'>
@@ -545,6 +569,7 @@
 						<option value='FREE'>Free</option>
 						<option value='FIXED' data-show-panel='supplierShippingConnectorFixed,supplierShippingConnectorHandling'>Fixed</option>
 						<option value='ZONE' data-show-panel='supplierShippingConnectorZone,supplierShippingConnectorHandling'>Zone</option>
+						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
 					</select />
 				</label>
 
@@ -613,7 +638,7 @@
 	<div class='twoColumn column2' data-app-column='2' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
-			<h2>Setup: Inventory Preferneces &amp; Download</h2>
+			<h2>Setup: Inventory Preferences &amp; Download</h2>
 			<div>
 			
 			<fieldset data-app-role='INVENTORYPREFERENCES'>
@@ -632,6 +657,7 @@
 					<select name='INVENTORY_CONNECTOR' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;" data-panel-selector=".supplierInventoryConnector" data-trigger='click'>
 						<option value='NONE'>None</option>
 						<option value='GENERIC' data-show-panel='supplierInventoryConnectorGeneric'>Generic</option>
+						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
 					</select />
 				</label>
 
@@ -668,13 +694,17 @@
 
 			<div>
 			<fieldset data-app-role='ORDERSET'>
-				<label><span>Order formatting</span>
-				<select name='FORMAT' data-bind="var:vendor(FORMAT); format:popVal;">
-					<option value='NONE'>None</option>
-					<option value='STOCK'>Stock</option>
-					<option value='DROPSHIP'>Dropship</option>
-					<option value='FULFILL'>Fulfill</option>
-				</select>
+
+				<label>
+					<span>Connector: </span>
+					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-panel-selector=".supplierAutomaticOrderingConnector">
+						<option value="NONE">None</option>
+						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
+						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
+						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>API</option>
+						<option value="AMZSQS" data-show-panel='supplierAutomaticOrderingAMZSQS'>Amazon SQS</option>
+						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
+					</select>
 				</label>
 
 				<label><span>Version</span>
@@ -707,16 +737,6 @@
 				<label><input type='checkbox' class='applyAnycb' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popVal;" />Dispatch on create (off recommended)</label>-->
 				<label><input type='checkbox' class='applyAnycb' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popVal;" />Transmit full order contents (off recommended)</label>
 				
-				<label>
-					<span>Connector: </span>
-					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-panel-selector=".supplierAutomaticOrderingConnector">
-						<option value="NONE">None</option>
-						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
-						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
-						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>API</option>
-						<option value="AMZSQS" data-show-panel='supplierAutomaticOrderingAMZSQS'>Amazon SQS</option>
-					</select>
-				</label>
 
 			
 			
