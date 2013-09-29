@@ -449,8 +449,13 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var valid = 0;
 
 				if($fieldset && formObj)	{
+
+//paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
+					if(app.ext.cco.u.thisSessionIsPayPal())	{
+						valid = 1;
+						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
-					if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
+					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -499,6 +504,10 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				if($fieldset && formObj)	{
 					
 					if(formObj['want/bill_to_ship'])	{valid = 1}
+//paypal address gets returned with as much as they need/want. trust what we already have (which may not be enough for OUR validation)
+					else if(app.ext.cco.u.thisSessionIsPayPal())	{
+						valid = 1;
+						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
 					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@ship'] && app.data.buyerAddressList['@ship'].length)	{
 						if(formObj['ship/shortcut'])	{valid = 1}
