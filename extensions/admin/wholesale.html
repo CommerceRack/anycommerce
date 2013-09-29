@@ -180,12 +180,9 @@
 	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
-<<<<<<< HEAD
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' 	data-mode='product'>Inventory</button>
-=======
+	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</button>
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierInventoryAddShow'>Add Inventory</button>
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button>
->>>>>>> c51e98a87a150cfe6c796a3d1bf8788fd2291391
+<!--	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button> -->
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
 	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
@@ -206,12 +203,11 @@
 
 <tr id='supplierItemListItemTemplate'>
 	<td><input type='checkbox' data-bind='var:product(pid);format:assignAttribute; attribute:name;' /></td>
-	<td data-bind="var:order(pid); format:text;"></td>
-	<td></td>
-	<td data-bind="var:product(zoovy:prod_name); format:text;"></td>
-	<td ></td>
-	<td data-bind="var:product(zoovy:base_cost); format:text;"></td>
-	<td data-bind="var:product(zoovy:base_price); defaultVal:Never; format:text;"></td>
+	<td data-bind="var:detail(PID); format:text;"></td>
+	<td data-bind="var:detail(SKU); format:text;"></td>
+	<td data-bind="var:detail(QTY); format:text;"></td>
+	<td data-bind="var:detail(COST_I); format:text;"></td>
+	<td data-bind="var:detail(NOTE); defaultVal:Never; format:text;"></td>
 </tr>
 
 
@@ -344,15 +340,14 @@
 <thead>
 <tr>
 	<th data-anytable-nosort='true'></th>
+	<th class='alignLeft'>PID</th>
 	<th class='alignLeft'>SKU</th>
-	<th class='alignLeft'>Inventory</th>
-	<th class='alignLeft'>Name</th>
-	<th class='alignLeft'>Shipping</th>
+	<th class='alignLeft'>Qty</th>
 	<th class='alignLeft'>Cost</th>
-	<th class='alignLeft'>Price</th>
+	<th class='alignLeft'>Note</th>
 </tr>
 </thead>
-<tbody data-bind="var:vendor(@SKUS); format: productList; extension: store_prodlist; loadsTemplate:supplierItemListItemTemplate; withInventory:1;">
+<tbody data-bind="var:vendor(@ROWS); format: processList; loadsTemplate:supplierItemListItemTemplate;">
 </tbody>
 </table>
 </form>

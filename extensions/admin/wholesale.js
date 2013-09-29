@@ -1013,9 +1013,8 @@ app.u.dump("BEGIN admin_wholesale.e.adminSupplierActionOrder click event");
 						}
 
 					$(":checkbox:checked",$form).each(function(){
-						cmdObj['@updates'].push("PRODUCT:UNLINK?sku="+$(this).attr('name'));
+						cmdObj['@updates'].push("PRODUCT:UNLINK?sku="+$(this).closest("[data-sku]").attr('data-sku'));
 						})
-					
 					if(cmdObj['@updates'].length)	{
 						$form.showLoading({"message":"De-associating product and fetching updated list"});
 						('tbody',$form).empty();
