@@ -212,13 +212,17 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 //$target -> a jquery instance of where the manager should show up.
 //P -> an object of params.
 //  -> currently supports 'pid' which, if set, will open the product editor for that pid.
+//This code should NOT bring the product tab into focus. That should be done by the code that executes this.
+//  -> allows this code build the product manager interface in the background so that the product task list 'add' works prior to the product editor being opened.
 			showProductManager : function(P)	{
 //				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
 				var $target = $("#productContent");
 //				app.u.dump(" -> P:"); app.u.dump(P);
 
-				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+				if(P.skipHandleNavTabs)	{
+					app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+					}
 				
 				if($target.children().length)	{} //product manager only gets rendered once and ONLY within the product tab.
 				else	{
