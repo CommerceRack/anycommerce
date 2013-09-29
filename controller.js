@@ -1028,7 +1028,16 @@ app.u.throwMessage(responseData); is the default error handler.
 
 					app.u.handleCommonPlugins($target);
 					app.u.handleButtons($target);
-					app.u.handleAppEvents($target);
+					
+					
+// ** 201338 -> support for event delegation. only turned on if enabled. disables execution of app event code. Use one or the other, not both.
+					if(_rtag.handleEventDelegation)	{
+						app.u.dump(" ------> using delegated events in anycontent, not app events ");
+						app.u.handleEventDelegation($target);
+						}
+					else	{
+						app.u.handleAppEvents($target);
+						}
 
 					if(_rtag.applyEditTrackingToInputs)	{
 						app.ext.admin.u.applyEditTrackingToInputs($target); //applies 'edited' class when a field is updated. unlocks 'save' button.

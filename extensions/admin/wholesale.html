@@ -201,13 +201,16 @@
 	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
 </tr>
 
-<tr id='supplierItemListItemTemplate'>
+<tr id='supplierItemListItemTemplate' class='isProductContainer'>
 	<td><input type='checkbox' data-bind='var:product(pid);format:assignAttribute; attribute:name;' /></td>
 	<td data-bind="var:detail(PID); format:text;"></td>
 	<td data-bind="var:detail(SKU); format:text;"></td>
 	<td data-bind="var:detail(QTY); format:text;"></td>
 	<td data-bind="var:detail(COST_I); format:text;"></td>
 	<td data-bind="var:detail(NOTE); defaultVal:Never; format:text;"></td>
+	<td>
+	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	</td>
 </tr>
 
 
@@ -306,7 +309,7 @@
 		<option value="ORDER:RESET">Reset to closed / resend</option>
 		<option value="ORDER:REDISPATCH">Re-dispatch</option>-->
 	</select>
-	<button data-app-event="admin_wholesale|adminSupplierActionOrder" class='smallButton'>Perform Action</button>
+	<button data-app-click="admin_wholesale|adminSupplierActionOrder" class='smallButton applyButton'>Perform Action</button>
 	</div>
 </div>
 <table class='gridTable fullWidth applyAnytable' data-app-role='supplierOrderListTable'>
@@ -333,7 +336,7 @@
 <div id='supplierItemListTemplate'>
 <form action='#' onsubmit="return false">
 <div class='clearfix ui-widget-header ui-corner-top smallPadding'>
-	<button class='floatRight' data-app-event="admin_wholesale|adminSupplierActionDeAssociate">Disassociate Product</button>
+	<button class='floatRight applyButton' data-app-click="admin_wholesale|adminSupplierActionDeAssociate">Disassociate Product</button>
 </div>
 
 <table class='gridTable fullWidth applyAnytable'>
@@ -345,6 +348,7 @@
 	<th class='alignLeft'>Qty</th>
 	<th class='alignLeft'>Cost</th>
 	<th class='alignLeft'>Note</th>
+	<th data-anytable-nosort='true'></th>
 </tr>
 </thead>
 <tbody data-bind="var:vendor(@ROWS); format: processList; loadsTemplate:supplierItemListItemTemplate;">

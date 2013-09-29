@@ -1324,7 +1324,7 @@ Required params include:
 							}
 						$taskList.prepend($li); //always put at top of the list.
 
-	//when simply adding to the list, we can use product data from localStorage/memory if it's available.
+//when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
 
 							if($ele && $ele.is('tr'))	{
@@ -1333,12 +1333,12 @@ Required params include:
 								var $tr = $ele.data('clone') ? $ele.clone() : $ele; //setting data-clone allows for the item to be left in the row (ex: amazon marketplace status) or removed from row (ex: search results) when being animated.
 								
 								$tmpTable.addClass('gridTable').css({'z-index':'1000','position':'absolute','width':$ele.width()}).css($ele.offset());
-								$tmpTable.appendTo($(document.body));
+								$tmpTable.appendTo($('body'));
 								$tr.appendTo($tmpTable);
-							//	if($ele.data('clone'))	{$tmpTable.css('background','red');
-								$tmpTable.animate($li.parent().offset(),'slow',function(){
+
+								$tmpTable.animate((app.ext.admin.vars.tab == 'product') ? $li.parent().offset() : $.extend({'width':100},$('.productTab:first','#mastHead').offset()),'slow',function(){
 									$li.show();
-									$tmpTable.hide();
+									$tmpTable.hide().intervaledEmpty();
 									});
 								}
 							else	{
@@ -1881,14 +1881,16 @@ else	{} //no changes in sku attribs.
 // the utility will need to support whether or not to immediately translate. 
 // -> because if we go straight into edit, we are always going to get a clean copy of the product record and should use that to translate.
 			productTaskPidToggle : function($ele,p) {
-				if($ele.data('pid'))	{
+//pid may be set on the button (product interface) or on the parent row (supplier, orders, etc)
+				var pid = $ele.data('pid') || $ele.closest("[data-pid]").data('pid');
+				if(pid)	{
 					if($ele.hasClass('ui-state-highlight'))	{
 						$ele.removeClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'remove'},$ele.closest('tr'));
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'remove'},$ele.closest('tr'));
 						}
 					else	{
 						$ele.addClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':'add'},$ele.closest('tr'));
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'},$ele.closest('tr'));
 						}
 					}
 				else	{
