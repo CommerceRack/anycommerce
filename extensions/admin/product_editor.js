@@ -2245,6 +2245,42 @@ else	{
 				},
 
 			
+			adminProductMacroNavcatClearallExec : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+				
+				app.model.addDispatchToQ({
+					'_cmd':'adminProductMacro',
+					'pid' : pid,
+					'@updates' : ["NAVCAT-CLEARALL"],
+					'_tag':	{
+						'callback': function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$ele.closest('form').anymessage({'message':rd});
+								}
+							else	{
+$ele.closest('form').anymessage(app.u.successMsgObject("Removed product "+pid+" from all categories"));
+//uncheck all the checkboxes to reflect the change.
+$(":checkbox",$ele.closest('form')).prop('checked','');
+								}
+							}
+						}
+					},'immutable');
+				app.model.addDispatchToQ({
+					'_cmd':'adminProductDetail',
+					'variations':1,
+					'inventory' : 1,
+					'skus':1,
+					'pid' : pid,
+					'_tag':{
+						'datapointer':'adminProductDetail|'+pid,
+						'pid' : pid
+						}
+					},'immutable'); //update the product record.
+				app.model.dispatchThis('immutable');
+				
+				},
 			
 			inventoryDetailsToggle : function($ele,p)	{
 				var
@@ -2282,6 +2318,9 @@ else	{
 				var $D = app.ext.admin.i.dialogCreate({
 					'title':'Amazon Validation for '+pid
 					}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
+				$D.dialog('option','modal',false);
+				$D.dialog('option','height',($('body').height() > 450 ? 400 : ($('body').height() - 50)));
+				$D.dialog('option','width',($('body').width() > 450 ? 400 : ($('body').height() - 50)));
 				$D.dialog('open');
 
 				app.model.addDispatchToQ({
@@ -2295,7 +2334,7 @@ else	{
 								}
 							else	{
 								$D.anymessage({'message':app.data[rd.datapointer],'persistent':true}); //will be @MSGS array.
-								$D.dialog('option','height',($('body').height() > 550 ? 500 : ($('body').height() - 50)));
+								
 								}
 							}
 						}
@@ -2373,12 +2412,13 @@ else	{
 										else	{$ele.prop('disabled','').removeProp('disabled');}
 										}
 								if(app.model.responseHasErrors(rd)){
-									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({'message':rd});
+									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({'message':rd,'persistent':true});
 									}
 								else	{
 									//clear existing messaging and display.
-									if(!rd._msg_1_txt && !rd['@MSGS'].length)	{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
-									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage({'message':rd,'persistent':true});
+									if(rd._msg_1_txt || (rd['@MSGS'] && rd['@MSGS'].length))	{}
+									else{rd._msg_1_txt = "Your changes have been saved"}//Need to have a message for anymessage.
+									$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').empty().anymessage(app.u.successMsgObject($ele.data('macro-cmd')+" success"));
 									}
 								}
 							}
@@ -2451,7 +2491,7 @@ else	{
 				app.u.dump("BEGIN admin_prodEdit.e.showProductTemplateInDialog (click!)");
 				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
-					app.u.dump(" -> have pid. proceed.");
+//					app.u.dump(" -> have pid. proceed.");
 					app.ext.admin_prodEdit.a.showProductDebugger(app.ext.admin.i.dialogCreate({
 						'title' : 'Debugger for '+pid,
 						'showLoading' : false
@@ -2462,7 +2502,35 @@ else	{
 					}
 				},
 
-
+			productDebugReportExec : function($ele,p)	{
+				var
+					$debugWin = $ele.closest("[data-app-role='productDebugger']")
+					$reportEle = $("[data-app-role='reportsContent']",$debugWin).empty(),
+					report = $("select[name='report']",$debugWin).val(),
+					pid = $ele.closest("[data-pid]").data('pid');
+				
+				if(report)	{
+					var cmdObj = {
+						'_cmd':'adminProductDebugLog',
+						'pid' : pid,
+						'_tag':{
+							'callback' : 'showReport',
+							'extension' : 'admin_batchJob',
+							'jqObj' : $reportEle,
+							'datapointer':'adminProductDebugLog|'+pid
+							}
+						}
+					cmdObj[report] = 1;
+					app.model.addDispatchToQ(cmdObj,'mutable');
+					app.model.dispatchThis();
+					}
+				else	{
+					$debugWin.anymessage({'message':'Please choose a report type'});
+					}
+				
+				
+				
+				},
 
 			handlePIDCloneChangeRemoveExec : function($ele,p)	{
 				var pid = $ele.closest("[data-pid]").data('pid');

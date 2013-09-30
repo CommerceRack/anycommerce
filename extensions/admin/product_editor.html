@@ -460,9 +460,9 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
 			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
-			<!--
+			
 			<button title="Open a dialog with some debug tools." class='floatLeft applyButton'  data-templateid='productDebuggerTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Debug</button>
-			-->
+			
 			
 		</div>
 
@@ -669,6 +669,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<form action='#' onSubmit='return false'>
 		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroNavcatClearallExec">Remove from All</button>
 			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="navigation">Save <span class='numChanges'></span> Changes</button>
 		</div>
 	</form>
@@ -1352,12 +1353,12 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-<div id='productDebuggerTemplate' class='appMessaging'>
+<div id='productDebuggerTemplate' class='appMessaging' data-app-role='productDebugger'>
 
 	<form action='#' onsubmit="return false">
 	<label>
 		<span>Debug report</span>
-		<select>
+		<select name='report'>
 			<option value=''>please choose</option>
 			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
 			<option value='@AMAZON_SKU_LIST'>Amazon SKU list</option>
@@ -1368,7 +1369,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
 		</select>
 	</label>
-	<button>View Report</button>
+	<button data-app-click="admin_prodEdit|productDebugReportExec" class='applyButton'>View Report</button>
 	</form>
 
 	<div data-app-role='reportsContent'></div>
