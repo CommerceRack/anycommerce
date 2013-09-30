@@ -103,6 +103,7 @@ General tab
 Variations
 */
 
+div.storeVariationsListContainer	{max-height:250px; overflow:auto;}
 
 td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; padding:0; width:2px;}
 td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}

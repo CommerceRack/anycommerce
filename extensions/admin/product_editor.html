@@ -678,7 +678,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	<section data-anytab-content='variations' class='clearfix'>
 	
+	<form action='#' onSubmit='return false'>
 	<div data-app-role='productVariations'></div>
+	</form>
+	
 	
 	<form action='#' onSubmit='return false'>
 	
@@ -718,7 +721,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -2391,6 +2394,7 @@ Snacks|Doughnuts<br />
 
 
 <div id='productVariationManager' class='ui-widget' data-app-role='productVariationManager'><!-- in product variations mode, PID will be set on this element -->
+
 	<section data-app-role='productVariationManagerContainer'>
 
 		<table class='fullWidth'>
@@ -2416,6 +2420,7 @@ Snacks|Doughnuts<br />
 			<td class='valignTop'>
 			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
 		<h2>Store Variations</h2>
+		<div class='storeVariationsListContainer'>
 		<table class='gridTable fullWidth marginTop'>
 		<thead>
 		<tr>
@@ -2427,19 +2432,21 @@ Snacks|Doughnuts<br />
 		</thead>
 		<tbody data-bind="var: variations(%SOGS); format: processList; loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
 		</table>
+		</div>
 			</div>
 			</td>
 		</tr>
 		</table>
 
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
-			<button class='floatRight' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Changes</button>
-
-			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add New Variation Group</button>
+<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
+			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Changes</button>
+			
+			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add Product Variation</button>
 		</div>
 
-
 	</section>
+
 </div>
 
 

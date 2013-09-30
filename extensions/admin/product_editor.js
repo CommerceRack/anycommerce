@@ -510,6 +510,7 @@ app.u.handleEventDelegation($target);
 			$('.gridTable',$storeOptions).anytable(); //make header click/sortable to make it easier to find sogs.
 			
 			app.u.handleAppEvents($target,{'pid':pid});
+			app.u.handleButtons($('.buttonset',$target)); //the save button uses delegated events. the rest was built prior to the new product editor.
 	// compare the sog list and the variations on the product and disable the buttons.
 	// this avoids the same SOG being added twice.
 			$('tbody tr',$prodOptions).each(function(){
@@ -1721,6 +1722,53 @@ Required params include:
 				else	{} //no changes to the images. that's fine.
 
 				}, //prodImages
+			
+			variations : function($form)	{
+				//data-app-role='productVariationManager'
+
+
+					var cmdObj = {
+						'_cmd' : 'adminProductOptionsUpdate', 
+						pid : $form.closest("[data-pid]").data('pid'),
+						'_tag' : {
+							'callback' : function(rd){
+								$form.hideLoading();
+								
+								if(app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									$form.anymessage(app.u.successMsgObject('Variations have been updated.'));
+									app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),cmdObj.pid);
+									}
+								}
+							},
+						'@pogs' : new Array()
+						};
+						
+					var variations = app.data['adminProductDetail|'+cmdObj.pid]['@variations']; //shortcut.
+					for(index in variations)	{
+						variations[index].autoid = 1; //tells the API to add id's to variations and/or options that don't have them.
+						}
+
+					$form.find("[data-app-role='productVariationManagerProductTbody'] tr").each(function(){
+						var $tr = $(this);
+						if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do nothing.
+						else	{
+							
+//Get the variation object out of the product object in memory.
+//At this point, all the data has been shoved into %variations on the product. The only trick here is using a guid, if set (for new pogs which have no ID yet)
+							
+							cmdObj['@pogs'].push(variations[($tr.data('guid')) ? app.ext.admin.u.getIndexInArrayByObjValue(variations,'guid',$tr.data('guid')) : app.ext.admin.u.getIndexInArrayByObjValue(variations,'id',$tr.data('id'))]);
+							
+//							cmdObj['%sog'].push();
+							}
+						});
+					
+					app.model.addDispatchToQ(cmdObj,'immutable');
+//					app.model.dispatchThis('immutable');
+				},
+			
 // executed from the save button in the variations panel. called sku because it doesn't impact add/removing variations, just updating attribs for each option.
 			sku : function($form)	{
 				var pid = $("input[name='pid']",$form).val();
@@ -3125,70 +3173,7 @@ app.model.dispatchThis('mutable');
 
 					});
 				}, //variationCreateExec
-//this is the action on the save button in the product variation manager (product > edit > variations) which is what allows a merchant to order/add/remove options.
 
-			productVariationsUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.productVariationsUpdateExec').on('click.productVariationsUpdateExec',function(){
-
-					var cmdObj = {
-						'_cmd' : 'adminProductOptionsUpdate',
-						'_tag' : {
-							'callback' : function(rd){
-								$container.hideLoading()
-								if(app.model.responseHasErrors(rd)){
-									$container.anymessage({'message':rd});
-									}
-								else	{
-									app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),cmdObj.pid);
-									}
-								}
-							},
-						'@pogs' : new Array()
-						};
-						
-					var $container = $btn.closest("[data-app-role='productVariationManagerContainer']");
-					cmdObj.pid = $btn.closest("[data-pid]").data('pid');
-					var variations = app.data['adminProductDetail|'+cmdObj.pid]['@variations']; //shortcut.
-// ### this is probably in the wrong spot. It should be moved over
-for(index in variations)	{
-	variations[index].autoid = 1; //tells the API to add id's to variations and/or options that don't have them.
-	}
-
-					$container.showLoading({"message":"Saving Product Variations Changes."});
-
-					$container.find("[data-app-role='productVariationManagerProductTbody'] tr").each(function(){
-						var $tr = $(this);
-						if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do nothing.
-						else	{
-							
-//Get the variation object out of the product object in memory.
-//At this point, all the data has been shoved into %variations on the product. The only trick here is using a guid, if set (for new pogs which have no ID yet)
-							
-							cmdObj['@pogs'].push(variations[($tr.data('guid')) ? app.ext.admin.u.getIndexInArrayByObjValue(variations,'guid',$tr.data('guid')) : app.ext.admin.u.getIndexInArrayByObjValue(variations,'id',$tr.data('id'))]);
-							
-//							cmdObj['%sog'].push();
-							}
-						});
-					
-					app.model.addDispatchToQ(cmdObj,'immutable');
-
-					app.model.addDispatchToQ({
-						'_cmd':'adminProductDetail',
-						'variations':1,
-						'inventory' : 1,
-						'skus':1,
-						'pid' : cmdObj.pid,
-						'_tag':{
-							'datapointer':'adminProductDetail|'+cmdObj.pid,
-							'pid' : cmdObj.pid
-							}
-						},'immutable');
-
-					app.model.dispatchThis('immutable');
-					
-					});
-				}, //productVariationsUpdateExec
 
 //a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
 			variationsOptionToggle : function($btn)	{
