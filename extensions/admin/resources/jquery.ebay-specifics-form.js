@@ -78,7 +78,8 @@
 
 				// show green star if this attribute is required 
 				// OR show 'Remove' link in the legend if attr is optional
-				if(rec.ValidationRules.MinValues > 0) {
+				//if(rec.ValidationRules.MinValues > 0) {
+				if(0) {
 					$fieldSetEl.attr("required",true);
 					$('legend', $fieldSetEl).prepend('<span class="isRequiredIcon">*</span>');
 				} else {
