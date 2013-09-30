@@ -25,6 +25,7 @@ bug fixes / enhancements in new product editor.
 	amazon (more to come here)
 	checkbox based attributes now saving.
 	return of 'Remove from All' in categorization tab.
+	return of debugger (in general panel)
 
 bug fix in support (update ticket working again).
 update to task list manager. will display up to 100 active tasks and tasks completed in last three days.

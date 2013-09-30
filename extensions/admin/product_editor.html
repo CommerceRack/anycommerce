@@ -461,7 +461,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
 			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
 			
-			<button title="Open a dialog with some debug tools." class='floatLeft applyButton'  data-templateid='productDebuggerTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Debug</button>
+			<button title="Open a dialog with some debug tools." class='floatLeft applyButton' data-verb='debug' data-templateid='productDebuggerTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Debug</button>
 			
 			
 		</div>
@@ -1363,8 +1363,6 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
 			<option value='@AMAZON_SKU_LIST'>Amazon SKU list</option>
 			<option value='@DIAGNOSTICS'>Diagnostics</option>
-			<option value='@INVENTORY'>Inventory</option>
-			<option value='@INVENTORY_LOG'>Inventory log</option>
 			<option value='@NAVCATS'>Navcats</option>
 			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
 		</select>

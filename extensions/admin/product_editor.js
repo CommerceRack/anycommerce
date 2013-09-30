@@ -2492,10 +2492,13 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
 //					app.u.dump(" -> have pid. proceed.");
-					app.ext.admin_prodEdit.a.showProductDebugger(app.ext.admin.i.dialogCreate({
-						'title' : 'Debugger for '+pid,
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Product: '+pid,
 						'showLoading' : false
-						}).dialog('open'),{'pid':pid,'templateID':$ele.data('templateid')});
+						});
+					app.ext.admin_prodEdit.a.showProductDebugger($D,{'pid':pid,'templateID':$ele.data('templateid')});
+					
+					$D.dialog('open')
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductTemplateInDialog, unable to ascertain PID.','gMessage':true});
@@ -2510,18 +2513,32 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 					pid = $ele.closest("[data-pid]").data('pid');
 				
 				if(report)	{
-					var cmdObj = {
+					app.model.addDispatchToQ({
 						'_cmd':'adminProductDebugLog',
+						'GUID' : report,
 						'pid' : pid,
 						'_tag':{
-							'callback' : 'showReport',
-							'extension' : 'admin_batchJob',
+							'callback' : function(rd){
+var data = app.data[rd.datapointer];
+/*
+The response here could come back in one of two flavors. Either as a txt file or using @BODY/@HEAD, which is a csv file (just like batches).
+*/
+if(data.body)	{
+	rd.filename = report+'.txt';
+	app.callbacks.fileDownloadInModal.onSuccess(rd)
+	}
+else if(data['@BODY'] && data['@HEAD'])	{
+	app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
+	}
+else	{
+	
+	}
+								},
 							'jqObj' : $reportEle,
+							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
 							'datapointer':'adminProductDebugLog|'+pid
 							}
-						}
-					cmdObj[report] = 1;
-					app.model.addDispatchToQ(cmdObj,'mutable');
+						},'mutable');
 					app.model.dispatchThis();
 					}
 				else	{
