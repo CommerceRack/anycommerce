@@ -3432,6 +3432,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 app.ext.admin_prodEdit.a.showProductManager();
 
 
+
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');

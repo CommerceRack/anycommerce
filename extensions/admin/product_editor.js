@@ -915,13 +915,19 @@ app.u.handleEventDelegation($target);
 	//				$r.append($("<div \/>").anymessage({'message':'No editor for SKU level fields yet.'}));
 					var L = prodData['@skus'].length;
 	//				app.u.dump(" -> data.id: "+data.id);
+					var $div = $("<div \/>").addClass('marginLeft handleAsSku');
 					for(var i = 0; i < L; i += 1)	{
+//						app.u.dump(i+") "+data.id);
 //for cases where there are no inventory-able variations present.
 						if(prodData['@skus'][i] && prodData['@skus'][i].sku && prodData['@skus'][i].sku.indexOf(':') < 0)	{
+							app.u.dump(" -> assigning product attribs as sku-specific attribs because no : in sku");
 							prodData['@skus'][i]['%attribs'] = prodData['%attribs'];
 							}
-						$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
+						//if sku is set, this'll cause a never ending loop. so stid is used in the save (from data() on the label).
+						$div.append(app.ext.admin_prodEdit.u.flexBuildInput(type,$.extend(app.u.getBlacklistedObject(data,['sku']),{'title':prodData['@skus'][i].sku,'stid':prodData['@skus'][i].sku}),prodData['@skus'][i]));
+//						$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
 						}
+					$div.appendTo($r);
 					}
 				else	{
 	
@@ -1696,6 +1702,48 @@ Required params include:
 
 				},
 
+			flex : function($form)	{
+
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductUpdate',
+					pid : pid,
+					'%attribs' : {},
+					'@updates' : [],
+					_tag : {
+						callback : 'showMessaging',
+						restoreInputsFromTrackingState : true,
+						'message' : 'Attributes have been saved.',
+						jqObj : $form
+						}
+					}
+
+				$(".edited",$form).each(function(){
+					var $input = $(this);
+					if($input.closest('.handleAsSku').length)	{
+						if($input.is(':input'))	{
+							cmdObj['@updates'].push("SET-SKU?SKU="+$input.closest('label').data().stid+"&"+$input.attr('name')+"="+$input.val()); //;
+							}
+						else	{
+							//in the case of images, a 'label' and an input get '.edited' assigned. The input is used in the update.
+							}
+						}
+					else	{
+						if($input.is(':input'))	{
+							cmdObj['%attribs'][$input.attr('name')] = $input.val();
+							}
+						else	{
+							//in the case of images, a 'label' and an input get '.edited' assigned. The input is used in the update.
+							}
+
+						}
+					});
+
+				if(cmdObj['@updates'].length || !$.isEmptyObject(cmdObj['%attribs']))	{
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
+
+				},
 			prodImages : function($form)	{
 
 				var $prodImageUL = $("[data-app-role='prodImagesContainer']",$form);
@@ -1808,11 +1856,7 @@ if($('.edited',$tbody).length)	{
 	}
 else	{} //no changes in sku attribs.
 
-// !!! need to save sku imagery too.
-
-
-
-//app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
+//app.u.dump(" -> cmdObj for sku:"); app.u.dump(cmdObj);
 				//The save button that exectutes this also runs skuImages. So it's possible this was run without any sku attribs changes 
 				//to avoid an API error (no @updates set), only add to Q if updates are present.
 				if(cmdObj['@updates'].length)	{
