@@ -1721,7 +1721,10 @@ Required params include:
 				$(".edited",$form).each(function(){
 					var $input = $(this);
 					if($input.closest('.handleAsSku').length)	{
-						if($input.is(':input'))	{
+						if($input.is(':checkbox'))	{
+							cmdObj['@updates'].push("SET-SKU?SKU="+$input.closest('label').data().stid+"&"+$input.attr('name')+"="+($input.is(':checked') ? 1 : 0)); //;
+							}
+						else if($input.is(':input'))	{
 							cmdObj['@updates'].push("SET-SKU?SKU="+$input.closest('label').data().stid+"&"+$input.attr('name')+"="+$input.val()); //;
 							}
 						else	{
@@ -1729,7 +1732,10 @@ Required params include:
 							}
 						}
 					else	{
-						if($input.is(':input'))	{
+						if($input.is(':checkbox'))	{
+							cmdObj['%attribs'][$input.attr('name')] = ($input.is(':checked') ? 1 : 0); //;
+							}
+						else if($input.is(':input'))	{
 							cmdObj['%attribs'][$input.attr('name')] = $input.val();
 							}
 						else	{
