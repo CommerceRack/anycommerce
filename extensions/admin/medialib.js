@@ -399,6 +399,7 @@ setTimeout(function(){
 					$target.data('mode',"");
 					$target.data('pid',"");
 					$target.data('src',"");
+					$(".ui-showloading",$target).hideLoading(); //removes any instance of showLoading which may have been left open as a result of some sort of crash.
 					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{

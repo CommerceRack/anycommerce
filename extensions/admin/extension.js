@@ -3253,6 +3253,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //vars is for variables. eventually, path and attrib should be move into the vars object.
 //vars will be used to contain all the 'chooser' variables.
 			showFinderInModal : function(findertype,path,attrib,vars)	{
+				app.u.dump("BEGIN showFinderInModal. findertype: "+findertype+" and path: "+path);
 				if(findertype)	{
 					var $finderModal = $('#prodFinder'),
 					vars = vars || {};
@@ -3787,6 +3788,16 @@ and all .someClass are hidden (value of data-panel-selector)
 				$("select[data-panel-selector]",$container).each(function(){
 					if($('option:selected',$(this)).data('show-panel'))	{
 						$('option:selected',$(this)).trigger('click');
+						}
+					});
+
+				$container.on('change',':input',function(e){
+					var $ele = $(e.target);
+					var $option = $(":selected",$ele);
+					var $form = $ele.closest('form');
+					if($option.data('change-input'))	{
+						app.u.dump(" -> $option.data('change-newval'): "+$option.data('change-newval'));
+						$("[name='"+app.u.jqSelector('',$option.data('change-input'))+"']",$form).val($option.data('change-newval'))
 						}
 					});
 
@@ -4459,7 +4470,7 @@ for a category, each sku added or removed is a separate request.
 						'_cmd': 'adminProductUpdate',
 						'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
 						},'immutable');					
-					app.calls.appProductGet.init(sku,{},'immutable');
+					app.calls.appProductGet.init({'pid':sku},{},'immutable');
 					}
 				else if (findertype == 'NAVCAT')	{
 					// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
@@ -4552,9 +4563,9 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,vars){
 
-//app.u.dump("BEGIN admin.u.addFinder");
-// app.u.dump(" -> targetID: "+targetID);
-//app.u.dump(vars);
+app.u.dump("BEGIN admin.u.addFinder");
+app.u.dump(" -> targetID: "+targetID);
+app.u.dump(vars);
 
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(vars.path);

@@ -1791,7 +1791,7 @@ Required params include:
 									}
 								else	{
 									$form.anymessage(app.u.successMsgObject('Variations have been updated.'));
-									app.ext.admin_prodEdit.a.showProductVariationManager($('#productTabMainContent'),cmdObj.pid);
+									app.ext.admin_prodEdit.a.showProductVariationManager($("[data-app-role='productVariations']",$form).empty(),cmdObj.pid);
 									}
 								}
 							},

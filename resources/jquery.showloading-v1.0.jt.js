@@ -43,7 +43,8 @@
 			else {
 				indicatorID = $this.attr('id');
 				}
-				
+			$this.addClass('ui-showloading');
+			
 			$loadingDiv.attr('id', 'loading-indicator-' + indicatorID );
 			$loadingDiv.addClass('loading-indicator');
 			
@@ -248,6 +249,9 @@
 		else {
 			indicatorID = $(this).attr('id');
 			}
+// * 201338 -> toggle an indicator class on/off 
+//indicator class on target element removed. used to detect cases of showloading and remove them globally.
+		$(this).removeClass('ui-showloading');
 // ** 201318 -> better method for selector
 		$(app.u.jqSelector('#','loading-indicator-'+indicatorID),$(this)).remove();
 		$(app.u.jqSelector('#','loading-indicator-'+indicatorID+'-overlay'),$(this)).remove();

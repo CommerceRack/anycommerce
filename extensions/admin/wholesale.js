@@ -242,60 +242,68 @@ else	{
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
 				if($editorContainer instanceof jQuery && VENDORID)	{
-$editorContainer.showLoading({"message":"Fetching supplier details"});
-app.model.addDispatchToQ({
-	'_cmd':'adminSupplierDetail',
-	'VENDORID' : VENDORID,
-	'_tag':	{
-		'datapointer' : 'adminSupplierDetail|'+VENDORID,
-		'callback':function(rd)	{
-			$editorContainer.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$editorContainer.anymessage({'message':rd})
-				}
-			else	{
-				$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
-				app.ext.admin.u.handleAppEvents($editorContainer);
-				$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
-				
-			//make into anypanels.
-				$("div.panel",$editorContainer).each(function(){
-					var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
-					$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
-					});
-			//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
-			
-			//make inputs 'know' when they've been added and update the button.
-				app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
-			
-			//make panels draggable
-				var sortCols = $('.twoColumn').sortable({  
-					connectWith: '.twoColumn',
-					handle: 'h2',
-					cursor: 'move',
-					placeholder: 'placeholder',
-					forcePlaceholderSize: true,
-					opacity: 0.4,
-			//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
-					stop: function(event, ui){
-						$(ui.item).find('h2').click();
-						var dataObj = new Array();
-						sortCols.each(function(){
-							var $col = $(this);
-							dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
-							});
-						app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
-			//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
-						}
-					});
-			
-				app.ext.admin.u.handleFormConditionalDelegation($('form',$editorContainer));
-				}
-
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+					$editorContainer.showLoading({"message":"Fetching supplier details"});
+					app.model.addDispatchToQ({
+						'_cmd':'adminSupplierDetail',
+						'VENDORID' : VENDORID,
+						'_tag':	{
+							'datapointer' : 'adminSupplierDetail|'+VENDORID,
+							'callback':function(rd)	{
+								$editorContainer.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$editorContainer.anymessage({'message':rd})
+									}
+								else	{
+									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
+									app.ext.admin.u.handleAppEvents($editorContainer);
+									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
+					
+									if(app.data[rd.datapointer].FORMAT == 'FBA')	{
+										$('.panel',$editorContainer).hide();  //hide all panels. only the fba panel is displayed.
+										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show().anypanel({
+											'wholeHeaderToggle':false, //don't bother with persistance on this. it's the only panel, it should be open.
+											'showClose':false});
+										}
+									else	{
+										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).hide(); //fba panel only shows up for fpa suppliers.
+									//make into anypanels.
+										$("div.panel",$editorContainer).each(function(){
+											var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
+											$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
+											});
+									//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
+									
+									//make inputs 'know' when they've been added and update the button.
+										app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
+									
+									//make panels draggable
+										var sortCols = $('.twoColumn').sortable({  
+											connectWith: '.twoColumn',
+											handle: 'h2',
+											cursor: 'move',
+											placeholder: 'placeholder',
+											forcePlaceholderSize: true,
+											opacity: 0.4,
+									//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
+											stop: function(event, ui){
+												$(ui.item).find('h2').click();
+												var dataObj = new Array();
+												sortCols.each(function(){
+													var $col = $(this);
+													dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+													});
+												app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
+									//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+												}
+											});
+										}
+									app.ext.admin.u.handleFormConditionalDelegation($('form',$editorContainer));
+									}
+					
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 					}
 				else	{
 					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or VENDORID ['+VENDORID+'] undefined','gMessage':true});
