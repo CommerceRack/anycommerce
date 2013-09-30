@@ -30,6 +30,13 @@ bug fixes / enhancements in new product editor.
 bug fix in support (update ticket working again).
 update to task list manager. will display up to 100 active tasks and tasks completed in last three days.
 
+Updates to supplier interface
+	inventory records for supplier can be added per sku/pid
+	new FBA supplier format.
+	some interface changes based on format.
+	format can no longer be changed once set per supplier.
+
+
 
 201336
 ADMIN
