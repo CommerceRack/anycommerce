@@ -3429,7 +3429,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
 // ** 201338 -> need the product task list ul generated as early as possible.
-app.ext.admin_prodEdit.a.showProductManager({'skipHandleNavTabs':true});
+app.ext.admin_prodEdit.a.showProductManager();
 
 
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
