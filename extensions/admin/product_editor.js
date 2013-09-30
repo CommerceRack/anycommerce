@@ -540,6 +540,12 @@ app.u.handleEventDelegation($target);
 	
 		renderFormats : {
 
+			link2eBayByID : function($tag,data)	{
+				$tag.off('click.link2eBayByID').on('click.link2eBayByID',function(){
+					linkOffSite("www.ebay.com/itm/"+data.value);
+					});
+				},
+
 			prodImages : function($tag,data)	{
 	//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
 				var L = data.bindData.max || 99;
