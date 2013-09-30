@@ -366,11 +366,6 @@
 
 <form action='#' autocomplete="on">
 
-<input type='hidden' name='_cmd' value='adminSupplierCreate' />
-<input type='hidden' name='_tag/callback' value='showMessaging' />
-<input type='hidden' name='_tag/message' value='Thank you, the supplier has been added.' />
-<input type='hidden' name='_tag/jqObjEmpty' value='true' />
-
 <fieldset class='labelsAsBreaks'>
 	<legend>Add a New Supplier</legend>
 
@@ -396,7 +391,7 @@
 	</label>
 
 	
-	<div class='alignCenter'><button data-app-event='admin|processForm'>Add Supplier</button></div>
+	<div class='alignCenter'><button data-app-event='admin_wholesale|adminSupplierCreateExec'>Add Supplier</button></div>
 </fieldset>
 </form>
 
@@ -565,22 +560,7 @@
 			</div>
 		</div><!-- /general panel -->
 
-		<div class='panel labelsAsBreaks alignedLabels supplierOurFBAConfig displayNone' data-panel-id='supplierOurFBAConfig'>
-			<h2>FBA Configuration</h2>
-			<div class='clearfix'>
-			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>
-			<fieldset data-app-role='OURSET'>				
-				<label>
-					<span>FBA Marketplace ID</span>
-					<input name='fba_marketplaceid' data-bind='var:supplier(%OUR.fba_marketplaceid); format:popVal;' />
-				</label>
-				<label>
-					<span>FBA Merchant ID</span>
-					<input name='fba_merchantid' data-bind='var:supplier(%OUR.fba_merchantid); format:popVal;' />
-				</label>
-			</fieldset>
-			</div>
-		</div>
+
 
 <!--
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='productUpdates'>
@@ -679,6 +659,26 @@
 
 
 	<div class='twoColumn column2' data-app-column='2' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
+
+
+		<div class='panel labelsAsBreaks alignedLabels supplierOurFBAConfig displayNone' data-panel-id='supplierOurFBAConfig'>
+			<h2>FBA Configuration</h2>
+			<div class='clearfix'>
+			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>
+			<fieldset data-app-role='OURSET'>				
+				<label>
+					<span>FBA Marketplace ID</span>
+					<input name='fba_marketplaceid' data-bind='var:supplier(%OUR.fba_marketplaceid); format:popVal;' />
+				</label>
+				<label>
+					<span>FBA Merchant ID</span>
+					<input name='fba_merchantid' data-bind='var:supplier(%OUR.fba_merchantid); format:popVal;' />
+				</label>
+			</fieldset>
+			</div>
+		</div>
+
+
 
 		<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
 			<h2>Setup: Inventory Preferences &amp; Download</h2>
