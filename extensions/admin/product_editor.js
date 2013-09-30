@@ -35,6 +35,7 @@ var admin_prodEdit = function() {
 // legacy type means 'this field is no longer used'. should not get an editor. it's deprecated and the attribute will eventually be removed.
 			flexTypes : {
 				'asin' : {'type':'text'},
+				'date' : {'type':'text'},
 				'textbox' : { 'type' : 'text'},
 				'text' : { 'type' : 'text'},
 				'textarea' : { 'type' : 'textarea'},
@@ -1042,17 +1043,26 @@ app.u.handleEventDelegation($target);
 						var $input = $("<input \/>",{'type':type,'name':data.id});
 						if(type == 'checkbox' && prodData['%attribs'][data.id])	{
 							$input.prop('checked','checked')
-							} // !!! hhhmmmm may need to tune this.
+							}
 						else {
+							app.u.dump(" -> type: "+type+" and data.type: "+data.type);
 							$input.val(prodData['%attribs'][data.id] || "");
 							$input.attr('size',data.size || 20); //do this early, then change for specific types, if necessary.
+
 							if(data.type == 'currency')	{
 								$input.attr({'step':'.01','min':'0.00','size':6})
 								}
-							
+							else if(data.type == 'date')	{
+								$input.datepicker({
+									'dateFormat' : "yymmdd"
+									});
+								}
+
 							if(type == 'number' || data.type == 'weight')	{
+								$input.addClass('smallInput');
 								$input.attr('size', data.size || 6); //default to smaller input for numbers, if size not set.
 								}
+							
 							
 							if(data.maxlength)	{
 								$input.attr('maxlength',data.maxlength);
@@ -1071,8 +1081,8 @@ app.u.handleEventDelegation($target);
 				}, //flexBuildInput
 	
 			flexJSON2JqObj : function(thisFlex,prodData)	{
-				app.u.dump("BEGIN admin_prodEdit.u.flexJSONJqObj");
-				app.u.dump(" -> prodData: "); app.u.dump(prodData);
+//				app.u.dump("BEGIN admin_prodEdit.u.flexJSONJqObj");
+//				app.u.dump(" -> prodData: "); app.u.dump(prodData);
 
 				var r = $("<div \/>");; //what is returned. Either a chunk of html or an error message.
 				if(thisFlex && typeof thisFlex === 'object')	{
