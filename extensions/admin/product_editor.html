@@ -1121,6 +1121,7 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 	<th class='alignLeft'>Origin</th>
 	<th class='alignLeft'>Qty</th>
 	<th class='alignLeft'>Base Type</th>
+	<th class='alignLeft'>Mkt/MktID</th>
 	<th class='alignLeft'>Location/Supplier</th>
 	<th class='alignLeft'>Note</th>
 	<th></th>
@@ -1211,6 +1212,9 @@ if it already has a simple, lock the button
 		<input data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
+	<td>
+	<span data-bind="var: detail(MARKET_DST); format:text;"></span>
+	<span data-bind="var: detail(MARKET_REFID); format:text;"></span></td>
 	<td class='alignLeft'>
 	<span data-bind="var: detail(WMS_GEO); format:text;"></span>
 	<span data-bind="var: detail(WMS_ZONE); format:text;"></span>
