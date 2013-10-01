@@ -1269,6 +1269,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 
 						}});
+					
 					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					})

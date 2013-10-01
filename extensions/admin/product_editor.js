@@ -1425,12 +1425,12 @@ Required params include:
 				if($target instanceof jQuery)	{
 					app.u.dump(" -> have a valid jquery target");
 					if(sku)	{
-						app.u.dump(" -> have a sku ["+sku+"]");
+//						app.u.dump(" -> have a sku ["+sku+"]");
 						var PID = sku.split(':')[0]; //the Product ID.
 						var invData = {};
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
-							app.u.dump(" -> Inventory record is in memory."); // app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
+//							app.u.dump(" -> Inventory record is in memory."); // app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
 							vars.sku = sku; //set on vars for dataAttribs.
 							if(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'])	{
 								if(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku])	{
@@ -1463,10 +1463,10 @@ Required params include:
 									ui.item.addClass('edited');
 									//if an item from the top of the list was dragged down, everything below the original index gets an 'edited' class because their preference all changes.
 									var changeFromIndex = ( ui.item.index() > ui.item.data('startingIndex')) ? ui.item.data('startingIndex') : ui.item.index();
-									app.u.dump(" -> changeFromIndex: "+changeFromIndex);
+//									app.u.dump(" -> changeFromIndex: "+changeFromIndex);
 									//each item after this one in the list of rows gets tagged as edited so it's preference can be adjusted.
 									ui.item.closest('tbody').children().each(function(){
-										app.u.dump(" -> $(this).index: "+$(this).index());
+//										app.u.dump(" -> $(this).index: "+$(this).index());
 										if($(this).index() >= changeFromIndex)	{
 											$(this).addClass('edited');
 											}
@@ -1477,8 +1477,8 @@ Required params include:
 									$(":input",$(this)).prop('disabled','disabled');
 									$('button',$(this)).prop('disabled','disabled');
 									});
-
-							app.u.handleButtons($target); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
+//skip the inventory details button, as it has already been buttonified and running it again will set the wrong icon (which is changed by the click event)
+							app.u.handleButtons($target).not("[data-app-click='admin_prodEdit|inventoryDetailsToggle']"); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
 							if(!$.isEmptyObject(invData))	{
 								if(app.ext.admin.u.getValueByKeyFromArray(invData,'BASETYPE','SIMPLE'))	{
@@ -2302,17 +2302,23 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 			
 			inventoryDetailsToggle : function($ele,p)	{
 				var
-					$target = $ele.parent(),
-					$icon = $ele.find('.ui-icon');
+					$target = $ele.closest('tr').find('td:last-child'), //drop contents into the last column of the row. event is triggered from sku link and button (in different columns)
+					$btn = $("button[data-app-click='admin_prodEdit|inventoryDetailsToggle']:first",$target),
+					icons = $btn.button( "option", "icons" );
 
+
+				app.u.dump(" -> icons: "); app.u.dump(icons);
+				
 				if($ele.data('sku'))	{
 					//details are visible. close them and nuke the table.
-					if($icon.hasClass('ui-icon-circle-triangle-n'))	{
-						$icon.removeClass('ui-icon-circle-triangle-n').addClass('ui-icon-circle-triangle-s');
+					if(icons.primary == 'ui-icon-circle-triangle-n')	{
+						icons.primary = 'ui-icon-circle-triangle-s';
+						$btn.button( "option", "icons", icons );
 						$("[data-app-role='inventoryDetailContainer']",$target).hide();
 						}
 					else	{
-						$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-n');
+						icons.primary = 'ui-icon-circle-triangle-n';
+						$btn.button( "option", "icons", icons );
 						if($("[data-app-role='inventoryDetailContainer']",$target).length)	{
 							$("[data-app-role='inventoryDetailContainer']",$target).show();
 							}
@@ -2322,7 +2328,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 						}
 					}
 				else	{
-					$target.anymessage({"message":"In admin_prodEdit.e.inventoryDetailsShow, data('pid') not set on trigger element.","gMessage":true});
+					$target.anymessage({"message":"In admin_prodEdit.e.inventoryDetailsShow, data('sku') not set on trigger element.","gMessage":true});
 					}
 				},
 

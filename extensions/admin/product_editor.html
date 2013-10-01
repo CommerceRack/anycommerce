@@ -1190,7 +1190,9 @@ if it already has a simple, lock the button
 
 
 <tr id='inventoryRowTemplate'>
-	<td data-bind="var: detail(sku); format:text;"></td>
+	<td data-app-click='admin_prodEdit|inventoryDetailsToggle' data-bind='var:detail(sku); format:assignAttribute; attribute:data-sku;' class='lookLikeLink'>
+	<span data-bind="var: detail(sku); format:text;"></span>
+	</td>
 	<td data-bind="var: product(zoovy:sku_pogdesc); format:text;"></td>
 	<td><span data-bind="var:detail(%SUMMARY.available); format:popVal; hideZero:false;"></span></td>
 	<td data-bind="var: product(zoovy:sku_pogdetail); format:text;"></td>
