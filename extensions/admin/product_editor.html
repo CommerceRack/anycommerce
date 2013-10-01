@@ -685,41 +685,41 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 	<form action='#' onSubmit='return false'>
+	<div class='clearfix'>
+		<fieldset class='imagesEditor floatRight marginLeft'><!-- prodImagesContainer container used in both pid and sku based image save -->
+			<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+			<legend>Sku Images</legend>
+			<!-- sku images will get added into this div (with js) -->
+			<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Sku Specifics</legend>
 	
-	<fieldset class='imagesEditor floatRight marginLeft'><!-- prodImagesContainer container used in both pid and sku based image save -->
-		<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
-		<legend>Sku Images</legend>
-		<!-- sku images will get added into this div (with js) -->
-		<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
-	</fieldset>
-	
-	<fieldset>
-		<legend>Sku Specifics</legend>
-
-		<table class='fullWidth gridTable'>
-		<colgroup>
-			<col span='2' data-app-role='properties' />
-			<col data-app-role='assembly' />
-			<col span='7' data-app-role='attributes' />
-		</colgroup>
-		<thead>
-		<tr>
-			<th>SKU</th>
-			<th>Desc</th>
-			<th>Assembly</th>
-			<th>Mfg ID</th>
-			<th>UPC</th>
-			<th>ASIN</th>
-			<th>Condition</th>
-			<th>Price</th>
-			<th>Base Cost</th>
-			<th>Weight</th>
-		</tr>
-		</thead>
-		<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
-		</table>
-	</fieldset>
-
+			<table class='fullWidth gridTable'>
+			<colgroup>
+				<col span='2' data-app-role='properties' />
+				<col data-app-role='assembly' />
+				<col span='7' data-app-role='attributes' />
+			</colgroup>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Desc</th>
+				<th>Assembly</th>
+				<th>Mfg ID</th>
+				<th>UPC</th>
+				<th>ASIN</th>
+				<th>Condition</th>
+				<th>Price</th>
+				<th>Base Cost</th>
+				<th>Weight</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
+			</table>
+		</fieldset>
+	</div>
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
@@ -2433,7 +2433,7 @@ Snacks|Doughnuts<br />
 
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
 <!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
-			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Changes</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
 			
 			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add Product Variation</button>
 		</div>
