@@ -1427,19 +1427,31 @@ Required params include:
 					if(sku)	{
 						app.u.dump(" -> have a sku ["+sku+"]");
 						var PID = sku.split(':')[0]; //the Product ID.
+						var invData = {};
 						//Verify the inventory record for this product is available.
 						if(app.data['adminProductInventoryDetail|'+PID])	{
 							app.u.dump(" -> Inventory record is in memory."); // app.u.dump(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]);
 							vars.sku = sku; //set on vars for dataAttribs.
-							$target.anycontent({
-								'templateID' : 'inventoryDetailTemplate',
-								'dataAttribs' : vars,
-								'data' : {
-									'header' : vars.header || "",
-									'@DETAIL' : app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]
-									},
-								'showLoading' : false
-								});
+							if(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'])	{
+								if(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku])	{
+									invData = app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku];
+									}
+								else	{
+									//no inventory records present. This could be normal (new product, for instance)
+									}
+								$target.anycontent({
+									'templateID' : 'inventoryDetailTemplate',
+									'dataAttribs' : vars,
+									'data' : {
+										'header' : vars.header || "",
+										'@DETAIL' : invData
+										},
+									'showLoading' : false
+									});
+								}
+							else	{
+								$target.anymessage({"message":"In admin_prodEdit.u.handleInventory, app.data['adminProductInventoryDetail|'+"+PID+"] is in memory, but %INVENTORY is not present and is required.","gMessage":true});
+								}
 							$('tbody:first',$target).sortable({
 								'start' : function(event,ui)	{
 									if(ui.item.attr('data-starting-index'))	{} //already been moved once.
@@ -1468,11 +1480,11 @@ Required params include:
 
 							app.u.handleButtons($target); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
-							if(!$.isEmptyObject(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku]))	{
-								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','SIMPLE'))	{
+							if(!$.isEmptyObject(invData))	{
+								if(app.ext.admin.u.getValueByKeyFromArray(invData,'BASETYPE','SIMPLE'))	{
 									$("button[data-detail-type='SIMPLE']",$target).attr({'title':'Only one simple inventory detail record is allowed per sku'}).button('disable');
 									}
-								if(app.ext.admin.u.getValueByKeyFromArray(app.data['adminProductInventoryDetail|'+PID]['%INVENTORY'][sku],'BASETYPE','CONSTANT')) {
+								if(app.ext.admin.u.getValueByKeyFromArray(invData,'BASETYPE','CONSTANT')) {
 									$("button[data-detail-type='CONSTANT']",$target).attr({'title':'Only one constant inventory detail record is allowed per sku'}).button('disable');
 									}
 								}

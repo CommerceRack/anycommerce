@@ -257,46 +257,48 @@ else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
 									app.ext.admin.u.handleAppEvents($editorContainer);
 									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
-					
+
+
 									if(app.data[rd.datapointer].FORMAT == 'FBA')	{
-										$('.panel',$editorContainer).hide();  //hide all panels. only the fba panel is displayed.
-										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show().anypanel({
-											'wholeHeaderToggle':false, //don't bother with persistance on this. it's the only panel, it should be open.
-											'showClose':false});
+										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show()
+										$('.panel',$editorContainer).not("[data-panel-id='supplierOurFBAConfig']").find(":input").attr('disabled','disabled');
 										}
-									else	{
-										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).hide(); //fba panel only shows up for fpa suppliers.
-									//make into anypanels.
-										$("div.panel",$editorContainer).each(function(){
-											var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
-											$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
-											});
-									//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
+
+								//make into anypanels.
+									$("div.panel",$editorContainer).each(function(){
+										var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
+										$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
+										});
+								//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
+								
+								//make inputs 'know' when they've been added and update the button.
+									app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
+
+
+								
+								//make panels draggable
+									var sortCols = $('.twoColumn').sortable({  
+										connectWith: '.twoColumn',
+										handle: 'h2',
+										cursor: 'move',
+										placeholder: 'placeholder',
+										forcePlaceholderSize: true,
+										opacity: 0.4,
+								//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
+										stop: function(event, ui){
+											$(ui.item).find('h2').click();
+											var dataObj = new Array();
+											sortCols.each(function(){
+												var $col = $(this);
+												dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+												});
+											app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
+								//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+											}
+										});
+
 									
-									//make inputs 'know' when they've been added and update the button.
-										app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
-									
-									//make panels draggable
-										var sortCols = $('.twoColumn').sortable({  
-											connectWith: '.twoColumn',
-											handle: 'h2',
-											cursor: 'move',
-											placeholder: 'placeholder',
-											forcePlaceholderSize: true,
-											opacity: 0.4,
-									//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
-											stop: function(event, ui){
-												$(ui.item).find('h2').click();
-												var dataObj = new Array();
-												sortCols.each(function(){
-													var $col = $(this);
-													dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
-													});
-												app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
-									//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
-												}
-											});
-										}
+
 									app.ext.admin.u.handleFormConditionalDelegation($('form',$editorContainer));
 									}
 					
@@ -904,10 +906,51 @@ else	{
 					$D.dialog('open');
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
-					$('form',$D).first().append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+					$('form',$D).first().append("<input type='hidden' name='DMIID' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
 					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 					app.u.handleAppEvents($D,{"$context":$btn.closest("[data-app-role='supplierManager']").parent()})
 					})
+				}, //showSupplierCreate
+
+
+//applied to 'create user' button. just opens the modal.
+			adminSupplierCreateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+
+var sfo = $form.serializeJSON();
+sfo._cmd = 'adminSupplierCreate'
+sfo._tag =	{
+	'callback':'showMessaging',
+	'jqObj' : $form,
+	'jqObjEmpty' : true,
+	'updateDMIList' : sfo.DMIID,
+	'message' : 'Thank you, the supplier has been added.'
+	}
+delete sfo.DMIID; //is no longer necessary.
+if(sfo.FORMAT == 'FBA')	{
+	sfo.NAME = "Fulfillment by Amazon"
+	}
+app.model.addDispatchToQ(sfo,'immutable');
+
+//after the initial dispatch so that the VENDOR is created by the time the macro is run.
+/*
+if(sfo.FORMAT == 'FBA')	{
+	app.model.addDispatchToQ({
+		'_cmd' : 'adminSupplierMacro',
+		'VENDOR' : 'FBA',
+		'@updates' : []
+		},'immutable');
+	}
+*/
+app.model.dispatchThis('immutable');	
+
+						}
+					else	{}//validation handles display logic too
+					});
 				}, //showSupplierCreate
 
 
