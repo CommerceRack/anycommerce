@@ -1848,17 +1848,6 @@ Required params include:
 						}
 					}
 
-//handle any assembly updates. currenly, each row only has one input, so keying off that input (if .edited present) is best.
-$("[data-app-role='assemblyContainer'] input.edited",$form).each(function(){
-	var SKU = $(this).closest("[data-sku]").data('sku');
-	if(SKU)	{
-		cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&sku:assembly="+$(this).val());
-		}
-	else	{
-		$(this).closest('fieldset').anymessage({"message":"In admin_prodEdit.saveHandlers.sku, unable to ascertain sku","gMessage":true});
-		}
-	})
-
 //the :input pseudo selector will match all form field types.
 var $tbody = $("[data-app-role='prodEditSkuAttribsTbody']",$form);
 //high level check to see if any updates occured within sku attribs.
@@ -1867,7 +1856,7 @@ if($('.edited',$tbody).length)	{
 		var $tr = $(this);
 		var SKU = $(this).closest("[data-sku]").data('sku');
 		if($('.edited',$tr).length)	{
-			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON())); //if any input changed, all are updated.
+			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'}))); //if any input changed, all are updated.
 			}
 		else	{} //no updates in this row.
 		});

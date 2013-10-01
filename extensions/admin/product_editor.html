@@ -693,20 +693,20 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
 	</fieldset>
 	
-	<fieldset data-app-role='assemblyContainer'>
-		<legend>Assembly/Kit Components</legend>
-		<ul class='listStyleNone' data-bind="var: product(@skus); format:processList; sku:1; loadsTemplate:xsellTableRowTemplate;">
-		</ul>
-	</fieldset>
-
 	<fieldset>
-		<legend>Sku Attributes</legend>
+		<legend>Sku Specifics</legend>
 
 		<table class='fullWidth gridTable'>
+		<colgroup>
+			<col span='2' data-app-role='properties' />
+			<col data-app-role='assembly' />
+			<col span='7' data-app-role='attributes' />
+		</colgroup>
 		<thead>
 		<tr>
 			<th>SKU</th>
 			<th>Desc</th>
+			<th>Assembly</th>
 			<th>Mfg ID</th>
 			<th>UPC</th>
 			<th>ASIN</th>
@@ -1287,19 +1287,11 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 
 
-
-<!-- used for assemblies -->
-<tr id='xsellTableRowTemplate'>
-	<td data-bind='var:sku(sku); format:text;'></td>
-	<td>
-		<input type='text' name='sku:assembly' value='' data-bind='var:sku(%attribs.sku:assembly); format:text;' />
-	</td>
-</tr>
-
 <!-- used for sku-specific attributes -->
-<tr id='skuTableRowTemplate'>
+<tr id='skuTableRowTemplate' data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:assignAttribute; attribute:title;'>
 	<td data-bind='var:sku(sku); format:text;'></td>
-	<td data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:text;'></td>
+	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
+	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' /></td>
 	<td><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.sku:mfgid); format:popVal;'></td>
 	<td><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.sku:upc); format:popVal;'></td>
 	<td><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
