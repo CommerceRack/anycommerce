@@ -45,7 +45,7 @@ var store_product = function() {
 //if no object is passed in, one must be created so that adding datapointer to a non existent object doesn't cause a js error
 // Override datapointer, if set.
 // The advantage of saving the data in memory and local storage is lost if the datapointer isn't consistent, especially for product data.
-				pid = pid.toUpperCase();
+				pid = pid.toString().toUpperCase(); //if a pid is all numbers, pid.toUpperCase results in JS error.
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj["datapointer"] = "appProductGet|"+pid; 
 
@@ -94,7 +94,7 @@ var store_product = function() {
 				var r = 0; //will return a 1 or a 0 based on whether the item is in local storage or not, respectively.
 //app.u.dump("appReviewsList tagObj:");
 //app.u.dump(tagObj);
-				pid = pid.toUpperCase();
+				pid = pid.toString().toUpperCase();
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
 				tagObj["datapointer"] = "appReviewsList|"+pid;
 
