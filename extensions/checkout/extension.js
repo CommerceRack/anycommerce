@@ -1607,10 +1607,47 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('#globalMessaging').anymessage({'message':'In cco.u.showSupplementalInputs, $input not defined or not a jquery object.','gMessage':true});
 					}
 
-				} //showSupplementalInputs
-
-
-
+				}, //showSupplementalInputs
+// *** 201338 -> new means for executing ROI tracking codes.
+			//pass in what is returned after order create in html:roi
+			scripts2iframe : function(arr)	{
+				app.u.dump('running runIt');
+				var L = arr.length;
+				app.u.dump(" -> L: "+L);
+				for(var i = 0; i < L; i++)	{
+//adding to iframe gives us an isolation layer
+//data-script-id added so the iframe can be removed easily later.
+					var $iframe = $("<iframe \/>").appendTo('body'); //.attr({'data-script-id':arr.owner,'height':100,'width':100}).css({'display':'none'}) -> commented out for testing !!!
+					var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
+					var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+					$div.find('script').each(function(){
+						var $s = $(this);
+						if($s.attr('src'))	{
+							app.u.dump(" -> attempting to add "+$s.attr('src'));
+							$iframe.contents().find('head').append($s);
+							}
+						else	{
+							scripts += $s.text()+"\n\n";
+							}
+						});
+					$iframe.contents().find('head').append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
+					}
+				},
+//is executed if one of the ROI scripts contains a javascript error (fails in the 'try').
+			roiScriptError : function(owner,err)	{
+app.u.dump("The script for "+scriptID+" Contained an error and most likely did not execute properly. (it failed the 'try').","warn");
+app.model.addDispatchToQ({
+	'_cmd':'appAccidentDataRecorder',
+	'owner' : owner,
+	'app' : '1pc', //if the API call logs the clientid, this won't be necessary.
+	'category' : 'html:roi',
+	'scripterr' : err,
+	'_tag':	{
+		'callback':'suppressErrors'
+		}
+	},'passive');
+app.model.dispatchThis('passive');
+				}
 
 
 			}, // u/utilities
