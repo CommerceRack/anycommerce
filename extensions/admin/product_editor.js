@@ -542,7 +542,7 @@ app.u.handleEventDelegation($target);
 
 			link2eBayByID : function($tag,data)	{
 				$tag.off('click.link2eBayByID').on('click.link2eBayByID',function(){
-					linkOffSite("www.ebay.com/itm/"+data.value);
+					linkOffSite("http://www.ebay.com/itm/"+data.value);
 					});
 				},
 
