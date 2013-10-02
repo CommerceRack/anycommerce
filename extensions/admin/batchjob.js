@@ -292,8 +292,8 @@ app.model.dispatchThis('mutable');
 			
 			adminBatchJobCleanupExec : function($btn)	{
 				var $row = $btn.closest('tr');
-				$btn.show({text: false,icons: {primary: "ui-icon-trash"}});
-				$btn.button(); //daisy-chaining the button on the show didn't work. button didn't get classes.
+				$btn.show();
+				$btn.button({text: false,icons: {primary: "ui-icon-trash"}}); //daisy-chaining the button on the show didn't work. button didn't get classes.
 				$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
 					var jobid = $btn.closest('[data-jobid]').data('jobid');
 					if(jobid)	{
