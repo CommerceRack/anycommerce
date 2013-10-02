@@ -906,8 +906,8 @@ app.u.handleEventDelegation($target);
 				
 //				app.u.dump('TYPE: '+type); app.u.dump(data);
 				var $r;
-				
-				if(data.sku)	{
+				//if there is only 1 sku and that sku does NOT have a :, then there are no inventory-able variations and the input should NOT be treated as a 'sku' input.
+				if(data.sku && (prodData['@skus'].length > 1 || prodData['@skus'][0].sku.indexOf(':') >0 ))	{
 					$r = $("<div \/>").data(data).addClass('label');
 					$r.append($("<div \/>").attr('title',data.id).text(data.title || data.id));
 					if(data.hint)	{$r.find('div').append($("<span class='toolTip' title='"+data.hint+"'>?<\/span>"))}
