@@ -1529,7 +1529,7 @@ Required params include:
 									r += "&zoovy:prod_image"+(imgIndex)+"="+$img.data('filename');
 									}
 								else	{
-									cmdObj['%attribs']['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
+									r['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
 									}
 								}
 							else if($img.length == 0)	{
@@ -1777,6 +1777,7 @@ Required params include:
 						'%attribs' : app.ext.admin_prodEdit.u.handleImageSave($prodImageUL,'pid'), //used for prod images
 						'_tag' : {
 							'callback' : 'showMessaging',
+							restoreInputsFromTrackingState : true,
 							"message" : "Product image updates have saved",
 							jqObj : $form
 							}
