@@ -3267,6 +3267,10 @@ $tmp.empty().remove();
 				}
 			$tag.html(o);
 			}, //text
+//for use on radio buttons when the button is part of the template and the value of that button needs to be populated from a var (ex: checkout wallets)
+		setVal : function($tag,data)	{
+			$tag.val(data.value);
+			},
 
 //for use on inputs.
 //populates val() with the value

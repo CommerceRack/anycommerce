@@ -240,11 +240,13 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 						}
 					}
 
+	app.ext.orderCreate.u.scripts2iframe(checkoutData['html:roi'])
+
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
 	
-	app.ext.orderCreate.u.scripts2iframe(checkoutData['html:roi'])
+	
 
 // *** -> new method for handling third party checkout scripts.
 /*	setTimeout(function(){
@@ -862,10 +864,11 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
-
+// !!! this doesn't work because want/payby is no longer a valid field. Either need a field to temporarily store this in OR need to start using localStorage for this.
 					if(formObj['want/payby'])	{
-						var $radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
-						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
+						var
+							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
+							$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
 						
 						$radio.attr('checked','checked');
 						if($supplemental)	{
@@ -1614,25 +1617,30 @@ note - the order object is available at app.data['order|'+P.orderID]
 			//pass in what is returned after order create in html:roi
 			scripts2iframe : function(arr)	{
 				app.u.dump('running scripts2iframe');
-				var L = arr.length;
-				app.u.dump(" -> L: "+L);
-				for(var i = 0; i < L; i++)	{
-//adding to iframe gives us an isolation layer
-//data-script-id added so the iframe can be removed easily later.
-					var $iframe = $("<iframe \/>").appendTo('body'); //.attr({'data-script-id':arr.owner,'height':100,'width':100}).css({'display':'none'}) -> commented out for testing !!!
-					var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
-					var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
-					$div.find('script').each(function(){
-						var $s = $(this);
-						if($s.attr('src'))	{
-							app.u.dump(" -> attempting to add "+$s.attr('src'));
-							$iframe.contents().find('head').append($s);
-							}
-						else	{
-							scripts += $s.text()+"\n\n";
-							}
-						});
-					$iframe.contents().find('head').append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
+				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
+					var L = arr.length;
+					app.u.dump(" -> L: "+L);
+					for(var i = 0; i < L; i++)	{
+	//adding to iframe gives us an isolation layer
+	//data-script-id added so the iframe can be removed easily later.
+						var $iframe = $("<iframe \/>").attr({'data-script-id':arr.owner}).css({'display':'none','height':1,'width':1}).appendTo('body'); // -> commented out for testing !!!
+						var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
+						var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+						$div.find('script').each(function(){
+							var $s = $(this);
+							if($s.attr('src'))	{
+								app.u.dump(" -> attempting to add "+$s.attr('src'));
+								$iframe.contents().find('head').append($s);
+								}
+							else	{
+								scripts += $s.text()+"\n\n";
+								}
+							});
+						$iframe.contents().find('head').append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
+						}
+					}
+				else	{
+					//didn't get anything or what we got wasn't an array.
 					}
 				},
 //is executed if one of the ROI scripts contains a javascript error (fails in the 'try').

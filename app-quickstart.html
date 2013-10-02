@@ -44,10 +44,13 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
+
+<!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
 <script type="text/javascript" src="loadscript.js"></script>
 
 

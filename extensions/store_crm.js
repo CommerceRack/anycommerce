@@ -543,17 +543,39 @@ else{
 
 					r = true;
 					var $editor = $("<div \/>");
-					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
+					
 					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
 					$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':{},'showLoading':false});
+//* 201338 -> the address id should be at the bottom of the form, not the top. isn't that important or required.
+					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
-					
+
+//** 201338 -> if the placeholder attribute on an input is not supported (thx IE8), then add labels.
+					if(app.ext.orderCreate)	{
+						app.ext.orderCreate.u.handlePlaceholder($editor);
+						}
+					$(":input",$editor).each(function(index){
+						var $input = $(this);
+						if($input.attr('placeholder') && !$input.attr('title'))	{
+							$(this).attr('title',$input.attr('placeholder'))
+							}
+						$input.tooltip({
+							position: {
+								my: "left top",
+								at: "right top",
+								using: function( position, feedback ) {
+									$( this ).css( position );
+									}
+								}
+							});
+
+						});
 				
 					$editor.dialog({
 						width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
 						height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
 						modal: true,
-						title: 'edit address',
+						title: 'Add a new '+vars.addressType+' address',
 						buttons : {
 							'cancel' : function(event){
 								event.preventDefault();

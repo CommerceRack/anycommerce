@@ -63,7 +63,6 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 */
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
 
 
 /*
