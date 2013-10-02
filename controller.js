@@ -1991,11 +1991,10 @@ VALIDATION
 				$form.showLoading({'message':'Validating'});
 
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
-				
+				var radios = {} //stores a list of which radio inputs are required.
 				$('input, select, textarea',$form).each(function(){
 					var
 						$input = $(this),
-						radios = new Array(), //stores a list of which radio inputs are required.
 						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
@@ -2017,8 +2016,11 @@ VALIDATION
 						}
 					else if($input.prop('type') == 'radio'){
 //keep a list of all required radios. only one entry per name.
-//app.u.dump(" -> $input.attr('name'): "+$input.attr('name'));
-						if($input.attr('required') && $.inArray($input.attr('name'), radios) == -1)	{radios.push($input.attr('name'))}
+//app.u.dump(" -> $input.attr('name'): "+$input.attr('name')+' and required: '+$input.attr('required'));
+
+						if($input.attr('required') == 'required')	{
+							radios[$input.attr('name')] = 1
+							}
 						}
 //only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
 					else if($input.attr('type') == 'url' && $input.val())	{
@@ -2113,19 +2115,29 @@ VALIDATION
 						}
 					
 					});
-				if(radios.length)	{
-					app.u.dump(" -> radios has length");
+app.u.dump(" -> radios:"); app.u.dump(radios);
+				if(!$.isEmptyObject(radios))	{
+					app.u.dump(" -> radios is not empty");
 					var L = radios.length;
-					for(var i = 0; i < L; i += 1)	{
-						if($("input:radio[name='"+radios[i]+"']:checked",$form).val())	{} //is selected.
+					for(var index in radios)	{
+						if($("input:radio[name='"+index+"']:checked",$form).val())	{
+							app.u.dump(" -> radio name='"+index+"' has a value selected");
+							} //is selected.
 						else	{
-							$("input:radio[name='"+radios[i]+"']",$form).addClass('ui-state-error');
+							var message = "<div class='formValidationError clearfix marginTop marginBottom ui-state-error smallPadding ui-corner-all'>Please select one choice from the list below:<\/div>"
+							if($("input:radio[name='"+index+"']:first",$form).closest("[data-app-role='radioContainer']").length)	{
+								$("input:radio[name='"+index+"']:first",$form).closest("[data-app-role='radioContainer']").prepend(message)
+								}
+							else	{
+								$("input:radio[name='"+index+"']",$form).first().closest('fieldset').prepend(message)
+								}
 							}
 						}
 					//check to see if the required radios have a value set. this list only contains radio input names that are required.
 					//if none are selected. add ui-state-error to each radio input of that name.
 					}
 				$form.hideLoading();
+				die()
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':'Object passed into admin.u.validateForm is empty or not a jquery object','gMessage':true});
