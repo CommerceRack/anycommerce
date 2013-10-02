@@ -240,33 +240,35 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 						}
 					}
 
-
-
-
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
-	setTimeout(function(){
+	
+	app.ext.orderCreate.u.scripts2iframe(checkoutData['html:roi'])
+
+// *** -> new method for handling third party checkout scripts.
+/*	setTimeout(function(){
 		$checkout.append(checkoutData['html:roi']);
 		app.u.dump('wrote html:roi to DOM.');
+		},1000); 
+*/
 
 //GTS for apps is handled in google extension
-		if(typeof window.GoogleTrustedStore)	{
-			delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+	if(typeof window.GoogleTrustedStore)	{
+		delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
 //running this will reload the script. the 'span' will be added as part of html:roi
 //if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-			(function() {
-			var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-			var gts = document.createElement("script");
-			gts.type = "text/javascript";
-			gts.async = true;
-			gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-			var s = document.getElementsByTagName("script")[0];
-			s.parentNode.insertBefore(gts, s);
-			})();
-			}
+		(function() {
+		var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+		var gts = document.createElement("script");
+		gts.type = "text/javascript";
+		gts.async = true;
+		gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(gts, s);
+		})();
+		}
 
-		},2000); 
 
 
 	}
@@ -1611,7 +1613,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 // *** 201338 -> new means for executing ROI tracking codes.
 			//pass in what is returned after order create in html:roi
 			scripts2iframe : function(arr)	{
-				app.u.dump('running runIt');
+				app.u.dump('running scripts2iframe');
 				var L = arr.length;
 				app.u.dump(" -> L: "+L);
 				for(var i = 0; i < L; i++)	{
