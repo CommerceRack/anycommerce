@@ -264,6 +264,7 @@
 	<th class='alignLeft'>SKU</th>
 	<th class='alignLeft'>Status</th>
 	<th class='alignLeft'>Vendor Order ID</th>
+	<th class='alignLeft'>Note</th>
 </tr>
 </thead>
 <!-- orders is what's returned in order view. items is what's returned in unorderitems -->
@@ -284,8 +285,9 @@
 	</td>
 	<td data-bind="var:supplier(QTY); format:text;"></td>
 	<td data-bind="var:supplier(SKU); format:text;"></td>
-	<td data-bind="var:supplier(STATUS); format:text;"></td>
+	<td data-bind="var:supplier(VENDOR_STATUS); format:text;"></td>
 	<td data-bind="var:supplier(VENDOR_ORDER_DBID); format:text;"></td>
+	<td data-bind="var:supplier(NOTE); format:text;"></td>
 </tr>
 </table>
 
