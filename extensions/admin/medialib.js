@@ -1295,6 +1295,52 @@ var tabs = [
 //				app.u.dump(" -> pathParams: "); app.u.dump(pathParams);
 				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+pathParams.VERB.toLowerCase(),{})); //load the page template.
 				app.ext.admin_medialib.u.convertFormToJQFU('#csvUploadToBatchForm','csvUploadToBatch');
+if(pathParams.VERB == 'INVENTORY')	{
+	var $sc = $("[data-app-role='fileImportSupplierContainer']",$target).showLoading({"message":"Fetching supplier list"}); //Supplier Container
+	var $wc = $("[data-app-role='fileImportWMSContainer']",$target).showLoading({"message":"Fetching warehouse list"}); //Warehouses Container
+
+	app.model.addDispatchToQ({
+		'_cmd':'adminSupplierList',
+		'_tag':	{
+			'datapointer' : 'adminSupplierList',
+			'callback':function(rd){
+				$sc.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+var suppliers = app.data[rd.datapointer]['@SUPPLIERS'];
+for(var index in suppliers)	{
+	$sc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=SUPPLIER|SUPPLIER_ID="+index+"'> SUPPLIER ID:"+index+" (%SKU,%QTY,%COST,%SUPPLIER_SKU) </label>");
+	}					
+					}
+				}
+			}
+		},'mutable');
+
+	app.model.addDispatchToQ({
+		'_cmd':'adminWarehouseList',
+		'_tag':	{
+			'datapointer' : 'adminWarehouseList',
+			'callback':function(rd){
+				$wc.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+var L = app.data[rd.datapointer]['@ROWS'].length;
+for(var i = 0; i < L; i += 1)	{
+	var tw = app.data[rd.datapointer]['@ROWS'][i]; //This Warehouse
+	$wc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO="+tw.GEO+"'> WMS GEO:"+tw.GEO+" (%SKU,%WMS_ZONE,%WMS_POS,%NOTE,%QTY,%COST)<</label>");
+	}
+					}
+				}
+			}
+		},'mutable');
+		
+		
+	app.model.dispatchThis('mutable');
+	}
 				app.ext.admin.u.uiHandleNavTabs(tabs);
 				app.u.handleAppEvents($target);
 				}
