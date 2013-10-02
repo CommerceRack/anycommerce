@@ -3300,7 +3300,7 @@ $tmp.empty().remove();
 				}
 			else if($tag.is(':radio'))	{
 //with radio's the value passed will only match one of the radios in that group, so compare the two and if a match, check it.
-				if($tag.val() == data.value)	{$tag.attr('checked','checked')}
+				if($tag.val() == data.value)	{$tag.prop('checked','checked')}
 				}
 			else if($tag.is('select') && $tag.attr('multiple') == 'multiple')	{
 //				app.u.dump("GOT HERE!!!!!!!!!!!!!!!!");
