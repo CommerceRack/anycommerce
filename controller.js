@@ -2137,7 +2137,6 @@ app.u.dump(" -> radios:"); app.u.dump(radios);
 					//if none are selected. add ui-state-error to each radio input of that name.
 					}
 				$form.hideLoading();
-				die()
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':'Object passed into admin.u.validateForm is empty or not a jquery object','gMessage':true});
