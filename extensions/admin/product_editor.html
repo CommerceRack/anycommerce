@@ -516,7 +516,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</tr>
 	
 	<tr>
-		<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popVal;"> eBay:</label></td>
+		<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popVal;"> eBay Syndication:</label></td>
 		<td></td>
 		<td><input type="text" value="" name="ebay:note" maxlength="60" size="60" data-bind="var: product(ebay:note); format:popVal;"></td>
 	</tr>
@@ -1063,12 +1063,32 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<fieldset class='labelsAsBreaks'>
 			<legend>Syndicated Listing Configuration</legend>
 			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
-			<div data-bind="var: product(ebay:ts); format:hideIfSet; hideZero:false;" class=' red marginBottom'>Syndication is disabled for this product.</div>
+			<div data-bind="var: product(ebay:ts); format:hideIfSet;" class='red marginBottom'>Syndication is disabled for this product.</div>
 	
 			<label>
 				<span>Fixed price</span>
 				$<input type="number" step='.01' min='0' size="6" value="" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
+
+
+			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
+				<span>Fixed qty</span>
+				<input type="number" step='1' min='0' size="6" value="" name="ebay:fixed_qty"  data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+			</label>
+
+		
+			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
+				<span>Duration</span>
+				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;">
+					<option value="">-- use profile --</option>
+					<option value="3">3 Day</option>
+					<option value="5">5 Day</option>
+					<option value="7">7 Day</option>
+					<option value="10">10 Day</option>
+					<option value="-1">Good till cancelled</option>
+				</select>
+			</label>
+
 	
 			<div class='buttonset'>
 			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
