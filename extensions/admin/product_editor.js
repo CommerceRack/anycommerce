@@ -1481,7 +1481,7 @@ Required params include:
 									$('button',$(this)).prop('disabled','disabled');
 									});
 //skip the inventory details button, as it has already been buttonified and running it again will set the wrong icon (which is changed by the click event)
-							app.u.handleButtons($target).not("[data-app-click='admin_prodEdit|inventoryDetailsToggle']"); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
+							app.u.handleButtons($target.not("[data-app-click='admin_prodEdit|inventoryDetailsToggle']")); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
 							if(!$.isEmptyObject(invData))	{
 								if(app.ext.admin.u.getValueByKeyFromArray(invData,'BASETYPE','SIMPLE'))	{

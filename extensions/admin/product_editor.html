@@ -188,6 +188,13 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
 		<div data-bind='var: product(pid); format:text;'></div>
 		<div data-bind='var: product(zoovy:prod_mfg); format:text; pretext: mfg: ;'></div>
+		<div>
+		<strong>Inventory </strong>
+			<span class='marginLeft' data-bind='var: inv(%invsummary.AVAILABLE); format:text; hideZero:false; pretext: available: ;'></span>
+			<span class='marginLeft' data-bind='var: inv(%invsummary.MARKETS); format:text; hideZero:false; pretext: markets: ;'></span>
+			<span class='marginLeft' data-bind='var: inv(%invsummary.ONSHELF); format:text; hideZero:false; pretext: on shelf: ;'></span>
+			<span class='marginLeft' data-bind='var: inv(%invsummary.SALEABLE); format:text; hideZero:false; pretext: saleable: ;'></span>
+		</div>
 
 		
 	</div>
