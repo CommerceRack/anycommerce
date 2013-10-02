@@ -342,7 +342,13 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 			-->
 		</div>
 		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise'});">
-			CLEARANCE
+			SALE
+			<!--
+			<img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" />
+			-->
+		</div>
+		<div class="pointer headerBarLink" onClick="return showContent('category',{'navcat':'.new-arrivals.100_years_of_wrigley_field'});">
+			100 YEARS
 			<!--
 			<img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" />
 			-->
@@ -742,10 +748,11 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
+	<!--
 	<div class="alignCenter marginBottom">
 		<img src="img/large_shipping_banner.png" class="pointer" onClick="return showContent('company',{'show':'shipping'});"/>
 	</div>
-	
+	-->
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
 	<h1 class="page_title" >
