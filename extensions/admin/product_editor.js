@@ -1046,8 +1046,11 @@ app.u.handleEventDelegation($target);
 						}
 					else	{
 						var $input = $("<input \/>",{'type':type,'name':data.id});
-						if(type == 'checkbox' && prodData['%attribs'][data.id])	{
-							$input.prop('checked','checked')
+						if(type == 'checkbox')	{
+							if(Number(prodData['%attribs'][data.id]) == 0 || !prodData['%attribs'][data.id])	{}
+							else	{
+								$input.prop('checked','checked')
+								}
 							}
 						else {
 							app.u.dump(" -> type: "+type+" and data.type: "+data.type);
