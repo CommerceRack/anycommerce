@@ -179,22 +179,26 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image0); defaultVar: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
 		</div>
 		
-		<button title="Open editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
+		<div class='floatRight marginLeft'>
+			<button title="Open editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
 		
-		<button title="Close editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
+			<button title="Close editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
 		
-		<button title="Remove this item from Q" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
-		
+			<button title="Remove this item from Q" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
+	
+		</div>
+		<div class='floatRight marginLeft'>
+			<strong>Inventory </strong>
+			<div data-bind='var: inv(%invsummary.AVAILABLE); format:text; hideZero:false; pretext: available: ;'></div>
+			<div data-bind='var: inv(%invsummary.MARKETS); format:text; hideZero:false; pretext: markets: ;'></div>
+			<div data-bind='var: inv(%invsummary.ONSHELF); format:text; hideZero:false; pretext: on shelf: ;'></div>
+			<div data-bind='var: inv(%invsummary.SALEABLE); format:text; hideZero:false; pretext: saleable: ;'></div>
+		</div>
+			
 		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
 		<div data-bind='var: product(pid); format:text;'></div>
 		<div data-bind='var: product(zoovy:prod_mfg); format:text; pretext: mfg: ;'></div>
-		<div>
-		<strong>Inventory </strong>
-			<span class='marginLeft' data-bind='var: inv(%invsummary.AVAILABLE); format:text; hideZero:false; pretext: available: ;'></span>
-			<span class='marginLeft' data-bind='var: inv(%invsummary.MARKETS); format:text; hideZero:false; pretext: markets: ;'></span>
-			<span class='marginLeft' data-bind='var: inv(%invsummary.ONSHELF); format:text; hideZero:false; pretext: on shelf: ;'></span>
-			<span class='marginLeft' data-bind='var: inv(%invsummary.SALEABLE); format:text; hideZero:false; pretext: saleable: ;'></span>
-		</div>
+
 
 		
 	</div>
@@ -1121,17 +1125,17 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <caption data-bind="var: detail(header); format:text;"></caption>
 <thead>
 <tr>
-	<th></th>
+	<th></th><!-- drag handle -->
 	<th class='alignLeft'>SKU</th>
-	<th class='alignLeft'>Order ID</th>
 	<th class='alignLeft'>Cost</th>
 	<th class='alignLeft'>Origin</th>
 	<th class='alignLeft'>Qty</th>
 	<th class='alignLeft'>Base Type</th>
-	<th class='alignLeft'>Mkt/MktID</th>
-	<th class='alignLeft'>Location/Supplier</th>
+	<th class='alignLeft'>Ref 1</th>
+	<th class='alignLeft'>Ref 2</th>
 	<th class='alignLeft'>Note</th>
 	<th></th>
+	<th class='alignLeft'>Diagnostics</th>
 </tr>
 </thead>
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
@@ -1209,30 +1213,78 @@ if it already has a simple, lock the button
 	</td>
 </tr>
 
+
+<!--
+	<th></th>
+	<th class='alignLeft'>SKU</th>
+	<th class='alignLeft'>Cost</th>
+	<th class='alignLeft'>Origin</th>
+	<th class='alignLeft'>Qty</th>
+	<th class='alignLeft'>Base Type</th>
+	<th class='alignLeft'>Ref 1</th>
+	<th class='alignLeft'>Ref 2</th>
+	<th class='alignLeft'>Note</th>
+	<th></th>
+	<th class='alignLeft'>Diagnostics</th>
+-->	
+
+
 <tr id='inventoryDetailRowTemplate'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
 	<td class='alignLeft' data-bind="var: detail(SKU); format:text;"></td>
-	<td class='alignLeft' data-bind="var: detail(OUR_ORDERID); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
 	<td class='alignLeft' >
 		<input data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
+	
+	<!-- REF 1 column -->
 	<td>
-	<span data-bind="var: detail(MARKET_DST); format:text;"></span>
-	<span data-bind="var: detail(MARKET_REFID); format:text;"></span></td>
-	<td class='alignLeft'>
-	<span data-bind="var: detail(WMS_GEO); format:text;"></span>
-	<span data-bind="var: detail(WMS_ZONE); format:text;"></span>
-	<span data-bind="var: detail(WMS_POS); format:text;"></span>
-	<span data-bind="var: detail(SUPPLIER); format:text;"></span>
+	
+	<div data-bind="var: detail(WMS_GEO); format:text;"></div>
+	<div data-bind="var: detail(SUPPLIER_ID); format:text;"></div>
+	<div data-bind="var: detail(OUR_ORDERID); format:text;"></div>
+	
+	<div data-bind="var: detail(MARKET_DST); format:text;"></div>
+	<div data-bind="var: detail(GRPASM_REF); format:text;"></div>
+	
 	</td>
+	<!-- REF 2 column -->
+	<td class='alignLeft'>
+	<div>
+		<span data-bind="var: detail(PICK_ROUTE); format:showIfSet;">
+			<span data-bind="var: detail(WMS_GEO); format:text; posttext:*;"></span>
+		</span>
+		<span data-bind="var: detail(WMS_ZONE); format:text; posttext:*;"></span><span data-bind="var: detail(WMS_POS); format:text;"></span>
+	</div>
+
+	
+	<div data-bind="var: detail(SUPPLIER_SKU); format:text;"></div>
+
+	<div>
+		<span data-bind="var: detail(VENDOR); format:text; posttext::;"></span>
+		<span data-bind="var: detail(VENDOR_STATUS); format:text; posttext: - ;"></span>
+		<span data-bind="var: detail(VENDOR_ORDER_DBID); format:text; posttext:.;"></span>
+		<span data-bind="var: detail(VENDOR_SKU); format:text;"></span>
+	</div>
+	</td>
+
+
 	<td class='alignLeft'>
 		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" size='25' maxlength="25" />
 	</td>
 	<td class='alignRight'>
 		<button data-app-click='admin|tagRow4Remove' data-icon-primary='ui-icon-circle-close' data-text='false' class='applyButton'>Delete Detail</button>
+	</td>
+	<td>
+	
+	<div>
+	<span data-bind="var: detail(VERIFY_TS); format:text; pretext:lastVerify:;"></span>
+	<span data-bind="var: detail(VERIFY_INC); format:text; pretext:count:;"></span>
+	</div>
+
+
 	</td>
 </tr>
 

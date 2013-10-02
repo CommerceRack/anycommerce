@@ -1376,24 +1376,18 @@ Required params include:
 							$("button[data-taskmode='edit']",$li).show();
 
 							$li.showLoading({'message':'Fetching Product Detail'});
-							var _tag = {
-								'datapointer':'adminProductDetail|'+P.pid,
-								'jqObj' : $li,
-								'callback' : 'anycontent'
-								}
-							if(app.model.fetchData('adminProductDetail|'+P.pid))	{
-								app.u.handleCallback(_tag);
-								}
-							else	{
-								app.model.addDispatchToQ({
-									'_cmd':'adminProductDetail',
-									'inventory':1,
-									'skus':1,
-									'pid':P.pid,
-									'_tag':	_tag
-									},'passive');
-								app.model.dispatchThis('passive');
-								}
+							app.model.addDispatchToQ({
+								'_cmd':'adminProductDetail',
+								'inventory':1,
+								'skus':1,
+								'pid':P.pid,
+								_tag : {
+									'datapointer':'adminProductDetail|'+P.pid,
+									'jqObj' : $li,
+									'callback' : 'anycontent'
+									}
+								},'passive');
+							app.model.dispatchThis('passive');
 							}
 //determine if the item is already in the list and, if so, just edit it.  If not, add and edit.
 //when opening the editor immediately, trigger the 'edit' button. no need to fetch the product data, the editor will do that.

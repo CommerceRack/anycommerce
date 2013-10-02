@@ -1534,6 +1534,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			var o=obj, attrs=s.split(char);
 			while (attrs.length > 0) {
 				o = o[attrs.shift()];
+				//I don't think this is handling zero well. !!!
 				if (!o) {o= null; break;}
 				}
 			return o;
