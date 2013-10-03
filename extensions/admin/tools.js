@@ -414,7 +414,7 @@ $target.append("<br \/>");
 			
 			rawJSONRequestExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
+				$btn.off('click.rawJSONRequestExec').on('click.rawJSONRequestExec',function(event){
 					event.preventDefault();
 					var JSONString = $btn.closest('form').find("[name='JSON']").val();
 					app.u.dump(" -> myJSON: "+JSONString);
@@ -464,6 +464,11 @@ $target.append("<br \/>");
 							cmdObj.withVariations = 1;
 							cmdObj.withInventory = 1;
 							cmdObj._tag.datapointer = "appProductGet|"+cmdObj.pid;
+							}
+						else if($btn.data('inspect') == 'shipmethods')	{
+							cmdObj._cmd = "adminConfigDetail";
+							cmdObj.shipmethods = true;
+							cmdObj._tag.datapointer = "adminConfigDetail|shipmethods|"+app.vars.partition;
 							}
 						else if($btn.data('inspect') == 'cart' && cmdObj.cartid)	{
 							cmdObj._cmd = "cartDetail";

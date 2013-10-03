@@ -329,7 +329,12 @@ var admin_config = function() {
 						for(var i = 0; i < L; i += 1)	{
 							if(shipmethods[i].provider.indexOf('FLEX:') === 0)	{
 //								app.u.dump("shipmethods[i].enabled: "+shipmethods[i].enable);
-								$("<li \/>").data('provider',shipmethods[i].provider).text(shipmethods[i].name).appendTo($flexUL).addClass((shipmethods[i].enable == 1) ? '' :'opacity50');
+								var $li = $("<li \/>");
+								$li.data('provider',shipmethods[i].provider)
+								$li.text(shipmethods[i].name);
+								if(shipmethods[i].handler)	{$li.append(" ["+shipmethods[i].handler.toLowerCase()+"]")}
+								$li.addClass((shipmethods[i].enable == 1) ? '' :'opacity50');
+								$li.appendTo($flexUL)
 								}
 							}
 						

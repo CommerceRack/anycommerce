@@ -727,7 +727,9 @@ has to be within the fieldset to for data-table to work right.
 	<section class='marginTop marginBottom'>
 		<h2>Inspectors</h2>
 		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
-		<form><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Go</button></form><!--
+		<form><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Go</button></form>
+		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-event='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>
+		<!--
 		<form><label><span>Cart ID</span><input type='text' name='cartid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='cart'>Go</button></form>
 		<p>but probably not this one</p>
 		<form><label><span>Session ID</span><input type='text' name='_cartid' class='marginLeft marginRight' /></label><button>Go</button></form>
