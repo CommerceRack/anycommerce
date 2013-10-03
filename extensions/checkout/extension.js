@@ -57,13 +57,13 @@ var orderCreate = function() {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
-				if(app.vars._clientid == '1pc')	{
+//				if(app.vars._clientid == '1pc')	{
 //					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
-					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
-					}
-				else {
+//					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
+//					}
+//				else {
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
-					}
+//					}
 				var r; //returns false if checkout can't load due to account config conflict.
 
 //update jQuery.support with whether or not placeholder is supported.
