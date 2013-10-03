@@ -596,7 +596,7 @@
 	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">WMS Inventory</a><br />
 	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Supplier Inventory</a><br />
 	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Pick Inventory</a><br />
-	<a href='#' onClick="app.ext.admin_reports.a.showReportBuilderDialog('INVENTORY'); return false;" data-batchexec='DETAIL'>Add custom report</a>
+	<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='DETAIL'>Add custom report</a>
 	</div>
 </div>
 

@@ -1387,6 +1387,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						var
 							sfo = $form.serializeJSON(),
 							cmdObj = {
+								'_cmd':'adminBatchJobParametersCreate',
 								'BATCH_EXEC' : sfo.BATCH_EXEC,
 								'%vars' : {}
 								}
@@ -1411,13 +1412,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						
 //						app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
 
-app.model.addDispatchToQ({
-	'_cmd':'adminBatchJobParametersCreate',
-	'_tag':	{
-		'datapointer' : 'adminBatchJobParametersCreate',
-		'callback':function(rd)	{}
-		}
-	},'immutable');
+app.model.addDispatchToQ(cmdObj,'immutable');
 app.model.dispatchThis('immutable');
 
 						}
