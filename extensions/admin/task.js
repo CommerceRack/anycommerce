@@ -114,7 +114,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				var filteredTasks = new Array();
 				var L = tasks.length;
 				
-				for(var i = 0; i < L; i++)	{
+				for(var i = (L-1); i >= 0; i--)	{
 					if(Number(tasks[i].completed_gmt) > 0 && (app.u.unixNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
 						app.u.dump("completed more than three days ago");
 						} //don't include tasks completed more than a few days ago
