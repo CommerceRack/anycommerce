@@ -90,6 +90,7 @@ var admin_reports = function() {
 
 		a : {
 			
+		
 			showReportsPage : function($target)	{
 				$target.empty();
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
@@ -108,15 +109,6 @@ var admin_reports = function() {
 					app.ext.admin.u.handleFormConditionalDelegation($(this));
 					});
 				
-				var $picker = $("[data-app-role='pickerContainer']:first",$target);
-				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
-				$('.applyDatepicker',$picker).datepicker({
-					changeMonth: true,
-					changeYear: true,
-					maxDate : 0,
-					dateFormat : 'yymmdd'
-					});
-
 				
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
 				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});
@@ -1365,44 +1357,6 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					});
 				},
 
-			adminInventoryReportExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						
-						var
-							sfo = serializeJSON(),
-							cmdObj = {}
-
-						cmdObj.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
-						
-						if(sfo.summary == 'AVAILABLE' || sfo.summary == 'ONSHELF')	{
-							cmdObj.where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
-							}
-						else if(sfo.summary == 'VENDOR')	{
-							
-							}
-
-						if(sfo.TYPE == 'SKU')	{
-							sfo.headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
-							}
-						else	{
-							//use whatever is set in the report generator.
-							}
-						
-						cmdObj.type = 'REPORT/INVENTORY';
-						cmdObj.guid = app.u.guidGenerator();
-//						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
-//							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
-//							sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
-//							}
-						app.ext.admin_batchJob.a.adminBatchJobCreate(cmdObj);
-						}
-					else	{} //validateForm handles error display.
-					});
-				},
 
 			execAdminReportCreate : function($btn)	{
 				$btn.button();
@@ -1421,8 +1375,95 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						}
 					else	{} //validateForm handles error display.
 					});
-				}
+				},
 
+			adminInventoryReportSaveExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminInventoryReportSaveExec').on('click.adminInventoryReportSaveExec',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var
+							sfo = $form.serializeJSON(),
+							cmdObj = {
+								'BATCH_EXEC' : sfo.BATCH_EXEC,
+								'%vars' : {}
+								}
+//selectors are NOT required, so no validation is done.
+						cmdObj['%vars'].product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
+						
+						if(sfo.summary == 'AVAILABLE' || sfo.summary == 'ONSHELF')	{
+							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
+							}
+						else if(sfo.summary == 'VENDOR')	{
+							
+							}
+
+						if(sfo.TYPE == 'SKU')	{
+							cmdObj['%vars'].headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
+							}
+						else	{
+							//use whatever is set in the report generator.
+							}
+						
+						cmdObj['%vars'].guid = app.u.guidGenerator();
+						
+//						app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+
+app.model.addDispatchToQ({
+	'_cmd':'adminBatchJobParametersCreate',
+	'_tag':	{
+		'datapointer' : 'adminBatchJobParametersCreate',
+		'callback':function(rd)	{}
+		}
+	},'immutable');
+app.model.dispatchThis('immutable');
+
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
+			showReportBuilderDialog : function($ele)	{
+
+				$ele.off('click.showReportBuilderDialog').on('click.showReportBuilderDialog',function(event){
+					event.preventDefault();
+				
+					if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'DETAIL')	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : $ele.data('batchexec')+' Report Builder',
+							'templateID' : 'reportBuilderTemplate',
+							'data' : {
+								'BATCH_EXEC':"REPORT/INVENTORY-"+$ele.data('batchexec'),
+								SKU : $ele.data('batchexec') == 'SKU' ? 1 : 0, //used to toggle on/off fields that are related just to the sku report type.
+								DETAIL : $ele.data('batchexec') == 'DETAIL' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
+								}
+							});
+
+						app.u.handleButtons($D);
+						app.u.handleCommonPlugins($D);
+						app.u.handleEventDelegation($D);
+						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+
+						$D.dialog('open');
+		
+						var $picker = $("[data-app-role='pickerContainer']:first",$D);
+						$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+						$('.applyDatepicker',$picker).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							maxDate : 0,
+							dateFormat : 'yymmdd'
+							});
+
+						}
+					else	{
+						// )
+						$('#globalMessaging').anymessage({"message":"In admin_reports.e.showReportBuilderDialog, data-batchexec not set or invalid ["+$ele.data('batchexec')+"] on trigger element.","gMessage":true});
+						}
+					});
+				},
 			
 			
 			} //E / Events

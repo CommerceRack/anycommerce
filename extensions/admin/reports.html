@@ -571,10 +571,69 @@
 		</section>
 		
 <!-- inventory reporting -->	
-		<section data-anytab-content='inventoryReports'>
+		<section data-anytab-content='inventoryReports' class='clearfix'>
 
-<h4>Inventory reports will be back very soon</h4>
-<!--
+
+<div class='twoColumn'>
+	<h2>Sku Reporting</h2>
+	<div>
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Recent changes</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (brief)</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Zero inventory</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (detailed)</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (uber detailed)</a><br />
+	<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
+	</div>
+</div>
+
+
+<div class='twoColumn column2'>
+	<h2>Inventory Reporting</h2>
+	<div>
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Recent changes</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">All skus (brief)</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Simple Inventory</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">WMS Inventory</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Supplier Inventory</a><br />
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Pick Inventory</a><br />
+	<a href='#' onClick="app.ext.admin_reports.a.showReportBuilderDialog('INVENTORY'); return false;" data-batchexec='DETAIL'>Add custom report</a>
+	</div>
+</div>
+
+
+		</section>
+
+<!-- the ebay report page is in utilities and in reports, so rather than having two templates, this template loads the other -->		
+		<section data-anytab-content='eBayReports' data-bind="loadsTemplate: ebayListingsReportPageTemplate; format: loadsTemplate;">
+		</section>
+
+
+	</div>
+
+</div>
+
+
+
+
+
+<table>
+<tr id='reportsRowTemplate'>
+	<td data-bind="var: user(ID); format:text;"></td>
+	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
+	<td><button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button><button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button></td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+<div id='reportBuilderTemplate'>
 <form onsubmit='return false'>
 <table class='fullWidth'>
 <tbody>
@@ -601,18 +660,14 @@
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<fieldset class='labelsAsBreaks marginBottom'>
 				<legend>Report</legend>
-				<label>
-					<span>Type</span>
-					<select name='TYPE' data-panel-selector=".reportsInventoryTypePanel">
-						<option value='product' data-show-panel='reportsInventoryTypeProduct'>Product level summary</option>
-						<option value='sku' data-show-panel='reportsInventoryTypeSKU'>SKU Level Summary</option>
-						<option value='inventory' data-show-panel='reportsInventoryTypeInventory'>Inventory Detail</option>
-					</select>
-				</label>
+				<input type='hidden' name='BATCH_EXEC' value='' data-bind="var: report(BATCH_EXEC); format:popVal;" />	
 				
-				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeProduct'>
-				<p class='hint'></p>
 				<label>
+					<span>Title</span>
+					<input type='text' name='TITLE' value='' size='40' maxlength="80" />
+				</label>
+		
+				<label data-bind="var: report(SKU); format:showIfSet;" class='displayNone'>
 					<span>Attributes</span>
 					<select name='headers'>
 						<option value='ALL'>All</option>
@@ -622,8 +677,6 @@
 						<option value='WMS'>WMS</option>
 					</select>
 				</label>
-				</div>
-
 				
 				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeSKU'>
 				<p class='hint'></p>
@@ -704,43 +757,12 @@
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<button data-app-event="admin_reports|adminInventoryReportExec">Build Report</button>
+		<button data-app-event="admin_reports|adminInventoryReportSaveExec">Build Report</button>
 		</div>
 	</div>
 	</td>
 </tr>
 </tbody>
 </table>
-
-
-
-
-			
-
-
-			
-
-			</form>		-->
-
-		</section>
-
-<!-- the ebay report page is in utilities and in reports, so rather than having two templates, this template loads the other -->		
-		<section data-anytab-content='eBayReports' data-bind="loadsTemplate: ebayListingsReportPageTemplate; format: loadsTemplate;">
-		</section>
-
-
-	</div>
-
+</form>
 </div>
-
-
-
-
-
-<table>
-<tr id='reportsRowTemplate'>
-	<td data-bind="var: user(ID); format:text;"></td>
-	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
-	<td><button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button><button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button></td>
-</tr>
-</table>
