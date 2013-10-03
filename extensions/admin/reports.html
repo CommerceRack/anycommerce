@@ -601,15 +601,16 @@
 			<fieldset class='labelsAsBreaks marginBottom'>
 				<legend>Report</legend>
 				<label>
-					<span>Detail</span>
+					<span>Type</span>
 					<select name='TYPE' data-panel-selector=".reportsInventoryTypePanel">
-						<option value='pid' data-show-panel='reportsInventoryTypePID'>PID</option>
-						<option value='sku'>SKU</option>
+						<option value='product' data-show-panel='reportsInventoryTypeProduct'>Product level summary</option>
+						<option value='sku' data-show-panel='reportsInventoryTypeSKU'>SKU Level Summary</option>
+						<option value='inventory' data-show-panel='reportsInventoryTypeInventory'>Inventory Detail</option>
 					</select>
 				</label>
 				
-				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypePID'>
-				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeProduct'>
+				<p class='hint'><!-- brian will put a SHORT hint here --></p>
 				<label>
 					<span>Attributes</span>
 					<select name='headers'>
@@ -621,7 +622,15 @@
 					</select>
 				</label>
 				</div>
+
 				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeSKU'>
+				<p class='hint'><!-- brian will put a SHORT hint here --></p>
+				</div>
+				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeInventory'>
+				<p class='hint'><!-- brian will put a SHORT hint here --></p>
+				</div>
 				
 			</fieldset>
 			
