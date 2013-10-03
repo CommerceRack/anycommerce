@@ -7,9 +7,13 @@
  * Dual licensed under the MIT and GPL licenses.
  *
  */
-
+// ### -> update this plugin using the new widget format.
+// when this is done, replace 'hideloading' with showLoading('destroy') OR have it execute that function after performing a check to make sure showloading is enabled.
+// add support for updating a message within a currently running 'showLoading'.
 	jQuery.fn.showLoading = function(options) {
 		var $this = jQuery(this);
+		if($this.hasClass('ui-showloading'))	{$this.hideLoading()} //if showloading is already running, hide the current and start afresh. this'll update the messaging as desired.
+		
 		var indicatorID;
 		var settings = {
 			'addClass': '',
