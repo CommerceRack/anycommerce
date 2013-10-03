@@ -447,13 +447,9 @@
 
 
 <h2>Inventory Reports</h2>
-<p>See how much inventory you have in stock, reserved and available to your customers.</p>
+<p>See how much inventory you have in stock, on-shelf and available, buy supplier, warehouse or everything.</p>
 <ul>
-	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY_SIMPLE', '%vars':{}}); return false;">Inventory Simple</a></li>
-	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY_DETAIL', '%vars':{}}); return false;">Inventory Detail</a></li>
-<!--	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT','%vars':{'REPORT':'INVENTORY_MISSING'}}); return false;">Products w/o Inventory Configured</a></li>
-	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY', '%vars':{'APP':'INVENTORY_UPDATE_RESERVES'}}); return false;">Utility: Update Reserves</a></li> -->
-	<li><b><a href='#' onclick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','#inventoryReports'); return false;">More Options</a></b></li>
+	<li><a href='#' onclick="$(this).closest('.ui-widget-anytabs').anytabs('reveal','#inventory'); return false;">Report Generator</a></b></li>
 </ul>
 
 
@@ -576,16 +572,144 @@
 		
 <!-- inventory reporting -->	
 		<section data-anytab-content='inventoryReports'>
-			<form onsubmit='return false'>
-			<fieldset class='labelsAsBreaks'>
-				<legend>Detail Level:</legend>
-				<label><input type="radio" value="INVENTORY_SIMPLE" name="REPORT"> Inventory Only (sku + quantity only)</label>
-				<label><input type="radio" value="INVENTORY_DETAIL" name="REPORT"> Inventory Detail (product names, prices, etc.)</label>
-				<label><input type="radio" value="INVENTORY_MISSING" name="REPORT"> Products w/o Inventory Configured</label>
+
+
+<form onsubmit='return false'>
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 1: Select Product</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom '>
+			<fieldset data-app-role='pickerContainer'></fieldset>
+		</div>
+	</div>
+
+	</td><!-- /step 1 -->
+	
+	<td class="valignTop nwColumnW">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 2: Specify Filters and Formats</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<fieldset class='labelsAsBreaks marginBottom'>
+				<legend>Report</legend>
+				<label>
+					<span>Detail</span>
+					<select name='TYPE' data-panel-selector=".reportsInventoryTypePanel">
+						<option value='pid' data-show-panel='reportsInventoryTypePID'>PID</option>
+						<option value='sku'>SKU</option>
+					</select>
+				</label>
+				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypePID'>
+				
+				<label>
+					<span>Attributes</span>
+					<select name='headers'>
+						<option value='ALL'>All</option>
+						<option value='ORDER'>Order</option>
+						<option value='ROUTE'>Route</option>
+						<option value='SUPPLIER'>Supplier</option>
+						<option value='WMS'>WMS</option>
+					</select>
+				</label>
+				</div>
+				
+				
 			</fieldset>
-			<div class='buttonset'>
-				<button data-app-event="admin_reports|execAdminReportCreate">Build Report</button>
-			</div>
+			
+			<fieldset class='marginBottom'>
+				<legend>Filter</legend>
+				<label>
+					<span>By</span>
+				<select name='summary' data-panel-selector=".reportsInventorySummaryPanel">
+					<option value=''>All</option>
+					<option value='AVAILABLE' data-show-panel='reportsInventorySummaryINVStatus'>Available</option>
+					<option value='ONSHELF' data-show-panel='reportsInventorySummaryINVStatus'>On shelf</option>
+					<option value='SUPPLIER' data-show-panel='reportsInventorySummarySupplier'>Supplier</option>
+					<option value='TS' data-show-panel='reportsInventorySummaryTS'>Timestamp</option>
+					<option value='MODIFIED_TS' data-show-panel='reportsInventorySummaryTS'>Modified timestamp</option>
+					<option value='PID' data-show-panel='reportsInventorySummaryPID'>PID</option>
+					<option value='ORDERID' data-show-panel='reportsInventorySummaryOrderID'>Our orderid</option>
+					<option value='PICK_ROUTE' data-show-panel='reportsInventorySummaryPickRoute'>Pick route</option>
+				</select>
+				</label>
+
+				<span data-panel-id='reportsInventorySummaryINVStatus' class='displayNone reportsInventorySummaryPanel'>
+					<label class='marginLeft'>
+					where quantity is 
+					<select name='operand'>
+						<option value='LT'>Less than</option>
+						<option value='EQ'>Equal to</option>
+						<option value='GT'>Greater than</option>
+					</select>
+					</label>
+					
+					<label class='marginLeft'>
+						<span>#</span>
+						<input type='number' name='operand_match' step='1' min='0' size='5' class='smallInput' />
+					</label>
+				</span>
+
+				<span data-panel-id='reportsInventorySummarySupplier' class='displayNone reportsInventorySummaryPanel'>
+					<label class='marginLeft'>
+						<span>Vendor</span>
+						<input type='text' name='SUPPLIER_ID' size='6' class='smallInput' />
+					</label>
+				</span>
+				
+				
+				<span data-panel-id='reportsInventorySummaryTS' class='displayNone reportsInventorySummaryPanel'>
+				<label>Time Period/since: <input type='number' class='datepicker' name='ts' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryPID' class='displayNone reportsInventorySummaryPanel'>
+				<label>PID: <input type='text' name='pid' size='20' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryOrderID' class='displayNone reportsInventorySummaryPanel'>
+				<label>Order ID: <input type='text' name='orderid' size='20' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryPickRoute' class='displayNone reportsInventorySummaryPanel'>
+				<label>Route: <input type='text' name='route' size='20' /></label>
+				</span>
+			</fieldset>
+
+
+		</div>
+	</div>
+	</td>
+	<td class="valignTop nwColumnN">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 3: Make It So</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		<button data-app-event="admin_reports|adminInventoryReportExec">Build Report</button>
+		</div>
+	</div>
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+			
+
+
+			
+
 			</form>		
 		</section>
 

@@ -95,6 +95,7 @@ var admin_reports = function() {
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
 				app.u.handleAppEvents($target);
 				
+				
 				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
 				$('.toolTip',$target).tooltip();
 				$('.datepicker',$target).datepicker({
@@ -102,7 +103,20 @@ var admin_reports = function() {
 					changeYear: true,
 					dateFormat : "@"
 					});
+
+				$('form',$target).each(function(){
+					app.ext.admin.u.handleFormConditionalDelegation($(this));
+					});
 				
+				var $picker = $("[data-app-role='pickerContainer']:first",$target);
+				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+				$('.applyDatepicker',$picker).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					maxDate : 0,
+					dateFormat : 'yymmdd'
+					});
+
 				
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
 				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});
@@ -1351,6 +1365,44 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					});
 				},
 
+			adminInventoryReportExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var
+							sfo = serializeJSON(),
+							cmdObj = {}
+
+						cmdObj.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
+						
+						if(sfo.summary == 'AVAILABLE' || sfo.summary == 'ONSHELF')	{
+							cmdObj.where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
+							}
+						else if(sfo.summary == 'VENDOR')	{
+							
+							}
+
+						if(sfo.TYPE == 'SKU')	{
+							sfo.headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
+							}
+						else	{
+							//use whatever is set in the report generator.
+							}
+						
+						cmdObj.type = 'REPORT/INVENTORY';
+						cmdObj.guid = app.u.guidGenerator();
+//						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
+//							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
+//							sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
+//							}
+						app.ext.admin_batchJob.a.adminBatchJobCreate(cmdObj);
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
 
 			execAdminReportCreate : function($btn)	{
 				$btn.button();
@@ -1369,7 +1421,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						}
 					else	{} //validateForm handles error display.
 					});
-				},
+				}
 
 			
 			
