@@ -266,6 +266,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		</ul>
 		<div id='messagesContent' class='displayNone'>
 			<button onClick="app.ext.admin.u.toggleMessagePane();" class='floatRight' id='closePanelButton'>Close Message Panel</button>
+			<button onClick="app.ext.admin.u.clearAllMessages();" class='floatRight' id='clearMessagesButton' title="Clear all messages from queue">Clear All</button>
 			<div class='messagesList'>
 			<table class='fullWidth'>
 			<tbody data-app-role='messagesContainer'></tbody>

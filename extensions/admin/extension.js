@@ -3438,6 +3438,8 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$('#appView').show();
 				
 				$("#closePanelButton",'#appView').button({icons: {primary: "ui-icon-triangle-1-n"},text: false});
+				$("#clearMessagesButton",'#appView').button({icons: {primary: "ui-icon-trash"},text:true});
+				
 				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
@@ -3449,10 +3451,6 @@ app.ext.admin_prodEdit.a.showProductManager();
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
 
-var	DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [];
-if(DPSMessages.length)	{
-	app.ext.admin.u.displayMessages(DPSMessages);
-	}
 
 
 					
@@ -3513,6 +3511,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						}
 					}
 				app.model.dispatchThis('immutable');
+//if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
+				var	DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [];
+				if(DPSMessages.length)	{
+					app.ext.admin.u.displayMessages(DPSMessages);
+					}
 
 				}, //showHeader
 
@@ -3598,22 +3601,13 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 			getLastMessageID : function()	{
 				var r = 0; //default to zero if no past messageid is present.
 				var DPSMessages = app.ext.admin.u.dpsGet('admin','messages');
-				if(DPSMessages)	{
+				if(DPSMessages && DPSMessages.length)	{
 					r = DPSMessages[(DPSMessages.length - 1)].id;
 					app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
 					}
 				
 				return r;
 				},
-/*
-			handleMessagesInit : function()	{
-//				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
-				app.ext.admin.vars.messageListInterval = setInterval(function(){
-					app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
-					},30000);
-				},
-*/
-
 
 
 //used in ebay and campaign to generate toolbar for html editor.
@@ -4099,7 +4093,12 @@ and all .someClass are hidden (value of data-panel-selector)
 				},
 
 
-
+			clearAllMessages : function(){
+				$("[data-app-role='messagesContainer']",'#messagesContent').intervaledEmpty();
+				app.ext.admin.u.dpsSet('admin','messages',[]);
+				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
+				// NOTE ### -> when this is updated to trigger a clear on the server, add a confirm prompt.
+				},
 			toggleMessagePane : function(state){
 
 				var $target = $('#messagesContent');

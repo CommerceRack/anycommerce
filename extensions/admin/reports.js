@@ -1416,12 +1416,13 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					if(app.u.validateForm($form))	{
 						
 						var
-							sfo = $form.serializeJSON(),
+							sfo = $form.serializeJSON({cb:true}),
 							cmdObj = {
 								'_cmd':'adminBatchJobParametersCreate',
 								'UUID' : app.u.guidGenerator(),
 								'TITLE' : sfo.TITLE,
 								'BATCH_EXEC' : sfo.BATCH_EXEC,
+								'PRIVATE' : sfo.PRIVATE,
 								'%vars' : {}
 								}
 //selectors are NOT required, so no validation is done.
@@ -1430,9 +1431,13 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						if(sfo.summary == 'AVAILABLE' || sfo.summary == 'ONSHELF')	{
 							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
 							}
-						else if(sfo.summary == 'VENDOR')	{
-							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
+						else if(sfo.summary == 'SUPPLIER' || sfo.summary == 'PID' || sfo.summary == 'ORDERID' || sfo.summary == 'PICK_ROUTE')	{
+							cmdObj['%vars'].where =sfo.summary+",eq,"+sfo[sfo.summary];
 							}
+						else if(sfo.summary == 'MODIFIED_TS' || sfo.summary == 'TS')	{
+							cmdObj['%vars'].where = sfo.summary+",gt,"+sfo.TS;
+							}
+						else	{} //either an unrecognized summary or a summary that requires no additional data.
 
 						if(sfo.TYPE == 'SKU')	{
 							cmdObj['%vars'].headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
@@ -1473,6 +1478,12 @@ app.model.dispatchThis('immutable');
 						app.u.handleCommonPlugins($D);
 						app.u.handleEventDelegation($D);
 						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+
+						$('.datepicker',$D).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							dateFormat : "@"
+							});
 
 						$D.dialog('open');
 		
