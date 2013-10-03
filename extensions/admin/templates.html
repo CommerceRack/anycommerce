@@ -1,6 +1,6 @@
 <table>
 <tr id='messageListTemplate'>
-	<td class='valignTop'>ICON</td>
+	<td class='valignTop' data-bind="var:message(icon); format:addClass;className:msgIcon_;"></td>
 	<td class='valignTop'>
 	<h5 data-bind="var:message(origin); format:text;"></h5>
 	<h6 data-bind="var:message(msg); format:text;"></h6>

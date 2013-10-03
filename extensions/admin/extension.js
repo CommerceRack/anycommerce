@@ -777,10 +777,10 @@ var admin = function() {
 
 		adminMessagesList : {
 //ID will be 0 to start.
-			init : function(MESSAGEID,_tag,Q)	{
+			init : function(msgid,_tag,Q)	{
 				var r = 0;
-				if(MESSAGEID || MESSAGEID === 0)	{
-					this.dispatch(MESSAGEID,_tag,Q);
+				if(msgid || msgid === 0)	{
+					this.dispatch(msgid,_tag,Q);
 					r = 1;
 					}
 				else	{
@@ -788,12 +788,12 @@ var admin = function() {
 					}
 				return r;
 				},
-			dispatch : function(MESSAGEID,_tag,Q)	{
+			dispatch : function(msgid,_tag,Q)	{
 				var obj = {};
 				obj._cmd = 'adminMessagesList';
-				obj.MESSAGEID = MESSAGEID;
+				obj.msgid = msgid;
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminMessagesList|'+MESSAGEID;
+				obj._tag.datapointer = 'adminMessagesList|'+msgid;
 				app.model.addDispatchToQ(obj,Q || 'passive');
 				}
 			},
@@ -4095,6 +4095,7 @@ and all .someClass are hidden (value of data-panel-selector)
 
 			clearAllMessages : function(){
 				$("[data-app-role='messagesContainer']",'#messagesContent').intervaledEmpty();
+
 				app.ext.admin.u.dpsSet('admin','messages',[]);
 				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
 				// NOTE ### -> when this is updated to trigger a clear on the server, add a confirm prompt.

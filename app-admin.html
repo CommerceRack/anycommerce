@@ -30,7 +30,8 @@ var app = {vars:{
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
-	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
+	"jqurl": (document.location.protocol == 'file:') ? "https://www.zoovy.com/webapi/jquery/index.cgi" : "/jsonapi/",
+//	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : baseURL,
