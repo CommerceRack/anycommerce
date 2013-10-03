@@ -576,27 +576,43 @@
 
 <div class='twoColumn'>
 	<h2>Sku Reporting</h2>
-	<div>
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Recent changes</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (brief)</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Zero inventory</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (detailed)</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (uber detailed)</a><br />
-	<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
+	<div class='marginTop'>
+		<h3>Quick Reports</h3>
+		<div class='stdMargin'>
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Zero inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (detailed)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (uber detailed)</a><br />
+		</div>
+		<h3>Custom Reports</h3>
+		<div class='stdMargin'>
+			<div class='marginBottom' data-app-role='inventoryReportsCustomContainer_sku'></div>
+			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
+		</div>
 	</div>
 </div>
 
 
 <div class='twoColumn column2'>
 	<h2>Inventory Reporting</h2>
-	<div>
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Recent changes</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">All skus (brief)</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Simple Inventory</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">WMS Inventory</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Supplier Inventory</a><br />
-	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Pick Inventory</a><br />
-	<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='DETAIL'>Add custom report</a>
+	<div class='marginTop'>
+		<h3>Quick Reports</h3>
+			<div class='stdMargin'>
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Simple Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">WMS Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Supplier Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Pick Inventory</a><br />
+		</div>
+
+		<h3>Custom Reports</h3>
+		<div class='stdMargin'>
+			<div class='marginBottom' data-app-role='inventoryReportsCustomContainer_inventory'></div>
+			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='INVENTORY'>Add custom report</a>
+		</div>
+		
 	</div>
 </div>
 
@@ -666,7 +682,11 @@
 					<span>Title</span>
 					<input type='text' name='TITLE' value='' size='40' maxlength="80" />
 				</label>
-		
+				<label>
+					<input type='checkbox' name='PRIVATE' class='applyAnycb' checked='checked' />
+					Private
+					<span class='toolTip' title="If private, this report link will not show up in list of custom reports.">?</span>
+				</label>
 				<label data-bind="var: report(SKU); format:showIfSet;" class='displayNone'>
 					<span>Attributes</span>
 					<select name='headers'>
@@ -757,7 +777,7 @@
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<button data-app-event="admin_reports|adminInventoryReportSaveExec">Build Report</button>
+		<button data-app-event="admin_reports|adminInventoryReportSaveExec">Save as Report</button>
 		</div>
 	</div>
 	</td>

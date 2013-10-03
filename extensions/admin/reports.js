@@ -96,7 +96,6 @@ var admin_reports = function() {
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
 				app.u.handleAppEvents($target);
 				
-				
 				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
 				$('.toolTip',$target).tooltip();
 				$('.datepicker',$target).datepicker({
@@ -105,11 +104,7 @@ var admin_reports = function() {
 					dateFormat : "@"
 					});
 
-				$('form',$target).each(function(){
-					app.ext.admin.u.handleFormConditionalDelegation($(this));
-					});
-				
-				
+			
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
 				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});
 				app.model.addDispatchToQ({
@@ -143,6 +138,42 @@ var admin_reports = function() {
 							}
 						}
 					},'mutable');
+				
+				app.model.addDispatchToQ({
+					'_cmd':'adminBatchJobParametersList',
+					'_tag':	{
+						'datapointer' : 'adminBatchJobParametersList',
+						'callback': function(rd)	{
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	var
+		data = app.data[rd.datapointer]['@PARAMETERS'],
+		L = data.length,
+		$skuReports = $("[data-app-role='inventoryReportsCustomContainer_sku']:first",$target),
+		$invReports = $("[data-app-role='inventoryReportsCustomContainer_inventory']:first",$target);
+
+function display(job){
+	return "<a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a> (last run: "+job.LASTRUN_TS+") <br />"
+	}
+
+	for(var i = 0; i < L; i += 1)	{
+		if(data[i].BATCH_EXEC == 'REPORT/SKU')	{
+			$skuReports.append(display(data[i]));
+			}
+		else if(data[i].BATCH_EXEC == 'REPORT/INVENTORY'){
+			$invReports.append(display(data[i]));
+			}
+		else	{}
+		}
+	//
+	}
+							},
+						'jqObj' : $("[data-anytab-content='inventoryReports']:first",$target)
+						}
+					},'mutable');
+				
 				app.model.dispatchThis('mutable');
 				
 				},
@@ -1388,6 +1419,8 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 							sfo = $form.serializeJSON(),
 							cmdObj = {
 								'_cmd':'adminBatchJobParametersCreate',
+								'UUID' : app.u.guidGenerator(),
+								'TITLE' : sfo.TITLE,
 								'BATCH_EXEC' : sfo.BATCH_EXEC,
 								'%vars' : {}
 								}
@@ -1398,17 +1431,17 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
 							}
 						else if(sfo.summary == 'VENDOR')	{
-							
+							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
 							}
 
 						if(sfo.TYPE == 'SKU')	{
 							cmdObj['%vars'].headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
 							}
 						else	{
+							cmdObj['%vars'].headers = sfo.headers;
 							//use whatever is set in the report generator.
 							}
-						
-						cmdObj['%vars'].guid = app.u.guidGenerator();
+
 						
 //						app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
 
@@ -1425,14 +1458,14 @@ app.model.dispatchThis('immutable');
 				$ele.off('click.showReportBuilderDialog').on('click.showReportBuilderDialog',function(event){
 					event.preventDefault();
 				
-					if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'DETAIL')	{
+					if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'INVENTORY')	{
 						var $D = app.ext.admin.i.dialogCreate({
 							'title' : $ele.data('batchexec')+' Report Builder',
 							'templateID' : 'reportBuilderTemplate',
 							'data' : {
-								'BATCH_EXEC':"REPORT/INVENTORY-"+$ele.data('batchexec'),
+								'BATCH_EXEC':"REPORT/"+$ele.data('batchexec'),
 								SKU : $ele.data('batchexec') == 'SKU' ? 1 : 0, //used to toggle on/off fields that are related just to the sku report type.
-								DETAIL : $ele.data('batchexec') == 'DETAIL' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
+								DETAIL : $ele.data('batchexec') == 'INVENTORY' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
 								}
 							});
 
