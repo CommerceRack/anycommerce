@@ -2381,27 +2381,21 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //				app.u.dump("BEGIN admin.callbacks.handleMessaging");
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
 
-					var L = app.data[_rtag.datapointer]['@MSGS'].length,
-					$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
-					$tmp = $("<table><tbody><\/tbody><\/table>"); //used to store the rows so DOM is only updated once.
+					var
+						L = app.data[_rtag.datapointer]['@MSGS'].length,
+						DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [],
+						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent');
 
+//update the localstorage object w/ the new messages.
 					for(var i = 0; i < L; i += 1)	{
-						$('tbody',$tmp).anycontent({
-							'templateID':'messageListTemplate',
-							'dataAttribs':{'index':i,'datapointer':_rtag.datapointer}, //used in detail view to find data src
-							'data':app.data[_rtag.datapointer]['@MSGS'][i]
-							});
+						DPSMessages.push(app.data[_rtag.datapointer]['@MSGS'][i])
 						}
-					app.u.handleCommonPlugins($tmp);
-					app.u.handleButtons($tmp);
-
-					$('tbody',$tmp).children().appendTo($tbody);
+					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
+					app.ext.admin.u.displayMessages(app.data[_rtag.datapointer]['@MSGS']);
 					}
 				else	{} //no new messages.
-				
-				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
-				
-				//add another request. this means with each immutable dispatch, messages get updated.
+
+//add another request. this means with each immutable dispatch, messages get updated.
 				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'mutable');
 				},
 			onError : function()	{
@@ -3454,6 +3448,15 @@ app.ext.admin_prodEdit.a.showProductManager();
 
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
+
+var	DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [];
+if(DPSMessages.length)	{
+	app.ext.admin.u.displayMessages(DPSMessages);
+	}
+
+
+					
+
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 app.u.handleEventDelegation($('#messagesContent'));
 app.model.addDispatchToQ({
@@ -3542,10 +3545,32 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				}, //whatPageToShow
 
 			
-			messageAdd : function()	{
-				
+			displayMessages : function(messages)	{ //messages could come from an API response or localstorage on load.
+				if(messages)	{
+					var
+						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
+						L = messages.length,
+						$tmp = $("<table><tbody><\/tbody><\/table>"); //used to store the rows so DOM is only updated once.
+	
+						for(var i = 0; i < L; i += 1)	{
+							$('tbody',$tmp).anycontent({
+								'templateID':'messageListTemplate',
+								'dataAttribs':{'messageid':messages[i].id}, //used in detail view to find data src
+								'data':messages[i]
+								});
+							}
+						app.u.handleCommonPlugins($tmp);
+						app.u.handleButtons($tmp);
+	
+						$('tbody',$tmp).children().appendTo($tbody);
+						}
+					else	{} //no new messages.
+					
+					app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
+
 				},
 			
+
 			updateMessageCount : function()	{
 				var messageCount = $("[data-app-role='messagesContainer']",'#messagesContent').children().length,
 				$MC = $('.messageCount');
@@ -3572,12 +3597,12 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 			getLastMessageID : function()	{
 				var r = 0; //default to zero if no past messageid is present.
-				if(app.model.fetchData('adminMessagesList'))	{
-//					app.u.dump("adminMessagesList WAS IN LOCAL");
-					if(app.data['adminMessagesList']['@MSGS'] && app.data['adminMessagesList']['@MSGS'].length)	{
-						r = app.data['adminMessagesList']['@MSGS'][(app.data['adminMessagesList']['@MSGS'].length - 1)].id;
-						}
+				var DPSMessages = app.ext.admin.u.dpsGet('admin','messages');
+				if(DPSMessages)	{
+					r = DPSMessages[(DPSMessages.length - 1)].id;
+					app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
 					}
+				
 				return r;
 				},
 /*
