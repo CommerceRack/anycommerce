@@ -2382,23 +2382,27 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
 
 					var L = app.data[_rtag.datapointer]['@MSGS'].length,
-					$tbody = $("[data-app-role='messagesContainer']",'#messagesContent');
+					$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
+					$tmp = $("<table><tbody><\/tbody><\/table>"); //used to store the rows so DOM is only updated once.
 
 					for(var i = 0; i < L; i += 1)	{
-						$tbody.anycontent({
+						$('tbody',$tmp).anycontent({
 							'templateID':'messageListTemplate',
 							'dataAttribs':{'index':i,'datapointer':_rtag.datapointer}, //used in detail view to find data src
 							'data':app.data[_rtag.datapointer]['@MSGS'][i]
 							});
 						}
-					app.u.handleAppEvents($tbody);
+					app.u.handleCommonPlugins($tmp);
+					app.u.handleButtons($tmp);
+
+					$('tbody',$tmp).children().appendTo($tbody);
 					}
 				else	{} //no new messages.
 				
 				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
 				
 				//add another request. this means with each immutable dispatch, messages get updated.
-				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'mutable');
 				},
 			onError : function()	{
 				//no error display.
@@ -2531,6 +2535,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
+					
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{
 //						app.u.dump(" -> is #:");
@@ -2614,6 +2619,7 @@ if($target && $target.length)	{
 		app.ext.admin.u.handleShowSection(path,opts,$target); 
 		}
 	else	{
+
 		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
 		if(mode == 'app')	{
 //			app.u.dump(" -> showUI mode = app");
@@ -2714,7 +2720,7 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 						ui.newPanel.anycontent(rd).data('contentloaded',true);
 
 	if(selectors)	{
-		app.u.dump("selectors are set: "+selectors);
+//		app.u.dump("selectors are set: "+selectors);
 		var selArr = selectors.split('\n');
 		var L = selArr.length;
 		for(var i = 0; i < L; i += 1)	{
@@ -2723,8 +2729,8 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 				}
 			else	{
 				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
-				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
 				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
 				}
 			}
@@ -3418,6 +3424,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
+				
 //hide all preView and login data.
 				$('#appLogin').hide(); 
 				$('#appPreView').hide();
@@ -3437,6 +3444,7 @@ app.ext.admin_prodEdit.a.showProductManager();
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+app.u.handleEventDelegation($('#messagesContent'));
 app.model.addDispatchToQ({
 	'detail':'more',
 	'_cmd': 'adminNavTreeList',
@@ -3471,7 +3479,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$('.username','#appView').text(app.vars.userid);
 					$('.domain','#appView').text(app.vars.domain);
 					$('.partition','#appView').text(app.vars.partition);
-					
 					var linkFrom = linkFrom = app.u.getParameterByName('linkFrom');
 					if(linkFrom)	{
 						app.u.dump("INCOMING! looks like we've just returned from a partner page");
@@ -3485,13 +3492,13 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						}
 					else	{
 						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+
 						if(document.URL.indexOf("/future/") > 0)	{
 							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
 							}
 						}
 					}
 				app.model.dispatchThis('immutable');
-
 
 				}, //showHeader
 
@@ -4038,17 +4045,21 @@ and all .someClass are hidden (value of data-panel-selector)
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
 //this will replace handleShowSection
 			bringTabContentIntoFocus : function($target){
-				if($target.is('visible'))	{
-					//target is already visible. do nothing.
+				
+				if($target instanceof jQuery)	{
+					if($target.is('visible'))	{
+						//target is already visible. do nothing.
+						}
+					else if($target.attr('id') == 'messagesContent')	{
+						this.toggleMessagePane(); //message tab is handled separately.
+						}
+					else	{
+						app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
+						$('.tabContent').hide();
+						$target.show();
+						}
 					}
-				else if($target.attr('id') == 'messagesContent')	{
-					this.toggleMessagePane(); //message tab is handled separately.
-					}
-				else	{
-					app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
-					$('.tabContent').hide();
-					$target.show();
-					}
+
 				},
 
 
@@ -4056,8 +4067,7 @@ and all .someClass are hidden (value of data-panel-selector)
 			toggleMessagePane : function(state){
 
 				var $target = $('#messagesContent');
-				$target.css('top',$target.parent().height()); //positions messages pane directly below tab bar, regardless of tab bar height.
-
+				$target.css({top : $target.parent().height()})
 				if(state == 'hide' && $target.css('display') == 'none')	{} //pane is already hidden. do nothing.
 				else if(state == 'show' || $target.css('display') == 'none')	{
 					$target.slideDown();
@@ -5680,13 +5690,6 @@ not in use
 					});
 				},
 
-			execMessageClear : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
-				$btn.off('click.execMessageClear').on('click.execMessageClear',function(event){
-					event.preventDefault();
-					$btn.closest('tr').empty().remove();
-					})
-				},
 //vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
 			execMailToolSend : function($btn,vars){
 				$btn.button();
@@ -5725,14 +5728,19 @@ not in use
 					});
 				},
 
-			showMessageDetail : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"}});
-				$btn.off('click.showMessageDetail').on('click.showMessageDetail',function(event){
-					event.preventDefault();
-					var $tr = $btn.closest('tr');
-					$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('datapointer'),$tr.data('index')));
-					});
+
+
+			messageClearExec : function($ele,P)	{
+				$ele.closest('tr').empty().remove();
 				},
+
+			messageDetailShow : function($ele,P)	{
+				var $tr = $ele.closest('tr');
+				$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('datapointer'),$tr.data('index')));
+				},
+
+
+
 
 /* login and create account */
 
