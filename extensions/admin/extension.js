@@ -2706,8 +2706,8 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
 		heightStyle: "content",
 		activate : function(event,ui)	{
-			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
-			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
 //static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
 			if(!ui.newPanel.data('contentloaded'))	{
 				ui.newPanel.showLoading({'message':'Fetching List'});
@@ -2717,12 +2717,23 @@ if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
 						$target.anymessage({'message':rd})
 						}
 					else	{
+						//applies the content to the panel.
 						ui.newPanel.anycontent(rd).data('contentloaded',true);
 
+if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+	$('label',ui.newPanel).each(function () {  
+		if($(this).data('value').charAt(0) != '.')	{
+			$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
+			}
+		});
+	}
+
+//selectors are values passed in that get 'checked' (turned on).
 	if(selectors)	{
 //		app.u.dump("selectors are set: "+selectors);
 		var selArr = selectors.split('\n');
 		var L = selArr.length;
+//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
 		for(var i = 0; i < L; i += 1)	{
 			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
 				//csv and 'all' are handled already.
