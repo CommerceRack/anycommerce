@@ -5787,7 +5787,25 @@ not in use
 
 
 			messageClearExec : function($ele,P)	{
+				var msgid = $ele.closest('tr').data('messageid');
+				app.u.dump(" -> remove message: "+msgid);
 				$ele.closest('tr').empty().remove();
+				var
+					DPSMessages = app.ext.admin.u.dpsGet('admin','messages'),
+					index = null;
+
+				$.grep(DPSMessages, function(e,i){app.u.dump(" -> i: "+i);if(e.id == msgid){index = i; return;}});
+				
+//				app.u.dump(" -> index: "); app.u.dump(index);
+				if(index)	{
+					DPSMessages.splice(index,1);
+					app.u.dump(DPSMessages);
+					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
+					app.ext.admin.u.updateMessageCount();
+					}
+				else	{
+					//could not find a matching message in DPS.
+					}
 				},
 
 			messageDetailShow : function($ele,P)	{
