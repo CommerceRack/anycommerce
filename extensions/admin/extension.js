@@ -2378,23 +2378,28 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 		handleMessaging : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN admin.callbacks.handleMessaging");
+				
+				app.u.dump("BEGIN admin.callbacks.handleMessaging");
+				app.u.dump(" ->last Message (start): "+app.ext.admin.u.getLastMessageID());
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
 
 					var
 						L = app.data[_rtag.datapointer]['@MSGS'].length,
 						DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [],
-						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent');
+						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
+						lastMessageID;
 
 //update the localstorage object w/ the new messages.
 					for(var i = 0; i < L; i += 1)	{
 						DPSMessages.push(app.data[_rtag.datapointer]['@MSGS'][i])
 						}
 					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
+					app.ext.admin.u.dpsSet('admin','lastMessage',app.data[_rtag.datapointer]['@MSGS'][L-1].id);
 					app.ext.admin.u.displayMessages(app.data[_rtag.datapointer]['@MSGS']);
+					app.u.dump(" ->last Message (end): "+app.ext.admin.u.getLastMessageID());
 					}
 				else	{} //no new messages.
-
+				
 //add another request. this means with each immutable dispatch, messages get updated.
 				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'mutable');
 				},
@@ -3547,7 +3552,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return page;
 				}, //whatPageToShow
 
-			
+			//messages would be an array and all would be displayed.
 			displayMessages : function(messages)	{ //messages could come from an API response or localstorage on load.
 				if(messages)	{
 					var
@@ -3586,26 +3591,41 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$MC.hide();
 					}
 				},
-
-			getMessageDetail : function(datapointer,index)	{
-				var $r = $("<div \/>");
-				if(datapointer && (index || index === 0))	{
-					$r.anycontent({'templateID':'messageDetailTemplate','data':app.data[datapointer]['@MSGS'][index]});
+//display an individual messages detail.
+			getMessageDetail : function(messageID)	{
+				var
+					$r = $("<div \/>"),
+					DPSMessages = app.ext.admin.u.dpsGet('admin','lastMessage'),
+					L = DPSMessages.length,
+					msg = {};
+				
+				for(var i = 0; i < L; i += 1)	{
+					if(DPSMessages[i].id == messageID)	{
+						msg = dpsMessages[i];
+						break; //exit early once a match is found.
+						}
+					else	{}
+					}
+				
+				if($.isEmptyObject(msg))	{
+					$r.anymessage({'message':'In admin.u.getMessageDetail, unable to find messageID ['+messageID+'] in dpsMessages are required','gMessage':true});
 					}
 				else	{
-					$r.anymessage({'message':'In admin.u.getMessageDetail, both datapointer ['+datapointer+'] and index ['+index+'] are required','gMessage':true});
+					$r.anycontent({'templateID':'messageDetailTemplate','data':msg});
 					}
 				return $r;
 				},
 
 			getLastMessageID : function()	{
+				return app.ext.admin.u.dpsGet('admin','lastMessage') || 0;
+				/*
 				var r = 0; //default to zero if no past messageid is present.
 				var DPSMessages = app.ext.admin.u.dpsGet('admin','messages');
 				if(DPSMessages && DPSMessages.length)	{
 					r = DPSMessages[(DPSMessages.length - 1)].id;
 					app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
 					}
-				
+				*/
 				return r;
 				},
 
