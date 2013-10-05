@@ -6,27 +6,27 @@
 		"searchLink":{"KEYWORDS":"Nike","fields":["prod_mfg"]}
 	},
 	{
+		"src":"100yearsofwrigley/chicago_cubs_wrigley_field100_years_banner_v2.jpg",
+		"alt":"Chicago Cubs Wrigley Field 100 Year Anniversary",
+		"title":"",
+		"catLink":".new-arrivals.100_years_of_wrigley_field"
+	},
+	{
 		"src":"banners/2013/47_brand_sale_banner.jpg",
 		"alt":"2013 Inventory Clearance!",
 		"title":"",
 		"catLink":""
 	},
 	{
+		"src":"100yearsofwrigley/chicago_cubs_wrigley_field100_years_banner_v2.jpg",
+		"alt":"Chicago Cubs Wrigley Field 100 Year Anniversary"",
+		"title":"",
+		"prodLink":".new-arrivals.100_years_of_wrigley_field"
+	},
+	{
 		"src":"banners/2013/cubs_authentic_gear_banner_v2.jpg",
 		"alt":"Official Chicago Cubs On-Field Apparel at SportsWorldchicago.com",
 		"title":"",
 		"catLink":".on-field-gear"
-	},
-	{
-		"src":"banners/2013/back_to_school_banner_2013.png",
-		"alt":"Back to School 2013 is Here...Get Your Cubs Gear!",
-		"title":"",
-		"prodLink":""
-	},
-	{
-		"src":"banners/2012/institutional_clothing_homepage_banner.png",
-		"alt":"Institutional Team Clothing",
-		"title":"",
-		"catLink":".new-arrivals.team-baseball-clothing-apparel"
 	}
 ]
