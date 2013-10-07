@@ -2379,8 +2379,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 		handleMessaging : {
 			onSuccess : function(_rtag)	{
 				
-				app.u.dump("BEGIN admin.callbacks.handleMessaging");
-				app.u.dump(" ->last Message (start): "+app.ext.admin.u.getLastMessageID());
+//				app.u.dump("BEGIN admin.callbacks.handleMessaging");
+//				app.u.dump(" ->last Message (start): "+app.ext.admin.u.getLastMessageID());
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
 
 					var
@@ -2396,7 +2396,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
 					app.ext.admin.u.dpsSet('admin','lastMessage',app.data[_rtag.datapointer]['@MSGS'][L-1].id);
 					app.ext.admin.u.displayMessages(app.data[_rtag.datapointer]['@MSGS']);
-					app.u.dump(" ->last Message (end): "+app.ext.admin.u.getLastMessageID());
+//					app.u.dump(" ->last Message (end): "+app.ext.admin.u.getLastMessageID());
 					}
 				else	{} //no new messages.
 				
@@ -3554,6 +3554,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 			//messages would be an array and all would be displayed.
 			displayMessages : function(messages)	{ //messages could come from an API response or localstorage on load.
+//			app.u.dump(" -> messages:");  app.u.dump(messages);
 				if(messages)	{
 					var
 						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
@@ -3593,25 +3594,31 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 //display an individual messages detail.
 			getMessageDetail : function(messageID)	{
-				var
-					$r = $("<div \/>"),
-					DPSMessages = app.ext.admin.u.dpsGet('admin','lastMessage'),
-					L = DPSMessages.length,
-					msg = {};
-				
-				for(var i = 0; i < L; i += 1)	{
-					if(DPSMessages[i].id == messageID)	{
-						msg = dpsMessages[i];
-						break; //exit early once a match is found.
+				var $r = $("<div \/>");
+				if(messageID)	{
+					var
+						DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [],
+						L = DPSMessages.length,
+						msg = {};
+					
+					for(var i = 0; i < L; i += 1)	{
+						if(DPSMessages[i].id == messageID)	{
+							msg = DPSMessages[i];
+							break; //exit early once a match is found.
+							}
+						else	{}
 						}
-					else	{}
-					}
-				
-				if($.isEmptyObject(msg))	{
-					$r.anymessage({'message':'In admin.u.getMessageDetail, unable to find messageID ['+messageID+'] in dpsMessages are required','gMessage':true});
+					
+					if($.isEmptyObject(msg))	{
+						$r.anymessage({'message':'In admin.u.getMessageDetail, unable to find messageID ['+messageID+'] in dpsMessages are required','gMessage':true});
+						}
+					else	{
+						app.u.dump(" -> msg:");		app.u.dump(msg);
+						$r.anycontent({'templateID':'messageDetailTemplate','data':msg});
+						}
 					}
 				else	{
-					$r.anycontent({'templateID':'messageDetailTemplate','data':msg});
+					$r.anymessage({'message':'In admin.u.getMessageDetail, messageID not passed and is required','gMessage':true});
 					}
 				return $r;
 				},
@@ -5792,13 +5799,13 @@ not in use
 
 			messageClearExec : function($ele,P)	{
 				var msgid = $ele.closest('tr').data('messageid');
-				app.u.dump(" -> remove message: "+msgid);
+//				app.u.dump(" -> remove message: "+msgid);
 				$ele.closest('tr').empty().remove();
 				var
 					DPSMessages = app.ext.admin.u.dpsGet('admin','messages'),
 					index = null;
 
-				$.grep(DPSMessages, function(e,i){app.u.dump(" -> i: "+i);if(e.id == msgid){index = i; return;}});
+				$.grep(DPSMessages, function(e,i){if(e.id == msgid){index = i; return;}});
 				
 //				app.u.dump(" -> index: "); app.u.dump(index);
 				if(index)	{
@@ -5814,7 +5821,7 @@ not in use
 
 			messageDetailShow : function($ele,P)	{
 				var $tr = $ele.closest('tr');
-				$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('datapointer'),$tr.data('index')));
+				$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('messageid')));
 				},
 
 

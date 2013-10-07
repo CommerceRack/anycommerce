@@ -15,10 +15,8 @@
 
 
 <div id='messageDetailTemplate'>
-	<h5 data-bind="var:message(author); format:text;"></h5>
-	<p data-bind="var:message(txt); format:text;"></p>
-	<hr />
-	More actions/buttons based on message type.
+	<h5 data-bind="var:message(origin); format:text; pretext:Origin: ;"></h5>
+	<p data-bind="var:message(note); format:text;"></p>
 </div>
 
 
