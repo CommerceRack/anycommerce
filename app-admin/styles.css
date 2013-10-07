@@ -101,7 +101,7 @@ h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
 
 .hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
 .small	{font-size:.85em;}
-
+.lowercase	{text-transform:lowercase;}
 
 
 
