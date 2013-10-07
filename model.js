@@ -906,15 +906,16 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				}
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
-
+/*
 		handleResponse_adminUIExecuteCGI : function(responseData)	{
+			app.u.dump(" -> responseData: "); app.u.dump(responseData);
 			if(responseData.html)	{
-				app.ext.admin.u.uiHandleContentUpdate(responseData.uri,responseData,viewObj);
+				app.ext.admin.u.uiHandleContentUpdate(responseData.uri,responseData,viewObj || {});
 				//app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
 				}
 
 			},
-
+*/
 //this function gets executed upon a successful request for a new session id.
 //it is also executed if appAdminAuthenticate returns exists=1 (yes, you can).
 //formerly newSession
@@ -1657,31 +1658,39 @@ ADMIN/USER INTERFACE
 //data2Pass gets passed along on the request. it's optional. a serialized form object, for example.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
 		
-
-		
 			var pathParts = path.split('?'); //pathParts[0] = /biz/setup and pathParts[1] = key=value&anotherkey=anothervalue (uri params);
 //make sure to pass data2pass last so that the contents of it get preference (duplicate vars will be overwritten by whats in data)
 //this is important because data is typically a form input and may have a verb or action set that is different than what's in the pathParts URI params
 			var data = $.extend(app.u.kvp2Array(pathParts[1]),data2Pass); //getParamsfunction wants ? in string.
 
-			var URL = (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com" : "https://www.zoovy.com";
-			URL += pathParts[0]; //once live, won't need the full path, but necessary for testing purposes.
+//			var URL = (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com" : "https://www.zoovy.com";
+//			URL += pathParts[0]; //once live, won't need the full path, but necessary for testing purposes.
 			
 			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
 				app.u.dump("request in progress. Aborting.");
 				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 				}
 
-/*
+
 cmdObj = {
 	_cmd : 'adminUIExecuteCGI',
-	uri : path
+	uri : path,
+	'_tag' : {
+		datapointer : 'adminUIExecuteCGI',
+		callback : function(rd)	{
+			if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+			else	{
+				app.ext.admin.u.uiHandleContentUpdate(path,app.data[rd.datapointer],viewObj)
+				app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
+				}
+			}
+		}
 	};
 if(!$.isEmptyObject(data)) {cmdObj['%vars'] = data} //only pass vars if present. would be a form post.
 app.model.addDispatchToQ(cmdObj,'mutable');
 app.model.dispatchThis('mutable');
-*/
 
+/*
 			app.ext.admin.vars.uiRequest = $.ajax({
 				"url":URL,
 				"data":data,
@@ -1721,7 +1730,7 @@ app.model.dispatchThis('mutable');
 				beforeSend: app.model.setHeader //uses headers to pass authentication info to keep them  off the uri.
 				});
 //			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
-			}
+	*/		}
 		
 		}
 

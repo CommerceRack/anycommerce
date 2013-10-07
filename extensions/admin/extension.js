@@ -4276,8 +4276,9 @@ and all .someClass are hidden (value of data-panel-selector)
 			uiHandleContentUpdate : function(path,data,viewObj){
 //				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
 //				app.u.dump("View Obj: "); app.u.dump(viewObj);
-
+				viewObj = viewObj || {};
 				if(viewObj.targetID)	{
+					data = data || {};
 					var $target = $(app.u.jqSelector('#',viewObj.targetID))
 					$target.html(data.html);
 //The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
