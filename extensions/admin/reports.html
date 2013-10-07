@@ -579,11 +579,18 @@
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 		<div class='stdMargin'>
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Recent changes</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (brief)</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">Zero inventory</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (detailed)</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', '%vars':{}}); return false;">All skus (uber detailed)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{{'GUID':app.u.guidGenerator(),'PERIOD':'4week','where':'TS,GT,$starts_gmt'}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':app.u.guidGenerator(),'ALL':1}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':app.u.guidGenerator(),'where':'QTY,LT,1'}}); return false;">Zero available qty</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':app.u.guidGenerator(),'ALL':1,'headers':'SKU,sku:title,sku:price,sku:weight,inv:available,inv:onhand,inv:markets'}); return false;">All skus (detailed)</a><br />
+			<!--
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'ALL':1,}}); return false;">All skus (uber detailed)</a><br />
+			-->
 		</div>
 		<h3>Custom Reports</h3>
 		<div class='stdMargin'>
@@ -599,12 +606,18 @@
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 			<div class='stdMargin'>
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Recent changes</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">All skus (brief)</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Simple Inventory</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">WMS Inventory</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Supplier Inventory</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', '%vars':{}}); return false;">Pick Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'PERIOD':4week','where':'TS,GT,$starts_gmt','+':'ALL'}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'ALL':1}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'BASETYPE':'SIMPLE'}}); return false;">Simple Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'BASETYPE':'WMS'}}); return false;">WMS Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'BASETYPE':'SUPPLIER'}}); return false;">Supplier Inventory</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':app.u.guidGenerator(),'BASETYPE':'PICK'}}); return false;">Pick Inventory</a><br />
 		</div>
 
 		<h3>Custom Reports</h3>
