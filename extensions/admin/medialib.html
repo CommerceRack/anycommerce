@@ -238,12 +238,12 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	
 	
 	<li id='mediaFileTemplate'>
-	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' />
+	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' />
 	<div data-bind='var: media(Name); format:text;'></div>
-	<button data-btn-action='deleteMedia'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
-	<button data-btn-action='selectMedia'>Use this piece of media.</button>
-	<button data-btn-action='mediaDetails'>More details.</button>
-	<button data-btn-action='downloadMedia'>Download file.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='deleteMedia' class='applyButton' data-icon-primary='ui-icon-trash' data-text='false'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' class='applyButton displayNone' data-icon-primary='ui-icon-circle-check' data-text='false'>Use this piece of media.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='mediaDetails' class='applyButton' data-icon-primary='ui-icon-info' data-text='false'>More details.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='downloadMedia' class='applyButton' data-icon-primary='ui-icon-image' data-text='false'>Download file.</button>
 	</li>
 	
 	
@@ -287,9 +287,9 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 	<td>
 	<div data-bind='var: media(IMG); format:mediaFilePathAsLinks; extension:admin_medialib; pretext:Currently Selected: ;'></div>
-	<button data-btn-action='clearMedia'></button>
-	<button data-btn-action='details'></button>
-	<button data-btn-action='download'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-circle-close' data-text='false' data-btn-action='clearMedia'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-trash' data-text='false'  data-btn-action='details'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-picture' data-text='false' data-btn-action='download'></button>
 	</td>
 </tr>
 </table>

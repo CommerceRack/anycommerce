@@ -421,15 +421,20 @@ setTimeout(function(){
 							}
 						});
 
-
+//handles the buttons in the media lib header, such as add folder, delete selected, etc.
 					app.ext.admin_medialib.u.handleMediaLibButtons($target);
-
+//** 201338 -> file 'list' is using delegated events now. should be much faster w/ less memory consumption. eventually, the whole media lib should use this method.
+					app.u.handleEventDelegation($("#mediaLibInfiniteScroller")); //media list of files (within each folder or search results)
+					app.u.handleEventDelegation($("#mediaLibraryFocusMediaDetails")); //currently selected file.
+					
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');
 
 					}
+
 				if(P.src)	{
 					app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'LOAD','src':P.src},{'callback':'handleMediaLibSrc','extension':'admin_medialib'});
 					}
+
 				app.model.dispatchThis('immutable');
 				$('#mediaLibFileList ul').data('mode',P.mode);
 //				app.u.dump("Media library setting data: "); app.u.dump(P);
@@ -729,12 +734,12 @@ setTimeout(function(){
 					
 
 					
-//
+var mode = $tag.data('mode');
 $("img.lazyLoad").lazyload({
 	container : '#mediaLibInfiniteScroller',
 	threshold : 100,
 	onLazyLoad : function($i){
-		app.ext.admin_medialib.u.handleMediaFileButtons($i.parents('li'));
+		app.ext.admin_medialib.u.handleMediaFileButtons($i.parents('li'),mode);
 		}
 	});
 
@@ -744,23 +749,8 @@ if(L > 20)	{
 	}
 else	{
 //scrolltop code above doesn't work if there's no scroll bar.  so instead, show the images if under 20.
-	$("img.lazyLoad").lazyload({event: 'click'}).trigger('click'); 
+	$("img.lazyLoad").lazyload({event: 'click'}).trigger('click',{lazyloadonly:true}); 
 	}
-	
-
-//mode is set on the UL when the media library is initialized or reopened.
-// ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
-if($tag.data('mode') == 'manage')	{
-	$tag.addClass('hideBtnSelect')
-	}
-else	{
-	$tag.removeClass('hideBtnSelect');
-	$('img',$tag).addClass('pointer').off('click.mediaSelect').on('click.mediaSelect',function(){
-		app.ext.admin_medialib.a.selectThisMedia($(this));
-		});
-	}
-
-	
 	
 					}
 				else	{
@@ -901,7 +891,7 @@ if(selector && mode)	{
 	$selector.fileupload({
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
-		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
+		url: document.location.protocol == 'file:' ? 'http://www.zoovy.com/jsonapi/upload/' : '/jsonapi/upload/', //don't hard code to http or https. breaks safari and chrome.
 		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
 //			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
@@ -913,7 +903,7 @@ if(selector && mode)	{
 	function fileuploadstopped() {
 //		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-	
+
 		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
@@ -1077,8 +1067,20 @@ else	{
 
 //This gets run over individual media files (each image).
 //also gets run over the image details area in the header when opening media lib for a field that already has an image selected.
-			handleMediaFileButtons : function($target)	{
+			handleMediaFileButtons : function($target,mode)	{
+				app.u.handleButtons($target);
 
+//mode is set on the UL when the media library is initialized or reopened.
+// ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
+if(mode == 'manage')	{
+	$("button[data-btn-action='selectMedia']").hide(); //leave button selector or images will be hidden.
+	}
+else	{
+	$("button[data-btn-action='selectMedia']").show();
+	}
+
+/*
+** 201338 -> w/ delegated events in use, this is no longer necessary.
 				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
 					event.preventDefault(); //keeps button from submitting the form.
 					$(this).toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
@@ -1103,7 +1105,7 @@ else	{
 					event.preventDefault(); //keeps button from submitting the form.
 					window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
 					});				
-				
+				*/
 				}, //handleMediaFileButtons
 
 
@@ -1348,7 +1350,65 @@ for(var i = 0; i < L; i += 1)	{
 			}, //u
 
 		e : {
+
+
+
+
+			handleMediaFileButton : function($ele,P)	{
+				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
+				app.u.dump(" -> $ele.data('btn-action'): "+$ele.data('btn-action'));
+
+				P = P || {};
+				P.preventDefault();
+				
+				var action = $ele.data('btn-action');
+				if(action)	{
+					switch(action)	{
+						case 'deleteMedia':
+							$ele.toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
+							break;
+						
+						case 'selectMedia':
+//for lazy load, a click on the image is triggered if no scroll bar. This prevents the click from auto-selecting the first image in the bunch.
+							if(P.lazyloadonly)	{} 
+//no action in manage mode. nothing gets selected.
+							else if($ele.closest('ul').data('mode') == 'manage')	{} 
+							else	{
+								if($ele.is('img'))	{
+									app.ext.admin_medialib.a.selectThisMedia($ele);
+									}
+								else	{
+									app.ext.admin_medialib.a.selectThisMedia($ele.closest('li').find('img'));
+									}
+								}
+							
+							break;
+						
+						case 'mediaDetails':
+							app.ext.admin_medialib.a.showMediaDetailsInDialog($ele.closest('[data-path]').data());
+							break;
+						
+						case 'clearMedia':
+							app.ext.admin_medialib.a.selectThisMedia($ele,true);
+							break;
 			
+						case 'downloadMedia':
+							window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
+							break;
+						
+						default:
+							//unrecognized action.
+						}
+					}
+				else	{
+					
+					}
+				},
+
+/**/
+
+
+
 			adminCSVExportRewritesExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
 				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
