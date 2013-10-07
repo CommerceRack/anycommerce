@@ -570,14 +570,25 @@ app.u.handleEventDelegation($target);
 
 			amazonIs : function($tag,data)	{
 //				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
-				var is = data.value['%IS'];
-				var $output = $("<span \/>");
-				for(index in is)	{
-//					if(is[index])	{
-						$output.append(index+": "+is[index]+" ");
-//						}
+				var sum = 0;
+				for(index in data.value['%IS'])	{
+					sum += Number(data.value['%IS'][index]);
 					}
-				$tag.append($output);
+				if(sum)	{
+					$("<button \/>").text("show report").button({icons: {primary: "ui-icon-circle-arrow-s"},text: false}).on('click',function(){
+						var $btn = $(this);
+						if($btn.find('.ui-icon').hasClass('ui-icon-circle-arrow-s'))	{
+							$btn.button({icons: {primary: "ui-icon-circle-arrow-w"},text: false});
+							$btn.parent().find('.toggleMe').show();
+							}
+						else	{
+							$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: false})
+							$btn.parent().find('.toggleMe').hide();
+							}
+						}).appendTo($tag);
+					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['%IS'])).appendTo($tag);
+					}
+				else	{} //all the values of the is report are zero. no point showing an empty report.
 				},
 
 			bigListOptions : function($tag,data){
@@ -624,6 +635,141 @@ app.u.handleEventDelegation($target);
 	
 	
 		u : {
+
+
+
+			amazonFeeds2Message : function(feedsObj) {
+			
+				var $messaging = $("<div \/>");
+			
+				// describe_bw - this function takes a bitwise value and returns a string of the equivalent feed names
+				// eg ( If a bitwise value of 3 is passed to this function it will return "Init,Products" (Init is 1, Products is 2)
+				var describe_bw = function(bitVal) {
+						console.log('made it to descibe_bw');
+			
+						var $feedsArray =  [];
+						if ((bitVal & 1<<0)>0) { $feedsArray.push("Init"); }
+						if ((bitVal & 1<<1)>0) { $feedsArray.push("Products"); }
+						if ((bitVal & 1<<2)>0) { $feedsArray.push("prices"); }
+						if ((bitVal & 1<<3)>0) { $feedsArray.push("images"); }
+						if ((bitVal & 1<<4)>0) { $feedsArray.push("inventory"); }
+						if ((bitVal & 1<<5)>0) { $feedsArray.push("relations"); }
+						if ((bitVal & 1<<6)>0) { $feedsArray.push("shipping"); }
+			
+						// these are high level product bits
+						if ((bitVal & 1<<10)>0) { $feedsArray.push("unreal"); }
+						if ((bitVal & 1<<14)>0) { $feedsArray.push("blocked"); }
+						if ((bitVal & 1<<15)>0) { $feedsArray.push("deleted"); }
+			
+						var feedString = String($feedsArray);
+			
+						return(feedString);
+						}
+				
+			
+				// feedsLookup holds a list of key value pairs (the key being the feed type and the value being the equivalent bitwise value.
+				// The lookup is used by JT when he needs to know the bitwise value of a specific feed type.
+				var feedLookupObj = {
+					'all' : '2+4+8+16+32+64',  // 2+4+8+16+32+64   (NOT INIT)
+					'init' : '1', //  'init_mask' : '~1',
+					'products' : '2',// 'products_mask' : '~2',
+					'prices' : '4',// 'prices_mask' : '~4',
+					'images' : '8',// 'images_mask' : '~8',
+					'inventory' : '16',// 'inventory_mask' : '~16',
+					'relations' : '32',// 'relations_mask' : '~32',
+					'shipping' : '64',// 'shipping_mask' : '~64',
+					'docs' : '128',
+					'not_needed' : '1<<10', // this product has been flagged as 'not needed' - it will never be transmitted. (ex: vcontainer)
+					'parentage' : '1<<14', // this bit is used during a product syndication to see if options changed.
+					'blocked' : '1<<14', // used for high level product actions (ex: error)
+					'deleted' : '1<<15',
+					}
+			
+			
+			
+			
+			
+				var $UNKNOWN = (feedsObj['TODO'] | feedsObj['SENT'] | feedsObj['WAIT'] | feedsObj['DONE'] | feedsObj['ERROR']);
+				$UNKNOWN = (~$UNKNOWN & feedLookupObj['all']);
+			
+			
+				if ((feedsObj['TODO'] & feedLookupObj['deleted'])>0) {
+					$("<div  \/>").text("Delete from Amazon in Queue").appendTo($messaging);
+					$UNKNOWN = 0;  // we know exactly what is going on.
+					}
+				else if (feedsObj['TODO']>0) {
+					$("<div  \/>").text("Feeds to Send: " + describe_bw(feedsObj['TODO'])).appendTo($messaging);
+					$("<div class='hint explanation' \/>").text("Feeds to send (also called TODO) is an indicator that one or more fields in the product has changed, but no feed file has been sent to amazon with those changes.  Feeds are sent at different times based on the account configuration").appendTo($messaging);
+					}
+				else	{}
+			
+			
+				if(feedsObj['SENT']>0) {
+					$("<div  \/>").text("Sent: " + describe_bw(feedsObj['SENT'])).appendTo($messaging);
+					$("<div class='hint explanation' \/>").text("DEFINITION: Sent is an indicator that a feed file with this information has (historically) been transfered to amazon successfully.").appendTo($messaging);
+					}
+			
+			
+				if(feedsObj['WAIT']>0) {
+					$("<div  \/>").text("Waiting: " + describe_bw(feedsObj['WAIT'])).appendTo($messaging);
+					$("<div class='hint explanation' \/>").text("DEFINITION: Waiting is an indicator that a feed file with this information has been transmitted but Amazon has not processed it.").appendTo($messaging);
+					}
+				
+				if(feedsObj['DONE']>0) {
+					$("<div  \/>").text("Finished: " + describe_bw(feedsObj['DONE'])).appendTo($messaging);
+					$("<div class='hint explanation' \/>").text("DEFINITION: Finished is an indicator that the system received a successful response to the last update. It is possible for a feed to be both in \"Done\" and another status such as \"Feeds to Send\", or \"Sent\" in the case of apending update, or an unconfirmed update").appendTo($messaging);
+					}
+			
+				if(feedsObj['ERROR']>0) {
+					$("<div  \/>").text("Errors: " + describe_bw(feedsObj['ERROR'])).appendTo($messaging);
+					}
+			
+				if ( ($UNKNOWN & feedLookupObj['all']) >0) {
+					$("<div  \/>").text("Unknown: " + describe_bw($UNKNOWN)).appendTo($messaging);
+					}
+						
+			// JT - HELP ME- Can we add something here to indicate that the product has been updated since the last sync?  !!!
+			
+			// lets summarize the product's state.
+				if ((feedsObj['TODO'] & feedLookupObj['init'])>0) {
+					// all feeds waiting to be sent
+					$("<div class='summary' \/>").text(feedsObj['SKU'] + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
+					}
+				else if ( ((feedsObj['ERROR'] > 0) && (feedsObj['DONE'] & feedLookupObj['init'])==0) ) {
+					// we have an error and init is still turned on
+					$("<div class='summary' \/>").text(" An error has been returned for the [" + describe_bw(feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + feedsObj['SKU'] + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
+					}
+				else if (feedsObj['ERROR'] > 0) {
+					// we have an error but init has been turned off - the feeds that don't have errors will still be sent
+					$("<div class='summary' \/>").text(" An error has been returned for the [".describe_bw(feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
+					}
+				else if ((feedsObj['SENT'] & feedLookupObj['init'])>0 && (feedsObj['DONE'] & feedLookupObj['init'])==0) {
+					// init sent - waiting to process
+					$("<div class='summary' \/>").text("The initial product feed has been sent for" + feedsObj['SKU'] + "In order for the other feeds [" + describe_bw[feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
+					}
+				else if ((feedsObj['DONE'] & feedLookupObj['init'])>0 && feedsObj['TODO']>0) {
+					// init done - waiting for others to sync
+					$("<div class='summary' \/>").text("The initial product feed for $row->{'SKU'} has been processed. The other feeds [" + describe_bw[feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
+					}
+				else if ((feedsObj['SENT'] & feedLookupObj['all']) == feedLookupObj['all']){
+					// all feeds have been sent but we're waiting for Amazon to process
+					$("<div class='summary' \/>").text("All feeds have now been sent for " + feedsObj['SKU'] + ". We are now waiting for Amazon to process them.").appendTo($messaging);
+					}
+				else if ((feedsObj['DONE'] & feedLookupObj['all']) == feedLookupObj['all']) {
+					// all feeds finished
+					$("<div class='summary' \/>").text("Amazon has notified us that all feeds have been processed, and" + feedsObj['SKU'] + " is now live on Seller Central.").appendTo($messaging);
+					}
+				else {
+					// should never be reached
+					$("<div class='summary' \/>").text("Sorry, something went wrong when trying to generate a summary (this tool is still in development)").appendTo($messaging);
+					}
+				return $messaging;
+				},
+
+
+
+
+
 
 //** 201334 -> for new product manager interface.
 			handleNavTabs : function()	{
