@@ -1657,6 +1657,7 @@ ADMIN/USER INTERFACE
 //data2Pass gets passed along on the request. it's optional. a serialized form object, for example.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
 		
+
 		
 			var pathParts = path.split('?'); //pathParts[0] = /biz/setup and pathParts[1] = key=value&anotherkey=anothervalue (uri params);
 //make sure to pass data2pass last so that the contents of it get preference (duplicate vars will be overwritten by whats in data)
@@ -1670,6 +1671,17 @@ ADMIN/USER INTERFACE
 				app.u.dump("request in progress. Aborting.");
 				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 				}
+
+/*
+cmdObj = {
+	_cmd : 'adminUIExecuteCGI',
+	uri : path
+	};
+if(!$.isEmptyObject(data)) {cmdObj['%vars'] = data} //only pass vars if present. would be a form post.
+app.model.addDispatchToQ(cmdObj,'mutable');
+app.model.dispatchThis('mutable');
+*/
+
 			app.ext.admin.vars.uiRequest = $.ajax({
 				"url":URL,
 				"data":data,

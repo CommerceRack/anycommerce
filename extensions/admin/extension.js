@@ -4236,7 +4236,7 @@ and all .someClass are hidden (value of data-panel-selector)
 //					app.ext.admin_medialib.u.showPublicFiles(path,P);
 //					}
 				else	{
-//					app.u.dump(" -> open something wonderful .. "+path);
+					app.u.dump(" -> open something wonderful .. "+path); app.u.dump(" -> P: "); app.u.dump(P);
 					$target.empty().append("<div class='loadingBG'></div>");
 //					alert(path);
 					app.model.fetchAdminResource(path,P);
