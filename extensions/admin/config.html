@@ -3248,7 +3248,7 @@ Coming Soon
 			<td></td>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody'>
+		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody'></tbody>
 		</table>
 
 
@@ -3403,7 +3403,7 @@ Coming Soon
 		<td></td>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipping(@MSGS); format:processList; loadsTemplate:domainManagerDiagnosticsRowTemplate;">
+	<tbody data-bind="var: shipping(@MSGS); format:processList; loadsTemplate:domainManagerDiagnosticsRowTemplate;"></tbody>
 	</table>
 	
 	</section>
@@ -3422,6 +3422,7 @@ Coming Soon
 	</tr>
 	</thead>
 	<tbody data-bind="var: shipping(@HISTORY); format:processList; loadsTemplate:domainManagerHistoryRowTemplate;">
+	</tbody>
 	</table>
 	
 	</section>
@@ -3432,3 +3433,179 @@ Coming Soon
 
 </div>
 
+<div id='billingHistoryTemplate' data-app-role='billingHistory'>
+
+	<div class='applyAnytabs'>
+	<ul>
+		<li><a href='#invoices'>General</a></li>
+		<li><a href='#pendingTransactions' data-app-click="admin_config|billingHandleTabContents">Pending Transactions</a></li>
+		<li><a href='#paymentMethods' data-app-click="admin_config|billingHandleTabContents">Payment Methods</a></li>
+	</ul>
+
+	<section data-anytab-content='invoices' class='clearfix'></section>
+	<section data-anytab-content='pendingTransactions' class='clearfix'></section>
+	<section data-anytab-content='paymentMethods' class='clearfix'>
+
+
+<form action='#' onSubmit="return false">
+
+<input type='hidden' name='_macrobuilder' value='admin_config|billingPaymentMacro' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
+
+<fieldset class='labelsAsBreaks alignedLabels marginBottom'>
+	<legend>Required Billing Information</legend>
+
+	<label>
+		<span>Company name</span>
+		<input type="text" name="zoovy:company_name" size="50" value="" />
+	</label>
+
+	<label>
+		<span>First name</span>
+		<input type="text" size="15" name="zoovy:firstname" value="" />
+	</label>
+	<label>
+		<span>Last name</span>
+		<input type="text" size="15" name="zoovy:lastname" value="" />
+	</label>
+	
+	<label>
+		<span>Contact email</span>
+		<input type="email" name="zoovy:email" value="" />
+		<span class='hint'>for internal use only</span>
+	</label>	
+	<label>
+		<span>Contact phone</span>
+		<input type='tel' name="zoovy:phone" value="" />
+		<span class='hint'>for internal use only</span>
+	</label>	
+	<label>
+		<span>Invoice email</span>
+		<input type='email' name="zoovy:bill_email" value="" />
+		<span class='hint'>for internal use only</span>
+	</label>
+
+</fieldset>
+
+<fieldset class='labelsAsBreaks'>
+	<legend>Configured Billing Methods</legend>
+
+	<div class='twoColumn'>
+		<table data-app-role='dataTable'>
+		<thead>
+		<tr>
+			<th>Type</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-app-role='paymentMethodTbody' data-bind="var: shipping(@METHODS); format:processList; loadsTemplate:billingHistoryPayMethodsRowTemplate;">
+		
+		</tbody>
+		</table>
+	</div>
+	
+	
+	<div class='twoColumn column2'>
+
+		<label>
+			<span>Type</span>
+			<select name='PAYMETHOD' data-panel-selector=".billingHistoryPaymentAddType" class='skipTrack'>
+				<option value="CREDIT" data-show-panel='billingHistoryPaymentAddTypeCREDIT'>Credit Card</option>
+				<option value="ECHECK" data-show-panel='billingHistoryPaymentAddTypeECHECK'>eCheck</option>
+<!--				<option value="PAYPAL">Paypal</option>
+				<option value="PREPAID">PrePaid</option>-->
+			</select>
+		</label>
+		<!-- SANITY: inputs are whitelists. check admin_config.macrobuilders.billingPaymentMacro -->
+		<div class='billingHistoryPaymentAddType' data-panel-id='billingHistoryPaymentAddTypeCREDIT'>
+			<label>
+				<span>CC#</span>
+				<input value="" type="text" name="CC" size="16" class='skipTrack'>
+			</label>
+			<div class='label'>
+				<span>Expiration</span>
+				<select name="MM" class='skipTrack'>
+					<option value="01">January (1)</option>
+					<option value="02">February (2)</option>
+					<option value="03">March (3)</option>
+					<option value="04">April (4)</option>
+					<option value="05">May (5)</option>
+					<option value="06">June (6)</option>
+					<option value="07">July (7)</option>
+					<option value="08">August (8)</option>
+					<option value="09">September (9)</option>
+					<option value="10">October (10)</option>
+					<option value="11">November (11)</option>
+					<option value="12">December (12)</option>
+				</select> 
+				<select name="YY" class='skipTrack'>
+					<option value="13">2013</option>
+					<option value="14">2014</option>
+					<option value="15">2015</option>
+					<option value="16">2016</option>
+					<option value="17">2017</option>
+					<option value="18">2018</option>
+					<option value="19">2019</option>
+					<option value="20">2020</option>
+				</select>
+			</div>
+		</div>
+		<div class='billingHistoryPaymentAddType' data-panel-id='billingHistoryPaymentAddTypeECHECK'>
+		<label>
+			<span>Bank name</span>
+			<input type="text" name="ECHECK_BANK" value="" class='skipTrack' />
+		</label>
+		<label>
+			<span>Account #</span>
+			<input type="text" name="ECHECK_CHECKING" value="" class='skipTrack' />
+		</label>
+		<label>
+			<span>Routing</span>
+			<input type="text" name="ECHECK_ROUTING" value="" class='skipTrack' />
+		</label>
+		</div>
+		
+		<div class='buttonset'>
+		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Add</button>
+		</div>
+	</div>
+
+</fieldset>
+
+
+<div class='buttonset alignRight'>
+<button data-app-role='saveButton' data-app-click='admin|submitForm' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
+</div>
+
+</form>
+
+	</section>
+	
+	</div>
+
+</div>
+
+
+<table>
+<tr id='billingHistoryPayMethodsRowTemplate'>
+	<td data-bind='var: method(PAYMETHOD); format:text;'></td>
+	<td>
+		<div data-bind="var:method(CC); format:text;"></div>
+		<div data-bind="var:method(ECHECK_BANK); format:text;"></div>
+	</td>
+	<td>
+		<div data-bind="var:method(MM); format:text;"></div>
+		<div data-bind="var:method(ECHECK_CHECKING); format:text;"></div>
+	</td>
+	<td>
+		<div data-bind="var:method(YY); format:text;"></div>
+		<div data-bind="var:method(ECHECK_ROUTING); format:text;"></div>
+	</td>
+	
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+</table>

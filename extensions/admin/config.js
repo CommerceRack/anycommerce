@@ -99,6 +99,42 @@ var admin_config = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
+			showBillingHistory : function($target)	{
+/*
+	'billingTransactions'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
+	'billingInvoiceList'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
+	'billingInvoiceDetail'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
+	'billingPaymentList'=>[ \&JSONAPI::billingPayment, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
+	'billingPaymentMacro'=>[ \&JSONAPI::billingPayment, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
+*/
+
+				$target.empty()
+				$target.anycontent({'templateID':'billingHistoryTemplate'});
+				app.u.handleCommonPlugins($target);
+				app.u.handleEventDelegation($target);
+				app.u.handleButtons($target);
+				$('form',$target).each(function(){
+					app.ext.admin.u.handleFormConditionalDelegation($(this));
+					app.ext.admin.u.applyEditTrackingToInputs($(this));
+					});
+
+				app.model.addDispatchToQ({
+					'_cmd':'billingTransactions',
+					'_tag':{
+						'callback': function(rd)	{
+							$target.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$target.anymessage({'message':rd});
+								}
+							else	{
+								$("[data-anytab-content='invoices']",$target).anycontent(rd);
+								}
+							},
+						'datapointer':'billingTransactions'
+					}
+				},'mutable');
+				app.model.dispatchThis('mutable');
+				},
 		
 			showPluginManager : function($target)	{
 				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
@@ -853,6 +889,46 @@ $D.dialog('open');
 				return newSfo;
 				},
 			
+			billingPaymentMacro : function(sfo,$form)	{
+				var newSfo = {
+					'_cmd':'billingPaymentMacro',
+					'_tag':sfo._tag,
+					'@updates':[]
+					};
+				
+				if($(':input.edited',$form).length)	{
+					newSfo['@updates'].push("ACCOUNT-ORG-SET?"+$.param($form.serializeJSON({'selector':':input.edited'})));
+					}
+
+				if($("[data-app-role='paymentMethodTbody'] tr.edited",$form).length)	{
+					$("[data-app-role='paymentMethodTbody'] tr.edited",$form).each(function(){
+						var $tr = $(this);
+						if($tr.hasClass('isNewRow') && $tr.hasClass('rowTaggedForRemove'))	{
+							//is new and tagged for delete. do nothing.
+							}
+						else if($tr.hasClass('isNewRow'))	{
+							if($tr.data('type') == 'CREDIT')	{
+								newSfo['@updates'].push("PAYMENT-CREDITCARD-ADD?"+$.param(app.u.getWhitelistedObject($tr.data,['CC','MM','YY'])));
+								}
+							else if($tr.data('type') == 'ECHECK')	{
+								newSfo['@updates'].push("PAYMENT-BANK-ADD?"+$.param(app.u.getWhitelistedObject($tr.data,['ECHECK_BANK','ECHECK_CHECKING','ECHECK_ROUTING'])));
+								}
+							else	{
+								//unsupported payment type
+								}
+								
+							}
+						else if($tr.hasClass('rowTaggedForRemove'))	{
+							newSfo['@updates'].push("PAYMENT-DELETE?ID="+$tr.data('id'));
+							}
+						else	{
+							//unexpected condition
+							}
+						})
+					}
+				return newSfo;
+				},
+			
 			//executed from within the 'create new domain' interface.
 			adminDomainMacroCreate : function(sfo,$form)	{
 				sfo = sfo || {};
@@ -1458,6 +1534,74 @@ $D.dialog('open');
 					});
 				}, //paymentMethodUpdateExec
 
+//This is the event to use for delegated events (as oppsed to app events).  It is also executed by the app event code.
+			dataTableAddUpdate : function($ele,P)	{
+//					app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				
+				var
+					$container = P['$container'] ? P['$container'] : $ele.closest('fieldset'),
+				//tbody can be passed in thru P or, if not passed, it will look for one within the fieldset. rules engine uses P approach. shipping doesn't. same for form.
+					$dataTbody = (P['$dataTbody']) ? P['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
+					$form = (P['$form']) ? P['$form'] : $container.closest('form');
+				
+				
+				if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
+//						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
+				//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
+				//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
+				//	$('input',$container).attr('required','required'); 
+//				app.u.dump(" -> app.u.validateForm($container): "+app.u.validateForm($container));
+					if(app.u.validateForm($container))	{
+//							app.u.dump(" -> form is validated.");
+						var 
+							bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+							sfo = $container.serializeJSON({'cb':true}),
+							$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+
+
+//							app.u.dump(" -> sfo: "); app.u.dump(sfo);
+						
+						$tr.anycontent({data:sfo});
+						$tr.addClass('edited');
+						$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+				
+//if a row already exists with this guid, this is an UPDATE, not an ADD.
+//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
+						if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
+							$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
+							}
+						else	{
+							$tr.appendTo($dataTbody);
+							}
+						app.u.handleAppEvents($tr,P); //P are passed through so that buttons in list can inheret. rules uses this.
+// * 201324 -> after add/save, clear the inputs for the next entry.
+// * 201330 -> turns out this behavior may not always be desired. caused issues in shipping. can now be disabled.
+						if($ele.data('form-skipreset'))	{
+							}
+						else	{
+							$('input, textarea',$container).not(':radio').val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
+							$(':radio').prop('checked',false);
+							$('select',$container).val();
+							$(':checkbox',$container).prop('checked',false);
+							}
+						app.ext.admin.u.handleSaveButtonByEditedClass($form);
+						}
+					else	{
+						app.u.dump("form did not validate");
+						//validateForm handles error display.
+						}
+				//	$('input',$container).attr('required','').removeAttr('required');
+					
+					}
+				else	{
+					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
+					app.u.dump(" -> $container.length: "+$container.length);
+					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+					app.u.dump(" -> $form.length: "+$form.length);
+					app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
+					}
+				},
+
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
@@ -1468,73 +1612,7 @@ $D.dialog('open');
 				$btn.button();
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
 					event.preventDefault();
-					
-//					app.u.dump("BEGIN admin_config.e.dataTableAddExec");
-					
-					var
-						$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
-					//tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
-						$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
-						$form = (vars['$form']) ? vars['$form'] : $container.closest('form');
-					
-					
-					if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
-//						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
-					//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
-					//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
-					//	$('input',$container).attr('required','required'); 
-					app.u.dump(" -> app.u.validateForm($container): "+app.u.validateForm($container));
-						if(app.u.validateForm($container))	{
-//							app.u.dump(" -> form is validated.");
-							var 
-								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-								sfo = $container.serializeJSON({'cb':true}),
-								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
-
-
-//							app.u.dump(" -> sfo: "); app.u.dump(sfo);
-							
-							$tr.anycontent({data:sfo});
-							$tr.addClass('edited');
-							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-					
-					//if a row already exists with this guid, this is an UPDATE, not an ADD.
-							app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
-							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
-								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
-								}
-							else	{
-								$tr.appendTo($dataTbody);
-								}
-							app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
-// * 201324 -> after add/save, clear the inputs for the next entry.
-// * 201330 -> turns out this behavior may not always be desired. caused issues in shipping. can now be disabled.
-							if($btn.data('form-skipreset'))	{
-								}
-							else	{
-								$('input, textarea',$container).not(':radio').val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
-								$(':radio').prop('checked',false);
-								$('select',$container).val();
-								$(':checkbox',$container).prop('checked',false);
-								}
-							app.ext.admin.u.handleSaveButtonByEditedClass($form);
-							}
-						else	{
-							app.u.dump("form did not validate");
-							//validateForm handles error display.
-							}
-					//	$('input',$container).attr('required','').removeAttr('required');
-						
-						}
-					else	{
-						$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
-						app.u.dump(" -> $container.length: "+$container.length);
-						app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
-						app.u.dump(" -> $form.length: "+$form.length);
-						app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
-						}
-
-
+					app.ext.admin_config.e.dataTableAddUpdate($btn,vars);
 					});
 				}, //dataTableAddExec
 
@@ -1951,6 +2029,40 @@ app.model.dispatchThis('immutable');
 				else	{
 					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_config.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
 					}
+				},
+			
+			billingHandleTabContents : function($ele,p)	{
+				var tab = $ele.parent().data('anytabsTab');
+				var $tabContent = $ele.closest("[data-app-role='"+tab+"']").find("[data-anytab-content='pending']");
+				var cmd;
+				if(tab == 'paymentMethods')	{
+					cmd = 'billingPaymentList';
+					}
+				else if(tab == 'pendingTransactions')	{
+					cmd = 'billingTransactions';
+					}
+				else	{} //unrecognized tab.
+				
+				if(cmd)	{
+					$tabContent.showLoading({'message':'Fetching details'});
+					app.model.addDispatchToQ({
+						'_cmd':'billingTransactions',
+						'_tag':{
+							'callback': function(rd)	{
+								$tabContent.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$tabContent.anymessage({'message':rd});
+									}
+								else	{
+									$tabContent.anycontent(rd);
+									}
+								},
+							'datapointer':'billingTransactions'
+						}
+					},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{}
 				}
 
 
