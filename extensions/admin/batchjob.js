@@ -172,9 +172,12 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 			adminBatchJobCreate : function(opts){
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
-				app.model.addDispatchToQ($.extend({
+				app.model.addDispatchToQ($.extend(true,{
 					'_cmd':'adminBatchJobCreate',
-					'_tag':	{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content",datapointer : opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate"}
+					'_tag':	{'callback':'showBatchJobStatus',
+					'extension':'admin_batchJob',
+					'parentID':app.ext.admin.vars.tab+"Content",
+					datapointer : opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate"}
 					},opts),'immutable');
 				app.model.dispatchThis('immutable');
 				},

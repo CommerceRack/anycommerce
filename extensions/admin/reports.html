@@ -580,13 +580,12 @@
 		<h3>Quick Reports</h3>
 		<div class='stdMargin'>
 			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
-				'%vars':{{'GUID':app.u.guidGenerator(),'PERIOD':'4week','where':'TS,GT,$starts_gmt'}}); return false;">Recent changes</a><br />
+				'%vars':{'GUID':app.u.guidGenerator(),'PERIOD':'4week','where':'TS,GT,$starts_gmt'}}); return false;">Recent changes</a><br />
 			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
 				'%vars':{'GUID':app.u.guidGenerator(),'ALL':1}}); return false;">All skus (brief)</a><br />
 			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
 				'%vars':{'GUID':app.u.guidGenerator(),'where':'QTY,LT,1'}}); return false;">Zero available qty</a><br />
-			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
-				'%vars':{'GUID':app.u.guidGenerator(),'ALL':1,'headers':'SKU,sku:title,sku:price,sku:weight,inv:available,inv:onhand,inv:markets'}); return false;">All skus (detailed)</a><br />
+			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU','%vars':{'GUID':app.u.guidGenerator(),'ALL':1,'headers':'SKU,sku:title,sku:price,sku:weight,inv:available,inv:onhand,inv:markets'}}); return false;">All skus (detailed)</a><br />
 			<!--
 			<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
 				'%vars':{'ALL':1,}}); return false;">All skus (uber detailed)</a><br />
