@@ -264,6 +264,7 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 						'_cmd':'adminProductDetail',
 						'variations':1,
 						'inventory' : 1,
+						'schedules' : 1,
 						'skus':1,
 						'pid' : pid,
 						'_tag':{

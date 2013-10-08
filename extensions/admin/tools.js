@@ -736,20 +736,30 @@ $target.append("<br \/>");
 				$btn.off('click.flexeditSaveExec').on('click.flexeditSaveExec',function(event){
 					event.preventDefault();
 					var json = new Array();
+					var keys = new Array();
 					$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
-						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
-						})
 
+						if($.inArray($(this).data('id'),keys) >= 0)	{
+							//if an id is already in keys, it's already added to the flex json. This keeps duplicate id's from being added.
+							}
+						else	{
+							keys.push($(this).data('id'));
+							json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+							}
+						})
 					app.model.addDispatchToQ({
 						'_cmd':'adminConfigMacro',
 						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+JSON.stringify(json)],
 						'_tag':	{
 							'callback' : 'showMessaging',
+							'jqObj' : $btn.closest('form'),
+							'removeFromDOMItemsTaggedForDelete' : true,
+							'restoreInputsFromTrackingState' : true,
 							'message':'Your changes have been saved'
 							}
 						},'immutable');
-					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
-					app.model.dispatchThis('immutable');
+//					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+//					app.model.dispatchThis('immutable');
 
 					});
 				//FLEXEDIT-SAVE
