@@ -65,6 +65,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
+			app.u.dump(" -> zGlobals are an object")
 			app.vars.profile = zGlobals.appSettings.profile.toUpperCase();
 			app.vars.username = zGlobals.appSettings.username.toLowerCase();
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
@@ -140,7 +141,7 @@ copying the template into memory was done for two reasons:
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
 //after login, the admin vars are set in the model. 
 	handleAdminVars : function(){
-//		app.u.dump("BEGIN handleAdminVars");
+		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
 		
 		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}

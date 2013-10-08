@@ -1773,7 +1773,7 @@ if giftcard is on there, no paypal will appear.
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 $('title').append(" - release: "+app.vars.release).prepend(document.domain+' - ');
@@ -1810,7 +1810,7 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
+				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
 				var L = app.rq.length-1;
 //load any remaining resources into the app.
 				for(var i = L; i >= 0; i -= 1)	{
@@ -3434,7 +3434,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
-				
+				app.u.dump("BEGIN admin.u.showHeader");
 //hide all preView and login data.
 				$('#appLogin').hide(); 
 				$('#appPreView').hide();
@@ -3537,7 +3537,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //uses whats in the hash first, then the default page passed in.
 //if you want to target a specific page, change the hash before executing this function.
 			whatPageToShow : function(defaultPage)	{
-//				app.u.dump("BEGIN admin.u.whatPageToShow");
+				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
 					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
