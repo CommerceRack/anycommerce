@@ -1067,19 +1067,19 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 			<label>
 				<span>Fixed price</span>
-				$<input type="number" step='.01' min='0' size="6" value="" name="ebay:fixed_price"  data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				$<input type="number" step='.01' min='0' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
 
 
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Fixed qty</span>
-				<input type="number" step='1' min='0' size="6" value="" name="ebay:fixed_qty"  data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<input type="number" step='1' min='0' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
 			</label>
 
 		
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
-				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;">
+				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;" data-validation-rules='skipIfHidden'>
 					<option value="">-- use profile --</option>
 					<option value="3">3 Day</option>
 					<option value="5">5 Day</option>
