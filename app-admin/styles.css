@@ -972,11 +972,10 @@ see shipping panel in product editor for example
 
 
 
+/* categories and lists interface */
 
 
-
-
-
+.navcats_lists .wait, .navcats_lists .hide4lists	{display:none;}
 
 
 

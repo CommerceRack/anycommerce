@@ -61,14 +61,20 @@ var admin_navcats = function() {
 		a : {
 
 			showCategoriesAndLists : function($target)	{
-				$target.empty().append("<h1>Categories and Lists</h1>").append($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all stdPadding').append(app.ext.admin_navcats.u.getTree('navcats',{
+				var path = '.'; //eventually, this could be something other than ., like the root path of the domain in focus.
+				$target.empty().anycontent({'templateID':'categoriesAndListsTemplate','showLoading':false});
+				app.u.handleButtons($target); //run early before content populated cuz getTree code will execute per list item. this is for the more global buttons (add, refresh, etc).
+				$("[data-app-role='navcatsContainer']:first",$target).append(app.ext.admin_navcats.u.getTree('navcats',{
 					'templateID' : 'catTreeNavcatItemTemplate',
-					'path' : '.'
-					})))
+					'path' : path
+					}))
+
+				$("[data-app-role='listsContainer']:first",$target).append(app.ext.admin_navcats.u.getTree('lists',{
+					'templateID' : 'catTreeNavcatItemTemplate',
+					'path' : path
+					}))
 				
 				app.u.handleEventDelegation($target);
-				app.u.handleButtons($target);
-				
 				}
 
 			}, //Actions
@@ -141,7 +147,7 @@ var admin_navcats = function() {
 //										app.u.dump("Match! "+rd.path);	app.u.dump(" -> cb.length: "+$(":checkbox[name='"+rd.path+"']",$container).length);
 										$(":checkbox[name='"+rd.path+"']",$container).prop('checked','checked'); //don't use $cat for context, it isn't set if loading from api (vs local storage)
 										}
-
+									app.u.handleButtons($cat);
 									}
 								},
 							'datapointer':datapointer,
@@ -169,7 +175,6 @@ var admin_navcats = function() {
 					}
 				else	{
 						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required. (fetchonly: "+vars.fetchOnly+")",'gMessage':true});
-						die();
 					}
 				
 				},
@@ -186,8 +191,8 @@ Params:
 	
 */
 			getTree : function(mode,vars){
-//				app.u.dump("BEGIN admin_navcats.u.getTree");
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
+				app.u.dump("BEGIN admin_navcats.u.getTree");
+				app.u.dump(" -> vars: "); app.u.dump(vars);
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 
@@ -196,43 +201,63 @@ Params:
 					if(vars.templateID && vars.path)	{
 						$tree.addClass('categoryTree categoryTree_'+mode);
 						$tree.showLoading({'message':'Fetching category tree'});
-
-						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
-//						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
-
-//						var $controls = $("<div \/>").addClass("ui-widget ui-corner-top ui-widget-header smallPadding alignRight clearfix").appendTo($tree);
-//						$controls.append($("<button \/>").text('Expand Checked').button().attr('data-app-click','admin_navcats|navcatsCheckedShow'));
 						
 						var $ul = $("<ul class='noPadOrMargin listStyleNone' \/>").attr('data-app-role','categories');
 						$ul.appendTo($tree);
-
-						app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
-						//all required params are present/set. proceed.
-						app.model.addDispatchToQ({
-							'detail':'more',
-							'_cmd': 'adminNavcatDetail',
-							'path' : vars.path,
-							'navtree' : 'PRT00'+app.vars.partition,
-							'_tag' : {
-								'callback':function(rd){
-									$tree.hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										$tree.anymessage({'message':rd});
+						
+						if(mode == 'lists')	{
+							app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{'callback':function(rd){
+								$tree.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									if(app.data[rd.datapointer] && app.data[rd.datapointer]['@paths'] && app.data[rd.datapointer]['@paths'].length)	{
+										var L = app.data[rd.datapointer]['@paths'].length
+										for(var i = 0; i < L; i+= 1)	{
+											$ul.anycontent({'templateID':vars.templateID, 'dataAttribs' : {'catsafeid':app.data[rd.datapointer]['@paths'][i]},'data' : {'pretty':app.data[rd.datapointer]['@paths'][i],'catsafeid':app.data[rd.datapointer]['@paths'][i]}})
+											}
+										app.u.handleButtons($ul);
 										}
-									else	{
-										if(app.data[rd.datapointer]._msg_1_type == 'warning')	{
+									else	{} //no lists
+									}
+								}},'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						else	{
+						
+							var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
+	//						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
+	
+							app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
+							//all required params are present/set. proceed.
+							app.model.addDispatchToQ({
+								'detail':'more',
+								'_cmd': 'adminNavcatDetail',
+								'path' : vars.path,
+								'navtree' : 'PRT00'+app.vars.partition,
+								'_tag' : {
+									'callback':function(rd){
+										$tree.hideLoading();
+										if(app.model.responseHasErrors(rd)){
 											$tree.anymessage({'message':rd});
 											}
-										app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$ul,vars);
-// SANITY-> if applyEditTrackingToInputs is desired, add it outside this to the parent container.
-//										app.ext.admin.u.applyEditTrackingToInputs($tree); 
-										}
-									},
-								'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.path
-								}
-							},'mutable');
-
-						app.model.dispatchThis('mutable');
+										else	{
+											if(app.data[rd.datapointer]._msg_1_type == 'warning')	{
+												$tree.anymessage({'message':rd});
+												}
+											app.ext.admin_navcats.u.getSubcats(["."],$ul,vars); //show the homepage.
+//											app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("[data-app-role='categories']:first",$ul),vars);
+	// SANITY-> if applyEditTrackingToInputs is desired, add it outside this to the parent container.
+	//										app.ext.admin.u.applyEditTrackingToInputs($tree); 
+											}
+										},
+									'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.path
+									}
+								},'mutable');
+	
+							app.model.dispatchThis('mutable');
+							}
 //SANITY	-> if event delegation occurs here, before $tree is added to the dom, the event delegation script can't look up the DOM to see if events have already been added. thus, dual-delegation could occur (bad).
 //			-> handle delegation by whatever calls getTree. Which is probably the right way to do it anyway since the delegation should occur at a high level. 
 //			-> this issue was discovered in product editor, so any changes to this function and events should be tested there.
@@ -280,7 +305,8 @@ Params:
 				else	{
 					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryEditExec, unable to ascertain category safe id.'});
 					}
-				},			
+				},	 //categoryEditExec
+			
 			categoryProductFinderExec : function($ele,p)	{
 				var catSafeID = $ele.closest('li').data('catsafeid');
 				if(catSafeID)	{
@@ -289,7 +315,7 @@ Params:
 				else	{
 					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryProductFinderExec, unable to ascertain category safe id.'});
 					}
-				},
+				}, //categoryProductFinderExec
 
 			adminNavcatMacroDeleteShow : function($ele,p)	{
 				var catSafeID = $ele.closest('li').data('catsafeid');
@@ -331,10 +357,12 @@ Params:
 					}
 				}, //adminNavcatsCreateRenameShow
 
+
+
 			adminNavcatsMacro : function($ele,p)	{
 				var verb = $ele.data('verb');
 				if(verb)	{
-					var catSafeID = $ele.closest('li').data('catsafeid');
+					var catSafeID = $ele.closest("[data-catsafeid]").data('catsafeid');
 					if(catSafeID)	{
 						var cmdObj = {
 							'_cmd':'adminNavcatMacro',
@@ -362,8 +390,13 @@ else	{
 		$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
 		}
 	else if(verb == 'CREATE')	{
-		app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+		$ele.closest("[data-app-role='navcatsContainer']").empty().append(app.ext.admin_navcats.u.getTree('navcats',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
 		}
+	else if(verb == 'LISTCREATE')	{
+		var $container = $ele.closest("[data-app-role='navcatsSection']");
+		$("[data-app-role='listsContainer']",$container).empty().append(app.ext.admin_navcats.u.getTree('lists',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
+		}
+	else	{}
 
 	}
 //Need to run app.model.destroy on everything in the @paths_modified array.									
@@ -372,12 +405,16 @@ else	{
 								}
 							}
 		
-						if(verb == 'CREATE' || verb == 'RENAME')	{
-							cmdObj['@updates'].push(verb+"?path="+catSafeID+"&"+$.param($ele.closest('div').serializeJSON()));
+						if(verb == 'CREATE' || verb == 'RENAME' || verb == 'LISTCREATE')	{
+							cmdObj['@updates'].push((verb == 'RENAME' ? verb : 'CREATE')+"?path="+catSafeID+"&"+$.param($ele.closest('div').serializeJSON()));
 //							app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
 							app.model.addDispatchToQ(cmdObj,'immutable');
+							
+							if(verb == 'LISTCREATE')	{
+								app.model.destroy("appCategoryList|"+app.vars.partition+"|lists|.");
+								}
+							
 							app.model.dispatchThis('immutable');
-						
 							}
 						else	{
 							$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, unrecognized verb ["+verb+"] on trigger element..","gMessage":true});
@@ -391,7 +428,7 @@ else	{
 					$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, trigger element does not have a data-verb set (should be set dynamically by adminNavcatsCreateRenameShow).","gMessage":true});
 					}
 				},
-			
+		
 //triggered when a category is clicked opened or closed.
 //will show/load or hide the category as needed.  Will also update DPS so that the next time the user comes into the category editor, 
 //anything that was open will auto-open in the current session.
