@@ -60,6 +60,17 @@ var admin_navcats = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 
+			showCategoriesAndLists : function($target)	{
+				$target.empty().append("<h1>Categories and Lists</h1>").append($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all stdPadding').append(app.ext.admin_navcats.u.getTree('navcats',{
+					'templateID' : 'catTreeNavcatItemTemplate',
+					'path' : '.'
+					})))
+				
+				app.u.handleEventDelegation($target);
+				app.u.handleButtons($target);
+				
+				}
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -69,7 +80,7 @@ var admin_navcats = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			openSubcatsIcon : function($tag,data)	{
-				if(data.value['@subcategories'].length)	{
+				if(data.value['@subcategories'] && data.value['@subcategories'].length)	{
 					$tag.attr('data-app-click','admin_navcats|navcatSubsShow').removeClass('opacity50').addClass('pointer');
 					}
 				}
@@ -183,6 +194,7 @@ Params:
 				//set some defaults.
 				if(mode)	{
 					if(vars.templateID && vars.path)	{
+						$tree.addClass('categoryTree categoryTree_'+mode);
 						$tree.showLoading({'message':'Fetching category tree'});
 
 						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
@@ -252,11 +264,133 @@ Params:
 					$('#globalMessaging').anymessage({'message':'In admin_navcats.u.getPathsArrayFromTree, $tree is not a valid jquery instance.','gMessage':true});
 					}
 				return arr;
-				}
+				},
+			
+			
 			
 			}, //u [utilities]
 //This extension uses a delegated event model, so each 'event' below does NOT need an on() declared. 
 		e : {
+			
+			categoryEditExec : function($ele,p)	{
+				var catSafeID = $ele.closest('li').data('catsafeid');
+				if(catSafeID)	{
+					navigateTo("#/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG="+catSafeID+"&FS=C");
+					}
+				else	{
+					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryEditExec, unable to ascertain category safe id.'});
+					}
+				},			
+			categoryProductFinderExec : function($ele,p)	{
+				var catSafeID = $ele.closest('li').data('catsafeid');
+				if(catSafeID)	{
+					app.ext.admin.a.showFinderInModal('NAVCAT',catSafeID);
+					}
+				else	{
+					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryProductFinderExec, unable to ascertain category safe id.'});
+					}
+				},
+
+			adminNavcatMacroDeleteShow : function($ele,p)	{
+				var catSafeID = $ele.closest('li').data('catsafeid');
+				app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you wish to remove this category? There is no undo for this action.",
+					"removeButtonText" : "Remove Category", 
+					"title" : "Remove Category "+catSafeID, 
+					"removeFunction" : function(vars,$D){
+						$D.showLoading({"message":"Deleting category "+catSafeID});
+						app.model.addDispatchToQ({
+							'_cmd':'adminNavcatMacro',
+							'@updates' : ["DELETE?path="+catSafeID],
+							'_tag':	{
+								'callback':function(rd)	{
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										$D.dialog('close');
+										$ele.closest('li').empty().remove();
+										}
+									}
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					})
+				
+				}, //adminNavcatMacroDeleteShow
+
+			adminNavcatsCreateRenameShow : function($ele,p)	{
+				if($ele.data('verb'))	{
+					var $container = $ele.parent().find("[data-app-role='categoryCreateRenameContainer']").show(); //used for context in button selector as well, which is why it's a var.
+					$('button',$container).button('option', 'label', $ele.data('verb').toLowerCase()).data('verb',$ele.data('verb')); //tell the button what to do (create or rename) so the onclick performs the right action.
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_navcats.e.adminNavcatsCreateRenameShow, trigger element does not have a data-verb set.","gMessage":true});
+					}
+				}, //adminNavcatsCreateRenameShow
+
+			adminNavcatsMacro : function($ele,p)	{
+				var verb = $ele.data('verb');
+				if(verb)	{
+					var catSafeID = $ele.closest('li').data('catsafeid');
+					if(catSafeID)	{
+						var cmdObj = {
+							'_cmd':'adminNavcatMacro',
+							'@updates' : [],
+							'_tag':	{
+								'datapointer' : 'adminNavcatMacro',
+								'callback':function(rd){
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	var data = app.data[rd.datapointer];
+
+	//clear everything out of memory and local storage that was just updated.
+	if(data['@PATHS_MODIFIED'] && data['@PATHS_MODIFIED'].length)	{
+//		app.u.dump(" -> got into paths code.");
+		var L = data['@PATHS_MODIFIED'].length;
+		for(var i = 0; i < L; i += 1)	{
+//			app.u.dump(" -> datapointer: adminNavcatDetail|"+app.vars.partition+"|"+data['@PATHS_MODIFIED'][i]);
+			app.model.destroy("adminNavcatDetail|"+app.vars.partition+"|"+data['@PATHS_MODIFIED'][i]);
+			}
+		}
+
+	if(verb == 'RENAME')	{
+		$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
+		}
+	else if(verb == 'CREATE')	{
+		app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+		}
+
+	}
+//Need to run app.model.destroy on everything in the @paths_modified array.									
+	
+									}
+								}
+							}
+		
+						if(verb == 'CREATE' || verb == 'RENAME')	{
+							cmdObj['@updates'].push(verb+"?path="+catSafeID+"&"+$.param($ele.closest('div').serializeJSON()));
+//							app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+							app.model.addDispatchToQ(cmdObj,'immutable');
+							app.model.dispatchThis('immutable');
+						
+							}
+						else	{
+							$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, unrecognized verb ["+verb+"] on trigger element..","gMessage":true});
+							}
+						}
+					else	{
+						$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, could not ascertain the catSafeID.","gMessage":true});
+						}
+					}
+				else	{
+					$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, trigger element does not have a data-verb set (should be set dynamically by adminNavcatsCreateRenameShow).","gMessage":true});
+					}
+				},
 			
 //triggered when a category is clicked opened or closed.
 //will show/load or hide the category as needed.  Will also update DPS so that the next time the user comes into the category editor, 
@@ -321,13 +455,30 @@ function handleDPS(cmd)	{
 							else	{
 								var dp = 'adminNavcatDetail|'+app.vars.partition+'|'+path
 //								app.u.dump(' -> datapointer: '+dp);
+//ok. can't rely on this data being in memory because navcat mode needs to be able to flip sections off then on to refresh them.
+var navCallback = function(rd){
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
+		}
+	else	{
+		$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
+		handleDPS('add');
+		app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+		}	
+	}
 								if(app.data[dp])	{
-									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
-									handleDPS('add');
-									app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+									navCallback({datapointer:dp});
 									}
 								else	{
-									$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, attempted to load app.data["+dp+"], which is not in memory.",'gMessage':true})
+									app.model.addDispatchToQ({
+										'_cmd':'adminNavcatDetail',
+										'_tag':	{
+											'datapointer' : dp,
+											'callback':navCallback
+											}
+										},'mutable');
+									app.model.dispatchThis('mutable');
+//									$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, attempted to load app.data["+dp+"], which is not in memory.",'gMessage':true})
 									}
 								}
 							}

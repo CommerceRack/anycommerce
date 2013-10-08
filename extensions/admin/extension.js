@@ -3969,6 +3969,9 @@ and all .someClass are hidden (value of data-panel-selector)
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!categoriesAndLists')	{
+					app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if(path == '#!billingHistory')	{
 					app.ext.admin_config.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}

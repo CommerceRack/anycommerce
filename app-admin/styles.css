@@ -56,7 +56,8 @@ class can also be applied to a 1 item per row list.
 
 
 /* for small buttons */
-.smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
 .appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
 .zMessage	{margin:6px; 0}
 
