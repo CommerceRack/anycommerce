@@ -337,7 +337,7 @@ Params:
 			categoryEditExec : function($ele,p)	{
 				var catSafeID = $ele.closest('li').data('catsafeid');
 				if(catSafeID)	{
-					navigateTo("#/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG="+catSafeID+"&FS=C");
+					navigateTo("/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG="+catSafeID+"&FS=C");
 					}
 				else	{
 					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryEditExec, unable to ascertain category safe id.'});

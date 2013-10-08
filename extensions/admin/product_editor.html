@@ -368,7 +368,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				<h4>Ship costs, handling and more</h4>
 
 				<div class='threeColumn floatLeft'>
-				<table class='fullWidth gridTable'>
+				<table class='fullWidth gridTable marginBottom'>
 				<thead>
 				<tr>
 					<th>Destination</th>
@@ -393,7 +393,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 					<td><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></td>
 				</tr>
 				</tbody>
-				</table>		
+				</table>
+				
+				<label><span>Product assembly</span> <input type="text" value="" name="pid:assembly" size="40" data-bind='var:product(pid:assembly); format:popVal;' /></label>
+				
 				</div>
 				
 				<div class='threeColumn floatLeft labelsAsBreaks'>
@@ -403,7 +406,8 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 					
 					<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
 					
-					<label><span>Promotion Class</span><input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' /></label>
+					<label><span>Promotion class</span><input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' /></label>
+					
 				</div>
 				
 				<div class='threeColumn floatLeft labelsAsBreaks'>
