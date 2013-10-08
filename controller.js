@@ -1035,6 +1035,7 @@ app.u.throwMessage(responseData); is the default error handler.
 						app.u.dump(" ------> using delegated events in anycontent, not app events ");
 						app.u.handleEventDelegation($target);
 						}
+					else if(_rtag.skipAppEvents)	{}
 					else	{
 						app.u.handleAppEvents($target);
 						}

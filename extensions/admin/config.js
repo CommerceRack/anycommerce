@@ -100,16 +100,8 @@ var admin_config = function() {
 		a : {
 
 			showBillingHistory : function($target)	{
-/*
-	'billingTransactions'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
-	'billingInvoiceList'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
-	'billingInvoiceDetail'=>[ \&JSONAPI::billingInvoice, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
-	'billingPaymentList'=>[ \&JSONAPI::billingPayment, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
-	'billingPaymentMacro'=>[ \&JSONAPI::billingPayment, { 'boss'=>1, 'admin'=>1, 'cart'=>0 }, 'boss' ],
-*/
-
 				$target.empty()
-				$target.anycontent({'templateID':'billingHistoryTemplate'});
+				$target.anycontent({'templateID':'billingHistoryTemplate','showLoading':false});
 				app.u.handleCommonPlugins($target);
 				app.u.handleEventDelegation($target);
 				app.u.handleButtons($target);
@@ -118,18 +110,15 @@ var admin_config = function() {
 					app.ext.admin.u.applyEditTrackingToInputs($(this));
 					});
 
+				var $tabContent = $("[data-anytab-content='invoices']",$target);
+				$tabContent.showLoading({'message':'Fetching invoice list'});
+
 				app.model.addDispatchToQ({
-					'_cmd':'billingTransactions',
+					'_cmd':'billingInvoiceList',
 					'_tag':{
-						'callback': function(rd)	{
-							$target.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$target.anymessage({'message':rd});
-								}
-							else	{
-								$("[data-anytab-content='invoices']",$target).anycontent(rd);
-								}
-							},
+						'callback': 'anycontent',
+						'jqObj' : $tabContent,
+						'skipAppEvents' : true, 
 						'datapointer':'billingTransactions'
 					}
 				},'mutable');
@@ -887,7 +876,7 @@ $D.dialog('open');
 				newSfo['@updates'].push(newSfo._tag.macrocmd+"?"+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
-				},
+				}, //adminConfigMacro
 			
 			billingPaymentMacro : function(sfo,$form)	{
 				var newSfo = {
@@ -895,37 +884,44 @@ $D.dialog('open');
 					'_tag':sfo._tag,
 					'@updates':[]
 					};
-				
+/*
 				if($(':input.edited',$form).length)	{
 					newSfo['@updates'].push("ACCOUNT-ORG-SET?"+$.param($form.serializeJSON({'selector':':input.edited'})));
 					}
-
-				if($("[data-app-role='paymentMethodTbody'] tr.edited",$form).length)	{
-					$("[data-app-role='paymentMethodTbody'] tr.edited",$form).each(function(){
+*/
+				var $tBody = $("tbody[data-app-role='paymentMethodTbody']:first",$form);
+//				app.u.dump(" -> $tBody.length: "+$tBody.length);
+//				app.u.dump(" -> $tBody.children().length: "+$tBody.children().length);
+				if($tBody.length && $tBody.children().length)	{
+					$("tr.edited",$tBody).each(function(){
 						var $tr = $(this);
 						if($tr.hasClass('isNewRow') && $tr.hasClass('rowTaggedForRemove'))	{
 							//is new and tagged for delete. do nothing.
 							}
 						else if($tr.hasClass('isNewRow'))	{
-							if($tr.data('type') == 'CREDIT')	{
-								newSfo['@updates'].push("PAYMENT-CREDITCARD-ADD?"+$.param(app.u.getWhitelistedObject($tr.data,['CC','MM','YY'])));
+//							app.u.dump(" -> $tr.data(): "); app.u.dump($tr.data());
+							if($tr.data('paymethod') == 'CREDIT')	{
+								//cant just whitelist data cuz the params are UC and data-table applies them as attributes which get lowercased.
+								newSfo['@updates'].push("METHOD-CREDITCARD-ADD?CC="+$tr.data('cc')+"&YY="+$tr.data('yy')+"&MM="+$tr.data('mm'));
 								}
-							else if($tr.data('type') == 'ECHECK')	{
-								newSfo['@updates'].push("PAYMENT-BANK-ADD?"+$.param(app.u.getWhitelistedObject($tr.data,['ECHECK_BANK','ECHECK_CHECKING','ECHECK_ROUTING'])));
+							else if($tr.data('paymethod') == 'ECHECK')	{
+								newSfo['@updates'].push("METHOD-ECHECK-ADD?EB="+$tr.data('eb')+"&EA="+$tr.data('ea')+"&ER="+$tr.data('er')); //"+$.param(app.u.getWhitelistedObject($tr.data(),['EB','EA','ER'])));
 								}
 							else	{
 								//unsupported payment type
+								$tr.closest('fieldset').anymessage({"message":"In admin_config.macrobuilders.billingPaymentMacro, an invalid paymethod ["+$tr.data('paymethod')+"] was passed thru the data table.","gMessage":true});
 								}
 								
 							}
 						else if($tr.hasClass('rowTaggedForRemove'))	{
-							newSfo['@updates'].push("PAYMENT-DELETE?ID="+$tr.data('id'));
+							newSfo['@updates'].push("METHOD-DELETE?ID="+$tr.data('id'));
 							}
 						else	{
 							//unexpected condition
 							}
 						})
 					}
+//				app.u.dump(" -> billingPayments newSFO: "); app.u.dump(newSfo);
 				return newSfo;
 				},
 			
@@ -1564,6 +1560,7 @@ $D.dialog('open');
 						$tr.anycontent({data:sfo});
 						$tr.addClass('edited');
 						$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+						app.u.handleButtons($tr);
 				
 //if a row already exists with this guid, this is an UPDATE, not an ADD.
 //						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
@@ -2029,41 +2026,76 @@ app.model.dispatchThis('immutable');
 				else	{
 					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_config.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
 					}
-				},
-			
-			billingHandleTabContents : function($ele,p)	{
-				var tab = $ele.parent().data('anytabsTab');
-				var $tabContent = $ele.closest("[data-app-role='"+tab+"']").find("[data-anytab-content='pending']");
-				var cmd;
-				if(tab == 'paymentMethods')	{
-					cmd = 'billingPaymentList';
-					}
-				else if(tab == 'pendingTransactions')	{
-					cmd = 'billingTransactions';
-					}
-				else	{} //unrecognized tab.
-				
-				if(cmd)	{
-					$tabContent.showLoading({'message':'Fetching details'});
-					app.model.addDispatchToQ({
-						'_cmd':'billingTransactions',
-						'_tag':{
-							'callback': function(rd)	{
-								$tabContent.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$tabContent.anymessage({'message':rd});
-									}
-								else	{
-									$tabContent.anycontent(rd);
-									}
-								},
-							'datapointer':'billingTransactions'
+				}, //adminDomainDiagnosticsShow
+//triggered on both the view and download buttons. based on data-mode, will either open a download dialog or show the invoice in a modal.
+			billingInvoiceViewDownload : function($ele,p)	{
+
+				var invoice = $ele.closest("[data-invoice]").data('invoice');
+				if(invoice)	{
+					var cmdObj = {
+						'_cmd':'billingInvoiceView',
+						'invoice' : invoice,
+						'_tag':	{
+							'datapointer' : 'billingInvoiceView'
+							}
 						}
-					},'mutable');
+				
+					if($ele.data('mode') == 'download')	{
+						cmdObj._tag.callback = 'fileDownloadInModal';
+						cmdObj._tag.skipDecode = true;
+						cmdObj._tag.filename = 'invoice_'+invoice+'.html';
+						}
+					else	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : 'Invoice '+invoice
+							});
+						cmdObj._tag.callback = 'anycontent';
+						cmdObj._tag.translateOnly = true;
+						cmdObj._tag.jqObj = $D;
+						$D.append("<div data-bind='var:invoice(body); format:text;'><\/div>");
+						$D.dialog('option','height',($(document.body).height() - 100));
+						$D.dialog('open');
+						$D.showLoading({'message':'Fetching invoice details'});
+						}
+					app.model.addDispatchToQ(cmdObj,'mutable');
 					app.model.dispatchThis('mutable');
 					}
-				else	{}
-				}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_config.e.billingInvoiceViewDownload, unable to ascertain invoice #.","gMessage":true});
+					}
+				
+				}, //billingInvoiceViewDownload
+			
+			billingHandleTabContents : function($ele,p)	{
+				var tab = $ele.closest('.ui-tabs-nav').find('.ui-state-active').data('anytabsTab');
+				var $tabContent = $ele.closest("[data-app-role='billingHistory']").find("[data-anytab-content='"+tab+"']:first");
+				if($tabContent.data('uiAnycontent'))	{} //already request/rendered content
+				else	{
+					var cmd;
+					if(tab == 'paymentMethods')	{
+						cmd = 'billingPaymentMethodsList';
+						}
+					else if(tab == 'pendingTransactions')	{
+						cmd = 'billingPendingCharges';
+						}
+					else	{} //unrecognized tab.
+					
+					if(cmd)	{
+						$tabContent.showLoading({'message':'Fetching details'});
+						app.model.addDispatchToQ({
+							'_cmd':cmd,
+							'_tag':{
+								'callback': 'anycontent',
+								'skipAppEvents' : true,
+								'jqObj' : $tabContent,
+								'datapointer':cmd
+							}
+						},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{}
+					}
+				} //billingHandleTabContents
 
 
 			} //e [app Events]

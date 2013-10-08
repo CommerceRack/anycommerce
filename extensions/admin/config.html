@@ -3442,8 +3442,37 @@ Coming Soon
 		<li><a href='#paymentMethods' data-app-click="admin_config|billingHandleTabContents">Payment Methods</a></li>
 	</ul>
 
-	<section data-anytab-content='invoices' class='clearfix'></section>
-	<section data-anytab-content='pendingTransactions' class='clearfix'></section>
+	<section data-anytab-content='invoices' class='clearfix'>
+	<table class='gridTable fullWidth applyAnytable'>
+	<thead>
+	<tr>
+		<th>Created</th>
+		<th>Subject</th>
+		<th>Amount</th>
+		<th>Status</th>
+		<th>Paid Date</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:billing(@INVOICES); format:processList;loadsTemplate:billingInvoiceRowTemplate;"></tbody>
+	</table>
+	</section>
+	
+	<section data-anytab-content='pendingTransactions' class='clearfix'>
+	<table class='gridTable fullWidth applyAnytable'>
+	<thead>
+	<tr>
+		<th>Subject</th>
+		<th>Amount</th>
+		<th>Status</th>
+		<th>Paid Date</th>
+		<th>Created</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:billing(@FEES); format:processList;loadsTemplate:billingTransactionsRowTemplate;"></tbody>
+	</table>
+	</section>
+	
 	<section data-anytab-content='paymentMethods' class='clearfix'>
 
 
@@ -3452,7 +3481,7 @@ Coming Soon
 <input type='hidden' name='_macrobuilder' value='admin_config|billingPaymentMacro' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
-
+<!--
 <fieldset class='labelsAsBreaks alignedLabels marginBottom'>
 	<legend>Required Billing Information</legend>
 
@@ -3487,22 +3516,22 @@ Coming Soon
 	</label>
 
 </fieldset>
-
+-->
 <fieldset class='labelsAsBreaks'>
 	<legend>Configured Billing Methods</legend>
 
 	<div class='twoColumn'>
-		<table data-app-role='dataTable'>
+		<table data-app-role='dataTable' class='gridTable fullWidth'>
 		<thead>
 		<tr>
 			<th>Type</th>
-			<th></th>
-			<th></th>
-			<th></th>
+			<th>Ref 1</th>
+			<th>Ref 2</th>
+			<th>Ref 3</th>
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-app-role='paymentMethodTbody' data-bind="var: shipping(@METHODS); format:processList; loadsTemplate:billingHistoryPayMethodsRowTemplate;">
+		<tbody data-app-role='paymentMethodTbody' data-bind="var: shipping(@PAYMENT_METHODS); format:processList; loadsTemplate:billingPaymentsRowTemplate;">
 		
 		</tbody>
 		</table>
@@ -3529,6 +3558,7 @@ Coming Soon
 			<div class='label'>
 				<span>Expiration</span>
 				<select name="MM" class='skipTrack'>
+					<option value=''></option>
 					<option value="01">January (1)</option>
 					<option value="02">February (2)</option>
 					<option value="03">March (3)</option>
@@ -3543,6 +3573,7 @@ Coming Soon
 					<option value="12">December (12)</option>
 				</select> 
 				<select name="YY" class='skipTrack'>
+					<option value=''></option>
 					<option value="13">2013</option>
 					<option value="14">2014</option>
 					<option value="15">2015</option>
@@ -3557,15 +3588,15 @@ Coming Soon
 		<div class='billingHistoryPaymentAddType' data-panel-id='billingHistoryPaymentAddTypeECHECK'>
 		<label>
 			<span>Bank name</span>
-			<input type="text" name="ECHECK_BANK" value="" class='skipTrack' />
+			<input type="text" name="EB" value="" class='skipTrack' />
 		</label>
 		<label>
 			<span>Account #</span>
-			<input type="text" name="ECHECK_CHECKING" value="" class='skipTrack' />
+			<input type="text" name="EA" value="" class='skipTrack' />
 		</label>
 		<label>
 			<span>Routing</span>
-			<input type="text" name="ECHECK_ROUTING" value="" class='skipTrack' />
+			<input type="text" name="ER" value="" class='skipTrack' />
 		</label>
 		</div>
 		
@@ -3591,21 +3622,44 @@ Coming Soon
 
 
 <table>
-<tr id='billingHistoryPayMethodsRowTemplate'>
+
+<tr id='billingInvoiceRowTemplate'>
+	<td data-bind="var:invoice(CREATED); format:text;"></td>
+	<td data-bind="var:invoice(SUBJECT); format:text;" data-app-click='admin_config|billingInvoiceViewDownload' class='lookLikeLink'></td>
+	<td data-bind="var:invoice(AMOUNT); format:text;"></td>
+	<td data-bind="var:invoice(STATUS); format:text;"></td>
+	<td data-bind="var:invoice(PAID_DATE); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-click='admin_config|billingInvoiceViewDownload' data-mode='download' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download Invoice</button>
+		<button data-app-click='admin_config|billingInvoiceViewDownload' class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>View Invoice</button>
+	</td>
+</tr>
+
+<tr id='billingTransactionsRowTemplate'>
+	<td data-bind="var:invoice(CREATED); format:text;"></td>
+	<td data-bind="var:invoice(MESSAGE); format:text;"></td>
+	<td data-bind="var:invoice(AMOUNT_DUE); format:text;"></td>
+	<td data-bind="var:invoice(BILLCLASS); format:text;"></td>
+	<td data-bind="var:invoice(TXNREF); format:text;"></td>
+</tr>
+
+
+<tr id='billingPaymentsRowTemplate'>
 	<td data-bind='var: method(PAYMETHOD); format:text;'></td>
 	<td>
 		<div data-bind="var:method(CC); format:text;"></div>
-		<div data-bind="var:method(ECHECK_BANK); format:text;"></div>
+		<div data-bind="var:method(CM); format:text;"></div>
+		<div data-bind="var:method(EB); format:text;"></div>
 	</td>
 	<td>
 		<div data-bind="var:method(MM); format:text;"></div>
-		<div data-bind="var:method(ECHECK_CHECKING); format:text;"></div>
+		<div data-bind="var:method(EA); format:text;"></div>
 	</td>
 	<td>
 		<div data-bind="var:method(YY); format:text;"></div>
-		<div data-bind="var:method(ECHECK_ROUTING); format:text;"></div>
+		<div data-bind="var:method(ER); format:text;"></div>
 	</td>
 	
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Delete Rule</button></td>
 </tr>
 </table>
