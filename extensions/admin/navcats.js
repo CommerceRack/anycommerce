@@ -295,7 +295,17 @@ Params:
 					var L = paths.length;
 					for(var i = 0; i < L; i += 1)	{
 						app.model.destroy("adminNavcatDetail|"+app.vars.partition+"|"+paths[i]);
+						app.model.addDispatchToQ({
+							'path':paths[i],
+							'detail':'more',
+							'navtree' : 'PRT00'+app.vars.partition,
+							'_cmd': 'adminNavcatDetail',
+							'_tag' : {
+								'datapointer' : "adminNavcatDetail|"+app.vars.partition+"|"+paths[i]
+								}
+							},'mutable');
 						}
+					app.model.dispatchThis('mutable');
 					}
 				},
 

@@ -215,7 +215,9 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
  	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
  	</div>
 	</td>
-	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
+	<td data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='lookLikeLink' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">
+		<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span>
+	</td>
 	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
 	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
 	<td class='hideInMinimalMode'>
