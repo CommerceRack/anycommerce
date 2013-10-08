@@ -758,8 +758,8 @@ $target.append("<br \/>");
 							'message':'Your changes have been saved'
 							}
 						},'immutable');
-//					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
-//					app.model.dispatchThis('immutable');
+					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+					app.model.dispatchThis('immutable');
 
 					});
 				//FLEXEDIT-SAVE
