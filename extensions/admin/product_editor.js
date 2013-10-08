@@ -1742,6 +1742,45 @@ Required params include:
 					}
 				}, //attributes
 
+
+//INVENTORY?SKU=XXXXX&unlimited, which is a checkbox at the product level.
+			schedule : function($form)	{
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'@updates' : new Array(),
+					_tag : {
+						callback : 'showMessaging',
+						message : 'Schedule pricing updated.',
+						restoreInputsFromTrackingState : true,
+						removeFromDOMItemsTaggedForDelete : true,
+						jqObj : $form
+						}
+					}
+
+// loop through all the rows and check to see if any have been edited.
+				$("[data-app-role='schedulesContainer'] tbody",$form).children().each(function(){
+					var $tr = $(this);
+					if($('.edited',$tr).length)	{
+						cmdObj['@updates'].push("SET-SCHEDULE?schedule="+$tr.data('schedule')+"&"+$.param($tr.serializeJSON()))
+						}
+					//if any input for the record has been updated, update qty and loc.
+					else {
+
+						}
+					});
+
+//				app.u.dump(" -> cmdObj for schedule:"); app.u.dump(cmdObj);
+				
+				if(cmdObj['@updates'].length)	{
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
+				
+				}, //schedule
+
+
+
 //INVENTORY?SKU=XXXXX&unlimited, which is a checkbox at the product level.
 			inventory : function($form)	{
 				var pid = $("input[name='pid']",$form).val();
@@ -1873,8 +1912,8 @@ Required params include:
 						jqObj : $form
 						}
 					}
-
-				$(".edited",$form).each(function(){
+				
+				$("[data-app-role='flexeditContainer']:first .edited",$form).each(function(){
 					var $input = $(this);
 					if($input.closest('.handleAsSku').length)	{
 						if($input.is(':checkbox'))	{

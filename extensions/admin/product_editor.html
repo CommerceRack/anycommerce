@@ -334,7 +334,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				<li><label><input type='checkbox'  name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label></li>
 				<li><label><input type='checkbox'  name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label></li>
 				<li><label><input type='checkbox'  name="is:newarrival"  data-bind="var: product(is:newarrival); format:popVal;" /> New arrival</label></li>
-				<li><label><input type='checkbox'  name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open Box </label></li>
+				<li><label><input type='checkbox'  name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open box </label></li>
 				<li><label><input type='checkbox'  name="is:preorder"  data-bind="var: product(is:preorder); format:popVal;" /> Pre-order</label></li>
 				<li><label><input type='checkbox'  name="is:refurb"  data-bind="var: product(is:refurb); format:popVal;" /> Refurb </label></li>
 				<li><label><input type='checkbox'  name="is:sale"  data-bind="var: product(is:sale); format:popVal;" /> Sale item</label></li>
@@ -657,10 +657,24 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 	<form action='#' onSubmit='return false'>
 	
+	<div class='marginBottom' data-app-role='schedulesContainer'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Schedule</th>
+		<th>Qty. Price</th>
+		<th>Minimum Qty</th>
+		<th>Qty. Increment</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: product(@schedules); format:processList; loadsTemplate:schedulesRowTemplate;"></tbody>
+	</table>
+	</div>
+	
 	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
 	
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="flex">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="flex,schedule">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /attributes tab content -->
@@ -727,7 +741,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				<th>Mfg ID</th>
 				<th>UPC</th>
 				<th>ASIN</th>
-				<th>Condition</th>
+<!--				<th>Condition</th>-->
 				<th>Price</th>
 				<th>Base Cost</th>
 				<th>Weight</th>
@@ -1315,6 +1329,14 @@ if it already has a simple, lock the button
 	</td>
 </tr>
 
+<tr id='schedulesRowTemplate'>
+	<td data-bind="var:schedule(schedule); format:text;"></td>
+	<td><input name='qtyprice' value='' data-bind="var:schedule(qtyprice); format:popVal;" size='20'  /></td>
+	<td><input name='qtymin' value='' data-bind="var:schedule(qtymin); format:popVal;" size='6' min='0' step='1' /></td>
+	<td><input name='qtyinc' value='' data-bind="var:schedule(qtyinc); format:popVal;" size='6' min='0' step='1' /></td>
+</tr>
+
+
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
 	<td data-bind="var: detail(PRODUCT); format:text;"></td>
 	<td class='lookLikeLink' data-bind="var: detail(EBAY_ID); format:link2eBayByID; extension:admin_prodEdit;"><span data-bind="var: detail(EBAY_ID); format:text;"></span></td>
@@ -1382,10 +1404,10 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind='var:sku(sku); format:text;'></td>
 	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
 	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' /></td>
-	<td><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.sku:mfgid); format:popVal;'></td>
-	<td><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.sku:upc); format:popVal;'></td>
-	<td><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
-	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
+	<td><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.amz:asin); format:popVal;'></td>
+<!--	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
 		<option value="NEW">New</option>
 		<option value="OPEN">Open</option>
 		<option value="REFURB">Refurb</option>
@@ -1394,9 +1416,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 		<option value="OTHER">Other</option>
 		<option value="DAMAGED">Damaged</option>
 		<option value="UNINSPECTED">Uninspected</option>
-	</select></td>
+	</select></td>-->
 	<td><input name="sku:price" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
-	<td><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.sku:cost); format:popVal;'></td>
+	<td><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
 	<td><input name="sku:weight" size="4" type="text" data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
 
 </tr>

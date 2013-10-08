@@ -203,11 +203,11 @@ copying the template into memory was done for two reasons:
 			app.calls.appCartCreate.init({'callback':'handleNewSession'},'immutable');
 			app.model.dispatchThis('immutable');
 			}
-		
+		this.u.dump(" -> finished onready except thirdPartyInits");
 //if third party inits are not done before extensions, the extensions can't use any vars loaded by third parties. yuck. would rather load our code first.
 // -> EX: username from FB and OPC.
 		app.u.handleThirdPartyInits();
-		
+		this.u.dump(" -> finished thirdPartyInits");
 		}, //onReady
 					// //////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\		
 
