@@ -176,7 +176,6 @@ var admin_navcats = function() {
 				else	{
 						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required. (fetchonly: "+vars.fetchOnly+")",'gMessage':true});
 					}
-				
 				},
 
 /*
@@ -191,8 +190,8 @@ Params:
 	
 */
 			getTree : function(mode,vars){
-				app.u.dump("BEGIN admin_navcats.u.getTree");
-				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				app.u.dump("BEGIN admin_navcats.u.getTree");
+//				app.u.dump(" -> vars: "); app.u.dump(vars);
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 
@@ -291,7 +290,45 @@ Params:
 				return arr;
 				},
 			
-			
+			destroyPathsModified : function(paths)	{
+				if(paths && paths.length)	{
+					var L = paths.length;
+					for(var i = 0; i < L; i += 1)	{
+						app.model.destroy("adminNavcatDetail|"+app.vars.partition+"|"+paths[i]);
+						}
+					}
+				},
+
+
+
+// a function for adding or removing a category from the list of what's open by default.
+// On the initial load, p.skipDPSset will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
+			handleNavcatDPS : function (cmd,path)	{
+				var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+				
+				var index = $.inArray(path,navcatObj);
+			//	app.u.dump(" -> cmd: "+cmd);
+			//	app.u.dump(" -> index: "+index);
+				if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{
+					//do nothing. array already reflects cmd.
+			//		app.u.dump("NO ACTION NECESSARY FOR "+path);
+					} 
+				else if(cmd == 'remove')	{
+			//		app.u.dump("REMOVE "+path);
+					navcatObj.splice(index,1);
+					app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					}
+				else if(cmd == 'add' && index < 0){
+					navcatObj.push(path);
+					app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					}
+				else	{
+					app.u.dump("handleNavcatDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
+					}
+			//	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
+				}
+
+
 			
 			}, //u [utilities]
 //This extension uses a delegated event model, so each 'event' below does NOT need an on() declared. 
@@ -329,6 +366,7 @@ Params:
 							'_cmd':'adminNavcatMacro',
 							'@updates' : ["DELETE?path="+catSafeID],
 							'_tag':	{
+								'datapointer' : 'adminNavcatMacro',
 								'callback':function(rd)	{
 									$D.hideLoading();
 									if(app.model.responseHasErrors(rd)){
@@ -337,6 +375,8 @@ Params:
 									else	{
 										$D.dialog('close');
 										$ele.closest('li').empty().remove();
+										app.ext.admin_navcats.u.handleNavcatDPS('remove',catSafeID);
+										app.ext.admin_navcats.u.destroyPathsModified(app.data[rd.datapointer]['@PATHS_MODIFIED']);
 										}
 									}
 								}
@@ -374,18 +414,8 @@ if(app.model.responseHasErrors(rd)){
 	$('#globalMessaging').anymessage({'message':rd});
 	}
 else	{
-	var data = app.data[rd.datapointer];
-
 	//clear everything out of memory and local storage that was just updated.
-	if(data['@PATHS_MODIFIED'] && data['@PATHS_MODIFIED'].length)	{
-//		app.u.dump(" -> got into paths code.");
-		var L = data['@PATHS_MODIFIED'].length;
-		for(var i = 0; i < L; i += 1)	{
-//			app.u.dump(" -> datapointer: adminNavcatDetail|"+app.vars.partition+"|"+data['@PATHS_MODIFIED'][i]);
-			app.model.destroy("adminNavcatDetail|"+app.vars.partition+"|"+data['@PATHS_MODIFIED'][i]);
-			}
-		}
-
+	app.ext.admin_navcats.u.destroyPathsModified(app.data[rd.datapointer]['@PATHS_MODIFIED']);
 	if(verb == 'RENAME')	{
 		$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
 		}
@@ -443,48 +473,19 @@ else	{
 						$icon = $ele.closest('li').find('.ui-icon:first');
 					
 					if(path)	{
-						var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+						
 //						app.u.dump(' -> path: '+path);
-
-// a function for adding or removing a category from the list of what's open by default.
-// On the initial load, p.skipDPSset will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
-function handleDPS(cmd)	{
-	if(p.skipDPSset)	{}
-	else	{
-	
-		var index = $.inArray(path,navcatObj);
-	//	app.u.dump(" -> cmd: "+cmd);
-	//	app.u.dump(" -> index: "+index);
-		if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{
-			//do nothing. array already reflects cmd.
-	//		app.u.dump("NO ACTION NECESSARY FOR "+path);
-			} 
-		else if(cmd == 'remove')	{
-	//		app.u.dump("REMOVE "+path);
-			navcatObj.splice(index,1);
-			app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
-			}
-		else if(cmd == 'add' && index < 0){
-			navcatObj.push(path);
-			app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
-			}
-		else	{
-			app.u.dump("handleDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
-			}
-		}
-//	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
-	}
 
 						if($subcats.length)	{
 							if($subcats.children().length)	{
 								//subcats have already been rendered. not an error, just handled differently.
 								if($subcats.is(':visible'))	{
 									$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e');
-									handleDPS('remove');
+									if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('remove',path);}
 									}
 								else	{
 									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s')
-									handleDPS('add');
+									if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
 									}
 								$subcats.toggle('fast'); //putting the handleDPS code in the toggle oncomplete was causing it to be executed multiple times
 								
@@ -495,11 +496,16 @@ function handleDPS(cmd)	{
 //ok. can't rely on this data being in memory because navcat mode needs to be able to flip sections off then on to refresh them.
 var navCallback = function(rd){
 	if(app.model.responseHasErrors(rd)){
+//8001 error would be a category that no longer exists. If we hit this, remove the safeid from local storage.
+		if(rd._msg_1_id == '8001')	{
+			app.u.dump(" ---------------------> got to 8001 error.");
+			app.ext.admin_navcats.u.handleNavcatDPS('remove',path)
+			}
 		$('#globalMessaging').anymessage({'message':rd});
 		}
 	else	{
 		$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
-		handleDPS('add');
+		if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
 		app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
 		}	
 	}
