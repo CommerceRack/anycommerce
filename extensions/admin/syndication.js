@@ -1062,7 +1062,16 @@ if(mode == 'test' || mode == 'update')	{
 						}
 					
 					setShippingServices('dom');
-					setShippingServices('int');
+					if(sfo['InternationalShipping\@BOOLEAN'] == 1)	{
+						setShippingServices('int');
+						}
+					else	{
+//international shipping is disabled, so nuke all international settings. This is how eBay wants the data (empty if disabled)
+						sfo['Item\ShipToLocations\@ARRAY'] = [];
+						sfo['Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption'] = "";
+						sfo['Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY'] = "";
+						sfo['@ship_intservices'] = [];
+						}
 //form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
 delete sfo.cost
 delete sfo.farcost
@@ -1082,7 +1091,8 @@ if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
 					sfo._cmd = CMD;
 					sfo._tag = {
 						'callback' : function(rd)	{
-							var dp = rd.datapointer || rd._rtag.datapointer; //depending on whether @msgs has errors, the response format changes.
+							var dp = rd.datapointer;
+							if(!dp && rd._rtag)	{dp = rd._rtag.datapointer}; //depending on whether @msgs has errors, the response format changes.
 							$tab.hideLoading();
 //for test mode, don't check for errors in the response. the mechanism used to return the profile errors is the same as a potential api error.
 //which means rd may be the exact response and data[datapointer] may not be set or the opposite.
@@ -1090,7 +1100,7 @@ if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
 									var
 										$D = $("<div \/>",{'title':'Profile '+sfo.PROFILE+' Error Report'}),
 										$ul = $("<ul \/>"),
-										errs = rd['@MSGS'] || app.data[rd.datapointer]['@MSGS'],
+										errs = rd['@MSGS'] || app.data[dp]['@MSGS'],
 										L = errs.length
 
 									for(var i = 0; i < L; i += 1)	{

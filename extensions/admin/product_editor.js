@@ -179,8 +179,15 @@ _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.exte
 
 //If the item has variations, show the variations tab.
 if(!$.isEmptyObject(app.data[_rtag.datapointer]['%variations']))	{
-	$("[data-app-role='variationsTab']",_rtag.jqObj).closest('li').show();
+	$("[data-anytabs-tab='variations']",_rtag.jqObj).show();
 	}
+
+//check to see if item has inventoryable variations.
+if(app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
+	//this product has inventoryable options.
+	$("[data-app-role='auctionConfigurationSettings']",_rtag.jqObj).hide() // inventory-able variations and ebay are not compatible.
+	}
+
 
 $('form',_rtag.jqObj).each(function(){
 	app.ext.admin.u.applyEditTrackingToInputs($(this));
