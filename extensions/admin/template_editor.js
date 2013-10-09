@@ -1688,7 +1688,7 @@ else	{
 					},
 //USES DELEGATED EVENTS
 				adminEBAYProfilePreviewShow : function($ele,p)	{
-						var $D = app.ext.admin.i.dialogCreate({"title":"Auction Template Preview"});
+						var $D = app.ext.admin.i.dialogCreate({"title":"HTML Listing Preview"});
 						$D.dialog('open');
 //this is used in the product editor 
 var pid = $ele.closest("[data-pid]").data('pid');
