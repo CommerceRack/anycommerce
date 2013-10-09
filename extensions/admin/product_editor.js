@@ -191,10 +191,11 @@ app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages'
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 
+//This tab is now always showing up because it has both flexedit and wholesale pricing in it.
 //if the merchant has flex fields enabled, show the attributes tab. needs to be after the handleCommonPlugins function so that tabs have already been generated.
-if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminConfigDetail|flexedit']['%flexedit']))	{
-	$("[data-anytabs-tab='attributes']",_rtag.jqObj).show();
-	}	
+//if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminConfigDetail|flexedit']['%flexedit']))	{
+//	$("[data-anytabs-tab='attributes']",_rtag.jqObj).show();
+//	}	
 
 if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 	$("[name='zoovy:inv_enable']",_rtag.jqObj).prop('checked','checked');
