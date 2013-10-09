@@ -587,10 +587,15 @@ payment options, pricing, etc
 			chkoutPreflight : function(formObj,$fieldset)	{
 //				app.u.dump("BEGIN orderCreate.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
+				$("[data-app-role='buyerLogout']").hide(); //make sure this is hidden. Will be shown when necessary.
 				if(app.u.buyerIsAuthenticated() || app.ext.cco.u.thisSessionIsPayPal())	{
 					app.u.dump(" -> session is authenticated OR this is an authorized paypal transaction.");
 					$("[data-app-role='login']",$fieldset).hide();
 					$("[data-app-role='username']",$fieldset).show();
+//if the user is logged in, show the 'not you?' feature. However, don't show it if this is already paypal (at that point, they are who they say they are)
+					if(!app.ext.cco.u.thisSessionIsPayPal())	{
+						$("[data-app-role='buyerLogout']").show();
+						}
 					}
 //hide the password input
 				else if(formObj['want/create_customer'] == 'on')	{
@@ -981,7 +986,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 		e : {
 
-
+			buyerLogout : function($ele)	{
+//				app.u.dump(" BEGIN orderCreate.e.buyerLogout");
+				$ele.off('click.buyerLogout').on('click.buyerLogout',function(event){
+//					app.u.dump(" -> orderCreate.e.buyerLogout (Click!)");
+					app.calls.buyerLogout.init({'callback':function(rt){
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+						app.model.dispatchThis('immutable');
+						}});
+					app.model.dispatchThis('immutable');
+					});
+				},
+				
 //applied to inputs like coupon and giftcard so that when 'enter' is pushed, it triggers a click on the corresponding button.
 			addTriggerButtonClick : function($input)	{
 				$input.off('keypress.addTriggerButtonClick').on('keypress.addTriggerButtonClick',function(event){
@@ -1730,6 +1749,8 @@ app.model.dispatchThis('passive');
 						}
 					}
 				} //payMethodsAsRadioButtons
+			
+
 			
 			} //renderFormats
 

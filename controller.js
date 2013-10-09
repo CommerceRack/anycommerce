@@ -762,6 +762,13 @@ see jquery/api webdoc for required/optional param
 
 		buyerLogout : {
 			init : function(_tag)	{
+// *** 201338 -> logging out should clear this fields as they contain buyer specific data.
+				app.model.destroy('appBuyerLogin');
+				app.model.destroy('buyerWalletList');
+				app.model.destroy('buyerAddressList');
+				app.model.destroy('appPaymentMethods');
+				app.model.destroy('whoAmI');
+				app.model.destroy('cartDetail');
 				this.dispatch(_tag);
 				return 1;
 				},
