@@ -793,6 +793,7 @@ if(selector && mode)	{
 //	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
 //	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
+
 	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 		'mediaLibrary' : function(data,textStatus){
 			var L = data.length;
@@ -803,7 +804,13 @@ if(selector && mode)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 				}
-//*** 201324 -> this wasn't getting dispatched!
+
+//** 201338 -> moved this. the 'stopped' code wasn't properly executing on a large batch of files upload.
+			app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+	
+			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
+			app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 			app.model.dispatchThis('immutable');
 			},
 		'publicFileUpload' : function(data,textStatus)	{
@@ -899,9 +906,9 @@ if(selector && mode)	{
 			}
 		});
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
-	
+/*
 	function fileuploadstopped() {
-//		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
@@ -914,6 +921,7 @@ if(selector && mode)	{
 //		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
+*/
 	// Enable iframe cross-domain access via redirect option:
 	$selector.fileupload(
 		'option',
