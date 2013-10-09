@@ -3136,59 +3136,53 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				app.model.dispatchThis('immutable')
 				},
 			
-//pass in a domain and an attr
-//ex: pass in prt and the partition is returned.
-			getDataForDomain : function(domain,attr)	{
-				var r = false; //what is returned. will be value, if available.
-				var data = app.data['adminDomainList']['@DOMAINS']; //shortcut
-				var L = data.length;
-				for(var i = 0; i < L; i += 1)	{
-					if(data[i].id == domain){
-						r = data[i][attr];
-						break; //once a match is found, exit.
-						}
-					else{} //catch.
-					}
-//				app.u.dump(" -> r: "+r);
-				return r;
-				}, //getDataForDomain
-
 
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
-//				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain); app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition));
+//				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain);
+				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
 				if(domain)	{
 //if no partition available, get it. if partition is null, number() returns 0.		
-					if(partition != null && Number(partition) >= 0){
-						
+					if(partition == 0 || Number(partition) > 0){
+						//if partition is 'false' or undef, number(partition) will = 0. not good in this case.
 						}
 					else	{
-						partition = app.ext.admin.a.getDataForDomain(domain,'PRT');
+//(( 201338 -> previously used getDataForDomain, which was broken. changed to shared function.
+						var domainData = app.ext.admin.u.getValueByKeyFromArray(app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain);
+						if(domainData && domainData.PRT)	{
+							partition = domainData.PRT; 
+							}
 						}
-					
-					app.vars.domain = domain;
-					app.vars.partition = partition;
-					app.vars.https_domain = app.data['adminDomainList']['media-host'];
-//set the vars in localStorage. This is what will be used upon return to preselect a domain.
-					app.ext.admin.u.dpsSet('admin',"domain",domain); 
-					app.ext.admin.u.dpsSet('admin',"partition",partition); 
-					app.ext.admin.u.dpsSet('admin',"https_domain",app.vars.https_domain); 
-//update the view.
-					$('.partition','#appView').text(partition || "");
-					$('.domain','#appView').text(domain);
+// ** 201338 -> added this check to track down where partition isn't getting properly set.
+					if(domain && (partition == 0 || Number(partition) > 0))	{
+						app.vars.domain = domain;
+						app.vars.partition = partition;
+						app.vars.https_domain = app.data['adminDomainList']['media-host'];
+	//set the vars in localStorage. This is what will be used upon return to preselect a domain.
+						app.ext.admin.u.dpsSet('admin',"domain",domain); 
+						app.ext.admin.u.dpsSet('admin',"partition",partition); 
+						app.ext.admin.u.dpsSet('admin',"https_domain",app.vars.https_domain); 
+	//update the view.
+						$('.partition','#appView').text(partition);
+						$('.domain','#appView').text(domain);
+	
+	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
+	//something here is causing session to not persist on reload.
+	/*					if(app.model.fetchData('authAdminLogin'))	{
+							var localVars = app.data['authAdminLogin'];
+							localVars.domain = domain;
+							localVars.partition = partition || null;
+							app.storageFunctions.writeLocal('authAdminLogin',localVars);
+							}
+	*/
+	//					app.u.dump(" -> path: "+path);
+						showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
 
-//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-//something here is causing session to not persist on reload.
-/*					if(app.model.fetchData('authAdminLogin'))	{
-						var localVars = app.data['authAdminLogin'];
-						localVars.domain = domain;
-						localVars.partition = partition || null;
-						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
-*/
-//					app.u.dump(" -> path: "+path);
-					showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin.u.changeDomain, partition ["+partition+"] was not passed, valid and/or could not be ascertained","gMessage":true})
+						}
 					}
 				else	{
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
@@ -3479,18 +3473,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					}
 				else {
 					
-/*
-//** 201320 -> as part of the change to using dpsGet in the extension init, the callback here is no longer needed.
-//The call is still executed so that the domainList is in memory.
-					app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
-						else	{
-							app.vars.partition = app.ext.admin.a.getDataForDomain(domain,'prt');
-							$('.partition').text(app.vars.partition);
-							app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
-							}
-						}},'immutable');
-*/					
+					
 					app.ext.admin.calls.adminDomainList.init({},'immutable');
 					
 					$('.username','#appView').text(app.vars.userid);
@@ -6020,7 +6003,7 @@ not in use
 				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
 				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(){
 //					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
-					app.ext.admin.a.changeDomain(domain,$btn.closest('tr').data('prt'));
+					app.ext.admin.a.changeDomain(domain,$btn.closest("[data-prt]").attr('data-prt'));
 					});
 				//
 				},

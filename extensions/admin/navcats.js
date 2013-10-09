@@ -107,10 +107,10 @@ var admin_navcats = function() {
 				var r = 0; //what is returned. will be # of dispatches added to Q.
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
-
+app.u.dump(" => typeof dpsGet: "+typeof app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition)); app.u.dump(app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition));
 					var
 						L = subcats.length,
-						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition), //list of 'open' categories from localStorage.
+						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || [], //list of 'open' categories from localStorage.
 						NOL = navcatObj.length;
 						
 
