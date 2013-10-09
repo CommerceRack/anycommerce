@@ -136,22 +136,26 @@ li.productListItem {
 	width: 185px;
 	margin: 6px;
 }
-.productListItem .prodThumbContainer {
+
+.productListItem .prodThumbContainer,
+.productListItemCategory .prodThumbContainer {
 	border: 1px solid #CDCDCD;
 }
-.productListItem .prodName{
+.productListItem .prodName,
+.productListItemCategory .prodName{
 	color: #0D2D66; 
 	font-weight: normal;
 	height: 30px;
 	font: 11px Arial,Helvetica,sans-serif;
 }
-.productListItem .prodPrice {
+.productListItem .prodPrice ,
+.productListItemCategory .prodPrice {
 	color: #7F0000;
     font: bold 13px Helvetica,Arial;
 	margin-bottom: 4px;
 }
 
-li.productListItem:hover .prodName{color: #BE0000;}
+li.productListItem:hover .prodName, li.productListItemCategory:hover .prodName{color: #BE0000;}
 
 .titleBlue{
 	background: url("img/cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
@@ -234,7 +238,7 @@ li.productListItem:hover .prodName{color: #BE0000;}
 button.quickView{
 	position: absolute;
 }
-
+.quickView.ui-button {padding: 8px;}
 .quickView.ui-state-default { display:none; }
 
 .prodViewerAddToCartForm {
@@ -679,6 +683,16 @@ h4.subCatTitle {
 div:hover > h4.subCatTitle {
 	color: #7f0000;
 }
+
+li.productListItemCategory {
+	height:326px;
+	width: 323px;
+	margin: 6px;
+}
+
+.productListItemCategory .prodName{font-size:16px; height: 40px;}
+.productListItemCategory .prodPrice{font-size:18px;}
+
 
 .categoryTemplateInquiry label {
 	display: inline-block;

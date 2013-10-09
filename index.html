@@ -759,7 +759,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList subcats'></ul><!-- outputs a list of subcategories -->
-	<ul data-bind="var: category(@products); format: infiniteProductList; extension:prodlist_infinite; loadsTemplate: productListTemplate; withReviews:1; withInventory:1; withVariations:1; items_per_page: 60;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+	<ul data-bind="var: category(@products); format: infiniteProductList; extension:prodlist_infinite; loadsTemplate: productListTemplateCategory; withReviews:1; withInventory:1; withVariations:1; items_per_page: 60;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 	<!--
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
@@ -1341,6 +1341,34 @@ remember to NOT put the button inside the 'onClick' container or two events will
 		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
 
 		<h6 class="prodPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
+		
+<!-- 	
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+-->
+	</div>
+<!--
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
+		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+	</form>
+-->
+
+</li>
+
+<li id='productListTemplateCategory' class='loadingBG productListItemCategory' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+
+	<button class='floatRight pointer quickView ui-button ui-state-default displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer positionRelative' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='321' height='221' />
+			<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodPageTagsContainer'></div>
+	
+		</div>
+
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
+
+		<h6 class="prodPrice alignRight" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
 		
 <!-- 	
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
