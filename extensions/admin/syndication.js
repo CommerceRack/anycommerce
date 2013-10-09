@@ -1078,20 +1078,19 @@ if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
 			}
 		}
 	}
-app.u.dump(sfo);
+// app.u.dump(sfo);
 					sfo._cmd = CMD;
 					sfo._tag = {
 						'callback' : function(rd)	{
+							var dp = rd.datapointer || rd._rtag.datapointer; //depending on whether @msgs has errors, the response format changes.
 							$tab.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
+//for test mode, don't check for errors in the response. the mechanism used to return the profile errors is the same as a potential api error.
+//which means rd may be the exact response and data[datapointer] may not be set or the opposite.
 								if(mode == 'test')	{
 									var
 										$D = $("<div \/>",{'title':'Profile '+sfo.PROFILE+' Error Report'}),
 										$ul = $("<ul \/>"),
-										errs = app.data[rd.datapointer]['@MSGS'],
+										errs = rd['@MSGS'] || app.data[rd.datapointer]['@MSGS'],
 										L = errs.length
 
 									for(var i = 0; i < L; i += 1)	{
@@ -1103,8 +1102,12 @@ app.u.dump(sfo);
 									
 									}
 								else	{
-									app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
-									$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
+										$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
 									}
 								}
 							}
