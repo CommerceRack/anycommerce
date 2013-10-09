@@ -727,13 +727,14 @@ has to be within the fieldset to for data-table to work right.
 	<section class='marginTop marginBottom'>
 		<h2>Inspectors</h2>
 		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
+		
 		<form><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Go</button></form>
-		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-event='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>
+		
+		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-event='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
 		<!--
-		<form><label><span>Cart ID</span><input type='text' name='cartid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='cart'>Go</button></form>
-		<p>but probably not this one</p>
-		<form><label><span>Session ID</span><input type='text' name='_cartid' class='marginLeft marginRight' /></label><button>Go</button></form>
-		-->
+		started, but not done yet.
+		<form><label><span>Site Debug</span><span class='toolTip' title="A variety of site debuggging tools (shipping, tax, promotions, etc)">?</span></label><button class='marginLeft' onClick='app.ext.admin_tools.a.siteDebugger(); return false;'>Go</button></form> -->
+		
 	</section>
 
 	<section class='marginTop marginBottom'>
@@ -868,9 +869,7 @@ has to be within the fieldset to for data-table to work right.
 
 
 
-<!-- BILLING HISTORY -->
-
-
+<!-- BILLING HISTORY
 <table>
 <tr id='billingHistoryInvoiceRowTemplate'>
 	<td data-bind='var:invoice(id); format:text;'></td>
@@ -882,6 +881,89 @@ has to be within the fieldset to for data-table to work right.
 	</td>
 </tr>
 </table>
+ -->
 
 
+<div id='siteDebugTemplate'>
+<form action='#' onSubmit='return false'>
+	<fieldset class='marginBottom labelsAsBreaks'>
+		<label>
+			<span>Service</span>
+			<select name='_cmd' data-panel-selector=".debugCMDSpecifics">
+				<option value=''>please choose</option>
+				<option value='adminDebugProduct' data-show-panel='debugCMDSpecificsProduct'>Product</option>
+				<option value='adminDebugPromotion' data-show-panel='debugCMDSpecificsCommon'>Promotion</option>
+				<option value='adminDebugSearch'>Search</option>
+				<option value='adminDebugShipping' data-show-panel='debugCMDSpecificsCommon'>Shipping</option>
+				<option value='adminDebugSite'>Site</option>
+				<option value='adminDebugTaxes' data-show-panel='debugCMDSpecificsCommon'>Taxes</option>
+			</select>
+		</label>
+		
+		
+		<div data-panel-id='debugCMDSpecificsProduct' class='displayNone debugCMDSpecifics'>
+		<label>
+			<span>Product id</span>
+			<input type='text' name='pid' value=''  />
+		</label>	
+		</div>
+		
+		<div data-panel-id='debugCMDSpecificsCommon' class='displayNone debugCMDSpecifics'>
+			<label>
+				<span>Source</span>
+				<select name='SRC' data-panel-selector=".debugSRCSpecifics">
+					<option value='CART' data-show-panel='debugSRCSpecificsCart'>Cart</option>
+					<option value='DEST' data-show-panel='debugSRCSpecificsDest'>Dest</option>
+					<option value='ORDER' data-show-panel='debugSRCSpecificsOrder'>Order</option>
+				</select>
+			</label>
 
+			<div data-panel-id='debugSRCSpecificsCart' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Cart id</span>
+				<input type='text' name='_cart' value=''  />
+			</label>
+			</div>
+			
+			<div data-panel-id='debugSRCSpecificsDest' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Item</span>
+				<input type='text' name='ITEM1' value=''  />
+			</label>
+			<label>
+				<span>Qty</span>
+				<input type='text' name='QTY1' value=''  />
+			</label>
+			<label>
+				<span>Zip</span>
+				<input type='text' name='ZIP' value=''  />
+			</label>
+			<label>
+				<span>State</span>
+				<input type='text' name='STATE' value=''  />
+			</label>
+			<label>
+				<span>Country</span>
+				<input type='text' name='COUNTRY' value=''  />
+			</label>
+			</div>
+		
+			<div data-panel-id='debugSRCSpecificsOrder' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Order ID</span>
+				<input type='text' name='ORDERID' value=''  />
+			</label>
+			</div>
+		
+		
+		
+		</div>
+	</fieldset>
+
+
+	<div class='buttonset alignRight'>
+	<button data-app-click="admin_tools|siteDebugExec" data-icon-primary='ui-icon-wrench' class='applyButton'>Go</button>
+	</div>
+
+</form>
+</div>

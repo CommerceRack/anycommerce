@@ -11,6 +11,16 @@ body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#56565
 img {border:0px;}
 
 /*
+*** 201338 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+}
+
+
+
+/*
 items that are floated may cause their containers to 'shrink'. apply this class to the container
 class can also be applied to a 1 item per row list.
 */

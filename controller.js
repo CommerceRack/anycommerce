@@ -1378,7 +1378,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 							actionFunction =  $target.data('app-'+newEventType).split('|')[1];
 		
 						if(actionExtension && actionFunction)	{
-							if(app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
+							if(app.ext[actionExtension] && app.ext[actionExtension].e[actionFunction] && typeof app.ext[actionExtension].e[actionFunction] === 'function')	{
 					//execute the app event.
 								app.ext[actionExtension].e[actionFunction]($target,p);
 								}

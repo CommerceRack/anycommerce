@@ -5999,7 +5999,7 @@ not in use
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
 //put all the fieldsets that may get toggld into an element with data-app-role='connectorFieldsetContainer' on it.
 //that way only the fieldsets in question get turned off/on.
-
+// ### replace this with data-panel-show.
 			showSiblingFieldset : function($ele)	{
 				$ele.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
 					$ele.closest('form').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){

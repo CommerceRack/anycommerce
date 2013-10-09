@@ -67,6 +67,20 @@ var admin_tools = function() {
 //				$("input",$picker).each(function(){});
 				},
 			
+			siteDebugger : function()	{
+				var $SD = $('#storeDebugger');
+				if($SD.length)	{
+					$SD.dialog('open');
+					}
+				else	{
+					$SD = $("<div \/>").attr('title','Site Debug Tools').anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
+					app.u.handleButtons($SD);
+					app.u.handleCommonPlugins($SD);
+					app.u.handleEventDelegation($SD);
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
+					}
+				},
+			
 			showManageFlexedit : function($target)	{
 				$target.empty();
 				$target.append($("<div \/>").anycontent({'templateID':'manageFlexeditTemplate',data:{}}));
@@ -894,7 +908,17 @@ $target.append("<br \/>");
 						app.model.dispatchThis('immutable');
 						}});
 					})
-				} //agentRemoveConfirm
+				}, //agentRemoveConfirm
+
+			siteDebugExec : function($ele,p)	{
+				var cmdObj = $ele.closest('form').serializeJSON();
+				cmdObj._tag = {
+					'datapointer' : cmdObj.siteDebug
+					};
+				app.u.dump(cmdObj);
+				app.model.addDispatchToQ(cmdObj,'mutable');
+				app.model.dispatchThis('mutable');
+				}
 
 			} //e [app Events]
 		} //r object.
