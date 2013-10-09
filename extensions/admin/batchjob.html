@@ -37,9 +37,9 @@
 	<td data-bind="var: user(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: user(STATUS); format:text;"></td>
 	<td class='alignRight'>
+		<button data-app-event="admin_batchJob|adminBatchJobCleanupExec" data-mode='list'>Delete</button>
 		<button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button>
 		<button data-app-event="admin_batchJob|showDownload" class='displayNone'>Download Report</button>
-		<button data-app-event="admin_batchJob|adminBatchJobCleanupExec" data-mode='list'>Delete</button>
 		<button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button>
 	</td>
 	
