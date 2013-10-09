@@ -294,18 +294,32 @@ app.model.dispatchThis('mutable');
 				}, //showDownload
 			
 			adminBatchJobCleanupExec : function($btn)	{
-				var $row = $btn.closest('tr');
-				$btn.show();
+				
 				$btn.button({text: false,icons: {primary: "ui-icon-trash"}}); //daisy-chaining the button on the show didn't work. button didn't get classes.
 				$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
 					var jobid = $btn.closest('[data-jobid]').data('jobid');
 					if(jobid)	{
-						$('#batchJobStatusModal').empty().addClass('loadingBG');
+						var callback;
+						if($btn.data('mode') == 'list')	{
+							$btn.button('option','icons',{primary:"wait"}).find('ui-icon').removeClass('ui-icon').end().button('disable');
+							callback = function(rd)	{
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	$btn.closest('tr').hide();
+	}
+								}
+							}
+						else	{
+							$('#batchJobStatusModal').empty().addClass('loadingBG');
+							callback = 'showMessaging';
+							}
 						app.model.addDispatchToQ({
 							'_cmd':'adminBatchJobCleanup',
 							'jobid' : jobid,
 							'_tag':	{
-								'callback':'showMessaging',
+								'callback':callback,
 								'message':'Batch job has been cleaned up',
 								'parentID':'batchJobStatus_'+jobid
 								}
