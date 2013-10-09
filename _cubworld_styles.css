@@ -238,7 +238,7 @@ li.productListItem:hover .prodName, li.productListItemCategory:hover .prodName{c
 button.quickView{
 	position: absolute;
 }
-.quickView.ui-button {padding: 8px;}
+.productListItemCategory .quickView.ui-button {padding: 8px;}
 .quickView.ui-state-default { display:none; }
 
 .prodViewerAddToCartForm {
