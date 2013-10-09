@@ -24,8 +24,9 @@ var tools_animation = function() {
 	var r = {
 	
 	vars : {
+		anims : {}
 		},
-	
+	aq : {},
 	metrics : {
 		lastTime : 0,
 		lastFPSTime : 0,
@@ -39,8 +40,8 @@ var tools_animation = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; 
-				app.ext.tools_animation.vars.anims = {};
-				app.ext.tools_animation.aq = {};
+//				app.ext.tools_animation.vars.anims = {};
+//				app.ext.tools_animation.aq = {}; //declaring this here instead of in the r object itself caused safari to die a horrible death when animLoop is run.
 				//Must be accessed from the window namespace
 				window.animFrame = window.requestAnimationFrame ||
 					window.webkitRequestAnimationFrame ||
