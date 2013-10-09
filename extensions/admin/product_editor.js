@@ -1611,6 +1611,7 @@ Required params include:
 										ui.item.attr('data-starting-index',ui.item.index())
 										}
 									},
+								cancel: "[data-basetype='PICK'], [data-basetype='_ASM_']",
 								'stop' : function(event,ui){
 									ui.item.addClass('edited');
 									//if an item from the top of the list was dragged down, everything below the original index gets an 'edited' class because their preference all changes.
@@ -1619,13 +1620,17 @@ Required params include:
 									//each item after this one in the list of rows gets tagged as edited so it's preference can be adjusted.
 									ui.item.closest('tbody').children().each(function(){
 //										app.u.dump(" -> $(this).index: "+$(this).index());
-										if($(this).index() >= changeFromIndex)	{
+										var $tr = $(this);
+										if($tr.data('basetype') == '_ASM_' || $tr.data('basetype') == 'PICK'){}
+										else if($(this).index() >= changeFromIndex)	{
 											$(this).addClass('edited');
 											}
+										else	{}
 										});
 									app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form')); //updates the save button change count.
 									}
-								}).find("tr[data-basetype='_ASM_']").each(function(){
+								}).find("tr[data-basetype='_ASM_'], tr[data-basetype='PICK']").each(function(){
+									$('.ui-icon-grip-dotted-vertical',$(this)).hide();
 									$(":input",$(this)).prop('disabled','disabled');
 									$('button',$(this)).prop('disabled','disabled');
 									});
@@ -1813,6 +1818,8 @@ Required params include:
 					if($tr.hasClass('rowTaggedForRemove'))	{
 						cmdObj['@updates'].push("INV-"+$tr.data('basetype')+"-UUID-NUKE?UUID="+$tr.data('uuid')+"&WAS="+$tr.data('qty'));
 						}
+//certain types get ignored.
+					else if($tr.data('BASETYPE') == '_ASM_' || $tr.data('BASETYPE') == 'PICK')	{}
 					//if any input for the record has been updated, update qty and loc.
 					else {
 						var $qty = $("input[name='QTY']", $tr);

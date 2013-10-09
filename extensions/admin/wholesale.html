@@ -206,7 +206,7 @@
 	<td data-bind="var:detail(PID); format:text;"></td>
 	<td data-bind="var:detail(SKU); format:text;"></td>
 	<td data-bind="var:detail(QTY); format:text;"></td>
-	<td data-bind="var:detail(COST_I); format:text;"></td>
+	<td data-bind="var:detail(COST_I); format:money; isElastic:true;"></td><!-- stored in the same manner as elastic -->
 	<td data-bind="var:detail(NOTE); defaultVal:Never; format:text;"></td>
 	<td>
 	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
