@@ -804,13 +804,7 @@ if(selector && mode)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 				}
-
-//** 201338 -> moved this. the 'stopped' code wasn't properly executing on a large batch of files upload.
-			app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
-			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-	
-			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
-			app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
+//*** 201324 -> this wasn't getting dispatched!
 			app.model.dispatchThis('immutable');
 			},
 		'publicFileUpload' : function(data,textStatus)	{
@@ -899,6 +893,7 @@ if(selector && mode)	{
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		url: document.location.protocol == 'file:' ? 'http://www.zoovy.com/jsonapi/upload/' : '/jsonapi/upload/', //don't hard code to http or https. breaks safari and chrome.
+		'limitConcurrentUploads' : 4,
 		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
 //			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
@@ -906,7 +901,7 @@ if(selector && mode)	{
 			}
 		});
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
-/*
+	
 	function fileuploadstopped() {
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
@@ -921,7 +916,6 @@ if(selector && mode)	{
 //		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
-*/
 	// Enable iframe cross-domain access via redirect option:
 	$selector.fileupload(
 		'option',
@@ -1363,8 +1357,8 @@ for(var i = 0; i < L; i += 1)	{
 
 
 			handleMediaFileButton : function($ele,P)	{
-				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
-				app.u.dump(" -> $ele.data('btn-action'): "+$ele.data('btn-action'));
+//				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
+//				app.u.dump(" -> $ele.data('btn-action'): "+$ele.data('btn-action'));
 
 				P = P || {};
 				P.preventDefault();

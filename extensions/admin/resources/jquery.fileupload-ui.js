@@ -85,6 +85,7 @@
             add: function (e, data) {
 //				app.u.dump("jquery.fileupload-ui.js data.fileupload: "); app.u.dump($(this).data());
 // ** 201324 -> odd. var that = $(this).data('fileupload') stopped working. checked data and it's a different pointer.
+// when upgrading to jquery 2+, this data pointer will need to change to blueimp-fileupload.
                 var that = $(this).data('blueimpFileupload'),
                     options = that.options,
                     files = data.files;
