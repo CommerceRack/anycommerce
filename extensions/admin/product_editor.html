@@ -1074,14 +1074,14 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				<div class='buttonset'>
 					<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
 					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION" data-trigger='save'>Test Auction</button>
-					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Listing</button>
+					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Auction</button>
 				</div>
 		
 			</fieldset>
 	
 	
 		<fieldset class='labelsAsBreaks'>
-			<legend>Syndicated Listing Configuration</legend>
+			<legend>Fixed Price / Syndication Configuration</legend>
 			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 			<div data-bind="var: product(ebay:ts); format:hideIfSet;" class='red marginBottom'>Syndication is disabled for this product.</div>
 	
@@ -1094,6 +1094,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Fixed qty</span>
 				<input type="number" step='1' min='0' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+			</label>
+
+			<label data-bind="var: product(ebay:ts); format:showIfSet;">
+				<div class="hint">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
 			</label>
 
 		
@@ -1109,11 +1113,23 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				</select>
 			</label>
 
+			<label data-bind="var: product(ebay:ts); format:showIfSet;">
+				<div class='buttonset'>
+				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-SYNDICATION">Create Syndication</button>
+				</div>
+				<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+			</label>
+
 	
-			<div class='buttonset'>
-			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
-			</div>
-			<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
+				<div class='buttonset'>
+				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-FIXED">Test Fixed</button>
+				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-FIXED">Create Fixed</button>
+				</div>
+			</label>
 		</fieldset>
 
 
