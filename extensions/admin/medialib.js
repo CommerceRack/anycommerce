@@ -314,7 +314,10 @@ setTimeout(function(){
 			
 				$('#mediaLibControlsTabContainer').tabs();
 //in some cases, we may re-run this callback (such as after a file upload) and we need to open the folder on the left and in the media area opened for continuity.
-				if(app.ext.admin_medialib.u.getOpenFolderName())	{app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())}
+				if(app.ext.admin_medialib.u.getOpenFolderName())	{
+//					app.u.dump(" -> app.ext.admin_medialib.u.getOpenFolderName(): "+app.ext.admin_medialib.u.getOpenFolderName());
+					app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())
+					}
 //for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
 				setTimeout(function(){
 					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
@@ -794,7 +797,8 @@ if(selector && mode)	{
 //	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
 
-	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
+//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
+//This code could get executed several times during a large batch of files. Any code needed for 1 time execution (at the end) should be in the fileuploadstopped function.
 		'mediaLibrary' : function(data,textStatus){
 			var L = data.length;
 			var tagObj;
@@ -804,13 +808,7 @@ if(selector && mode)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 				}
-
-//** 201338 -> moved this. the 'stopped' code wasn't properly executing on a large batch of files upload.
-			app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
-			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-	
-			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
-			app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
+//*** 201324 -> this wasn't getting dispatched!
 			app.model.dispatchThis('immutable');
 			},
 		'publicFileUpload' : function(data,textStatus)	{
@@ -899,6 +897,7 @@ if(selector && mode)	{
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		url: document.location.protocol == 'file:' ? 'http://www.zoovy.com/jsonapi/upload/' : '/jsonapi/upload/', //don't hard code to http or https. breaks safari and chrome.
+		'limitConcurrentUploads' : 4,
 		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
 //			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
@@ -906,7 +905,7 @@ if(selector && mode)	{
 			}
 		});
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
-/*
+	
 	function fileuploadstopped() {
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
@@ -921,7 +920,6 @@ if(selector && mode)	{
 //		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
-*/
 	// Enable iframe cross-domain access via redirect option:
 	$selector.fileupload(
 		'option',
@@ -1029,19 +1027,19 @@ else	{
 //the root LI's contain UL's with their FID in the ID. (mediaChildren_FID) (arguably, should have been mediaChildrenOf_ to indicate better).
 //each of these UL's contain all the properties of the parent folder. fid, fname, etc
 			openMediaFolderByFilePath : function(path)	{
-//				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
+				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
 //if no slashes or periods, is a root category.
 				if(path && path.indexOf('/') == -1 && path.indexOf('.') == -1){
-//					app.u.dump(" -> is a root folder.");
-					$('#mediaRootFolder_'+path+' a:first').click();
+					$("li[data-fname='"+path+"']:first",'#mediaLibFolderListUL').find('a:first').trigger('click');
 					}
 				else if(path)	{
-
+					app.u.dump(" -> is a sub folder");
 					var pathArray = path.split('/');
 					var path2Now = pathArray[0]; //puts path back together again. each pass it adds a folder back, starting with the root and working down 2 the last.
 					var L = (path.indexOf('.') > -1) ? pathArray.length - 1 : pathArray.length; //if last spot is filename, ignore.
 //					app.u.dump(" -> L: "+L);
-					var $rootCat = $('#mediaRootFolder_'+pathArray[0])
+					var $rootCat = $("li[data-fname='"+pathArray[0]+"']:first",'#mediaLibFolderListUL'); //$('#mediaRootFolder_'+pathArray[0])
+					app.u.dump(" -> $rootCat.length: "+$rootCat.length);
 					var fid = $rootCat.data('fid'); //root folder has fname in the id, but all properties in data.
 					var $tmp;
 					$('#mediaChildren_'+fid).toggle(); //turn first set of subfolders.
@@ -1363,8 +1361,8 @@ for(var i = 0; i < L; i += 1)	{
 
 
 			handleMediaFileButton : function($ele,P)	{
-				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
-				app.u.dump(" -> $ele.data('btn-action'): "+$ele.data('btn-action'));
+//				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
+//				app.u.dump(" -> $ele.data('btn-action'): "+$ele.data('btn-action'));
 
 				P = P || {};
 				P.preventDefault();
