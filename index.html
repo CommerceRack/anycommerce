@@ -1823,21 +1823,37 @@ this will likely become more flexible in the future. ###
 <!--
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 -->
-<div class='positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div class='prodBigImageContainer positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodPageTagsContainer'></div>
 	<!--
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 	-->
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='296' height='296' />
+	
+	<canvas class="prodPreviewer displayNone" width="296" height="296" ></canvas>
+	
+	<a class="prodMainImage" data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='296' height='296' />
+	</a>
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:fancybox; extension:fancybox;' width='54' height='54' />
-	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:fancybox; extension:fancybox;' width='54' height='54' />
+	
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image3; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image5; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='54' height='54' />
+	</a>
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image6; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='54' height='54' />
+	</a>
 <!--
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
 
@@ -1912,6 +1928,7 @@ this will likely become more flexible in the future. ###
 		<img class="pointer" width="98" height="25" src="img/prodPage/review-98x25.png" onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;' />
 		<img class="pointer" width="94" height="25" src="img/prodPage/printpage-94x25.png" onClick="app.u.printByElementID('productTemplate_'+app.u.makeSafeHTMLId($(this).parent().data('pid')));return false;" />
 		
+		<!--
 		<span data-bind='var:product(zoovy:prod_image8); format:showIfSetInline;' class="displayNone">
 		<span data-bind='var:product(user:prod_flashparams_jersey); format:showIfSetInline;' class="displayNone">
 		<span data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
@@ -1921,6 +1938,7 @@ this will likely become more flexible in the future. ###
 		</span>
 		</span>
 		</span>
+		-->
 	</div>
 	<div class="socialLinks"></div>
 
@@ -1936,7 +1954,6 @@ this will likely become more flexible in the future. ###
 
 	</menu>
 -->
-	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
 <!--
@@ -1995,7 +2012,7 @@ this will likely become more flexible in the future. ###
 </table>
 
 <div class="prodDescContainer alignJustify">
-	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99);format:imageURL;'  width="160" height="100" />
+	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99); format:imageURL;' width="160" height="100" />
 	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 </div>
 
@@ -2015,7 +2032,6 @@ this will likely become more flexible in the future. ###
 	<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
 
 </div>
-
 
 </div><!-- productTemplateQuickView -->
 

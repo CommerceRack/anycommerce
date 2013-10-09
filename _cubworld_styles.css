@@ -901,7 +901,7 @@ fieldset.variationsFieldset{
 	width: 28px;
 }
 
-.addToCartButton {
+.ui-widget-content .addToCartButton, .addToCartutton {
 	width: 163px;
 	height: 42px;
 	background: url(img/prodPage/cw12_add_to_cart.png) top left no-repeat;
