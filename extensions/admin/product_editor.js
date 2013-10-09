@@ -1611,7 +1611,7 @@ Required params include:
 										ui.item.attr('data-starting-index',ui.item.index())
 										}
 									},
-								cancel: "[data-basetype='PICK'], [data-basetype='_ASM_']",
+								cancel: "[data-basetype='PICK'], [data-basetype='_ASM_'], [data-basetype='DONE']",
 								'stop' : function(event,ui){
 									ui.item.addClass('edited');
 									//if an item from the top of the list was dragged down, everything below the original index gets an 'edited' class because their preference all changes.
@@ -1621,7 +1621,7 @@ Required params include:
 									ui.item.closest('tbody').children().each(function(){
 //										app.u.dump(" -> $(this).index: "+$(this).index());
 										var $tr = $(this);
-										if($tr.data('basetype') == '_ASM_' || $tr.data('basetype') == 'PICK'){}
+										if($tr.data('basetype') == '_ASM_' || $tr.data('basetype') == 'PICK' || $tr.data('basetype') == 'DONE'){}
 										else if($(this).index() >= changeFromIndex)	{
 											$(this).addClass('edited');
 											}
@@ -1629,7 +1629,7 @@ Required params include:
 										});
 									app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form')); //updates the save button change count.
 									}
-								}).find("tr[data-basetype='_ASM_'], tr[data-basetype='PICK']").each(function(){
+								}).find("tr[data-basetype='_ASM_'], tr[data-basetype='PICK'], tr[data-basetype='DONE']").each(function(){
 									$('.ui-icon-grip-dotted-vertical',$(this)).hide();
 									$(":input",$(this)).prop('disabled','disabled');
 									$('button',$(this)).prop('disabled','disabled');
