@@ -2332,7 +2332,9 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	//success content goes here.
-	$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("input[name='ebay:storecat']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
+//	app.u.dump(" -> pid: "+pid+"\nebay:storecat: "+app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
+//	app.u.dump(" -> select.length: "+$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("input[name='ebay:storecat']").length);
+	$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("select[name='ebay:storecat']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
 	}
 								}
 							}
