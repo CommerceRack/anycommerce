@@ -678,20 +678,24 @@ app.model.dispatchThis('mutable');
 							}).prependTo($target);
 						
 						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
-						$panel.slideDown('fast',function(){$target.showLoading({'message':'Fetching Ticket Details.'});});
+						$panel.slideDown('fast',function(){
+							$target.showLoading({'message':'Fetching Ticket Details.'});
+//** 201338 -> moved dispatch into slidedown callback because sometimes the animation would complete after the dispatch, causing the ticket to remain in 'loading' state.
+							app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+							app.model.addDispatchToQ({
+								'_cmd':'adminTicketDetail',
+								'ticketid':ticketID,
+								'_tag':	{
+									'datapointer' : 'adminTicketDetail|'+ticketID,
+									'callback': 'anycontent',
+									'jqObj' : $target,
+									'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
+							
+							});
 						
-						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
-						app.model.addDispatchToQ({
-							'_cmd':'adminTicketDetail',
-							'ticketid':ticketID,
-							'_tag':	{
-								'datapointer' : 'adminTicketDetail|'+ticketID,
-								'callback': 'anycontent',
-								'jqObj' : $target,
-								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
-								}
-							},'mutable');
-						app.model.dispatchThis('mutable');
 
 
 						}
