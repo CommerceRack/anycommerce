@@ -21,7 +21,7 @@ var myCreole;
 
 var app = {vars:{
 	"release":"201338.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-	"_clientid":"zmvc",
+	"_clientid":"1pc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.ylh.zoovy.com/" //used ONLY if protocol is file: (for testing)
@@ -178,13 +178,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
+<!--
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
-
+-->
 <!-- a sample of how to get a 'list' src onto the page. -->
-	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
+<!--
+	<ul data-bind="var: list($somelistname.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+-->
 
 </div>
 

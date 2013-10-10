@@ -321,10 +321,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var r = false; //what is returned. Either true or false.
 				if($form)	{
 					
-					var formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
-					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
-					sum = 0,
-					errors = "";
+					var
+						formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
+						$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
+						sum = 0,
+						errors = "";
 
 //nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
 					$(".ui-widget-anymessage",$form).each(function(){
@@ -1609,9 +1610,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 //they don't happen here because this code is executed when the panel is transmogrified.
 			showSupplementalInputs : function($input)	{
 				if($input && typeof $input === 'object')	{
-					$label = $input.closest('label'),
-					$fieldset = $input.closest('fieldset'),
-					$pmc = $input.closest("[data-app-role='paymentMethodContainer']"); //payment method container. an li or div or row. who knows.
+					var
+						$label = $input.closest('label'),
+						$fieldset = $input.closest('fieldset'),
+						$pmc = $input.closest("[data-app-role='paymentMethodContainer']"); //payment method container. an li or div or row. who knows.
 	
 	//handle the previously selected payment method.
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
