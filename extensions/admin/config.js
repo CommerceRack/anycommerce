@@ -1505,8 +1505,8 @@ $D.dialog('open');
 					
 					if(sfo.tender && sfo.tenderGroup)	{
 						
-						app.u.dump(" -> tender: "+sfo.tender);
-						app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
+//						app.u.dump(" -> tender: "+sfo.tender);
+//						app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
 						
 						if(app.u.validateForm($form))	{
 							if(sfo.tenderGroup == 'WALLET')	{
@@ -1515,8 +1515,8 @@ $D.dialog('open');
 							else	{
 								macroCmd = "PAYMENT/"+sfo.tenderGroup;
 								}
-							app.u.dump(" -> macroCmd: "+macroCmd);
-							app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.','jqObj':$form},'immutable');
+//							app.u.dump(" -> macroCmd: "+macroCmd);
+							app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.','jqObj':$form,'restoreInputsFromTrackingState':true},'immutable');
 					
 							app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
 							app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition},'immutable');
