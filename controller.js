@@ -2260,6 +2260,8 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 			// alert(a.lib);		// uncomment then go into media library for some really wonky behavior 
 		
 				//default height and width to blank. setting it to zero or NaN is bad for IE.
+// *** 201338 Added better handling for when no parameters are set, as well as a bug fix where a necessary '-' character was being removed
+// from a valid use case. -mc
 			if(a.h == null || a.h == 'undefined' || a.h == 0)
 				a.h = '';
 			if(a.w == null || a.w == 'undefined' || a.w == 0)
@@ -2293,12 +2295,13 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 					url += 'B'+a.b+'-';
 					}
 				url += a.m;
+// *** 201338 Moved up into the else statement so that the valid case of no parameters produces the expected URL containing "/-/" instead of "//" -mc
 				if(url.charAt(url.length-1) == '-')	{
 					url = url.slice(0,url.length-1); //strip trailing - because it isn't stricly 'compliant' with media lib specs.
 					}
 				}
 			url += '\/'+a.name;
-		
+
 //			app.u.dump(" -> URL: "+url);
 			
 			if(a.tag == true)	{
