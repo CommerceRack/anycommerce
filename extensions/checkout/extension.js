@@ -1216,7 +1216,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.ext.cco.u.sanitizeAndUpdateCart($form);
 							app.model.dispatchThis('immutable');
 							//scrolls up to first instance of an error.
-							$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage',$form).first().offset().top},1000); //scroll to first instance of error.
+							$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage, .ui-state-error',$form).first().offset().top},1000); //scroll to first instance of error.
 							}
 						}
 					})
