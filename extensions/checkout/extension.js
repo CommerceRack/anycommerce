@@ -242,7 +242,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 						}
 					}
 
-	app.ext.orderCreate.u.scripts2iframe(checkoutData['html:roi'])
+	app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
 
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
@@ -1637,30 +1637,44 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 				}, //showSupplementalInputs
 // *** 201338 -> new means for executing ROI tracking codes.
-			//pass in what is returned after order create in html:roi
+			//pass in what is returned after order create in @TRACKERS
 			scripts2iframe : function(arr)	{
 				app.u.dump('running scripts2iframe');
+				if(window.roiScriptError)	{}
+				else	{
+					window.roiScriptError = app.ext.orderCreate.u.roiScriptError; //assigned global scope to reduce likely hood of any errors resulting in callback.
+					app.u.dump(" -> typeof window.roiScriptError: "+typeof window.roiScriptError);
+					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
 					var L = arr.length;
-					app.u.dump(" -> L: "+L);
+//					app.u.dump(" -> L: "+L);
+					var $container = $("<div>",{'id':'iframes4checkout'}).appendTo(document.body);
+//first, create the iframes necessary for each item in the arr.
 					for(var i = 0; i < L; i++)	{
-	//adding to iframe gives us an isolation layer
-	//data-script-id added so the iframe can be removed easily later.
-						var $iframe = $("<iframe \/>").attr({'data-script-id':arr.owner}).css({'display':'none','height':1,'width':1}).appendTo('body'); // -> commented out for testing !!!
-						var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
-						var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
-						$div.find('script').each(function(){
-							var $s = $(this);
-							if($s.attr('src'))	{
-								app.u.dump(" -> attempting to add "+$s.attr('src'));
-								$iframe.contents().find('head').append($s);
-								}
-							else	{
-								scripts += $s.text()+"\n\n";
-								}
-							});
-						$iframe.contents().find('head').append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
+						$("<iframe \/>").attr({'data-owner':arr[i].owner}).css({'display':'block','height':40,'width':40}).appendTo($container); //.append(arr[i].script);
 						}
+
+//for whatever reason, a short delay needs to occur between creating the iframes and accessing them (adding content).
+					setTimeout(function(){
+						for(var i = 0; i < L; i++)	{
+							app.u.dump(" -> owner: "+arr[i].owner);
+							var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
+							var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+							var $iframeBody = $("iframe[data-owner='"+arr[i].owner+"']",$container).contents().find('body');
+							$div.find('script').each(function(index){
+								var $s = $(this);
+								if($s.attr('src'))	{
+									app.u.dump(" -> attempting to add "+$s.attr('src')+" to head of iframe"); //this is an js include.
+									$iframeBody.append($s);
+									}
+								else	{
+									scripts += $s.text()+"\n\n"; //this is script guts.
+									}
+								});
+							//now put all the scripts into a try and see what happens.
+							$iframeBody.append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
+							}
+						},1000);
 					}
 				else	{
 					//didn't get anything or what we got wasn't an array.
@@ -1668,7 +1682,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				},
 //is executed if one of the ROI scripts contains a javascript error (fails in the 'try').
 			roiScriptError : function(owner,err)	{
-app.u.dump("The script for "+scriptID+" Contained an error and most likely did not execute properly. (it failed the 'try').","warn");
+app.u.dump("The script for "+owner+" Contained an error and most likely did not execute properly. (it failed the 'try').","warn");
 app.model.addDispatchToQ({
 	'_cmd':'appAccidentDataRecorder',
 	'owner' : owner,
