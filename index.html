@@ -1361,12 +1361,12 @@ remember to NOT put the button inside the 'onClick' container or two events will
 
 	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer positionRelative' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-			<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='321' height='221' />
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='236' height='162' />
 			<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodPageTagsContainer'></div>
 	
 		</div>
 
-		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 70;'></h5>
 
 		<h6 class="prodPrice alignRight" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
 		

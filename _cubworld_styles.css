@@ -685,13 +685,13 @@ div:hover > h4.subCatTitle {
 }
 
 li.productListItemCategory {
-	height:326px;
-	width: 323px;
+	height:240px;
+	width: 238px;
 	margin: 6px;
 }
 
-.productListItemCategory .prodName{font-size:16px; height: 40px;}
-.productListItemCategory .prodPrice{font-size:18px;}
+.productListItemCategory .prodName{font-size:14px; height: 36px;}
+.productListItemCategory .prodPrice{font-size:16px;}
 
 
 .categoryTemplateInquiry label {
