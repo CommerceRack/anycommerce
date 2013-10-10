@@ -2068,12 +2068,12 @@ else	{} //no changes in sku attribs.
 				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
-				}, //buycom, //prodImages
+				}, //prodImages
 				
 			buycom : function($form)	{
 				var pid = $("input[name='pid']",$form).val();
 				var cmdObj = {
-					_cmd : 'adminProductMacro',
+					_cmd : 'adminProductUpdate',
 					pid : pid,
 					'%attribs' : $("[data-app-role='buyAttributes']",$form).serializeJSON({'selector' : ':input.edited' , 'cb' : true}),
 					'@updates' : new Array(),
@@ -2085,9 +2085,6 @@ else	{} //no changes in sku attribs.
 						}
 					}
 
-
-
-
 //the :input pseudo selector will match all form field types.
 				var $editedInputs = $("[data-app-role='buySkus'] :input.edited",$form);
 				if($editedInputs.length)	{
@@ -2096,7 +2093,7 @@ else	{} //no changes in sku attribs.
 						})
 					}
 
-//app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
+//				app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				} //buycom
 
