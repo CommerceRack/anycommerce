@@ -1612,6 +1612,7 @@ Required params include:
 										ui.item.attr('data-starting-index',ui.item.index())
 										}
 									},
+								handle : ".ui-icon-grip-dotted-vertical",
 								cancel: "[data-basetype='PICK'], [data-basetype='_ASM_'], [data-basetype='DONE']",
 								'stop' : function(event,ui){
 									ui.item.addClass('edited');
