@@ -268,6 +268,7 @@ if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
 					
 
 					//product record, used in most panels.
+					//if this request is changed, don't forget to add the change to the detail call made in the save button (adminProductMacroSaveHandlersExec)
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductDetail',
 						'variations':1,
@@ -1863,6 +1864,7 @@ Required params include:
 						'@updates' : new Array(), //used for sku images
 						'_tag' : {
 							'callback' : 'showMessaging',
+							restoreInputsFromTrackingState : true,
 							'message' : "Your product navigation changes have been saved",
 							jqObj : $form
 							}
@@ -1890,6 +1892,7 @@ Required params include:
 						'@updates' : new Array(), //used for sku images
 						'_tag' : {
 							'callback' : 'showMessaging',
+							restoreInputsFromTrackingState : true,
 							'message' : "SKU image updates have saved",
 							jqObj : $form
 							}
@@ -2871,6 +2874,7 @@ else	{
 						'_cmd':'adminProductDetail',
 						'variations':1,
 						'inventory' : 1,
+						'schedules' : 1,
 						'skus':1,
 						'pid' : pid,
 						'_tag':{
