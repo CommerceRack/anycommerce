@@ -64,7 +64,7 @@ var orderCreate = function() {
 //				else {
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
 //					}
-				var r; //returns false if checkout can't load due to account config conflict.
+				var r = true; //returns false if checkout can't load due to account config conflict.
 
 //update jQuery.support with whether or not placeholder is supported.
 
@@ -133,8 +133,9 @@ var orderCreate = function() {
 				app.ext.cco.u.nukePayPalEC({'callback':function(rd){
 //suppress errors but unlock all the panels.
 $('body').hideLoading();
-var $context = $(app.u.jqSelector('#',app.u.getParameterByName('parentID')));
+var $context = responseData._rtag.jqObj;
 app.u.dump(" -> $context.length: "+$context.length);
+
 app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
@@ -1587,7 +1588,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.u.dump("It appears we've just returned from PayPal.");
 						app.ext.orderCreate.vars['payment-pt'] = token;
 						app.ext.orderCreate.vars['payment-pi'] = payerid;
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
