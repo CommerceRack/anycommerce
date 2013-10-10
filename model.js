@@ -219,12 +219,14 @@ function zoovyModel() {
 					
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
 					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
-					c += 1;
-//added on 2012-02-23
-					if(c > app.globalAjax.numRequestsPerPipe){
+
+//* 201338 -> moved the c increment to below the comparison and changed from c > to c >=. that way if numRequestsPP = 1, this will work correctly.
+//					if(c > app.globalAjax.numRequestsPerPipe){
+					if(c >= app.globalAjax.numRequestsPerPipe){
 						setTimeout("app.model.dispatchThis('"+QID+"');",500); //will fire off the remaining items in the q shortly.
 						break //max of 100 dispatches at a time.
 						}
+					c++;
 					}
 				}
 			return myQ;
