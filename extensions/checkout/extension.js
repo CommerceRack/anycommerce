@@ -1646,35 +1646,35 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.u.dump(" -> typeof window.roiScriptError: "+typeof window.roiScriptError);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
-					var L = arr.length;
-//					app.u.dump(" -> L: "+L);
-					var $container = $("<div>",{'id':'iframes4checkout'}).appendTo(document.body);
-//first, create the iframes necessary for each item in the arr.
-					for(var i = 0; i < L; i++)	{
-						$("<iframe \/>").attr({'data-owner':arr[i].owner}).css({'display':'block','height':40,'width':40}).appendTo($container); //.append(arr[i].script);
-						}
-
-//for whatever reason, a short delay needs to occur between creating the iframes and accessing them (adding content).
-					setTimeout(function(){
-						for(var i = 0; i < L; i++)	{
-							app.u.dump(" -> owner: "+arr[i].owner);
-							var $div = $("<div \/>").append(arr[i].script); //may contain multiple scripts.
-							var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
-							var $iframeBody = $("iframe[data-owner='"+arr[i].owner+"']",$container).contents().find('body');
-							$div.find('script').each(function(index){
-								var $s = $(this);
-								if($s.attr('src'))	{
-									app.u.dump(" -> attempting to add "+$s.attr('src')+" to head of iframe"); //this is an js include.
-									$iframeBody.append($s);
-									}
-								else	{
-									scripts += $s.text()+"\n\n"; //this is script guts.
-									}
-								});
-							//now put all the scripts into a try and see what happens.
-							$iframeBody.append("<script>try{"+scripts+"} catch(err){window.parent.roiScriptErr('"+arr.owner+"','error: '+err);}<\/script>");
-							}
-						},1000);
+	var L = arr.length;
+	for(var i = 0; i < L; i++)	{
+//adding to iframe gives us an isolation layer
+//data-script-id added so the iframe can be removed easily later.
+		arr[i].id = 'iframe_3ps_'+i
+		$("<iframe \/>",{'id':arr[i].id}).attr({'data-script-id':arr[i].owner,'height':1,'width':1}).css({'display':'none'}).appendTo('body'); // -> commented out for testing !!!
+/*
+the timeout is added for multiple reasons.
+1.  jquery needed a moment between adding the iframe to the DOM and accessing it's contents.
+2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
+*/
+  		setTimeout(function(thisArr){
+			var $iframe = $('#'+thisArr.id).contents().find("html").html("bob was here");
+			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
+			var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+			$div.find('script').each(function(){
+				console.log("woot");
+				var $s = $(this);
+				if($s.attr('src'))	{
+					console.log(" -> attempting to add "+$s.attr('src'));
+					$iframe.contents().find('head').append($s);
+					}
+				else	{
+					scripts += $s.text()+"\n\n";
+					}
+				});
+			$iframe.append("<script>try{"+scripts+"\n window.parent.scriptCallback('"+arr.owner+"','success');} catch(err){window.parent.scriptCallback('"+arr.owner+"','error: '+err);}<\/script>");
+			},(100 * i),arr[i])
+		} 
 					}
 				else	{
 					//didn't get anything or what we got wasn't an array.
