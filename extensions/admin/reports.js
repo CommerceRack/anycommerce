@@ -138,37 +138,43 @@ var admin_reports = function() {
 							}
 						}
 					},'mutable');
-				
+
+				//fetch a list of pre-defined jobs that the merchant can quickly re-execute.
 				app.model.addDispatchToQ({
 					'_cmd':'adminBatchJobParametersList',
 					'_tag':	{
 						'datapointer' : 'adminBatchJobParametersList',
 						'callback': function(rd)	{
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	var
-		data = app.data[rd.datapointer]['@PARAMETERS'],
-		L = data.length,
-		$skuReports = $("[data-app-role='inventoryReportsCustomContainer_sku']:first",$target),
-		$invReports = $("[data-app-role='inventoryReportsCustomContainer_inventory']:first",$target);
-
-function display(job){
-	return "<a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a> (last run: "+job.LASTRUN_TS+") <br />"
-	}
-
-	for(var i = 0; i < L; i += 1)	{
-		if(data[i].BATCH_EXEC == 'REPORT/SKU')	{
-			$skuReports.append(display(data[i]));
-			}
-		else if(data[i].BATCH_EXEC == 'REPORT/INVENTORY'){
-			$invReports.append(display(data[i]));
-			}
-		else	{}
-		}
-	//
-	}
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								var
+									data = app.data[rd.datapointer]['@PARAMETERS'];
+//* 201338 -> better handling if no parameters are returned.
+									if(typeof data == 'object')	{
+										var L = data.length,
+										$skuReports = $("[data-app-role='inventoryReportsCustomContainer_sku']:first",$target),
+										$invReports = $("[data-app-role='inventoryReportsCustomContainer_inventory']:first",$target);
+							
+										function display(job){
+											return "<a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a> (last run: "+job.LASTRUN_TS+") <br />"
+											}
+							
+										for(var i = 0; i < L; i += 1)	{
+											if(data[i].BATCH_EXEC == 'REPORT/SKU')	{
+												$skuReports.append(display(data[i]));
+												}
+											else if(data[i].BATCH_EXEC == 'REPORT/INVENTORY'){
+												$invReports.append(display(data[i]));
+												}
+											else	{}
+											}
+										}
+									else	{
+										//no @parameters/predefined jobs.  that's ok. no error message or anything of that nature is necessary.
+										}
+								}
 							},
 						'jqObj' : $("[data-anytab-content='inventoryReports']:first",$target)
 						}

@@ -6001,7 +6001,8 @@ not in use
 				$btn.button({icons: {primary: "ui-icon-check"},text: false});
 				var domain = $btn.closest("[data-domainname]").data('domainname');
 				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
-				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(){
+				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(event){
+					event.preventDefault();
 //					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
 					app.ext.admin.a.changeDomain(domain,$btn.closest("[data-prt]").attr('data-prt'));
 					});
@@ -6009,7 +6010,8 @@ not in use
 				},
 			domainView : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
-				$btn.off('click.domainView').on('click.domainView',function(){
+				$btn.off('click.domainView').on('click.domainView',function(event){
+					event.preventDefault();
 					var domainname = $btn.closest("[data-domainname]").data('domainname');
 if(domainname)	{
 	if($btn.data('mode') == 'host')	{
