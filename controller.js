@@ -2046,20 +2046,24 @@ VALIDATION
 
 // * 201336 -> make sure a number input has a numerical value.
 					else if($input.attr('type') == 'number' && $input.val())	{
+						app.u.dump(" -> number validation. value: "+$input.val()+" and isNaN: "+isNaN($input.val()));
 						if (!isNaN($input.val())) {
-							if($input.attr('min') && ($input.val() < $input.attr('min')))	{
+							if($input.attr('min') && (Number($input.val()) < Number($input.attr('min'))))	{
 								r = false;
 								$input.addClass('ui-state-error');
 								$input.after($span.text('minimum value of '+$input.attr('min')+'. '));
 								}
-							else if($input.attr('max') && ($input.val() > $input.attr('max')))	{
+							else if($input.attr('max') && (Number($input.val()) > Number($input.attr('max'))))	{
 								r = false;
 								$input.addClass('ui-state-error');
 								$input.after($span.text('max value of '+$input.attr('max')+'. '));
 								}
-							else	{}
+							else	{
+//								app.u.dump(" -> everything appears to check out w/  "+$input.attr('name')+" number input.");
+								}
 							}
 						else	{
+							app.u.dump(" -> value is not a number");
 							r = false;
 							$input.addClass('ui-state-error');
 							$input.after($span.text('not a number. '));
