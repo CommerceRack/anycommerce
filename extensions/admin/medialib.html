@@ -240,7 +240,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	<li id='mediaFileTemplate'>
 	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' />
 	<div data-bind='var: media(Name); format:text;'></div>
-	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='deleteMedia' class='applyButton' data-icon-primary='ui-icon-trash' data-text='false'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='deleteMedia' class='applyButton btnDelete' data-icon-primary='ui-icon-trash' data-text='false'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
 	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' class='applyButton displayNone' data-icon-primary='ui-icon-circle-check' data-text='false'>Use this piece of media.</button>
 	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='mediaDetails' class='applyButton' data-icon-primary='ui-icon-info' data-text='false'>More details.</button>
 	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='downloadMedia' class='applyButton' data-icon-primary='ui-icon-image' data-text='false'>Download file.</button>
