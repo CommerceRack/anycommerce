@@ -556,6 +556,20 @@ app.u.handleEventDelegation($target);
 					});
 				},
 
+//was originally used in the product editor. Is no longer, but the render format is used in the picker still.
+			manageCatsList : function($tag,data) {
+				var cats = Object.keys(data.value).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+				for(var index in cats) {
+					if(cats[index]) {
+//						app.u.dump(" -> index: "+cats[index]);
+//						app.u.dump(" -> data.value[index]: "+data.value[cats[index]]);
+						var obj = {'MCID':cats[index], 'product_count' : data.value[cats[index]].length, '@product' : data.value[cats[index]]}
+						$o = app.renderFunctions.transmogrify({'mcid':index},data.bindData.loadsTemplate,obj);
+						$tag.append($o);
+						}
+					}
+				},
+
 			prodImages : function($tag,data)	{
 	//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
 				var L = data.bindData.max || 99;
