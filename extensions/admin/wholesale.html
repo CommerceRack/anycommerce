@@ -443,10 +443,21 @@
 			<h2>Supplier Information</h2>
 			<div class='clearfix'>
 			
-			<div>
-			Role: <span data-bind="var:vendor(FORMAT); format:text;"></span>
-			</div>
 			<fieldset data-app-role='SET'>
+
+				<label><!-- an input for format must be present because OURSET is destructive-->
+				<span>Role</span> <select data-bind="var:vendor(FORMAT); format:popVal;" name='FORMAT' required='required' >
+					<option value=''>Please choose</option>
+					<option value='NONE'  data-show-panel='supplierFormatVendorID'>None / Disabled</option>
+					<option value='STOCK' data-show-panel='supplierFormatVendorID'>Stock/Vendor : orders are shipped from vendor to your warehouse(s)</option>
+					<option value='DROPSHIP' data-show-panel='supplierFormatVendorID'>Dropship : orders will be shipped to customer out of vendors inventory</option>
+					<option value='FULFILL' data-show-panel='supplierFormatVendorID'>Fulfillment/3PL : outsourced warehouse/logistics services</option>
+					<option value='FBA' data-change-input='VENDORID' data-change-newval='FBA'>FBA: fulfillment by Amazon</option>
+					<option value='RIVER' data-show-panel='supplierFormatVendorID'>River : transmits wire-speed copies of all orders for integrations</option>
+				</select>
+				<span class='toolTip' title="The format, once set, can not be changed.">?</span>
+				</label>
+
 		
 				<label data-bind='var: supplier(MARKUP); format:showIfSet;' class='displayNone'>
 					<span>Markup</span>
@@ -667,7 +678,7 @@
 			<h2>FBA Configuration</h2>
 			<div class='clearfix'>
 			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>
-			<fieldset data-app-role='OURSET'>				
+			<fieldset data-app-role='SET'>				
 				<label>
 					<span>FBA Marketplace ID</span>
 					<input name='fba_marketplaceid' data-bind='var:supplier(%OUR.fba_marketplaceid); format:popVal;' />

@@ -258,11 +258,25 @@ else	{
 									app.ext.admin.u.handleAppEvents($editorContainer);
 									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
 
-
-									if(app.data[rd.datapointer].CODE == 'FBA')	{
+//for FBA, most panel inputs get 'locked'
+									if(app.data[rd.datapointer].FORMAT == 'FBA' || app.data[rd.datapointer].CODE == 'FBA')	{
 										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show()
 										$('.panel',$editorContainer).not("[data-panel-id='supplierOurFBAConfig']").find(":input").attr('disabled','disabled');
+										$("select[name='FORMAT']",$editorContainer).val('FBA');
+//to compensate for a bug where FORMAT was getting dropped.
+										if(!app.data[rd.datapointer].FORMAT)	{
+											$("select[name='FORMAT']",$editorContainer).val('FBA').addClass('edited');
+											}
 										}
+//format can not change once set.
+									else if(app.data[rd.datapointer].FORMAT)	{
+										$("select[name='FORMAT']",$editorContainer).prop('disabled','disabled');
+										}
+//if code is FBA, force format to FBA. this is a reserved name (user formats are more characters).
+									else if(app.data[rd.datapointer].CODE != 'FBA')	{
+										$("select[name='FORMAT'] option[value='FBA']",$editorContainer).prop('disabled','disabled').addClass('edited');
+										}
+									else	{}
 
 								//make into anypanels.
 									$("div.panel",$editorContainer).each(function(){
