@@ -1839,9 +1839,9 @@ BROWSER/OS
 // .browser returns an object of info about the browser (name and version).
 		getBrowserInfo : function()	{
 // *** .browser() is not supported as of jquery 1.9+
-			var r = false,
-			ua= navigator.userAgent,
-			match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
+			var
+				ua= navigator.userAgent.toLowerCase(),
+				match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
 
 			return match[ 1 ] || "-" + match[ 2 ] || "0";
 			
