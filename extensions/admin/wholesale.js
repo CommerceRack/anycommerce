@@ -259,7 +259,7 @@ else	{
 									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
 
 
-									if(app.data[rd.datapointer].FORMAT == 'FBA')	{
+									if(app.data[rd.datapointer].CODE == 'FBA')	{
 										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show()
 										$('.panel',$editorContainer).not("[data-panel-id='supplierOurFBAConfig']").find(":input").attr('disabled','disabled');
 										}

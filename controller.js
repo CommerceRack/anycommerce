@@ -2024,6 +2024,7 @@ VALIDATION
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						//indexOf instead of == means validation-rules (notice the plural) can be a comma seperated list
 						}
+					else if($input.prop('disabled')){} //do not validate disabled fields. if required and blank and disabled, form would never submit.
 					else if($input.prop('type') == 'radio'){
 //keep a list of all required radios. only one entry per name.
 //app.u.dump(" -> $input.attr('name'): "+$input.attr('name')+' and required: '+$input.attr('required'));
