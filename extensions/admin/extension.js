@@ -5508,6 +5508,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 //used for creating a disposable dialog. returns dialog.
 //does NOT open dialog. this allows for customization of the dialog prior to display.
+//this code is pretty modal specific.
 			dialogCreate : function(vars)	{
 				vars = vars || {};
 				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
@@ -5521,7 +5522,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$D.anycontent(vars);
 					}
 				$D.dialog({
-					modal: true,
+					modal: false,
 					width : '90%',
 					autoOpen : false,
 					appendTo : vars.appendTo || "",

@@ -2720,14 +2720,16 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 				app.u.dump("BEGIN admin_prodEdit.e.showProductTemplateInDialog (click!)");
 				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
-//					app.u.dump(" -> have pid. proceed.");
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Product: '+pid,
-						'showLoading' : false
+//don't use dialogCreate because this isn't a modal. when browser scoller issue is resolved, this can be updated.
+					var $D = $("<div \/>",{'title':'Product Debug: '+pid}).dialog({
+						width : "90%",
+						height : 500,
+						close: function(event, ui)	{
+							$(this).dialog('destroy'); //remove from DOM when finished.
+							$(this).intervaledEmpty(1000);
+							}
 						});
 					app.ext.admin_prodEdit.a.showProductDebugger($D,{'pid':pid,'templateID':$ele.data('templateid')});
-					
-					$D.dialog('open')
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductTemplateInDialog, unable to ascertain PID.','gMessage':true});
@@ -2752,17 +2754,21 @@ var data = app.data[rd.datapointer];
 /*
 The response here could come back in one of two flavors. Either as a txt file or using @BODY/@HEAD, which is a csv file (just like batches).
 */
-if(data.body)	{
-	rd.filename = report+'.txt';
-	app.callbacks.fileDownloadInModal.onSuccess(rd)
-	}
-else if(data['@BODY'] && data['@HEAD'])	{
-	app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
+if(data)	{
+	if(data.body)	{
+		rd.filename = report+'.txt';
+		app.callbacks.fileDownloadInModal.onSuccess(rd)
+		}
+	else if(data['@BODY'] && data['@HEAD'])	{
+		app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
+		}
+	else	{
+		$debugWin.anymessage({'message':'In admin_prodEdit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});
+		}
 	}
 else	{
-	
-	}
-								},
+	$debugWin.anymessage(rd);
+	}								},
 							'jqObj' : $reportEle,
 							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
 							'datapointer':'adminProductDebugLog|'+pid
