@@ -1,0 +1,312 @@
+@font-face	{
+	font-family: barcode3of9;
+	src: url('../app-admin/fonts/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
+body {line-height: 1;} /* helps to reduce some errant whitespace issues */
+
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+
+img {border:0px;}
+
+/*
+*** 201338 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+}
+
+
+
+/*
+items that are floated may cause their containers to 'shrink'. apply this class to the container
+class can also be applied to a 1 item per row list.
+*/
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.displayInlineBlock	{display:inline-block;}
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+
+.valignTop	{vertical-align:top;}
+.valignMiddle	{vertical-align:middle;}
+
+.displayNone,
+.labelsAsBreaks label.displayNone,
+.labelsAsBreaks .label.displayNone,
+.debug,
+.showForZoovyOnly,
+.showForAnyCommerceOnly,
+.conditionalHide, /* a generic class used for hiding/unhiding based on when specific conditions are met */
+.detailMode .hideInDetailMode,
+.minimalMode .hideInMinimalMode 	{display:none;}
+
+.isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+.conditionMet .conditionalHide	{display:block;}
+.conditionMet span.conditionalHide	{display:inline-block;}
+
+/* for use on lists where no bullets, indents, etc are needed. add on ul */
+/* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
+
+
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+
+
+
+a, .lookLikeLink	{cursor:pointer; color:#7398a5;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
+.pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
+
+
+.opacity50	{
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */
+	-moz-opacity: 0.5; /* Netscape */
+	-khtml-opacity: 0.5; /* Safari 1.x */
+	opacity: 0.5;	/* Good browsers */
+	}
+
+
+/* text styling */
+
+
+
+.barcode	{font-family: barcode3of9 !important;}
+/*section or page header. There should only be one of these per page and it should be at the very top.*/
+h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
+
+/* used for the heading of section of text blocks each with it's own sub heading.
+must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
+h2	{font-size: 1.3em; margin: 0px 0px 6px 0px;}
+
+/* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
+should be followed by a P , TABLE or LIST. */
+h3	{font-size: 1.2em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+/* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
+h4	{font-size: 1.1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+/* if you want to display a hint or tip, give it the hint class */
+
+
+.hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
+.small	{font-size:.85em;}
+.lowercase	{text-transform:lowercase;}
+
+
+
+
+
+
+
+/* some positioning classes */
+
+.positionRelative	{position:relative;}
+.positionAbsolute	{position:absolute;}
+.positionTop	{top:0;}
+.positionRight	{right:0;}
+.positionLeft	{left:0;}
+.positionBottom	{bottom:0;}
+
+
+/*
+Generic text styles
+*/
+.lineThrough	{text-decoration:line-through}
+.uppercase	{text-transform:uppercase;}
+.spacedLetters	{letter-spacing:.6em;}
+/* apply this class to a pre tag and whitespace formatting will be supporting, but word wraping will occur */
+.preformatted {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	display:block; 
+	white-space: pre-wrap;  
+	white-space: -moz-pre-wrap; 
+	white-space: -pre-wrap; 
+	white-space: -o-pre-wrap; 
+	word-wrap: break-word; 
+	width:100%; overflow:visible; /* formatting caused scroll bars for a few px */
+	font-family:Tahoma, Geneva, sans-serif; /* have to redeclare for pre default */
+	}
+
+.smallTxt,
+.ui-widget select.smallTxt	{font-size:.75em;}
+
+
+/*
+some global padding and margins.
+As often as practical, use margin or padding of 12px; this will give the UI a consistent look and feel.
+If more is needed, jump up in increments of 12.
+If less is needed, use increments of 4
+*/
+
+.noPadOrMargin	{padding:0; margin:0;}
+.paddingNone {padding:0;}
+
+
+/*
+MARGIN CLASSES
+some standard margins that can be used for spacing between elements.
+In general, rule of thumb would be to apply bottom margin to stacked elements, not top. That way if the element order changes, there's no alignment issues on top.
+if extra spacing is needed between two elements, add a leftmargin to the right element and rightmargin to the left element. doubles the margin.
+using these shared margins will help make the UI more consistent.
+*/
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px !important;}
+
+.paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
+
+.stdMargin	{margin:12px;}
+.stdPadding, .ui-widget .stdPadding	{padding:12px;}
+.smallPadding, .ui-widget .smallPadding	{padding:4px !important;}
+.ui-widget-header-padding	{padding:3px 6px !important;}
+section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
+
+.ui-corner-none	{
+	-webkit-border-radius: 0px;
+	border-radius: 0px; 	
+	}
+
+
+
+
+.wait	{display:inline-block; background:url(../app-admin/images/small_wait.gif) no-repeat center center    !important; min-height:16px; min-width:16px;}
+
+
+
+/*
+
+########################################################
+
+LOGIN and preView
+
+########################################################
+
+*/
+
+
+#appPreView, #appLogin, #createAccountContainer, #appPasswordRecover	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
+
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+
+
+#appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
+
+
+/*
+
+########################################################
+
+
+Messaging Styles
+
+########################################################
+
+*/
+.appMessage	{margin-bottom:12px;}
+.appMessage .stdMargin {padding:5px;}
+
+.appMessage .ui-icon	{float:left; margin-right:12px;}
+
+/* some messages have a red bg. add a white circle around the icon in these cases. */
+.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
+
+
+.ui-state-success	{background:#c3e6c2; border:#abc8aa 1px solid;}
+.ui-state-success .ui-icon-check, .ui-icon-z-success	{background: url(../app-admin/images/success-25x25.png) no-repeat  !important; width:25px; height:29px;}
+.ui-state-success p	{padding-top:7px;} /* top padding aligns text w/ middle of icon */
+
+
+
+/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+.appMessage .appMessageTxt	{float:left;}
+
+.ui-state-z-message	{border:1px solid #666666; background:#efefef; color:#333333;}
+
+.ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
+.ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
+
+.ui-icon-z-ise	{background:url(../app-admin/images/ise-25x22.png) no-repeat center center  !important; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(../app-admin/images/error-25x25.png) no-repeat center center  !important; width:29px; height:29px;}
+
+.ui-icon-z-legacy	{background:url(../app-admin/images/legacy-25x22.png) no-repeat  !important; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(../app-admin/images/todo-25x29.png) no-repeat  !important; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(../app-admin/images/hint-25x25.png) no-repeat  !important; width:25px; height:25px;}
+.ui-icon-z-debug	{background: url(../app-admin/images/debug-25x20.png) no-repeat  !important; width:25px; height:24px;}
+.ui-icon-z-youerr	{background:url(../app-admin/images/ise-25x22.png) no-repeat center center  !important; width:29px; height:26px;}
+.ui-icon-z-warn	{background:url(../app-admin/images/ise-25x22.png) no-repeat center center  !important; width:29px; height:26px;}
+
+
+/*
+
+########################################################
+
+
+SHARED FORM STYLES
+
+########################################################
+
+*/
+
+
+/*
+for use in forms where the label is the row container.
+put the prompt into a span
+<label><span>prompt</span>input</label>
+*/
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
+
+/* 
+within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
+add floatleft to each label inside the div
+see shipping panel in product editor for example
+*/
+
+.labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
+.labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
+
+/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+.alignedLabels label span:first-of-type	{width:30%;}
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=url],
+.alignedInputs input[type=password],
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+
+.alignedInputs input[type=number], 
+.alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
+
