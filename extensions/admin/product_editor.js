@@ -2624,6 +2624,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 						}
 //used on the 'test auction' button. could be used elsewhere.
 					if($ele.data('trigger') == 'save')	{
+						app.u.dump(" -> trigger set to save. trigger click on save button");
 						$ele.closest('form').find("button[data-app-role='saveButton']:first").trigger('click',{'skipDispatch':true});
 						}
 
