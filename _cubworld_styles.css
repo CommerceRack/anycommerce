@@ -488,7 +488,7 @@ COLUMN STYLES
 .wideColumn [data-columncontent]{max-width: 789px;}
 .hotLineItemList {height: 408px; overflow:hidden;}
 li.productListTemplateHotLineItem {width: 203px;height: 60px; margin:4px 2px;}
-li.productListTemplateHotLineItem img{margin-right:4px;}
+li.productListTemplateHotLineItem .prodThumbContainer {float:left;margin-right:4px;}
 li.productListTemplateHotLineItem .prodName {color: #FEDF46; font-size: .8em; max-height: 45px; width: 139px;}
 li.productListTemplateHotLineItem:hover .prodName {color: #FFFFFF;}
 li.productListTemplateHotLineItem .prodPrice {color: #FFFFFF; font-weight: bold; width: 139px;}
