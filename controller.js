@@ -1377,7 +1377,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				if($target && $target instanceof jQuery && newEventType)	{
 					
 					if($target.data('app-'+newEventType))	{}
-					else	($target = $target.closest("[data-app-"+newEventType+"]")); //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
+					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
 					
 					if($target.data('app-'+newEventType))	{
 						var
