@@ -1109,6 +1109,7 @@ app.u.throwMessage(responseData); is the default error handler.
 				app.u.dump("BEGIN app.callbacks.showMessaging");
 				if(_rtag.jqObj)	{
 					app.u.dump(" -> jqObj is present.");
+					app.u.dump(" -> jqObj.data(): "); app.u.dump(_rtag.jqObj.data());
 					_rtag.jqObj.hideLoading();
 					if(_rtag.jqObjEmpty)	{
 						_rtag.jqObj.empty();
