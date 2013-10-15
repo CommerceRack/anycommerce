@@ -678,7 +678,7 @@
 			<h2>FBA Configuration</h2>
 			<div class='clearfix'>
 			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>
-			<fieldset data-app-role='SET'>				
+			<fieldset data-app-role='OURSET'>				
 				<label>
 					<span>FBA Marketplace ID</span>
 					<input name='fba_marketplaceid' data-bind='var:supplier(%OUR.fba_marketplaceid); format:popVal;' />
@@ -697,11 +697,11 @@
 			<h2>Setup: Inventory Preferences &amp; Download</h2>
 			<div>
 			
-			<fieldset data-app-role='INVENTORYPREFERENCES'>
+			<fieldset data-app-role='SET'>
 			
 			<label>
 				<span>Preference</span>
-				<input type='number' name='INVENTORY_PREFERENCE' value='' data-bind="var:vendor(INVENTORY_PREFERENCE); format:popVal;" max='100' step='1' min='1' size='3' />
+				<input type='number' name='PREFERENCE' value='' data-bind="var:vendor(PREFERENCE); format:popVal;" max='100' step='1' min='1' size='3' />
 			</label>
 			
 			</fieldset>

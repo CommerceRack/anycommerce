@@ -2794,7 +2794,7 @@ else	{
 				
 				var cmdObj = {
 					_cmd : 'adminProductMacro',
-					pid : pid,
+					pid : pid, //pid of product being cloned/nuked/etc
 					'@updates' : new Array(),
 					_tag : {}
 					}
@@ -2823,10 +2823,6 @@ else	{
 									$("li[data-pid='"+pid+"']",$tasklist).empty().remove();
 									}
 								}
-//if new pid or clone, add item to task list.
-							if(verb == 'CLONE' || verb == 'RENAME')	{
-								app.ext.admin_prodEdit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
-								}
 
 							if(verb == 'CLONE')	{
 								$ele.closest('.appMessaging').anymessage(app.u.successMsgObject('Product '+pid+' has been cloned and the clone was added to your product task list'));
@@ -2846,6 +2842,10 @@ else	{
 						} // end callback.
 					
 					app.model.addDispatchToQ(cmdObj,'immutable');
+//if new pid or clone, add item to task list.  This needs to be after the dispatch or the new pid won't exist.
+					if(verb == 'CLONE' || verb == 'RENAME')	{
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
+						}
 					app.model.dispatchThis('immutable');
 					
 					}

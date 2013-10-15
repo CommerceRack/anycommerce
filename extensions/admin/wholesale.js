@@ -263,7 +263,9 @@ else	{
 										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show()
 										$('.panel',$editorContainer).not("[data-panel-id='supplierOurFBAConfig']").find(":input").attr('disabled','disabled');
 										$("select[name='FORMAT']",$editorContainer).val('FBA');
+										$("input[name='PREFERENCE']",$editorContainer).prop('disabled','').removeAttr('disabled');
 //to compensate for a bug where FORMAT was getting dropped.
+//if code is FBA, force format to FBA. this is a reserved name (user formats are more characters).
 										if(!app.data[rd.datapointer].FORMAT)	{
 											$("select[name='FORMAT']",$editorContainer).val('FBA').addClass('edited');
 											}
@@ -272,9 +274,9 @@ else	{
 									else if(app.data[rd.datapointer].FORMAT)	{
 										$("select[name='FORMAT']",$editorContainer).prop('disabled','disabled');
 										}
-//if code is FBA, force format to FBA. this is a reserved name (user formats are more characters).
+//disallow FBA except for the reserved code.
 									else if(app.data[rd.datapointer].CODE != 'FBA')	{
-										$("select[name='FORMAT'] option[value='FBA']",$editorContainer).prop('disabled','disabled').addClass('edited');
+										$("select[name='FORMAT'] option[value='FBA']",$editorContainer).prop('disabled','disabled');
 										}
 									else	{}
 
