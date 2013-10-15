@@ -1187,6 +1187,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				$('#printContainer').empty();
 				$('body').showLoading(); //indicate to client that button was pressed.
 				var profileDatapointer = "";
+				
 				if(P.data.profile)	{
 					app.calls.appProfileInfo.init({'profile':P.data.profile},{},'immutable');
 					profileDatapointer = 'appProfileInfo|'+P.data.profile;
@@ -1194,6 +1195,10 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				else if(P.data.domain)	{
 					app.calls.appProfileInfo.init({'domain':P.data.domain},{},'immutable');
 					profileDatapointer = 'appProfileInfo|'+P.data.domain;
+					}
+				else if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].our && app.data['adminOrderDetail|'+orderID].our.domain)	{
+					app.calls.appProfileInfo.init({'domain':app.data['adminOrderDetail|'+orderID].our.domain},{},'immutable');
+					profileDatapointer = 'appProfileInfo|'+app.data['adminOrderDetail|'+orderID].our.domain;
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'Both domain AND profile were not set on this order. That is unusual. Order will be printed with no branding.'})

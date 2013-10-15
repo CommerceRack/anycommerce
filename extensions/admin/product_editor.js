@@ -177,15 +177,14 @@ _rtag.jqObj.hideLoading();
 _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.extend(true,{},app.data[_rtag.datapointer],app.data['adminProductReviewList|'+pid])});
 
 
-//If the item has variations, show the variations tab.
-if(!$.isEmptyObject(app.data[_rtag.datapointer]['%variations']))	{
-	$("[data-anytabs-tab='variations']",_rtag.jqObj).show();
-	}
-
 //check to see if item has inventoryable variations.
 if(app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
 	//this product has inventoryable options.
-	$("[data-app-role='auctionConfigurationSettings']",_rtag.jqObj).hide() // inventory-able variations and ebay are not compatible.
+
+	// inventory-able variations and ebay are not compatible.
+	$("[data-app-role='auctionConfigurationSettings']",_rtag.jqObj).hide();
+	$("[data-app-role='auctionConfigurationDisabledMessage']",_rtag.jqObj).show();
+
 	}
 
 
@@ -198,15 +197,6 @@ app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages'
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 
-//This tab is now always showing up because it has both flexedit and wholesale pricing in it.
-//if the merchant has flex fields enabled, show the attributes tab. needs to be after the handleCommonPlugins function so that tabs have already been generated.
-//if(app.data['adminConfigDetail|flexedit'] && !$.isEmptyObject(app.data['adminConfigDetail|flexedit']['%flexedit']))	{
-//	$("[data-anytabs-tab='attributes']",_rtag.jqObj).show();
-//	}	
-
-if(app.data['adminProductDetail|'+pid]['%attribs']['zoovy:inv_enable'] > 31)	{
-	$("[name='zoovy:inv_enable']",_rtag.jqObj).prop('checked','checked');
-	}
 					}
 				} //handleProductEditor
 			}, //callbacks

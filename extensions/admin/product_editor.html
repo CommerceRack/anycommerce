@@ -996,8 +996,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 					<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 				</label>
 		</fieldset>
-	
-	
+
+		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='auctionConfigurationDisabledMessage'>
+		Auction functionality is not available due to product variations.
+		</div>
+
 		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels' data-app-role='auctionConfigurationSettings'>
 			<legend>Auction Configurations</legend>
 				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
@@ -1007,12 +1010,12 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 						<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
 						<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
 					</label>
-					
+
 					<label>
 						<span>eBay title</span>
 						<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
 					</label>
-			
+
 					<label>
 						<span>eBay subtitle</span>
 						<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
