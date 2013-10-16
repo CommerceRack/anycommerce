@@ -72,15 +72,8 @@ var orderCreate = function() {
 				var test = document.createElement('input')
 				
 				if('placeholder' in test) {$.support.placeholder = true};
-app.u.dump(" -> document.compatMode: "+document.compatMode);
-app.u.dump(" -> document.documentMode: "+document.documentMode);
-if(document.compatMode == 'CSS1Compat')	{}
-else	{
-	app.u.dump(" -> we are in quirks mode.");
-	$.ui.button = function(){
-		app.u.dump(' -> button function was overwritten cuz it dies in quirks mode');
-		}
-	}
+				app.u.dump(" -> document.compatMode: "+document.compatMode);
+				app.u.dump(" -> document.documentMode: "+document.documentMode);
 
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
@@ -961,12 +954,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
-								app.u.dump(" -> cart has items. 2013-14-13e");
+								app.u.dump(" -> cart has items.");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 //								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
-								app.u.dump("NOT using anycontent plugin.");
+//								app.u.dump("NOT using anycontent plugin.");
 								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout());
-								app.u.dump("transmogrify saved to var");
+//								app.u.dump("transmogrify saved to var");
 								$chkContainer.append($checkoutContents);
 								app.u.dump(" -> checkout appended to container.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
@@ -978,6 +971,20 @@ note - the order object is available at app.data['order|'+P.orderID]
 									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
 									});
 //								app.u.dump(" -> handlePanel has been run over all fieldsets.");
+
+if(document.compatMode == 'CSS1Compat')	{}
+else	{
+	app.u.dump(" -> we are in quirks mode. rerender the panels after a short delay");
+	setTimeout(function(){
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		},2000);
+	}
+
 								}
 							else	{
 								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
@@ -986,6 +993,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}},'immutable');
 //					app.u.dump(" -> made it past adding calls to Q for startCheckout. now dispatch.");
 					app.model.dispatchThis('immutable');
+
+
+
+
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'in orderCreate.a.startCheckout, no $chkContainer not passed or does not exist.'});
@@ -1128,10 +1141,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerEmailUpdate
 			
 			execBuyerLogin : function($btn)	{
-				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
-				else	{
-					 //buttons don't respond well to quirks mode
-					}
+				$btn.button();
 				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
 					event.preventDefault();
 					var $fieldset = $btn.closest('fieldset'),
@@ -1191,11 +1201,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-				$btn.addClass('ui-state-highlight');
-				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
-				else	{
-					 //buttons don't respond well to quirks mode
-					}
+				$btn.addClass('ui-state-highlight').button().css('display','block');
+
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
@@ -1289,10 +1296,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execCountryUpdate
 
 			execCouponAdd : function($btn)	{
-				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
-				else	{
-					 //buttons don't respond well to quirks mode
-					}
+				$btn.button();
 				$btn.off('click.execCouponAdd').on('click.execCouponAdd',function(event){
 					event.preventDefault();
 					
@@ -1300,7 +1304,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$form = $btn.closest('form'),
 					$input = $("[name='coupon']",$fieldset);
 					
-					if($btn.hasClass('ui-icon')){$btn.button('disable');} //if the class isn't present, not a button()
+					$btn.button('disable');
 					
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
@@ -1325,17 +1329,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execCouponAdd
 
 			execGiftcardAdd : function($btn)	{
-				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
-				else	{
-					 //buttons don't respond well to quirks mode
-					}
+				$btn.button();
 				$btn.off('click.execGiftcardAdd').on('click.execGiftcardAdd',function(event){
 					event.preventDefault();
 					
 					var $fieldset = $btn.closest('fieldset'),
 					$input = $("[name='giftcard']",$fieldset);
 					
-					if($btn.hasClass('ui-icon')){$btn.button('disable');}
+					$btn.button('disable');
 					
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
@@ -1368,10 +1369,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execInvoicePrint
 
 			showBuyerAddressAdd : function($btn)	{
-				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
-				else	{
-					 //buttons don't respond well to quirks mode
-					}
+				$btn.button();
 				
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
