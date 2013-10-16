@@ -329,13 +329,14 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='couponEntryContainer clearfix marginBottom' data-app-role='couponContainer'>
 		<label for='coupon'>Coupon/Promo Code:</label>
 		<input type='text' name='coupon' size='8'  data-app-event='orderCreate|addTriggerButtonClick' />
-		<button data-app-event="orderCreate|execCouponAdd" >add</button>
+		<div><button data-app-event="orderCreate|execCouponAdd" >add</button></div>
 	</div>
 
-
+	<div>
 	<button data-app-event="orderCreate|execCartOrderCreate">
 		Place Order
 	</button>
+	</div>
 
 <div data-app-role='referenceNumber' class='displayNone'>
 	<label>Purchase Order/Reference #: </label>
