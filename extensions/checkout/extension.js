@@ -1289,7 +1289,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execCountryUpdate
 
 			execCouponAdd : function($btn)	{
-				$btn.button();
+				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
+				else	{
+					 //buttons don't respond well to quirks mode
+					}
 				$btn.off('click.execCouponAdd').on('click.execCouponAdd',function(event){
 					event.preventDefault();
 					
@@ -1297,7 +1300,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$form = $btn.closest('form'),
 					$input = $("[name='coupon']",$fieldset);
 					
-					$btn.button('disable');
+					if($btn.hasClass('ui-icon')){$btn.button('disable');} //if the class isn't present, not a button()
 					
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
@@ -1322,14 +1325,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execCouponAdd
 
 			execGiftcardAdd : function($btn)	{
-				$btn.button();
+				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
+				else	{
+					 //buttons don't respond well to quirks mode
+					}
 				$btn.off('click.execGiftcardAdd').on('click.execGiftcardAdd',function(event){
 					event.preventDefault();
 					
 					var $fieldset = $btn.closest('fieldset'),
 					$input = $("[name='giftcard']",$fieldset);
 					
-					$btn.button('disable');
+					if($btn.hasClass('ui-icon')){$btn.button('disable');}
 					
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
@@ -1362,7 +1368,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execInvoicePrint
 
 			showBuyerAddressAdd : function($btn)	{
-				$btn.button();
+				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
+				else	{
+					 //buttons don't respond well to quirks mode
+					}
 				
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
