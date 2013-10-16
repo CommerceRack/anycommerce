@@ -1128,7 +1128,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerEmailUpdate
 			
 			execBuyerLogin : function($btn)	{
-				$btn.button();
+				if(document.compatMode == 'CSS1Compat')	{}
+				else	{
+					$btn.button(); //buttons don't respond well to quirks mode
+					}
 				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
 					event.preventDefault();
 					var $fieldset = $btn.closest('fieldset'),
@@ -1188,8 +1191,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-				$btn.addClass('ui-state-highlight').button().css('display','block');
-
+				$btn.addClass('ui-state-highlight');
+				if(document.compatMode == 'CSS1Compat')	{}
+				else	{
+					$btn.button(); //buttons don't respond well to quirks mode
+					}
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
