@@ -2316,7 +2316,9 @@ effects the display of the nav buttons only. should be run just after the handle
 					$('#mainContentArea').anycontent({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
 					$page = $('#mainContentArea_search');
 					}
-
+// !!!!!!!!!!! TEMPORARILY DISABLING SEARCHES FOR THIS APP
+if(false){
+					
 //add item to recently viewed list IF it is not already in the list.
 				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
@@ -2358,7 +2360,7 @@ elasticsearch.size = 50;
 				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
 				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,_tag);
 				app.model.dispatchThis();
-
+}
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
