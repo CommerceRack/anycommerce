@@ -9,7 +9,5 @@
 .secCode_amex	{background:url(images/sec_code_amex-159x100.gif) no-repeat; width:159px; height:100px;}
 
 
-/* a fix for IE < 10 that will impact 1PC only */
-.panelContent	{position:relative;}
-
-#zContent .ui-button	{display:block; position:relative;} /* the inline-block is causing the buttons to not appear correctly in IE */
+/* a fix for IE < 10 that will impact 1PC only. */
+#zContent .ui-button	{position:relative;} /* the inline-block is causing the buttons to not appear correctly in IE */
