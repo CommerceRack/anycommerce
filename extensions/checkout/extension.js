@@ -1179,7 +1179,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-				$btn.addClass('ui-state-highlight').button();
+				$btn.addClass('ui-state-highlight').button().css('display','block');
 
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
