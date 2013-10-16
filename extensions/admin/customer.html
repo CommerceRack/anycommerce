@@ -764,7 +764,7 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(EXPIRES_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(LAST_ORDER); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: giftcard(CID); format:text;"></td>
+	<td data-bind='var: giftcard(CID); format:assignAttribute; attribute:data-cid;' data-app-event="admin_customer|customerEditorModalShow"><span class='lookLikeLink' data-bind="var: giftcard(CID); format:text;"></span></td>
 	<td data-bind="var: giftcard(BALANCE); format:money;"></td>
 	<td data-bind="var: giftcard(TXNCNT); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(TYPE); format:text;" class='hideInDetailMode'></td>

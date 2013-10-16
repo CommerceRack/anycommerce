@@ -1872,8 +1872,26 @@ app.model.addDispatchToQ({
 	},'mutable');
 app.model.dispatchThis('mutable');
 					});
-				} //showWalletDetail
+				}, //showWalletDetail
 
+			customerEditorModalShow : function($ele)	{
+				if($ele.is('button'))	{
+					$ele.button();
+					}
+
+				$ele.off('click.customerEditorModalShow').on('click.customerEditorModalShow',function(){
+					var CID = $ele.attr('data-cid');
+					if(CID)	{
+						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer Record: '+CID});
+						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':CID});
+						$D.dialog('option','height',500);
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
+						}
+					});
+				} //orderCustomerEdit
 
 			} //e [app Events]
 		} //r object.
