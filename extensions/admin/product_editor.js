@@ -2207,7 +2207,7 @@ else	{} //no changes in sku attribs.
 						$output = $("<div \/>"), //one container so dom is only updated once.
 						L = app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'].length,
 						$D = app.ext.admin.i.dialogCreate({
-							'title':'Amazon Log for '+pid
+							'title':'Amazon Log for '+$ele.closest("[data-sku]").data('sku')
 							}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
 					
 					$D.dialog('option','height',500);
