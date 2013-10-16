@@ -72,6 +72,8 @@ var orderCreate = function() {
 				var test = document.createElement('input')
 				
 				if('placeholder' in test) {$.support.placeholder = true};
+app.u.dump(" -> document.compatMode: "+document.compatMode);
+app.u.dump(" -> document.documentMode: "+document.documentMode);
 if(document.compatMode == 'CSS1Compat')	{}
 else	{
 	app.u.dump(" -> we are in quirks mode. document.documentMode: "+document.documentMode);
