@@ -1,9 +1,9 @@
 
 .checkoutSprite	{background-color:#660000;} /* add this to any element that uses one of the following classes (preparation for sprite) */
 
-.fbComment	{background:url(images/fb_comment-133x32.png) no-repeat; width:133px; height:32px;}
-.tweetComment	{background:url(images/tweet_comment-133x32.png) no-repeat; width:133px; height:32px;}
-.continueShopping	{background:url(images/continue_shopping-133x32.png) no-repeat; width:133px; height:32px;}
+.ocmFacebookComment	{background:url(images/fb_comment-133x32.png) no-repeat; width:133px; height:32px;}
+.ocmTwitterComment	{background:url(images/tweet_comment-133x32.png) no-repeat; width:133px; height:32px;}
+.ocmContinue	{background:url(images/continue_shopping-133x32.png) no-repeat; width:133px; height:32px;}
 
 .secCode_vmd	{background:url(images/sec_code-159x100.gif) no-repeat; width:159px; height:100px;} /* Visa/Mastercard/Discover */
 .secCode_amex	{background:url(images/sec_code_amex-159x100.gif) no-repeat; width:159px; height:100px;}
