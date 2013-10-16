@@ -732,7 +732,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
 				isAuthenticated = app.u.buyerIsAuthenticated(),
 				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
-				L = shipMethods.length;
+				L = (shipMethods) ? shipMethods.length : 0;
 				
 //				app.u.dump(' -> shipMethods.length: '+L); // app.u.dump(shipMethods);
 				
