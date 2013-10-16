@@ -2197,7 +2197,6 @@ else	{} //no changes in sku attribs.
 
 
 			amazonLogShow : function($ele,p)	{
-				app.u.dump("");
 				var
 					pid = $ele.closest("[data-pid]").data('pid'),
 					index = $ele.closest("[data-obj_index]").attr('data-obj_index');
