@@ -82,7 +82,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
 
 // += is used so that this is appended to anything passed in P.
-		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
+		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';compatMode:'+document.compatMode; //passed in model as part of dispatch Version. can be app specific.
 		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
 /*
@@ -1844,7 +1844,7 @@ BROWSER/OS
 			var
 				ua= navigator.userAgent.toLowerCase(),
 				match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
-
+			//app.u.dump("browser: "+match[ 1 ] || "-" + match[ 2 ] || "0");
 			return match[ 1 ] || "-" + match[ 2 ] || "0";
 			
 		/*			
