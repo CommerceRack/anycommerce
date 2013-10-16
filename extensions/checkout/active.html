@@ -103,7 +103,7 @@ item list and summary are separate just to give more control over location.
 
 
 
-<section id='chkoutPreflightTemplate'>
+<div id='chkoutPreflightTemplate'>
 
 <h4 class='displayNone' data-app-role='username' data-bind="var:cart(bill/email); defaultVar: cart(customer/login); format:text;"></h4>
 
@@ -118,7 +118,7 @@ item list and summary are separate just to give more control over location.
 	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
 </div>
 
-</section>
+</div>
 
 
 
@@ -133,7 +133,7 @@ billing address panel spec
 This template is also used in the myAccount page, which is why a default using _ is present.
 -->
 
-<section id='chkoutAddressBillTemplate'>
+<div id='chkoutAddressBillTemplate'>
 
 	<div><input type='text' placeholder='first name' name='bill/firstname' required='required' value='' data-bind='var: cart(bill/firstname); defaultVar: cart(bill/firstname); format:popVal;'  /></div>
 	<div><input type='text' placeholder='last name' name='bill/lastname' required='required' value='' data-bind='var: cart(bill/lastname); defaultVar: cart(bill/lastname); format:popVal;'  /></div>
@@ -155,7 +155,7 @@ This template is also used in the myAccount page, which is why a default using _
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
-</section>
+</div>
 
 
 
@@ -166,7 +166,7 @@ shipping address panel.
 don't add required to any inputs because if bill to ship is checked, NONE of these fields are required/populated.
 -->
 
-<section id='chkoutAddressShipTemplate'>
+<div id='chkoutAddressShipTemplate'>
 
 	<div><input type='text' placeholder='first name' name='ship/firstname' required='required' value='' data-bind='var: cart(ship/firstname); defaultVar: cart(ship/firstname); format:popVal;'  /></div>
 	<div><input type='text' placeholder='last name' name='ship/lastname' required='required' value='' data-bind='var: cart(ship/lastname); defaultVar: cart(ship/lastname); format:popVal;'  /></div>
@@ -186,11 +186,11 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 
 	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;'  data-app-event="orderCreate|execCountryUpdate" ></select></div>
 
-</section>
+</div>
 
 
 <!-- a panel that only appears in 'nice' -->
-<section id='chkoutAccountCreateTemplate'>
+<div id='chkoutAccountCreateTemplate'>
 
 <div><input type='password' data-minlength='8' placeholder='password' required='required' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /> <span class='hint'>must be at least 8 characters</span></div>
 <div><input type='password' data-minlength='8' placeholder='verify password' required='required'  name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></div>
@@ -205,7 +205,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 
 <input type='text' placeholder='recovery answer' required='required' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
 
-</section>
+</div>
 
 
 
@@ -291,7 +291,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 </table>
 
 
-<section id='chkoutCartContentsTemplate'>
+<div id='chkoutCartContentsTemplate'>
 <table class='fullWidth gridTable'>
 <thead>
 <tr>
@@ -303,7 +303,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 </thead>
 <tbody data-bind='var: cart(@ITEMS); format:processList; loadsTemplate:chkoutCartItemTemplate;'></tbody>
 </table>
-</section>
+</div>
 
 
 
@@ -312,7 +312,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 
-<section id='chkoutCartSummaryTemplate'>
+<div id='chkoutCartSummaryTemplate'>
 	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
@@ -344,7 +344,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 </div>
 
 
-</section>
+</div>
 
 
 
