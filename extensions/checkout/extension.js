@@ -73,22 +73,6 @@ var orderCreate = function() {
 				
 				if('placeholder' in test) {$.support.placeholder = true};
 
-//update jQuery.support with whether or not inline block is supported. older IE barfs on ui buttons and anycb
-				$.support.cssDisplay_inlineblock = false;
-				test.style.cssText = 'display:inline-block';
-				if (div.currentStyle) {
-					$.support.cssDisplay_inlineblock = (div.currentStyle['display'] === 'inline-block');
-					}
-				else if (window.getComputedStyle) {
-					$.support.cssDisplay_inlineblock = document.defaultView.getComputedStyle(div,null).getPropertyValue('display')=== 'inline-block';  
-					}
-				else	{
-					$.support.cssDisplay_inlineblock = ($(test).css('display') === 'inline-block')
-					}
-				app.u.dump(" -> $.support.cssDisplay_inlineblock: "+$.support.cssDisplay_inlineblock);
-
-
-
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
