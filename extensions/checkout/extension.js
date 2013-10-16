@@ -69,8 +69,15 @@ var orderCreate = function() {
 
 //update jQuery.support with whether or not placeholder is supported.
 				$.support.placeholder = false;
-				var test = document.createElement('input');
+				var test = document.createElement('input').css('display','inline-block');
 				if('placeholder' in test) {$.support.placeholder = true};
+
+//update jQuery.support with whether or not inline block is supported. older IE barfs on ui buttons and anycb
+				$.support.cssDisplay_inlineblock = false;
+				app.u.dump(" -> test.css('display'): "+test.css('display'));
+				if(test.css('display') === 'inline-block')	{$.support.cssDisplay_inlineblock == true}
+				
+
 
 
 				if(typeof _gaq === 'undefined')	{
