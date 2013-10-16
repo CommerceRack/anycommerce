@@ -200,7 +200,11 @@ It is run once, executed by the renderFormat.
 						data['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
 						}
 														//if you want this list inventory aware, do you check here and skip the append below.
-					$placeholder.before(app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+// !!!!!!!!! SPORTSWORLDCHICAGO- DON'T RENDER PRODUCTS THAT ARE NOT PURCHASEABLE.
+// note, this is a terrible solution.  DO NOT DO THIS ON OTHER SITES.  it does not account for summaries, pagination, etc...
+					if(app.ext.store_product.u.productIsPurchaseable(pid)){
+						$placeholder.before(app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+						}
 					$placeholder.remove();
 					}
 				else if(attempts < 50){

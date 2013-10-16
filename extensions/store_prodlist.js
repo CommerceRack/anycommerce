@@ -195,7 +195,12 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
 					tmp['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
 					}
-				$(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer});
+					
+// !!!!!!!!! SPORTSWORLDCHICAGO- DON'T RENDER PRODUCTS THAT ARE NOT PURCHASEABLE.
+// note, this is a terrible solution.  DO NOT DO THIS ON OTHER SITES.  it does not account for summaries, pagination, etc...
+				if(app.ext.store_product.u.productIsPurchaseable(pid)){
+					$(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer});
+					}
 //				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				},
 //error needs to clear parent or we end up with orphans (especially in UI finder).
