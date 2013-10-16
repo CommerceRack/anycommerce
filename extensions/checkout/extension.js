@@ -143,6 +143,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 					}});
 				app.model.destroy('cartDetail');
 				app.calls.cartDetail.init({},'immutable');
+				app.ext.cco.calls.appPaymentMethods.init({_cartid:app.vars.cartID},{},'immutable');
 				app.model.dispatchThis('immutable');
 				}
 			},		 //handlePayPalIntoPaymentQ
@@ -1602,6 +1603,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 					if(!app.ext.cco.u.aValidPaypalTenderIsPresent())	{
 						app.u.dump(" -> validPayalTender found. Nuke it.");
 						app.ext.cco.u.nukePayPalEC();
+						//update the panels too so that the ship/billing is 'unlocked' and payments get updated.
+						app.ext.orderCreate.u.handleCommonPanels($form);
+						app.calls.ping.init({callback:function(){
+							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					app.u.dump(" -> paypal nuked ");
 					}
