@@ -659,7 +659,7 @@ app.u.handleEventDelegation($target);
 				// describe_bw - this function takes a bitwise value and returns a string of the equivalent feed names
 				// eg ( If a bitwise value of 3 is passed to this function it will return "Init,Products" (Init is 1, Products is 2)
 				var describe_bw = function(bitVal) {
-						console.log('made it to descibe_bw');
+//						app.u.dump('made it to descibe_bw');
 			
 						var $feedsArray =  [];
 						if ((bitVal & 1<<0)>0) { $feedsArray.push("Init"); }
@@ -2196,6 +2196,32 @@ else	{} //no changes in sku attribs.
 				},
 
 
+			amazonLogShow : function($ele,p)	{
+				app.u.dump("");
+				var
+					pid = $ele.closest("[data-pid]").data('pid'),
+					index = $ele.closest("[data-obj_index]").attr('data-obj_index');
+				
+				if(pid && index && app.data["adminProductAmazonDetail|"+pid] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'])	{
+					var 
+						$output = $("<div \/>"), //one container so dom is only updated once.
+						L = app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'].length,
+						$D = app.ext.admin.i.dialogCreate({
+							'title':'Amazon Log for '+pid
+							}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
+					
+					$D.dialog('option','height',500);
+					for(var i = 0; i < L; i += 1)	{
+						$output.append("<p class='"+app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'][i].type+"'>"+app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'][i].msg+"<\/p>");
+						}
+					$output.appendTo($D);
+					$D.dialog('open');
+					}
+				else	{
+					$ele.closest('fieldset').anymessage({"message":"In admin_prodEdit.e.amazonLogShow, unable to ascertain pid ["+pid+"] or index ["+index+"] or app.data['adminProductAmazonDetail|"+pid+"']['@DETAIL']["+index+"] doesn't exist.","gMessage":true});
+					}
+				
+				},
 
 //executed from within the search results.
 //if it's already in the list, it's removed. If it is not in the list, it's added.
@@ -3529,6 +3555,8 @@ app.model.dispatchThis('mutable');
 					});
 				}, //variationCreateExec
 
+
+			
 
 //a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
 			variationsOptionToggle : function($btn)	{

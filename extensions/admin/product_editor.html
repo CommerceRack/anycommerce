@@ -905,6 +905,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<th>Changed Since Attempt</th>
 		<th data-anytable-nosort='true'>Details</th>
 		<th data-anytable-nosort='true'></th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: amazon(@DETAIL); format:processList; loadsTemplate:amazonDetailRowTemplate;" data-app-role='amazonDetailTbody'>
@@ -1390,7 +1391,12 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
 	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
-	<td><button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button></td>
+	<td>
+	<button class='applyButton displayNone' data-app-click='admin_prodEdit|amazonLogShow' data-bind="var: detail(@LOG.length); format:showIfSet;" data-icon-primary='ui-icon-alert' data-text='false'>Error and History Report</button>
+	</td>
+	<td>
+	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	</td>
 </tr>
 
 
