@@ -1178,8 +1178,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-// ### disabled to test an IE bug causing the button to load in the wrong part of the page.
-//				$btn.addClass('ui-state-highlight').button();
+				$btn.addClass('ui-state-highlight').button();
 
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
