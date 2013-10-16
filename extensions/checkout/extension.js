@@ -72,6 +72,13 @@ var orderCreate = function() {
 				var test = document.createElement('input')
 				
 				if('placeholder' in test) {$.support.placeholder = true};
+if(document.compatMode == 'CSS1Compat')	{}
+else	{
+	app.u.dump(" -> we are in quirks mode. document.documentMode: "+document.documentMode);
+	$.button = function(){
+		app.u.dump(' -> button function was overwritten cuz it dies in quirks mode');
+		}
+	}
 
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
