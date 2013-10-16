@@ -6,6 +6,19 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201342 (some of these were in 38)
+Checkout
+	Fixes for better support in older IE/Quirks mode.
+	Improvements in return user address updates.
+	Support for payment type handling fees.
+	Some text/layout cleanup.
+	More reliable handling of ROI/Tracking code.
+	Logging of OS/browser in order (handy for debug purposes).
+	Improvement in changing from paypal to another payment method after returning from paypal.
+	Bug fix which allowed orders to be created w/out email address.
+	Buyer logout (not you? click here)
+
+
 201338
 ADMIN
 New inventory system
