@@ -1652,10 +1652,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 			//pass in what is returned after order create in @TRACKERS
 			scripts2iframe : function(arr)	{
 				app.u.dump('running scripts2iframe');
-				if(window.roiScriptError)	{}
+				if(typeof window.scriptCallback == 'function')	{}
 				else	{
-					window.roiScriptError = app.ext.orderCreate.u.roiScriptError; //assigned global scope to reduce likely hood of any errors resulting in callback.
-					app.u.dump(" -> typeof window.roiScriptError: "+typeof window.roiScriptError);
+					window.scriptCallback = app.ext.orderCreate.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
+					app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
 	var L = arr.length;
@@ -1670,22 +1670,24 @@ the timeout is added for multiple reasons.
 2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
 */
   		setTimeout(function(thisArr){
-			var $iframe = $('#'+thisArr.id).contents().find("html").html("bob was here");
-			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
+			var $iframe = $('#'+thisArr.id).contents().find("html");
+			$iframe.append(thisArr.script);
+/// hhhmmm... some potential problems with this. non-script based output. sequence needs to be preserved for includes and inline.
+
+/*			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
 			var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
 			$div.find('script').each(function(){
-				console.log("woot");
 				var $s = $(this);
 				if($s.attr('src'))	{
 					console.log(" -> attempting to add "+$s.attr('src'));
-					$iframe.contents().find('head').append($s);
+					$iframe.append($s);
 					}
 				else	{
 					scripts += $s.text()+"\n\n";
 					}
 				});
 			$iframe.append("<script>try{"+scripts+"\n window.parent.scriptCallback('"+arr.owner+"','success');} catch(err){window.parent.scriptCallback('"+arr.owner+"','error: '+err);}<\/script>");
-			},(100 * i),arr[i])
+*/			},(100 * (i + 1)),arr[i])
 		} 
 					}
 				else	{
@@ -1693,13 +1695,13 @@ the timeout is added for multiple reasons.
 					}
 				},
 //is executed if one of the ROI scripts contains a javascript error (fails in the 'try').
-			roiScriptError : function(owner,err)	{
+			scriptCallback : function(owner,err)	{
 app.u.dump("The script for "+owner+" Contained an error and most likely did not execute properly. (it failed the 'try').","warn");
 app.model.addDispatchToQ({
 	'_cmd':'appAccidentDataRecorder',
 	'owner' : owner,
 	'app' : '1pc', //if the API call logs the clientid, this won't be necessary.
-	'category' : 'html:roi',
+	'category' : '@TRACKERS',
 	'scripterr' : err,
 	'_tag':	{
 		'callback':'suppressErrors'
