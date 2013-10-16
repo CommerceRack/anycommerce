@@ -76,8 +76,8 @@ app.u.dump(" -> document.compatMode: "+document.compatMode);
 app.u.dump(" -> document.documentMode: "+document.documentMode);
 if(document.compatMode == 'CSS1Compat')	{}
 else	{
-	app.u.dump(" -> we are in quirks mode. document.documentMode: "+document.documentMode);
-	$.button = function(){
+	app.u.dump(" -> we are in quirks mode.");
+	$.ui.button = function(){
 		app.u.dump(' -> button function was overwritten cuz it dies in quirks mode');
 		}
 	}
