@@ -974,7 +974,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 if(document.compatMode == 'CSS1Compat')	{}
 else	{
-	app.u.dump(" -> we are in quirks mode. rerender the panels after a short delay");
+	app.u.dump(" -> we are in quirks mode. rerender the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
 	setTimeout(function(){
 		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
 		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
@@ -982,7 +982,7 @@ else	{
 		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
 		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic','handleAppEvents']);
 		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
-		},2000);
+		},1000);
 	}
 
 								}
