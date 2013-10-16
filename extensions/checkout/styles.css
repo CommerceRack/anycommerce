@@ -10,4 +10,4 @@
 
 
 /* a fix for IE < 10 that will impact 1PC only. */
-#zContent .ui-button	{position:relative; display:block; float:left; background:green;} /* the inline-block is causing the buttons to not appear correctly in IE */
+#zContent .ui-button	{position:relative; display:block; float:left; background:blue;} /* the inline-block is causing the buttons to not appear correctly in IE */
