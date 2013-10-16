@@ -332,11 +332,10 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<button data-app-event="orderCreate|execCouponAdd" >add</button>
 	</div>
 
-	<div>
+
 	<button data-app-event="orderCreate|execCartOrderCreate">
 		Place Order
 	</button>
-	</div>
 
 <div data-app-role='referenceNumber' class='displayNone'>
 	<label>Purchase Order/Reference #: </label>
@@ -394,7 +393,7 @@ do NOT change the input name or id or checkout will likely break.
 
 <div id='chkoutNotesTemplate'>
 <p>Please include any special instructions or comments here:</p>
-<textarea class='chkoutOrderNotes fullWidth' name='want/order_notes' data-app-event='orderCreate|execCartSet' data-bind='var: cart(want/order_notes); format:popVal;' rows='5'></textarea>
+<textarea class='chkoutOrderNotes fullWidth' name='want/order_notes' data-app-event='orderCreate|execCartSet' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
 </div>
 
 
