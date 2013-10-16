@@ -485,7 +485,6 @@ else{
 							}
 						$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 						
-					
 						$editor.dialog({
 							width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
 							height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
@@ -529,6 +528,11 @@ else{
 								},
 							close : function(event, ui) {$(this).dialog('destroy').remove()}
 							});
+//* 201342 -> used in checkout (or potentailly any editor) to immediately highlight any invalid fields (useful in 'edit' as opposed to 'create' address)
+							if(vars.validateForm)	{
+								app.u.validateForm($editor);
+								}
+
 						
 						}
 					else	{

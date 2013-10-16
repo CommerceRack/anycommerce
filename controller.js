@@ -418,6 +418,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 					else 	{
 						app.u.handleCallback(_tag);
 						}
+					if(obj.withInventory)	{obj.inventory=1}
 					}
 				else	{
 					app.u.throwGMessage("In calls.appProductGet, required parameter pid was not passed");

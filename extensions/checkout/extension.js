@@ -1065,13 +1065,16 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var addressType = $btn.closest('fieldset').data('app-addresstype'), //will be ship or bill.
 					$form = $btn.closest('form'),
 					addressID = $btn.closest('address').data('_id');
-					
+//** 201342 -> update to better handle an incomplete address. edit dialog will open automatically and prompt for invalid fields. The intent to select the address will also update the cart.
 					if(addressType && addressID)	{
-						
+						//even if the address doesn't pass validation, set the shortcut to this id. checkout won't let them proceed, but this way their intent is still saved.
+						//and after the update occurs, this address will be selected.
+						$("[name='"+addressType+"/shortcut']",$form).val(addressID);
+						var cartUpdate = {};
+						cartUpdate[addressType+"/shortcut"] = addressID;
+
 						if(app.ext.cco.u.verifyAddressIsComplete(addressType,addressID))	{
-							$("[name='"+addressType+"/shortcut']",$form).val(addressID);
-							var cartUpdate = {};
-							cartUpdate[addressType+"/shortcut"] = addressID;
+							
 							
 							if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
 	//							app.u.dump("Ship to billing address checked. set fields in billing.");
@@ -1092,10 +1095,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							$btn.closest('fieldset').anymessage({'message':"It appears the address you've selected is missing some required information. Please edit the address (click the pencil icon) to supply the required information."});
+							app.calls.cartSet.init(cartUpdate,{},'passive');
+							app.model.dispatchThis('passive');
+							$btn.closest('fieldset').find("[data-app-event='orderCreate|showBuyerAddressUpdate']").data('validate-form',true).trigger('click');
 							}
-						
-
 						}
 					else	{
 						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
@@ -1376,9 +1379,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 					})
 				}, //showBuyerAddressAdd
 
-			showBuyerAddressUpdate : function($btn)	{
+			showBuyerAddressUpdate : function($btn,p)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-
+				p = p || {};
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
 
@@ -1388,7 +1391,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 					app.ext.store_crm.u.showAddressEditModal({
 						'addressID' : $btn.closest("address").data('_id'),
-						'addressType' : addressType
+						'addressType' : addressType,
+						'validateForm' : $btn.data('validate-form')
 						},function(){
 //by here, the new address has been edited.
 //set appropriate address panel to loading.
