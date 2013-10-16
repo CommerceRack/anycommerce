@@ -977,7 +977,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 			
 		
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
-			else if($.browser && $.browser.msie && Number($.browser.version.substring(0, 1)) <= 8)	{} //ie 8 not supported. didn't link binding.
+			else if(navigator.userAgent.toLowerCase().indexOf('msie') >= 0)	{} //ie not supported. didn't link binding.
 			else if($label.length)	{
 //				app.u.dump(" -> anycbifying. is label: "+$label.is('label'));
 				var $input = $("input",$label).first(),
