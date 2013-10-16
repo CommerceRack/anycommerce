@@ -1128,9 +1128,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerEmailUpdate
 			
 			execBuyerLogin : function($btn)	{
-				if(document.compatMode == 'CSS1Compat')	{}
+				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
 				else	{
-					$btn.button(); //buttons don't respond well to quirks mode
+					 //buttons don't respond well to quirks mode
 					}
 				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
 					event.preventDefault();
@@ -1192,9 +1192,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			execCartOrderCreate : function($btn)	{
 				$btn.addClass('ui-state-highlight');
-				if(document.compatMode == 'CSS1Compat')	{}
+				if(document.compatMode == 'CSS1Compat')	{$btn.button();}
 				else	{
-					$btn.button(); //buttons don't respond well to quirks mode
+					 //buttons don't respond well to quirks mode
 					}
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
