@@ -62,12 +62,12 @@ var orderCreate = function() {
 //					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 //					}
 //				else {
+					app.u.loadCSSFile(app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
 //					}
 				var r = true; //returns false if checkout can't load due to account config conflict.
 
 //update jQuery.support with whether or not placeholder is supported.
-
 				$.support.placeholder = false;
 				var test = document.createElement('input');
 				if('placeholder' in test) {$.support.placeholder = true};
