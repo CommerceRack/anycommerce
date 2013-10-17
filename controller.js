@@ -3122,6 +3122,12 @@ return $r;
 				}
 			},
 
+		showIfMatch : function($tag,data)	{
+//			app.u.dump("BEGIN renderFormat.showIfMatch. \n value: "+data.value+"\n matchValue: "+data.bindData.matchValue);
+			if(data.value == data.bindData.matchValue)	{$tag.show()}
+			else {} //can't count on getting here. value could be blank. hide by default, then let this show if it's a match.
+			},
+
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.
 		hideIfSet : function($tag,data)	{

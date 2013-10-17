@@ -2840,53 +2840,42 @@ else	{
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
 				app.model.addDispatchToQ({
 					'_cmd':'adminDomainList',
+					'hosts' : 1,
 					'_tag':	{
 						'datapointer' : 'adminDomainList',
 						'callback':function(rd)	{
-							$target.hideLoading();
-							var data = {
-								'*favorites' : new Array(),
-								'*nonfavorites' : new Array()
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
 								}
-				//					app.u.dump(" -> rd: "); app.u.dump(rd);
-							var domains = app.data[rd.datapointer]['@DOMAINS'];
-							var L = domains.length;
-							for(var i = 0; i < L; i += 1)	{
-								if(domains[i].IS_FAVORITE == 1)	{
-									data['*favorites'].push(domains[i]);
+							else	{
+								$target.hideLoading();
+								var data = {
+									'*favorites' : new Array(),
+									'*nonfavorites' : new Array()
 									}
-								else	{
-									data['*nonfavorites'].push(domains[i]);
+					//					app.u.dump(" -> rd: "); app.u.dump(rd);
+								var domains = app.data[rd.datapointer]['@DOMAINS'];
+								var L = domains.length;
+								for(var i = 0; i < L; i += 1)	{
+									if(domains[i].IS_FAVORITE == 1)	{
+										data['*favorites'].push(domains[i]);
+										}
+									else	{
+										data['*nonfavorites'].push(domains[i]);
+										}
+									}
+								$target.anycontent({'templateID':'pageTemplateSites','data':data});
+					
+								if(data['*favorites'].length)	{
+									app.u.handleAppEvents($("[data-app-role='domainListFavorites']",$target)); //used for context.
+									app.model.dispatchThis('mutable');
+									}
+					
+								if(data['*nonfavorites'].length)	{
+									app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
+									$("[data-app-role='domainListNonFavorites']",$target).anytable();
 									}
 								}
-							$target.anycontent({'templateID':'pageTemplateSites','data':data});
-				
-							if(data['*favorites'].length)	{
-								var $favs = $("[data-app-role='domainListFavorites']",$target); //used for context.
-								for(var i = 0; i < data['*favorites'].length; i += 1)	{
-							
-									var $li = $("li[data-domainname='"+data['*favorites'][i].DOMAINNAME+"']",$favs);
-									$li.showLoading({'message':'Fetching Domain Details'});
-							
-									app.model.addDispatchToQ({
-										'_cmd':'adminDomainDetail',
-										'DOMAINNAME' : data['*favorites'][i].DOMAINNAME,
-										'_tag':	_tag = {
-											'callback' : 'anycontent',
-											'jqObj' : $li,
-											'datapointer' : 'adminDomainDetail|'+data['*favorites'][i].DOMAINNAME
-											}
-										},'mutable');
-									}
-								app.model.dispatchThis('mutable');
-								}
-				
-							if(data['*nonfavorites'].length)	{
-								app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
-								$("[data-app-role='domainListNonFavorites']",$target).anytable();
-								}
-							
-				
 							}
 						}
 					},'mutable');

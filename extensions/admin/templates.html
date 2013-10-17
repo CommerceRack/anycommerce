@@ -545,7 +545,7 @@ SETUP PAGE TEMPLATE
 	
 	<div class='ui-widget-content ui-corner-all displayNone stdPadding' data-bind="var: domains(*nonfavorites); format:showIfSet;">
 <!--	<h3>Non Favorite Domains</h3>-->
-	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites'>
+	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(*nonfavorites); format:processList; loadsTemplate:domainListTemplate;"><!-- template is tbody, so processList is on table -->
 		<thead>
 		<tr>
 			<th>Domain</th>
@@ -553,7 +553,6 @@ SETUP PAGE TEMPLATE
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: domains(*nonfavorites); format:processList; loadsTemplate:domainListTemplate;"></tbody>
 	</table>
 	</div>
 	
@@ -561,41 +560,72 @@ SETUP PAGE TEMPLATE
 
 <ul>
 	
-	<li id='domainListFavoriteTemplate' class='ui-widget-content ui-corner-all domainPanel'>
-		<div class='marginBottom alignCenter'>
-		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='80' />
+	<li id='domainListFavoriteTemplate' class='ui-widget-content ui-corner-all domainPanel positionRelative smallButton'>
+		<div class='alignCenter'>
+		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='160' />
 		</div>
 		
-		<h4>
-			<span data-bind="var: domain(DOMAINNAME); format:text;"></span>
-			<span data-bind="var: domain(PRT); format:text; pretext:(;posttext:);" class='marginLeft'></span>
-		</h4>
-		<div class='buttonset marginTop' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;">
+		<div class='positionAbsolute positionTop positionRight stdPadding' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;"><!-- stdPadding aligns this button w/ host-buttons -->
 			<button data-app-event="admin|domainPutInFocus">Use Domain</button>
-			<button data-app-event="admin|domainView" data-mode='Site'>View Site</button>
-			<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
-<!-- buttons locked UNLESS a project is in place -->
-			<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site' data-hidebuttontext='true'>Download Zip of Template</button>
-			<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
-<!-- end project dependant buttons -->
-			
-			<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
-			<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
 		</div>
+		
+		<h4 class='alignCenter smallPadding'>
+			<span data-bind="var: domain(DOMAINNAME); format:text;"></span>
+			<span data-bind="var: domain(PRT); format:text; pretext:(;posttext:);"></span>
+		</h4>
+		
+
+	
+		<table class='fullWidth'>
+		<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;" data-app-role='domainHostsTbody'>
+		</tbody>
+		</table>
+	
 	</li>
 </ul>
 
+
+
+
+
 <table>
-<tr id='domainListTemplate'>
+
+<tbody id='domainListTemplate'>
+<tr>
 	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
-	<td class='alignRight'>
+	<td class='alignRight width50'>
 		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
 		<button data-app-event="admin|domainView" data-mode='Site'>View Site</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
 		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
 	</td>
 </tr>
+</tbody>
+
+
+<tr id='domainListHostsRowTemplate'>
+	<td>
+		<span data-bind="var: host(HOSTNAME); format:text;"></span>
+		<span data-bind="var: host(HOSTTYPE); format:text; pretext:(; posttext:);"></span>
+	</td>
+	<td></td>
+	<td class='alignRight width50'>
+	<button data-app-event="admin|domainView" data-mode='host'>View Site</button>
+
+<!--	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button> -->
+
+	<span data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;" class='displayNone'>
+		<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
+<!-- buttons locked UNLESS a project is in place -->
+		<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site' data-hidebuttontext='true'>Download Zip of Template</button>
+		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
+<!-- end project dependant buttons -->
+	</span>
+	</td>
+</tr>
+
+
 </table>
 
 
@@ -1114,13 +1144,6 @@ ACHIEVEMENTS
 	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
 	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
 	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
-
-	<div class='buttonset' data-bind='var:project(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;'>
-		<button data-app-role='siteTemplateChooseButton' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose</button>
-		<button data-app-role='siteTemplateEditButton' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit</button>
-		<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site'>Download Zip</button>
-		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'>Upload</button>
-	</div>
 
 </div>
 
