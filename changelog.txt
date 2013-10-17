@@ -6,6 +6,13 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201342
+ADMIN
+	addition of amazon sku-specific LOG.
+	bug fixes in orders stickytab (edit button works again)
+	bug fixes in UPS and USPS settings
+
+
 201342 (some of these were in 38)
 Checkout
 	Fixes for better support in older IE/Quirks mode.
