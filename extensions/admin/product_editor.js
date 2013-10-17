@@ -2203,17 +2203,28 @@ else	{} //no changes in sku attribs.
 				
 				if(pid && index && app.data["adminProductAmazonDetail|"+pid] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'])	{
 					var 
-						$output = $("<div \/>"), //one container so dom is only updated once.
-						L = app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'].length,
+						logArr = app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'],
+						L = logArr.length,
 						$D = app.ext.admin.i.dialogCreate({
 							'title':'Amazon Log for '+$ele.closest("[data-sku]").data('sku')
 							}); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
-					
+					$D.addClass('amazonLog');
 					$D.dialog('option','height',500);
+
+function type2class(type)	{
+	if(type == 'ERROR')	{return 'red'}
+	else if(type == 'STOP') {return 'orange'}
+	else	{return ""}
+	}
+
 					for(var i = 0; i < L; i += 1)	{
-						$output.append("<p class='"+app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'][i].type+"'>"+app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'][i].msg+"<\/p>");
+						var $P = $("<p \/>").addClass('marginTop marginBottom');
+						$P.append($("<h5>"+logArr[i].type+"<\/h5>").addClass(type2class(logArr[i].type)));
+						$P.append("<h6>Feed: "+logArr[i].feed+"<\/h6>");
+						$P.append("<h6>"+app.u.unix2Pretty(logArr[i].ts,true)+"<\/h6>");
+						$P.append(logArr[i].msg);
+						$P.appendTo($D);
 						}
-					$output.appendTo($D);
 					$D.dialog('open');
 					}
 				else	{
