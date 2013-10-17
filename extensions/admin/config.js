@@ -821,7 +821,7 @@ $D.dialog('open');
 							})
 						}
 					else if(sfo.HOSTTYPE == 'SITE')	{
-						hostSet += "&force_https"+sfo.force_https;
+						hostSet += "&force_https="+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'SITEPTR')	{
 						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https"+sfo.force_https;
