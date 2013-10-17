@@ -16,8 +16,9 @@ Put this high in the doc as a reminder to occassionally re-check if it can be re
 */
 .ui-dialog {
     position: fixed;
-}
+	}
 
+.ui-dialog-content .ui-widget-anymessage	{max-height: 300px; overflow:auto;} /* inside a dialog, let's keep to a reasonable height */
 
 
 /*

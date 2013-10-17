@@ -1109,8 +1109,8 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(_rtag,macroResponses)	{
 				app.u.dump("BEGIN app.callbacks.showMessaging");
 				if(_rtag.jqObj)	{
-					app.u.dump(" -> jqObj is present.");
-					app.u.dump(" -> jqObj.data(): "); app.u.dump(_rtag.jqObj.data());
+//					app.u.dump(" -> jqObj is present.");
+//					app.u.dump(" -> jqObj.data(): "); app.u.dump(_rtag.jqObj.data());
 					_rtag.jqObj.hideLoading();
 					if(_rtag.jqObjEmpty)	{
 						_rtag.jqObj.empty();
@@ -1130,6 +1130,7 @@ app.u.throwMessage(responseData); is the default error handler.
 
 				if(macroResponses && macroResponses['@RESPONSES'])	{
 					var $target = _rtag.jqObj || $("#globalMessaging");
+					macroResponses.persistent = _rtag.persistent || false;
 					$target.anymessage(macroResponses);
 					}
 				else	{
