@@ -1435,7 +1435,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	
 	
 	<p>
-	UPS Shipper Number: <span></span><br />
+	UPS Shipper Number: <span data-bind="var:shipmethod(shipper_number); format:text;"></span><br />
 	<a href="#" onClick="app.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br />
 	</p>
 	
@@ -1625,7 +1625,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	   </tr>
 	   <tr>
 		  <td>Express Mail (3-5 days)</td>
-		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popVal;" /></td>
+		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom_express); format: popVal;" /></td>
 		  <td>
 			 <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.<br />
 			 <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.<br />
@@ -3189,6 +3189,7 @@ Coming Soon
 		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
 			<option value='SITE' data-show-panel='domainForceHTTPS' data-bind="var:domain(DOMAINNAME); format:text; posttext: project;">Domain project</option>
 			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Other project reference</option>
+<!--			<option value='ADMIN'>Admin</option> -->
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
 			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE'>V-Store</option>
 			<option value='CUSTOM'>Custom</option>

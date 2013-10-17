@@ -1109,8 +1109,8 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(_rtag,macroResponses)	{
 				app.u.dump("BEGIN app.callbacks.showMessaging");
 				if(_rtag.jqObj)	{
-					app.u.dump(" -> jqObj is present.");
-					app.u.dump(" -> jqObj.data(): "); app.u.dump(_rtag.jqObj.data());
+//					app.u.dump(" -> jqObj is present.");
+//					app.u.dump(" -> jqObj.data(): "); app.u.dump(_rtag.jqObj.data());
 					_rtag.jqObj.hideLoading();
 					if(_rtag.jqObjEmpty)	{
 						_rtag.jqObj.empty();
@@ -1130,6 +1130,7 @@ app.u.throwMessage(responseData); is the default error handler.
 
 				if(macroResponses && macroResponses['@RESPONSES'])	{
 					var $target = _rtag.jqObj || $("#globalMessaging");
+					macroResponses.persistent = _rtag.persistent || false;
 					$target.anymessage(macroResponses);
 					}
 				else	{
@@ -1500,7 +1501,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						});
 					}
 				else	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					//don't throw error to user. target 'could' be in memory.
+					app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.",'warn');
 					}
 				
 				}, //handleAppEvents
@@ -3118,6 +3120,12 @@ return $r;
 			if(data.value)	{
 				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
+			},
+
+		showIfMatch : function($tag,data)	{
+//			app.u.dump("BEGIN renderFormat.showIfMatch. \n value: "+data.value+"\n matchValue: "+data.bindData.matchValue);
+			if(data.value == data.bindData.matchValue)	{$tag.show()}
+			else {} //can't count on getting here. value could be blank. hide by default, then let this show if it's a match.
 			},
 
 //handy for enabling tabs and whatnot based on whether or not a field is populated.

@@ -989,9 +989,9 @@ app.model.dispatchThis('immutable');
 							'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
 							}).prependTo($dualModeDetails);
 					
-					
+					$panel.showLoading({'message':'Fetching Ticket Details.'});
 					app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
-					$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
+					$panel.slideDown('fast');
 					
 app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode,'translateOnly':true}},'mutable');						
 					app.model.dispatchThis('mutable');

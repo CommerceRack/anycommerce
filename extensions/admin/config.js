@@ -791,12 +791,14 @@ $D.dialog('open');
 				if(mode == 'create' || mode == 'update' && $form instanceof jQuery)	{
 
 					var sfo = $form.serializeJSON({'cb':true});
+					$form.showLoading({"message":"Updating host..."});
 					var cmdObj = {
 						_cmd : 'adminDomainMacro',
 						_tag : {
 							jqObj : $form,
 							message : 'Your changes have been saved',
-							callback : 'showMessaging'
+							callback : 'showMessaging',
+							persistent : true
 							},
 						'DOMAINNAME' : sfo.DOMAINNAME,
 						'@updates' : new Array()
@@ -821,10 +823,10 @@ $D.dialog('open');
 							})
 						}
 					else if(sfo.HOSTTYPE == 'SITE')	{
-						hostSet += "&force_https"+sfo.force_https;
+						hostSet += "&force_https="+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'SITEPTR')	{
-						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https"+sfo.force_https;
+						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https="+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
 						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
@@ -1089,8 +1091,8 @@ $D.dialog('open');
 								//success content goes here.
 								$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
 								if($btn.data('mode') == 'update')	{
-									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
-									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT);
+//									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
+//									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT);
 									$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT)
 									}
 								}
@@ -1105,9 +1107,9 @@ $D.dialog('open');
 							app.u.handleCallback(_tag);
 							}
 
-						
-						
-						
+
+
+
 						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 //hostname isn't editable once set.					
 						if($btn.data('mode') == 'update')	{
