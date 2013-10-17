@@ -2849,32 +2849,17 @@ else	{
 								}
 							else	{
 								$target.hideLoading();
-								var data = {
-									'*favorites' : new Array(),
-									'*nonfavorites' : new Array()
-									}
-					//					app.u.dump(" -> rd: "); app.u.dump(rd);
 								var domains = app.data[rd.datapointer]['@DOMAINS'];
+								app.data[rd.datapointer]['*favorites'] = new Array();
 								var L = domains.length;
 								for(var i = 0; i < L; i += 1)	{
 									if(domains[i].IS_FAVORITE == 1)	{
-										data['*favorites'].push(domains[i]);
-										}
-									else	{
-										data['*nonfavorites'].push(domains[i]);
+										app.data[rd.datapointer]['*favorites'].push(domains[i]);
 										}
 									}
-								$target.anycontent({'templateID':'pageTemplateSites','data':data});
-					
-								if(data['*favorites'].length)	{
-									app.u.handleAppEvents($("[data-app-role='domainListFavorites']",$target)); //used for context.
-									app.model.dispatchThis('mutable');
-									}
-					
-								if(data['*nonfavorites'].length)	{
-									app.u.handleAppEvents($("[data-app-role='domainListNonFavorites']",$target));
-									$("[data-app-role='domainListNonFavorites']",$target).anytable();
-									}
+								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
+								app.u.handleAppEvents($target);
+
 								}
 							}
 						}

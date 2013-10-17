@@ -543,16 +543,15 @@ SETUP PAGE TEMPLATE
 	</div>
 	
 	
-	<div class='ui-widget-content ui-corner-all displayNone stdPadding' data-bind="var: domains(*nonfavorites); format:showIfSet;">
-<!--	<h3>Non Favorite Domains</h3>-->
-	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(*nonfavorites); format:processList; loadsTemplate:domainListTemplate;"><!-- template is tbody, so processList is on table -->
-		<thead>
-		<tr>
-			<th>Domain</th>
-			<th>Partition</th>
-			<th></th>
-		</tr>
-		</thead>
+	<div class='ui-widget-content ui-corner-all stdPadding'>
+	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+	<thead>
+	<tr>
+		<th>Domain</th>
+		<th>Partition</th>
+		<th></th>
+	</tr>
+	</thead>
 	</table>
 	</div>
 	
@@ -590,7 +589,7 @@ SETUP PAGE TEMPLATE
 
 <table>
 
-<tbody id='domainListTemplate'>
+<tbody id='domainListTemplate' data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;">
 <tr>
 	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
