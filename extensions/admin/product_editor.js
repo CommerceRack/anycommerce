@@ -755,7 +755,7 @@ app.u.handleEventDelegation($target);
 					}
 				else if (feedsObj['ERROR'] > 0) {
 					// we have an error but init has been turned off - the feeds that don't have errors will still be sent
-					$("<div class='summary' \/>").text(" An error has been returned for the [".describe_bw(feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
+					$("<div class='summary' \/>").text(" An error has been returned for the ["+describe_bw(feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
 					}
 				else if ((feedsObj['SENT'] & feedLookupObj['init'])>0 && (feedsObj['DONE'] & feedLookupObj['init'])==0) {
 					// init sent - waiting to process

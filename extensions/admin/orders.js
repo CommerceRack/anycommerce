@@ -794,7 +794,7 @@ else	{
 				var actions = app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
 				L = actions.length;
 				if(L > 0)	{
-					$select = $("<select \/>").attr('name','action').data(data.value);
+					var $select = $("<select \/>").attr('name','action').data(data.value);
 					$select.off('change.showActionInputs').on('change.showActionInputs',function(){
 						var $tr = $(this).closest('tr');
 						if($(this).val())	{
