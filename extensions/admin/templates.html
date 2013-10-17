@@ -1092,6 +1092,7 @@ ACHIEVEMENTS
 	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
+	<button data-app-event='admin|projectRemove'>Remove this Project</button>
 	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
 	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
 	<button data-app-event='admin|projectUpdateShow'>View Details</button><!-- this will eventually be 'edit' -->
@@ -1100,7 +1101,7 @@ ACHIEVEMENTS
 </table>
 
 
-<div id='projectDetailTemplate' class='labelsAsBreaks'>
+<div id='projectDetailTemplate' class='labelsAsBreaks clearfix'>
 
 	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
 	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
@@ -1113,6 +1114,13 @@ ACHIEVEMENTS
 	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
 	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
 	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+
+	<div class='buttonset' data-bind='var:project(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;'>
+		<button data-app-role='siteTemplateChooseButton' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose</button>
+		<button data-app-role='siteTemplateEditButton' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit</button>
+		<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site'>Download Zip</button>
+		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'>Upload</button>
+	</div>
 
 </div>
 

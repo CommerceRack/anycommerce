@@ -3325,41 +3325,45 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 			showProjects : function($target)	{
 
-				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
-					'header' : 'Projects',
+				$target.intervaledEmpty();
+				app.ext.admin.i.DMICreate($target,{
+					'header' : 'Hosted Applications',
 					'className' : 'projects',
 					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|openDialog' data-templateid='projectCreateTemplate' title='Create a new project' data-update-list='true'>New Project</button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button data-app-event='admin|projectCreateShow'>New Project</button>"],
 					'thead' : ['ID','Title','Type','Created','Updated',''],
-					'tbodyDatabind' : "var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;"
+					'tbodyDatabind' : "var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminProjectList',
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminProjectList'
+							}
+						}
 					});
-
-				if($table)	{
-					app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag': {'datapointer':'adminProjectList','callback':'anycontent','jqObj':$table}},'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				else	{} //buildDualMode will handle the error display.
+				app.model.dispatchThis('mutable');
 
 				},
 
 			showRSS : function($target)	{
 				
-				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+				$target.intervaledEmpty();
+				app.ext.admin.i.DMICreate($target,{
 					'header' : 'RSS Feeds',
 					'className' : 'rssFeeds',
 					'controls' : "",
-					'buttons' : ["<button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
 					'thead' : ['ID','Title','Status','Profile','Schedule',''],
-					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;"
+					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminRSSList',
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminRSSList'
+							}
+						}
 					});
-
-				if($table)	{
-					app.model.addDispatchToQ({'_cmd':'adminRSSList','_tag': {'datapointer':'adminRSSList','callback':'anycontent','jqObj':$table}},'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				else	{} //buildDualMode will handle the error display.			
+				app.model.dispatchThis('mutable');
 				},
 
 //opens a dialog with a list of domains for selection.
@@ -6066,6 +6070,7 @@ else	{
 						"UUID":projectUUID,
 						"_tag": {
 							'callback':'anycontent',
+							'translateOnly' : true,
 							jqObj:$panel,
 							'datapointer' : 'adminProjectDetail|'+projectUUID
 							}
@@ -6074,14 +6079,28 @@ else	{
 					});
 				},
 			
+			projectCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.projectCreateShow').on('click.projectCreateShow',function(){
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Create a New Project',
+						'templateID' : 'projectCreateTemplate',
+						showLoading : false,
+						appendTo : $(this).closest("[data-app-role='dualModeContainer']")
+						});
+					
+					$D.dialog('open');
+					})
+				},
+			
 			projectCreateExec  : function($btn,vars)	{
 				$btn.button();
 				vars = vars || {};
 				$btn.off('click.projectCreateExec').on('click.projectCreateExec',function(){
 					var
 						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON();
-					
+						sfo = $form.serializeJSON(),
+						$DMI = $form.closest("[data-app-role='dualModeContainer']");
 					
 					if(app.u.validateForm($form))	{
 						$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
@@ -6090,26 +6109,61 @@ else	{
 						app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
 							$form.hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd})
+								$form.anymessage({'message':rd});
 								}
 							else	{
-								$form.empty().anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
-								$form.closest('.ui-dialog-content').dialog("option", "buttons", [ { text: "Ok", click: function() { $( this ).dialog( "close" ); } } ] );
+								
+								if($DMI.length)	{
+									$DMI.anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
+									$form.closest('.ui-dialog-content').dialog('close');
+									}
+								else	{
+									$form.empty().anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
+									}
 								}
 							}},'immutable');
-
-//if the list should be updated, the initial 'add project' button should have a data-update-list attribute set. 
-//that way, this app event can be recycled for other uses.
-						app.ext.admin.calls.adminProjectList.init({callback : (vars['update-list'] ? function(){
-							app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-							} : "")},'immutable'); //after the add so the new project is returned in the list.
-
+						app.ext.admin.calls.adminProjectList.init({
+							'callback' :  'DMIUpdateResults',
+							'extension' : 'admin',
+							'jqObj' : $DMI
+							},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{} //validateForm handles error display.
 					})
 				},
-			
+
+			projectRemove : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.projectGitRepoOpen').on('click.projectGitRepoOpen',function(){
+					app.ext.admin.i.dialogConfirmRemove({
+						"message" : "Are you sure you wish to remove this app/project? There is no undo for this action.",
+						"removeButtonText" : "Remove Project", //will default if blank
+						"title" : "Remove Project", //will default if blank
+						"removeFunction" : function(vars,$D){
+							$D.parent().showLoading({"message":"Deleting "});
+							app.model.addDispatchToQ({
+								'_cmd':'adminProjectRemove',
+								'UUID' : $btn.closest("[data-uuid]").attr('data-uuid'),
+								'_tag':	{
+									'callback':function(rd){
+										$D.parent().hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											$D.dialog('close');
+											$('#globalMessaging').anymessage(app.u.successMsgObject('Your project has been removed'));
+											$btn.closest('tr').empty().remove();
+											}
+										}
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						})
+					});
+				}, //projectRemove
 			
 			projectGitRepoOpen : function($btn)	{
 				if($btn.closest('tr').data('github_repo'))	{
@@ -6122,7 +6176,6 @@ else	{
 					$btn.hide();
 					}
 				},
-
 
 			adminRSSRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
