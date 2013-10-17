@@ -20,7 +20,7 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var login = function() {
+var lookup = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -49,20 +49,6 @@ var login = function() {
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
-				var L = app.rq.length-1;
-
-				var uriParams = {};
-				var ps = window.location.href; //param string. find a regex for this to clean it up.
-				if(ps.indexOf('?') >= 1)	{
-					ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-					if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
-					else	{
-						if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-						uriParams = app.u.kvp2Array(ps);
-						}
-					}
-				
 				//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 				if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
 					app.u.dump(" -> Treat as anycommerce");
@@ -72,27 +58,6 @@ var login = function() {
 				else	{
 					app.u.dump(" -> Treat as zoovy");
 					$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
-					}
-				
-				
-				//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
-				//the code for handling the support login is in the thisisanadminsession function (looking at uri)
-				if(app.u.thisIsAnAdminSession())	{
-					app.ext.admin.u.showHeader();
-					}
-				else if(uriParams.show == 'acreate')	{
-					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
-					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-						$("#appPreView").hide();
-						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-						});
-					}
-				else	{
-					app.ext.admin.u.handleAppEvents($('#appLogin'));
-					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-						$("#appPreView").hide();
-						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-						});
 					}
 				}
 			} //initExtension
@@ -129,6 +94,45 @@ var login = function() {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			domainLookup : function($ele,event)	{
+				event.preventDefault();
+				var domain = $ele.find("[name='domain']").val();
+				$('.warn',$ele).empty().remove(); //clear any previous warnings.
+				if(domain)	{
+					$('button').attr('disabled','disabled');
+					$('.wait',$ele).show().css('display','inline-block');
+					app.model.addDispatchToQ({
+						'_cmd':'domainLookup',
+						'domain' : domain,
+						'_tag':	{
+							'datapointer' : 'domainLookup',
+							'callback':function(rd)	{
+					
+								$('.wait',$ele).hide();
+								$('button').attr('disabled','').removeAttr('disabled');
+								if(app.model.responseHasErrors(rd)){
+									$ele.prepend("<div class='warn'>"+rd.errmsg+"</div>");
+									}
+								else	{
+									//kewl. found a match.  now show them their logo, a link and a countdown till auto-redirect occurs.
+									if(app.data[rd.datapointer].adminURL)	{
+										window.location = app.data[rd.datapointer].adminURL+"?fromLookup="+app.u.unixNow(); //timestamp is passed so it can be used on landing page to determine if the user bookmarked w/ this param in the url
+										}
+									else	{
+										$ele.prepend("<div class='warn'>We found a match on the domain, but no admin URL. Please contact your provider for assistance.</div>");
+										}
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+
+					}
+				else	{
+					$ele.prepend("<div class='warn'>Please enter a domain</div>");
+					}
+				return false;
+				}
 			} //e [app Events]
 		} //r object.
 	return r;

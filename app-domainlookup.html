@@ -43,7 +43,7 @@ var app = {vars:{
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="app-login/styles.css">
+<link rel="stylesheet" type="text/css" href="app-domainlookup/styles.css">
 <link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.custom.css" /><!-- tho the jqueryui js lib isn't used for this app, the styles are (for now) -->
 
 <!-- not much is going to run without these two. load em early -->
@@ -53,8 +53,8 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript" src="controller.js"></script>
 <script type="text/javascript" src="model.js"></script>
 <script type="text/javascript" src="includes.js"></script>
-<script type='text/javascript' src='app-login/extension.js'></script>
-<script type='text/javascript' src='app-login-init.js'></script>
+<script type='text/javascript' src='app-domainlookup/extension.js'></script>
+
 <!-- <script type="text/javascript" src="loadscript.js"></script> -->
 
 <script type="text/javascript">
@@ -63,6 +63,10 @@ $(document).ready(function(){
 	var tmp = new zController(app);
 //instantiate wiki parser.
 	myCreole = new Parse.Simple.Creole();
+	// !!! update this to use the proper loadExtension prior to deployment.
+	app.ext.lookup = lookup();
+//	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js'}]);
+	app.u.handleEventDelegation($(document.body));
 	});
 </script>
 
@@ -76,49 +80,24 @@ $(document).ready(function(){
 <body class="control">
 <!-- this div handles getting content to appear below the fixed header -->
 
-
-	
-<div id='appPreView' class='ui-widget ui-widget-content ui-corner-all stdPadding displayNone'>
-	
-	<h3>One moment please while we load our app</h3>
-
-	<div class='alignCenter'>
-	<progress id="appPreViewProgressBar" max="100" value="0"></progress><br />
-	</div>
-	<div id='appPreViewProgressText'>0% Complete</div>
-
-	<div class='appMessaging'></div>
-
-</div>
-
-
-
-
-<div id='appLogin' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+<div id='appLookup' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
 	<div class='logo alignCenter'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 
 	<div class='appMessaging'></div>
 
 	<div id='loginFormContainer'>
-		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' onSubmit="return false">
-		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
-			<legend>Merchant Login</legend>
+		<form name='merchantLogin' action='#' data-app-submit="lookup|domainLookup">
+		<fieldset class='marginTop'>
 			
-			<label><span>Your Domain: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
+			<label><span>Your Domain</span> <input type='text' name='domain' value='' required='required' class='textbox' /></label>
 			
-			<button class='loginbutton floatRight' data-app-event="admin|domainLookup">lookup</button>
+			<button class='loginbutton ui-widget ui-state-default ui-corner-all'>
+				<span class='wait'></span>
+				<span class='ui-button-text'>Go!</span>
+			</button>
 		</fieldset>
 		</form>
-
-		<div class='showForAnyCommerceOnly'>
-			<hr class='ruler' />
-			<div class='alignCenter'>
-			<button class="createAccount" data-app-event="admin|showCreateAccount"><span class="ui-button-text">Create An Account</span></button>
-			</div>
-		</div>
-
-
 	</div>
 </div>
 

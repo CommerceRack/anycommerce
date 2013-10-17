@@ -1426,7 +1426,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
 					}
 				else	{
-					var supportedEvents = new Array("click","change","focus","blur");
+					var supportedEvents = new Array("click","change","focus","blur","submit");
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
 						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
 							app.u.executeEvent($(e.target),$.extend(p,e));
