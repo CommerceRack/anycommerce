@@ -791,6 +791,7 @@ $D.dialog('open');
 				if(mode == 'create' || mode == 'update' && $form instanceof jQuery)	{
 
 					var sfo = $form.serializeJSON({'cb':true});
+					$form.showLoading({"message":"Updating host..."});
 					var cmdObj = {
 						_cmd : 'adminDomainMacro',
 						_tag : {
@@ -824,7 +825,7 @@ $D.dialog('open');
 						hostSet += "&force_https="+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'SITEPTR')	{
-						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https"+sfo.force_https;
+						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https="+sfo.force_https;
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
 						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
