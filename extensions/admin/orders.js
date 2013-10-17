@@ -1105,7 +1105,7 @@ else	{
 				//tab already exists. don't create a duplicate.
 				}
 			else	{
-				$table.stickytab({'tabtext':'order results','tabID':'productListTab'});
+				$table.stickytab({'tabtext':'order results','tabID':'productListTab','handleEventDelegation':true});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 				$('button, a',$table).each(function(){
 					$(this).off('close.stickytab').on('click.closeStickytab',function(){

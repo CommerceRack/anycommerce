@@ -1368,6 +1368,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 	$.widget("ui.stickytab",{
 		options : {
 			tabID : '',
+			handleEventDelegation : false, //if enabled, will apply event delegation to table.
 			tabtext : 'unnamed tab', //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
 			tabclass : 'ui-state-default' //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			},
@@ -1396,6 +1397,9 @@ supported options include tabID (given to the container), tabtext (what appears 
 					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
 	
 				this.sticky = $sticky; //global reference to container for easy access.
+				if(o.handleEventDelegation)	{
+					app.u.handleEventDelegation($sticky);
+					}
 //* 202324  -> tabid wasn't getting applied to tab.
 				$sticky.attr({'id':(o.tabID) ? o.tabID : 'stickytab_'+guid});
 				$sticky.appendTo($tabContainer);
