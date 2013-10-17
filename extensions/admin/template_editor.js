@@ -1442,7 +1442,7 @@ var $input = $(app.u.jqSelector('#',ID));
 //executed when a template is selected.
 				templateChooserExec : function($ele)	{
 					if($ele.is('button'))	{$ele.button();}
-					$ele.off('click.templateChooserShow').on('click.templateChooserShow',function(event){
+					$ele.off('click.templateChooserExec').on('click.templateChooserExec',function(event){
 						event.preventDefault();
 						app.ext.admin_templateEditor.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
 						});
@@ -1781,7 +1781,7 @@ else	{
 					}, //templateChooserShow
 
 				templateEditorShow : function($btn)	{
-					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
+//					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
 					$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
 					
 				

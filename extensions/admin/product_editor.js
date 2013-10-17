@@ -2135,7 +2135,7 @@ else	{} //no changes in sku attribs.
 
 				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='productManager']");
 				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
-				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
+				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'});
 				$ele.parent().find("[data-app-click='admin_prodEdit|productFiltersClose']").trigger('click');
 //				app.u.dump("name='size'.length: "+$("select[name='size']",'#navTabs').length+" and val: "+$("select[name='size']",'#navTabs').val());
 
@@ -3057,9 +3057,9 @@ app.model.dispatchThis("immutable");
 			variationSearchByIDExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
 				$btn.off('click.variationSearchByIDExec').on('click.variationSearchByIDExec',function(){
-					app.ext.admin_prodEdit.u.prepContentArea4Results($("[data-app-role='productManager']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'});
 					var varID = $btn.closest('tr').data('id');
+					app.ext.admin_prodEdit.u.prepContentArea4Results($('#productContent'));
+					
 					app.model.addDispatchToQ({
 						"mode":"elastic-native",
 						"size":250,
@@ -3069,11 +3069,12 @@ app.model.dispatchThis("immutable");
 							'callback':'handleElasticResults',
 							'extension':'store_search',
 							'datapointer' : 'appPublicSearch|variation|'+varID,
-							'templateID':'productManagerResultsItemTemplate',
-							'list':$('#prodEditorResultsTbody')
+							'templateID':'prodManagerProductResultsTemplate',
+							'list': $("[data-app-role='productManagerSearchResults']",$('#productContent'))
 							},
 						"type":"product"
 						},"mutable");
+					navigateTo('#!product');
 					app.model.dispatchThis("mutable");
 					});
 				}, //variationSearchByIDExec

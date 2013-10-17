@@ -993,7 +993,7 @@ app.model.dispatchThis('immutable');
 					app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
 					$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
 					
-app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode}},'mutable');						
+app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode,'translateOnly':true}},'mutable');						
 					app.model.dispatchThis('mutable');
 					});
 

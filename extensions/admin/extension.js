@@ -5522,7 +5522,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$D.anycontent(vars);
 					}
 				$D.dialog({
-					modal: false,
+					modal: true,
 					width : '90%',
 					autoOpen : false,
 					appendTo : vars.appendTo || "",
