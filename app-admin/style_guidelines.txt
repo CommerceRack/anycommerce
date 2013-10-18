@@ -27,6 +27,8 @@ Add a class 'labelsAsBreaks' on the form to give each label a block status.
 Buttons:
 Upper case the first letter of each word.
 if you have several buttons in a horizontal row and 1 button is delete or remove, always put it on the left.
+in general, if you have a set of buttons and some display conditionally, group the non-conditional together (typically on the right) so they're aligned and not moving around.
+
 
 Titles and Legends:
 Uppercase the first letter of each word.
