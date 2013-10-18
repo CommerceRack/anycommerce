@@ -3750,6 +3750,7 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 
 
 			handleFormConditionalDelegation : function($container)	{
+				
 				$container.on('keyup',function(e)	{
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 					if(e.target.nodeName.toLowerCase() == 'input'){
@@ -3774,9 +3775,19 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 					});
 				
 				$container.on('click',function(e){
-					var $ele = $(e.target);
+					
+					var
+						$form = $ele.closest('form'), //used for context.
+						$ele = $(e.target);
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 
+					if($ele.data('show-selector'))	{
+						$($ele.data('show-selector'),$form).show();						
+						}
+
+					if($ele.data('hide-selector'))	{
+						$($ele.data('hide-selector'),$form).hide();						
+						}
 					
 					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
 //						app.u.dump('is option or select');
@@ -3797,7 +3808,7 @@ and all .someClass are hidden (value of data-panel-selector)
 
 */
 						if($ele.data('panel-selector'))    {
-							var	$form = $ele.closest('form'); //used for context.
+							
 				
 							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
 							var $option = $('option:selected',$ele);
