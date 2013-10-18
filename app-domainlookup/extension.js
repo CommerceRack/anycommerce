@@ -43,12 +43,13 @@ var lookup = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+
 				}
 			},
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
+				app.u.dump('BEGIN lookup.initExtension.onSuccess ');
 				//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 				if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
 					app.u.dump(" -> Treat as anycommerce");
