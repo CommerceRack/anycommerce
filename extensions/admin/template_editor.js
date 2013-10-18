@@ -1761,14 +1761,21 @@ else	{
 
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{
-					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
 					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
 
 						if($btn.data('mode') == 'Campaign')	{
 							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
 							}
 						else if ($btn.data('mode') == 'Site')	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":$btn.closest("[data-domain]").data('domain')});
+							var domainname = $btn.closest("[data-domainname]").data('domainname');
+							var hostname = $btn.closest("[data-hostname]").attr('data-hostname');
+							if(hostname && domainname)	{
+								app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
+								}
+							else	{
+								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+								}
 							}
 						else if ($btn.data('mode') == 'EBAYProfile')	{
 							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$btn.closest("[data-profile]").data('profile')});
@@ -1799,33 +1806,11 @@ else	{
 							var hostname = $btn.closest("[data-hostname]").attr('data-hostname');
 							
 							if(hostname && domainname)	{
-								app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
+								app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
 								}
 							else	{
 								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
 								}
-							
-							
-							/*
-							if(app.data['adminDomainDetail|'+domainname])	{
-								if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
-									//this domain has a project. open the editor. that occurs later as long as pass=true.
-									}
-								else	{
-									//no project set. open chooser.
-									pass = false;
-									app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname+'.'+domainname});
-									}
-								}
-							else 	{
-								pass = false;
-								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, domain detail is not in memory and is required.','gMessage':true});
-								}
-							
-							if(pass)	{
-								app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":$btn.closest("[data-domainname]").data('domainname')});
-								}
-							*/
 							}
 						else	{
 							//invalid mode set.
