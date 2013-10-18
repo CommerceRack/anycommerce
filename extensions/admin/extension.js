@@ -3774,15 +3774,28 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 						}
 					});
 				
+				$container.on('click','[data-show-class]',function(e)	{
+					var $ele = $(e.target);
+					if($ele.attr('data-show-class'))	{}
+					else	{
+						$ele = $ele.closest("[data-show-class]");
+						}
+					app.u.dump(" ->>>>> got here");
+					app.u.dump(" $ele.attr('data-show-class'): "+$ele.attr('data-show-class'));
+					app.u.dump(" length: "+$(app.u.jqSelector("",$ele.attr('data-show-class')),$ele.closest('form')).length);
+					$($ele.attr('data-show-class'),$ele.closest('form')).show();
+					})
+				
+				
 				$container.on('click',function(e){
-					
+					app.u.dump(" we are form delegtion. you will be assimilated");
 					var
-						$form = $ele.closest('form'), //used for context.
-						$ele = $(e.target);
+						$ele = $(e.target),
+						$form = $ele.closest('form'); //used for context.
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 
 					if($ele.data('show-selector'))	{
-						$($ele.data('show-selector'),$form).show();						
+						$(app.u.jqSelector("",$ele.data('show-selector')),$form).show();						
 						}
 
 					if($ele.data('hide-selector'))	{
