@@ -976,8 +976,8 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<form action='#' onSubmit='return false'>
 	
 		<fieldset class='clearfix marginBottom'>
+			<div class='threeColumn floatLeft clearfix marginBottom'>
 			<legend>eBay Categories</legend>
-	
 				<label class='threeColumn floatLeft'>
 					<span>eBay category 1</span>
 					<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
@@ -996,19 +996,26 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 					<span>eBay Store Category</span>
 					<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 				</label>
+			</div>
+			<div class='clearfix marginBottom'>
 				<label>
 					<span>Launch profile</span>
 					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
 					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
 				</label>
+			</div>
+			<div class='clearfix marginBottom'>
 				<label>
 					<span>eBay title</span>
-					<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+					<input type="text" value="" size="80" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
 				</label>
+			</div>
+			<div class='clearfix marginBottom'>
 				<label>
 					<span>eBay subtitle</span>
-					<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+					<input type="text" value="" size="80" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
 				</label>
+			</div>
 		</fieldset>
 
 		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='showProductWithVariations'>
