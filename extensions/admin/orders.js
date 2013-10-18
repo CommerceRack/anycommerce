@@ -2609,6 +2609,33 @@ else	{
 				},
 
 
+			adminOrderMacroExec : function($ele,p)	{
+				var orderID = $ele.closest("[data-orderid]").attr('data-orderid');
+				if(orderID)	{
+					app.model.addDispatchToQ({
+						'_cmd':'adminOrderMacro',
+						'orderid' : orderID,
+						'@updates' : [$ele.attr('data-macro-cmd')],
+						'_tag':	{
+							'callback':function(rd){
+	//this is used in orders > routes for inventory detail. test there if changes are made.
+								if(app.model.responseHasErrors(rd)){
+									$ele.parent().anymessage({'message':rd}); //tag is a button.
+									}
+								else	{
+									$ele.parent().empty().anymessage(app.u.successMsgObject('Route assigned'));
+									app.ext.admin_orders.a.showOrderView(orderID,'','ordersContent')
+									}
+								}
+							}
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					$ele.parent().anymessage({"message":"In admin_orders.e.adminOrderMacroExec, unable to ascertain order ID.","gMessage":true});
+					}
+				},
+
 			routingDialogShow : function($ele)	{
 				$ele.button(); //{icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: true}
 				$ele.off('click.itemHandleRoutingExec').on('click.itemHandleRoutingExec',function(e){
