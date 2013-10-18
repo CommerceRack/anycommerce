@@ -52,7 +52,7 @@ var admin_trainer = function() {
 				var $trainer = $("#trainer");
 				if($trainer.length)	{$trainer.dialog('open')}
 				else	{
-					$trainer = $('<div \/>',{'id':'trainer'});
+					$trainer = $('<div \/>',{'id':'trainer','title':"Let's get started..."});
 					$trainer.anycontent({
 						'templateID':'trainerTemplate',
 						'data' : app.ext.admin.u.dpsGet('trainer') || {},
@@ -61,7 +61,10 @@ var admin_trainer = function() {
 					$trainer.dialog({
 						'modal' : true,
 						'width' : ($(document.body).width() > 500) ? 500 : '90%'
-						})
+						});
+					app.u.handleEventDelegation($trainer);
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$trainer));
+					app.u.handleCommonPlugins($trainer);
 					}
 				}
 			}, //Actions

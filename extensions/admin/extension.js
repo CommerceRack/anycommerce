@@ -2424,27 +2424,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					//currently, this is used in orders > routes
-					if(data.bindData._cmd == 'adminOrderMacro')	{
-						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).attr('data-macro-cmd',data.value[i].cmd).button().on('click',function(){
-							app.model.addDispatchToQ({
-								'_cmd':'adminOrderMacro',
-								'orderid' : $tag.closest("[data-orderid]").attr('data-orderid'),
-								'@updates' : [$(this).attr('data-macro-cmd')],
-								'_tag':	{
-									'callback':function(rd){
-										if(app.model.responseHasErrors(rd)){
-											$tag.parent().anymessage({'message':rd}); //tag is a button.
-											}
-										else	{
-											$tag.parent().empty().anymessage(app.u.successMsgObject('Route assigned'))
-											}
-										}
-									}
-								},'immutable');
-							app.model.dispatchThis('immutable');
-							}).appendTo($tag);
-						}
+// This needs to be cleaned up.  Probably should specify the app-click in the data-bind to get the control we want. !!!
 //!!! Need to go back and update the other places this is used so that 'else' is an error condition of missing _cmd, not a default.
+					if(data.bindData._cmd == 'adminOrderMacro')	{
+						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).attr({'data-macro-cmd':data.value[i].cmd,'data-app-click':'admin_orders|adminOrderMacroExec'}).button().appendTo($tag);
+						}
 					else	{
 						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
 						}
@@ -3767,6 +3751,7 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 
 
 			handleFormConditionalDelegation : function($container)	{
+				
 				$container.on('keyup',function(e)	{
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 					if(e.target.nodeName.toLowerCase() == 'input'){
@@ -3791,9 +3776,19 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 					});
 				
 				$container.on('click',function(e){
-					var $ele = $(e.target);
+					
+					var
+						$form = $ele.closest('form'), //used for context.
+						$ele = $(e.target);
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 
+					if($ele.data('show-selector'))	{
+						$($ele.data('show-selector'),$form).show();						
+						}
+
+					if($ele.data('hide-selector'))	{
+						$($ele.data('hide-selector'),$form).hide();						
+						}
 					
 					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
 //						app.u.dump('is option or select');
@@ -3814,7 +3809,7 @@ and all .someClass are hidden (value of data-panel-selector)
 
 */
 						if($ele.data('panel-selector'))    {
-							var	$form = $ele.closest('form'); //used for context.
+							
 				
 							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
 							var $option = $('option:selected',$ele);
