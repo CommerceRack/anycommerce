@@ -3,7 +3,7 @@
 
 <div id='trainerTemplate'>
 
-<form action='#' onSubmit='false' class='trainer'>
+<form action='#' onSubmit='false' class='trainer labelAsBreaks'>
 
 <fieldset>
 	<legend>Step 1</legend>
@@ -12,9 +12,9 @@
 	<p>Welcome and thanks for signing up!</p>
 	
 	<div>I'm excited to be here, but will <span class='lookLikeLink'>explore on my own</span>.</div>
-	<div><b><span class='lookLikeLink'>I'd like a tour, please.</span></b></div>
-	
-	<div class='displayNone'>
+	<div class='pointer' data-show-class="[data-app-role='trainerStep1'], [data-app-role='trainerNavButtons']"><b><span class='lookLikeLink'>I'd like a tour, please.</span></b></div>
+
+	<div class='displayNone' data-app-role='trainerStep1'>
 		<h4>Alright! Let's get started</h4>
 	
 		<div>
@@ -43,7 +43,7 @@
 </fieldset>
 
 
-<fieldset class='displayNone'>
+<fieldset class='displayNone' data-app-role='trainerStep2'>
 	<legend>Step 2</legend>
 	
 	<div>
@@ -70,7 +70,7 @@
 
 
 
-<div class='displayNone buttonset clearfix'>
+<div class='displayNone buttonset clearfix' data-app-role='trainerNavButtons'>
 	<button class='floatLeft applyButton' data-text='true'>Previous</button>	
 	<button class='floatRight applyButton' data-text='true'>Next</button>
 </div>
