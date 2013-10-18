@@ -1796,6 +1796,17 @@ else	{
 						else if ($btn.data('mode') == 'Site')	{
 							
 							var domainname = $btn.closest("[data-domainname]").data('domainname');
+							var hostname = $btn.closest("[data-hostname]").attr('data-hostname');
+							
+							if(hostname && domainname)	{
+								app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
+								}
+							else	{
+								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+								}
+							
+							
+							/*
 							if(app.data['adminDomainDetail|'+domainname])	{
 								if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
 									//this domain has a project. open the editor. that occurs later as long as pass=true.
@@ -1803,7 +1814,7 @@ else	{
 								else	{
 									//no project set. open chooser.
 									pass = false;
-									app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":domainname});
+									app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname+'.'+domainname});
 									}
 								}
 							else 	{
@@ -1814,6 +1825,7 @@ else	{
 							if(pass)	{
 								app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":$btn.closest("[data-domainname]").data('domainname')});
 								}
+							*/
 							}
 						else	{
 							//invalid mode set.
