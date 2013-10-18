@@ -59,7 +59,8 @@ var admin_trainer = function() {
 						'showLoading':false
 						});
 					$trainer.dialog({
-						
+						'modal' : true,
+						'width' : ($(document.body).width() > 500) ? 500 : '90%'
 						})
 					}
 				}

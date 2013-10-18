@@ -2419,9 +2419,34 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 	renderFormats : {
 
 			macros2Buttons : function($tag,data)	{
+//				app.u.dump(" got here"); app.u.dump(data.value);
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
-					$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+					//currently, this is used in orders > routes
+					if(data.bindData._cmd == 'adminOrderMacro')	{
+						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).attr('data-macro-cmd',data.value[i].cmd).button().on('click',function(){
+							app.model.addDispatchToQ({
+								'_cmd':'adminOrderMacro',
+								'orderid' : $tag.closest("[data-orderid]").attr('data-orderid'),
+								'@updates' : [$(this).attr('data-macro-cmd')],
+								'_tag':	{
+									'callback':function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$tag.parent().anymessage({'message':rd}); //tag is a button.
+											}
+										else	{
+											$tag.parent().empty().anymessage(app.u.successMsgObject('Route assigned'))
+											}
+										}
+									}
+								},'immutable');
+							app.model.dispatchThis('immutable');
+							}).appendTo($tag);
+						}
+//!!! Need to go back and update the other places this is used so that 'else' is an error condition of missing _cmd, not a default.
+					else	{
+						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+						}
 					}
 				},
 				

@@ -620,13 +620,11 @@ The following templates are used in the 'order detail' modal/view.
 </tr>
 
 
-<!-- used in the order editor line item template when 'update routes' is clicked. button is shown conditionally. -->
+<!-- used in the order editor line item template when 'update routes' is clicked. button is shown conditionally
 <tr id='itemRoutesTemplate'>
-	<td data-bind='var: route(SKU); format:text; '></td>
-	<td data-bind='var: route(ROUTE); format:text; '></td>
-	<td class='alignRight' data-bind="var: route(@MACROS); format:macros2Buttons; extension:admin;"></td>
+	<td class='alignRight' data-bind="useParentData:true; format:macros2Buttons; extension:admin;"></td>
 </tr>
-
+. -->
 
 </table>
 
