@@ -100,7 +100,7 @@
       "youtube_videoheader" : "Cool Touch Bedding Relief",
       "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_cool_touch_bedding.jpg",
-      "description" : "In search of some cooling relief at night? Whether you are prone to being warm blooded or experiencing some change of life issues - you need cooling comfort. DOWNLITE offers several unique solutions to help you stay comfortable and cool at night in bed.\n\n\nWhen it comes to cooling comfort, we suggest fabrics that use TENCEL Lyocell due to it's unique ability to feel cool against the skin, wick away moisture and just feel amazing. TENCEL Lyocell is often considered a miracle fabric for the way it feels so great in sheeting, duvets and other fabric applications.\n\n\nUnderneath the top of out fabrics we suggest Outlast Or Climarelle as a great solution to help transfer heat away from your body at night. Heat transfer technologies are known as PCM (Phase Change Materials). Originally developed for NASA, Outlast is an ultra premium material we use for pillows to offer cooling comfort).\n\nDOWNLITE also offers lighter weight blanket solutions to help reduce night time sweats.",
+      "description" : "In search of some cooling relief at night? Whether you are prone to being warm blooded or experiencing some change of life issues - you need cooling comfort. DOWNLITE offers several unique solutions to help you stay comfortable and cool at night in bed.\n\n\nWhen it comes to cooling comfort we suggest fabrics that use TENCEL Lyocell due to it's unique ability to feel cool against the skin, wick away moisture and just feel amazing. TENCEL Lyocell is often considered a miracle fabric for the way it feels so great in sheeting, duvets and other fabric applications.\n\n\nUnderneath the top or out fabrics we suggest Outlast Or Climarelle as a great solution to help transfer heat away from your body at night. Heat transfer technologies are known as PCM (Phase Change Materials). Originally developed for NASA - Outlast is an ultra premium material we use for pillows to offer cooling comfort).\n\nDOWNLITE also offers lighter weight blanket solutions to help reduce night time sweats.",
       "youtube_videodescription" : "Don't settle for warm restless nights when you can enjoy cool comfort at night. Options include Outlast, Tencel Lyocell and more for a cooler sleep environment."
    },
    ".200-bed-toppers.featherbeds" : {
@@ -366,6 +366,14 @@
    },
    ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.175-enviroloft-polyester-inserts" : {
       "fl" : "~downlite_c_dataentry"
+   },
+   ".hotels.250-local-and-bnb.260-crabtree-cottage-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Crabtree Cottage Bedding",
+      "fl" : "~downlite_c_dataentry",
+      "picture1" : "4/480x360_crabtree_cottage_bedding.jpg",
+      "description" : "The Crabtree Cottage uses our PrimaLoft, luxury down alternative collection of bedding.  We also suggest our cool to the touch Tencel Lyocell sheets, pillowcases and duvet covers to compliment the bedding. Please note that the comforter model they use is offered online in 3 weight levels to fit your comfort levels.",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
    ".125-comforters.125-synthetic-down-alternative-comforters" : {
       "fl" : "~downlite_c_dataentry"
