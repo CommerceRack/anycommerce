@@ -1735,7 +1735,8 @@ $('.editable',$container).each(function(){
 									}
 								else	{
 									//success content goes here.
-									$tbody.anycontent(rd)
+									$tbody.anycontent(rd);
+									app.u.handleButtons($tbody);
 									}
 								}
 							}
@@ -1820,8 +1821,17 @@ $('.editable',$container).each(function(){
 
 //the edit button in the order list mode. Will open order editable format.
 			"orderUpdateShowEditor" : function($ele,P){
-				var orderID = $ele.attr('data-orderid'),
-				CID = $ele.closest('tr').attr('data-cid'); //not strictly required, but helpful.
+				var
+					orderID,
+					CID = $ele.closest('tr').attr('data-cid') || ""; //not strictly required, but helpful.
+					
+				if($ele.data('mode') == 'inventoryDetail')	{
+					orderID = $ele.closest('[data-our_orderid]').attr('data-our_orderid');
+					}
+				else	{
+					orderID = $ele.attr('data-orderid');
+					}
+				
 				if(orderID)	{
 					app.ext.admin_orders.u.handleOrderListTab('activate');
 					$(app.u.jqSelector('#',"ordersContent")).empty();
@@ -2611,7 +2621,7 @@ else	{
 							'title' : 'Routing options for '+uuid,
 							'showLoading' : false
 							});
-						$D.append("<table><tbody data-bind='var: routes(@ROWS); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
+						$D.append("<table><tbody data-bind='var: routes(@ROUTES); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
 						$D.dialog('open');
 												
 						app.model.addDispatchToQ({
