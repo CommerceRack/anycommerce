@@ -2611,7 +2611,7 @@ else	{
 							'title' : 'Routing options for '+uuid,
 							'showLoading' : false
 							});
-						$D.append("<table><tbody data-bind='var: routes(@ROWS); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
+						$D.append("<table><tbody data-bind='var: routes(@ROUTES); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
 						$D.dialog('open');
 												
 						app.model.addDispatchToQ({
