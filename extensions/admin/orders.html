@@ -153,13 +153,15 @@
 				
 				<!-- bulk menu for items -->
 				<div class='floatLeft marginLeft bulkEditMenu hideInOrderListMode'>
-				<ul data-app-role='admin_orders|itemUpdateBulkEditMenu'>
+				<!--<ul data-app-role='admin_orders|itemUpdateBulkEditMenu'>
+				
 					<li><a href='#'>Action</a>
 					<ul>
 						<li class='hideInOrderListMode'><a href='#BTCH|ADDBATCHID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Do something awesome</a></li>
 					</ul>
 					</li>
-				</ul>
+				
+				</ul>-->
 				</div>
 	
 			</div>
@@ -271,7 +273,7 @@
 	<td><span data-bind='var:order(WMS_ZONE);format:text;'></span></td>
 	<td><span data-bind='var:order(WMS_POSITION);format:text;'></span></td>
 	<td NOWRAP class='alignRight'>
-	
+	<button data-app-click='admin_orders|orderUpdateShowEditor' data-mode='inventoryDetail' data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
 	</td>
 </tr>
 
