@@ -2621,9 +2621,9 @@ else	{
 							'title' : 'Routing options for '+uuid,
 							'showLoading' : false
 							});
-						$D.append("<table><tbody data-bind='var: routes(@ROUTES); format:processList; loadsTemplate:itemRoutesTemplate;'></tbody></table>");
+						$D.append("<table data-orderid='"+orderID+"'><tbody data-bind='var: routes(@ROUTES); format:macros2Buttons; extension:admin; _cmd:adminOrderMacro;'></tbody></table>");
 						$D.dialog('open');
-												
+						app.u.handleEventDelegation($D);
 						app.model.addDispatchToQ({
 							'_cmd':'adminOrderRouteList',
 							'orderid' : orderID,
