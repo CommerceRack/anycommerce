@@ -63,9 +63,7 @@ $(document).ready(function(){
 	var tmp = new zController(app);
 //instantiate wiki parser.
 	myCreole = new Parse.Simple.Creole();
-	// !!! update this to use the proper loadExtension prior to deployment.
-	app.ext.lookup = lookup();
-//	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js'}]);
+	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js','callback':'initExtension'}]);
 	app.u.handleEventDelegation($(document.body));
 	});
 </script>
