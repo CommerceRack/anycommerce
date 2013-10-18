@@ -80,20 +80,18 @@ $(document).ready(function(){
 <body class="control">
 <!-- this div handles getting content to appear below the fixed header -->
 
-<div id='appLookup' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+<div id='appLookup' class='ui-widget ui-widget-content ui-corner-all'>
 	
-	<div class='logo alignCenter'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 
-			<div class='hint'>
-			<b>Oct 17th, 2013: Release 201342 is online, and each domain now has a private admin
-			url directly connected to the clusters servers.	Enter your store domain below to be redirected.
-			</b>
-			<br>
-			</div>
+	<div class='hint stdMargin'>
+	<b>Oct 17th, 2013: Release 201342 is online and each domain now has a private admin
+	url directly connected to the cluster's servers. Enter your store domain below to be redirected.
+	</b>
+	<br>
+	</div>
 
-	<div class='appMessaging'></div>
-
-	<div id='loginFormContainer'>
+	<div id='loginFormContainer' class='stdMargin'>
 		<form name='merchantLogin' action='#' data-app-submit="lookup|domainLookup">
 		<fieldset class='marginTop'>
 

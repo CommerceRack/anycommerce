@@ -20,12 +20,14 @@ img {border:0px;}
 .alignLeft	{text-align:left;}
 .alignCenter	{text-align:center;}
 
-.logo	{margin-top:24px;}
-#appLookup	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
-#appLookup form	{padding:24px;}
+
+#appLookup	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px; padding:24px 24px 0 24px;} /* top margin F's up FF and body/html 100% height */
 #appLookup .hint	{font-size:14px;}
 #appLookup legend	{display:none;}
 #appLookup fieldset	{border:0; padding:0; margin:0;}
 
 .loginbutton	{padding:4px;}
 .wait	{background:url(wait.gif) no-repeat center center; height:16px; width:16px; float:left; margin-right:4px; display:none;}
+
+.stdMargin 	{margin:0 24px 24px 24px;}
+.hint	{margin-top:12px;}
