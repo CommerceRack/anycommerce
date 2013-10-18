@@ -996,32 +996,30 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 					<span>eBay Store Category</span>
 					<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 				</label>
+				<label>
+					<span>Launch profile</span>
+					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
+					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+				</label>
+				<label>
+					<span>eBay title</span>
+					<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+				</label>
+				<label>
+					<span>eBay subtitle</span>
+					<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+				</label>
 		</fieldset>
 
 		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='auctionConfigurationDisabledMessage'>
-		Auction functionality is not available due to product variations.
+			<legend>Auction Configuration</legend>
+			Auction functionality is not available because product variations	are present.
 		</div>
 
 		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels' data-app-role='auctionConfigurationSettings'>
-			<legend>Auction Configurations</legend>
+			<legend>Auction Configuration</legend>
 				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 				<div class='threeColumn floatLeft'>
-					<label>
-						<span>Launch profile</span>
-						<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
-						<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
-					</label>
-
-					<label>
-						<span>eBay title</span>
-						<input type="text" value="" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
-					</label>
-
-					<label>
-						<span>eBay subtitle</span>
-						<input type="text" value="" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
-					</label>
-				</div>
 				
 				<div class='threeColumn floatLeft'>
 		
@@ -1091,13 +1089,13 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 			<label>
 				<span>Fixed price</span>
-				$<input type="number" step='.01' min='0' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
 
 
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Fixed qty</span>
-				<input type="number" step='1' min='0' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<input type="number" step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
 			</label>
 
 			<label data-bind="var: product(ebay:ts); format:showIfSet;">
