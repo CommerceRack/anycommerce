@@ -22,9 +22,11 @@ app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js
 app.rq.push(['extension',0,'tools_lightbox','extensions/tools_lightbox/tools_lightbox.js']);
 app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 
-app.rq.push(['extension',0,'auth_google_sso','extensions/auth_google_sso.js']);
-app.rq.push(['extension',0,'auth_facebook_sso','extensions/auth_facebook_sso.js']);
-app.rq.push(['extension',0,'auth_paypal_sso','extensions/auth_paypal_sso.js']);
+app.rq.push(['extension',1,'cubworld_conversiontracking','extensions/_cubworld_conversiontracking.js','startExtension']);
+
+//app.rq.push(['extension',0,'auth_google_sso','extensions/auth_google_sso.js']);
+//app.rq.push(['extension',0,'auth_facebook_sso','extensions/auth_facebook_sso.js']);
+//app.rq.push(['extension',0,'auth_paypal_sso','extensions/auth_paypal_sso.js']);
 
 app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
