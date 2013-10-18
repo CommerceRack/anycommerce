@@ -84,18 +84,31 @@ $(document).ready(function(){
 	
 	<div class='logo alignCenter'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 
+			<div class='hint'>
+			<b>Oct 17th, 2013: Release 201342 is online, and each domain now has a private admin
+			url directly connected to the clusters servers.	Enter your store domain below to be redirected.
+			</b>
+			<br>
+			</div>
+
 	<div class='appMessaging'></div>
 
 	<div id='loginFormContainer'>
 		<form name='merchantLogin' action='#' data-app-submit="lookup|domainLookup">
 		<fieldset class='marginTop'>
-			
-			<label><span>Your Domain</span> <input type='text' name='domain' value='' required='required' class='textbox' /></label>
+
+			<label><span>Domain:</span> <input type='text' name='domain' value='' required='required' class='textbox' /></label>
 			
 			<button class='loginbutton ui-widget ui-state-default ui-corner-all'>
 				<span class='wait'></span>
-				<span class='ui-button-text'>Go!</span>
+				<span class='ui-button-text'>Take Me</span>
 			</button>
+			
+			<br>
+			<div class="hint">
+			<i>HINT: You can bookmark the next page to skip this step for future logins.</i>
+			</div>
+
 		</fieldset>
 		</form>
 	</div>
