@@ -180,11 +180,13 @@ _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.exte
 //check to see if item has inventoryable variations.
 if(app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
 	//this product has inventoryable options.
-
-	// inventory-able variations and ebay are not compatible.
-	$("[data-app-role='auctionConfigurationSettings']",_rtag.jqObj).hide();
-	$("[data-app-role='auctionConfigurationDisabledMessage']",_rtag.jqObj).show();
-
+	$("[data-app-role='showProductWithVariations']",_rtag.jqObj).show();
+	$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).hide();
+	}
+else {
+	// no variations
+	$("[data-app-role='showProductWithVariations']",_rtag.jqObj).hide();
+	$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).show();
 	}
 
 

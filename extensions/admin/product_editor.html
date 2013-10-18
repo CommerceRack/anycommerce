@@ -1011,12 +1011,15 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				</label>
 		</fieldset>
 
-		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='auctionConfigurationDisabledMessage'>
-			<legend>Auction Configuration</legend>
-			Auction functionality is not available because product variations	are present.
+		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='showProductWithVariations'>
+			<legend>Variations Detected</legend>
+			<ul>
+			<li> Auction functionality is not compatible with variations
+			<li> Variation level pricing and inventory available will be transmitted to eBay.
+			</ul>			
 		</div>
 
-		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels' data-app-role='auctionConfigurationSettings'>
+		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels' data-app-role='showProductWithoutVariations'>
 			<legend>Auction Configuration</legend>
 				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 				<div class='threeColumn floatLeft'>
@@ -1083,20 +1086,24 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	
 	
 		<fieldset class='labelsAsBreaks'>
-			<legend>Fixed Price / Syndication Configuration</legend>
+			<div data-app-role='showProductWithoutVariations'>
+				<!-- don't show this header when variations are present -->
+				<legend>Fixed Price / Syndication Configuration</legend>
+			</div>
+			
 			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 			<div data-bind="var: product(ebay:ts); format:hideIfSet;" class='red marginBottom'>Syndication is disabled for this product.</div>
-	
+			
+			<div data-app-role='showProductWithoutVariations'>
 			<label>
 				<span>Fixed price</span>
 				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
-
-
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Fixed qty</span>
 				<input type="number" step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
 			</label>
+			</div>
 
 			<label data-bind="var: product(ebay:ts); format:showIfSet;">
 				<div class="hint">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
