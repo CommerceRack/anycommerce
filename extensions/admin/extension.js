@@ -3751,7 +3751,7 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 
 
 			handleFormConditionalDelegation : function($container)	{
-				
+//events don't seem to be bubbling like i expected. so within each event handler, move up the dom to the target element (this is the reason for the 'closest')
 				$container.on('keyup',function(e)	{
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
 					if(e.target.nodeName.toLowerCase() == 'input'){
@@ -3775,40 +3775,75 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 						}
 					});
 				
-				$container.on('click','[data-show-class]',function(e)	{
+				$container.on('click','[data-show-selector]',function(e)	{
 					var $ele = $(e.target);
-					if($ele.attr('data-show-class'))	{}
+					if($ele.attr('data-show-selector'))	{}
 					else	{
-						$ele = $ele.closest("[data-show-class]");
+						$ele = $ele.closest("[data-show-selector]");
 						}
-					app.u.dump(" ->>>>> got here");
-					app.u.dump(" $ele.attr('data-show-class'): "+$ele.attr('data-show-class'));
-					app.u.dump(" length: "+$(app.u.jqSelector("",$ele.attr('data-show-class')),$ele.closest('form')).length);
-					$($ele.attr('data-show-class'),$ele.closest('form')).show();
-					})
-				
-				
-				$container.on('click',function(e){
-					app.u.dump(" we are form delegtion. you will be assimilated");
-					var
-						$ele = $(e.target),
-						$form = $ele.closest('form'); //used for context.
-//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
+//only animate if it is hidden.
+					if($($ele.attr('data-show-selector'),$container).is(':visible'))	{}
+					else	{
+						$($ele.attr('data-show-selector'),$container).slideDown();
+						}
+					});
 
-					if($ele.data('show-selector'))	{
-						$(app.u.jqSelector("",$ele.data('show-selector')),$form).show();						
+				$container.on('click','[data-hide-selector]',function(e)	{
+					var $ele = $(e.target);
+					if($ele.attr('data-hide-selector'))	{}
+					else	{
+						$ele = $ele.closest("[data-hide-selector]");
 						}
-
-					if($ele.data('hide-selector'))	{
-						$($ele.data('hide-selector'),$form).hide();						
-						}
+//only hide if not already hidden.
+					if($($ele.attr('data-show-selector'),$container).is(':visible'))	{$($ele.attr('data-show-selector'),$container).slideUp();}
+					});
+				
+				$container.on('click','[data-toggle]',function(e)	{
+					var $ele = $(e.target);
 					
-					if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
+					
+					if($ele.is(':checked'))	{
+						$($ele.attr('data-show-selector'),$container).slideDown();
+						}
+					else if(!$ele.is(':checked') && $($ele.attr('data-show-selector'),$container).is(':visible'))	{
+						$($ele.attr('data-hide-selector'),$container).slideUp();
+						}
+					else	{
+						//to get here, checkbox is checked and selector is already visible OR unchecked and already hidden.
+						}
+					});
+// !!! this should have a selector in the scond param but needs testing against existing use cases (supply chain, ebay ,etc)
+// aaarrrgghh.  I hate being rushed. this'll need to be rewritten to be more efficient when time permits.
+				$container.on('click',function(e){
+					var	$ele = $(e.target)
+//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
+					if($ele.is(':radio'))	{
+
+						$($ele.data('panel-selector'),$container).hide(); //hide all panels w/ matching selector.
+						if(!$ele.data('show-panel'))	{} //no panel defined. do nada
+						else if($ele.data('show-panel'))	{
+							var panels = new Array();
+							if($ele.data('show-panel').indexOf(','))	{panels = $ele.data('show-panel').split(',')}
+							else {panels.push($ele.data('show-panel'))};
+							for(var i = 0; i < panels.length; i += 1)	{
+								$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
+								}
+							}
+						
+						}
+					else	{
+						if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
 //						app.u.dump('is option or select');
 //FF registers a click on the option. Chrome on the select.
 //to be consistent, put select into focus.						
 						if(e.target.nodeName.toLowerCase() == 'option'){
 							$ele = $ele.closest('select');
+									var panels = new Array();
+									if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
+									else {panels.push($option.data('show-panel'))};
+									for(var i = 0; i < panels.length; i += 1)	{
+										$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
+										}
 							}
 //						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
 //						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
@@ -3821,22 +3856,23 @@ so when the option with data-show-panel="supplierShippingConnectorGeneric" is se
 and all .someClass are hidden (value of data-panel-selector)
 
 */
-						if($ele.data('panel-selector'))    {
-							
-				
-							$($ele.data('panel-selector'),$form).hide(); //hide all panels w/ matching selector.
-							var $option = $('option:selected',$ele);
-							if(!$option.data('show-panel'))	{} //no panel defined. do nada
-							else if($option.data('show-panel'))	{
-								var panels = new Array();
-								if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
-								else {panels.push($option.data('show-panel'))};
-								for(var i = 0; i < panels.length; i += 1)	{
-									$("[data-panel-id='"+panels[i]+"']",$form).show(); //panel defined and it exists. show it.
+							if($ele.data('panel-selector'))    {
+								
+					
+								$($ele.data('panel-selector'),$container).hide(); //hide all panels w/ matching selector.
+								var $option = $('option:selected',$ele);
+								if(!$option.data('show-panel'))	{} //no panel defined. do nada
+								else if($option.data('show-panel'))	{
+									var panels = new Array();
+									if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
+									else {panels.push($option.data('show-panel'))};
+									for(var i = 0; i < panels.length; i += 1)	{
+										$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
+										}
 									}
-								}
-							else	{
-								$form.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
+								else	{
+									$container.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
+									}
 								}
 							}
 						}
@@ -3853,10 +3889,9 @@ and all .someClass are hidden (value of data-panel-selector)
 				$container.on('change',':input',function(e){
 					var $ele = $(e.target);
 					var $option = $(":selected",$ele);
-					var $form = $ele.closest('form');
 					if($option.data('change-input'))	{
 						app.u.dump(" -> $option.data('change-newval'): "+$option.data('change-newval'));
-						$("[name='"+app.u.jqSelector('',$option.data('change-input'))+"']",$form).val($option.data('change-newval'))
+						$("[name='"+app.u.jqSelector('',$option.data('change-input'))+"']",$container).val($option.data('change-newval'))
 						}
 					});
 
@@ -3963,6 +3998,9 @@ and all .someClass are hidden (value of data-panel-selector)
 					}
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!trainer')	{
+					app.ext.admin_trainer.a.showTrainer($target);
 					}
 				else if(path == '#!categoriesAndLists')	{
 					app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));

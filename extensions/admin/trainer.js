@@ -31,6 +31,7 @@ var admin_trainer = function() {
 		init : {
 			onSuccess : function()	{
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/trainer.html',theseTemplates);
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/trainer.css','trainer']);
 				return true;
 				},
 			onError : function()	{
@@ -48,24 +49,15 @@ var admin_trainer = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-			showTrainerInModal : function()	{
-				var $trainer = $("#trainer");
-				if($trainer.length)	{$trainer.dialog('open')}
-				else	{
-					$trainer = $('<div \/>',{'id':'trainer','title':"Let's get started..."});
-					$trainer.anycontent({
-						'templateID':'trainerTemplate',
-						'data' : app.ext.admin.u.dpsGet('trainer') || {},
-						'showLoading':false
-						});
-					$trainer.dialog({
-						'modal' : true,
-						'width' : ($(document.body).width() > 500) ? 500 : '90%'
-						});
-					app.u.handleEventDelegation($trainer);
-					app.ext.admin.u.handleFormConditionalDelegation($('form',$trainer));
-					app.u.handleCommonPlugins($trainer);
-					}
+			showTrainer : function($target)	{
+				$target.anycontent({
+					'templateID':'trainerTemplate',
+					'data' : app.ext.admin.u.dpsGet('trainer') || {},
+					'showLoading':false
+					});
+				app.u.handleEventDelegation($target);
+				app.ext.admin.u.handleFormConditionalDelegation($('form',$target));
+				app.u.handleCommonPlugins($target);
 				}
 			}, //Actions
 
@@ -90,6 +82,30 @@ var admin_trainer = function() {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			
+			navigate : function($ele,p)	{
+
+var
+	$form = $ele.closest('form'),
+	$fieldset2hide = $('fieldset:visible:first',$form),
+	$fieldset2show;
+
+if($ele.data('verb') == 'next')	{
+	$fieldset2show = $fieldset2hide.next('fieldset');
+	}
+else if($ele.data('verb') == 'previous')	{
+	$fieldset2show = $fieldset2hide.next('fieldset');
+	}
+else	{
+	$form.anymessage({'message':'In admin_trainer.e.navigate, invalid verb set on trigger element.','gMessage':true});
+	}
+
+if($fieldset2show.length)	{
+	$fieldset2show.slideDown();
+	$fieldset2hide.slideUp();
+	}
+
+				}
 			} //e [app Events]
 		} //r object.
 	return r;
