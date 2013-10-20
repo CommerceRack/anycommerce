@@ -1,4 +1,5 @@
-
+.trainer legend	{display:none;} /* the legend isn't used, but it is populated for readability */
 .trainer .questionGroup	{margin-bottom:24px;}
 
 .floatedSubgroup	{margin-right:48px; float:left;}
+.labelsAsBreaks .subset	{margin-left:36px;}

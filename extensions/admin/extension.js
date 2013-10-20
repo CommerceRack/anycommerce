@@ -3817,10 +3817,11 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 				$container.on('click',function(e){
 					var	$ele = $(e.target)
 //					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-					if($ele.is(':radio'))	{
+					if($ele.is(':radio') || $ele.is(':checkbox'))	{
 
 						$($ele.data('panel-selector'),$container).hide(); //hide all panels w/ matching selector.
 						if(!$ele.data('show-panel'))	{} //no panel defined. do nada
+						else if($ele.is(':checkbox') && !$ele.is(':checked'))	{} //is an unchecked checkbox. do nada
 						else if($ele.data('show-panel'))	{
 							var panels = new Array();
 							if($ele.data('show-panel').indexOf(','))	{panels = $ele.data('show-panel').split(',')}

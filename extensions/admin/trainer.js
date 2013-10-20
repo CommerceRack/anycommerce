@@ -57,7 +57,7 @@ var admin_trainer = function() {
 					});
 				app.u.handleEventDelegation($target);
 				app.ext.admin.u.handleFormConditionalDelegation($('form',$target));
-				app.u.handleCommonPlugins($target);
+				app.u.handleButtons($target);
 				}
 			}, //Actions
 
@@ -84,7 +84,7 @@ var admin_trainer = function() {
 		e : {
 			
 			navigate : function($ele,p)	{
-
+app.u.dump("Navigate!");
 var
 	$form = $ele.closest('form'),
 	$fieldset2hide = $('fieldset:visible:first',$form),
@@ -94,15 +94,27 @@ if($ele.data('verb') == 'next')	{
 	$fieldset2show = $fieldset2hide.next('fieldset');
 	}
 else if($ele.data('verb') == 'previous')	{
-	$fieldset2show = $fieldset2hide.next('fieldset');
+	$fieldset2show = $fieldset2hide.prev('fieldset');
 	}
 else	{
 	$form.anymessage({'message':'In admin_trainer.e.navigate, invalid verb set on trigger element.','gMessage':true});
 	}
 
 if($fieldset2show.length)	{
-	$fieldset2show.slideDown();
 	$fieldset2hide.slideUp();
+	$fieldset2show.slideDown();
+//	$fieldset2hide.css('position','relative').animate({right:($('body').width() + $fieldset2hide.width() + 100)},'slow','');	
+	
+	
+	if($fieldset2show.is('fieldset:last-of-type'))	{
+		$("[data-verb='next']",$form).button('disable');
+		}
+	else if	($fieldset2show.is(":first-child")){
+		$("[data-verb='previous']",$form).button('disable');
+		}
+	else	{
+		$("[data-app-role='trainerNavButtons']",$form).find('button').button('enable');
+		}
 	}
 
 				}

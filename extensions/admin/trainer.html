@@ -2,7 +2,7 @@
 
 
 <div id='trainerTemplate' class='ui-widget ui-widget-content ui-corner-all trainer stdPadding'>
-<form action='#' onSubmit='return false' class='trainer labelsAsBreaks'>
+<form action='#' onSubmit='return false' class='trainer labelsAsBreaks positionRelative'>
 	<fieldset>
 		<legend>Step 1</legend>
 		
@@ -73,10 +73,113 @@
 	</fieldset>
 
 
+	<fieldset class='displayNone' data-app-role='trainerStep3'>
+		<legend>Step 3</legend>
+		<p>Alright let's figure out what you sell, and how you're currently selling.  Check all that apply.</p>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
+					<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='WANT_CSV'>Some or all product have variations (color, size, etc)</label>
+	
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
+				<div class='trainerSellServices displayNone subset' data-panel-id='trainerSellServices'>
+					<label><input type='checkbox' value='WANT_CSV'>Services are performed at our location</label>
+					<label><input type='checkbox' value='WANT_CSV'>Services are performed off site</label>
+				</div>
+	
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
+				<div class='trainerSellSubscriptions displayNone subset' data-panel-id='trainerSellSubscriptions'>				
+					<label><input type='checkbox' value='WANT_CSV'>We have a tracking/fulfillment system</label>
+					<label><input type='checkbox' value='WANT_CSV'>We need a tracking/fulfillment system</label>
+				</div>
+
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
+			</div>
+
+
+			<div class='floatedSubgroup trainerSellHasBricknMortar displayNone ' data-panel-id='trainerSellHasBricknMortar'>
+				<p>What type of store(s) do you have?</p>
+				<label><input type='checkbox' value='WANT_CSV'>Single store with attached warehouse</label>
+				<label><input type='checkbox' value='WANT_CSV'>One or more stores in a regional area</label>
+				<label><input type='checkbox' value='WANT_CSV'>Nationwide retailer</label>
+				
+				<p>Tell us about your point of sale solution</p>
+				<label><input type='checkbox' value='WANT_CSV'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
+				<label><input type='checkbox' value='WANT_CSV'>We'd like to integrate with our existing point of sale</label>
+				
+				<p>Are you interested in offereing retail clients self checkout?</p>
+				<label><input type='radio' name='selfcheckout' value='yes'>Yes</label>
+				<label><input type='radio' name='selfcheckout' value='no'>Nos</label>
+			</div>
+
+
+		</section>
+	
+	</fieldset>
+
+	<fieldset class='displayNone' data-app-role='trainerStep4'>
+		<legend>Step 4</legend>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+				<p>Alright, now where do you sell them?</p>
+
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
+				<div class='trainerSellDirect2Consumers displayNone subset' data-panel-id='trainerSellDirect2Consumers'>
+					<label><input type='checkbox' value='WANT_CSV'>I currently have a mobile app that accepts orders</label>
+					<label><input type='checkbox' value='WANT_CSV'>I currently have a mobile website that accepts orders</label>
+					<label><input type='checkbox' value='WANT_CSV'>No, but I’d sure like these!</label>
+				</div>
+
+				<label><input type='checkbox' name='' />We use social channels like Facebook, Google+, Twitter</label>
+				<label><input type='checkbox' name='' data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
+				
+				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
+					<label class='trainerSellWholesale displayNone subset' data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
+
+				<label><input type='checkbox' name='' />We have sales representatives who follow up on inbound leads</label>
+
+			</div>
+		
+			<div class='floatedSubgroup displayNone trainerSellOnMarketplaces' data-panel-id='trainerSellOnMarketplaces'>
+				<p>On which marketplaces do you currently/plan to sell?</p>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_EBAY'>eBay</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_AMAZON' >Amazon</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_BUY' >Buy.com</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_NEWEGG' >New Egg</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_OTHER'>Other (not listed)</label>
+			</div>
+		
+			
+		
+		
+		</section>
+	</fieldset>
+
+	<fieldset class='displayNone' data-app-role='trainerStep4'>
+		<legend>Step 5</legend>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+				<p>How do you get paid?</p>
+
+				<label><input type='checkbox' name='payments_3pc_ppec'>PayPal</label>
+				<label><input type='checkbox' name='payments_3pc_cba' >Checkout by Amazon</label>
+				<label><input type='checkbox' name='payments_3pc_gw' >Google Wallet</label>		
+				<label><input type='checkbox' name='payments_cc' >Credit Card</label>		
+				<label><input type='checkbox' name='payments_offline' >Offline Payments</label>			
+
+			</div>
+		</section>
+	</fieldset>
+
+
 
 
 <div class='displayNone buttonset clearfix' data-app-role='trainerNavButtons'>
-	<button class='floatedSubgroup applyButton' data-text='true' data-verb='previous' data-app-click="admin_trainer|navigate">Previous</button>	
+	<button class='floatedSubgroup applyButton' data-text='true' data-verb='previous' data-app-click="admin_trainer|navigate" disabled='disabled'>Previous</button>	
 	<button class='floatedSubgroup applyButton ui-state-highlight' data-text='true' data-verb='next' data-app-click="admin_trainer|navigate">Next</button>
 </div>
 <div class='displayNone'>
