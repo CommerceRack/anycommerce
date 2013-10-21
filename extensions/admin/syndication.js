@@ -1062,14 +1062,14 @@ if(mode == 'test' || mode == 'update')	{
 						}
 					
 					setShippingServices('dom');
-					if(sfo['InternationalShipping\@BOOLEAN'] == 1)	{
+					if(sfo['InternationalShipping\\@BOOLEAN'] == 1)	{
 						setShippingServices('int');
 						}
 					else	{
 //international shipping is disabled, so nuke all international settings. This is how eBay wants the data (empty if disabled)
-						sfo['Item\ShipToLocations\@ARRAY'] = [];
-						sfo['Item\ShippingDetails\InternationalInsuranceDetails\InsuranceOption'] = "";
-						sfo['Item\ShippingDetails\InternationalInsuranceDetails\InsuranceFee@CURRENCY'] = "";
+						sfo['Item\\ShipToLocations\\@ARRAY'] = [];
+						sfo['Item\\ShippingDetails\\InternationalInsuranceDetails\\InsuranceOption'] = "";
+						sfo['Item\\ShippingDetails\\InternationalInsuranceDetails\\InsuranceFee@CURRENCY'] = "";
 						sfo['@ship_intservices'] = [];
 						}
 //form inputs used in shipping. shouldn't be saved into the profile. Won't hurt, but let's keep it clean.
