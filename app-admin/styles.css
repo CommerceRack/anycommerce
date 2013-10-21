@@ -944,7 +944,7 @@ put the prompt into a span
 <label><span>prompt</span>input</label>
 */
 
-.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px inherit; vertical-align:top; } /* left and right margin should NOT be forced to zero */
 .labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
 
 /* 

@@ -1,4 +1,11 @@
 
+<!--
+
+if clicking a checkbox reveals additional inputs directly below the checkbox itself, apply subset to/around the inputs to indent them.
+
+
+
+-->
 
 
 <div id='trainerTemplate' class='ui-widget ui-widget-content ui-corner-all trainer stdPadding'>
@@ -80,38 +87,38 @@
 		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
 			<div class='floatedSubgroup'>
 
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
-					<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='WANT_CSV'>Some or all product have variations (color, size, etc)</label>
+				<label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
+					<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
 	
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
+				<label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
 				<div class='trainerSellServices displayNone subset' data-panel-id='trainerSellServices'>
-					<label><input type='checkbox' value='WANT_CSV'>Services are performed at our location</label>
-					<label><input type='checkbox' value='WANT_CSV'>Services are performed off site</label>
+					<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
+					<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
 				</div>
 	
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
+				<label ><input type='checkbox' name='selling_subscriptions' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
 				<div class='trainerSellSubscriptions displayNone subset' data-panel-id='trainerSellSubscriptions'>				
-					<label><input type='checkbox' value='WANT_CSV'>We have a tracking/fulfillment system</label>
-					<label><input type='checkbox' value='WANT_CSV'>We need a tracking/fulfillment system</label>
+					<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
+					<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
 				</div>
 
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
+				<label ><input type='checkbox' name='selling_has_bricknmortar'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
 			</div>
 
 
 			<div class='floatedSubgroup trainerSellHasBricknMortar displayNone ' data-panel-id='trainerSellHasBricknMortar'>
 				<p>What type of store(s) do you have?</p>
-				<label><input type='checkbox' value='WANT_CSV'>Single store with attached warehouse</label>
-				<label><input type='checkbox' value='WANT_CSV'>One or more stores in a regional area</label>
-				<label><input type='checkbox' value='WANT_CSV'>Nationwide retailer</label>
+				<label><input type='checkbox' value='retailer_attached_warehouse'>Single store with attached warehouse</label>
+				<label><input type='checkbox' value='retailer_regional'>One or more stores in a regional area</label>
+				<label><input type='checkbox' value='retailer_national'>Nationwide retailer</label>
 				
 				<p>Tell us about your point of sale solution</p>
-				<label><input type='checkbox' value='WANT_CSV'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
-				<label><input type='checkbox' value='WANT_CSV'>We'd like to integrate with our existing point of sale</label>
+				<label><input type='checkbox' value='pos_need'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
+				<label><input type='checkbox' value='pos_has'>We'd like to integrate with our existing point of sale</label>
 				
-				<p>Are you interested in offereing retail clients self checkout?</p>
-				<label><input type='radio' name='selfcheckout' value='yes'>Yes</label>
-				<label><input type='radio' name='selfcheckout' value='no'>Nos</label>
+				<p>Are you interested in offering retail clients self checkout?</p>
+				<label><input type='radio' name='pos_selfcheckout' value='yes'>Yes</label>
+				<label><input type='radio' name='pos_selfcheckout' value='no'>Nos</label>
 			</div>
 
 
@@ -126,20 +133,20 @@
 			<div class='floatedSubgroup'>
 				<p>Alright, now where do you sell them?</p>
 
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
+				<label ><input type='checkbox' name='sell_via_direct' data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
 				<div class='trainerSellDirect2Consumers displayNone subset' data-panel-id='trainerSellDirect2Consumers'>
-					<label><input type='checkbox' value='WANT_CSV'>I currently have a mobile app that accepts orders</label>
-					<label><input type='checkbox' value='WANT_CSV'>I currently have a mobile website that accepts orders</label>
-					<label><input type='checkbox' value='WANT_CSV'>No, but I’d sure like these!</label>
+					<label><input type='checkbox' value='has_mobile_app'>I currently have a mobile app that accepts orders</label>
+					<label><input type='checkbox' value='has_mobile_website'>I currently have a mobile website that accepts orders</label>
+					<label><input type='checkbox' value='wants_mobile'>No, but I’d sure like these!</label>
 				</div>
 
-				<label><input type='checkbox' name='' />We use social channels like Facebook, Google+, Twitter</label>
-				<label><input type='checkbox' name='' data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
+				<label><input type='checkbox' name='sell_via_social' />We use social channels like Facebook, Google+, Twitter</label>
+				<label><input type='checkbox' name='sell_via_markets' data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
 				
-				<label ><input type='checkbox' name='WANT_SAMPLEDATA' data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
+				<label ><input type='checkbox' name='sell_via_wholesale' data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
 					<label class='trainerSellWholesale displayNone subset' data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
 
-				<label><input type='checkbox' name='' />We have sales representatives who follow up on inbound leads</label>
+				<label><input type='checkbox' name='sell_via_phone' />We have sales representatives who follow up on inbound leads</label>
 
 			</div>
 		
@@ -158,6 +165,8 @@
 		</section>
 	</fieldset>
 
+
+
 	<fieldset class='displayNone' data-app-role='trainerStep4'>
 		<legend>Step 5</legend>
 	
@@ -168,12 +177,116 @@
 				<label><input type='checkbox' name='payments_3pc_ppec'>PayPal</label>
 				<label><input type='checkbox' name='payments_3pc_cba' >Checkout by Amazon</label>
 				<label><input type='checkbox' name='payments_3pc_gw' >Google Wallet</label>		
-				<label><input type='checkbox' name='payments_cc' >Credit Card</label>		
+				<label><input type='checkbox' name='payments_cc'  data-panel-selector='.trainerCCproviders' data-show-panel='trainerCCproviders'>Credit Card</label>	
+				<div class='trainerCCproviders displayNone subset' data-panel-id='trainerCCproviders'>
+					<label><input type='checkbox' name='cc_pp_payflowpro'>Paypal Payflow Pro</label>
+					<label><input type='checkbox' name='cc_pp_websitepayments'>Paypal Website Payments Pro</label>
+					<label><input type='checkbox' name='cc_authorizenet'>Authorize.Net</label>
+					<label><input type='checkbox' name='cc_other'>Other</label>
+					<label><input type='checkbox' name='cc_new'>I’d like to establish a new merchant account</label>
+				</div>	
 				<label><input type='checkbox' name='payments_offline' >Offline Payments</label>			
 
 			</div>
 		</section>
 	</fieldset>
+
+
+
+
+	<fieldset class='displayNone' data-app-role='trainerStep4'>
+		<legend>Step 6</legend>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+				<p>Shipping Costs <span class='hint'>(choose all that apply)</span></p>
+
+				<label><input type='checkbox' name='shipping_free'>Free shipping on all product</label>
+				<label><input type='checkbox' name='shipping_primarycarrier'  data-panel-selector='.trainerPrimaryCarriers' data-show-panel='trainerPrimaryCarriers'>Rate based parcels with a common carrier (FedEx, UPS, USPS)</label>
+				
+				<div class='trainerPrimaryCarriers displayNone subset' data-panel-id='trainerPrimaryCarriers'>
+					<label><input type='checkbox' name='shipping_fedex'>FedEx</label>
+					<label><input type='checkbox' name='shipping_ups'>UPS</label>
+					<label><input type='checkbox' name='shipping_usps'>USPS</label>
+				</div>
+			</div>
+
+			<div class='floatedSubgroup'>
+				<p>Origins <span class='hint'>(choose all that apply)</span></p>
+				<label><input type='checkbox' name='origin_retail'>We ship from our retail store locations</label>
+				<label><input type='checkbox' name='origin_retailpickup'>We allow pick up from our retail store locations</label>
+				<label><input type='checkbox' name='origin_wms'>We ship from our own warehouse(s)</label>
+				<label><input type='checkbox' name='origin_fba'>We use fulfillment by Amazon</label>
+				<label><input type='checkbox' name='origin_3pl'>We use a 3rd party logistics service</label>
+				<label><input type='checkbox' name='origin_dropship'>Our suppliers/manufacturers drop ship items for us</label>
+				<label><input type='checkbox' name='origin_localdelivery'>We offer local delivery</label>
+				<label><input type='checkbox' name='origin_localinstall'>We offer local delivery with setup and installation</label>
+				<label><input type='checkbox' name='origin_natinstall'>We offer national delivery with setup and installation</label>
+			</div>
+			
+
+			
+		</section>
+	</fieldset>
+
+
+	<fieldset class='displayNone' data-app-role='trainerStep4'>
+		<legend>Step 7</legend>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+				<p>Social</p>
+
+				<label><input type='checkbox' name='social_blog'>I have a blog</label>
+				<label><input type='checkbox' name='social_website'>I have a non-commerce website</label>
+				<label><input type='checkbox' name='social_facebook'>We use facebook</label>
+				<label><input type='checkbox' name='social_googleplus'>We use google+</label>
+				<label><input type='checkbox' name='social_twitter'>We use twitter</label>
+				<label><input type='checkbox' name='social_youtube'>We use youtube to host informational videos</label>
+				<label><input type='checkbox' name='social_email' data-panel-selector='.trainerEmailSolutions' data-show-panel='trainerEmailSolutions'>We currently use an Email Service Provider (ESP)</label>
+			</div>
+			
+			<div class='floatedSubgroup trainerEmailSolutions displayNone ' data-panel-id='trainerEmailSolutions'>
+				<label><input type='checkbox' name='email_amazon'>Amazon Secure Email Services</label>
+				<label><input type='checkbox' name='email_mailchimp'>Mail Chimp</label>
+				<label><input type='checkbox' name='email_other'>Other</label>
+			</div>
+			
+		</section>
+	</fieldset>
+
+	<fieldset class='displayNone' data-app-role='trainerStep4'>
+		<legend>Step 8</legend>
+	
+		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
+			<div class='floatedSubgroup'>
+				<p>What other cloud services do you currently use?</p>
+
+				<label><input type='checkbox' name='cloud_github'>Github</label>
+				<label><input type='checkbox' name='cloud_quickbooks'>QuickBooks</label>
+				<label><input type='checkbox' name='cloud_xero'>Xero</label>
+				<label><input type='checkbox' name='cloud_msdynamics'>Microsoft Dynamics</label>
+				<label><input type='checkbox' name='cloud_otheraccounting'>Other Accounting</label>
+				<label><input type='checkbox' name='cloud_chat'>Chat</label>
+				<label><input type='checkbox' name='cloud_salesforce'>Salesforce</label>
+				<label><input type='checkbox' name='cloud_zendesk'>Zen Desk</label>
+				<label><input type='checkbox' name='cloud_kount'>Kount</label>
+				<label><input type='checkbox' name='cloud_googleapps'>Google Apps</label>
+				<label><input type='checkbox' name='cloud_others' data-panel-selector='.trainerCloudOther' data-show-panel='trainerCloudOther'>Others</label>
+			</div>
+
+			<div class='floatedSubgroup trainerCloudOther displayNone ' data-panel-id='trainerCloudOther'>
+				<p>Please tell us more about the 'other' cloud software you use</p>
+				<textarea name='cloud_other_software'></textarea>
+			</div>
+
+			
+		</section>
+	</fieldset>
+
+
+
+
 
 
 
