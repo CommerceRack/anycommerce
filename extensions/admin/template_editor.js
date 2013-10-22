@@ -77,6 +77,7 @@ var admin_templateEditor = function() {
 						$D.empty().remove();
 						}
 
+
 					$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'}).attr('data-app-role','templateEditor');
 					
 

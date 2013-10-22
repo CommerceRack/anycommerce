@@ -34,6 +34,13 @@ General tab
 
 
 
+
+/* inventory */
+
+/* .invDetail__ASM_	{display:none;} */
+
+
+
 /* for the sku-specific imagery */
 .imagesEditor .skusImagesContainer ul	{display:inline-block; min-height:35px;}
 

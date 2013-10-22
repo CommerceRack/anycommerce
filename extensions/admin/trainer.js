@@ -83,6 +83,19 @@ var admin_trainer = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
+			handleUpdate : function($ele,p)	{
+/*
+app.model.addDispatchToQ({
+	'_cmd':'',
+	'_tag':	{
+		'datapointer' : '',
+		'callback':''
+		}
+	},'passive');
+*/
+
+				},
+			
 			navigate : function($ele,p)	{
 app.u.dump("Navigate!");
 var

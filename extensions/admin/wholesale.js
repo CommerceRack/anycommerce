@@ -537,7 +537,7 @@ else	{
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				
-				if($btn.closest('tr').data('zone_type') == 'RECEIVING')	{
+				if($btn.closest('tr').data('zone_type') == 'RECEIVING' || $btn.closest('tr').data('zone_type') == 'UNSTRUCTURED')	{
 					$btn.hide();
 					}
 				else	{

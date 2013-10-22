@@ -1685,28 +1685,7 @@ if giftcard is on there, no paypal will appear.
 				}
 			},
 
-		
-		bossRoleList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = 'bossRoleList';
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					this.dispatch(_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				Q = Q || 'immutable';
-				var obj = {_cmd : 'bossRoleList'};
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //bossRoleList
+
 		
 		helpSearch : {
 			init : function(keywords,_tag,Q)	{
@@ -3962,7 +3941,7 @@ and all .someClass are hidden (value of data-panel-selector)
 					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
 					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
-				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
+				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
 				else if(path == '#!batchManager')	{
 					app.ext.admin.vars.tab = 'utilities';
 					this.bringTabIntoFocus('utilities');

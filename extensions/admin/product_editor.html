@@ -1301,7 +1301,7 @@ if it already has a simple, lock the button
 -->	
 
 
-<tr id='inventoryDetailRowTemplate'>
+<tr id='inventoryDetailRowTemplate' data-bind="var: detail(BASETYPE); format: addClass; className:invDetail_;">
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
 	<td class='alignLeft' data-bind="var: detail(SKU); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>

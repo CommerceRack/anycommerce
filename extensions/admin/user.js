@@ -55,14 +55,15 @@ var admin_user = function() {
 		a : {
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showUserManager : function() {
+			showUserManager : function($target) {
 				app.u.dump("BEGIN admin_user.a.showUserManager");
-				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+
 //generate some of the task list content right away so the user knows something is happening.
-				$tabContent.empty();
-				$tabContent.append(app.renderFunctions.createTemplateInstance('userManagerPageTemplate',{'id':'userManagerContent'})); //placeholder
+				$target.empty();
+				$target.append(app.renderFunctions.createTemplateInstance('userManagerPageTemplate',{'id':'userManagerContent'})); //placeholder
 				$('#userManagerContent').showLoading({'message':'Fetching your user list.'});
-				app.ext.admin.calls.bossRoleList.init({},'mutable'); //have this handy.
+
+				app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
 				app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':'#userManagerContent'},'mutable');
 				app.model.dispatchThis('mutable');
 				} //showTaskManager
