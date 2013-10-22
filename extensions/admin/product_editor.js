@@ -1655,7 +1655,7 @@ Required params include:
 								}
 
 							if($('tbody:first',$target).find('tr:hidden').length)	{
-								var $ul = $("button[data-app-click='admin_prodEdit|invDetailFilterShow']",$target).show().next('ul')
+								var $ul = $("button[data-app-click='admin_prodEdit|invDetailFilterShow']",$target).show().next('ul');
 								
 								if($('tbody:first',$target).find("tr[data-basetype='_ASM_']").length)	{
 									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='_ASM_'>show "+$('tbody:first',$target).find("tr[data-basetype='_ASM_']").length+" ASM record(s)</li>");

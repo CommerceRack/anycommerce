@@ -3766,7 +3766,14 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 						$($ele.attr('data-show-selector'),$container).slideDown();
 						}
 					});
-
+				$container.on('click','[data-toggle-class]',function(e)	{
+					var $ele = $(e.target);
+					if($ele.attr('data-toggle-class'))	{}
+					else	{
+						$ele = $ele.closest("[data-toggle-class]");
+						}
+					$container.toggleClass($ele.attr('data-toggle-class'));
+					});
 				$container.on('click','[data-hide-selector]',function(e)	{
 					var $ele = $(e.target);
 					if($ele.attr('data-hide-selector'))	{}
