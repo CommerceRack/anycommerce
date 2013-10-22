@@ -1656,17 +1656,17 @@ Required params include:
 
 							if($('tbody:first',$target).find('tr:hidden').length)	{
 								var $ul = $("button[data-app-click='admin_prodEdit|invDetailFilterShow']",$target).show().next('ul')
-								$ul.width(220).menu();
+								
 								if($('tbody:first',$target).find("tr[data-basetype='_ASM_']").length)	{
-									$ul.append("<li>show "+$('tbody:first',$target).find("tr[data-basetype='_ASM_']").length+" ASM record(s)</li>");
+									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='_ASM_'>show "+$('tbody:first',$target).find("tr[data-basetype='_ASM_']").length+" ASM record(s)</li>");
 									}
-								if($('tbody:first',$target).find("tr[data-basetype='_DONE_']").length)	{
-									$ul.append("<li>show "+$('tbody:first',$target).find("tr[data-basetype='DONE']").length+" done record(s)</li>");
+								if($('tbody:first',$target).find("tr[data-basetype='DONE']").length)	{
+									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='DONE'>show "+$('tbody:first',$target).find("tr[data-basetype='DONE']").length+" done record(s)</li>");
 									}
-								if($('tbody:first',$target).find("tr[data-basetype='_PICK_']").length)	{
-									$ul.append("<li>show "+$('tbody:first',$target).find("tr[data-basetype='PICK']").length+" pick record(s)</li>");
+								if($('tbody:first',$target).find("tr[data-basetype='PICK']").length)	{
+									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='PICK'>show "+$('tbody:first',$target).find("tr[data-basetype='PICK']").length+" pick record(s)</li>");
 									}
-
+								$ul.width(220).menu();
 								}
 
 							}
@@ -2580,20 +2580,29 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 					}
 				},
 
+			invDetailFilterExec : function($ele,p)	{
+				if($ele.attr('data-show-basetype'))	{
+					$ele.closest('table').find("tr[data-basetype='"+$ele.attr('data-show-basetype')+"']").toggle();
+					}
+				else	{
+					$ele.closest('td').anymessage({'message':'In admin_prodEdit.e.invDetailFilterExec, trigger element had no data-show-basetype.','gMessage':true});
+					}
+				},
+
 			invDetailFilterShow : function($ele,p)	{
 				var $menu = $ele.next('ul')
-				$menu.show(); /*position({
+				$menu.show().css('position','absolute').position({
 					my: "left top",
 					at: "left bottom",
 					of: $ele
-					})*/
+					});
 //the click to open the menu seems to trigger the 'one' as well. not sure how/why, but adding after a short timeout cure's it.
 //could be that the click event doesn't return a false?
 				setTimeout(function(){
 					$(document).one( "click", function() {
 						$menu.hide();
 						});
-					},300);
+					},1000);
 				},
 
 //executed on the 'validate' button. Gives a report of whether or not this product needs anything to be successfully syndicated.
