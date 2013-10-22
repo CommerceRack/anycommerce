@@ -37,7 +37,7 @@ General tab
 
 /* inventory */
 
-/* .invDetail__ASM_	{display:none;} */
+.invDetail__ASM_, .invDetail_PICK, .invDetail_DONE	{display:none;}
 
 
 

@@ -1212,7 +1212,13 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
 <tfoot>
 <tr>
-	<th colspan='10'>
+	<th colspan='2' class='positionRelative'>
+<!--	<button class='applyButton displayNone' data-icon-secondary='ui-icon-triangle-1-s' data-text='true' data-app-click='admin_prodEdit|invDetailFilterShow'>Show</button>
+	<ul class='displayNone'>
+	
+	</ul>-->
+	</th>
+	<th colspan='8'>
 	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
 	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
 	</th>
