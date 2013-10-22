@@ -2372,6 +2372,8 @@ elasticsearch.size = 50;
 							$cart.anymessage({'message':rd});
 							}
 						else	{
+//***201342 this will empty the cart before translating it, meaning it doesn't get duplicate content. -mc
+							$cart.intervaledEmpty();
 							$cart.anycontent({'templateID':infoObj.templateID,'datapointer':'cartDetail'});
 							}
 						}},'mutable');
