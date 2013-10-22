@@ -97,14 +97,16 @@ app.model.addDispatchToQ({
 				},
 			
 			navigate : function($ele,p)	{
-app.u.dump("Navigate!");
+//app.u.dump("Navigate!");
 var
 	$form = $ele.closest('form'),
 	$fieldset2hide = $('fieldset:visible:first',$form),
-	$fieldset2show;
+	$fieldset2show = $('fieldset:hidden:first',$form);
 
 if($ele.data('verb') == 'next')	{
-	$fieldset2show = $fieldset2hide.next('fieldset');
+	$form.prepend($fieldset2show);
+	$fieldset2show.slideDown();
+	$(':input',$fieldset2hide).attr('disabled','disabled');
 	}
 else if($ele.data('verb') == 'previous')	{
 	$fieldset2show = $fieldset2hide.prev('fieldset');
@@ -114,15 +116,10 @@ else	{
 	}
 
 if($fieldset2show.length)	{
-	$fieldset2hide.slideUp();
-	$fieldset2show.slideDown();
-//	$fieldset2hide.css('position','relative').animate({right:($('body').width() + $fieldset2hide.width() + 100)},'slow','');	
-	
-	
-	if($fieldset2show.is('fieldset:last-of-type'))	{
+	if($('fieldset:hidden',$form).length === 0)	{
 		$("[data-verb='next']",$form).button('disable');
 		}
-	else if	($fieldset2show.is(":first-child")){
+	else if	($('fieldset:visible',$form).length === 1){
 		$("[data-verb='previous']",$form).button('disable');
 		}
 	else	{
