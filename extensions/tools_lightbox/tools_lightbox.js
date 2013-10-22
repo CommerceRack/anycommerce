@@ -28,7 +28,7 @@ var tools_lightbox = function() {
 			onSuccess : function()	{
 				var r = false;
 				
-				app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
+				app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox-2.6.min.js']);
 				app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
 				//app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/screen.css','lightbox-screen']);
 				
@@ -106,7 +106,7 @@ optional:
 						
 						var href = app.u.makeImage(imgObj);
 						
-						var rel= 'lightbox';
+						var group= '';
 						if(data.bindData.groupingAttr){
 							var groupingAttr = data.value;
 							var groupingParams = data.bindData.groupingAttr.split('.');
@@ -121,16 +121,18 @@ optional:
 									}
 								}
 							if(groupingAttr){
-								rel += "[";
+								
 								if(data.bindData.groupingPrefix){
-									rel += data.bindData.groupingPrefix;
+									group += data.bindData.groupingPrefix;
 									}
-								rel += groupingAttr;
-								rel += "]";								
+								group += groupingAttr;
+															
 								}
 						
 						
 							}
+						//If no group is specified, set it to the href so it is unique (hopefully?)
+						if(group === ''){ group = href; }
 						
 						var title = false;
 						if(data.bindData.titleAttr){
@@ -154,7 +156,7 @@ optional:
 							}
 						
 						$tag.attr('href', href);
-						$tag.attr('rel', rel);
+						$tag.attr('data-lightbox', group);
 						if(title){
 							$tag.attr('title', title);
 							}
