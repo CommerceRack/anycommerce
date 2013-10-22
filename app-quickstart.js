@@ -2372,6 +2372,8 @@ elasticsearch.size = 50;
 							$cart.anymessage({'message':rd});
 							}
 						else	{
+//***201342 this will empty the cart before translating it, meaning it doesn't get duplicate content. -mc
+							$cart.intervaledEmpty();
 							$cart.anycontent({'templateID':infoObj.templateID,'datapointer':'cartDetail'});
 							}
 						}},'mutable');
@@ -3016,16 +3018,14 @@ else	{
 				if($form && $form.length)	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
-						if(cartObj)	{
-							app.calls.cartItemAppend.init(cartObj,{},'immutable');
-							app.model.destroy('cartDetail');
-							app.calls.cartDetail.init({'callback':function(rd){
-								if(obj.action === "modal"){
-									showContent('cart',obj);
-									}
-								}},'immutable');
-							app.model.dispatchThis('immutable');
-							}
+						app.calls.cartItemAppend.init(cartObj,{},'immutable');
+						app.model.destroy('cartDetail');
+						app.calls.cartDetail.init({'callback':function(rd){
+							if(obj.action === "modal"){
+								showContent('cart',obj);
+								}
+							}},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{} //do nothing, the validation handles displaying the errors.
 					}
