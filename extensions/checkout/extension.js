@@ -231,8 +231,21 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
 				app.model.destroy('cartDetail');
-				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-				app.calls.cartDetail.init({},'immutable');
+//***201342 cartDetail call moved into a callback to the appCartCreate call.  This is due to the fact that cartDetail call needs a cartID
+//			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
+//			orders placed from the same computer in multiple sessions could have the same cartID attached.  Very bad.
+				app.calls.appCartCreate.init({
+					"callback" : function(rd){
+						if(!app.model.responseHasErrors(rd)){
+							app.calls.cartDetail.init({"_cartid" : rd._cartid},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else {
+							app.u.throwMessage(rd);
+							}
+						}
+					}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
+				//app.calls.cartDetail.init({},'immutable'); 
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
