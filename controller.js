@@ -72,7 +72,7 @@ jQuery.extend(zController.prototype, {
 			app.vars.secureURL = zGlobals.appSettings.https_app_url;
 			app.vars.domain = zGlobals.appSettings.sdomain;
 // *** -> as of 201342, the path /jsonapi/ can/should be used for all ajax calls in a store
-			app.vars.jqurl = '/jsonapi/';
+			app.vars.jqurl = (document.location.protocol === 'file:') ? app.vars.testURL+'jsonapi/' : '/jsonapi/';
 //			if('https:' == app.vars.protocol)	{app.vars.jqurl = zGlobals.appSettings.https_api_url;}
 //			else	{app.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
