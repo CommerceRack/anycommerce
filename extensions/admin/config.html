@@ -2099,7 +2099,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 <div id='paymentManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
-
+<!-- the tenders are also whitelisted (more or less) in config.js (showPaymentTypeEditorByTender) -->
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Gateways</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
@@ -2111,7 +2111,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Wallets</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
-		<li data-tender='AMZPAY'>Amazon</li>
+		<li data-tender='AMZCBA'>Amazon</li>
 		<li data-tender='GOOGLE'>Google</li>
 		<li data-tender='PAYPALEC'>PayPal</li>
 	</ul>
@@ -2181,10 +2181,10 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 
 
 
-<div id='paymentWallet_amzpay'>
+<div id='paymentWallet_amzcba'>
 
 <p>To access your Amazon Account: <a href="https://payments.amazon.com">https://payments.amazon.com</a>.<br />
-NOTE: the values below are configured in Setup | Amazon are are shared with your Amazon.com feed.
+NOTE: the values below are configured in Setup | Amazon and are shared with your Amazon.com feed.
 </p>
 
 
@@ -2208,7 +2208,7 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 
 
 <label>
-	<span>Payment Environment</span>
+	<span>Payment Environment</span><span data-bind='var: payment(amzpay_env); format:popVal;'></span>
 	<select name="amzpay_env" data-bind='var: payment(amzpay_env); format:popVal;'>
 		<option value="0">Disable</option>
 		<option value="1">Sandbox/Testing</option>

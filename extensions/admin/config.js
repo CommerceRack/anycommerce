@@ -266,7 +266,7 @@ var admin_config = function() {
 /* wallets/third party payments */
 						case 'GOOGLE':
 						case 'PAYPALEC':
-						case 'AMZPAY':
+						case 'AMZCBA':
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('WALLET'));
 							$target.anycontent({'templateID':'paymentWallet_'+tender.toLowerCase(),data : payData});
 							break;
@@ -1506,7 +1506,7 @@ $D.dialog('open');
 						macroCmd;
 					
 					if(sfo.tender && sfo.tenderGroup)	{
-						
+						$form.showLoading({'message':'Updating payment information'});
 //						app.u.dump(" -> tender: "+sfo.tender);
 //						app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
 						
