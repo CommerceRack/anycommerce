@@ -6,6 +6,11 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201342.c
+ADMIN
+	bug fix in payments CBA (wasn't loading existing settings)
+	bug fix in rss (edit feed was double-loading template)
+
 201342
 ADMIN
 	Addition of amazon sku-specific LOG.
