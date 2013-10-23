@@ -48,8 +48,11 @@ app.u.loadScript("app-analyzer-init.js");
 function getConfig4Domain()	{
 	var domain = $('#domain').val();
 	if(domain)	{
+//***201342 Must add to the testURL in order to get a proper url to send api requests. -mc
+		app.vars.testURL = "http://"+domain+(domain[domain.length-1] == "/" ? "" : "/");
 		console.log('BEGIN getConfig4Domain');
-		var url = 'http://'+$('#domain').val()+'/jquery/config.js';
+		console.log(app.vars.testURL);
+		var url = app.vars.testURL+'jquery/config.js';
 		$.getScript(url).success(function(script, textStatus) {
 //instantiate wiki parser.
 			app.u.handleRQ(0);
@@ -131,7 +134,7 @@ ul .prompt	{display:inline-block; width:250px;}
 <label>Domain:</label>
 <input type='text' name='domain' id='domain' />
 <input class='ui-button ui-button-text-only ui-corner-all ui-state-active' type='submit' name='domainSubmit' id='domainSubmit' value='Go' />
-<span class='hint'>hint: www.something.com</span>
+<span class='hint'>note: You must include a host! for example- www.something.com</span>
 </form>
 </div>
 <hr />
