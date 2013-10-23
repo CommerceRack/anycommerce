@@ -6292,9 +6292,9 @@ else	{} //validateForm handles error display
 						'panelID' : 'rss'+data.cpg,
 						'header' : 'Edit Project: '+data.cpg,
 						'handleAppEvents' : false, //handled later.
-						showLoading : true
+						showLoading : false
 						});
-
+					$panel.showLoading({'message':'Fetching RSS detail'})
 //files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
 					app.model.addDispatchToQ({
 						"_cmd":"adminRSSDetail",
@@ -6306,7 +6306,7 @@ else	{} //validateForm handles error display
 									}
 								else	{
 									//success content goes here.
-									$panel.anycontent({'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
+									$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
 									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
 									$('.toolTip',$panel).tooltip();
 									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
