@@ -1693,6 +1693,7 @@ else	{
 					app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
+
 	var L = arr.length;
 	for(var i = 0; i < L; i++)	{
 //adding to iframe gives us an isolation layer

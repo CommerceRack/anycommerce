@@ -33,6 +33,65 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 
 
+<div id='trainerPanelTemplate' class='trainer ui-widget ui-corner-all'>
+<form>
+	<div class='ui-widget-header ui-corner-top'>This is the title</div>
+	<div class='ui-widget-content contentContainer clearfix'>
+
+		<section class='staticContent'>
+
+
+<label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
+	
+
+<label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
+
+<label ><input type='checkbox' name='selling_subscriptions' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
+
+<label ><input type='checkbox' name='selling_has_bricknmortar'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
+
+
+		</section>
+		
+		<section class='dynamicContent'>
+
+<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+
+<div class='trainerSellServices displayNone subset' data-panel-id='trainerSellServices'>
+	<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
+	<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
+</div>
+
+<div class='trainerSellSubscriptions displayNone subset' data-panel-id='trainerSellSubscriptions'>				
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
+</div>
+
+		</section>
+	</div>
+
+	<section class='navAndResources ui-widget-content ui-corner-bottom'>
+		<div class='resources'>
+		
+<article data-runtime='42:15' title="This is the title" data-youtube-id='12313213' data-resource-type='video'></article>
+<article class='showIfDeveloper' title="This is the title" data-resource-type='html'>This content would show up.</article>
+		
+		</div>
+		<div class='navigation'>
+			<button>Previous</button>
+			<button>Next</button>
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+
+
 <div id='trainerTemplate' class='ui-widget ui-widget-content ui-corner-all trainer stdPadding'>
 <form action='#' onSubmit='return false' class='trainer labelsAsBreaks positionRelative' data-app-change='admin_trainer|handleUpdate'>
 	<fieldset>
@@ -52,7 +111,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 		
 			<div class='floatedSubgroup'>
 				<p>Which describe your role? <span class='hint'>(check all that apply)</span></p>
-				<label><input type='checkbox' name='ima_boss' data-toggle-class='ima_boss' />I'm a principal in the business</label>
+				<label><input type='checkbox' name='ima_boss' data-checked-magic="im[*]boss" data-checked-classes='ima_boss' data-unchecked-classes="imnotaboss" />I'm a principal in the business</label>
 				<label><input type='checkbox' name='ima_webmaster' data-toggle-class='ima_webmaster' />I manage the website</label>
 				<label><input type='checkbox' name='ima_mktmaster' data-toggle-class='ima_mktmaster' />I manage the marketing</label>
 				<label><input type='checkbox' name='ima_csmaster' data-toggle-class='ima_csmaster' />I manage customer service</label>

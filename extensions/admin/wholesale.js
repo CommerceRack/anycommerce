@@ -58,6 +58,7 @@ var admin_wholesale = function() {
 				}
 			}, //INIT
 
+
 		wholesaleSearchResults: {
 			onSuccess : function(_rtag)	{
 				if(_rtag.jqObj)	{
