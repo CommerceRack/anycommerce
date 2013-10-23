@@ -2487,6 +2487,39 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.text('true') //won't get into renderFormat if not populated.
 			},
 
+//put this on a select element.  Will generate the 'options'. var should be the value of the schedule already selected.
+		wholesaleScheduleSelect : function($tag,data)	{
+			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect");
+			app.ext.admin.calls.adminPriceScheduleList.init({
+				'callback' : function(rd){
+					app.u.dump(" -> in to callback");
+					if(app.model.responseHasErrors(rd)){
+						$tag.parent().anymessage({'message':rd})
+						}
+					else	{
+						if(app.data.adminPriceScheduleList['@SCHEDULES'] && app.data.adminPriceScheduleList['@SCHEDULES'].length)	{
+							var $select = $("<select \/>"),
+							schedules = app.data.adminPriceScheduleList['@SCHEDULES'], //shortcut
+							L = app.data.adminPriceScheduleList['@SCHEDULES'].length
+							list = null;
+//no 'none' is added here.  If you need it, add it into the select that has this renderFormat. That way it's easy to not have it.
+							for(var i = 0; i < L; i += 1)	{
+								$select.append($("<option \/>",{'value':schedules[i].SID}).text(schedules[i].SID));
+								}
+							app.u.dump(" -> $select:"); app.u.dump($select);
+							$tag.append($select.children());
+							if(data.value)	{
+								$select.val(data.value);
+								}
+							}
+						else	{
+							$tag.parent().anymessage({'message':'You have not created any schedules yet.'})
+							}	
+						}
+					}
+				},'mutable');
+			},
+
 
 //a value, such as media library folder name, may be a path (my/folder/name) and a specific value from that string may be needed.
 //set bindData.splitter and the value gets split on that character.

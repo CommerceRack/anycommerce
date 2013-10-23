@@ -2876,11 +2876,12 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 			if(bindData['var'])	{
 				value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
 				}
-			if(!app.u.isSet(value) && bindData.defaultVar)	{
+// *** 201342 -> else added to both of the follwoing statements. once value is set, defaults aren't necessary.
+			else if(!app.u.isSet(value) && bindData.defaultVar)	{
 				value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
 	//					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
 				}
-			if(!app.u.isSet(value) && bindData.defaultValue)	{
+			else if(!app.u.isSet(value) && bindData.defaultValue)	{
 				value = bindData['defaultValue']
 //				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 				}
@@ -2915,7 +2916,8 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 			}
 		
 		}
-	else if(value || (Number(value) == 0 && bindData.hideZero === false))	{
+// ** 201342 -> added forceRender. if true, will always execute the render format, regardless of whether a value is set on the attribute.
+	else if(value || (Number(value) == 0 && bindData.hideZero === false) || bindData.forceRender)	{
 		if(app.u.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
 
 		if(app.u.isSet(bindData.format)){
