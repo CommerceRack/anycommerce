@@ -3,10 +3,6 @@
 
 if clicking a checkbox reveals additional inputs directly below the checkbox itself, apply  to/around the inputs to indent them.
 
-
-
--->
-
 <div id='trainerPanelTemplate' class='trainer ui-widget ui-corner-all'>
 	<div class='ui-widget-header ui-corner-top'>This is the title</div>
 	<div class='ui-widget-content contentContainer clearfix'>
@@ -29,6 +25,10 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 	</section>
 
 </div>
+
+
+-->
+
 
 
 
@@ -73,10 +73,10 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 	</div>
 
 	<section class='navAndResources ui-widget-content ui-corner-bottom'>
-		<div class='resources'>
+		<div class='resources' data-app-role='trainerResources'>
 		
-<article data-runtime='42:15' title="This is the title" data-youtube-id='12313213' data-resource-type='video'></article>
-<article class='showIfDeveloper' title="This is the title" data-resource-type='html'>This content would show up.</article>
+<article data-runtime='42:15' data-title="This is the title" data-youtube-id='SjqaTHPHrxI' data-resource-type='video'></article>
+<article class='showIfDeveloper' data-title="This is the title" data-resource-type='html'>This content would show up.</article>
 		
 		</div>
 		<div class='navigation'>
@@ -89,6 +89,11 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 
 
+<div id='trainerResourceTemplate_video'>
+	<img data-bind="var:resource(youtube-id); format:youtubeThumbnail; extension:admin_trainer" />
+	<h5 data-bind="var:resource(title); format:text;"></h5>
+	<h6 data-bind="var:resource(runtime); format:text;"></h6>
+</div>
 
 
 

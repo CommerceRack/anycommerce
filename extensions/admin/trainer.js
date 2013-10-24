@@ -59,7 +59,7 @@ var admin_trainer = function() {
 							'showLoading':false
 							}).appendTo($target);
 						}
-					
+					app.ext.admin_trainer.u.handleTrainerResources($target);
 					app.u.handleEventDelegation($target);
 					app.ext.admin.u.handleFormConditionalDelegation($target);
 					app.u.handleButtons($target);
@@ -76,13 +76,40 @@ var admin_trainer = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
+//no click event is added to this. do that on a parent element so that this can be recycled.
+			youtubeThumbnail : function($tag,data)	{
+				$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
+				return true;
+				}, //youtubeThumbnail
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			handleTrainerResources : function($context)	{
+				$("[data-app-role='trainerResources']",$context).find('article').each(function(){
+					var $resource = $(this);
+					if($resource.data('resource-type'))	{
+						$resource.addClass('floatLeft ui-widget-content ui-corner-all marginRight')
+						}
+					
+					
+					if($resource.data('resource-type') == 'html')	{
+						//just show what's there.
+						}
+					else if($resource.data('resource-type'))	{
+						$resource.anycontent({
+							templateID : 'trainerResourceTemplate_'+$resource.data('resource-type'),
+							data : $resource.data(),
+							showLoading: false
+							});
+						}
+					else	{
+						//no resource type? uh oh.
+						}
+					});
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
