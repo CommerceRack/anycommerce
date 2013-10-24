@@ -1380,9 +1380,10 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				app.u.dump(" ----> handle eventExecution ["+newEventType+"]");
 
 				if($target && $target instanceof jQuery && newEventType)	{
-					
-					if($target.data('app-'+newEventType))	{}
-					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
+					app.u.dump(" -> $target.data()"); app.u.dump($target.data());
+// !!! commented out for testing in chrome
+//					if($target.data('app-'+newEventType))	{}
+//					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
 					
 					if($target.data('app-'+newEventType))	{
 						var
@@ -1432,7 +1433,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
 						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
 							app.u.dump(" -> triggering the execute event code: "); app.u.dump(e);
-							app.u.executeEvent($(e.target),$.extend(p,e));
+							app.u.executeEvent($(e.currentTarget),$.extend(p,e));
 							});						
 						}
 					$container.addClass('eventDelegation'); //here for the debugger.
