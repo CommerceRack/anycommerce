@@ -1,7 +1,7 @@
 
 <!--
 
-if clicking a checkbox reveals additional inputs directly below the checkbox itself, apply subset to/around the inputs to indent them.
+if clicking a checkbox reveals additional inputs directly below the checkbox itself, apply  to/around the inputs to indent them.
 
 
 
@@ -33,16 +33,15 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 
 
-<div id='trainerPanelTemplate' class='trainer ui-widget ui-corner-all'>
-<form>
+<div id='trainer_whatusell' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
 	<div class='ui-widget-header ui-corner-top'>This is the title</div>
-	<div class='ui-widget-content contentContainer clearfix'>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
 
-		<section class='staticContent'>
+		<section class='staticContent boxModelBorder'>
 
 
 <label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
-	
 
 <label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
 
@@ -53,16 +52,19 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 		</section>
 		
-		<section class='dynamicContent'>
+		<section class='dynamicContent boxModelBorder'>
 
-<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+<div class='trainerSellProduct displayNone ' data-panel-id='trainerSellProduct'>
+	<label><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+</div>
 
-<div class='trainerSellServices displayNone subset' data-panel-id='trainerSellServices'>
+
+<div class='trainerSellServices displayNone' data-panel-id='trainerSellServices'>
 	<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
 	<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
 </div>
 
-<div class='trainerSellSubscriptions displayNone subset' data-panel-id='trainerSellSubscriptions'>				
+<div class='trainerSellSubscriptions displayNone' data-panel-id='trainerSellSubscriptions'>				
 	<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
 	<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
 </div>
@@ -172,16 +174,16 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 			<div class='floatedSubgroup'>
 
 				<label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
-					<label class='trainerSellProduct displayNone subset' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+					<label class='trainerSellProduct displayNone ' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
 	
 				<label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
-				<div class='trainerSellServices displayNone subset' data-panel-id='trainerSellServices'>
+				<div class='trainerSellServices displayNone ' data-panel-id='trainerSellServices'>
 					<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
 					<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
 				</div>
 	
 				<label ><input type='checkbox' name='selling_subscriptions' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
-				<div class='trainerSellSubscriptions displayNone subset' data-panel-id='trainerSellSubscriptions'>				
+				<div class='trainerSellSubscriptions displayNone ' data-panel-id='trainerSellSubscriptions'>				
 					<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
 					<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
 				</div>
@@ -218,7 +220,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<p>Alright, now where do you sell them?</p>
 
 				<label ><input type='checkbox' name='sell_via_direct' data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
-				<div class='trainerSellDirect2Consumers displayNone subset' data-panel-id='trainerSellDirect2Consumers'>
+				<div class='trainerSellDirect2Consumers displayNone ' data-panel-id='trainerSellDirect2Consumers'>
 					<label><input type='checkbox' value='has_mobile_app'>I currently have a mobile app that accepts orders</label>
 					<label><input type='checkbox' value='has_mobile_website'>I currently have a mobile website that accepts orders</label>
 					<label><input type='checkbox' value='wants_mobile'>No, but I’d sure like these!</label>
@@ -228,7 +230,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='sell_via_markets' data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
 				
 				<label ><input type='checkbox' name='sell_via_wholesale' data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
-					<label class='trainerSellWholesale displayNone subset' data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
+					<label class='trainerSellWholesale displayNone ' data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
 
 				<label><input type='checkbox' name='sell_via_phone' />We have sales representatives who follow up on inbound leads</label>
 
@@ -262,7 +264,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='payments_3pc_cba' >Checkout by Amazon</label>
 				<label><input type='checkbox' name='payments_3pc_gw' >Google Wallet</label>		
 				<label><input type='checkbox' name='payments_cc'  data-panel-selector='.trainerCCproviders' data-show-panel='trainerCCproviders'>Credit Card</label>	
-				<div class='trainerCCproviders displayNone subset' data-panel-id='trainerCCproviders'>
+				<div class='trainerCCproviders displayNone ' data-panel-id='trainerCCproviders'>
 					<label><input type='checkbox' name='cc_pp_payflowpro'>Paypal Payflow Pro</label>
 					<label><input type='checkbox' name='cc_pp_websitepayments'>Paypal Website Payments Pro</label>
 					<label><input type='checkbox' name='cc_authorizenet'>Authorize.Net</label>
@@ -288,7 +290,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='shipping_free'>Free shipping on all product</label>
 				<label><input type='checkbox' name='shipping_primarycarrier'  data-panel-selector='.trainerPrimaryCarriers' data-show-panel='trainerPrimaryCarriers'>Rate based parcels with a common carrier (FedEx, UPS, USPS)</label>
 				
-				<div class='trainerPrimaryCarriers displayNone subset' data-panel-id='trainerPrimaryCarriers'>
+				<div class='trainerPrimaryCarriers displayNone ' data-panel-id='trainerPrimaryCarriers'>
 					<label><input type='checkbox' name='shipping_fedex'>FedEx</label>
 					<label><input type='checkbox' name='shipping_ups'>UPS</label>
 					<label><input type='checkbox' name='shipping_usps'>USPS</label>

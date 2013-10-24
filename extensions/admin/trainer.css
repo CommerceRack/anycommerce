@@ -1,5 +1,15 @@
 .trainer legend	{display:none;} /* the legend isn't used, but it is populated for readability */
 .trainer .questionGroup	{margin-bottom:24px;}
 
-.floatedSubgroup	{margin-right:48px; float:left;}
-.labelsAsBreaks .subset	{margin-left:36px;}
+.trainer .floatedSubgroup	{margin-right:48px; float:left;}
+
+.trainer .staticContent	{float:left;}
+.trainer .dynamicContent	{float:right;}
+.trainer .dynamicContent, .trainer .staticContent	{padding:12px; width:49%;}
+
+.trainer .contentContainer	{display:block;}
+
+.trainer .navAndResources	{height:125px; border-top-width:0;}
+.trainer .resources	{width:79%; float:left;}
+.trainer .navigation	{width:20%; float:right; text-align:right;}
+

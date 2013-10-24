@@ -49,15 +49,24 @@ var admin_trainer = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-			showTrainer : function($target)	{
-				$target.anycontent({
-					'templateID':'trainerTemplate',
-					'data' : app.ext.admin.u.dpsGet('trainer') || {},
-					'showLoading':false
-					});
-				app.u.handleEventDelegation($target);
-				app.ext.admin.u.handleFormConditionalDelegation($('form',$target));
-				app.u.handleButtons($target);
+			showTrainer : function($target,slidesArr)	{
+				slidesArr = ["trainer_whatusell"];
+				if($target instanceof jQuery && typeof slidesArr == 'object' && slidesArr.length > 0)	{
+					for(var i = 0,L = slidesArr.length; i < L; i += 1)	{
+						$("<div \/>").addClass((i == 0 ? "" : "displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
+							'templateID':slidesArr[i],
+							'data' : app.ext.admin.u.dpsGet('trainer',slidesArr[i]) || {},
+							'showLoading':false
+							}).appendTo($target);
+						}
+					
+					app.u.handleEventDelegation($target);
+					app.ext.admin.u.handleFormConditionalDelegation($target);
+					app.u.handleButtons($target);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_trainer.a.showTrainer, either $target not a valid jQuery instance ["+$target instanceof jQuery+"] or slidesArr not an object with length ["+typeof slidesArr+"].","gMessage":true});
+					}
 				}
 			}, //Actions
 

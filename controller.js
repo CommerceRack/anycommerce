@@ -1431,6 +1431,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					var supportedEvents = new Array("click","change","focus","blur","submit");
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
 						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
+							app.u.dump(" -> triggering the execute event code: "); app.u.dump(e);
 							app.u.executeEvent($(e.target),$.extend(p,e));
 							});						
 						}
