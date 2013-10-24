@@ -91,7 +91,7 @@ var admin_trainer = function() {
 				$("[data-app-role='trainerResources']",$context).find('article').each(function(){
 					var $resource = $(this);
 					if($resource.data('resource-type'))	{
-						$resource.addClass('floatLeft ui-widget-content ui-corner-all marginRight')
+						$resource.addClass('resource ui-widget-content ui-corner-all')
 						}
 					
 					

@@ -13,3 +13,4 @@
 .trainer .resources	{width:79%; float:left;}
 .trainer .navigation	{width:20%; float:right; text-align:right;}
 
+.trainer .resource	{height:100px; width:150px; float:left; margin-right:24px; overflow:hidden;}
