@@ -178,7 +178,7 @@ _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.exte
 
 
 //check to see if item has inventoryable variations.
-if(app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
+if(app.data[_rtag.datapointer]['@skus'] && app.data[_rtag.datapointer]['@skus'][0] && app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
 	//this product has inventoryable options.
 	$("[data-app-role='showProductWithVariations']",_rtag.jqObj).show();
 	$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).hide();
