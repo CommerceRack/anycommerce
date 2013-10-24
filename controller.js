@@ -1381,7 +1381,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 				if($target && $target instanceof jQuery && newEventType)	{
 					app.u.dump(" -> $target.data()"); app.u.dump($target.data());
-// !!! commented out for testing in chrome
+// ** 201342 -> once currentTarget was being used instead of e.target, this code became unnecessary.
 //					if($target.data('app-'+newEventType))	{}
 //					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
 					
@@ -1432,7 +1432,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					var supportedEvents = new Array("click","change","focus","blur","submit");
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
 						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
-							app.u.dump(" -> triggering the execute event code: "); app.u.dump(e);
+//							app.u.dump(" -> triggering the execute event code: "); app.u.dump(e);
 							app.u.executeEvent($(e.currentTarget),$.extend(p,e));
 							});						
 						}
