@@ -1696,7 +1696,7 @@ app.model.dispatchThis('immutable');
 			adminCustomerSearchShowUI : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-person"},text: false});
 				if($btn.data('scope') && $btn.data('searchfor'))	{
-					$btn.attr('title','Search customers by '+$btn.data('scope').toLowerCase()+" for '"+$btn.data('searchfor').toLowerCase()+"'");
+					$btn.attr('title','Search customers by '+($btn.data('scope') ? $btn.data('scope').toLowerCase() : "")+" for '"+($btn.data('searchfor') ? $btn.data('searchfor').toLowerCase() : "")+"'");
 					$btn.off('click.adminCustomerSearchShowUI').on('click.adminCustomerSearchShowUI',function(event){
 						//later, maybe we add a data-stickytab to the button and, if true, closest table gets sticky.
 						app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'scope':$btn.data('scope'),'searchfor':$btn.data('searchfor')});
