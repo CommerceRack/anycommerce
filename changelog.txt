@@ -8,9 +8,14 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201342.c
 ADMIN
-	bug fix in payments CBA (wasn't loading existing settings/saving)
-	bug fix in rss (edit feed was double-loading template)
-	bug fix in syndication that caused the 'schedules' select list to not preselect the current schedule.
+	bug - in payments CBA (wasn't loading existing settings/saving)
+	bug - in rss (edit feed was double-loading template)
+	bug - in syndication that caused the 'schedules' select list to not preselect the current schedule.
+	bug - in billing history (it'll load now)
+	bug - in product editor causing brand new products to not load properly (variations panel, specifically)
+	feature - in product editor, inventory panel now hides some detail records. A button at the bottom w/ a dropdown allows display.
+	feature - 'unstructured' zone type added for WMS.
+
 
 201342
 ADMIN
