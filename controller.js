@@ -1380,7 +1380,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				app.u.dump(" ----> handle eventExecution ["+newEventType+"]");
 
 				if($target && $target instanceof jQuery && newEventType)	{
-					app.u.dump(" -> $target.data()"); app.u.dump($target.data());
+//					app.u.dump(" -> $target.data()"); app.u.dump($target.data());
 // ** 201342 -> once currentTarget was being used instead of e.target, this code became unnecessary.
 //					if($target.data('app-'+newEventType))	{}
 //					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
