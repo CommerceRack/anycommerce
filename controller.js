@@ -2878,12 +2878,12 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 			if(bindData['var'])	{
 				value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
 				}
-// *** 201342 -> else added to both of the follwoing statements. once value is set, defaults aren't necessary.
-			else if(!app.u.isSet(value) && bindData.defaultVar)	{
+
+			if(!app.u.isSet(value) && bindData.defaultVar)	{
 				value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
 	//					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
 				}
-			else if(!app.u.isSet(value) && bindData.defaultValue)	{
+			if(!app.u.isSet(value) && bindData.defaultValue)	{
 				value = bindData['defaultValue']
 //				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 				}
