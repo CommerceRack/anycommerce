@@ -3858,12 +3858,13 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 //to be consistent, put select into focus.						
 						if(e.target.nodeName.toLowerCase() == 'option'){
 							$ele = $ele.closest('select');
-									var panels = new Array();
-									if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
-									else {panels.push($option.data('show-panel'))};
-									for(var i = 0; i < panels.length; i += 1)	{
-										$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
-										}
+							var $option = $('option:selected',$ele);
+							var panels = new Array();
+							if($option.data('show-panel') && $option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
+							else {panels.push($option.data('show-panel'))};
+							for(var i = 0; i < panels.length; i += 1)	{
+								$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
+								}
 							}
 //						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
 //						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
