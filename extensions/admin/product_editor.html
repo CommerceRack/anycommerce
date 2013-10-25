@@ -657,7 +657,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 	<form action='#' onSubmit='return false'>
 	
-	<div class='marginBottom' data-app-role='schedulesContainer'>
+	<div class='marginBottom displayNone' data-app-role='pidSchedulesContainer'>
 	<table class='gridTable'>
 	<thead>
 	<tr>
@@ -669,6 +669,17 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	</tr>
 	</thead>
 	<tbody data-bind="var: product(@schedules); format:processList; loadsTemplate:schedulesRowTemplate;"></tbody>
+	</table>
+	</div>	
+	
+	<div class='marginBottom displayNone' data-app-role='skuSchedulesContainer'>
+	<table class='gridTable' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
+	<thead>
+	<tr>
+		<th>Schedule</th>
+		<th>Price</th>
+	</tr>
+	</thead>
 	</table>
 	</div>
 	
@@ -1374,6 +1385,18 @@ if it already has a simple, lock the button
 	<td><input name='qtymin' value='' data-bind="var:schedule(qtymin); format:popVal;" size='6' min='0' step='1' type='number' /></td>
 	<td><input name='qtyinc' value='' data-bind="var:schedule(qtyinc); format:popVal;" size='6' min='0' step='1' type='number' /></td>
 </tr>
+
+
+<tr id='skuSchedulesTbodyTemplate' data-bind="var:schedule(@schedule_prices); format:processList; loadsTemplate:skuSchedulesRowTemplate;">
+	<td data-bind="var:schedule(sku); format:text;" colspan='2'></td>
+</tr>
+
+
+<tr>
+	<td id='skuSchedulesRowTemplate'><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' /></td>
+</tr>
+
+
 
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>

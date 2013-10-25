@@ -652,7 +652,19 @@ app.u.handleEventDelegation($target);
 	
 		u : {
 
-
+//product must be in memory with sku:1 passed for this to work.
+			thisPIDHasInventorableVariations : function(pid)	{
+				var r = false;
+				if(pid && app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length)	{
+					app.u.dump(" -> sku: "+app.data['adminProductDetail|'+pid]['@skus'][0].sku);
+					if(app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(':') > 0 )	{r = true}
+					}
+				else	{
+					//missing something we need.
+					$('#globalMessaging').anymessage({"message":"in admin_prodEdit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
+					}
+				return r;
+				},
 
 			amazonFeeds2Message : function(feedsObj) {
 			
@@ -1794,17 +1806,25 @@ Required params include:
 						}
 					}
 
+				if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+					$("[data-app-role='skuSchedulesContainer']",$form).find('input.edited').each(function(){
+						cmdObj['@updates'].push("SET-SCHEDULE-PRICE?SKU="+$(this).closest("[data-sku]").attr('data-sku')+"&schedule="+$(this).closest("[data-schedule]").attr('data-schedule')+"&price="+$(this).val());
+						});				
+					}
+				else	{
 // loop through all the rows and check to see if any have been edited.
-				$("[data-app-role='schedulesContainer'] tbody",$form).children().each(function(){
-					var $tr = $(this);
-					if($('.edited',$tr).length)	{
-						cmdObj['@updates'].push("SET-SCHEDULE?schedule="+$tr.data('schedule')+"&"+$.param($tr.serializeJSON()))
-						}
-					//if any input for the record has been updated, update qty and loc.
-					else {
+					$("[data-app-role='pidSchedulesContainer'] tbody",$form).children().each(function(){
+						var $tr = $(this);
+						if($('.edited',$tr).length)	{
+							cmdObj['@updates'].push("SET-SCHEDULE-PROPERTIES?schedule="+$tr.data('schedule')+"&"+$.param($tr.serializeJSON()))
+							}
+						//if any input for the record has been updated, update qty and loc.
+						else {
+	
+							}
+						});
 
-						}
-					});
+					}
 
 //				app.u.dump(" -> cmdObj for schedule:"); app.u.dump(cmdObj);
 				
@@ -2276,6 +2296,23 @@ function type2class(type)	{
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid'),
 					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
+
+//Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
+					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+						$("[data-app-role='skuSchedulesContainer']",$PE).show();
+//build the table headers for the schedules.
+						if(app.data['adminProductDetail|'+pid]['@skus'][0] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
+							var o = '';
+							for(var i = 0, L = app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length; i < L; i += 1)	{
+								o += "<th>"+app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'][i].schedule+"</th>";
+								}
+							$("[data-app-role='skuSchedulesContainer']",$PE).find('thead tr').append(o);
+							}
+						}
+					else	{
+						$("[data-app-role='pidSchedulesContainer']",$PE).show();
+						}
+
 
 //				app.u.dump(" -> $flexContent.length: "+$flexContent.length);
 //				app.u.dump(" -> $PE.length: "+$PE.length);
