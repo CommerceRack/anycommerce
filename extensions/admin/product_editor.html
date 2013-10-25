@@ -991,24 +991,35 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<legend>eBay Categories</legend>
 
 			<div class='clearfix marginBottom'>
-				<label class='floatLeft marginRight'>
-					<span>eBay category 1</span>
-					<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
-					<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
-					<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-				</label>
-	
-				<label class='floatLeft marginRight'>
-					<span>eBay category 2</span>
-					<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
-					<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
-					<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
-				</label>
 				
-				<label class='floatLeft marginRight' data-app-role='ebayStoreCategoryContainer'>
-					<span>eBay Store Category</span>
-					<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
-				</label>
+				<div class='floatLeft marginRight labelsAsBreaks'>
+					<label >
+						<span>eBay category 1</span>
+						<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+						<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+					</label>
+		
+					<label class='floatLeft marginRight'>
+						<span>eBay category 2</span>
+						<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+						<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+					</label>
+				</div>
+				
+				<div class='floatLeft marginRight labelsAsBreaks' data-app-role='ebayStoreCategoryContainer'>
+					<label>
+						<span>eBay Store Category</span>
+						<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
+					</label>
+					
+					<label>
+						<span>eBay Store Category 2</span>
+						<select name='ebay:storecat2' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
+					</label>
+				</div>
+				
 				<label class='floatLeft marginRight' >
 					<span>Launch profile</span>
 					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
