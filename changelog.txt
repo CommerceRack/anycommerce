@@ -8,7 +8,7 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201344
 ADMIN
 	feature - product editor now supports a sku-specific price per schedule
-	enhancement - if inventory-able options, no quantity pricing on product (wouldn't have worked anyway).
+	enhancement - if inventory-able options are present, no quantity pricing will show for the product (wouldn't have worked anyway)
 
 
 201342.c
