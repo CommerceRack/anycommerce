@@ -7,9 +7,9 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 201344
 ADMIN
-	feature - product editor now supports a sku-specific price per schedule
+	feature - product editor now supports a sku-specific price per schedule (attributes panel)
 	enhancement - if inventory-able options are present, no quantity pricing will show for the product (wouldn't have worked anyway)
-
+	feature - ebay store category 2 is back in the product editor (ebay panel)
 
 201342.c
 ADMIN
