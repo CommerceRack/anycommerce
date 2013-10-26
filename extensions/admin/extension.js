@@ -4009,6 +4009,19 @@ and all .someClass are hidden (value of data-panel-selector)
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
 				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
+
+				else if(path == '#!orderCreate2')	{
+					app.calls.appCartCreate.init({'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							//appCartCreate will automatically set app.vars.cartid
+							app.ext.orderCreate.a.startCheckout($target);
+							}
+						}},'immutable');
+						app.model.dispatchThis('immutable');
+					}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 
 				else if(path == '#!downloads')	{

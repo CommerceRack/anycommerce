@@ -727,7 +727,7 @@ NOTES
 				if($form && $form.length && $form.is('form'))	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
-						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
+//						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
 						if(cartObj)	{
 							r = true;
 							app.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');

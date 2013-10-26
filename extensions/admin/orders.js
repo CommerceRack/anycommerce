@@ -453,7 +453,6 @@ else	{
 //			app.u.dump("END initOrderManager");
 			}, //initOrderManager
 
-
 //will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
 //though not a modal, only one can be open at a time.
 		showCustomMailEditor : function(orderID, prt)	{

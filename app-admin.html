@@ -29,6 +29,7 @@ var app = {vars:{
 	"release":"201344.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
+	"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
 	"_clientid":"admin",
 	"jqurl": (document.location.protocol == 'file:') ? "https://admin-sporks-zoovy-com.app-hosted.com/jsonapi/" : "/jsonapi/",
 //	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",

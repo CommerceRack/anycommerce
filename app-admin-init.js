@@ -14,8 +14,16 @@ app.rq.push(['extension',1,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',1,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',1,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',1,'store_cart','extensions/store_cart.js']);
-app.rq.push(['extension',1,'store_checkout','extensions/store_checkout.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
+
+
+
+//app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
+//app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
+
+app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
+
 
 app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',0,'admin_tools','extensions/admin/tools.js']); 
@@ -30,7 +38,6 @@ app.rq.push(['extension',0,'admin_batchJob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',0,'admin_customer','extensions/admin/customer.js']);
 app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']);
 app.rq.push(['extension',1,'admin_user','extensions/admin/user.js']);
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 app.rq.push(['extension',0,'admin_trainer','extensions/admin/trainer.js']); //load in pass 0 for local testing.
 
