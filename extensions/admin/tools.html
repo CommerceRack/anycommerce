@@ -611,6 +611,13 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
+			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_RESUMMARIZE','%vars':{}}); return false;">Inventory Resummarize</button></td>
+			<td class='valignTop small'>
+			Forces the system to recompute the summary inventory for all SKU's. 
+			This should not be necessary unless you have encountered a bug which caused inventory summaries to not match inventory detail.
+			</td>
+		</tr>
+		<tr>
 			<td class='valignTop'><button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_CLEANUP','%vars':{}}); return false;">Product Cleanup</button></td>
 			<td class='valignTop small'>
 			Resets/Rebuilds Product Index, clears out deleted items, and source pid from zoovy:related_products, and zoovy:accessory_products. Removes unicode characters. 
