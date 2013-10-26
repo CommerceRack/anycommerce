@@ -1479,12 +1479,12 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 
 <!-- used for sku-specific attributes -->
 <tr id='skuTableRowTemplate' data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:assignAttribute; attribute:title;'>
-	<td data-bind='var:sku(sku); format:text;'></td>
+	<td class='width1' data-bind='var:sku(sku); format:text;'></td>
 	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
-	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' /></td>
-	<td><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
-	<td><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
-	<td><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
+	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' class='fullWidth' /></td>
+	<td class='width1'><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td class='width1'><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td class='width1'><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
 <!--	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
 		<option value="NEW">New</option>
 		<option value="OPEN">Open</option>
@@ -1495,9 +1495,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 		<option value="DAMAGED">Damaged</option>
 		<option value="UNINSPECTED">Uninspected</option>
 	</select></td>-->
-	<td><input name="sku:price" size="4" type="number" step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
-	<td><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
-	<td><input name="sku:weight" size="4" type="text" data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
+	<td class='width1'><input name="sku:price" size="4" type="number" step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
+	<td class='width1'><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
+	<td class='width1'><input name="sku:weight" size="4" type="text" data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
 
 </tr>
 
