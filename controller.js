@@ -3361,6 +3361,8 @@ $tmp.empty().remove();
 					}
 				else	{
 					$tag.val(data.value);
+// *** 201344 -> added defaultVal prop.
+					$tag.prop('defaultValue',data.value); //allows for tracking the difference onblur.
 					}
 				}
 			

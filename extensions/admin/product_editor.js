@@ -148,8 +148,9 @@ if(_rtag.jqObj)	{
 //hidden pid input is used by save. must come after the 'anycontent' above or form won't be set.
 	_rtag.jqObj.find('form').append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 
-	app.u.handleEventDelegation(_rtag.jqObj);
-	app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
+//	app.u.handleEventDelegation(_rtag.jqObj);
+//	app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
+	_rtag.jqObj.anydelegate({'trackEdits':true});
 	app.u.handleCommonPlugins(_rtag.jqObj);
 	app.u.handleButtons(_rtag.jqObj);
 	
@@ -191,14 +192,18 @@ else {
 
 
 $('form',_rtag.jqObj).each(function(){
-	app.ext.admin.u.applyEditTrackingToInputs($(this));
+// ** 201344 -> edit tracking now in anydelegate.
+//	app.ext.admin.u.applyEditTrackingToInputs($(this));
 	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 	});
 
 app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
-
+_rtag.jqObj.anydelegate({
+	trackEdits:true,
+	trackSelector:'form'
+	});
 					}
 				} //handleProductEditor
 			}, //callbacks
@@ -226,7 +231,8 @@ app.u.handleButtons(_rtag.jqObj);
 				if($target.children().length)	{} //product manager only gets rendered once and ONLY within the product tab.
 				else	{
 					$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
-					app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
+					$("[data-app-role='productManagerResultsContent']",$target).anydelegate(); //this delegate is just on the results. each product get's it's own in quickview.
+//					app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
 					}
 				}, //showProductManager
 
@@ -279,7 +285,6 @@ app.u.handleButtons(_rtag.jqObj);
 							}
 						},'mutable');
 					
-					
 					app.model.dispatchThis('mutable');
 
 					}
@@ -319,8 +324,8 @@ $target.anycontent({'templateID':P.templateID,'showLoading':false}).attr('data-p
 
 app.u.handleCommonPlugins($target);
 app.u.handleButtons($target);
-app.u.handleEventDelegation($target);
-
+//app.u.handleEventDelegation($target);
+$target.anydelegate();
 					}
 				else if($target instanceof jQuery)	{
 					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, either no pid ["+P.pid+"] and/or no templateid ["+P.templateID+"] passed. both are required.","gMessage":true});
@@ -832,8 +837,8 @@ app.u.handleEventDelegation($target);
 						}
 					});
 				$( "[data-app-role='priceFilterRange']" ).val( "$" + $( ".sliderRange" ).slider( "values", 0 ) + " - $" + $( ".sliderRange" ).slider( "values", 1 ) );
-
-				app.u.handleEventDelegation($div);
+				$div.anydelegate();
+//				app.u.handleEventDelegation($div);
 				},
 
 //** 201334 -> for new product manager interface.

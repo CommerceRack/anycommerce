@@ -55,6 +55,348 @@ For the list of available params, see the 'options' object below.
 
 
 (function($) {
+	
+
+/*
+apply to a selector to handle app events.
+additionally, will apply some conditional form logic.
+*/
+
+	$.widget("ui.anydelegate",{
+		options : {
+//			trackFormEvents : true, //set to false to turn off the form event actions (panel code et all)
+			trackEdits : false, //boolean.  if true, as an input/select is changed, an 'edited' class is added to the input.
+/* the following options are only applicable if trackEdits is enabled */
+			trackSelector : null, //allows for delegation to occur on an element encompasing several forms, but for tracking to be applied to each individual form.
+			masterSaveSelector : "[data-app-role='masterSaveButton']" //if applying track edits to a subset, this can be used to update a master button (X total changes within all forms).
+			},
+
+		_init : function(){
+//			app.u.dump("BEGIN anydelegate");
+			var
+				self = this,
+				$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+
+//don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
+			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
+				app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
+				}
+			else	{
+				var supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
+				for(var i = 0; i < supportedEvents.length; i += 1)	{
+					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
+						self._executeEvent($(e.currentTarget),$.extend(p,e));
+						return true;
+						});
+					
+//go through and trigger the form based events, so that if any content/classes should be on, they are.
+//do this before edit tracking is added so the edited class is not added.
+					$("[data-input-"+supportedEvents[i]+"]",$t).each(function(){
+						var $i = $(this)
+						if($i.is('select'))	{
+							$('option:selected',$i).trigger(supportedEvents[i]+'.app');
+							}
+						else if($i.is(':checkbox'))	{
+							$i.trigger(supportedEvents[i]+'.app');
+							}
+						else if($i.is(':radio'))	{
+							if($i.is(':checked'))	{
+								$i.trigger(supportedEvents[i]+'.app');
+								}
+							}
+						
+						})
+					}
+				$t.addClass('eventDelegation'); //here for the debugger.
+				}
+//outside the app event delegation check for backwards compatiblity.
+//the track edit delegation is removed and added in case it's run more than once, so that each edit isn't double-counted.
+			if(self.options.trackEdits)	{
+				if(self.options.trackSelector)	{
+//					app.u.dump(" -> TrackSelector IS enabled");
+					$(self.options.trackSelector,$t).each(function(){
+						self._applyTracking4Edits($(this));
+						})
+					}
+				else	{
+					self._applyTracking4Edits($t);
+					}
+				this.updateChangeCounts(); //handles defaults, like hiding the changes-container elements
+				}
+			}, //_init
+
+//what is triggered when an event occurs.
+//$CT = $(e.currentTarget)
+//ep = event + parameters (params may get added if the event is triggered programatically)
+		_executeEvent : function($CT,ep)	{
+			ep = ep || {};
+			ep.normalizedType = this._normalizeEventType(ep.type);
+			if($CT && $CT instanceof jQuery)	{
+				if($CT.attr('data-input-'+ep.normalizedType))	{
+					this._handleFormEvents($CT,ep);
+					}
+				
+				if($CT.attr('data-app-'+ep.normalizedType))	{
+					this._handleAppEvents($CT,ep);
+					}
+				
+				}
+			else	{
+				$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
+				}
+			},
+
+		_formEventActions : {
+//used w/ keyup to modify the value of the input. ex: all uppercase. input-format accepts a comma separated list of values.
+			"input-format" : function($CT)	{
+				if($CT.data('input-format').indexOf('uppercase') > -1)	{
+					$CT.val($CT.val().toUpperCase());
+					}
+				
+				if($CT.data('input-format').indexOf('alphanumeric') > -1)	{
+					$CT.val($CT.val().replace(/\W/, '','g'));
+					}							
+				
+				if($CT.data('input-format').indexOf('pid') > -1)	{
+					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
+					}
+				},
+//allows one form input to set the value of another.
+			"set-value-selector" : function($CT)	{
+				$($CT.data('set-value-selector'),$CT.closest('form')).val($CT.is('select') ? $("option:selected",$CT).data('set-value') : $CT.data('set-value')).trigger('keyup.trackform').trigger('change.trackform');
+				},
+
+//will hide the matching selectors. (hide-selector='.bob' will hide all class='bob' elements.
+			"hide-selector" : function($CT)	{
+				if($($ele.attr('data-hide-selector'),$CT.closest('form')).is(':hidden'))	{}
+				else	{
+					$($ele.attr('data-hide-selector'),$CT.closest('form')).slideUp();
+					}
+				},
+
+//will show the matching selectors. (show-selector='.bob' will show all class='bob' elements.
+			"show-selector" : function($CT)	{
+				if($($ele.attr('data-show-selector'),$CT.closest('form')).is(':visible'))	{}
+				else	{
+					$($ele.attr('data-show-selector'),$CT.closest('form')).slideDown();
+					}
+				},
+
+			"checked-classes" : function($CT)	{
+				$CT.closest('form').removeClass($CT.data('check-selectors'));
+				$CT.is(':checked') ? $CT.closest('form').addClass($CT.data('checked-classes')) : $CT.closest('form').removeClass($CT.data('checked-classes'));
+				},
+
+			"unchecked-classes" : function($CT)	{
+				$CT.closest('form').removeClass($CT.data('check-selectors'));
+				!$CT.is(':checked') ? $CT.closest('form').addClass($CT.data('unchecked-classes')) : $CT.closest('form').removeClass($CT.data('unchecked-classes'));
+				},
+
+//allows for a specific panel (or sets of panels) to be turned on/off based on selection. commonly used on a select list, but not limited to that.
+//provides more control that trying to accomplish the same thing with the show/hide-selectors.
+			"panel-selector" : function($CT)	{
+				$($CT.data('panel-selector'),$CT.closest('form')).hide(); //hide all panels w/ matching selector.
+				
+				if($CT.is(':checkbox') && !$CT.is(':checked'))	{} //this is an unchecked checkbox. do nothing.
+				else	{
+					var panelList = $CT.is('select') ? $("option:selected",$CT).data('show-panel') : $CT.data('show-panel');
+					if(panelList)	{
+						if(panelList.indexOf(','))	{panels = panelList.split(',')}
+						else {panels.push(panelList)};
+						
+						for(var i = 0; i < panels.length; i += 1)	{
+							$("[data-panel-id='"+panels[i]+"']",$CT.closest('form')).show(); //panel defined and it exists. show it.
+							}
+						}
+					else	{} //no panel was defined. this is an acceptable case.
+					}
+				}
+			},
+
+//a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
+		updateChangeCounts : function()	{
+			var self = this;
+			if(self.options.trackSelector)	{
+				$(self.options.trackSelector,self.element).each(function(){
+					var $ele = $(this);
+//if a changes container has been specified, update with the number of edits or hide if there are no edits.
+					if($ele.data('changes-container'))	{
+						if($('.edited',$ele).length)	{
+							$("[data-anydelegate-changes='"+$ele.data('changes-container')+"']",self.element).show().find('.numChanges').text($('.edited',$ele).length)
+							}
+						else	{
+							$("[data-anydelegate-changes='"+$ele.data('changes-container')+"']",self.element).hide();
+							}
+						
+						}
+					self._updateSaveButtonInContext($ele,"[data-app-role='saveButton']");
+					})
+				}
+			else	{
+				self._updateSaveButtonInContext(this.element,"[data-app-role='saveButton']");
+				}
+			if(this.options.masterSaveSelector)	{
+				self._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']")
+				}
+			},
+
+/*
+pass in an event name and a function and it will be added as an eventAction.
+		addFormEventAction : function(name,eventActionFunction){},
+
+*/
+
+//used to update the save buttons, both the master and the individuals.
+		_updateSaveButtonInContext : function($context,selector)	{
+			var $button = $(selector,$context);
+
+			if($('.edited',$context).length)	{
+				$('.numChanges',$button).text($('.edited',$context).length);
+				$button.addClass('ui-state-highlight');
+				if($button.hasClass('ui-button'))	{
+					$button.button("enable");
+					}
+				else	{
+					$button.attr('disabled','').removeAttr('disabled');
+					}
+				}
+			else	{
+				$('.numChanges',$button).text("");
+				$button.removeClass('ui-state-highlight');
+				if($button.hasClass('ui-button'))	{
+					$button.button("disable")
+					}
+				else	{
+					$button.attr('disabled','disabled');
+					}
+				}
+
+			},
+		
+		_applyTracking4Edits : function($context)	{
+			var self = this;
+			$context.off('change.trackform').on('change.trackform',"select, :radio, :checkbox",function(event)	{
+				var $input = $(this);
+				if($input.hasClass('skipTrack'))	{} //if skipTrack is set, do nothing.
+				else if($input.is(':checkbox'))	{
+					$input.toggleClass('edited');
+					self.updateChangeCounts($context);
+					}
+				else	{
+					if($input.is(':radio'))	{
+						$("[name='"+$input.attr('name')+"']",$input.closest('form')).removeClass('edited'); //remove edited class from the other radio buttons in this group.
+						}
+					$input.addClass('edited');
+					self.updateChangeCounts($context);
+					}
+				});
+
+// mouseup event present because a right click of 'paste' does not trigger keyup.
+			$context.off('keyup.trackform').on('keyup.trackform mouseup.trackform',"input, textarea",function(event){
+				var $input = $(this);
+				if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
+				else if($input.is(':checkbox') || $input.is(':radio'))	{
+					//handled in it's own delegation above. Here because they 'could' be triggered by a space bar.
+					}
+//only add the edited class if the value has changed.
+				else if($input.prop("defaultValue") != $input.val())	{
+					$input.addClass('edited');
+					self.updateChangeCounts($context);
+					}
+				else	{
+					//well... something happened.  verify change counts are correct. 
+					self.updateChangeCounts($context);
+					}
+				});
+
+			},
+		
+		_handleFormEvents : function($CT,ep)	{
+//			app.u.dump("BEGIN _handleFormEvents");
+			//for each event action, determine if the element should trigger it and, if so, trigger it.
+			for(index in this._formEventActions)	{
+				if($CT.data(index))	{this._formEventActions[index]($CT,this.element);}
+				}
+			},
+
+		resetTracking : function()	{
+			$('.edited',this.element).removeClass('edited');
+			var $button = $("[data-app-role='saveButton']",$context);
+			$('.numChanges',$button).text("");
+			$button.removeClass('ui-state-highlight');
+			if($button.hasClass('ui-button'))	{
+				$button.button("disable")
+				}
+			else	{
+				$button.attr('disabled','disabled');
+				}
+			},
+
+		_handleAppEvents : function($CT,ep)	{
+//by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
+			ep = ep || {};
+			var	AEF = $CT.data('app-'+ep.normalizedType).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
+
+			if(AEF[0] && AEF[1])	{
+				if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
+					//execute the app event.
+					app.ext[AEF[0]].e[AEF[1]]($CT,ep);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+					}
+				}
+			else	{
+				$('#globalMessaging').anymessage({'message':"In anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$target.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+				}						
+
+
+			},
+
+
+/*
+want to avoid double-delegation. so mutation watches to see if this element is moved.
+suppose events were delegated but not applied because the parent already had delegated events, then this element moved into a new parent (a sticky tab, perhaps). suddenly, delegation is gone.
+ -> in this case, apply the events.
+alternatively, this could get moved into another parent that already has event delegation on it.
+ -> in this case, remove the events.
+
+In both cases, keep watching for further changes.
+
+		_watchMutation : function()	{
+			
+			},
+*/
+//The actual event type and the name used on the dom (focus, blur, etc) do not always match. Plus, I have a sneaking feeling we'll end up with differences between browsers.
+//This function can be used to regularize the event type. Wherever possible, we'll map to the jquery event type name.
+		_normalizeEventType : function(type)	{
+			var r = type;
+			if(type == 'focusin')	{
+				r = 'focus';
+				}
+			else if(type == 'focusout')	{
+				r = 'blur';
+				}
+			return r;
+			},
+
+//clear the message entirely. run after a close. removes element from DOM.
+		destroy : function(){
+			//remove all the delegated events!!! leave the content alone.
+			this.element.off('change.trackform').off('keyup.trackform')
+			var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
+			for(var i = 0; i < supportedEvents.length; i += 1)	{
+				this.element.off(supportedEvents[i]+".app");
+				}
+			}
+		}); // create the widget
+
+
+
+	
+	
+	
+	
 	$.widget("ui.anymessage",{
 		options : {
 			message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
@@ -198,7 +540,7 @@ For the list of available params, see the 'options' object below.
 //the validate order request returns a list of issues.
 				else if(msg['@RESPONSES'])	{
 					var L = msg['@RESPONSES'].length;
-//					console.dir("Got to @issues, length: "+L);
+//					app.u.dump("Got to @issues, length: "+L);
 					$r = $("<ul \/>"); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
 						$r.append("<li>"+(msg['@RESPONSES'][i].msgsubtype || msg['@RESPONSES'][i].msgtype)+": "+msg['@RESPONSES'][i].msg+"<\/li>");
@@ -208,7 +550,7 @@ For the list of available params, see the 'options' object below.
 //the validate order request returns a list of issues.
 				else if(msg['@issues'])	{
 					var L = msg['@issues'].length;
-//					console.dir("Got to @issues, length: "+L);
+//					app.u.dump("Got to @issues, length: "+L);
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
 						$r.append("<p>"+msg['@issues'][i][3]+"<\/p>");
@@ -223,7 +565,7 @@ For the list of available params, see the 'options' object below.
 //A message could contain a _msg for success AND @MSGS. always display what is in @MSGS.
 				if(msg['@MSGS'])	{
 					var L = msg['@MSGS'].length;
-					console.dir("Got to @MSGS, length: "+L);
+					app.u.dump("Got to @MSGS, length: "+L);
 					$msgs = $("<ul \/>"); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
 						$msgs.append("<li>"+msg['@MSGS'][i]['_']+": "+msg['@MSGS'][i]['+']+"<\/li>");

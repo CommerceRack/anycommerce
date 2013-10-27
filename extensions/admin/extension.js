@@ -3641,120 +3641,46 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return r;
 				},
 
-
-
-//used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.
-// .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
-//ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
-			handleSaveButtonByEditedClass : function($context)	{
-				var $button = $("[data-app-role='saveButton']",$context);
-//				app.u.dump(" -> button.length: "+$button.length);
-				if($('.edited',$context).length)	{
-					$('.numChanges',$button).text($('.edited',$context).length);
-					$button.addClass('ui-state-highlight');
-					if($button.hasClass('ui-button'))	{
-						$button.button("enable");
-						}
-					else	{
-						$button.attr('disabled','').removeAttr('disabled');
-						}
-					}
-				else	{
-					$('.numChanges',$button).text("");
-					$button.removeClass('ui-state-highlight');
-					if($button.hasClass('ui-button'))	{
-						$button.button("disable")
-						}
-					else	{
-						$button.attr('disabled','disabled');
-						}
-					}
-				},
-			
-		
-//run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
-			restoreInputsFromTrackingState : function($context)	{
-				$('.edited',$context).removeClass('edited');
-				var $button = $("[data-app-role='saveButton']",$context);
-				$('.numChanges',$button).text("");
-				$button.removeClass('ui-state-highlight');
-				if($button.hasClass('ui-button'))	{
-					$button.button("disable")
-					}
-				else	{
-					$button.attr('disabled','disabled');
-					}
-//* 201334 -> no need to re-apply. event tracking is now delegated, so it's always on.
-//				this.applyEditTrackingToInputs($context); 
-				},
 			
 			removeFromDOMItemsTaggedForDelete : function($context)	{
 				$('tr.rowTaggedForRemove',$context).each(function(){
 					$(this).empty().remove();
 					})
 				},
-			
-/*
-This is the start of a fucntion that will get executed from within the delegated events in applyEditTrackingToInputs
-It will support some pre-set commands to make updates to elements outside the form/context.
-One example would be if data-anytab is set on the form, it'll load hte # of changes into the corresponding tab.
-			handleFormBasedTrackingEvents : function($form)	{
-				if($form.data('tab'))	{
-					var $container = $form.closest("[data-keeper-container]");
-					if($container.length)	{
-						var $tab = $("[data-anytabs-tab='"+$form.data('tab')+"']:first",$container);
-						}
-					else	{
-						$form.anymessage({"message":"In admin.u.handleFormBasedTrackingEvents, data-tab was set on the form, but no container was found.","gMessage":true});
-						}
+
+//used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.
+// .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
+//ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
+			handleSaveButtonByEditedClass : function($context)	{
+				app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
+//*** 201344 -> code moved into anydelegate.
+				if($context.hasClass('eventDelegation'))	{
+					$context.anydelegate('updateChangeCounts');
+					}
+				else	{
+					$context.closest('.eventDelegation').anydelegate('updateChangeCounts');
 					}
 				},
-*/			
+			
+		
+//run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
+			restoreInputsFromTrackingState : function($context)	{
+//*** 201344 -> code moved into anydelegate.
+				if($context.hasClass('eventDelegation'))	{
+					$context.anydelegate('resetTracking');
+					}
+				else	{
+					$context.closest('.eventDelegation').anydelegate('resetTracking');
+					}
+				},
+			
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
 //will also update a .numChanges selector with the number of elements within the context that have edited on them.
 //will also 'enable' the parent button of that class.
 // ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
-// ** 201334 -> instead of applying the tracking to each input, the event is delegated on to $context. This is more efficient (in terms of memory)
-
-				$context.off('click.trackform').on('click.trackform',":checkbox",function(event){
-//					app.u.dump(" -> checkbox was clicked.");
-					var $input = $(this);
-					if($input.hasClass('skipTrack')){
-//						app.u.dump(" -> skipTrack enabled.");
-						} //allows for a field to be skipped.
-					else	{
-//						app.u.dump(" -> toggling edited class.");
-						$input.toggleClass('edited');
-						app.ext.admin.u.handleSaveButtonByEditedClass($context);
-						}
-					});
-
-// * 201338 -> mouseup added to this
-// mouseup event present because a right click of 'paste' does not trigger keyup.
-				$context.off('keyup.trackform').on('keyup.trackform mouseup.trackform',"input, textarea",function(event){
-					var $input = $(this);
-					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
-					else if($input.is(':checkbox'))	{
-//handled in it's own delegation above. technically, a checkbox could be triggered by a space bar.
-						}
-					else	{
-						$input.addClass('edited');
-						app.ext.admin.u.handleSaveButtonByEditedClass($context);
-						}
-					});
-
-				$context.off('change.trackform').on('change.trackform',"select, :radio",function(event){
-					var $input = $(this);
-					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
-					else	{
-						if($input.is(':radio'))	{
-							$("[name='"+$input.attr('name')+"']",$input.closest('form')).removeClass('edited'); //remove edited class from the other radio buttons in this group.
-							}
-						$input.addClass('edited');
-						app.ext.admin.u.handleSaveButtonByEditedClass($context);
-						}
-					});					
+//*** 201344 -> code moved into anydelegate.
+				$context.anydelegate({trackEdits : true});
 				$context.attr('data-applied-inputtracking',true); //is attribute so we can easily inspect on the dom.
 				}, //applyEditTrackingToInputs
 
@@ -3762,160 +3688,9 @@ One example would be if data-anytab is set on the form, it'll load hte # of chan
 
 
 
-			handleFormConditionalDelegation : function($container)	{
-//events don't seem to be bubbling like i expected. so within each event handler, move up the dom to the target element (this is the reason for the 'closest')
-				$container.on('keyup',function(e)	{
-//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-					if(e.target.nodeName.toLowerCase() == 'input'){
-						var $input = $(e.target);
-						
-						if($input.data('input-format'))	{
-
-							if($input.data('input-format').indexOf('uppercase') > -1)	{
-								$input.val($input.val().toUpperCase());
-								}
-							
-							if($input.data('input-format').indexOf('alphanumeric') > -1)	{
-								$input.val($input.val().replace(/\W/, '','g'));
-								}							
-							
-							if($input.data('input-format').indexOf('pid') > -1)	{
-								$input.val($input.val().replace(/[^\w\-_]+/, '','g'));
-								}
-							
-							}
-						}
-					});
-				
-				$container.on('click','[data-show-selector]',function(e)	{
-					var $ele = $(e.target);
-					if($ele.attr('data-show-selector'))	{}
-					else	{
-						$ele = $ele.closest("[data-show-selector]");
-						}
-//only animate if it is hidden.
-					if($($ele.attr('data-show-selector'),$container).is(':visible'))	{}
-					else	{
-						$($ele.attr('data-show-selector'),$container).slideDown();
-						}
-					});
-				$container.on('click','[data-toggle-class]',function(e)	{
-					var $ele = $(e.target);
-					if($ele.attr('data-toggle-class'))	{}
-					else	{
-						$ele = $ele.closest("[data-toggle-class]");
-						}
-					$container.toggleClass($ele.attr('data-toggle-class'));
-					});
-				$container.on('click','[data-hide-selector]',function(e)	{
-					var $ele = $(e.target);
-					if($ele.attr('data-hide-selector'))	{}
-					else	{
-						$ele = $ele.closest("[data-hide-selector]");
-						}
-//only hide if not already hidden.
-					if($($ele.attr('data-show-selector'),$container).is(':visible'))	{$($ele.attr('data-show-selector'),$container).slideUp();}
-					});
-				
-				$container.on('click','[data-toggle]',function(e)	{
-					var $ele = $(e.target);
-					
-					
-					if($ele.is(':checked'))	{
-						$($ele.attr('data-show-selector'),$container).slideDown();
-						}
-					else if(!$ele.is(':checked') && $($ele.attr('data-show-selector'),$container).is(':visible'))	{
-						$($ele.attr('data-hide-selector'),$container).slideUp();
-						}
-					else	{
-						//to get here, checkbox is checked and selector is already visible OR unchecked and already hidden.
-						}
-					});
-// !!! this should have a selector in the scond param but needs testing against existing use cases (supply chain, ebay ,etc)
-// aaarrrgghh.  I hate being rushed. this'll need to be rewritten to be more efficient when time permits.
-				$container.on('click',function(e){
-					var	$ele = $(e.target)
-//					app.u.dump(" -> e.target.nodeName.toLowerCase(): "+e.target.nodeName.toLowerCase());
-					if($ele.is(':radio') || $ele.is(':checkbox'))	{
-
-						$($ele.data('panel-selector'),$container).hide(); //hide all panels w/ matching selector.
-						if(!$ele.data('show-panel'))	{} //no panel defined. do nada
-						else if($ele.is(':checkbox') && !$ele.is(':checked'))	{} //is an unchecked checkbox. do nada
-						else if($ele.data('show-panel'))	{
-							var panels = new Array();
-							if($ele.data('show-panel').indexOf(','))	{panels = $ele.data('show-panel').split(',')}
-							else {panels.push($ele.data('show-panel'))};
-							for(var i = 0; i < panels.length; i += 1)	{
-								$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
-								}
-							}
-						
-						}
-					else	{
-						if(e.target.nodeName.toLowerCase() == 'option' || e.target.nodeName.toLowerCase() == 'select'){
-//						app.u.dump('is option or select');
-//FF registers a click on the option. Chrome on the select.
-//to be consistent, put select into focus.						
-						if(e.target.nodeName.toLowerCase() == 'option'){
-							$ele = $ele.closest('select');
-							var $option = $('option:selected',$ele);
-							var panels = new Array();
-							if($option.data('show-panel') && $option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
-							else {panels.push($option.data('show-panel'))};
-							for(var i = 0; i < panels.length; i += 1)	{
-								$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
-								}
-							}
-//						app.u.dump(" -> $ele.is('select'): "+$ele.is('select'));
-//						app.u.dump(" -> $ele.data('panel-selector'): "+$ele.data('panel-selector'));
-/*
-panel-selector:
-on a select, set data-panel-selector=".someClass"
-on each option, set data-show-panel=""
-on each panel, which MUST be within the same form, set data-panel-id="" where the value matches the data-show-panel set in the option.
-so when the option with data-show-panel="supplierShippingConnectorGeneric" is selected, the panel with data-panel-id="supplierShippingConnectorGeneric" is displayed
-and all .someClass are hidden (value of data-panel-selector)
-
-*/
-							if($ele.data('panel-selector'))    {
-								
-					
-								$($ele.data('panel-selector'),$container).hide(); //hide all panels w/ matching selector.
-								var $option = $('option:selected',$ele);
-								if(!$option.data('show-panel'))	{} //no panel defined. do nada
-								else if($option.data('show-panel'))	{
-									var panels = new Array();
-									if($option.data('show-panel').indexOf(','))	{panels = $option.data('show-panel').split(',')}
-									else {panels.push($option.data('show-panel'))};
-									for(var i = 0; i < panels.length; i += 1)	{
-										$("[data-panel-id='"+panels[i]+"']",$container).show(); //panel defined and it exists. show it.
-										}
-									}
-								else	{
-									$container.anymessage({'message':"The option selected has a panel defined ["+$option.data('show-panel')+"], but none exists within the form specified.",'gMessage':true}); //panel defined but does not exist. throw error.
-									}
-								}
-							}
-						}
-					});				
-//after adding the listeners, need to trigger some clicks.
-
-//trigger the hide/show panel on select options.
-				$("select[data-panel-selector]",$container).each(function(){
-					if($('option:selected',$(this)).data('show-panel'))	{
-						$('option:selected',$(this)).trigger('click');
-						}
-					});
-
-				$container.on('change',':input',function(e){
-					var $ele = $(e.target);
-					var $option = $(":selected",$ele);
-					if($option.data('change-input'))	{
-						app.u.dump(" -> $option.data('change-newval'): "+$option.data('change-newval'));
-						$("[name='"+app.u.jqSelector('',$option.data('change-input'))+"']",$container).val($option.data('change-newval'))
-						}
-					});
-
+			handleFormConditionalDelegation : function($context)	{
+//*** 201344 -> code moved into anydelegate.
+				$context.anydelegate({trackEdits : true});
 				},
 
 
