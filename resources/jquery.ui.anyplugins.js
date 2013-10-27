@@ -321,15 +321,17 @@ pass in an event name and a function and it will be added as an eventAction.
 
 		resetTracking : function()	{
 			$('.edited',this.element).removeClass('edited');
-			var $button = $("[data-app-role='saveButton']",$context);
+			var $button = $("[data-app-role='saveButton'], [data-app-role='masterSaveButton']",this.element);
 			$('.numChanges',$button).text("");
 			$button.removeClass('ui-state-highlight');
-			if($button.hasClass('ui-button'))	{
-				$button.button("disable")
-				}
-			else	{
-				$button.attr('disabled','disabled');
-				}
+			$button.each(function(){
+				if($(this).hasClass('ui-button'))	{
+					$(this).button("disable")
+					}
+				else	{
+					$(this).attr('disabled','disabled');
+					}
+				});
 			},
 
 		_handleAppEvents : function($CT,ep)	{
@@ -1327,7 +1329,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
 	
 				this.$input = $input;
-				$label.data('anycb',true).css({'min-height':'20px','cursor':'pointer'}); // allows for plugin to check if it's already been run on this element.
+				$label.data('anycb',true).css({'min-height':'24px','cursor':'pointer'}); // allows for plugin to check if it's already been run on this element.
 				self.span = $span; //global (within instance) for easy reference.
 //				self.input = $input;//global (within instance) for easy reference.
 

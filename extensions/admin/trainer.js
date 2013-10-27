@@ -50,18 +50,21 @@ var admin_trainer = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showTrainer : function($target,slidesArr)	{
-				slidesArr = ["trainer_whatusell"];
+				$target.removeData('slides');
+				slidesArr = ["trainer_yourBusiness","trainer_whatYouSell"];
+				
+				$target.data('slides').attr('data-app-role','trainerContainer');
 				if($target instanceof jQuery && typeof slidesArr == 'object' && slidesArr.length > 0)	{
 					for(var i = 0,L = slidesArr.length; i < L; i += 1)	{
+						app.u.dump(i+"). "+slidesArr[i]);
 						$("<div \/>").addClass((i == 0 ? "" : "displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
 							'templateID':slidesArr[i],
 							'data' : app.ext.admin.u.dpsGet('trainer',slidesArr[i]) || {},
 							'showLoading':false
 							}).appendTo($target);
 						}
-					app.ext.admin_trainer.u.handleTrainerResources($target);
-					app.u.handleEventDelegation($target);
-					app.ext.admin.u.handleFormConditionalDelegation($target);
+					app.ext.admin_trainer.u.handleTrainerArticles($target);
+					$target.anydelegate();
 					app.u.handleButtons($target);
 					}
 				else	{
@@ -87,8 +90,8 @@ var admin_trainer = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			handleTrainerResources : function($context)	{
-				$("[data-app-role='trainerResources']",$context).find('article').each(function(){
+			handleTrainerArticles : function($context)	{
+				$("[data-app-role='trainerArticles']",$context).find('article').each(function(){
 					var $resource = $(this);
 					if($resource.data('resource-type'))	{
 						$resource.addClass('resource ui-widget-content ui-corner-all')
@@ -100,7 +103,7 @@ var admin_trainer = function() {
 						}
 					else if($resource.data('resource-type'))	{
 						$resource.anycontent({
-							templateID : 'trainerResourceTemplate_'+$resource.data('resource-type'),
+							templateID : 'trainerArticleTemplate_'+$resource.data('resource-type'),
 							data : $resource.data(),
 							showLoading: false
 							});

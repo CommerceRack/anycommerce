@@ -1,87 +1,70 @@
-
 <!--
 
-if clicking a checkbox reveals additional inputs directly below the checkbox itself, apply  to/around the inputs to indent them.
-
-<div id='trainerPanelTemplate' class='trainer ui-widget ui-corner-all'>
-	<div class='ui-widget-header ui-corner-top'>This is the title</div>
-	<div class='ui-widget-content contentContainer clearfix'>
-
-		<section class='staticContent'>
-		static form content here.
-		</section>
-		
-		<section class='dynamicContent'>
-		dynamic form content here
-		</section>
-	</div>
-
-	<section class='navAndResources ui-widget-content ui-corner-bottom'>
-		<div class='resources'>videos</div>
-		<div class='navigation'>
-			<button>Previous</button>
-			<button>Next</button>
-		</div>
-	</section>
-
-</div>
-
+Article templates
 
 -->
 
 
 
 
+<div id='trainerArticleTemplate_video' class='trainerArticleVideo'>
+	<div class='videoThumbnail'><img data-bind="var:resource(youtubeid); format:youtubeThumbnail; extension:admin_trainer;" width='120' height='90' /></div>
+	<hgroup class='videoAttribs'>
+		<h5 data-bind="var:resource(title); format:text;"></h5>
+		<h6 data-bind="var:resource(runtime); format:text;"></h6>
+	</hgroup>
+</div>
 
-<div id='trainer_whatusell' class='trainer ui-widget ui-corner-all'>
+
+
+
+<!--
+
+Blank trainer template.  Copy this and paste near bottom of this file. change content as needed. change nothing else.
+
+in app-admin, there's a style_guidelines.txt file. read it before continuing.
+
+The NAME is important. should be trainer_someCamelCaseNameThatSaysConsiselyWhatThisTrainerIsFor
+-->
+
+
+<div id='trainer_NAME' class='trainer ui-widget ui-corner-all'>
 <form action='#' onsubmit="return false">
-	<div class='ui-widget-header ui-corner-top'>This is the title</div>
+	<h2 class='ui-widget-header ui-corner-top stdPadding'><!-- title goes here --></h2>
 	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
 
 		<section class='staticContent boxModelBorder'>
 
-
-<label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
-
-<label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
-
-<label ><input type='checkbox' name='selling_subscriptions' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
-
-<label ><input type='checkbox' name='selling_has_bricknmortar'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
-
+<!--
+Content that does not change goes here.
+The one exception is if the content is shown/hidden based on a selection in a previous step.
+-->
 
 		</section>
 		
 		<section class='dynamicContent boxModelBorder'>
 
-<div class='trainerSellProduct displayNone ' data-panel-id='trainerSellProduct'>
-	<label><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
-</div>
-
-
-<div class='trainerSellServices displayNone' data-panel-id='trainerSellServices'>
-	<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
-	<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
-</div>
-
-<div class='trainerSellSubscriptions displayNone' data-panel-id='trainerSellSubscriptions'>				
-	<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
-	<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
-</div>
+<!--
+Content that appears as a result of making a selection goes here.
+The selection could have been made in this trainer or a previous one.
+-->
 
 		</section>
 	</div>
 
-	<section class='navAndResources ui-widget-content ui-corner-bottom'>
-		<div class='resources stdPadding' data-app-role='trainerResources'>
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
 		
-<article data-runtime='42:15' data-title="This is the title" data-youtube-id='SjqaTHPHrxI' data-resource-type='video'></article>
-<article class='showIfDeveloper' data-title="This is the title" data-resource-type='html'>This content would show up.</article>
-		
-		</div>
 		<div class='navigation'>
-			<button>Previous</button>
-			<button>Next</button>
+			<button class='applyButton'>Previous</button>
+			<button class='applyButton'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!--
+articles. These may be shown or hidden based on selections made in this trainer or a previous step.
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-resource-type='video'></article>
+<article class='showIfDeveloper' data-title="This is the title" data-resource-type='html'>This content would show up.</article>
+-->	
 		</div>
 	</section>
 </form>
@@ -89,11 +72,142 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 
 
-<div id='trainerResourceTemplate_video'>
-	<img data-bind="var:resource(youtube-id); format:youtubeThumbnail; extension:admin_trainer" />
-	<h5 data-bind="var:resource(title); format:text;"></h5>
-	<h6 data-bind="var:resource(runtime); format:text;"></h6>
+
+
+
+<div id='trainer_yourBusiness' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Your Business</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>Which best describes your business? <span class='hint'>(check all that apply)</span></p>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample' name='bizdesc' value='is_new_business' />This is a new endeavor (no products, images)</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample,trainerImportMethod_scrape,trainerImportMethod_csv,trainerImportMethod_scratch' name='bizdesc' value='is_existing_business' />I have existing infrastructure online already</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_sample' name='bizdesc' value='is_evaluating' />I'm just evaluating this</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_a_consultant' />I'd like a consultant to help me set this up for me</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_none_apply' />None of these apply to me</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='floatedSubgroup trainerImportMethods displayNone' data-panel-id='trainerImportMethod_container' data-app-role='trainerDataImportContainer'>
+				<p>How would you like to bring in your product data?</p>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_sample'><input type='checkbox' name='WANT_SAMPLEDATA'>I'd like some sample data to test with</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scrape'><input type='checkbox' value='WANT_SCRAPE'>Try and import my existing site</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_csv'><input type='checkbox' value='WANT_CSV'>I'll import my data</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scratch'><input type='checkbox' value='WANT_SCRATCH'>I'd like to create all my data from scratch</label>
+			</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		<div class='navigation'>
+			<button class='applyButton'>Previous</button>
+			<button class='applyButton'>Next</button>
+		</div>
+		<div class='resources' data-app-role='trainerArticles'>
+		
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-resource-type='video'></article>
+<article class='showIfDeveloper' data-title="This is the title" data-resource-type='html'>This content would show up.</article>
+		
+		</div>
+	</section>
+</form>
 </div>
+
+
+
+
+
+
+<div id='trainer_whatYouSell' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>What You Sell</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+
+<p>Alright let's figure out what you sell, and how you're currently selling.  Check all that apply.</p>
+
+<label ><input type='checkbox' name='selling_product' data-input-change="panel-selector" data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
+	
+<label ><input type='checkbox' name='selling_services' data-input-change="panel-selector" data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
+
+<label ><input type='checkbox' name='selling_subscriptions' data-input-change="panel-selector" data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
+
+<label ><input type='checkbox' name='selling_has_bricknmortar' data-input-change="panel-selector" data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
+
+
+
+
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+<div class='trainerSellProduct displayNone' data-panel-id='trainerSellProduct'>
+	<label ><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+</div>
+
+<div class='trainerSellServices displayNone ' data-panel-id='trainerSellServices'>
+	<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
+	<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
+</div>
+
+
+<div class='trainerSellSubscriptions displayNone ' data-panel-id='trainerSellSubscriptions'>				
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
+</div>
+
+<div class='trainerSellHasBricknMortar displayNone ' data-panel-id='trainerSellHasBricknMortar'>
+	<p>What type of store(s) do you have?</p>
+	<label><input type='checkbox' value='retailer_attached_warehouse'>Single store with attached warehouse</label>
+	<label><input type='checkbox' value='retailer_regional'>One or more stores in a regional area</label>
+	<label><input type='checkbox' value='retailer_national'>Nationwide retailer</label>
+	
+	<p>Tell us about your point of sale solution</p>
+	<label><input type='checkbox' value='pos_need'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
+	<label><input type='checkbox' value='pos_has'>We'd like to integrate with our existing point of sale</label>
+	
+	<p>Are you interested in offering retail clients self checkout?</p>
+	<label><input type='radio' name='pos_selfcheckout' value='yes'>Yes</label>
+	<label><input type='radio' name='pos_selfcheckout' value='no'>Nos</label>
+</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		<div class='navigation'>
+			<button class='applyButton'>Previous</button>
+			<button class='applyButton'>Next</button>
+		</div>
+		<div class='resources' data-app-role='trainerArticles'>
+		
+		
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
 
 
 
@@ -143,80 +257,6 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 
 
 
-	<fieldset class='displayNone' data-app-role='trainerStep2'>
-		<legend>Step 2</legend>
-		
-		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
-			<div class='floatedSubgroup'>
-				<p>Which best describes your business? <span class='hint'>(check all that apply)</span></p>
-				<label><input type='radio' data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample' name='bizdesc' value='is_new_business' />This is a new endeavor (no products, images)</label>
-				<label><input type='radio' data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample,trainerImportMethod_scrape,trainerImportMethod_csv,trainerImportMethod_scratch' name='bizdesc' value='is_existing_business' />I have existing infrastructure online already</label>
-				<label><input type='radio' data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_sample' name='bizdesc' value='is_evaluating' />I'm just evaluating this</label>
-				<label><input type='radio' data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_a_consultant' />I'd like a consultant to help me set this up for me</label>
-				<label><input type='radio' data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_none_apply' />None of these apply to me</label>
-			</div>
-	
-			<div class='floatedSubgroup trainerImportMethods displayNone' data-panel-id='trainerImportMethod_container' data-app-role='trainerDataImportContainer'>
-				<p>How would you like to bring in your product data?</p>
-				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_sample'><input type='checkbox' name='WANT_SAMPLEDATA'>I'd like some sample data to test with</label>
-				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scrape'><input type='checkbox' value='WANT_SCRAPE'>Try and import my existing site</label>
-				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_csv'><input type='checkbox' value='WANT_CSV'>I'll import my data</label>
-				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scratch'><input type='checkbox' value='WANT_SCRATCH'>I'd like to create all my data from scratch</label>
-			</div>
-	
-	
-	
-		</section>
-		
-	</fieldset>
-
-
-	<fieldset class='displayNone' data-app-role='trainerStep3'>
-		<legend>Step 3</legend>
-		<p>Alright let's figure out what you sell, and how you're currently selling.  Check all that apply.</p>
-	
-		<section class='questionGroup clearfix' data-app-role='trainerStep2Section1'>
-			<div class='floatedSubgroup'>
-
-				<label ><input type='checkbox' name='selling_product' data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
-					<label class='trainerSellProduct displayNone ' data-panel-id='trainerSellProduct'><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
-	
-				<label ><input type='checkbox' name='selling_services' data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
-				<div class='trainerSellServices displayNone ' data-panel-id='trainerSellServices'>
-					<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
-					<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
-				</div>
-	
-				<label ><input type='checkbox' name='selling_subscriptions' data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
-				<div class='trainerSellSubscriptions displayNone ' data-panel-id='trainerSellSubscriptions'>				
-					<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
-					<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
-				</div>
-
-				<label ><input type='checkbox' name='selling_has_bricknmortar'  data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
-			</div>
-
-
-			<div class='floatedSubgroup trainerSellHasBricknMortar displayNone ' data-panel-id='trainerSellHasBricknMortar'>
-				<p>What type of store(s) do you have?</p>
-				<label><input type='checkbox' value='retailer_attached_warehouse'>Single store with attached warehouse</label>
-				<label><input type='checkbox' value='retailer_regional'>One or more stores in a regional area</label>
-				<label><input type='checkbox' value='retailer_national'>Nationwide retailer</label>
-				
-				<p>Tell us about your point of sale solution</p>
-				<label><input type='checkbox' value='pos_need'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
-				<label><input type='checkbox' value='pos_has'>We'd like to integrate with our existing point of sale</label>
-				
-				<p>Are you interested in offering retail clients self checkout?</p>
-				<label><input type='radio' name='pos_selfcheckout' value='yes'>Yes</label>
-				<label><input type='radio' name='pos_selfcheckout' value='no'>Nos</label>
-			</div>
-
-
-		</section>
-	
-	</fieldset>
-
 	<fieldset class='displayNone' data-app-role='trainerStep4'>
 		<legend>Step 4</legend>
 	
@@ -224,7 +264,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 			<div class='floatedSubgroup'>
 				<p>Alright, now where do you sell them?</p>
 
-				<label ><input type='checkbox' name='sell_via_direct' data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
+				<label ><input type='checkbox' name='sell_via_direct' data-input-change="panel-selector" data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
 				<div class='trainerSellDirect2Consumers displayNone ' data-panel-id='trainerSellDirect2Consumers'>
 					<label><input type='checkbox' value='has_mobile_app'>I currently have a mobile app that accepts orders</label>
 					<label><input type='checkbox' value='has_mobile_website'>I currently have a mobile website that accepts orders</label>
@@ -232,10 +272,10 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				</div>
 
 				<label><input type='checkbox' name='sell_via_social' />We use social channels like Facebook, Google+, Twitter</label>
-				<label><input type='checkbox' name='sell_via_markets' data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
+				<label><input type='checkbox' name='sell_via_markets' data-input-change="panel-selector" data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
 				
-				<label ><input type='checkbox' name='sell_via_wholesale' data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
-					<label class='trainerSellWholesale displayNone ' data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
+				<label ><input type='checkbox' name='sell_via_wholesale' data-input-change="panel-selector" data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
+					<label class='trainerSellWholesale displayNone ' data-input-change="panel-selector" data-panel-id='trainerSellWholesale'><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
 
 				<label><input type='checkbox' name='sell_via_phone' />We have sales representatives who follow up on inbound leads</label>
 
@@ -268,7 +308,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='payments_3pc_ppec'>PayPal</label>
 				<label><input type='checkbox' name='payments_3pc_cba' >Checkout by Amazon</label>
 				<label><input type='checkbox' name='payments_3pc_gw' >Google Wallet</label>		
-				<label><input type='checkbox' name='payments_cc'  data-panel-selector='.trainerCCproviders' data-show-panel='trainerCCproviders'>Credit Card</label>	
+				<label><input type='checkbox' name='payments_cc' data-input-change="panel-selector" data-panel-selector='.trainerCCproviders' data-show-panel='trainerCCproviders'>Credit Card</label>	
 				<div class='trainerCCproviders displayNone ' data-panel-id='trainerCCproviders'>
 					<label><input type='checkbox' name='cc_pp_payflowpro'>Paypal Payflow Pro</label>
 					<label><input type='checkbox' name='cc_pp_websitepayments'>Paypal Website Payments Pro</label>
@@ -293,7 +333,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<p>Shipping Costs <span class='hint'>(choose all that apply)</span></p>
 
 				<label><input type='checkbox' name='shipping_free'>Free shipping on all product</label>
-				<label><input type='checkbox' name='shipping_primarycarrier'  data-panel-selector='.trainerPrimaryCarriers' data-show-panel='trainerPrimaryCarriers'>Rate based parcels with a common carrier (FedEx, UPS, USPS)</label>
+				<label><input type='checkbox' name='shipping_primarycarrier' data-input-change="panel-selector" data-panel-selector='.trainerPrimaryCarriers' data-show-panel='trainerPrimaryCarriers'>Rate based parcels with a common carrier (FedEx, UPS, USPS)</label>
 				
 				<div class='trainerPrimaryCarriers displayNone ' data-panel-id='trainerPrimaryCarriers'>
 					<label><input type='checkbox' name='shipping_fedex'>FedEx</label>
@@ -334,7 +374,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='social_googleplus'>We use google+</label>
 				<label><input type='checkbox' name='social_twitter'>We use twitter</label>
 				<label><input type='checkbox' name='social_youtube'>We use youtube to host informational videos</label>
-				<label><input type='checkbox' name='social_email' data-panel-selector='.trainerEmailSolutions' data-show-panel='trainerEmailSolutions'>We currently use an Email Service Provider (ESP)</label>
+				<label><input type='checkbox' name='social_email' data-input-change="panel-selector" data-panel-selector='.trainerEmailSolutions' data-show-panel='trainerEmailSolutions'>We currently use an Email Service Provider (ESP)</label>
 			</div>
 			
 			<div class='floatedSubgroup trainerEmailSolutions displayNone ' data-panel-id='trainerEmailSolutions'>
@@ -363,7 +403,7 @@ if clicking a checkbox reveals additional inputs directly below the checkbox its
 				<label><input type='checkbox' name='cloud_zendesk'>Zen Desk</label>
 				<label><input type='checkbox' name='cloud_kount'>Kount</label>
 				<label><input type='checkbox' name='cloud_googleapps'>Google Apps</label>
-				<label><input type='checkbox' name='cloud_others' data-panel-selector='.trainerCloudOther' data-show-panel='trainerCloudOther'>Others</label>
+				<label><input type='checkbox' name='cloud_others' data-input-change="panel-selector" data-panel-selector='.trainerCloudOther' data-show-panel='trainerCloudOther'>Others</label>
 			</div>
 
 			<div class='floatedSubgroup trainerCloudOther displayNone ' data-panel-id='trainerCloudOther'>

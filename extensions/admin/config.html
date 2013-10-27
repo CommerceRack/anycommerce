@@ -3148,7 +3148,7 @@ Coming Soon
 	
 	<label>
 		<span>Type</span>
-		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype">
+		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
 			<option value='DOMAIN-DELEGATE' data-show-panel='domainCreateDomaintypeDelegate'>Delegate domain</option>
 			<option value='DOMAIN-RESERVE'>Reserve test domain</option>
 		</select>
@@ -3186,7 +3186,7 @@ Coming Soon
 <!-- the save for this looks for specific host types to generate the macro. don't change these without updating admin_config.u.domainAddUpdateHost -->
 	<label>
 		<span>Host Type</span>
-		<select name='HOSTTYPE' data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
+		<select name='HOSTTYPE' data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
 			<option value='SITE' data-show-panel='domainForceHTTPS' data-bind="var:domain(DOMAINNAME); format:text; posttext: project;">Domain project</option>
 			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Other project reference</option>
 <!--			<option value='ADMIN'>Admin</option> -->
@@ -3372,7 +3372,7 @@ Coming Soon
 			
 			<label>
 				<span>Configuration</span>
-				<select name='TYPE'  data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
+				<select name='TYPE' data-input-change="panel-selector" data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
 					<option value=''>None</option>
 					<option value='MX' data-show-panel='domainEmailConfigurationMX'>MX</option>
 					<option value='GOOGLE'>Google</option>
@@ -3545,7 +3545,7 @@ Coming Soon
 
 		<label>
 			<span>Type</span>
-			<select name='PAYMETHOD' data-panel-selector=".billingHistoryPaymentAddType" class='skipTrack'>
+			<select name='PAYMETHOD' data-input-change="panel-selector" data-panel-selector=".billingHistoryPaymentAddType" class='skipTrack'>
 				<option value="CREDIT" data-show-panel='billingHistoryPaymentAddTypeCREDIT'>Credit Card</option>
 				<option value="ECHECK" data-show-panel='billingHistoryPaymentAddTypeECHECK'>eCheck</option>
 <!--				<option value="PAYPAL">Paypal</option>

@@ -1,4 +1,4 @@
-.trainer legend	{display:none;} /* the legend isn't used, but it is populated for readability */
+
 .trainer .questionGroup	{margin-bottom:24px;}
 
 .trainer .floatedSubgroup	{margin-right:48px; float:left;}
@@ -9,8 +9,20 @@
 
 .trainer .contentContainer	{display:block;}
 
-.trainer .navAndResources	{height:125px; border-top-width:0;}
-.trainer .resources	{width:79%; float:left;}
+.trainer .navAndArticles	{height:125px; border-top-width:0;}
+.trainer .resources	{width:80%; float:left; overflow:auto; max-height:130px;}
 .trainer .navigation	{width:20%; float:right; text-align:right;}
 
-.trainer .resource	{height:100px; width:150px; float:left; margin-right:24px; overflow:hidden;}
+.trainer .resource	{height:90px; width:120px; float:left; overflow:hidden; margin:12px; position:relative;}
+
+.trainerArticleVideo .videoThumbnail	{position:absolute; top:0; left:0;}
+.trainerArticleVideo .videoAttribs	{
+	position:absolute; bottom:0; left:0; right:0; 
+	background:#ffffff; 
+	font-size:.85em; 
+	-moz-opacity: 0.70;
+	opacity: 0.70;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=70);
+	}
+
+.trainerArticleVideo .videoAttribs h5, .trainerArticleVideo .videoAttribs h6	{font-weight:normal; color:#000000;}

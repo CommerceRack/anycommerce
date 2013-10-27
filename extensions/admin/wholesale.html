@@ -374,7 +374,7 @@
 	
 				
 	<label><span>Role</span>
-	<select name='FORMAT' required='required' data-panel-selector=".supplierFormatPanel">
+	<select name='FORMAT' required='required' data-input-change="panel-selector" data-panel-selector=".supplierFormatPanel">
 		<option value='NONE'  data-show-panel='supplierFormatVendorID'>None / Disabled</option>
 		<option value='STOCK' data-show-panel='supplierFormatVendorID'>Stock/Vendor : orders are shipped from vendor to your warehouse(s)</option>
 		<option value='DROPSHIP' data-show-panel='supplierFormatVendorID'>Dropship : orders will be shipped to customer out of vendors inventory</option>
@@ -600,7 +600,7 @@
 
 				<label>
 					<span>Connector:</span>
-					<select name='SHIP_CONNECTOR' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;" data-panel-selector=".supplierShippingConnector">
+					<select name='SHIP_CONNECTOR' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;" data-input-change="panel-selector" data-panel-selector=".supplierShippingConnector">
 						<option value='NONE' data-show-panel='supplierShippingConnectorNone'>None</option>
 						<option value='FREE'>Free</option>
 						<option value='FIXED' data-show-panel='supplierShippingConnectorFixed,supplierShippingConnectorHandling'>Fixed</option>
@@ -710,7 +710,7 @@
 			<fieldset data-app-role='INVENTORYSET'>
 				<label>
 					<span>Connector:</span>
-					<select name='INVENTORY_CONNECTOR' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;" data-panel-selector=".supplierInventoryConnector" data-trigger='click'>
+					<select name='INVENTORY_CONNECTOR' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;" data-input-change="panel-selector" data-panel-selector=".supplierInventoryConnector" data-trigger='click'>
 						<option value='NONE'>None</option>
 						<option value='GENERIC' data-show-panel='supplierInventoryConnectorGeneric'>Generic</option>
 						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
@@ -753,7 +753,7 @@
 
 				<label>
 					<span>Connector: </span>
-					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-panel-selector=".supplierAutomaticOrderingConnector">
+					<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-input-change="panel-selector" data-panel-selector=".supplierAutomaticOrderingConnector">
 						<option value="NONE">None</option>
 						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
 						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
@@ -764,7 +764,7 @@
 				</label>
 
 				<label><span>Version</span>
-				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;"  data-panel-selector=".supplierExportFormat">
+				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;" data-input-change="panel-selector" data-input-change="panel-selector" data-panel-selector=".supplierExportFormat">
 					<option value=''>-</option>
 					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
 					<option value='XSLT#201240'  data-show-panel='supplierExportFormatXSLT'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>

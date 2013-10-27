@@ -1522,12 +1522,13 @@ Required params include:
 						$("button[data-taskmode='edit']",$li).show();
 						}
 					else	{
-						
+						//to get here, we are in 'add' or 'edit' mode.
 						if($li.length)	{}//product is already in list.
 						else	{
 							var $li = app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
 							$li.hide();
 							$li.attr('data-pid',P.pid);
+							$li.anydelegate();
 							}
 						$taskList.prepend($li); //always put at top of the list.
 

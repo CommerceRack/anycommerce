@@ -896,7 +896,7 @@ has to be within the fieldset to for data-table to work right.
 	<fieldset class='marginBottom labelsAsBreaks'>
 		<label>
 			<span>Service</span>
-			<select name='_cmd' data-panel-selector=".debugCMDSpecifics">
+			<select name='_cmd' data-input-change="panel-selector" data-panel-selector=".debugCMDSpecifics">
 				<option value=''>please choose</option>
 				<option value='adminDebugProduct' data-show-panel='debugCMDSpecificsProduct'>Product</option>
 				<option value='adminDebugPromotion' data-show-panel='debugCMDSpecificsCommon'>Promotion</option>
@@ -918,7 +918,7 @@ has to be within the fieldset to for data-table to work right.
 		<div data-panel-id='debugCMDSpecificsCommon' class='displayNone debugCMDSpecifics'>
 			<label>
 				<span>Source</span>
-				<select name='SRC' data-panel-selector=".debugSRCSpecifics">
+				<select name='SRC' data-input-change="panel-selector" data-panel-selector=".debugSRCSpecifics">
 					<option value='CART' data-show-panel='debugSRCSpecificsCart'>Cart</option>
 					<option value='DEST' data-show-panel='debugSRCSpecificsDest'>Dest</option>
 					<option value='ORDER' data-show-panel='debugSRCSpecificsOrder'>Order</option>
