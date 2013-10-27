@@ -50,11 +50,10 @@ var admin_trainer = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showTrainer : function($target,slidesArr)	{
-				$target.removeData('slides');
 				slidesArr = ["trainer_yourBusiness","trainer_whatYouSell"];
-				
-				$target.data('slides').attr('data-app-role','trainerContainer');
 				if($target instanceof jQuery && typeof slidesArr == 'object' && slidesArr.length > 0)	{
+					$target.removeData('slides');
+					$target.data('slides',slidesArr).attr('data-app-role','trainerContainer');
 					for(var i = 0,L = slidesArr.length; i < L; i += 1)	{
 						app.u.dump(i+"). "+slidesArr[i]);
 						$("<div \/>").addClass((i == 0 ? "" : "displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
@@ -136,24 +135,50 @@ app.model.addDispatchToQ({
 				},
 			
 			navigate : function($ele,p)	{
-//app.u.dump("Navigate!");
+app.u.dump("Navigate!");
 var
-	$form = $ele.closest('form'),
-	$fieldset2hide = $('fieldset:visible:first',$form),
-	$fieldset2show = $('fieldset:hidden:first',$form);
+	$trainer = $ele.closest("[data-app-role='trainerContainer']");
+	slidesArr = $trainer.data('slides');
+	$thisTrainer = $ele.closest("[data-trainerid]");
 
-if($ele.data('verb') == 'next')	{
-	$form.prepend($fieldset2show);
-	$fieldset2show.slideDown();
-	$(':input',$fieldset2hide).attr('disabled','disabled');
-	}
-else if($ele.data('verb') == 'previous')	{
-	$fieldset2show = $fieldset2hide.prev('fieldset');
+if($trainer instanceof jQuery && $trainer.length)	{
+	if(typeof slidesArr == 'object' && slidesArr.length && $thisTrainer instanceof jQuery && $thisTrainer.length)	{
+		var thisTrainerIndex = $.inArray($thisTrainer.data('trainerid'),slidesArr);
+		if(thisTrainerIndex >= 0)	{
+
+			if($ele.data('verb') == 'next')	{
+				var $trainer2Show = $("[data-trainerid='"+slidesArr[(thisTrainerIndex+1)]+"']",$trainer);
+				$trainer.prepend($trainer2Show);
+				$trainer2Show.slideDown();
+				$(':input',$thisTrainer).attr('disabled','disabled');
+				}
+			else if($ele.data('verb') == 'previous')	{
+				
+				}
+			else	{
+				$trainer.anymessage({'message':'In admin_trainer.e.navigate, invalid verb set on trigger element.','gMessage':true});
+				}
+
+			
+			}
+		else	{
+			//the trainer in focus couldn't be found in the list of trainers. odd.
+			$trainer.anymessage({"message":"In admin_trainer.e.navigate, slidesArr has no length.","gMessage":true});
+			}
+		}
+	else	{
+		//something necessary could not be found.
+		$trainer.anymessage({"message":"In admin_trainer.e.navigate, could slides array is not an object/has no length ["+(typeof slidesArr)+"] or thisTrainer isn't valid/has no length ["+($thisTrainer instanceof jQuery)+"].","gMessage":true});
+		}
 	}
 else	{
-	$form.anymessage({'message':'In admin_trainer.e.navigate, invalid verb set on trigger element.','gMessage':true});
+	// couldn't find the trainer container. That's no good.
+	$('#globalMessaging').anymessage({"message":"In admin_trainer.e.navigate, could not ascertain the trainer container.","gMessage":true});
 	}
 
+
+
+/*
 if($fieldset2show.length)	{
 	if($('fieldset:hidden',$form).length === 0)	{
 		$("[data-verb='next']",$form).button('disable');
@@ -165,7 +190,7 @@ if($fieldset2show.length)	{
 		$("[data-app-role='trainerNavButtons']",$form).find('button').button('enable');
 		}
 	}
-
+*/
 				}
 			} //e [app Events]
 		} //r object.
