@@ -161,7 +161,7 @@ if($trainer instanceof jQuery && $trainer.length)	{
 				var $trainer2Show = $("[data-trainerid='"+slidesArr[(thisTrainerIndex+1)]+"']",$trainer);
 				$trainer.prepend($trainer2Show);
 				$trainer2Show.slideDown();
-				$(':input',$thisTrainer).attr('disabled','disabled');
+//				$(':input',$thisTrainer).attr('disabled','disabled');
 				$ele.closest("[data-app-role='trainerNavigation']").find('button').button('disable'); //disable the nav buttons in the current trainer.
 
 				//disable the 'next' button in the last trainer slide.

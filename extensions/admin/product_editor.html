@@ -992,7 +992,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 			<div class='clearfix marginBottom'>
 				
-				<div class='floatLeft marginRight labelsAsBreaks'>
+				<div class='floatLeft marginRight labelsAsBreaks smallButton'>
 					<label >
 						<span>eBay category 1</span>
 						<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
@@ -1010,12 +1010,12 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				
 				<div class='floatLeft marginRight labelsAsBreaks' data-app-role='ebayStoreCategoryContainer'>
 					<label>
-						<span>eBay Store Category</span>
+						<span>eBay store category</span>
 						<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 					</label>
 					
 					<label>
-						<span>eBay Store Category 2</span>
+						<span>eBay store category 2</span>
 						<select name='ebay:storecat2' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
 					</label>
 				</div>
@@ -1051,56 +1051,56 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<legend>Auction Configuration</legend>
 				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
 				<div class='clearfix marginBottom'>
-				<div class='threeColumn floatLeft'>
-		
-					<label>
-						<span>Duration</span>
-						<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-							<option value="">-- use profile --</option>
-							<option value="3">3 Day</option>
-							<option value="5">5 Day</option>
-							<option value="7">7 Day</option>
-							<option value="10">10 Day</option>
-						</select>
-					</label>
+					<div class='threeColumn floatLeft labelsAsBreaks'>
 			
-					<label>
-						<span>Auction qty</span>
-						<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
-					</label>
-		
-					<label>
-						<span>eBay gallery</span>
-						<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
-							<option value="">-- use profile --</option>
-							<option value="0">never</option>
-							<option value="1">auctions only</option>
-							<option value="2">fixed price only</option>
-							<option value="3">auction + fixed price</option>
-							<option value="8">store only</option>
-							<option value="11">any type</option>
-						</select>	
-					</label>
-		
-				</div>
+						<label>
+							<span>Duration</span>
+							<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+								<option value="">-- use profile --</option>
+								<option value="3">3 Day</option>
+								<option value="5">5 Day</option>
+								<option value="7">7 Day</option>
+								<option value="10">10 Day</option>
+							</select>
+						</label>
 				
-				<div class='threeColumn floatLeft'>
+						<label>
+							<span>Auction qty</span>
+							<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+						</label>
+			
+						<label>
+							<span>eBay gallery</span>
+							<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+								<option value="">-- use profile --</option>
+								<option value="0">never</option>
+								<option value="1">auctions only</option>
+								<option value="2">fixed price only</option>
+								<option value="3">auction + fixed price</option>
+								<option value="8">store only</option>
+								<option value="11">any type</option>
+							</select>	
+						</label>
+			
+					</div>
 				
-					<label>
-						<span>Starting bid</span>
-						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
-					</label>
+					<div class='threeColumn floatLeft labelsAsBreaks'>
 					
-					<label>
-						<span>Buy it now</span>
-						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
-					</label>
-					<label>
-						<span>Reserve price</span>
-						$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
-						<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
-					</label>
-				</div>
+						<label>
+							<span>Starting bid</span>
+							$<input type="number" step='.01' min='0' size="6" value="" class='money' name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
+						</label>
+						
+						<label>
+							<span>Buy it now</span>
+							$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
+						</label>
+						<label>
+							<span>Reserve price</span>
+							$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
+							<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+						</label>
+					</div>
 				</div>
 		
 				<div class='buttonset clearfix'>
@@ -1123,7 +1123,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			
 			<div data-app-role='showProductWithoutVariations'>
 			<label>
-				<span>Fixed price</span>
+				<span>Fixed price </span>
 				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 			</label>
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
@@ -1132,10 +1132,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			</label>
 			</div>
 
-			<label data-bind="var: product(ebay:ts); format:showIfSet;">
-				<div class="hint">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
-			</label>
-
+			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
 		
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
@@ -1149,23 +1146,19 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 				</select>
 			</label>
 
-			<label data-bind="var: product(ebay:ts); format:showIfSet;">
-				<div class='buttonset'>
-				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview Syndication</button>
+			<div data-bind="var: product(ebay:ts); format:showIfSet;" class='buttonset marginTop marginBottom'>
+				<button class='applyButton' data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" >Preview Syndication</button>
 				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
 				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-SYNDICATION">Create Syndication</button>
-				</div>
 				<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
-			</label>
+			</div>
 
 	
-			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
-				<div class='buttonset'>
+			<div class='buttonset' data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview Fixed</button>
 				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-FIXED">Test Fixed</button>
 				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-FIXED">Create Fixed</button>
-				</div>
-			</label>
+			</div>
 		</fieldset>
 
 

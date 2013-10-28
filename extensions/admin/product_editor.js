@@ -2721,11 +2721,11 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 
 			
 			adminProductMacroExec : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.adminProductMacroExec (Click!)");
+//				app.u.dump("BEGIN admin_prodEdit.e.adminProductMacroExec (Click!)");
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');
-				app.u.dump(" -> $ele.data('macro-cmd'): "+$ele.data('macro-cmd'));
+//				app.u.dump(" -> $ele.data('macro-cmd'): "+$ele.data('macro-cmd'));
 				if($ele.data('macro-cmd') && pid)	{
 
 					if($ele.is('button'))	{
