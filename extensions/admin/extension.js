@@ -2708,8 +2708,29 @@ else	{
 				},
 				
 				
-				
-				
+//show YouTubeVideo in a dialog.
+			showYTVInDialog : function(videoID,vars){
+				if(videoID)	{
+					vars = vars || {};
+					var $D = $("<div \/>",{'id':'ytv_'+videoID});
+					if(vars.title)	{
+						$D.attr('title',vars.title);
+						}
+					$D.append("<iframe width='560' height='315' src='https://www.youtube.com/embed/"+videoID+"?autoplay=1' frameborder='0' allowfullscreen></iframe>");
+					$D.appendTo(document.body);
+					$D.dialog({
+						width: 600,
+						dialog : false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy'); //remove this from the dom entirely on close. consequently, it also stops the video 
+							$(this).intervaledEmpty(1000,1);
+							}, //will remove from dom on close
+						})
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.a.showYTVInDialog, no videoID passed.","gMessage":true});
+					}
+				},
 				
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data,selectors)	{
@@ -3428,7 +3449,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
-				app.u.dump("BEGIN admin.u.showHeader");
+//				app.u.dump("BEGIN admin.u.showHeader");
 //hide all preView and login data.
 				$('#appLogin').hide(); 
 				$('#appPreView').hide();
@@ -3520,7 +3541,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //uses whats in the hash first, then the default page passed in.
 //if you want to target a specific page, change the hash before executing this function.
 			whatPageToShow : function(defaultPage)	{
-				app.u.dump("BEGIN admin.u.whatPageToShow");
+//				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
 					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
@@ -6239,6 +6260,9 @@ else	{
 					});
 				},
 			
+			showYTVInDialog : function($ele)	{
+				app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
+				},
 		
 			linkOffSite : function($btn)	{
 				$btn.button();

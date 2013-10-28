@@ -10,10 +10,11 @@
 .trainer .contentContainer	{display:block;}
 
 .trainer .navAndArticles	{height:125px; border-top-width:0;}
-.trainer .resources	{width:80%; float:left; overflow:auto; max-height:130px;}
+.trainer .articles	{width:80%; float:left; overflow:auto; max-height:130px;}
 .trainer .navigation	{width:20%; float:right; text-align:right;}
+.trainer .navigation button	{margin:12px 12px 0 0;}
 
-.trainer .resource	{height:90px; width:120px; float:left; overflow:hidden; margin:12px; position:relative;}
+.trainer .article	{height:90px; width:120px; float:left; overflow:hidden; margin:12px; position:relative;}
 
 .trainerArticleVideo .videoThumbnail	{position:absolute; top:0; left:0;}
 .trainerArticleVideo .videoAttribs	{
@@ -26,3 +27,6 @@
 	}
 
 .trainerArticleVideo .videoAttribs h5, .trainerArticleVideo .videoAttribs h6	{font-weight:normal; color:#000000;}
+
+
+.is_not_boss .hideForNotBoss	{display:none;}

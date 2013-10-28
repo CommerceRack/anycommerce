@@ -221,7 +221,7 @@ _rtag.jqObj.anydelegate({
 //This code should NOT bring the product tab into focus. That should be done by the code that executes this.
 //  -> allows this code build the product manager interface in the background so that the product task list 'add' works prior to the product editor being opened.
 			showProductManager : function(P)	{
-				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
+//				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
 				P = P || {};
 				var $target = $("#productContent");
 //				app.u.dump(" -> P:"); app.u.dump(P);

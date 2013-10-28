@@ -50,21 +50,29 @@ var admin_trainer = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showTrainer : function($target,slidesArr)	{
-				slidesArr = ["trainer_yourBusiness","trainer_whatYouSell"];
+				slidesArr = ["trainer_welcome","trainer_yourBusiness","trainer_whatYouSell","trainer_whereSell","trainer_paymentOptions","trainer_shipping","trainer_socialMedia","trainer_cloud"];
 				if($target instanceof jQuery && typeof slidesArr == 'object' && slidesArr.length > 0)	{
-					$target.removeData('slides');
-					$target.data('slides',slidesArr).attr('data-app-role','trainerContainer');
+					var $trainer = $("<div \/>").appendTo($target); //put trainer into a div so that the delegation et all is NOT added to a tabContent
+					$trainer.data('slides',slidesArr).attr('data-app-role','trainerContainer');
 					for(var i = 0,L = slidesArr.length; i < L; i += 1)	{
 						app.u.dump(i+"). "+slidesArr[i]);
-						$("<div \/>").addClass((i == 0 ? "" : "displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
+						$("<div \/>").addClass((i == 0 ? "marginBottom" : "marginBottom displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
 							'templateID':slidesArr[i],
 							'data' : app.ext.admin.u.dpsGet('trainer',slidesArr[i]) || {},
 							'showLoading':false
-							}).appendTo($target);
+							}).appendTo($trainer);
 						}
-					app.ext.admin_trainer.u.handleTrainerArticles($target);
-					$target.anydelegate();
-					app.u.handleButtons($target);
+					app.ext.admin_trainer.u.handleTrainerArticles($trainer);
+					$trainer.anydelegate();
+					app.u.handleButtons($trainer);
+
+					if(slidesArr.length == 1)	{
+						$("[data-app-role='trainerNavigation']").hide();
+						}
+					else	{
+						$("button[data-app-click='admin_trainer|navigate']:first").button('disable'); //needs to be after the handleButtons execution or button('disable') causes js error.
+						}
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_trainer.a.showTrainer, either $target not a valid jQuery instance ["+$target instanceof jQuery+"] or slidesArr not an object with length ["+typeof slidesArr+"].","gMessage":true});
@@ -91,24 +99,27 @@ var admin_trainer = function() {
 		u : {
 			handleTrainerArticles : function($context)	{
 				$("[data-app-role='trainerArticles']",$context).find('article').each(function(){
-					var $resource = $(this);
-					if($resource.data('resource-type'))	{
-						$resource.addClass('resource ui-widget-content ui-corner-all')
+					var $article = $(this);
+					if($article.data('article-type'))	{
+						$article.addClass('article ui-widget-content ui-corner-all')
 						}
 					
 					
-					if($resource.data('resource-type') == 'html')	{
+					if($article.data('article-type') == 'html')	{
 						//just show what's there.
 						}
-					else if($resource.data('resource-type'))	{
-						$resource.anycontent({
-							templateID : 'trainerArticleTemplate_'+$resource.data('resource-type'),
-							data : $resource.data(),
+					else if($article.data('article-type'))	{
+						if($article.data('article-type') == 'video')	{
+							$article.attr('data-app-click','admin|showYTVInDialog').addClass('pointer');
+							}
+						$article.anycontent({
+							templateID : 'trainerArticleTemplate_'+$article.data('article-type'),
+							data : $article.data(),
 							showLoading: false
 							});
 						}
 					else	{
-						//no resource type? uh oh.
+						//no article type? uh oh.
 						}
 					});
 				}
@@ -139,18 +150,25 @@ app.u.dump("Navigate!");
 var
 	$trainer = $ele.closest("[data-app-role='trainerContainer']");
 	slidesArr = $trainer.data('slides');
-	$thisTrainer = $ele.closest("[data-trainerid]");
+	$thisTrainer = $ele.closest("[data-trainerid]"); //the trainer that is currently open.
 
 if($trainer instanceof jQuery && $trainer.length)	{
 	if(typeof slidesArr == 'object' && slidesArr.length && $thisTrainer instanceof jQuery && $thisTrainer.length)	{
+		
 		var thisTrainerIndex = $.inArray($thisTrainer.data('trainerid'),slidesArr);
 		if(thisTrainerIndex >= 0)	{
-
 			if($ele.data('verb') == 'next')	{
 				var $trainer2Show = $("[data-trainerid='"+slidesArr[(thisTrainerIndex+1)]+"']",$trainer);
 				$trainer.prepend($trainer2Show);
 				$trainer2Show.slideDown();
 				$(':input',$thisTrainer).attr('disabled','disabled');
+				$ele.closest("[data-app-role='trainerNavigation']").find('button').button('disable'); //disable the nav buttons in the current trainer.
+
+				//disable the 'next' button in the last trainer slide.
+				if( (thisTrainerIndex + 2) == slidesArr.length){
+					app.u.dump(" --------> got here. length: "+$("button[data-app-click]",$trainer2Show).length);
+					$("button[data-verb='next']",$trainer2Show).button('disable');
+					}
 				}
 			else if($ele.data('verb') == 'previous')	{
 				
@@ -158,13 +176,12 @@ if($trainer instanceof jQuery && $trainer.length)	{
 			else	{
 				$trainer.anymessage({'message':'In admin_trainer.e.navigate, invalid verb set on trigger element.','gMessage':true});
 				}
-
-			
 			}
 		else	{
 			//the trainer in focus couldn't be found in the list of trainers. odd.
 			$trainer.anymessage({"message":"In admin_trainer.e.navigate, slidesArr has no length.","gMessage":true});
 			}
+
 		}
 	else	{
 		//something necessary could not be found.

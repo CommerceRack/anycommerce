@@ -82,6 +82,7 @@ additionally, will apply some conditional form logic.
 				app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
+				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
 				var supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
 				for(var i = 0; i < supportedEvents.length; i += 1)	{
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
@@ -107,7 +108,7 @@ additionally, will apply some conditional form logic.
 						
 						})
 					}
-				$t.addClass('eventDelegation'); //here for the debugger.
+				
 				}
 //outside the app event delegation check for backwards compatiblity.
 //the track edit delegation is removed and added in case it's run more than once, so that each edit isn't double-counted.
@@ -167,29 +168,29 @@ additionally, will apply some conditional form logic.
 				},
 
 //will hide the matching selectors. (hide-selector='.bob' will hide all class='bob' elements.
-			"hide-selector" : function($CT)	{
-				if($($ele.attr('data-hide-selector'),$CT.closest('form')).is(':hidden'))	{}
+			"hide-selector" : function($CT,$t)	{
+				if($($CT.attr('data-hide-selector'),$t).is(':hidden'))	{}
 				else	{
-					$($ele.attr('data-hide-selector'),$CT.closest('form')).slideUp();
+					$($CT.attr('data-hide-selector'),$t).slideUp();
 					}
 				},
 
 //will show the matching selectors. (show-selector='.bob' will show all class='bob' elements.
-			"show-selector" : function($CT)	{
-				if($($ele.attr('data-show-selector'),$CT.closest('form')).is(':visible'))	{}
+			"show-selector" : function($CT,$t)	{
+				if($($CT.attr('data-show-selector'),$t).is(':visible'))	{}
 				else	{
-					$($ele.attr('data-show-selector'),$CT.closest('form')).slideDown();
+					$($CT.attr('data-show-selector'),$t).slideDown();
 					}
 				},
 
-			"checked-classes" : function($CT)	{
-				$CT.closest('form').removeClass($CT.data('check-selectors'));
-				$CT.is(':checked') ? $CT.closest('form').addClass($CT.data('checked-classes')) : $CT.closest('form').removeClass($CT.data('checked-classes'));
+			"checked-classes" : function($CT,$t)	{
+				$t.removeClass($CT.data('check-selectors'));
+				$CT.is(':checked') ? $t.addClass($CT.data('checked-classes')) : $t.removeClass($CT.data('checked-classes'));
 				},
 
-			"unchecked-classes" : function($CT)	{
-				$CT.closest('form').removeClass($CT.data('check-selectors'));
-				!$CT.is(':checked') ? $CT.closest('form').addClass($CT.data('unchecked-classes')) : $CT.closest('form').removeClass($CT.data('unchecked-classes'));
+			"unchecked-classes" : function($CT,$t)	{
+				$t.removeClass($CT.data('check-selectors'));
+				!$CT.is(':checked') ? $t.addClass($CT.data('unchecked-classes')) : $t.removeClass($CT.data('unchecked-classes'));
 				},
 
 //allows for a specific panel (or sets of panels) to be turned on/off based on selection. commonly used on a select list, but not limited to that.
