@@ -1219,7 +1219,7 @@ $target.anydelegate();
 						
 						$("<button \/>").button().on('click',function(event){
 							event.preventDefault();
-							$image.attr('src','/images/blank.gif');
+							$image.attr('src','app-admin/images/blank.gif');
 							$input.val('');
 							}).text('Clear').appendTo($r);
 						}

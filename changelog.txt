@@ -10,6 +10,7 @@ ADMIN
 	feature - product editor now supports a sku-specific price per schedule (attributes panel)
 	enhancement - if inventory-able options are present, no quantity pricing will show for the product (wouldn't have worked anyway)
 	feature - ebay store category 2 is back in the product editor (ebay panel)
+	bug - in product editor -> variations -> attribs, existing values were not always populating.
 
 201342.c
 ADMIN
