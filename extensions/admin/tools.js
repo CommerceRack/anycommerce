@@ -763,7 +763,7 @@ $target.append("<br \/>");
 						})
 					app.model.addDispatchToQ({
 						'_cmd':'adminConfigMacro',
-						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+JSON.stringify(json)],
+						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
 						'_tag':	{
 							'callback' : 'showMessaging',
 							'jqObj' : $btn.closest('form'),
