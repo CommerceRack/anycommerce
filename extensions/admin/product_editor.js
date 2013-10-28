@@ -1534,7 +1534,7 @@ Required params include:
 
 //when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
-
+app.u.dump(" -> $ele.data(): "); app.u.dump($ele.data());
 							if($ele && $ele.is('tr'))	{
 								//This is the search result tr.
 								var $tmpTable = $("<table \/>"); //need a tmp table. orphan TR's are treated inconsistently between browsers.
@@ -3515,9 +3515,13 @@ app.model.dispatchThis('mutable');
 							});
 
 						$D.append(app.ext.admin_prodEdit.a.getVariationEditor('product',data,vars.pid));
+						$D.dialog('option','height',($(document.body).height() - 100));
 //a little css tuning to make this shared content look better in a modal.
 						$('hgroup',$D).hide();
 						$('section.ui-widget-content',$D).css('border-width',0);
+// There's a usability issue between the app and FireFox where after doing a ctrl+f and clicking within the variations/options box, the browser jumps to top of the scrolly div on click.
+//putting the variation options into their own scroller solved this, but made the interface more clumsy.
+//						$("[data-app-role='storeVariationsOptionsContainer']",$D).wrap($("<div \/>").css({'padding':0,'overflow':'auto','height':($D.innerHeight() - 200)}));
 
 						$D.dialog('open');
 						}
