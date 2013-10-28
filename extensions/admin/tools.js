@@ -290,7 +290,7 @@ $target.append("<br \/>");
 				},
 			
 			pickerSelection2KVP : function($context)	{
-				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
+//				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
 //				app.u.dump(" -> sfo: "); app.u.dump(sfo);
@@ -326,7 +326,7 @@ $target.append("<br \/>");
 						r += "csv="+sfo.csv.replace(/\n/,"")+"\n";
 						}
 					}
-				app.u.dump(" -> r: "+r);
+//				app.u.dump(" -> r: "+r);
 				return r;
 				},
 
@@ -393,7 +393,14 @@ $target.append("<br \/>");
 						data.attrib = data.attrib_custom;
 						delete attrib_custom;
 						}
-
+					
+					if(data.when == 'when-attrib-contains')	{
+						//data() stores keys without dashes. so some-key is converted to someKey. 
+						data['when-attrib'] = data.whenAttrib;
+						data['when-attrib-operator'] = data.whenAttribOperator;
+						data['when-attrib-contains'] = data.whenAttribContains;
+						}
+					
 					r += verb+"?"+$.param(app.u.getWhitelistedObject(data,['attrib','when','when-attrib','when-attrib-operator','when-attrib-contains'])); //verb not passed because it is macro
 					switch(verb)
 						{
@@ -532,7 +539,7 @@ $target.append("<br \/>");
 				$btn.button();
 				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(event){
 					event.preventDefault();
-					app.u.dump("BEGIN powerToolBatchJobExec click event.");
+//					app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
 					
 					if(app.ext.admin.u.validatePicker($form))	{
