@@ -2058,7 +2058,7 @@ Function does NOT dispatch.
 
 		handleLogout : {
 			onSuccess : function(tagObj)	{
-				document.location = '/app/latest/admin_logout.html'
+				document.location = 'admin_logout.html'
 				}
 			},
 //in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)

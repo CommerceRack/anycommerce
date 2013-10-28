@@ -13,6 +13,7 @@ ADMIN
 	bug - in product editor -> variations -> attribs, existing values were not always populating.
 	bug - in product power tool, 'conditionals' were not being applied.
 	enhancement - in product editor -> ebay, if inventory-able variations are present, the warning for the incompatibility now stands out more.
+	bug - logout was going to a 404 (logout was occuring).
 
 201342.c
 ADMIN
