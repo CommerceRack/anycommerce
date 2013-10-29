@@ -814,8 +814,10 @@ $target.anydelegate();
 				$div.appendTo($navtabs);
 
 // commented out till management categories get added to elastic.				
-//				app.ext.admin_prodEdit.u.handleManagementCategoryFilters();//handleManagementCategoryFilters 'may' add a dispatch.
-				app.ext.admin_prodEdit.u.handleLaunchProfileFilters();//handleManagementCategoryFilters 'may' add a dispatch.
+
+//buildFilterListByCommand -> whitelisted by cmd type. will use local storage if available.
+				app.ext.admin_prodEdit.u.buildFilterListByCommand('adminEBAYProfileList');
+//				app.ext.admin_prodEdit.u.buildFilterListByCommand('adminSupplierList'); //need to uncomment data-elastic-key='prod_supplierid' in .html file too.
 				
 				app.u.handleButtons($navtabs);
 
@@ -892,17 +894,31 @@ $target.anydelegate();
 				
 				}, //handleManagementCategoryFilters
 			
-			handleLaunchProfileFilters : function()	{
+
+//vars should include:  _cmd (which should match the data-app-role value), arrayPointer (for launchProfiles, this would be @PROFILES
+			buildFilterListByCommand : function(_cmd)	{
+				var vars = {}
+				if(_cmd == 'adminSupplierList')	{
+					vars.arrayPointer = '@SUPPLIERS';
+					vars.termPointer = 'CODE';
+					vars.textPointer = 'NAME';
+					}
+				else if(_cmd == 'adminEBAYProfileList')	{
+					vars.arrayPointer = '@PROFILES';
+					vars.termPointer = 'PROFILE';
+					vars.textPointer = 'PROFILE';
+					}				
+				
 //				app.u.dump("BEGIN admin_prodEdit.u.handleLaunchProfileFilters");
 				var $navtabs = $('#navTabs');// tabs container
-				var $profileList = $("[data-app-role='launchProfileList']",$navtabs);
-				
-				if($profileList.children().length)	{
-//					app.u.dump("Launch Profiles have been rendered already. leave them as they are");
+				var $list = $("[data-app-role='"+_cmd+"']",$navtabs);
+
+				if($list.children().length)	{
+//					app.u.dump("list rendered already. leave them as they are");
 					} //already rendered management categories.
 				else	{
 					var cmdObj = {
-						_cmd : "adminEBAYProfileList",
+						_cmd : _cmd,
 						_tag : {
 							callback : function(rd){
 //								app.u.dump(" -> executing callback for management categories request");
@@ -913,22 +929,24 @@ $target.anydelegate();
 								else	{
 									var $tmp = $("<ul \/>"); //add list items to this, then move to $manCatsList after. decreases DOM updates which is more efficient.
 //									app.u.dump(" -> rd: "); app.u.dump(rd);
-									if(app.data[rd.datapointer]['@PROFILES'] && !$.isEmptyObject(app.data[rd.datapointer]['@PROFILES']))	{
-										var profiles = app.data[rd.datapointer]['@PROFILES'] // Object.keys(app.data[rd.datapointer]['@PROFILES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
-										for(var i = 0; i < profiles.length; i += 1)	{
-											$tmp.append($("<li data-elastic-term='"+profiles[i].PROFILE+"' \/>").text((profiles[i].PROFILE.toLowerCase())));
+									var data = app.data[rd.datapointer][vars.arrayPointer]; //shortcut
+									if(data && !$.isEmptyObject(data))	{
+										for(var i in data)	{
+											$tmp.append($("<li data-elastic-term='"+data[i][vars.termPointer]+"' \/>").text((data[i][vars.textPointer].toString().toLowerCase())));
 											}
-										$profileList.append($tmp.children());
+										$list.append($tmp.children());
 										}
 									else	{
 										//successful call, but no management categories exist. do nothing.
+										 $list.closest('fieldset').hide();
 										}
 									}
 								},
-							datapointer : 'adminEBAYProfileList'
+							datapointer : _cmd
 							}
 						}
-					if(app.model.fetchData('adminEBAYProfileList'))	{
+
+					if(app.model.fetchData(_cmd))	{
 						app.u.handleCallback(cmdObj._tag)
 						}
 					else	{
@@ -939,7 +957,8 @@ $target.anydelegate();
 					}
 				
 				}, //handleLaunchProfileFilters
-	
+
+
 			handleImagesInterface : function($context,pid)	{
 //				app.u.dump("BEGIN admin_prodEdit.u.handleImagesInterface.  pid: "+pid);
 				if(pid && $context && $context instanceof jQuery)	{
@@ -1376,7 +1395,7 @@ app.model.dispatchThis('immutable');
 				var r = false; //what is returned. will be term or terms object if valid.
 				if($obj.length == 1)	{
 					r = {term:{}};
-					r.term[attr] = $obj.data('elastic-term').toLowerCase();
+					r.term[attr] = $obj.data('elastic-term').toString().toLowerCase();
 					}
 				else if($obj.length > 1)	{
 					r = {terms:{}};

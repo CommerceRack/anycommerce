@@ -227,14 +227,14 @@
 
 	<label>
 		<span>SKU</span>
-		<input type='text' name='SKU' value='' />
+		<input type='text' name='SKU' value='' class='resetMeOnComplete' data-input-keyup="input-format" data-input-format='pid uppercase' />
 		<span class='toolTip' title="This field is 'sku', not product id. If the product has inventory-able options, you must enter the entire sku."></span>
 	</label>
 
 	
 	<label>
 		<span>Quantity</span>
-		<input type='number' step='1' min='0' name='QTY' value='0' />
+		<input type='number' step='1' min='0' name='QTY' value='0' class='number resetMeOnComplete' />
 	</label>
 
 	<button data-app-event="admin_wholesale|adminSupplierInventoryAddExec">Add</button>

@@ -137,9 +137,17 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<td class='valignTop alignLeft'>
 		<fieldset data-elastic-key='profile'>
 		<legend>Launch Profiles</legend>
-		<ul class='filterList listStyleNone' data-app-role='launchProfileList'>
+		<ul class='filterList listStyleNone' data-app-role='adminEBAYProfileList'>
 		</ul>
 		</fieldset>
+		<!--
+		uncomment this and buildFilterListByCommand('adminSupplierList') in product_editor.js once elastic search for supplier is working.
+		<fieldset data-elastic-key='prod_supplierid'>
+		<legend>Suppliers</legend>
+		<ul class='filterList listStyleNone' data-app-role='adminSupplierList'>
+		</ul>
+		</fieldset>
+		-->
 		</td>
 	
 		<td class='valignTop alignLeft'>

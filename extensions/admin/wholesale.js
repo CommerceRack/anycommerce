@@ -818,6 +818,7 @@ else	{
 							});
 						$D.find('form').append("<input type='hidden' name='vendor' value='"+vendor+"' />")
 						$D.dialog('open');
+						$D.anydelegate();
 						}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
@@ -857,7 +858,7 @@ else	{
 											$li.anymessage({'message':rd,'persistant':true});
 											}
 										else	{
-											$('input',$form).each(function(){$(this).val("")}); //clear inputs for next sku.
+											$(".resetMeOnComplete",$form).each(function(){$(this).val("")}); //clear inputs for next sku. only target class so hiddens et all don't get nuked.
 											$('.ui-icon',$li).addClass('ui-icon-check');
 											//success content goes here.
 											}
@@ -1076,7 +1077,7 @@ app.model.dispatchThis('immutable');
 					}
 
 				$(":checkbox:checked",$form).each(function(){
-					cmdObj['@updates'].push("PRODUCT:UNLINK?sku="+$(this).closest("[data-sku]").attr('data-sku'));
+					cmdObj['@updates'].push("SKU:UNLINK?SKU="+$(this).closest("[data-sku]").attr('data-sku'));
 					})
 				if(cmdObj['@updates'].length)	{
 					$form.showLoading({"message":"De-associating product and fetching updated list"});
