@@ -249,29 +249,32 @@ pass in an event name and a function and it will be added as an eventAction.
 
 //used to update the save buttons, both the master and the individuals.
 		_updateSaveButtonInContext : function($context,selector)	{
-			var $button = $(selector,$context);
-
-			if($('.edited',$context).length)	{
-				$('.numChanges',$button).text($('.edited',$context).length);
-				$button.addClass('ui-state-highlight');
-				if($button.hasClass('ui-button'))	{
-					$button.button("enable");
+			app.u.dump(" -> running anydelegate._handleSaveButtonByEditedClass.");
+//run over EACH button individually.  some may have had button() run on them, some may not.
+			$(selector,$context).each(function(){
+				var $button = $(this);
+				if($('.edited',$context).length)	{
+					$('.numChanges',$button).text($('.edited',$context).length);
+					$button.addClass('ui-state-highlight');
+					if($button.hasClass('ui-button'))	{
+						$button.button("enable");
+						}
+					else	{
+						$button.attr('disabled','').removeAttr('disabled');
+						}
 					}
 				else	{
-					$button.attr('disabled','').removeAttr('disabled');
+					$('.numChanges',$button).text("");
+					$button.removeClass('ui-state-highlight');
+					if($button.hasClass('ui-button'))	{
+						$button.button("disable")
+						}
+					else	{
+						$button.attr('disabled','disabled');
+						}
 					}
-				}
-			else	{
-				$('.numChanges',$button).text("");
-				$button.removeClass('ui-state-highlight');
-				if($button.hasClass('ui-button'))	{
-					$button.button("disable")
-					}
-				else	{
-					$button.attr('disabled','disabled');
-					}
-				}
 
+				});
 			},
 		
 		_applyTracking4Edits : function($context)	{
@@ -1050,18 +1053,18 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 
 		_fileUpload : function(img, file)	{
 			
-			file.name = file.name.toLowerCase();
-			
+			var newFileName = file.name.replace(/[^A-Za-z0-9]+/ig, "_").toString().toLowerCase(); //alphanumeric only (this will include underscores). the +/ig will replace multiple spaces/specialcharacters in a row w/ 1 underscore.
+			app.u.dump(" revised filename: "+newFileName);
 			var o = this.options;
 			var reader = new FileReader();  
-			var folder = o.folder || file.name.charAt(0).toLowerCase();
-			$(img).attr('data-filename',folder+'/'+file.name); //used during the save.
+			var folder = o.folder || newFileName.charAt(0);
+			$(img).attr('data-filename',folder+'/'+newFileName); //used during the save.
 			reader.onload = function(evt) {
 				app.model.addDispatchToQ({
 					'_cmd':'adminImageUpload',
 					'base64' : btoa(evt.target.result), //btoa is binary to base64
 					'folder' : folder,
-					'filename' : file.name,
+					'filename' : newFileName,
 					'_tag':	{
 						'callback' : function(rd){
 //							if(typeof o.upload === 'function')	{
@@ -1078,6 +1081,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 
 //executed when a file is dropped onto a dropzone.
 		_drop : function(event)	{
+			app.u.dump(" -> a file has been dropped into a dropzone.");
 			event.preventDefault();
 			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
 			if(typeof this.options.drop === 'function')	{

@@ -14,6 +14,10 @@ ADMIN
 	bug - in product power tool, 'conditionals' were not being applied.
 	enhancement - in product editor -> ebay, if inventory-able variations are present, the warning for the incompatibility now stands out more.
 	bug - logout was going to a 404 (logout was occuring).
+	enhancement - icons in messages to better visually indicate differences (errors, warnings, etc)
+
+ANYPLUGINS
+	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.
 
 201342.c
 ADMIN
