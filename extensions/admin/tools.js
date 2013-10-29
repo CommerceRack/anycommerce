@@ -725,8 +725,19 @@ $target.append("<br \/>");
 					$btn.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr)
 					});
 				},
-
-			flexeditAttributeCreateUpdateShow : function($btn)	{
+/*
+till events support multiple actions, can't implement this.
+need the 'apply' button to run both the apply code AND this code.
+uncomment this, the two lines in flexeditAttributeCreateUpdateShow for button(disable) and the cancel button to proceed w/ this.
+OR, since old app events are still in play, could use data-app-click to trigger this and the app event code to trigger the data-table save. could be good temporary work around.
+			flexDataTableAddEditCancel : function($btn)	{
+				$btn.button().off('click.flexDataTableAddEditCancel').on('click.flexDataTableAddEditCancel',function(event){
+					event.preventDefault();
+					$btn.closest('[data-app-role="flexeditManager"]').find("[data-app-event='admin_tools|flexeditAttributeCreateUpdateShow'], [data-app-event='admin_tools|flexeditAttributeCreateUpdateShow']").button('enable');
+					$btn.closest("[data-app-role='flexeditAttributeAddUpdateContainer']").slideUp();
+					})
+				},
+*/			flexeditAttributeCreateUpdateShow : function($btn)	{
 				
 				if($btn.data('mode') == 'update')	{
 					$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -734,6 +745,10 @@ $target.append("<br \/>");
 				
 				$btn.button().off('click.flexeditAttributeUpdateShow').on('click.flexeditAttributeUpdateShow',function(){
 					var $inputContainer = $btn.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
+//disable the add and edit buttons so as to not accidentally lose data while it's being entered (form would clear or populate w/ 'edit' contents )
+//					$btn.button('disable');
+//					$btn.closest('[data-app-role="flexeditManager"]').find("[data-app-event='admin_tools|flexeditAttributeCreateUpdateShow']").button('disable');
+					
 //need to make sure form input area is 'on screen'. scroll to it.
 					$('html, body').animate({
 						scrollTop: $inputContainer.offset().top
