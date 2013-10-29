@@ -694,12 +694,15 @@ $target.append("<br \/>");
 					app.ext.admin.calls.appResource.init('product_attribs_all.json',{
 						'callback' : function(rd){
 							$tbody.parent().hideLoading();
-							$('tr',$tbody).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
+							
 							if(app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
 								$tbody.anycontent({'datapointer':rd.datapointer});
+								$('tr',$tbody).each(function(){
+									$(this).attr('data-guid',app.u.guidGenerator())
+									}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
 //started implementing a button for 'move this to enabled list'.  Worked fine on the short list of attribs. dies on the full list.
 //the issue is handleAppEvents.  Once this uses delegated events, it should work fine (handlebuttons did run w/out dying).
 //however, can't migrate this yet because the data-table format uses app events, not delegated, and I don't want two copies of that.
@@ -708,7 +711,7 @@ $target.append("<br \/>");
 							},
 						'datapointer':'appResource|product_attribs_all.json'
 						},'mutable'); //total sales
-//				app.model.dispatchThis('mutable');
+				app.model.dispatchThis('mutable');
 
 
 					});

@@ -2692,7 +2692,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 						'datapointer' : 'adminProductAmazonValidate|'+pid,
 						'callback':function(rd)	{
 							if(app.model.responseHasErrors(rd)){
-								$D.anymessage({'message':rd});
+								$D.anymessage({'message':rd,'persistent':true}); //if api repsonse gets treated as an error/warning, keep that open.
 								}
 							else	{
 								$D.anymessage({'message':app.data[rd.datapointer],'persistent':true}); //will be @MSGS array.
