@@ -2780,10 +2780,10 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<div class='label'>
 		Also applies to:
 			<div class='stdMargin'>
-<label class='clearfix'><input type="checkbox" name="SHIPPING" /> Shipping</label>
-<label class='clearfix'><input type="checkbox" name="HANDLING" /> Handling</label>
-<label class='clearfix'><input type="checkbox" name="INSURANCE" /> Insurance</label>
-<label class='clearfix'><input type="checkbox" name="SPECIAL" /> Speciality Fees</label>
+<label class='clearfix'><input type="checkbox" name="SHIPPING" class='applyAnycb' /> Shipping</label>
+<label class='clearfix'><input type="checkbox" name="HANDLING" class='applyAnycb' /> Handling</label>
+<label class='clearfix'><input type="checkbox" name="INSURANCE" class='applyAnycb' /> Insurance</label>
+<label class='clearfix'><input type="checkbox" name="SPECIAL" class='applyAnycb' /> Speciality Fees</label>
 			</div>
 		</div>
 	
@@ -2819,7 +2819,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<div class='ui-widget-content ui-corner-bottom'>
 	<form data-app-role='taxTableExecForm'>
 
-	<table class='gridTable fullWidth marginBottom' data-app-role='dataTable'>
+	<table class='gridTable fullWidth marginBottom applyAnytable' data-app-role='dataTable'>
 	<thead>
 	<tr>
 		<th>Group</th>
@@ -2834,7 +2834,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	</thead>
 	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
 	</table>
-	<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
+	<div class='buttonset smallPadding alignRight'>
+		<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
+	</div>
 	</form>
 	</div>
 </section>
@@ -2851,7 +2853,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<td data-bind="var:taxes(match); format:text;"></td>
 	<td data-bind="var:taxes(type); format:text;"></td>
 	<td data-bind="var:taxes(expires); format:text;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Delete Rule</button></td>
 </tr>
 </table>
 

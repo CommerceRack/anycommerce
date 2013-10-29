@@ -293,8 +293,9 @@ var admin_config = function() {
 
 
 			showTaxConfig : function($target)	{
-				$target.empty().showLoading({'message':'Fetching Tax Details'});
+				$target.empty().showLoading({'message':'Fetching tax details'});
 				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
+
 				app.model.destroy(datapointer);
 				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{'datapointer' : datapointer, 'callback' : function(rd){
 					if(app.model.responseHasErrors(rd)){
@@ -302,11 +303,9 @@ var admin_config = function() {
 						}
 					else	{
 						$target.hideLoading();
-						$target.anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer});
-						
-						$('.gridTable',$target).anytable();
-						$('.toolTip',$target).tooltip();
-						$(':checkbox',$target).anycb();
+						$target.append($("<div \/>").anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer}).anydelegate());
+						app.u.handleButtons($target);
+						app.u.handleCommonPlugins($target);
 						$("[name='expires']",$target).datepicker({
 							changeMonth: true,
 							changeYear: true,
