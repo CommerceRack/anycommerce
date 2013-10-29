@@ -2807,7 +2807,7 @@ if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
 					_tag.datapointer = 'adminSupplierList'
 //when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
 					if(app.model.fetchData(_tag.datapointer) == false)	{
-						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
 						}
 					else	{
 						app.u.handleCallback(_tag);
