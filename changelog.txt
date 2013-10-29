@@ -22,6 +22,7 @@ ADMIN
 	bug fix - flexedit manager 'show all fields' now works.
 	bug fix - whim inventory lookup didn't report the 'no results found' message.
 	bug fix - product selector (what's used in product export and power tool) supplier list now working.
+	bug fix - crm manager allowed same ticket to be open twice.
 
 ANYPLUGINS
 	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.

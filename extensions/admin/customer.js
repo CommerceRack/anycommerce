@@ -981,22 +981,28 @@ app.model.dispatchThis('immutable');
 						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
 						$dualModeDetails = $("[data-app-role='dualModeDetail']",$dualModeContainer),
 						data = $btn.closest('tr').data(),
-						panelID = app.u.jqSelector('','crmDetail_'+data.tktcode),
-						$panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
+						panelID = 'crmDetail_'+data.tktcode;
+						
+					if($(app.u.jqSelector('#',panelID)).length)	{
+						//panel is already open.
+						$(app.u.jqSelector('#',panelID)).closest('.ui-widget-anypanel').prependTo($dualModeDetails); //move panel to top of list.
+						}
+					else	{
+						var $panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
 							'header':'Edit: '+data.tktcode,
 							'templateID':'crmManagerTicketDetailTemplate',
 						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
 							'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
 							}).prependTo($dualModeDetails);
 					
-					$panel.showLoading({'message':'Fetching Ticket Details.'});
-					app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
-					$panel.slideDown('fast');
-					
-app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode,'translateOnly':true}},'mutable');						
-					app.model.dispatchThis('mutable');
+						$panel.showLoading({'message':'Fetching Ticket Details.'});
+						app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
+						$panel.slideDown('fast');
+						
+						app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode,'translateOnly':true}},'mutable');						
+						app.model.dispatchThis('mutable');
+						}
 					});
-
 				}, //appAdminTicketDetailShow
 
 			appAdminTicketCreateShow : function($btn)	{
