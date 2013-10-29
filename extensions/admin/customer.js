@@ -985,7 +985,7 @@ app.model.dispatchThis('immutable');
 						
 					if($(app.u.jqSelector('#',panelID)).length)	{
 						//panel is already open.
-						$(app.u.jqSelector('#',panelID)).closest('.ui-widget-anypanel').prependTo($dualModeDetails); //move panel to top of list.
+						$(app.u.jqSelector('#',panelID)).closest('.ui-widget-anypanel').anypanel('toggle','expand').prependTo($dualModeDetails); //move panel to top of list.
 						}
 					else	{
 						var $panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({

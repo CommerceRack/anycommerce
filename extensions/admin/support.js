@@ -669,32 +669,38 @@ app.model.dispatchThis('mutable');
 					if(ticketID && uuid)	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-						var panelID = app.u.jqSelector('','ticketDetail_'+ticketID),
-						$panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
-							'header':'Ticket: '+ticketID,
-							'templateID':'supportTicketDetailTemplate',
-						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-							'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
-							}).prependTo($target);
+						var panelID = 'ticketDetail_'+ticketID;
 						
-						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
-						$panel.slideDown('fast',function(){});
-						$target.showLoading({'message':'Fetching Ticket Details.'});
-//** 201338 -> moved dispatch into slidedown callback because sometimes the animation would complete after the dispatch, causing the ticket to remain in 'loading' state.
-// the move mentioned above didn't fix chrome. so showloading and dispatch moved out of animation callback.
-						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
-						app.model.addDispatchToQ({
-							'_cmd':'adminTicketDetail',
-							'ticketid':ticketID,
-							'_tag':	{
-								'datapointer' : 'adminTicketDetail|'+ticketID,
-								'callback': 'anycontent',
-								'jqObj' : $target,
-								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
-								}
-							},'mutable');
-						app.model.dispatchThis('mutable');
-
+						if($(app.u.jqSelector('#',panelID)).length)	{
+							$(app.u.jqSelector('#',panelID)).closest('.ui-widget-anypanel').anypanel('toggle','expand').prependTo($target)
+							}
+						else	{
+						
+							$panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
+								'header':'Ticket: '+ticketID,
+								'templateID':'supportTicketDetailTemplate',
+							//	'data':user, //data not passed because it needs req and manipulation prior to translation.
+								'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
+								}).prependTo($target);
+							
+							app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
+							$panel.slideDown('fast',function(){});
+							$target.showLoading({'message':'Fetching Ticket Details.'});
+	//** 201338 -> moved dispatch into slidedown callback because sometimes the animation would complete after the dispatch, causing the ticket to remain in 'loading' state.
+	// the move mentioned above didn't fix chrome. so showloading and dispatch moved out of animation callback.
+							app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+							app.model.addDispatchToQ({
+								'_cmd':'adminTicketDetail',
+								'ticketid':ticketID,
+								'_tag':	{
+									'datapointer' : 'adminTicketDetail|'+ticketID,
+									'callback': 'anycontent',
+									'jqObj' : $target,
+									'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
+							}
 
 						}
 					else	{
