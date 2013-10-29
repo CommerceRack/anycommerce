@@ -299,30 +299,27 @@ app.model.dispatchThis('mutable');
 				$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
 					var jobid = $btn.closest('[data-jobid]').data('jobid');
 					if(jobid)	{
-						var callback;
+						var _tag = {};
 						if($btn.data('mode') == 'list')	{
 							$btn.button('option','icons',{primary:"wait"}).find('ui-icon').removeClass('ui-icon').end().button('disable');
-							callback = function(rd)	{
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	$btn.closest('tr').hide();
-	}
+							_tag.callback = function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$btn.closest('tr').hide();
+									}
 								}
 							}
 						else	{
-							$('#batchJobStatusModal').empty().addClass('loadingBG');
-							callback = 'showMessaging';
+							_tag.callback = 'showMessaging';
+							_tag.message = 'Batch job '+jobid+' has been cleaned up';
+							_tag.jqObj = $('#batchJobStatusModal').empty().showLoading({"message":"Deleting batch job "+jobid})
 							}
 						app.model.addDispatchToQ({
 							'_cmd':'adminBatchJobCleanup',
 							'jobid' : jobid,
-							'_tag':	{
-								'callback':callback,
-								'message':'Batch job has been cleaned up',
-								'parentID':'batchJobStatus_'+jobid
-								}
+							'_tag':	_tag
 							},'immutable');
 						app.model.dispatchThis('immutable');
 						}
