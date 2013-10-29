@@ -1,4 +1,61 @@
+/* ANYMESSAGE */
 
+.ui-widget-anymessage	{margin-bottom:12px;}
+.ui-widget-anymessage .stdMargin {padding:5px;}
+
+.ui-widget-anymessage .app-icon	{float:left; margin:4px 12px 0 0;}
+.app-icon	{background-repeat:no-repeat; background-image: url(images/messages_icons_small.png); display:block; width:26px; height:26px;}
+
+
+/* some messages have a red bg. add a white circle around the icon in these cases. */
+.app-state-z-ise .app-icon, 
+.app-state-z-error .app-icon,
+.app-state-z-debug .app-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
+
+
+.app-icon-success, .app-icon-win {background-position: 0 0;} /* green circle checkmark */
+
+/* {background-position:-28px 0;} green suitcase */
+.app-icon-fileerr {background-position:-58px 0;} /* circle w/ slash */
+
+.app-icon-error {background-position:-86px 0;} /* red triangle w/ bang */
+.app-icon-warning, .app-icon-warn, .app-icon-alert, .app-icon-ise, .app-icon-youwarn {background-position:-115px 0;} /* orange triangle w/ bang */
+
+.app-icon-halt {background-position:-145px 0;} /* red triangle w/ hand */
+.app-icon-abort, .app-icon-fail, .app-icon-iseerr, .app-icon-apierr {background-position:-174px 0;} /* red circle w/ X */
+.app-icon-apperr {background-position:-203px 0;} /* red circle w/ i */
+
+.app-icon-info, .app-icon-help {background-position:-145px 0;} /* orange circle w/ i */
+
+.app-icon-detail {background-position:-261px 0;} /* blue file */
+.app-icon-todo {background-position:-291px 0;} /* green file */
+
+/* {background-position:0 -27px;} /* black arrow west */
+.app-icon-flow {background-position:0 -27px;} /* black arrow east */
+/* {background-position:-56px -27px;} /* blue arrow south */
+
+
+.app-icon-task {background-position:-87px -27px;} /* blue suitcase */
+.app-icon-good, .app-icon-done {background-position:-116px -27px;} /* green circle thumbsup */
+.app-icon-bad, .app-icon-fail-soft, .app-icon-youerr, .app-icon-cfgerr {background-position:-145px -27px;} /* red circle thumbsdown */
+.app-icon-hint, .app-icon-tip {background-position:-175px -27px;} /* blue circle lightbulb */
+.app-icon-fail-fatal {background-position:-204px -27px;} /* red circle flame */
+.app-icon-pause, .app-icon-challenge {background-position:-232px -27px;} /* orange circle pause */
+.app-icon-end {background-position:-262px -27px;} /* orange circle arrow east */
+.app-icon-skip {background-position:-291px -27px;} /* orange circle arrow northeast */
+
+.app-icon-status {background-position:0 -56px;} /* blue circle gear */
+.app-icon-future {background-position:-29px -56px;} /* blue circle curly arrow */
+.app-icon-deprecated {background-position:-57px -56px;} /* blue circle curly arrow */
+.app-icon-debug {background-position:-87px -56px;} /* blue circle curly arrow */
+/* {background-position:-115px -56px;} /* blue black refresh arrows */
+.app-icon-stop {background-position:-146px -56px;} /* red stop sign */
+.app-icon-wait {background-position:-175px -56px;} /* orange circle hourglass */
+/* {background-position:-203px -56px;} /* network symbol */
 
 
 /* STICKYTAB */

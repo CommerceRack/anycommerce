@@ -415,7 +415,7 @@ In both cases, keep watching for further changes.
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 //a unique ID applied to the container of the message. used for animating and for checking if element is still on the DOM during close.
-			o.messageElementID = 'msg_'+app.u.guidGenerator();
+			o.messageElementID = 'msg_'+self._guid();
 			
 //the content is in an array because otherwise adding multiple messages to one selector causes them to share properties, which is not a desired behavior.
 			if(typeof self.outputArr == 'object')	{}
@@ -448,6 +448,13 @@ In both cases, keep watching for further changes.
 				}
 			}, //_init
 
+		_guid : function()	{
+			var S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+				};
+			return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+			},
+
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
@@ -459,16 +466,17 @@ In both cases, keep watching for further changes.
 			msg = o.message,
 			r; //what is returned
 			if(o.iconClass)		{}
-			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-z-'+msg.errtype}
-			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-z-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
-			else	{o.iconClass = 'ui-icon-info'}
+			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'app-icon-'+msg.errtype}
+			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'app-icon-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
+			else	{o.iconClass = 'app-icon-info'}
 //			app.u.dump(" -> o.iconClass: "+o.iconClass);
-			return $("<span \/>").addClass('ui-icon ui-icon-anymessage').addClass(o.iconClass).css({'float':'left','marginRight':'5px','marginBottom':'5px','marginTop':'3px'});
+			return $("<span \/>").addClass('app-icon').addClass(o.iconClass);
 			},
 
 		_getCloseButton : function()	{
 			var $t = this.element;
 			return $("<button \/>")
+				.addClass('smallButton')
 				.text('close message').css({'float':'right','marginLeft':'5px','marginBottom':'5px'})
 				.button({icons: {primary: "ui-icon-circle-close"},text: false})
 				.on('click.closeMsg',function(event){event.preventDefault(); $t.anymessage('close',$(this).closest('.ui-widget-anymessage'))});

@@ -100,26 +100,40 @@ var admin_trainer = function() {
 			handleTrainerArticles : function($context)	{
 				$("[data-app-role='trainerArticles']",$context).find('article').each(function(){
 					var $article = $(this);
+
 					if($article.data('article-type'))	{
 						$article.addClass('article ui-widget-content ui-corner-all')
-						}
-					
-					
-					if($article.data('article-type') == 'html')	{
-						//just show what's there.
-						}
-					else if($article.data('article-type'))	{
-						if($article.data('article-type') == 'video')	{
-							$article.attr('data-app-click','admin|showYTVInDialog').addClass('pointer');
+						if($article.data('article-type') == 'html')	{
+							//just show what's there.
 							}
-						$article.anycontent({
-							templateID : 'trainerArticleTemplate_'+$article.data('article-type'),
-							data : $article.data(),
-							showLoading: false
-							});
+						else	{
+							
+							switch($article.data('article-type'))	{
+								
+								case 'video':
+									$article.attr('data-app-click','admin|showYTVInDialog').addClass('pointer');
+									break;
+								
+								case 'webdoc':
+									$article.attr('data-app-click','admin_support|showHelpDocInDialog').addClass('pointer');
+									break;
+								
+								default:
+									//no default action.
+								}
+							$article.addClass('trainerArticle_'+$article.data('article-type'));
+							$article.anycontent({
+								templateID : 'trainerArticleTemplate_'+$article.data('article-type'),
+								data : $article.data(),
+								showLoading: false
+								});
+	
+							}
 						}
 					else	{
 						//no article type? uh oh.
+						app.u.dump("An article in the trainer had no data-article-type set. here's what we do know: ","warn");
+						app.u.dump($article.data());
 						}
 					});
 				}

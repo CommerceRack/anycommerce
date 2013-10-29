@@ -7,9 +7,9 @@ Article templates
 
 
 
-<div id='trainerArticleTemplate_video' class='trainerArticleVideo'>
+<div id='trainerArticleTemplate_video' class='trainerArticle'>
 	<div class='videoThumbnail'><img data-bind="var:article(youtubeid); format:youtubeThumbnail; extension:admin_trainer;" width='120' height='90' /></div>
-	<hgroup class='videoAttribs'>
+	<hgroup class='trainerAttribs'>
 		<h5 data-bind="var:article(title); format:text;"></h5>
 		<h6 data-bind="var:article(runtime); format:text;"></h6>
 	</hgroup>
@@ -17,9 +17,9 @@ Article templates
 
 
 
-<div id='trainerArticleTemplate_webdoc' class='trainerArticleVideo'>
+<div id='trainerArticleTemplate_webdoc' class='trainerArticle'>
 	<div>ICON</div>
-	<hgroup class='videoAttribs'>
+	<hgroup class='trainerAttribs'>
 		<h5 data-bind="var:article(title); format:text;"></h5>
 	</hgroup>
 </div>
@@ -69,7 +69,8 @@ The selection could have been made in this trainer or a previous one.
 		<div class='articles' data-app-role='trainerArticles'>
 <!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
 <article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
-<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+<article data-title="This is the title" data-article-type='html'>This content would show up.</article>
+<article data-title="This is a webdoc" data-article-type='webdoc' data-docid='dev_detail_imglib'>This content would show up.</article>
 
 		</div>
 	</section>
@@ -162,6 +163,7 @@ The selection could have been made in this trainer or a previous one.
 <!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
 <article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
 <article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+<article data-title="This is a webdoc" data-article-type='webdoc' data-docid='dev_detail_imglib'></article>
 
 		</div>
 	</section>

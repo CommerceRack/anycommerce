@@ -60,7 +60,6 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
-app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.fullscreen-1.2.js']); //used in template editor. will likely get used more.
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
 
 app.rq.push(['script',0,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication and in various other places.
@@ -68,9 +67,9 @@ app.rq.push(['script',0,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5
 //have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']);
 
-//used in the launchpad. needed early.
-app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.js']);
-
+//these are resources that are not currently used.
+//app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.js']);//used in the launchpad. needed early.
+//app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.fullscreen-1.2.js']); //used in template editor. will likely get used more.
 
 //used in campaigns. probably get used more. allows for time selection in datepicker.
 app.rq.push(['css',1,app.vars.baseURL+'resources/jquery-ui-timepicker-addon.css']);
