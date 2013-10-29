@@ -19,7 +19,7 @@ ADMIN
 	bug fix - supplier add inventory had bug where dialog had to be closed after each add.
 	bug fix - batch detail dialog/modal cleanup didn't show success/fail messaging on complete.
 	enhancement - shipping UI now restores buttons and hides 'deleted' (banned users, countries, etc) items after save.
-
+	bug fix - flexedit manager 'show all fields' now works.
 
 ANYPLUGINS
 	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.

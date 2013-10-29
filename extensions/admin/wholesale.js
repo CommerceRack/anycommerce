@@ -67,7 +67,7 @@ var admin_wholesale = function() {
 							_rtag.jqObj.anycontent(_rtag);
 							}
 						else	{
-							$('#globalMessaging').anymessage({"message":"There were zero items returns in your search of warehouse "+$ele.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
+							$('#globalMessaging').anymessage({"message":"There were zero items returns in your search of warehouse "+_rtag.jqObj.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
 							}
 						}
 					else	{
