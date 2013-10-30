@@ -228,6 +228,7 @@ var admin_support = function() {
 					}
 				
 				}
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -676,13 +677,13 @@ app.model.dispatchThis('mutable');
 							}
 						else	{
 						
-							$panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
+							var $panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
 								'header':'Ticket: '+ticketID,
 								'templateID':'supportTicketDetailTemplate',
 							//	'data':user, //data not passed because it needs req and manipulation prior to translation.
 								'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
 								}).prependTo($target);
-							
+
 							app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
 							$panel.slideDown('fast',function(){});
 							$target.showLoading({'message':'Fetching Ticket Details.'});
