@@ -99,6 +99,12 @@ var admin_config = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
+			showEmailAuth : function($target)	{
+				//app vars is passed in so the email input can be prepopulated w/ the domain in focus.
+				$target.empty().append($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':app.vars}).anydelegate());
+				app.u.handleButtons($target)
+				},
+
 			showBillingHistory : function($target)	{
 				$target.empty()
 				$target.anycontent({'templateID':'billingHistoryTemplate','showLoading':false});

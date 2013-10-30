@@ -87,6 +87,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 			}, //adminTaskCreate
 
 //this callback gets used by the DMI. the tasks response gets a little massaging before it's displayed.
+// jqObj should always be  data-app-role="dualModeContainer", not the tbody.
+// this code will empty the table, so no need to do it before (means previous results will still show if an error occurs).
 		updateTaskList : {
 			onSuccess : function(tagObj){
 				app.u.dump("BEGIN admin_task.callbacks.updateTaskList.onSuccess");
@@ -111,7 +113,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					if(inc >= 100)	{break;} //exit after 100. limits displayed tasks to 100.
 					}
 				tagObj.jqObj.hideLoading();
-				$("[data-app-role='dualModeListTbody']",tagObj.jqObj).anycontent({'translateOnly':true,'data':{'@TASKS':filteredTasks}});
+				$("[data-app-role='dualModeListTbody']",tagObj.jqObj).empty().anycontent({'translateOnly':true,'data':{'@TASKS':filteredTasks}});
 				app.u.handleButtons(tagObj.jqObj);
 				},
 			onError : function(responseData, uuid)	{

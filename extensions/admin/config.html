@@ -3668,3 +3668,30 @@ Coming Soon
 	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Delete Rule</button></td>
 </tr>
 </table>
+
+
+
+
+
+
+
+<div id='emailAuthenticationPageTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+
+<form action='#' onsubmit="return false;">
+<input type='hidden' name='_cmd' value='adminEmailAuthorize' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/persistent' value='true' />
+<input type='hidden' name='_tag/message' value='You will have an email in your inbox shortly. Please follow the instructions in the email to complete this process.' />
+
+<p>Enter an email address below.  You must have access to this email address.</p>
+<label>
+	<span>Email to authorize</span>
+	<input type='email' name='email' value='' data-bind="var: global(domain); format:popVal;" />
+</label>
+<button class='applyButton' data-app-click='submitForm'>Request Authorization</button>
+
+</form>
+
+</div>
+
+

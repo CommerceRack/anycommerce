@@ -3766,6 +3766,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					this.bringTabContentIntoFocus($('#homeContent'));
 					app.ext.admin.a.showDownloads($('#homeContent'));
 					}
+				else if(path == '#!showEmailAuth')	{
+					app.ext.admin_config.a.showEmailAuth($target);
+					}
+					
+					
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
@@ -6006,14 +6011,14 @@ resizable: false,
 modal: true,
 buttons: {
 	"Delete Feed": function() {
-		$D.dialog('close');
-		$('body').showLoading({'message':'Deleting Feed'});
+		$D.showLoading({'message':'Deleting Feed'});
 		app.ext.admin.calls.adminRSSRemove.init(data.id,{'callback':function(rd){
+			$D.hideLoading();
 			if(app.model.responseHasErrors(rd)){
-				$('body').hideLoading();
-				app.u.throwMessage(rd);
+				$D.anymessage({'message':rd})
 				}
 			else	{
+				$D.empty();
 				app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 				}
 			}},'immutable');
