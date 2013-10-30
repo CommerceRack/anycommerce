@@ -1091,7 +1091,7 @@ app.model.dispatchThis('immutable');
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.adminProductReviewUpdateShow').on('click.adminProductReviewUpdateShow',function(event){
 					event.preventDefault();
-					app.ext.admin_customer.e.adminProductReviewUpdateShowDE($btn,{});
+					app.ext.admin_customer.e.adminProductReviewUpdateShow_DE($btn,{});
 					});
 				}, //adminProductReviewUpdateShow
 			
