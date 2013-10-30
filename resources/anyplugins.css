@@ -43,7 +43,7 @@
 .app-icon-good, .app-icon-done {background-position:-116px -27px;} /* green circle thumbsup */
 .app-icon-bad, .app-icon-fail-soft, .app-icon-youerr, .app-icon-cfgerr {background-position:-145px -27px;} /* red circle thumbsdown */
 .app-icon-hint, .app-icon-tip {background-position:-175px -27px;} /* blue circle lightbulb */
-.app-icon-fail-fatal {background-position:-204px -27px;} /* red circle flame */
+.app-icon-fail-fatal, .app-icon-fatal, .app-icon-crashed {background-position:-204px -27px;} /* red circle flame */
 .app-icon-pause, .app-icon-challenge {background-position:-232px -27px;} /* orange circle pause */
 .app-icon-end {background-position:-262px -27px;} /* orange circle arrow east */
 .app-icon-skip {background-position:-291px -27px;} /* orange circle arrow northeast */
