@@ -728,7 +728,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				callback = responseData['_rtag']['callback']; //shortcut
 //				app.u.dump(' -> callback: '+callback);
 				if(typeof callback == 'function'){} //do nothing to callback. will get executed later.
-				else if(responseData['_rtag']['extension'] && !$.isEmptyObject(app.ext[responseData['_rtag']['extension']].callbacks[callback]))	{
+				else if(responseData['_rtag']['extension'] && app.ext[responseData['_rtag']['extension']] && app.ext[responseData['_rtag']['extension']].callbacks && !$.isEmptyObject(app.ext[responseData['_rtag']['extension']].callbacks[callback]))	{
 					callback = app.ext[responseData['_rtag']['extension']].callbacks[callback];
 //					app.u.dump(' -> callback node exists in app.ext['+responseData['_rtag']['extension']+'].callbacks');
 					}
@@ -738,7 +738,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					}
 				else	{
 					callback = false;
-					app.u.dump(' -> WARNING! callback defined but does not exist.');
+					app.u.dump('A callback defined but does not exist. The _rtag follows: ','warn'); app.u.dump(responseData['_rtag']);
 					}
 				}
 			else	{callback = false;} //no callback defined.
