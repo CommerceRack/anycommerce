@@ -175,10 +175,15 @@ var admin_config = function() {
 				$target.empty();
 				var $div = $("<div \/>").appendTo($target);
 				$div.showLoading({"message":"Fetching Global Settings"});
+				$div.anydelegate({
+					'trackEdits':true,
+					trackSelector:'form'
+					})
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'order' : true, 'wms' : true, 'erp' : true, 'inventory' : true,
 					'_tag':	{
+						'skipAppEvents' : true,
 						'datapointer' : 'adminConfigDetail|General',
 						'callback':'anycontent',
 						'templateID':'globalSettingsTemplate',
