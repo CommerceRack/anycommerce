@@ -29,7 +29,7 @@
 .app-icon-abort, .app-icon-fail, .app-icon-iseerr, .app-icon-apierr {background-position:-174px 0;} /* red circle w/ X */
 .app-icon-apperr {background-position:-203px 0;} /* red circle w/ i */
 
-.app-icon-info, .app-icon-help {background-position:-145px 0;} /* orange circle w/ i */
+.app-icon-info, .app-icon-help {background-position:-233px 0;} /* orange circle w/ i */
 
 .app-icon-detail {background-position:-261px 0;} /* blue file */
 .app-icon-todo {background-position:-291px 0;} /* green file */
