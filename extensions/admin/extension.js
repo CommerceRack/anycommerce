@@ -1145,71 +1145,6 @@ if giftcard is on there, no paypal will appear.
 			}, //adminSyndicationListFiles
 
 
-		adminTaskList : {
-			init : function(_tag,q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":_tag},q);	
-				}
-			}, //adminTaskList
-		adminTaskCreate : {
-			init : function(obj,_tag,q)	{
-				this.dispatch(obj,_tag,q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,q)	{
-				obj._cmd = "adminTaskCreate"
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTaskCreate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			}, //adminTaskCreate
-		adminTaskComplete : {
-			init : function(taskid, _tag,q)	{
-				this.dispatch(taskid, _tag,q);
-				return 1;
-				},
-			dispatch : function(taskid, _tag,q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskComplete";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":_tag},q);	
-				}
-			}, //adminTaskComplete
-		adminTaskRemove : {
-			init : function(taskid, _tag,q)	{
-				this.dispatch(taskid, _tag,q);
-				return 1;
-				},
-			dispatch : function(taskid, _tag,q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskRemove";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":_tag},q);	
-				}
-			}, //adminTaskRemove
-		adminTaskUpdate : {
-			init : function(obj,_tag,q)	{
-				this.dispatch(obj,_tag,q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
-				obj._cmd = "adminTaskUpdate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			}, //adminTaskUpdate
-
 
 //obj accepts the following params: disposition, body, subject, callback, private and/or priority [low, med, warn]
 		adminTicketCreate : {
@@ -1959,6 +1894,8 @@ $ele is an elmeent anywhere within the DMI. It'll trace up to the parent DMI and
 vars should include everything for the dispatch. _cmd is required.
 vars._tag._listpointer is the ID of i the data object of where the list is. ex: in giftcards, @GIFTCARDS. if not set, no 'no results' message is displayed.
 Function does NOT dispatch. 
+
+SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 */
 
 		DMIUpdateResults : {
@@ -3119,10 +3056,13 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						if($DMI.length)	{
 							var cmdVars = $DMI.data('cmdVars');
 							if(cmdVars && cmdVars._cmd)	{
+								$("[data-app-role='dualModeListTbody']",$DMI).empty(); //clear existing rows.
 								cmdVars._tag = cmdVars._tag || {};
-								cmdVars._tag.callback = 'DMIUpdateResults';
-								cmdVars._tag.extension = 'admin';
-								cmdVars._tag.jqObj = $DMI;
+								cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
+								cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
+//								app.u.dump(" -> cmdVars:" );app.u.dump(cmdVars);
+// ** 201344 -> don't want to re-render the panels, jus tthe 'list' section.
+								cmdVars._tag.jqObj = $DMI.find("[data-app-role='dualModeList']:first");
 								app.model.addDispatchToQ(cmdVars,q);
 								}
 							else	{
@@ -3953,7 +3893,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.ext.admin_prodEdit.a.showProductManager(opts);
 					}
 				else if(path == '#!taskManager')	{
-					app.ext.admin_task.a.showTaskManager();
+					app.ext.admin_task.a.showTaskManager($target);
 					}
 				else	{
 					app.u.throwGMessage("WARNING! unrecognized path/app ["+path+"] passed into loadNativeApp.");
@@ -5259,7 +5199,7 @@ vars:
 					if(vars.cmdVars && vars.cmdVars._cmd)	{
 						$DMI.data('cmdVars',vars.cmdVars);
 						vars.cmdVars._tag = vars.cmdVars._tag || {};
-						vars.cmdVars._tag.callback = 'anycontent';
+						vars.cmdVars._tag.callback = vars.cmdVars._tag.callback || 'anycontent';
 						vars.cmdVars._tag.jqObj = $table;
 						app.model.addDispatchToQ(vars.cmdVars,'mutable');
 						}
@@ -5543,7 +5483,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$btn.off('click.refreshDMI').on('click.refreshDMI',function(event){
 						event.preventDefault();
 						$DMI.showLoading({'message' : 'Refreshing list...' });
-						
+						$("[data-app-role='dualModeListTbody']",$DMI).empty();
 						var cmdVars = {};
 						if($btn.data('serializeform'))	{
 							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
@@ -5553,8 +5493,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 							}
 
 						cmdVars._tag = cmdVars._tag || {};
-						cmdVars._tag.callback = 'DMIUpdateResults';
-						cmdVars._tag.extension = 'admin';
+						cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
+						cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
 						cmdVars._tag.jqObj = $DMI;
 						app.model.addDispatchToQ(cmdVars,'mutable');
 						app.model.dispatchThis('mutable');

@@ -353,7 +353,7 @@ pass in an event name and a function and it will be added as an eventAction.
 					}
 				}
 			else	{
-				$('#globalMessaging').anymessage({'message':"In anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$target.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+				$('#globalMessaging').anymessage({'message':"In anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
 				}						
 
 
