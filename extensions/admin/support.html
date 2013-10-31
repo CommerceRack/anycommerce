@@ -31,45 +31,14 @@
 
 </div>
 
-
-
-<div id='supportPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail' data-dualmode-widthpercent='70'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='buttonSet'>
-				<button data-app-event='admin_support|showTicketCreate' class='hideInDetailMode'>Create A New Ticket</button>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</div>
-			<h3 class='heading'>Ticket Disposition: <select name='disposition' data-app-event='admin_support|execTicketListDispositionChange'>
-				<option value='open'>Open</option>
-				<option value='waiting'>Waiting</option>
-				<option value='all'>All</option>
-			</select>
-			</h3>
-		</div>
-
-		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth marginBottom' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th class='alignLeft hideInDetailMode'></th>
-			<th class='alignLeft'>Ticket #</th>
-			<th class='alignLeft hideInDetailMode'>Opened</th>
-			<th class='hideInDetailMode alignLeft'>Last Update</th>
-			<th class='alignLeft'>Subject</th>
-			<th class='alignLeft hideInDetailMode'>User</th>
-			<th class='alignLeft hideInDetailMode'>Date Closed</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@TICKETS); format:processList; loadsTemplate:supportTicketRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
+<div id='supportManagerControls'>
+<form action='#' onSubmit='return false'>
+Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar" data-trigger='refresh'>
+	<option value='open'>Open</option>
+	<option value='waiting'>Waiting</option>
+	<option value='all'>All</option>
+</select>
+</form>
 </div>
 
 
@@ -81,14 +50,14 @@
 		<td class='hideInDetailMode' data-bind="var: ticket(DISPOSITION); format:text;"></td>
 		<td data-bind="var: ticket(ID); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
-		<td class='hideInDetailMode' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-event='admin_support|showTicketLastUpdate'></td>
+		<td class='hideInDetailMode lookLikeLink' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-click='admin_support|adminTicketLastUpdateShow'></td>
 		<td data-bind="var: ticket(SUBJECT); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(LUSER); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
 		
 		<td class='alignRight'>
-		<button data-app-event="admin_support|execTicketClose" class='hideInDetailMode'>Close Ticket</button>
-		<button data-app-event="admin_support|showTicketDetail">Detail/Update</button>
+		<button data-app-click="admin_support|adminTicketMacroCloseShow" class='hideInDetailMode applyButton' data-text='false' data-icon-primary='ui-icon-close'>Close Ticket</button>
+		<button data-app-click="admin_support|adminTicketDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Detail/Update</button>
 		</td>
 	</tr>
 
@@ -101,33 +70,41 @@
 <div id='supportTicketCreateTemplate' class='labelsAsBreaks  alignedLabels alignedInputs'>
 
 <form action='#'>
+
+<input type='hidden' name='_cmd' value='adminTicketCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='Your ticket has been created.' />
+
+
+
 <fieldset class=' marginBottom'>
 	<label><span>Subject: </span><input type='text' name='subject'  required='required' /></label>
-	<label><span>Topic: </span><select name='topic' required='required' data-app-event='admin_support|showTopicInputs'>
+	<label><span>Topic: </span><select name='topic' required='required' data-panel-selector=".ticketTopic" data-input-change='show-panel'>
 		<option></option>
 		<option value='admin'>Admin/user interface</option>
-		<option value='storefront'>Website</option>
+		<option value='storefront' data-show-panel='ticketTopicStorefront'>Website</option>
 		<option value='billing'>Billing</option>
-		<option value='DNS'>Domain name</option>
-		<option value='other '>Other</option>
+		<option value='DNS' data-show-panel='ticketTopicDNS'>Domain name</option>
+		<option value='other'>Other</option>
 		</select>
 	</label>
 </fieldset>
 
 
-<fieldset class='displayNone topicInputs marginBottom' data-app-role='storefront_inputs'>
+<fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicStorefront'>
 	<legend>Storefront</legend>
 	<label><span>Domain: </span><input type='url' name='storefront_domain' data-validation-rules='skipIfHidden' required='required' /></label>
 	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 
-<fieldset class='displayNone topicInputs marginBottom' data-app-role='DNS_inputs'>
+<fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicDNS'>
 	<legend>Domain/DNS</legend>
 	<label><span>Domain: </span><input type='url' name='DNS_domain'  data-validation-rules='skipIfHidden' required='required' /></label>
 </fieldset>
 
-<fieldset class='displayNone' data-app-role='phoneFieldset'>
+<fieldset class='displayNone ticketPriority' data-panel-id='ticketPriorityHigh'>
 	<label><span>Phone: </span><input type='tel' name='phone' data-validation-rules='skipIfHidden' required='required' /></label>
 </fieldset>
 
@@ -137,9 +114,9 @@
 
 		<div class='marginBottom'>
 		Priority:
-		<label><input type='radio' name='priority' value='LOW' checked='checked' data-app-event='admin_support|tagAsPriority' /><b>Low:</b> information needed.</label>
-		<label><input type='radio' name='priority' value='MED' data-app-event='admin_support|tagAsPriority' /><b>High:</b> need assistance as soon as possible.</label>
-		<label><input type='radio' name='priority' value='HIGH' data-app-event='admin_support|tagAsPriority' /><b>System Outage:</b> site is down.</label>
+		<label><input type='radio' name='priority' value='LOW' checked='checked' data-panel-selector=".ticketPriority" data-input-change='show-panel' /><b>Low:</b> information needed.</label>
+		<label><input type='radio' name='priority' value='MED'  data-panel-selector=".ticketPriority" data-input-change='show-panel' /><b>High:</b> need assistance as soon as possible.</label>
+		<label><input type='radio' name='priority' value='HIGH'  data-panel-selector=".ticketPriority" data-input-change='show-panel' data-show-panel='ticketPriorityHigh' /><b>System Outage:</b> site is down.</label>
 		</div>
 <!--
 		<div class='marginBottom'>
@@ -150,9 +127,9 @@
 -->
 </fieldset>
 
-<button class='floatRight ui-state-highlight' data-app-event="admin_support|execTicketCreate">Create Ticket</button>
-<button class='floatRight marginRight' data-app-event="admin_support|showFileAttachmentModal">Attach Files</button>
-<button data-app-event="admin|execDialogClose">Cancel</button>
+<button class='floatRight ui-state-highlight applyButton' data-app-click="admin_support|adminTicketCreateExec" data-text='true' data-icon-primary='ui-icon-circle-plus'>Create Ticket</button>
+<button class='floatRight marginRight applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-app-click="admin_support|fileAttach2TicketShow">Attach Files</button>
+<button data-app-click="admin|dialogCloseExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-close'>Cancel</button>
 
 <p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
 <p class='hint'>Also, remember that the more details you provide, the more likely we are to be able to reproduce and resolve.</p>
@@ -187,7 +164,7 @@
 	</table>
 	
 	<div class='labelsAsBreaks alignedLabels alignedInputs'>
-	<button data-app-event="admin_support|showFileAttachmentModal" class='marginBottom'>Add File(s) To Ticket</button><!-- intentionally outside the form. form is emptied on update -->
+	<button data-app-click="admin_support|fileAttach2TicketShow" class='marginBottom applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n'>Add File(s) To Ticket</button><!-- intentionally outside the form. form is emptied on update -->
 	<table class='gridTable fullWidth marginBottom'>
 	<thead>
 	<tr>
@@ -204,7 +181,7 @@
 		<legend>Provide Additional Information:</legend>
 		<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
 	</fieldset>
-	<button data-app-event='admin_support|execTicketUpdate'>Add Message To Ticket</button>
+	<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
 	</form>
 	</div>
 
@@ -228,7 +205,7 @@
 	<td data-bind='var: ticket(uploaded); format:text;'></td>
 	<td data-bind='var: ticket(created); format:text;'></td>
 	<td>
-	<button data-app-event="admin_support|adminTicketFileGetExec">Download File</button>
+	<button data-app-click="admin_support|adminTicketFileGetExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download File</button>
 	</td>
 </tr>
 </table>

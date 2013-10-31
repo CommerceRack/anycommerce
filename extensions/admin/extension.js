@@ -5479,7 +5479,18 @@ dataAttribs -> an object that will be set as data- on the panel.
 						}
 					});
 				},
-
+//uses delegated events.
+//add to a select list and the cmd bars on the DMI will be updated with the key and the selected value. used in CRM and ticketing 
+			updateDMICmdVar : function($ele,p)	{
+				if($ele.is('select')){
+					var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+					$DMI.data('listmode','list');
+					$DMI.data('cmdVars')[$ele.attr('name')] = $ele.val();
+					if($ele.data('trigger') == 'refresh')	{
+						$('button[data-app-event="admin|refreshDMI"]',$DMI).trigger('click');
+						}
+					}
+				},
 
 			refreshDMI : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-s"},text: false});
@@ -5560,7 +5571,9 @@ not in use
 */
 /* app chooser */
 
-
+			dialogCloseExec : function($ele,p)	{
+				$ele.closest(".ui-dialog-content").dialog('close');
+				},
 
 			execDialogClose : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"}});

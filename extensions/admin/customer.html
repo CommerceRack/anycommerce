@@ -504,7 +504,7 @@ The checkbox below does not work.
 <div id='crmManagerControls'>
 		<form action='#' data-app-role='crmFilter' class='floatLeft' onSubmit='return false'>
 			<label>Status 
-			<select name='STATUS' data-app-change="admin_customer|crmTicketStatusChangeExec">
+			<select name='STATUS' data-app-change="admin|updateDMICmdVar" data-trigger='refresh'>
 				<option>All</option>
 				<option value='NEW' selected="selected">New</option>
 				<option value='OPEN'>Open</option>

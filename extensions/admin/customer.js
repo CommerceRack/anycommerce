@@ -1923,14 +1923,8 @@ app.model.dispatchThis('mutable');
 
 			crmAdminTicketCreateShow : function($ele)	{
 				app.ext.admin_customer.a.showCRMTicketCreateInDialog($ele.data()); //data could contain an 'orderid'. down the road, likely to support more. Customer ID maybe.
-				}, //appAdminTicketCreateShow
+				} //appAdminTicketCreateShow
 
-			crmTicketStatusChangeExec : function($ele,p)	{
-				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
-				$DMI.data('listmode','list');
-				$DMI.data('cmdVars').STATUS = $ele.val();
-				$('button[data-app-event="admin|refreshDMI"]',$DMI).trigger('click');
-				}
 
 			} //e [app Events]
 		} //r object.
