@@ -1721,7 +1721,15 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage';
 					}
 //the url in the domain may or may not have a slash at the end. Check for both
-				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url || url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
+				else if(	url == zGlobals.appSettings.http_app_url || 
+							url+"/" == zGlobals.appSettings.http_app_url || 
+							url == zGlobals.appSettings.https_app_url || 
+							url+"/" == zGlobals.appSettings.https_app_url ||
+//*** 201344 server structure no longer auto-redirects host-less domains to a host, so we should check if just the domain matches. -mc
+							url == "http://"+zGlobals.appSettings.domain_only ||
+							url == "http://"+zGlobals.appSettings.domain_only+"/" ||
+							url == "https://"+zGlobals.appSettings.domain_only ||
+							url == "https://"+zGlobals.appSettings.domain_only+"/")	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
