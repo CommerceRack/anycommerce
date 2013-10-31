@@ -25,6 +25,8 @@ ADMIN
 	bug fix - crm manager allowed same ticket to be open twice.
 	bug fix - reviews manager review editor working again.
 	bug fix - deleting an rss feed caused a never ending 'deleting...' screen (delete did still occur).
+	enhancement - task manager updated. faster and more memory efficient for browser.
+	enhancement - support/tickets interface updated. faster and more memory efficient for browser.
 
 ANYPLUGINS
 	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.
