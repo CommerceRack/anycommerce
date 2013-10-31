@@ -1145,35 +1145,10 @@ if giftcard is on there, no paypal will appear.
 			}, //adminSyndicationListFiles
 
 
-
-//obj accepts the following params: disposition, body, subject, callback, private and/or priority [low, med, warn]
-		adminTicketCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.body && obj.subject && obj.priority)	{
-					this.dispatch(obj,_tag,Q);
-					}
-				else if(obj)	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, a required param was left blank. body: ["+typeof obj.body+"]<br>subject: ["+obj.subject+"]<br>priority: ["+obj.priority+"]","gMessage":true});
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, no variables/obj passed","gMessage":true});
-					}
-				
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminTicketCreate"
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTicketCreate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminTicketCreate
-
-
 // @updates holds the macros.
 // CLOSE -> no params
 // APPEND -> pass note.
+// leave this one as a call.
 
 		adminTicketMacro : {
 			init : function(ticketid,macro,_tag,Q)	{
@@ -1183,7 +1158,7 @@ if giftcard is on there, no paypal will appear.
 					this.dispatch(ticketid,macro,_tag,Q);
 					}
 				else	{
-					$('#gloobjbalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, either ticketid ["+ticketid+"] or macro ["+typeof macro+"] not defined.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketMacro, either ticketid ["+ticketid+"] or macro ["+typeof macro+"] not defined.","gMessage":true});
 					}
 				return r;
 				},

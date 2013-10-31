@@ -276,31 +276,7 @@ var admin_support = function() {
 				
 				return r;
 				},
-/*
-not necessary in support2
-			reloadTicketList : function($tbody,disposition,Q)	{
-				app.u.dump("BEGIN admin_support.u.reloadTicketList");
-				if($tbody && disposition)	{
-					app.u.dump(" -> tbody and disposition ["+disposition+"] are both set.");
-					app.u.dump(" -> Q: "+Q);
-					$tbody.showLoading({'message':'Fetching updated ticket list.'});
-					app.ext.admin.calls.adminTicketList.init({'detail':disposition},{callback : function(rd){
-						$tbody.hideLoading();
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							$tbody.empty();
-							$tbody.anycontent({'datapointer':rd.datapointer});
-							app.u.handleAppEvents($tbody);
-							}
-						}},Q || 'mutable');
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In admin_support.u.reloadTicketList, either tbody ["+typeof $tbody+"] or disposition ["+disposition+"] not defined.",'gMessage':true});
-					}
-				},
-*/
+
 //overwrite the linkdoc links.  In the future, this will probably do more.
 			handleHelpDocOverwrites : function($target)	{
 				app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
