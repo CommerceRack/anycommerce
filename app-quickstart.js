@@ -1721,7 +1721,15 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage';
 					}
 //the url in the domain may or may not have a slash at the end. Check for both
-				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url || url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
+				else if(	url == zGlobals.appSettings.http_app_url || 
+							url+"/" == zGlobals.appSettings.http_app_url || 
+							url == zGlobals.appSettings.https_app_url || 
+							url+"/" == zGlobals.appSettings.https_app_url ||
+//*** 201344 server structure no longer auto-redirects host-less domains to a host, so we should check if just the domain matches. -mc
+							url == "http://"+zGlobals.appSettings.domain_only ||
+							url == "http://"+zGlobals.appSettings.domain_only+"/" ||
+							url == "https://"+zGlobals.appSettings.domain_only ||
+							url == "https://"+zGlobals.appSettings.domain_only+"/")	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
@@ -3164,8 +3172,46 @@ else	{
 					return false;
 					});
 
-				} //bindAppViewForms
-
+				}, //bindAppViewForms
+			
+			getDataFromInfoObj : function(infoObj){
+				//initialized to an empty object, so that we don't return a null pointer
+				var data = {};
+				
+				if(infoObj.datapointer){
+					data = app.data[infoObj.datapointer];
+					}
+				else {
+					switch(infoObj.pageType){
+						case "product" :
+							data = app.data['appProductGet|'+infoObj.pid];
+							break;
+						case "homepage" :
+							//both homepage and category share the same infoObj.navcat syntax, so we can cascade
+						case "category" :
+							data = app.data['appNavcatDetail|'+infoObj.navcat];
+							break;
+						case "customer" :
+							data = app.data.appBuyerLogin;
+							break;
+						case "company" :
+							//Return an empty object
+							break;
+						case "search" :
+							data = app.data["appPublicSearch|"+JSON.stringify(infoObj.elasticsearch)];
+							break;
+						case "cart" :
+							//Both cart and checkout can return the cart, so we can cascade
+						case "checkout" :
+							data = app.data.cartDetail;
+							break;
+						default :
+							//Return an empty object
+							break;
+						}
+					}
+				return data;
+				}
 			
 			}, //util
 
