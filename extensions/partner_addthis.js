@@ -21,43 +21,57 @@ Adds AddThis social sharing code to the product page.
 
 For AddThis API docs, go here: http://support.addthis.com/customer/portal/articles/381263-addthis-client-api
 
-
-
-
-in index.html, set the following vars for this to work properly:
-
-addthis_id =  #####;
+*** 201344 MAJOR REWRITE
+*** REQUIRES QUICKSTART getDataFromInfoObj METHOD
 
 */
 
-
-//Global object that will be updated before addThis code is rendered.
-var addthis_share = {
-	url : "",
-	title : ""
-};
-
 var partner_addthis = function() {
 	var r= {
+		
 		vars : {
-			selector : ".socialLinks"
-		},
+			titlePrefix : "",
+			setTitle : true,
+			setDesc : true,
+			
+			//Adjust addthis config below.  Specs for config options can be found at:
+			//http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-ui
+			addthis_config : {
+				username : ""
+				}
+			},
 		
 		callbacks : {
 			init : {
 				onSuccess : function(){
 					var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js';
-					if(typeof addthis_id !== 'undefined'){
-						scriptPath+= '#pubid='+addthis_id;
-					}
-					//setTimeout used to test asynchronous loading and dependency checks
-					//setTimeout(function(){app.u.loadScript(scriptPath);},3000);
+					if(app.ext.partner_addthis.vars.addthis_config.username && app.ext.partner_addthis.vars.addthis_config.username !== ""){
+						scriptPath+= '#username='+app.ext.partner_addthis.vars.addthis_config.username+'&domready';
+						}
+					else {
+						scriptPath += '#domready';
+						}
 					app.u.loadScript(scriptPath);
+					
+					//This is an example of how to add an addthis toolbox to a product page
 					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
-						app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj);
-						}]);
-					app.rq.push(['templateFunction','productTemplate','onDeparts',function(infoObj){
-						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
+						var $context = $(app.u.jqSelector('#',infoObj.parentID));
+						var $toolbox = $('.socialLinks', $context);
+						if($toolbox.hasClass('addThisRendered')){
+							//Already rendered, don't do it again.
+							}
+						else {
+							$toolbox.addClass('addThisRendered').append(
+									'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
+								+		'<a class="addthis_button_preferred_1"></a>'
+								+		'<a class="addthis_button_preferred_2"></a>'
+								+		'<a class="addthis_button_preferred_3"></a>'
+								+		'<a class="addthis_button_preferred_4"></a>'
+								+		'<a class="addthis_button_compact"></a>'
+								+	'</div>');
+							
+							app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
+							}
 						}]);
 					return true;
 				},
@@ -68,53 +82,99 @@ var partner_addthis = function() {
 		},
 		
 	u : {
-		buildSocialLinksProductPage : function(infoObj, attempts){
+	
+		toolbox : function($tags, infoObj){
+			
+			var call = 'toolbox';
+			var target = $tags.get();
+			var configObj = app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		button : function($tags, infoObj){
+			
+			var call = 'button';
+			var target = $tags.get();
+			var configObj = app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		counter : function($tags, infoObj){
+			
+			var call = 'counter';
+			var target = $tags.get();
+			var configObj = app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		
+		callAddThis : function(call, target, configObj, sharingObj, attempts){
 			attempts = attempts || 0;
-			//app.u.dump("-> Addthis attempt: "+attempts);
 			if(typeof addthis !== "undefined"){
-				//Adds the addthis code to the container specified
-				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
-				//Note: this also includes using custom share icons.
-				var $context = $(app.u.jqSelector('#',infoObj.parentID));
-				
-				$(app.ext.partner_addthis.vars.selector, $context).append(
-						'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-					+		'<a class="addthis_button_preferred_1"></a>'
-					+		'<a class="addthis_button_preferred_2"></a>'
-					+		'<a class="addthis_button_preferred_3"></a>'
-					+		'<a class="addthis_button_preferred_4"></a>'
-					+		'<a class="addthis_button_compact"></a>'
-					+	'</div>');
-				
-				//Set URL+title for most sharing code
-				var url = zGlobals.appSettings.http_app_url+"product/"+infoObj.pid+"/";
-				addthis_share.url = url;
-				addthis_share.title = app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name'];
-				
-				//Set URL+title for Facebook
-				$('#ogURL').attr('content',url);
-				$('#ogTitle').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name']);
-				$('#ogImage').attr('content',app.u.makeImage({"name":app.data[infoObj.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
-				$('#ogDescription, #metaDescription').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_desc']);
-				
-				//Hooks everything in
-				//app.u.dump("-> Calling addthis.toolbox...");
-				addthis.toolbox('#socialLinks');
+				addthis[call](target, configObj, sharingObj);
 				}
 			else {
-				//app.u.dump("-> Addthis is not defined...");
-				var n = 40;
-				if(attempts > n){
-					app.u.dump("Failed to build social links after "+(n/4)+" seconds.  infoObj follows: "); app.u.dump(infoObj);
+				if(attempts > 40){
+					app.u.dump("ADDTHIS FAILED "+call);
 					}
-				else{
-					setTimeout(function(){app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj, attempts+1);}, 250);
+				else {
+					setTimeout(function(){app.ext.partner_addthis.u.callAddThis(call, target,configObj, sharingObj, attempts+1);}, 250);
 					}
 				}
 			},
-		destroySocialLinks : function(infoObj){
-			var $context = $(app.u.jqSelector('#',infoObj.parentID));
-			$(app.ext.partner_addthis.vars.selector, $context).empty();
+			
+		buildSharingObj : function(infoObj){
+			// The addThis sharing configuration specs can be found here:
+			// http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-sharing
+			// By default only url, title, and description are supported.
+			sharingObj = {
+				url : (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url)+ app.ext.myRIA.u.buildRelativePath(infoObj),
+				title : app.ext.partner_addthis.vars.titlePrefix || "",
+				description : app.ext.partner_addthis.vars.defaultDesc || ""
+				};
+				
+			var data = app.ext.myRIA.u.getDataFromInfoObj(infoObj);
+			switch(infoObj.pageType){
+				case "product" :
+					if(app.ext.partner_addthis.vars.setTitle){
+						sharingObj.title += data['%attribs']['zoovy:prod_name'];
+						}
+					if(app.ext.partner_addthis.vars.setDesc){
+						sharingObj.description = data['%attribs']['zoovy:prod_desc'];
+						}
+					break;
+				case "category" :
+					if(app.ext.partner_addthis.vars.setTitle){
+						sharingObj.title += data.pretty;
+						}
+					break;
+				case "company" :
+					//no custom behavior
+					break;
+				case "search" :
+					//no custom behavior
+					break;
+				//The following cases should all revert to homepage
+				case "customer" :
+				case "cart" :
+				case "checkout" :
+				case "homepage" :
+				default :
+					sharingObj.url = (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url);
+					break;
+				}
+			if(sharingObj.title === ""){
+				//If no title is provided in the sharing object, it will default back to the window title
+				delete sharingObj.title;
+				}
+			if(sharingObj.description === ""){
+				//This is an optional parameter, so if it was not set above, let's get rid of it.
+				delete sharingObj.description
+				}
+			return sharingObj;
 			}
 		}
 	}
