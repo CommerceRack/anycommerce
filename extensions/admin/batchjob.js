@@ -240,8 +240,22 @@ app.model.dispatchThis('mutable');
 		e : {
 
 
-
-
+			batchJobExec : function($btn)	{
+				$btn.button({text: false,icons: {primary: "ui-icon-refresh"}})
+				$btn.off('click.batchJobExec').on('click.batchJobExec',function(event){
+					event.preventDefault();
+					var data = $btn.closest("[data-element]").data();
+					if(data && $btn.data('whitelist') && $btn.data('type'))	{
+						var whitelist = $btn.data('whitelist').split(',');
+						var vars = app.u.getWhitelistedObject(data,whitelist) || {};
+						vars.GUID = app.u.guidGenerator();
+						app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$btn.data('type'), '%vars':vars});
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"in admin_batchJobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$btn.data('whitelist')+"] not set and/or data-type ["+$btn.data('type')+"] not set","gMessage":true});}
+					});
+				},
+	
 //NOTE -> the batch_exec will = REPORT for reports.
 			showReport : function($btn)	{
 

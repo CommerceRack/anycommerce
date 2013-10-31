@@ -42,7 +42,6 @@ var admin_customer = function() {
 	'customerCreateTemplate',
 	'organizationManagerChooserRowTemplate',
 	
-	'crmManagerPageTemplate',
 	'crmManagerControls', //called in DMICreate in CRM directly from templates.
 	'crmManagerResultsRowTemplate',
 	'crmManagerTicketDetailTemplate',
@@ -99,54 +98,28 @@ var admin_customer = function() {
 					}
 				}, //showCustomerManager
 
-			showCRMManager2 : function($target)	{
-
-var $DMI = app.ext.admin.i.DMICreate($target,{
-	'header' : 'CRM Manager',
-	'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
-	'thead' : ['','id','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
-	'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;",
-	'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton'>Add Ticket</button>"],	
-	'controls' : app.templates.crmManagerControls,
-	'cmdVars' : {
-		'_cmd' : 'adminAppTicketList',
-		'STATUS' : 'NEW', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
-		'limit' : '50', //not supported for every call yet.
-		'_tag' : {
-			'datapointer':'adminAppTicketList'
-			}
-		}
-	});
-app.model.dispatchThis('mutable');
-app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
-				},
-
 			showCRMManager : function($target)	{
-				$target.empty()
-				$target.showLoading({"message":"Fetching list of recently updated/created tickets."});
-				
-				app.model.addDispatchToQ({
-					"_cmd":"adminAppTicketList",
-					"STATUS":'NEW',
-					"_tag":{
-						'callback':'anycontent',
-						'datapointer' : 'adminAppTicketList',
-						'jqObj':$target,
-						'templateID':'crmManagerPageTemplate'
+				$target.intervaledEmpty();
+				var $DMI = app.ext.admin.i.DMICreate($target,{
+					'header' : 'CRM Manager',
+					'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['','id','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
+					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;",
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton'>Add Ticket</button>"],	
+					'controls' : app.templates.crmManagerControls,
+					'cmdVars' : {
+						'_cmd' : 'adminAppTicketList',
+						'STATUS' : 'NEW', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminAppTicketList'
+							}
 						}
-					},'mutable');	
-				app.model.dispatchThis();
+					});
+				app.model.dispatchThis('mutable');
+				app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
 				},
 
-			showCRMTicketCreateInDialog : function(data)	{
-				var $D = app.ext.admin.i.dialogCreate({
-					'title' : 'Create CRM Ticket',
-					'templateID':'crmManagerTicketCreateTemplate',
-					'data':data
-					});
-				app.u.handleAppEvents($D);
-				$D.dialog('open');
-				},
 
 			showCampaignManager : function($target)	{
 				$target.empty();
@@ -744,6 +717,7 @@ else	{
 					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 					})
 				},
+
 //clicked within the campaign editor.
 			adminCampaignUpdateExec : function($btn)	{
 				$btn.button();
@@ -794,6 +768,7 @@ else	{
 
 					})
 				},
+
 			adminCampaignSendConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: true});
 				$btn.off('click.adminCampaignSendConfirm').on('click.adminCampaignSendConfirm',function(event){
@@ -830,6 +805,7 @@ else	{
 					});
 				
 				}, //adminCampaignSendConfirm
+
 			adminCampaignRemoveConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.adminCampaignRemoveConfirm').on('click.adminCampaignRemoveConfirm',function(event){
@@ -869,169 +845,124 @@ else	{
 				}, //adminCampaignRemoveConfirm
 
 
+/*
+//////////////////// 		CRM			 \\\\\\\\\\\\\\\\\\
+*/
 
+			crmAdminTicketDetailShow : function($ele,p)	{
+				p.preventDefault();
+				var	tktCode = $ele.closest("[data-tktcode]").data('tktcode');
+				
+				if(tktCode)	{
+					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'crmManagerTicketDetailTemplate',
+						'panelID' : 'crmDetail_'+tktCode,
+						'header' : 'Edit Ticket: '+tktCode,
+						'showLoading':true
+						}).attr('data-tktcode',tktCode);
+					app.u.handleButtons($panel);
+					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktCode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+tktCode,'translateOnly':true}},'mutable');						
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_customer.e.crmAdminTicketDetailShow, unable to ascertain tktcode, which is required.","gMessage":true});
+					}
+				}, //crmAdminTicketDetailShow
 
-//ele is a select list, most likely.
-			appAdminTicketListFilterExec : function($ele)	{
-				$ele.off('change.appAdminTicketListFilterExec').on('change.appAdminTicketListFilterExec',function(event){
-					event.preventDefault();
-					
-					if($ele.val())	{
-						var
-							$dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']"),
-							$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
-						
-						$dualModeListContents.empty(); //empty all the existing rows.
-						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-						app.model.addDispatchToQ({
-							"_cmd":"adminAppTicketList",
-							"STATUS":$ele.val(),
-							"_tag":{
-								'callback':'anycontent',
-								'datapointer' : 'adminAppTicketList',
-								'jqObj':$dualModeListContents.parent()
-								}
-							},'mutable');
-						app.model.dispatchThis('mutable');
+			crmAdminTicketNoteAdd : function($ele,p)	{
+
+				p.preventDefault();
+				var
+					$form = $ele.closest('form'),
+					tktCode = $ele.closest("[data-tktcode]").data('tktcode'),
+					sfo = $form.serializeJSON({'cb':true});
+				
+				$form.showLoading({'message':'Updating Ticket'});
+				app.ext.admin.calls.adminAppTicketMacro.init(tktCode,["ADDNOTE?"+$.param(sfo)],{'callback':function(rd){
+					$form.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$form.anymessage({'message':rd});
 						}
-					});
-				}, //appAdminTicketListFilterExec
+					else	{		
+						$form.anymessage(app.u.successMsgObject('The ticket has been updated.'));
+						$('textarea',$form).val('');
+						
+						//adds an instance of the template to the history table to show the update took place.
+						var $tr = app.renderFunctions.createTemplateInstance('crmManagerTicketMsgRowTemplate',sfo);
+						sfo.NOTE = sfo.note; //input is lowercase for macro. data-binds want uppercase.
+						$tr.anycontent({data:sfo});
+						$ele.closest('.ui-widget-anypanel').find("[data-app-role='ticketHistory'] tbody:first").append($tr);
+						}
+					}},'immutable');
+				app.model.dispatchThis('immutable');
 
-			appAdminTicketAddNote : function($btn)	{
-				$btn.button();
-				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(event){
-event.preventDefault();
-var
-	$form = $btn.closest('form');
-	sfo = $form.serializeJSON({'cb':true});
-
-$form.showLoading({'message':'Updating Ticket'})
-app.ext.admin.calls.adminAppTicketMacro.init($btn.closest("[data-tktcode]").data('tktcode'),["ADDNOTE?"+$.param(sfo)],{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd});
-			}
-		else	{		
-			$form.anymessage(app.u.successMsgObject('The ticket has been updated.'));
-			$('textarea',$form).val('');
-			
-			//adds an instance of the template to the history table to show the update took place.
-			var $tr = app.renderFunctions.createTemplateInstance('crmManagerTicketMsgRowTemplate',sfo);
-			sfo.NOTE = sfo.note; //input is lowercase for macro. data-binds want uppercase.
-			$tr.anycontent({data:sfo});
-			$btn.closest('.ui-widget-anypanel').find("[data-app-role='ticketHistory'] tbody:first").append($tr);
-			}
-	}},'immutable');
-app.model.dispatchThis('immutable');
-
-					});
 				}, //appAdminTicketAddNote
 
-			appAdminTicketChangeEscalation : function($btn)	{
-				
-				var tktcode = $btn.closest("[data-tktcode]").data('tktcode');
+			crmAdminTicketEscalationToggle : function($ele,p)	{
+
+				var tktcode = $ele.closest("[data-tktcode]").data('tktcode');
 //escalateTicket is what gets passed as the value for escalate on the update. so if the ticket is NOT escalated already, escalateTicket is set to 1 and, when passed, the ticket is escalated.
-				Number(app.data['adminAppTicketDetail|'+tktcode].ESCALATED) === 1 ? $btn.text('De-Escalate').data('escalateTicket',0) : $btn.text('Escalate').data('escalateTicket',1) ; //set when button event runs. updated when button is pushed.
-				$btn.button();
-				$btn.off('click.appAdminTicketChangeEscalation').on('click.appAdminTicketChangeEscalation',function(event){
-					event.preventDefault();
-					$btn.button('disable');
-					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$btn.data('escalateTicket')],{'callback':function(rd){
+				p.preventDefault();
+				if(tktcode)	{
+					$ele.button('disable');
+					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$ele.data('escalateTicket')],{'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							app.u.throwMessage(rd);
 							}
 						else	{		
-							$btn.button('enable');
-							$btn.data('escalateTicket') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
-							}					
+							$ele.button('enable');
+							$ele.data('escalateTicket') === 1 ? $ele.button({ label: "De-Escalate" }).data('escalateTicket',0) : $ele.button({ label: "Escalate" }).data('escalateTicket',1) ;
+							}
 						}},'immutable');
-					
+						
 					app.model.destroy('adminAppTicketDetail|'+tktcode);
-//					app.ext.admin.calls.adminAppTicketDetail.init(tktcode,{},'immutable');
 					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktcode,"_tag":{'datapointer':'adminAppTicketDetail|'+tktcode}},'immutable');
 					app.model.dispatchThis('immutable');
-					});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_customer.e.crmAdminTicketEscalationToggle, unable to ascertain tktcode.","gMessage":true});
+					}
 				
 				}, //appAdminTicketChangeEscalation
 
-			appAdminTicketClose : function($btn)	{
-				$btn.button();
-				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
-					app.ext.admin.calls.adminAppTicketMacro.init($btn.closest("[data-tktcode]").data('tktcode'),["CLOSE"],{},'immutable');
+			crmAdminTicketClose : function($ele,p)	{
+				p.preventDefault();
+				var tktcode = $ele.closest("[data-tktcode]").data('tktcode');
+				if(tktcode)	{
+					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["CLOSE"],{},'immutable');
 					app.model.dispatchThis('immutable');
 					$btn.closest('.ui-widget-anypanel').anypanel('destroy');
-					});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_customer.e.crmAdminTicketEscalationToggle, unable to ascertain tktcode.","gMessage":true});
+					}
 				}, //appAdminTicketClose
 
-//ele is a select list, most likely.
-			appAdminTicketListSearchExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
-				$btn.off('click.appAdminTicketListFilterExec').on('click.appAdminTicketListFilterExec',function(event){
-					event.preventDefault();
-					
-					var
-						$form = $btn.closest('form');
-						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-						$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
-					
-					if(app.u.validateForm($form))	{
-						$dualModeListContents.empty(); //empty all the existing rows.
-						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-						var sfo = $.extend(true,{},$form.serializeJSON(),{
-							"_cmd":"adminAppTicketSearch",
-							"_tag":{
-								'callback':'anycontent',
-								'datapointer' : 'adminAppTicketSearch',
-								'jqObj':$dualModeListContents.parent()
-								}
-							});
-						
-						app.model.addDispatchToQ(sfo,'mutable');	
-						app.model.dispatchThis();
-						}
-					else	{} //validateForm will handle error display.
-
+			crmAdminTicketCreateShow : function($ele,p)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Create CRM Ticket',
+					'templateID':'crmManagerTicketCreateTemplate',
+					'data':$ele.data()
 					});
-				}, //appAdminTicketListSearchExec
+				
+				if($ele.data('suppress_dmi_update'))	{}
+				else	{
+					$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+					}
+				
+				$D.anydelegate();
+				app.u.handleButtons($D);
+				$D.dialog('open');
 
-			appAdminTicketDetailShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.appAdminTicketDetailsShow').on('click.appAdminTicketDetailsShow',function(event){
-					event.preventDefault();
+				}, //appAdminTicketCreateShow
 
-					var
-						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-						$dualModeDetails = $("[data-app-role='dualModeDetail']",$dualModeContainer),
-						data = $btn.closest('tr').data(),
-						panelID = 'crmDetail_'+data.tktcode;
-						
-					if($(app.u.jqSelector('#',panelID)).length)	{
-						//panel is already open.
-						$(app.u.jqSelector('#',panelID)).closest('.ui-widget-anypanel').anypanel('toggle','expand').prependTo($dualModeDetails); //move panel to top of list.
-						}
-					else	{
-						var $panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
-							'header':'Edit: '+data.tktcode,
-							'templateID':'crmManagerTicketDetailTemplate',
-						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-							'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
-							}).prependTo($dualModeDetails);
-					
-						$panel.showLoading({'message':'Fetching Ticket Details.'});
-						app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
-						$panel.slideDown('fast');
-						
-						app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":data.tktcode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+data.tktcode,'translateOnly':true}},'mutable');						
-						app.model.dispatchThis('mutable');
-						}
-					});
-				}, //appAdminTicketDetailShow
-
+// still used in the order editor. When that is updated, use:  crmAdminTicketCreateShow
 			appAdminTicketCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
 					event.preventDefault();
-					app.ext.admin_customer.a.showCRMTicketCreateInDialog({'orderid':$btn.data('orderid')});
+					$btn.data('suppress_dmi_update',true); //this old app event is only used outside the CRM manager, so enforce a 'no dmi update'.
+					app.ext.admin_customer.e.crmAdminTicketCreateShow($btn,event);
 					});
 				}, //appAdminTicketCreateShow
 
@@ -1039,27 +970,21 @@ app.model.dispatchThis('immutable');
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateExec').on('click.appAdminTicketCreateExec',function(event){
 					event.preventDefault();
-					
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON();
-						sfo._cmd = 'adminAppTicketCreate';
-						sfo._tag = {
-							'callback' : 'showMessaging',
-							'jqObjEmpty': true,
-							'jqObj' : $form,
-							'message' : 'The ticket has been created.'
+					var	$form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var sfo = $form.serializeJSON();
+						if(sfo.phone || sfo.email || sfo.orderid)	{
+							$form.showLoading({'message':'Creating CRM Ticket'});
+							app.ext.admin.a.processForm($form,'immutable');
+							app.model.dispatchThis('immutable');
 							}
-					if(sfo.phone || sfo.email || sfo.orderid)	{
-						$form.showLoading({'message':'Creating CRM Ticket'});
-						app.model.addDispatchToQ(sfo,'immutable');
-						app.model.dispatchThis('immutable');
-						
+						else	{
+							$form.anymessage({'message':'Either email, phone or order ID is required for a ticket to be created','errtype':'youerr'});
+							}
 						}
 					else	{
-						
+//validateForm will handle error display.						
 						}
-
 					});
 				}, //appAdminTicketCreateExec
 
@@ -1107,6 +1032,9 @@ app.model.dispatchThis('immutable');
 				}, //adminProductReviewUpdateShow
 
 
+/*/////////////////////////////				PRODUCT REVIEWS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
 // * 201336 -> needed a version of this code for delegated events. Rather than copy/paste a big chunk of code, the core of this was moved into adminProductReviewUpdateShowDE, which is executed on click.
 // The delegated events model was necessary for the new product editor.
 			adminProductReviewUpdateShow : function($btn)	{
@@ -1116,7 +1044,6 @@ app.model.dispatchThis('immutable');
 					app.ext.admin_customer.e.adminProductReviewUpdateShow_DE($btn,{});
 					});
 				}, //adminProductReviewUpdateShow
-			
 
 			reviewRemoveConfirm_DE : function($ele,p)	{
 				var 
@@ -1204,6 +1131,10 @@ app.model.dispatchThis('immutable');
 					});
 				}, //reviewApproveExec
 
+
+/*/////////////////////////////				GIFTCARDS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
 			giftcardCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.giftcardCreateShow').on('click.giftcardCreateShow',function(event){
@@ -1290,6 +1221,9 @@ setTimeout(function(){
 					});
 				}, //adminGiftcardUpdateShow
 
+
+/*/////////////////////////////				CUSTOMER 				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
 //executed within the customer create form to validate form and create user.
 			execAdminCustomerCreate : function($btn)	{
 				$btn.button().off('click.execAdminCustomerCreate').on('click.execAdminCustomerCreate',function(event){
@@ -1329,6 +1263,7 @@ app.model.dispatchThis('immutable');
 
 					});
 				}, //execAdminCustomerCreate
+
 
 //saves all the changes to a customer editor
 			execCustomerEditorSave : function($btn)	{
@@ -1919,11 +1854,9 @@ app.model.dispatchThis('mutable');
 						$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 						}
 					});
-				}, //orderCustomerEdit
+				} //orderCustomerEdit
 
-			crmAdminTicketCreateShow : function($ele)	{
-				app.ext.admin_customer.a.showCRMTicketCreateInDialog($ele.data()); //data could contain an 'orderid'. down the road, likely to support more. Customer ID maybe.
-				} //appAdminTicketCreateShow
+
 
 
 			} //e [app Events]

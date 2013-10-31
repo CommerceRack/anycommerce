@@ -409,6 +409,8 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
 			<div class="helper">Configure which languages and currencies are available.</div>
 
+
+			
 <!--
 * 201338 -> doesn't work w/ new inventory system. WHIM is new version.
 			<a href="#" onClick="navigateTo('/biz/vstore/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
@@ -591,11 +593,12 @@ SETUP PAGE TEMPLATE
 
 <table>
 
-<tbody id='domainListTemplate' data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;">
+<tbody id='domainListTemplate' data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;" data-element='domain'>
 <tr>
 	<td colspan='2'><h6 data-bind="var: domain(DOMAINNAME); format:text;"></h6></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight width50'>
+		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</button>
 		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
 		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
@@ -688,6 +691,7 @@ UTILITIES PAGE TEMPLATE
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
 			<div class="helper marginBottom">A list of recently run batches, including reports and syndication published files</div>
+
 
 			
 						
