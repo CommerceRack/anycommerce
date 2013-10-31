@@ -3164,8 +3164,40 @@ else	{
 					return false;
 					});
 
-				} //bindAppViewForms
-
+				}, //bindAppViewForms
+			
+			getDataFromInfoObj : function(infoObj){
+				//initialized to an empty object, so that we don't return a null pointer
+				var data = {};
+				switch(infoObj.pageType){
+					case "product" :
+						data = app.data['appProductGet|'+infoObj.pid];
+						break;
+					case "homepage" :
+						//both homepage and category share the same infoObj.navcat syntax, so we can cascade
+					case "category" :
+						data = app.data['appNavcatDetail|'+infoObj.navcat];
+						break;
+					case "customer" :
+						data = app.data.appBuyerLogin;
+						break;
+					case "company" :
+						//Return an empty object
+						break;
+					case "search" :
+						data = app.data["appPublicSearch|"+JSON.stringify(infoObj.elasticsearch)];
+						break;
+					case "cart" :
+						//Both cart and checkout can return the cart, so we can cascade
+					case "checkout" :
+						data = app.data.cartDetail;
+						break;
+					default :
+						//Return an empty object
+						break;
+					}
+				return data;
+				}
 			
 			}, //util
 
