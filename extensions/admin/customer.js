@@ -43,6 +43,7 @@ var admin_customer = function() {
 	'organizationManagerChooserRowTemplate',
 	
 	'crmManagerPageTemplate',
+	'crmManagerControls', //called in DMICreate in CRM directly from templates.
 	'crmManagerResultsRowTemplate',
 	'crmManagerTicketDetailTemplate',
 	'crmManagerTicketCreateTemplate',
@@ -96,8 +97,29 @@ var admin_customer = function() {
 					$("[name='searchfor']",$target).val(vars.searchfor);
 					$("[data-app-event='admin_customer|execCustomerSearch']",$target).trigger('click');
 					}
-				
 				}, //showCustomerManager
+
+			showCRMManager2 : function($target)	{
+
+var $DMI = app.ext.admin.i.DMICreate($target,{
+	'header' : 'CRM Manager',
+	'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+	'thead' : ['','id','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
+	'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;",
+	'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton'>Add Ticket</button>"],	
+	'controls' : app.templates.crmManagerControls,
+	'cmdVars' : {
+		'_cmd' : 'adminAppTicketList',
+		'STATUS' : 'NEW', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
+		'limit' : '50', //not supported for every call yet.
+		'_tag' : {
+			'datapointer':'adminAppTicketList'
+			}
+		}
+	});
+app.model.dispatchThis('mutable');
+app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
+				},
 
 			showCRMManager : function($target)	{
 				$target.empty()
@@ -1897,7 +1919,18 @@ app.model.dispatchThis('mutable');
 						$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 						}
 					});
-				} //orderCustomerEdit
+				}, //orderCustomerEdit
+
+			crmAdminTicketCreateShow : function($ele)	{
+				app.ext.admin_customer.a.showCRMTicketCreateInDialog($ele.data()); //data could contain an 'orderid'. down the road, likely to support more. Customer ID maybe.
+				}, //appAdminTicketCreateShow
+
+			crmTicketStatusChangeExec : function($ele,p)	{
+				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+				$DMI.data('listmode','list');
+				$DMI.data('cmdVars').STATUS = $ele.val();
+				$('button[data-app-event="admin|refreshDMI"]',$DMI).trigger('click');
+				}
 
 			} //e [app Events]
 		} //r object.

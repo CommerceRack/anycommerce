@@ -5480,6 +5480,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 				},
 
+
 			refreshDMI : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-s"},text: false});
 				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");

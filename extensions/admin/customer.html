@@ -501,6 +501,32 @@ The checkbox below does not work.
 -->
 
 
+<div id='crmManagerControls'>
+		<form action='#' data-app-role='crmFilter' class='floatLeft' onSubmit='return false'>
+			<label>Status 
+			<select name='STATUS' data-app-change="admin_customer|crmTicketStatusChangeExec">
+				<option>All</option>
+				<option value='NEW' selected="selected">New</option>
+				<option value='OPEN'>Open</option>
+				<option value='WAIT'>Waiting</option>
+			</select>
+			</label>
+		</form>
+
+		<!-- if DMI.listmode is search, it will look for a form with data-app-role='DMISearch' and serialize it.  -->
+		<form action='#' data-app-role='DMISearch' class='floatRight' onSubmit='return false'>
+		<input type='hidden' name='_cmd' value='adminAppTicketSearch' />
+		<select name='scope'>
+			<option value='email' selected="selected">email</option>
+			<option value='orderid'>order #</option>
+			<option value='phone'>phone #</option>
+			<option value='ticket'>ticket #</option>
+		</select>
+		<input type='search' name='searchfor' placeholder='keyword' required='required' size='30'  />
+		<button data-app-event="admin|refreshDMI" data-serializeform='true'>Search</button>
+		</form>	
+</div>
+
 
 
 <div id='crmManagerPageTemplate' class='page pageCRM' data-app-role='dualModeContainer' data-app-mode='list'>

@@ -850,7 +850,7 @@ STYLES FOR SPECIFIC UI LAYOUTS (dualMode, soloMode, slimLeft, etc)
 h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0; padding:0; text-indent:12px;} /* the text header */
 .dualModeListThead th	{text-align:left; padding:2px 4px;} /* the table headers */
 
-.dualModeListControls	{padding:0 12px; line-height:25px; height:25px;}
+.dualModeListControls	{padding:2px 12px; line-height:25px; min-height:25px;}
 
 .dualModeDetail	{float:right; display:none;} /* the container for the detail column. */
 
