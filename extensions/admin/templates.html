@@ -598,7 +598,6 @@ SETUP PAGE TEMPLATE
 	<td colspan='2'><h6 data-bind="var: domain(DOMAINNAME); format:text;"></h6></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight width50'>
-		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME' data-type='UTILITY/GITPULL'>Pull from GitHub</button>
 		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</button>
 		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
@@ -625,6 +624,11 @@ SETUP PAGE TEMPLATE
 		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
 <!-- end project dependant buttons -->
 	</span>
+<!--
+	<span  class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:APP;">
+	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME' data-type='UTILITY/GITPULL'>Pull from GitHub</button>
+	</span>
+-->
 	<button data-app-event="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	</td>
 </tr>
