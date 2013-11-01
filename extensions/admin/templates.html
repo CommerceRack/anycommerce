@@ -598,6 +598,7 @@ SETUP PAGE TEMPLATE
 	<td colspan='2'><h6 data-bind="var: domain(DOMAINNAME); format:text;"></h6></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight width50'>
+		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME' data-type='UTILITY/GITPULL'>Pull from GitHub</button>
 		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</button>
 		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
 		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
