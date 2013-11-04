@@ -305,12 +305,10 @@ _rtag.jqObj.anydelegate({
 						modal:true,
 						autoOpen:false
 						});
-					
-					app.u.handleEventDelegation($modal);
 					}
 				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'));
 				app.u.handleButtons($modal);
-				app.ext.admin.u.handleFormConditionalDelegation($('form',$modal));
+				$modal.anydelegate();
 				$modal.dialog('open');
 				}, //showCreateProductDialog
 	
