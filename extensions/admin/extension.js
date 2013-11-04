@@ -6067,7 +6067,7 @@ else	{} //validateForm handles error display
 					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
 						'panelID' : 'rss'+data.cpg,
-						'header' : 'Edit Project: '+data.cpg,
+						'header' : 'Edit Feed: '+data.cpg,
 						'handleAppEvents' : false, //handled later.
 						showLoading : false
 						});

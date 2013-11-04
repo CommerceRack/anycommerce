@@ -1636,7 +1636,6 @@ This is checks for two things:
 // if set to true and in a non-admin mode, won't hurt anything, but is less clean.
 //these are whitelisted server side. add anything non supported and comatibility mode calls will die a most horrible death.
 		setHeader : function(xhr){
-//			xhr.setRequestHeader('x-auth','sporks');
 			if(app.vars.thisSessionIsAdmin)	{
 				xhr.setRequestHeader('x-clientid',app.vars._clientid); //set by app
 				xhr.setRequestHeader('x-session',app.vars._session); //set by app. 
