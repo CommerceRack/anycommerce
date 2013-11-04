@@ -2191,15 +2191,15 @@ NOTE: the values below are configured in Setup | Amazon and are shared with your
 <table>
 <tr>
 	<td>Merchant ID:</td>
-	<td><i data-bind="var:payment(amz_merchantid); format:text;"></i></td>
+	<td><input name='amz_merchantid' data-bind="var:payment(amz_merchantid); format:popVal;" /></td>
 </tr>
 <tr>
 	<td>Access Key Id:</td>
-	<td><i data-bind="var:payment(amz_accesskey); format:text;"></i></td>
+	<td><input name='amz_accesskey' data-bind="var:payment(amz_accesskey); format:popVal;" /></td>
 </tr>
 <tr>
   	<td>Secret Key Id:</td>
-	<td><i data-bind="var:payment(amz_secretkey); format:text;"></i></td>
+	<td><input name='amz_secretkey' data-bind="var:payment(amz_secretkey); format:popVal;" /></td>
 </tr>
 </table>
 
