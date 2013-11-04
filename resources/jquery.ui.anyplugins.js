@@ -84,6 +84,12 @@ additionally, will apply some conditional form logic.
 			else	{
 				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
 				var supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
+
+//make sure there are no children w/ delegated events.
+				$('.eventDelegation',$t).each(function(){
+					$(this).anydelegate('destroy');
+					});
+				
 				for(var i = 0; i < supportedEvents.length; i += 1)	{
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
 						self._executeEvent($(e.currentTarget),$.extend(p,e));
@@ -394,6 +400,7 @@ In both cases, keep watching for further changes.
 			for(var i = 0; i < supportedEvents.length; i += 1)	{
 				this.element.off(supportedEvents[i]+".app");
 				}
+			this.element.addClass('delegationRemoved'); //here for troubleshooting purposes.
 			}
 		}); // create the widget
 
