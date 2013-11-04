@@ -323,7 +323,7 @@ $target.append("<br \/>");
 						}
 					
 					if(sfo.csv)	{
-						r += "csv="+sfo.csv.replace(/\n/,"")+"\n";
+						r += "csv="+sfo.csv.replace(/\n/gm,",")+"\n"; //linebreaks instead of commas are acceptable for the input, but the API wants commas.
 						}
 					}
 //				app.u.dump(" -> r: "+r);
