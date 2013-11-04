@@ -83,6 +83,7 @@ var admin_syndication = function() {
 				
 				
 				if(macroResponses && macroResponses['@RESPONSES'])	{
+					macroResponses.persistent = true; //leave messages open.
 					$target.anymessage(macroResponses);
 					}
 				else	{
