@@ -162,6 +162,10 @@ additionally, will apply some conditional form logic.
 				
 				if($CT.data('input-format').indexOf('alphanumeric') > -1)	{
 					$CT.val($CT.val().replace(/\W/, '','g'));
+					}
+					
+				if($CT.data('input-format').indexOf('numeric') > -1)	{
+					$CT.val($CT.val().replace(/^\d+$/, '','g'));
 					}							
 				
 				if($CT.data('input-format').indexOf('pid') > -1)	{

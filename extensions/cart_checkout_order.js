@@ -554,7 +554,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		//expiration is less of a concern
 						case 'CREDIT':
 	
-							tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' class=' creditCard' value='";
+							tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' data-input-keyup='input-format' data-input-format='numeric' class=' creditCard' value='";
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' onKeyPress='' required='required' /><\/label><\/div>";
 							
