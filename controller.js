@@ -1289,73 +1289,73 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //vars.filename is optional
 //opted to force this into a modal to reduce the likely of a bunch of unused blobs remaining on the DOM.
 //the dialog will empty/remove itself when closed.
-			fileDownloadInModal : function(vars)	{
-				vars = vars || {};
-				if(vars.mime_type && vars.body)	{
-					var filename = vars.filename || 'file';
-					var MIME_TYPE = vars.mime_type;
-	
-					var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
-					$D.dialog({
-						'modal' : true,
-						'width' : 300,
-						'height' : 200,
-						close: function(event, ui)	{
-							$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-	//						app.u.dump('got into dialog.close - destroy.');
-							$(this).dialog('destroy');
-							$(this).intervaledEmpty(1000,1);
-							} //will remove from dom on close
-						});
+		fileDownloadInModal : function(vars)	{
+			vars = vars || {};
+			if(vars.mime_type && vars.body)	{
+				var filename = vars.filename || 'file';
+				var MIME_TYPE = vars.mime_type;
 
-	// this worked, but not an ideal solution. we like blob better.
+				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+				$D.dialog({
+					'modal' : true,
+					'width' : 300,
+					'height' : 200,
+					close: function(event, ui)	{
+						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
+//						app.u.dump('got into dialog.close - destroy.');
+						$(this).dialog('destroy');
+						$(this).intervaledEmpty(1000,1);
+						} //will remove from dom on close
+					});
+
+// this worked, but not an ideal solution. we like blob better.
 //			var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(vars.body);
 //			var $a = $('<a>',{'download':filename || 'file',"href":uri}).text('download me data style').appendTo($D);
 //			$("<br \/>").appendTo($D);
-	
+
 //if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
 //content returned on an API call will be base 64 encoded. app-generated content (report csv's) will not.
 //app.u.dump("vars.skipdecode: "+vars.skipDecode);
 
-					var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
+				var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
 //					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
-						// Use typed arrays to convert the binary data to a Blob
-						//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
-						var arraybuffer = new ArrayBuffer(file.length);
-						var L = file.length;
-						var view = new Uint8Array(arraybuffer);
-						for (var i=0; i < L; i++) {
-							view[i] = file.charCodeAt(i) & 0xff;
-							}
-						var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
+					// Use typed arrays to convert the binary data to a Blob
+					//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
+					var arraybuffer = new ArrayBuffer(file.length);
+					var L = file.length;
+					var view = new Uint8Array(arraybuffer);
+					for (var i=0; i < L; i++) {
+						view[i] = file.charCodeAt(i) & 0xff;
+						}
+					var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
 //						}
 //					else	{
 //						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
 //						}
-					
-					var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
+				
+				var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
 
-					$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
-						var a = this;
-						a.textContent = 'Downloaded';
-						a.dataset.disabled = true;
-						$D.dialog('close');
-						// Need a small delay for the revokeObjectURL to work properly.
-						//revokeObjectURL causes browser to drop reference to the file.
-						setTimeout(function() {
-							window.URL.revokeObjectURL(a.href);
-							$D.empty().remove(); //nuke dialog.
-							}, 1500);
-						});
+				$a.addClass('dragout').attr('data-downloadurl',[MIME_TYPE, $a.attr('download'), $a.attr('href')].join(':')).text('download ready').on('click',function(){
+					var a = this;
+					a.textContent = 'Downloaded';
+					a.dataset.disabled = true;
+					$D.dialog('close');
+					// Need a small delay for the revokeObjectURL to work properly.
+					//revokeObjectURL causes browser to drop reference to the file.
+					setTimeout(function() {
+						window.URL.revokeObjectURL(a.href);
+						$D.empty().remove(); //nuke dialog.
+						}, 1500);
+					});
 
-					
-					$a.appendTo($D);
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.u.fileDownloadInModal, either mime_type ["+vars.mime_type+"] or body ["+typeof vars.body+"] not passed.","gMessage":true});
-					}
+				
+				$a.appendTo($D);
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In admin.u.fileDownloadInModal, either mime_type ["+vars.mime_type+"] or body ["+typeof vars.body+"] not passed.","gMessage":true});
+				}
 
-				},
+			},
 
 
 
@@ -1483,176 +1483,175 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
 //obj is some optional data. obj.$content would be a common use.
-// !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
-		handleAppEvents : function($target,obj)	{
-//				app.u.dump("BEGIN app.u.handleAppEvents");
-				obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
-				if($target && $target.length && typeof($target) == 'object')	{
-//					app.u.dump(" -> target exists"); app.u.dump($target);
-//don't auto-pass context. will be harder for event delegation
-					$("[data-app-event]",$target).each(function(){
-						var $ele = $(this),
-						extension = $ele.data('app-event').split("|")[0],
-						action = $ele.data('app-event').split("|")[1];
-						if(action && extension && app.ext[extension] && app.ext[extension].e && typeof app.ext[extension].e[action] == 'function'){
-//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
-//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].e[action]($ele,obj);
-							} //no action specified. do nothing. element may have it's own event actions specified inline.
-						else	{
-							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+" typeof app.data.extension: "+(extension ? typeof app.data[extension] : 'undefined')+"] and/or extension/action combination is not a function");
-							}
-						});
+			handleAppEvents : function($target,obj)	{
+	//				app.u.dump("BEGIN app.u.handleAppEvents");
+					obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
+					if($target && $target.length && typeof($target) == 'object')	{
+	//					app.u.dump(" -> target exists"); app.u.dump($target);
+	//don't auto-pass context. will be harder for event delegation
+						$("[data-app-event]",$target).each(function(){
+							var $ele = $(this),
+							extension = $ele.data('app-event').split("|")[0],
+							action = $ele.data('app-event').split("|")[1];
+							if(action && extension && app.ext[extension] && app.ext[extension].e && typeof app.ext[extension].e[action] == 'function'){
+	//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
+	//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
+								app.ext[extension].e[action]($ele,obj);
+								} //no action specified. do nothing. element may have it's own event actions specified inline.
+							else	{
+								app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+" typeof app.data.extension: "+(extension ? typeof app.data[extension] : 'undefined')+"] and/or extension/action combination is not a function");
+								}
+							});
+						}
+					else	{
+						//don't throw error to user. target 'could' be in memory.
+						app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.",'warn');
+						}
+					
+					}, //handleAppEvents
+
+			printByjqObj : function($ele)	{
+				if($ele && $ele.length)	{
+					var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
+					html+= $ele.html();
+					html+="</body></html>";
+					
+					var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
+	//a browser could disallow the window.open, which results in printWin NOT being defined and that ends in a JS error, so 'if' added.
+					if(printWin)	{
+						printWin.document.write(html);
+						printWin.document.close();
+						printWin.focus();
+						printWin.print();
+						printWin.close();
+						}				
 					}
 				else	{
-					//don't throw error to user. target 'could' be in memory.
-					app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.",'warn');
+					$('#globalMessaging').anymessage({'message':'In app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
 					}
-				
-				}, //handleAppEvents
+				},
 
-		printByjqObj : function($ele)	{
-			if($ele && $ele.length)	{
-				var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
-				html+= $ele.html();
-				html+="</body></html>";
-				
-				var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
-//a browser could disallow the window.open, which results in printWin NOT being defined and that ends in a JS error, so 'if' added.
-				if(printWin)	{
-					printWin.document.write(html);
-					printWin.document.close();
-					printWin.focus();
-					printWin.print();
-					printWin.close();
-					}				
-				}
-			else	{
-				$('#globalMessaging').anymessage({'message':'In app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
-				}
-			},
-
-		printByElementID : function(id)	{
-			if(id && $(app.u.jqSelector('#',id)).length)	{
-				app.u.printByjqObj($(app.u.jqSelector('#',id)));
-				}
-			else	{
-				app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
-				}
-			}, //printByElementID
+			printByElementID : function(id)	{
+				if(id && $(app.u.jqSelector('#',id)).length)	{
+					app.u.printByjqObj($(app.u.jqSelector('#',id)));
+					}
+				else	{
+					app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
+					}
+				}, //printByElementID
 
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
 //ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
 //will be used in updates to translator.
 
 //http://stackoverflow.com/questions/5240785/split-abc/5240797#5240797
-		getObjValFromString : function (s,obj,char)	{
-			char = char || '.';
-			var o=obj, attrs=s.split(char);
-			while (attrs.length > 0) {
-				o = o[attrs.shift()];
-				//I don't think this is handling zero well. !!!
-				if (!o) {o= null; break;}
-				}
-			return o;
-
-			}, //getObjValFromString
-
-		getDomainFromURL : function(URL)	{
-			var r ; //what is returned. takes http://www.domain.com/something.html and converts to domain.com
-			r = URL.replace(/([^:]*:\/\/)?([^\/]+\.[^\/]+)/g, '$2');
-			if(r.indexOf('www.') == 0)	{r = r.replace('www.','')}
-			if(r.indexOf('/'))	{r = r.split('/')[0]}
-			return r;
-			},
-
-		isThisBitOn : function(bit,int)	{
-			var B = Number(int).toString(2); //binary
-			return (B.charAt(bit) == 1) ? true : false; //1
-			},
-
-//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-		guidGenerator : function() {
-			var S4 = function() {
-				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-				};
-			return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
-			},
-
-//jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
-		jumpToAnchor : function(id)	{
-			window.location.hash=id;
-			},
-
-//uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
-//this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
-		throwGMessage : function(err,parentID){
-			var msg = this.youErrObject("Err: "+err+"<br \/>URI: "+document.location+"<br \/>Dev: console may contain additional details.","#");
-			msg.gMessage = true;
-			$(app.u.jqSelector('#',parentID || 'globalMessaging')).anymessage(msg);
-			},
-/*
-msg could be a string or an object.
-if an object, could be: {errid,errmsg,errtype}   OR   {msg_X_txt,msg_X_type,msg_X_id}
- -> if msg_X format, X will be an integer and _msgs will be set to indicate the # of messages.
-
-$target - a jquery object of the target/destination for the message itself. Will check err for parentID, targetID and if not present, check to see if globalMessaging is present AND visible.  If not visible, will open modal.
-returns the id of the message, so that an action can be easily added if needed (onclick or timeout w/ a hide, etc)
-
-persistent - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
-and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
-*/
-		throwMessage : function(msg,persistent){
-//			app.u.dump("BEGIN app.u.throwMessage");
-//			app.u.dump(" -> msg follows: "); app.u.dump(msg);
-
-			
-
-			var $target, //where the app message will be appended.
-			r = true; //what is returned. true if a message was output
-
-			if(typeof msg === 'string')	{
-				msg = this.youErrObject(msg,"#"); //put message into format anymessage can understand.
-				}
-
-			if(typeof msg === 'object')	{
-//				app.u.dump(" -> msg: "); app.u.dump(msg);
-				if(msg._rtag && msg._rtag.jqObj)	{$target = msg._rtag.jqObj}
-				else if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
-				else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
-					if(msg._rtag.parentID)	{$target = $(app.u.jqSelector('#',msg._rtag.parentID))}
-					else if(msg._rtag.targetID)	{$target = $(app.u.jqSelector('#',msg._rtag.targetID))}
-					else	{
-						$target = $(app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector));
-						}
+			getObjValFromString : function (s,obj,char)	{
+				char = char || '.';
+				var o=obj, attrs=s.split(char);
+				while (attrs.length > 0) {
+					o = o[attrs.shift()];
+					//I don't think this is handling zero well. !!!
+					if (!o) {o= null; break;}
 					}
-				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging:visible');}
-// ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
-//	target of last resort is now the body element
-				else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
-				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
-				else	{
-					$target = $("<div \/>").attr('title',"Error!");
-					$target.addClass('displayNone').appendTo('body'); 
-					$target.dialog({
-						modal: true,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
+				return o;
+	
+				}, //getObjValFromString
+
+			getDomainFromURL : function(URL)	{
+				var r ; //what is returned. takes http://www.domain.com/something.html and converts to domain.com
+				r = URL.replace(/([^:]*:\/\/)?([^\/]+\.[^\/]+)/g, '$2');
+				if(r.indexOf('www.') == 0)	{r = r.replace('www.','')}
+				if(r.indexOf('/'))	{r = r.split('/')[0]}
+				return r;
+				},
+	
+			isThisBitOn : function(bit,int)	{
+				var B = Number(int).toString(2); //binary
+				return (B.charAt(bit) == 1) ? true : false; //1
+				},
+	
+	//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+			guidGenerator : function() {
+				var S4 = function() {
+					return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+					};
+				return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+				},
+	
+	//jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
+			jumpToAnchor : function(id)	{
+				window.location.hash=id;
+				},
+	
+	//uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
+	//this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
+			throwGMessage : function(err,parentID){
+				var msg = this.youErrObject("Err: "+err+"<br \/>URI: "+document.location+"<br \/>Dev: console may contain additional details.","#");
+				msg.gMessage = true;
+				$(app.u.jqSelector('#',parentID || 'globalMessaging')).anymessage(msg);
+				},
+	/*
+	msg could be a string or an object.
+	if an object, could be: {errid,errmsg,errtype}   OR   {msg_X_txt,msg_X_type,msg_X_id}
+	 -> if msg_X format, X will be an integer and _msgs will be set to indicate the # of messages.
+	
+	$target - a jquery object of the target/destination for the message itself. Will check err for parentID, targetID and if not present, check to see if globalMessaging is present AND visible.  If not visible, will open modal.
+	returns the id of the message, so that an action can be easily added if needed (onclick or timeout w/ a hide, etc)
+	
+	persistent - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
+	and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
+	*/
+			throwMessage : function(msg,persistent){
+	//			app.u.dump("BEGIN app.u.throwMessage");
+	//			app.u.dump(" -> msg follows: "); app.u.dump(msg);
+	
+				
+	
+				var $target, //where the app message will be appended.
+				r = true; //what is returned. true if a message was output
+	
+				if(typeof msg === 'string')	{
+					msg = this.youErrObject(msg,"#"); //put message into format anymessage can understand.
+					}
+	
+				if(typeof msg === 'object')	{
+	//				app.u.dump(" -> msg: "); app.u.dump(msg);
+					if(msg._rtag && msg._rtag.jqObj)	{$target = msg._rtag.jqObj}
+					else if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
+					else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
+						if(msg._rtag.parentID)	{$target = $(app.u.jqSelector('#',msg._rtag.parentID))}
+						else if(msg._rtag.targetID)	{$target = $(app.u.jqSelector('#',msg._rtag.targetID))}
+						else	{
+							$target = $(app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector));
 							}
-						});
+						}
+					else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging:visible');}
+	// ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
+	//	target of last resort is now the body element
+					else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
+					else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
+					else	{
+						$target = $("<div \/>").attr('title',"Error!");
+						$target.addClass('displayNone').appendTo('body'); 
+						$target.dialog({
+							modal: true,
+							close: function(event, ui)	{
+								$(this).dialog('destroy').remove();
+								}
+							});
+						}
+					$target.anymessage(msg);
 					}
-				$target.anymessage(msg);
-				}
-			else	{
-				app.u.dump("WARNING! - unknown type ["+typeof err+"] set on parameter passed into app.u.throwMessage");
-				r = false; //don't return an html id.
-				}
-//get rid of all the loading gfx in the target so users know the process has stopped.
-			$target.removeClass('loadingBG');
-			if(typeof jQuery().hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
-// 			app.u.dump(" -> $target in error handling: "); app.u.dump($target);
-			return r;
-			},
+				else	{
+					app.u.dump("WARNING! - unknown type ["+typeof err+"] set on parameter passed into app.u.throwMessage");
+					r = false; //don't return an html id.
+					}
+	//get rid of all the loading gfx in the target so users know the process has stopped.
+				$target.removeClass('loadingBG');
+				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
+	// 			app.u.dump(" -> $target in error handling: "); app.u.dump($target);
+				return r;
+				},
 
 
 
@@ -1661,19 +1660,19 @@ and model that needed to be permanently displayed had to be converted into an ob
 // keep this simple. don't add support for icons or message type. If that degree of control is needed, build your own object and pass that in.
 // function used in store_product (and probably more)
 // once throwMessage is gone completely, we can nuke the uiClass and uiIcon
-		successMsgObject : function(msg)	{
-			return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','iconClass':'app-icon-success'}
-			},
-
-		errMsgObject : function(msg,errid)	{
-			return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','iconClass':'app-icon-error','containerClass':'ui-state-error'}
-			},
-		statusMsgObject : function(msg)	{
-			return {'errid':'#','errmsg':msg,'errtype':'statusupdate','iconClass':'app-icon-warn','containerClass':'ui-state-statusupdate'}
-			},
-		youErrObject : function(errmsg,errid)	{
-			return {'errid':errid,'errmsg':errmsg,'errtype':'youerr','iconClass':'ui-icon-youerr','containerClass':'ui-state-highlight'}
-			},
+			successMsgObject : function(msg)	{
+				return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','iconClass':'app-icon-success'}
+				},
+	
+			errMsgObject : function(msg,errid)	{
+				return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','iconClass':'app-icon-error','containerClass':'ui-state-error'}
+				},
+			statusMsgObject : function(msg)	{
+				return {'errid':'#','errmsg':msg,'errtype':'statusupdate','iconClass':'app-icon-warn','containerClass':'ui-state-statusupdate'}
+				},
+			youErrObject : function(errmsg,errid)	{
+				return {'errid':errid,'errmsg':errmsg,'errtype':'youerr','iconClass':'ui-icon-youerr','containerClass':'ui-state-highlight'}
+				},
 
 
 /*
@@ -1684,31 +1683,31 @@ URI PARAM
 
 
 //pass in a name and if it is a parameter on the uri, the value is returned.
-		getParameterByName : function(name)	{
-			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-			var regexS = "[\\?&]" + name + "=([^&#]*)";
-			var regex = new RegExp(regexS);
-			var results = regex.exec(window.location.href);
-			if(results == null)
-				return "";
-			else
-				return decodeURIComponent(results[1].replace(/\+/g, " "));
-			}, //getParameterByName
-
+			getParameterByName : function(name)	{
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regexS = "[\\?&]" + name + "=([^&#]*)";
+				var regex = new RegExp(regexS);
+				var results = regex.exec(window.location.href);
+				if(results == null)
+					return "";
+				else
+					return decodeURIComponent(results[1].replace(/\+/g, " "));
+				}, //getParameterByName
+	
 //turn a set of key value pairs (a=b&c=d) into an object. if string is from URI, use getParametersAsObject which handles encoding and executes this after.
 //formerly getParametersAsObject
-		kvp2Array : function(s)	{
-			var r = false;
-			if(s && s.indexOf('=') > -1)	{
-//				app.u.dump(s.replace(/"/g, "\",\x22"));
-				s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
-				// .replace(/"/g, "\",\x22")
-//				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
-				r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
-				}
-			else	{}
-			return r;
-			}, //kvp2Array
+			kvp2Array : function(s)	{
+				var r = false;
+				if(s && s.indexOf('=') > -1)	{
+	//				app.u.dump(s.replace(/"/g, "\",\x22"));
+					s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
+					// .replace(/"/g, "\",\x22")
+	//				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
+					r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
+					}
+				else	{}
+				return r;
+				}, //kvp2Array
 		
 
 /*
@@ -1718,32 +1717,32 @@ AUTHENTICATION/USER
 */
 
 //## allow for targetID to be passed in.
-		logBuyerOut : function()	{
-//kill all the memory and localStorage vars used in determineAuthentication
-			app.model.destroy('appBuyerLogin'); //nuke this so app doesn't fetch it to re-authenticate session.
-			app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
-			app.model.destroy('whoAmI'); //need this nuked too.
-			app.vars.cid = null; //used in soft-auth.
-			localStorage.clear(); //clear everything from localStorage.
-			
-			app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
-			app.calls.refreshCart.init({},'immutable');
-			app.model.dispatchThis('immutable');
-			}, //logBuyerOut
+			logBuyerOut : function()	{
+	//kill all the memory and localStorage vars used in determineAuthentication
+				app.model.destroy('appBuyerLogin'); //nuke this so app doesn't fetch it to re-authenticate session.
+				app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
+				app.model.destroy('whoAmI'); //need this nuked too.
+				app.vars.cid = null; //used in soft-auth.
+				localStorage.clear(); //clear everything from localStorage.
+				
+				app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
+				app.calls.refreshCart.init({},'immutable');
+				app.model.dispatchThis('immutable');
+				}, //logBuyerOut
 
-		thisIsAnAdminSession : function()	{
-			//while technically this could be spoofed, the API wouldn't accept invalid values
-			return (app.vars.deviceid && app.vars.userid && app.vars.authtoken) ? true : false;
-			}, //thisIsAnAdminSession
-
-//uses the supported methods for determining if a buyer is logged in/session is authenticated.
-//neither whoAmI or appBuyerLogin are in localStorage to ensure data from a past session isn't used.
-		buyerIsAuthenticated : function()	{
-			r = false;
-			if(app.data.whoAmI && app.data.whoAmI.cid)	{r = true}
-			else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = true}
-			return r;
-			}, //buyerIsAuthenticated
+			thisIsAnAdminSession : function()	{
+				//while technically this could be spoofed, the API wouldn't accept invalid values
+				return (app.vars.deviceid && app.vars.userid && app.vars.authtoken) ? true : false;
+				}, //thisIsAnAdminSession
+	
+	//uses the supported methods for determining if a buyer is logged in/session is authenticated.
+	//neither whoAmI or appBuyerLogin are in localStorage to ensure data from a past session isn't used.
+			buyerIsAuthenticated : function()	{
+				r = false;
+				if(app.data.whoAmI && app.data.whoAmI.cid)	{r = true}
+				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = true}
+				return r;
+				}, //buyerIsAuthenticated
 
 //pretty straightforward. If a cid is set, the session has been authenticated.
 //if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
@@ -1751,90 +1750,91 @@ AUTHENTICATION/USER
 //if logged in via facebook, they are a thirdPartyGuest.
 //this could easily become smarter to take into account the timestamp of when the session was authenticated.
 			
-		determineAuthentication : function(){
-			var r = 'none';
-			if(this.thisIsAnAdminSession())	{r = 'admin'}
-			else if(app.u.buyerIsAuthenticated())	{r = 'authenticated'}
-//need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
-//and all third parties would get 'guest'
-			else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
-				r = 'thirdPartyGuest';
-//					app.thirdParty.fb.saveUserDataToSession();
-				}
-			else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
-				r = 'guest';
-				}
-			else	{
-				//catch.
-				}
-			return r;
-			}, //determineAuthentication
-
-
-
+			determineAuthentication : function(){
+				var r = 'none';
+				if(this.thisIsAnAdminSession())	{r = 'admin'}
+				else if(app.u.buyerIsAuthenticated())	{r = 'authenticated'}
+	//need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
+	//and all third parties would get 'guest'
+				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
+					r = 'thirdPartyGuest';
+	//					app.thirdParty.fb.saveUserDataToSession();
+					}
+				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
+					r = 'guest';
+					}
+				else	{
+					//catch.
+					}
+				return r;
+				}, //determineAuthentication
+	
+	
+	
 //pass in an array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)
-		removeDuplicatesFromArray : function(arrayName)	{
-			var newArray=new Array();
-			label:for(var i=0; i<arrayName.length;i++ )	{  
-				for(var j=0; j<newArray.length;j++ )	{
-					if(newArray[j]==arrayName[i]) 
-					continue label;
+			removeDuplicatesFromArray : function(arrayName)	{
+				var newArray=new Array();
+				label:for(var i=0; i<arrayName.length;i++ )	{  
+					for(var j=0; j<newArray.length;j++ )	{
+						if(newArray[j]==arrayName[i]) 
+						continue label;
+						}
+					newArray[newArray.length] = arrayName[i];
 					}
-				newArray[newArray.length] = arrayName[i];
-				}
-			return newArray;
-			},
+				return newArray;
+				},
 
 //pass an object in as first param and an array as the second.
 //This will return a NEW object, removing any keys from 'obj' that are not declared in 'whitelist'.
-		getWhitelistedObject : function(obj,whitelist)	{
-			var r = {};
-			for(index in obj)	{
-// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
-				if($.inArray(index, whitelist) >= 0)	{
-					r[index] = obj[index];
+			getWhitelistedObject : function(obj,whitelist)	{
+				var r = {};
+				for(index in obj)	{
+	// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+					if($.inArray(index, whitelist) >= 0)	{
+						r[index] = obj[index];
+						}
+					else	{} //not in whitelist
 					}
-				else	{} //not in whitelist
-				}
-			return r;
-			},
+				return r;
+				},
+
 //pass an object in as first param and an array as the second.
 //This will return a NEW object, removing any keys from 'obj' that ARE declared in 'blacklist'
-		getBlacklistedObject : function(obj,blacklist)	{
-			var r = $.extend({},obj);
-			for(index in obj)	{
-// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
-				if($.inArray(index, blacklist) >= 0)	{
-					delete r[index];
+			getBlacklistedObject : function(obj,blacklist)	{
+				var r = $.extend({},obj);
+				for(index in obj)	{
+	// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+					if($.inArray(index, blacklist) >= 0)	{
+						delete r[index];
+						}
+					else	{} //is not in blacklist
 					}
-				else	{} //is not in blacklist
-				}
-			return r;
-			},
+				return r;
+				},
 
 
 
 //used in checkout to populate username: so either login or bill/email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
 //later, this could be expanded to include a facebook id.
-		getUsernameFromCart : function()	{
-//			app.u.dump('BEGIN u.getUsernameFromCart');
-			var r = false;
-			if(app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
-				r = app.data.cartDetail.customer.login;
-//				app.u.dump(' -> login was set. email = '+r);
-				}
-			else if(app.data.cartDetail && app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
-				r = app.data.cartDetail.bill.email;
-//				app.u.dump(' -> bill/email was set. email = '+r);
-				}
-			else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
-//				app.u.dump(' -> user is logged in via facebook');
-				r = app.vars.fbUser.email;
-				}
-			return r;
-			}, //getUsernameFromCart
+			getUsernameFromCart : function()	{
+	//			app.u.dump('BEGIN u.getUsernameFromCart');
+				var r = false;
+				if(app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
+					r = app.data.cartDetail.customer.login;
+	//				app.u.dump(' -> login was set. email = '+r);
+					}
+				else if(app.data.cartDetail && app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
+					r = app.data.cartDetail.bill.email;
+	//				app.u.dump(' -> bill/email was set. email = '+r);
+					}
+				else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
+	//				app.u.dump(' -> user is logged in via facebook');
+					r = app.vars.fbUser.email;
+					}
+				return r;
+				}, //getUsernameFromCart
 
 
 /*
@@ -1845,40 +1845,24 @@ BROWSER/OS
 
 
 // .browser returns an object of info about the browser (name and version).
-		getBrowserInfo : function()	{
-// *** .browser() is not supported as of jquery 1.9+
-			var
-				ua= navigator.userAgent.toLowerCase(),
-				match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
-			//app.u.dump("browser: "+match[ 1 ] || "-" + match[ 2 ] || "0");
-			return match[ 1 ] || "-" + match[ 2 ] || "0";
+			getBrowserInfo : function()	{
+	// *** .browser() is not supported as of jquery 1.9+
+				var
+					ua= navigator.userAgent.toLowerCase(),
+					match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
+				//app.u.dump("browser: "+match[ 1 ] || "-" + match[ 2 ] || "0");
+				return match[ 1 ] || "-" + match[ 2 ] || "0";
+				}, //getBrowserInfo
 			
-		/*			
-			var r;
-			var BI = jQuery.browser; //browser information. returns an object. will set 'true' for value of browser 
-			jQuery.each(BI, function(i, val) {
-				if(val === true){r = i;}
-				});
-			r += '-'+BI.version;
-//			app.u.dump(' r = '+r);
-			return r;
-			*/
-			}, //getBrowserInfo
-			
-		getOSInfo : function()	{
-
-			var OSName="Unknown OS";
-			if (navigator.appVersion.indexOf("Win")!=-1) OSName="WI";
-			if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MC";
-			if (navigator.appVersion.indexOf("X11")!=-1) OSName="UN";
-			if (navigator.appVersion.indexOf("Linux")!=-1) OSName="LI";
-			return OSName;
-			}, //getOSInfo
-
-
-
-
-
+			getOSInfo : function()	{
+	
+				var OSName="Unknown OS";
+				if (navigator.appVersion.indexOf("Win")!=-1) OSName="WI";
+				if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MC";
+				if (navigator.appVersion.indexOf("X11")!=-1) OSName="UN";
+				if (navigator.appVersion.indexOf("Linux")!=-1) OSName="LI";
+				return OSName;
+				}, //getOSInfo
 
 
 
@@ -3643,7 +3627,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 
 
 	thirdParty : {
-		
+// !!! this should get moved out of here and either into a FB extension or quickstart.		
 		fb : {
 			
 			postToWall : function(msg)	{

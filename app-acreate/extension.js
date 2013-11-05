@@ -20,49 +20,54 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var lookup = function() {
+var login = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-
-
-	callbacks : {
-//executed when extension is loaded. should include any validation that needs to occur.
-		init : {
-			onSuccess : function()	{
-				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-
-				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
-				r = true;
-
-				return r;
-				},
-			onError : function()	{
-//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
-//you may or may not need it.
-
-				}
+		vars : {
+			services : ['facebook','google','linkedin','twitter']
 			},
-//executed when the extension loads
-		initExtension : {
-			onSuccess : function()	{
-				app.u.dump('BEGIN lookup.initExtension.onSuccess ');
-				//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
-				if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
-					app.u.dump(" -> Treat as anycommerce");
-					$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
-					$('body').addClass('isAnyCommerce');
+	
+		callbacks : {
+//executed when extension is loaded. should include any validation that needs to occur.
+			init : {
+				onSuccess : function()	{
+					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+	
+					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
+					r = true;
+	
+					return r;
+					},
+				onError : function()	{
+	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
+	//you may or may not need it.
+	
 					}
-				else	{
-					app.u.dump(" -> Treat as zoovy");
-					$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
+				},
+	//executed when the extension loads
+			initExtension : {
+				onSuccess : function()	{
+					app.u.dump('BEGIN lookup.initExtension.onSuccess ');
+					//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
+					if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
+						app.u.dump(" -> Treat as anycommerce");
+						$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
+						$('body').addClass('isAnyCommerce');
+						}
+					else	{
+						app.u.dump(" -> Treat as zoovy");
+						$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
+						}
+					
+//at first login, use DPS to set which service was used and next time, use that var to load that service first and if logged in, jump straight in. If no, load all services.
+					app.ext.login.u.loadServices(app.ext.admin.u.dpsGet('login','service'));
 					}
-				}
-			} //initExtension
-		}, //callbacks
+				} //initExtension
+			}, //callbacks
 
 
 
@@ -87,6 +92,163 @@ var lookup = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			
+			loadServices : function(service)	{
+				if(service)	{
+					if(typeof app.ext.login.u[service] == 'function')	{
+						app.ext.login.u[service](document);
+						}
+					else	{
+						//for this app, this early in the process, we're suppressing errors as much as possible.
+						app.u.dump('Attempted to load a service which does not exist: '+service,'warn');
+						app.ext.login.u.loadServices();
+						}
+					}
+				else	{
+					app.ext.login.u.load_facebook(document);
+					app.ext.login.u.load_foogle(document);
+					app.ext.login.u.load_twitter(document);
+					app.ext.login.u.load_linkedin(document);					
+					}
+				},
+
+			load_facebook : function(d){
+				app.u.dump(" -> loading facebook code");
+				if(typeof FB == 'object')	{}
+				else	{
+	
+					var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+					if (d.getElementById(id)) {return;}
+					js = d.createElement('script'); js.id = id; js.async = true;
+					js.src = "https://connect.facebook.net/en_US/all.js";
+					ref.parentNode.insertBefore(js, ref);
+
+					window.fbAsyncInit = function() {
+						FB.init({
+							appId      : '717808051580347', // App ID (from jt-zoovy fb account)
+							channelUrl : 'cors/channel.html', // Channel File
+							status     : true, // check login status
+							cookie     : true, // enable cookies to allow the server to access the session
+							xfbml      : true  // parse XFBML
+							});
+					
+					  // Here we run a very simple test of the Graph API after login is successful. 
+					  // This testAPI() function is only called in those cases. 
+						function testAPI() {
+							console.log('Welcome!  Fetching your information.... ');
+							FB.api('/me', function(response) {
+								console.log('Good to see you, ' + response.name + '.');
+								});
+							}
+					
+					// Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+					// for any authentication related change, such as login, logout or session refresh. This means that
+					// whenever someone who was previously logged out tries to log in again, the correct case below 
+					// will be handled. 
+						FB.Event.subscribe('auth.authResponseChange', function(response) {
+					// Here we specify what we do with the response anytime this event occurs. 
+							if(response.status === 'connected') {
+								console.log(" -> user is logged into the app");
+					// The response object is returned with a status field that lets the app know the current
+					// login status of the person. In this case, we're handling the situation where they 
+					// have logged in to the app.
+								testAPI();
+								}
+							else if (response.status === 'not_authorized') {
+								console.log(" -> user is logged into FB but NOT the app");
+					// In this case, the person is logged into Facebook, but not into the app, so we call
+					// FB.login() to prompt them to do so. 
+					// In real-life usage, you wouldn't want to immediately prompt someone to login 
+					// like this, for two reasons:
+					// (1) JavaScript created popup windows are blocked by most browsers unless they 
+					// result from direct interaction from people using the app (such as a mouse click)
+					// (2) it is a bad experience to be continually prompted to login upon page load.
+								FB.login(function(response){
+									console.log(" -> here's the response from the login"); console.dir(response);
+									},{scope:'email'});
+								}
+							else {
+								console.log(" -> user is NOT logged into FB OR the app");
+					// In this case, the person is not logged into Facebook, so we call the login() 
+					// function to prompt them to do so. Note that at this stage there is no indication
+					// of whether they are logged into the app. If they aren't then they'll see the Login
+					// dialog right after they log in to Facebook. 
+					// The same caveats as above apply to the FB.login() call here.
+								FB.login(function(response){
+									console.log(" -> here's the response from the login"); console.dir(response);
+									},{scope:'email'});
+								}
+							});
+						}
+				
+					}
+				},
+			
+			load_google : function(d)	{
+				
+				if(typeof gapi == 'object')	{} //google+ code already loaded.
+				else	{
+					var clientId = '286671899262.apps.googleusercontent.com'; //from billing.zoovy.com
+					var apiKey = 'AIzaSyChIsIQp1hVMcdeyY-G4ySvxImu065YbBU'; //from billing.zoovy.com
+					var scopes = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email ';
+					
+					// Use a button to handle authentication the first time.
+					window.handleClientLoad = function () {
+						gapi.client.setApiKey(apiKey);
+						window.setTimeout(checkAuth,1);
+						}
+					
+					function checkAuth() {
+						gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+						}
+					
+					
+					function handleAuthResult(authResult) {
+						var authorizeButton = document.getElementById('authorize-button');
+						if (authResult && !authResult.error) {
+							authorizeButton.style.visibility = 'hidden';
+							makeApiCall();
+							}
+						else {
+							authorizeButton.style.visibility = '';
+							authorizeButton.onclick = handleAuthClick;
+							}
+						}
+					
+					function handleAuthClick(event) {
+						gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+						return false;
+						}
+					
+					
+					// Load the API and make an API call.  Display the results on the screen.
+					function makeApiCall() {
+						gapi.client.load('plus', 'v1', function() {
+							var request = gapi.client.plus.people.get({
+								'userId': 'me'
+								});
+							request.execute(function(resp) {
+								console.log(" executed after a successful login");
+								alert('user is logged in with google');
+					/*
+								var heading = document.createElement('h4');
+								var image = document.createElement('img');
+								image.src = resp.image.url;
+								heading.appendChild(image);
+								heading.appendChild(document.createTextNode(resp.displayName));
+								document.getElementById('content').appendChild(heading);
+					*/			});
+							});
+						}
+					
+					$.getScript("https://apis.google.com/js/client.js?onload=handleClientLoad");
+					}
+				},
+			
+			load_twitter : function(d){},
+			
+			load_linkedin : function(d){}
+			
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"

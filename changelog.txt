@@ -30,6 +30,8 @@ ADMIN
 	feature - sites interface now has 'update sitemap' button for domains (starts a batch job).
 	enhancement - crm/tickets interface udpated. faster and more memory efficient for browser.
 	enhancement - product selector (powertool, product export) now supports linebreaks OR commas for comma separated list input.
+	bug fix - better error/warning display in syndication.
+	bug fix - global settings > inventory 'remove from website' is saving now.
 
 ANYPLUGINS
 	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.

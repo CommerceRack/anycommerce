@@ -63,27 +63,10 @@ $(document).ready(function(){
 	var tmp = new zController(app);
 //instantiate wiki parser.
 	myCreole = new Parse.Simple.Creole();
-	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js','callback':'initExtension'}]);
+	app.model.addExtensions([{'namespace':'login','filename':'app-login/extension.js','callback':'initExtension'}]);
 	app.u.handleEventDelegation($(document.body));
 	});
 
-
-/*
-linked in docs:
-https://developer.linkedin.com/documents/getting-started-javascript-api
-*/
-
-
-//here for quick testing.  will need to be moved into extension when it's working.
-function initTwitter()	{
-	$.ajax({
-		url : 'https://api.twitter.com/oauth/request_token?oauth_token=57002332-tQEaz11fELPxhQSsEnZ65LFNQzlbHMUDdlCzTsZlV'//,
-//		beforeSend : function(xhr)	{
-//			xhr.setRequestHeader('Authorization ','OAuth oauth_consumer_key="yMN0fyj927LHqbE43WphBA", oauth_nonce="kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg", oauth_signature="tnnArxj06cWHq44gCs1OSKk%2FjLY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1318622958", oauth_token="370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", oauth_version="1.0"'); //set by app
-//			}
-		});
-//	var twitRequest = $.ajax('https://api.twitter.com/oauth/authenticate?oauth_token=57002332-tQEaz11fELPxhQSsEnZ65LFNQzlbHMUDdlCzTsZlV');
-	}
 
 </script>
 
@@ -107,13 +90,13 @@ function initTwitter()	{
 		
 		<div class='alignCenter clearfix marginBottom'>
 		
-			<span class='threePLSprite twitter' onClick="initTwitter();"></span>
+			<span class='threePLSprite twitter'></span>
 <!--			<span class='threePLSprite facebook'></span> -->
 			<span class='treatAsthreePLSprite'><fb:login-button show-faces="false" width="200" max-rows="1"></fb:login-button></span>
 			<span class='threePLSprite linkedin'></span>
 			<span class='threePLSprite yahoo'></span>
 			<span class='threePLSprite openid'></span>
-			<span class='threePLSprite google'></span>
+			<span class='threePLSprite google' id="authorize-button" style="visibility: hidden"></span>
 		
 		</div>
 	
@@ -143,63 +126,6 @@ we should be able to get this much from whatever service they use.
 </div>
 
 <div id="fb-root"></div>
-<script>
-//http://developers.facebook.com/docs/facebook-login/getting-started-web/
-  // Additional JS functions here
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '717808051580347', // App ID
-      channelUrl : 'app-acreate/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true  // parse XFBML
-    });
-
-    // Additional init code here
-
-  };
-
-  // Load the SDK asynchronously
-  (function(d){
-     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = (document.location.protocol == 'file:' ? 'http:' : '')+"//connect.facebook.net/en_US/all.js";
-     ref.parentNode.insertBefore(js, ref);
-   }(document));
-
-  FB.Event.subscribe('auth.authResponseChange', function(response) {
-    // Here we specify what we do with the response anytime this event occurs. 
-    if (response.status === 'connected') {
-      testAPI();
-    } else if (response.status === 'not_authorized') {
-      FB.login();
-    } else {
-      FB.login();
-    }
-  });
-
-
-  // Load the SDK asynchronously
-  (function(d){
-   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement('script'); js.id = id; js.async = true;
-   js.src = "//connect.facebook.net/en_US/all.js";
-   ref.parentNode.insertBefore(js, ref);
-  }(document));
-
-  // Here we run a very simple test of the Graph API after login is successful. 
-  // This testAPI() function is only called in those cases. 
-  function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Good to see you, ' + response.name + '.');
-    });
-  }
-
-
-</script>
 
 </body>
 </html>
