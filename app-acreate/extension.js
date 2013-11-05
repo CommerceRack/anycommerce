@@ -20,7 +20,7 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var login = function() {
+var acreate = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -62,9 +62,9 @@ var login = function() {
 						app.u.dump(" -> Treat as zoovy");
 						$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
 						}
-					
+					app.u.handleButtons($('#loginFormContainer'));
 //at first login, use DPS to set which service was used and next time, use that var to load that service first and if logged in, jump straight in. If no, load all services.
-					app.ext.login.u.loadServices(app.model.dpsGet('login','service'));
+					app.ext.acreate.u.loadServices(app.model.dpsGet('acreate','service'));
 					}
 				} //initExtension
 			}, //callbacks
@@ -95,23 +95,23 @@ var login = function() {
 			
 			loadServices : function(service)	{
 				if(service)	{
-					if(typeof app.ext.login.u[service] == 'function')	{
-						app.ext.login.u[service](document);
+					if(typeof app.ext.acreate.u[service] == 'function')	{
+						app.ext.acreate.u[service](document);
 						}
 					else	{
 						//for this app, this early in the process, we're suppressing errors as much as possible.
 						app.u.dump('Attempted to load a service which does not exist: '+service,'warn');
-						app.ext.login.u.loadServices();
+						app.ext.acreate.u.loadServices();
 						}
 					}
 				else	{
-					app.ext.login.u.load_facebook(document);
-					app.ext.login.u.load_foogle(document);
-					app.ext.login.u.load_twitter(document);
-					app.ext.login.u.load_linkedin(document);					
+					var services = app.ext.acreate.vars.services; //shortcut.
+					for(var i = 0, L = services.length; i < L; i += 1)	{
+						app.ext.acreate.u['load_'+services[i]](document);
+						}
 					}
 				},
-
+// NOTE -> each service function should check to see if it's libs have already been loaded and, if so, NOT load them again.
 			load_facebook : function(d){
 				app.u.dump(" -> loading facebook code");
 				if(typeof FB == 'object')	{}

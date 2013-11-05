@@ -48,7 +48,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <!-- not much is going to run without these two. load em early -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script type="text/javascript" src="controller.js"></script>
 <script type="text/javascript" src="model.js"></script>
@@ -62,8 +62,8 @@ css files should be included before any .js file to ensure they are downloaded i
 $(document).ready(function(){
 	var tmp = new zController(app);
 //instantiate wiki parser.
-	myCreole = new Parse.Simple.Creole();
-	app.model.addExtensions([{'namespace':'login','filename':'app-login/extension.js','callback':'initExtension'}]);
+//	myCreole = new Parse.Simple.Creole();
+	app.model.addExtensions([{'namespace':'acreate','filename':'app-acreate/extension.js','callback':'initExtension'}]);
 	app.u.handleEventDelegation($(document.body));
 	});
 
@@ -95,7 +95,7 @@ $(document).ready(function(){
 			<span class='treatAsthreePLSprite'><fb:login-button show-faces="false" width="200" max-rows="1"></fb:login-button></span>
 			<span class='threePLSprite linkedin'></span>
 			<span class='threePLSprite yahoo'></span>
-			<span class='threePLSprite openid'></span>
+<!--			<span class='threePLSprite openid'></span> -->
 			<span class='threePLSprite google' id="authorize-button" style="visibility: hidden"></span>
 		
 		</div>
@@ -117,7 +117,7 @@ we should be able to get this much from whatever service they use.
 		<label><span>Domain: </span><input type='url' name='domain' required='required' placeholder='http://' value="" /></label>
 		<label><span>Phone: </span><input type='tel' name='phone' required='required' size='10' /></label>
 		<div class='alignRight'>
-			<button>Create Account</button>
+			<button class='applyButton ui-state-highlight'>Create Account</button>
 		</div>
 	</fieldset>
 	</form>
