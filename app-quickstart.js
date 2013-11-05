@@ -1838,7 +1838,12 @@ if(ps.indexOf('?') >= 1)	{
 				
 				//Try to parse URI information
 				try {
-					infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
+//*** 201344 	Need to do a check before calling kvp2Array; if there are no params then it will return false, and the pagetype will not get set. -mc
+//				This essentially breaks any page hash that requires no params, ie #homepage, #cart, #checkout
+//				No need to worry about #slide2 or another oblivious anchor affecting this code- app.ext.myRIA.u.thisPageInfoIsValid gets called to check that.
+					if(splits.length > 1){
+						infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
+					}
 //					app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
 					infoObj.pageType = splits[0];
 					
