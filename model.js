@@ -1731,8 +1731,68 @@ app.model.dispatchThis('mutable');
 				beforeSend: app.model.setHeader //uses headers to pass authentication info to keep them  off the uri.
 				});
 //			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
-	*/		}
-		
+	*/		},
+
+
+/*
+
+methods of getting data from non-server side sources, such as cookies, local or session storage.
+
+*/
+
+//Device Persistent Settings (DPS) Get  ### here for search purposes:   preferences settings localstorage
+//false is returned if there are no matchings session vars.
+//if no extension is passed, return the entire sesssion object (if it exists).
+//this allows for one extension to read anothers preferences and use/change them.
+//ns is an optional param. NameSpace. allows for nesting.
+			dpsGet : function(ext,ns)	{
+				var r = false, obj = app.storageFunctions.readLocal('session');
+//				app.u.dump("ACCESSING DPS:"); app.u.dump(obj);
+				if(obj == undefined)	{
+					// if nothing is local, no work to do. this allows an early exit.
+					} 
+				else	{
+					if(ext && obj[ext] && ns)	{r = obj[ext][ns]} //an extension was passed and an object exists.
+					else if(ext && obj[ext])	{r = obj[ext]} //an extension was passed and an object exists.
+					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
+					else	{} //could get here if ext passed but obj.ext doesn't exist.
+					}
+				return r;
+				},
+
+//Device Persistent Settings (DPS) Set
+//For updating 'session' preferences, which are currently device specific.
+//for instance, in orders, what were the most recently selected filter criteria.
+//ext is required (currently). reduces likelyhood of nuking entire preferences object.
+			dpsSet : function(ext,ns,varObj)	{
+//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
+				if(ext && ns && (varObj || varObj == 0))	{
+//					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
+					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
+					sessionData = (typeof sessionData === 'object') ? sessionData : {};
+//					app.u.dump(" -> sessionData: "); app.u.dump(sessionData);
+					if(typeof sessionData[ext] === 'object'){
+						sessionData[ext][ns] = varObj;
+						}
+					else	{
+						sessionData[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
+						sessionData[ext][ns] = varObj;
+						} //object  exists already. update it.
+
+//can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
+//					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
+
+					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
+					}
+				else	{
+					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
+					}
+				}
+
+
+
+
+
 		}
 
 	return r;

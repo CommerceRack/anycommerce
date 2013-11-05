@@ -328,7 +328,7 @@ else	{
 			app.u.dump("BEGIN admin_orders.a.initOrderManager. targetID:"+P.targetID);
 //			app.u.dump(P);
 			app.ext.admin_orders.u.handleOrderListTab('deactivate');
-			var oldFilters = app.ext.admin.u.dpsGet('admin_orders');
+			var oldFilters = app.model.dpsGet('admin_orders');
 			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
 //				app.u.dump(" -> use old filters.");
@@ -408,14 +408,14 @@ else	{
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
 
 //check to see which index in accordian was open last.
-				var settings = app.ext.admin.u.dpsGet('admin_orders','accordion') || {};
+				var settings = app.model.dpsGet('admin_orders','accordion') || {};
 				settings.active = settings.active || 0; //default to search.
 				$(".searchAndFilterContainer",$target).accordion({
 					heightStyle: "content",
 					collapsible: true,
 					active : settings.active,
 					change : function(e,ui)	{
-						app.ext.admin.u.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.
+						app.model.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.
 						}
 					});
 				
@@ -1141,7 +1141,7 @@ else	{
 				}
 			else	{
 //						app.u.dump(" -> filter change is getting set locally.");
-				app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
+				app.model.dpsSet('admin_orders','managerFilters',obj);
 //						app.u.dump("Filter Obj: "); app.u.dump(obj);
 				app.model.destroy('adminOrderList'); //clear local storage to ensure request
 				app.ext.admin_orders.a.showOrderList(obj);

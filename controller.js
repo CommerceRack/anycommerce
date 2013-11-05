@@ -3536,7 +3536,8 @@ $tmp.empty().remove();
 
 ////////////////////////////////////   						STORAGEFUNCTIONS						    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 					
-					
+// !!! at some point, these should get moved to the model. the model should handle loading data from any source.
+		
 	storageFunctions : {
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{

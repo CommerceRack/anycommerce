@@ -64,7 +64,7 @@ var login = function() {
 						}
 					
 //at first login, use DPS to set which service was used and next time, use that var to load that service first and if logged in, jump straight in. If no, load all services.
-					app.ext.login.u.loadServices(app.ext.admin.u.dpsGet('login','service'));
+					app.ext.login.u.loadServices(app.model.dpsGet('login','service'));
 					}
 				} //initExtension
 			}, //callbacks

@@ -1611,7 +1611,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_handleInitialState : function()	{
 			if(this.options.state == 'persistent' && this.options.name && this.options.extension)	{
 //				app.u.dump(" -> using persistent settings");
-				var settings = app.ext.admin.u.dpsGet(this.options.extension,'anypanel');
+				var settings = app.model.dpsGet(this.options.extension,'anypanel');
 				if(settings && settings[this.options.name])	{
 					this.options.state = settings[this.options.name].state; //if not defined, default to expand.
 					}
@@ -1665,10 +1665,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 				if(this.options.extension && this.options.name)	{
 					var settings = {};
 					settings[this.options.name] = {'state':value};
-					var newSettings = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
+					var newSettings = $.extend(true,app.model.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
 //					app.u.dump(' -> '+this.options.extension);
 //					app.u.dump(' -> newSettings:');	app.u.dump(newSettings);
-					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
+					app.model.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
 				else	{

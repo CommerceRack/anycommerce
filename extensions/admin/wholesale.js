@@ -125,7 +125,7 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	$target.anycontent(rd);
-	var whim = app.ext.admin.u.dpsGet('admin_wholesale','whim') || {};
+	var whim = app.model.dpsGet('admin_wholesale','whim') || {};
 //	app.u.dump(" -> dps.whim: "); app.u.dump(whim);
 	if(whim.geo)	{
 		$("[data-geo='666']",$target).trigger('click',{'skipDPSUpdate':true})
@@ -309,7 +309,7 @@ else	{
 												var $col = $(this);
 												dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
 												});
-											app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
+											app.model.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
 								//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 											}
 										});
@@ -700,9 +700,9 @@ else	{
 // it's already set because dps is where the page load got the geo from in the firstplace
 					if(p.skipDPSUpdate)	{}
 					else	{
-						var whim = app.ext.admin.u.dpsGet('admin_wholesale',"whim") || {};
+						var whim = app.model.dpsGet('admin_wholesale',"whim") || {};
 						whim.geo = $ele.data('geo');
-						app.ext.admin.u.dpsSet('admin_wholesale',"whim",whim);
+						app.model.dpsSet('admin_wholesale',"whim",whim);
 						}
 					}
 				else	{

@@ -107,10 +107,10 @@ var admin_navcats = function() {
 				var r = 0; //what is returned. will be # of dispatches added to Q.
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
-app.u.dump(" => typeof dpsGet: "+typeof app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition)); app.u.dump(app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition));
+app.u.dump(" => typeof dpsGet: "+typeof app.model.dpsGet('navcat','tree4prt'+app.vars.partition)); app.u.dump(app.model.dpsGet('navcat','tree4prt'+app.vars.partition));
 					var
 						L = subcats.length,
-						navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || [], //list of 'open' categories from localStorage.
+						navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || [], //list of 'open' categories from localStorage.
 						NOL = navcatObj.length;
 						
 
@@ -225,7 +225,7 @@ Params:
 							}
 						else	{
 						
-							var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
+							var navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
 	//						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
 	
 							app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
@@ -314,7 +314,7 @@ Params:
 // a function for adding or removing a category from the list of what's open by default.
 // On the initial load, p.skipDPSset will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
 			handleNavcatDPS : function (cmd,path)	{
-				var navcatObj = app.ext.admin.u.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+				var navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
 				
 				var index = $.inArray(path,navcatObj);
 			//	app.u.dump(" -> cmd: "+cmd);
@@ -326,11 +326,11 @@ Params:
 				else if(cmd == 'remove')	{
 			//		app.u.dump("REMOVE "+path);
 					navcatObj.splice(index,1);
-					app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					app.model.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
 					}
 				else if(cmd == 'add' && index < 0){
 					navcatObj.push(path);
-					app.ext.admin.u.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					app.model.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
 					}
 				else	{
 					app.u.dump("handleNavcatDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');

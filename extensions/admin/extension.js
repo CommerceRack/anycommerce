@@ -1728,7 +1728,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 //** 201320 -> no more hunting and pecking for domain. stored in dps and if it isn't there, the user will be prompted (in showHeader) to select one.
 //the domainChange will set these three vars in localStorage so they'll be there next time.
 //all three of the vars are required. images require the https_domain and several configDetail calls require partition.
-var adminObj = app.ext.admin.u.dpsGet('admin');
+var adminObj = app.model.dpsGet('admin');
 if(!$.isEmptyObject(adminObj))	{
 	app.vars.domain = adminObj.domain;
 	app.vars.partition = adminObj.partition;
@@ -2277,7 +2277,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 					var
 						L = app.data[_rtag.datapointer]['@MSGS'].length,
-						DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [],
+						DPSMessages = app.model.dpsGet('admin','messages') || [],
 						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
 						lastMessageID;
 
@@ -2285,8 +2285,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					for(var i = 0; i < L; i += 1)	{
 						DPSMessages.push(app.data[_rtag.datapointer]['@MSGS'][i])
 						}
-					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
-					app.ext.admin.u.dpsSet('admin','lastMessage',app.data[_rtag.datapointer]['@MSGS'][L-1].id);
+					app.model.dpsSet('admin','messages',DPSMessages);
+					app.model.dpsSet('admin','lastMessage',app.data[_rtag.datapointer]['@MSGS'][L-1].id);
 					app.ext.admin.u.displayMessages(app.data[_rtag.datapointer]['@MSGS']);
 //					app.u.dump(" ->last Message (end): "+app.ext.admin.u.getLastMessageID());
 					}
@@ -3092,9 +3092,9 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						app.vars.partition = partition;
 						app.vars.https_domain = app.data['adminDomainList']['media-host'];
 	//set the vars in localStorage. This is what will be used upon return to preselect a domain.
-						app.ext.admin.u.dpsSet('admin',"domain",domain); 
-						app.ext.admin.u.dpsSet('admin',"partition",partition); 
-						app.ext.admin.u.dpsSet('admin',"https_domain",app.vars.https_domain); 
+						app.model.dpsSet('admin',"domain",domain); 
+						app.model.dpsSet('admin',"partition",partition); 
+						app.model.dpsSet('admin',"https_domain",app.vars.https_domain); 
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
@@ -3436,7 +3436,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					}
 				app.model.dispatchThis('immutable');
 //if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
-				var	DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [];
+				var	DPSMessages = app.model.dpsGet('admin','messages') || [];
 				if(DPSMessages.length)	{
 					app.ext.admin.u.displayMessages(DPSMessages);
 					}
@@ -3516,7 +3516,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				var $r = $("<div \/>");
 				if(messageID)	{
 					var
-						DPSMessages = app.ext.admin.u.dpsGet('admin','messages') || [],
+						DPSMessages = app.model.dpsGet('admin','messages') || [],
 						L = DPSMessages.length,
 						msg = {};
 					
@@ -3543,10 +3543,10 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 			getLastMessageID : function()	{
-				return app.ext.admin.u.dpsGet('admin','lastMessage') || 0;
+				return app.model.dpsGet('admin','lastMessage') || 0;
 				/*
 				var r = 0; //default to zero if no past messageid is present.
-				var DPSMessages = app.ext.admin.u.dpsGet('admin','messages');
+				var DPSMessages = app.model.dpsGet('admin','messages');
 				if(DPSMessages && DPSMessages.length)	{
 					r = DPSMessages[(DPSMessages.length - 1)].id;
 					app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
@@ -3912,7 +3912,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 			clearAllMessages : function(){
 				$("[data-app-role='messagesContainer']",'#messagesContent').intervaledEmpty();
 
-				app.ext.admin.u.dpsSet('admin','messages',[]);
+				app.model.dpsSet('admin','messages',[]);
 				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
 				// NOTE ### -> when this is updated to trigger a clear on the server, add a confirm prompt.
 				},
@@ -4772,7 +4772,7 @@ else	{
 			selectivelyNukeLocalStorage : function(){
 				var admin = {};
 				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
-				var dps = app.ext.admin.u.dpsGet(); //all 'session' vars
+				var dps = app.model.dpsGet(); //all 'session' vars
 				localStorage.clear();
 				app.storageFunctions.writeLocal('authAdminLogin',admin);
 // * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
@@ -4864,55 +4864,6 @@ just lose the back button feature.
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
 					}
 				_ignoreHashChange = false; //turned off again to re-engage this feature.
-				},
-
-//Device Persistent Settings (DPS) Get  ### here for search purposes:   preferences settings localstorage
-//false is returned if there are no matchings session vars.
-//if no extension is passed, return the entire sesssion object (if it exists).
-//this allows for one extension to read anothers preferences and use/change them.
-//ns is an optional param. NameSpace. allows for nesting.
-			dpsGet : function(ext,ns)	{
-				var r = false, obj = app.storageFunctions.readLocal('session');
-//				app.u.dump("ACCESSING DPS:"); app.u.dump(obj);
-				if(obj == undefined)	{
-					// if nothing is local, no work to do. this allows an early exit.
-					} 
-				else	{
-					if(ext && obj[ext] && ns)	{r = obj[ext][ns]} //an extension was passed and an object exists.
-					else if(ext && obj[ext])	{r = obj[ext]} //an extension was passed and an object exists.
-					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
-					else	{} //could get here if ext passed but obj.ext doesn't exist.
-					}
-				return r;
-				},
-
-//Device Persistent Settings (DPS) Set
-//For updating 'session' preferences, which are currently device specific.
-//for instance, in orders, what were the most recently selected filter criteria.
-//ext is required (currently). reduces likelyhood of nuking entire preferences object.
-			dpsSet : function(ext,ns,varObj)	{
-//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
-				if(ext && ns && (varObj || varObj == 0))	{
-//					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
-					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
-					sessionData = (typeof sessionData === 'object') ? sessionData : {};
-//					app.u.dump(" -> sessionData: "); app.u.dump(sessionData);
-					if(typeof sessionData[ext] === 'object'){
-						sessionData[ext][ns] = varObj;
-						}
-					else	{
-						sessionData[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
-						sessionData[ext][ns] = varObj;
-						} //object  exists already. update it.
-
-//can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-//					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
-
-					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
-					}
-				else	{
-					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
-					}
 				},
 
 
@@ -5603,7 +5554,7 @@ not in use
 //				app.u.dump(" -> remove message: "+msgid);
 				$ele.closest('tr').empty().remove();
 				var
-					DPSMessages = app.ext.admin.u.dpsGet('admin','messages'),
+					DPSMessages = app.model.dpsGet('admin','messages'),
 					index = null;
 
 				$.grep(DPSMessages, function(e,i){if(e.id == msgid){index = i; return;}});
@@ -5612,7 +5563,7 @@ not in use
 				if(index)	{
 					DPSMessages.splice(index,1);
 					app.u.dump(DPSMessages);
-					app.ext.admin.u.dpsSet('admin','messages',DPSMessages);
+					app.model.dpsSet('admin','messages',DPSMessages);
 					app.ext.admin.u.updateMessageCount();
 					}
 				else	{

@@ -58,7 +58,7 @@ var admin_trainer = function() {
 						app.u.dump(i+"). "+slidesArr[i]);
 						$("<div \/>").addClass((i == 0 ? "marginBottom" : "marginBottom displayNone")).attr("data-trainerid",slidesArr[i]).anycontent({
 							'templateID':slidesArr[i],
-							'data' : app.ext.admin.u.dpsGet('trainer',slidesArr[i]) || {},
+							'data' : app.model.dpsGet('trainer',slidesArr[i]) || {},
 							'showLoading':false
 							}).appendTo($trainer);
 						}

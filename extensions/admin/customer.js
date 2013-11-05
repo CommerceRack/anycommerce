@@ -245,7 +245,7 @@ if(app.model.responseHasErrors(rd)){
 else	{
 	$custEditorTarget.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer],'dataAttribs':obj});
 	
-	var panArr = app.ext.admin.u.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
+	var panArr = app.model.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
 
 	if(!$.isEmptyObject(panArr))	{
 //		app.u.dump(" -> panArr: "); app.u.dump(panArr);
@@ -283,7 +283,7 @@ else	{
 				var $col = $(this);
 				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
 				});
-			app.ext.admin.u.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
+			app.model.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
 //			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 			}
 		});
