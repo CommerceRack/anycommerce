@@ -1398,7 +1398,8 @@ for(var i = 0; i < L; i += 1)	{
 							break;
 			
 						case 'downloadMedia':
-							window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
+							app.u.dump(" -> $(this).closest('[data-path]').length: "+$ele.closest('[data-path]').length); app.u.dump($ele.closest('[data-path]').data());
+							window.open(app.u.makeImage({'name':$ele.closest('[data-path]').data('path')}));
 							break;
 						
 						default:
