@@ -732,10 +732,13 @@ has to be within the fieldset to for data-table to work right.
 
 
 	<section class='marginTop marginBottom'>
-		<h2>Inspectors</h2>
+		<h2>Inspectors &amp; More</h2>
 		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
 		
-		<form><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Go</button></form>
+		<form action='#' onSubmit='return false'><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label>
+			<button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Inspect</button>
+			<button data-app-click='admin_tools|forcePIDIntoPTL' class='applyButton' title="This will add the sku in question to the product task list">Force into Product Task</button>
+			</form>
 		
 		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-event='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
 		<!--

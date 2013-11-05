@@ -191,6 +191,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 		u : {}, //u
 
 		e : {
+
+			
 			adminTaskCreateShow : function($ele,p)	{
 
 				var $target = $('#createTaskModal'); //created as part of init process.

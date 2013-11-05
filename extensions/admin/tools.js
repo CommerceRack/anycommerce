@@ -141,6 +141,7 @@ var admin_tools = function() {
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
 				app.u.handleAppEvents($target);
+				$target.anydelegate();
 
 				app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogList',
@@ -943,8 +944,13 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 				app.u.dump(cmdObj);
 				app.model.addDispatchToQ(cmdObj,'mutable');
 				app.model.dispatchThis('mutable');
-				}
+				},
 
+			//for forcing a product into the product task list
+			forcePIDIntoPTL : function($ele,p)	{
+				app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
+				}
+				
 			} //e [app Events]
 		} //r object.
 	return r;

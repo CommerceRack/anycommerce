@@ -1559,8 +1559,9 @@ Required params include:
 
 //when simply adding to the list, we can use product data from localStorage/memory if it's available.
 						if(P.mode == 'add')	{
-app.u.dump(" -> $ele.data(): "); app.u.dump($ele.data());
+							
 							if($ele && $ele.is('tr'))	{
+								//app.u.dump(" -> $ele.data(): "); app.u.dump($ele.data());
 								//This is the search result tr.
 								var $tmpTable = $("<table \/>"); //need a tmp table. orphan TR's are treated inconsistently between browsers.
 								var $tr = $ele.data('clone') ? $ele.clone() : $ele; //setting data-clone allows for the item to be left in the row (ex: amazon marketplace status) or removed from row (ex: search results) when being animated.
