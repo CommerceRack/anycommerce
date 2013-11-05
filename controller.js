@@ -21,7 +21,7 @@
 
 
 var zController = function(params) {
-	this.u.dump('zController has been instantiated');
+	this.u.dump('Welcome fellow developer!\nThis project was built with an open-source MVC which can be found here:\nhttps://github.com/zoovy/AnyCommerce-Development','greet');
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
@@ -2171,6 +2171,9 @@ VALIDATION
 				else if(typeof console.dir == 'undefined' && typeof msg == 'object')	{
 					//browser doesn't support writing object to console. probably IE8.
 					console.log('object output not supported');
+					}
+				else if(type == 'greet')	{
+					console.log("%c\n\n"+msg+"\n\n",'color: purple; font-weight: bold;')
 					}
 				else if(console[type])	{
 					console[type](msg);
