@@ -3588,6 +3588,24 @@ app.model.dispatchThis('mutable');
 					}
 				},
 
+//used in product editor.  shows a DD which allows user to chooser product or store for scope.
+			variationCreateShowMenu : function($btn)	{
+				$btn.button({text: true,icons: {secondary: "ui-icon-triangle-1-s"}});
+				$btn.off('click.variationCreateShowMenu').on('click.vavariationCreateShowMenuriationCreateShow',function(){
+					var $menu = $btn.next()
+					$menu.show().css({'position':'absolute','width':'200px','padding':'2px 0'}).position({
+						my: "left top",
+						at: "left bottom",
+						of: $btn
+						}).find('button').css({'width':'90%','margin':'2px auto'});
+					 setTimeout(function(){
+						 $( document ).one( "click", function() {
+							$menu.hide();
+							});
+						 },1000);
+					});
+				}, //variationCreateShow
+
 			variationCreateShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.variationCreateShow').on('click.variationCreateShow',function(){
@@ -3598,25 +3616,69 @@ app.model.dispatchThis('mutable');
 						'showLoading' : false
 						});
 					$D.data('variationmode',mode);
-					if(mode == 'product')	{
-						$D.attr('data-pid',$btn.closest('[data-pid]').data('pid'));
+					if(mode == 'store')	{
+						//container ID is used to refresh the list of global variations when adding a new global variation from within the product editor.
+						var $container = $btn.closest("[data-app-role='productVariationManager']");
+						if($container.attr('id'))	{}
+						else	{
+							$container.attr('id','pvm_'+app.u.guidGenerator());
+							}
+						$D.data({'containerid':$container.attr('id')});
+						$D.dialog('open');
 						}
-					$D.dialog('open');
+					else if(mode == 'product')	{
+						$D.attr({'data-pid':$btn.closest('[data-pid]').data('pid')});
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationCreateShow, invalid data-mode ["+mode+"] on trigger element. must be store or product.","gMessage":true});
+						} //invalid mode.
+					
+					
 					});
 				}, //variationCreateShow
+//used within product editor to allow for the list of global variations to be refreshed.
+			storeVariationsRefresh : function($btn)	{
+				$btn.button({text: false,icons: {secondary: "ui-icon-refresh"}});
+				$btn.off('click.variationsCreateExec').on('click.variationsCreateExec',function(event){
+					event.preventDefault();
+					var $tbody = $btn.closest("[data-app-role='productVariationManagerStoreContainer']").find("tbody[data-app-role='storeVariationsTbody']:first");
+					$tbody.empty().showLoading({'message':'Fetching store variations'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminSOGComplete',
+						'_tag':	{
+							'datapointer' : 'adminSOGComplete',
+							'callback' : function(rd)	{
+								$tbody.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$tbody.closest('div').anymessage({'message':rd});
+									}
+								else	{
+									$tbody.anycontent(rd); 
+									app.u.handleAppEvents($tbody);
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
 
 			variationCreateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.variationsCreateExec').on('click.variationsCreateExec',function(event){
 					event.preventDefault();
-					var mode =
-						$btn.closest('.ui-dialog-content').data('variationmode'),
+					var 
+						mode = $btn.closest('.ui-dialog-content').data('variationmode'),
 						pid = $btn.closest("[data-pid]").data('pid'),
 						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON({'cb':true});
+						sfo = $form.serializeJSON({'cb':true}),
+						containerid = $btn.closest('.ui-dialog-content').data('containerid'),
+						newSogID;
 						
 					app.u.dump(" -> mode: "+mode);
 					if(app.u.validateForm($form) && sfo.type)	{
+						$form.showLoading({'message':'Creating '+mode+' variation'});
 						sfo.autoid = 1; //tells API to give this option a variation ID (next in sequence) and to assign id's to the options.
 						if(mode == 'store')	{
 							sfo.v = '2'; //sog version.
@@ -3631,6 +3693,7 @@ app.model.dispatchThis('mutable');
 											}
 										else	{
 											$btn.closest('.ui-dialog-content').dialog('close');
+											newSogID = app.data[rd.datapointer].sogid;
 											app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
 											$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
 											}
@@ -3640,7 +3703,33 @@ app.model.dispatchThis('mutable');
 							app.model.addDispatchToQ({
 								'_cmd':'adminSOGComplete',
 								'_tag':	{
-									'datapointer' : 'adminSOGComplete'
+									'datapointer' : 'adminSOGComplete',
+									'callback' : function(rd)	{
+										app.u.dump(" -> INTO the callback for adminSOGComplete");
+										if(app.model.responseHasErrors(rd)){
+											$form.anymessage({'message':rd});
+											}
+										else	{
+
+if(containerid)	{
+	app.u.dump(" -> containerid is specified. reload the list of store variations");
+	var $container = $(app.u.jqSelector('#',containerid));
+	if($container.length)	{
+		var $tbody = $("tbody[data-app-role='storeVariationsTbody']:first",$container);
+	//update the list of sogs.
+		$tbody.empty().anycontent(rd); 
+		app.u.handleAppEvents($tbody);
+//apply the new sog to the list of product variations.
+		if(newSogID)	{
+			$("[data-id='"+newSogID+"']",$tbody).find("button[data-app-event='admin_prodEdit|variationAddToProduct']").trigger('click');
+			}
+		}
+	else	{
+		app.u.dump(" -> no matching element for containerid");
+		}
+	}
+											}
+										}
 									}
 								},'mutable');
 							app.model.dispatchThis('mutable');

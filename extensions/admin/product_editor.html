@@ -2119,7 +2119,7 @@ time.
 <table class='fullWidth stdMargin'>
 <tbody>
 <tr>
-	<td class='column3' data-app-role='variationSettingsContainer'>
+	<td class='column3 valignTop' data-app-role='variationSettingsContainer'>
 <!-- high level settings -->
 	<fieldset class='stdPadding'>
 <!-- * 201336 -> added  hideZero:true; to id for variations w/ 00 as id -->
@@ -2201,9 +2201,9 @@ time.
 
 	<td class='valignTop'>
 <!-- variation specific template loaded into this div, based on 'type' -->
-<div data-app-role='variationsTypeSpecificsContainer' class='stdPadding'></div>
+<div data-app-role='variationsTypeSpecificsContainer' class='marginLeft marginRight marginBottom'></div>
 
-<div class='buttonset alignRight clearfix'>
+<div class='buttonset alignRight marginRight'>
 <!--<button data-app-event='admin|execDialogClose'>Cancel Changes</button> -->
 <button data-app-event='admin_prodEdit|variationAdminProductMacroExec' data-app-role='saveButton'>Save Changes</button>
 </div>
@@ -2603,7 +2603,10 @@ Snacks|Doughnuts<br />
 			</td>
 			<td class='valignTop'>
 			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
-		<h2>Store Variations</h2>
+		<div class='clearfix'>
+			<button class='floatRight' data-app-event='admin_prodEdit|storeVariationsRefresh'>Refresh Store Variations</button>
+			<h2>Store Variations</h2>
+		</div>
 		<div class='storeVariationsListContainer'>
 		<table class='gridTable fullWidth marginTop'>
 		<thead>
@@ -2614,7 +2617,7 @@ Snacks|Doughnuts<br />
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: variations(%SOGS); format: processList; loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
+		<tbody data-app-role='storeVariationsTbody' data-bind="var: variations(%SOGS); format: processList; loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
 		</table>
 		</div>
 			</div>
@@ -2626,7 +2629,12 @@ Snacks|Doughnuts<br />
 <!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
 			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
 			
-			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Add Product Variation</button>
+			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
+			<!-- when this is upgraded to app events, change this to be a menu() -->
+			<div class='displayNone ui-widget ui-widget-content ui-corner-all alignCenter'>
+				<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Product Specific</button>
+				<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="store">Store Wide</button>
+			</div>
 		</div>
 
 	</section>
@@ -2649,7 +2657,7 @@ Snacks|Doughnuts<br />
 	<td data-bind="var: variation(prompt); format:text;"></td>
 	<td data-bind="var: variation(type); format:text;"></td>
 	<td data-bind="var: variation(id); format:text;"></td>
-	<td><button title="Add store option group to product" data-app-event='admin_prodEdit|variationAddToProduct'>Add To Product</button></td>
+	<td><button title="Add store option group to product" data-app-event='admin_prodEdit|variationAddToProduct'>Apply</button></td>
 </tr>
 
 <tr id='productVariationManagerProductRowTemplate' class='pointer'>
