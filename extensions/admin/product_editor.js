@@ -516,13 +516,7 @@ $target.anydelegate();
 			app.u.handleButtons($('.buttonset',$target)); //the save button uses delegated events. the rest was built prior to the new product editor.
 	// compare the sog list and the variations on the product and disable the buttons.
 	// this avoids the same SOG being added twice.
-			$('tbody tr',$prodOptions).each(function(){
-				var $tr = $(this);
-				if($tr.data('id') && $tr.data('id').charAt('0') != '#')	{ //ignore pogs.
-					$("tr[data-id='"+$tr.data('id')+"']",$storeOptions).find('button').button('disable'); //disable 'add to product' button if already enabled on the product.
-	//				$("tr[data-id='"+$tr.data('id')+"']",$storeOptions).hide();  //don't use this. causes alternating colors to get messed up.
-					}
-				})
+			app.ext.admin_prodEdit.u.handleApply2ProdButton($target);
 			
 			}		
 		
@@ -654,6 +648,20 @@ $target.anydelegate();
 	
 	
 		u : {
+
+//will go through the list of sogs that are enabled and disable the sog in the 'store variations' list.
+			handleApply2ProdButton : function($container)	{
+				var $storeOptions = $("[data-app-role='productVariationManagerStoreContainer']",$container);
+				$("[data-app-role='productVariationManagerProductTbody'] tr",$container).each(function(){
+					var $tr = $(this);
+					if($tr.data('id') && $tr.data('id').charAt('0') != '#')	{ //ignore pogs.
+						$("tr[data-id='"+$tr.data('id')+"']",$storeOptions).find('button').button('disable'); //disable 'add to product' button if already enabled on the product.
+		//				$("tr[data-id='"+$tr.data('id')+"']",$storeOptions).hide();  //don't use this. causes alternating colors to get messed up.
+						}
+					})
+
+				},
+
 
 //product must be in memory with sku:1 passed for this to work.
 			thisPIDHasInventorableVariations : function(pid)	{
@@ -3656,6 +3664,7 @@ app.model.dispatchThis('mutable');
 								else	{
 									$tbody.anycontent(rd); 
 									app.u.handleAppEvents($tbody);
+									app.ext.admin_prodEdit.u.handleApply2ProdButton($btn.closest("[data-app-role='productVariationManagerContainer']"));
 									}
 								}
 							}
