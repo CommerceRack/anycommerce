@@ -201,13 +201,15 @@ A special translate template for product so that reviews can be merged into the 
 //error needs to clear parent or we end up with orphans (especially in UI finder).
 			onError : function(responseData,uuid)	{
 				responseData.persistent = true; //throwMessage will NOT hide error. better for these to be pervasive to keep merchant fixing broken things.
+				var pid = responseData.pid;
 				var $parent = $('#'+responseData['_rtag'].parentID)
 				$parent.empty().removeClass('loadingBG');
-				app.u.throwMessage(responseData,uuid);
+				$parent.anymessage(responseData,uuid);
 //for UI prod finder. if admin session, adds a 'remove' button so merchant can easily take missing items from list.
-// ### !!! NOTE - upgrade this to proper admin verify (function)
-				if(app.vars.cartID && app.vars.cartID.indexOf('**') === 0)	{
-					$('.ui-state-error',$parent).append("<button class='ui-state-default ui-corner-all'  onClick='app.ext.admin.u.removePidFromFinder($(this).closest(\"[data-pid]\"));'>Remove "+responseData.pid+"<\/button>");
+				if(app.vars.thisSessionIsAdmin)	{
+					$("<button \/>").text("Remove "+pid).button().on('click',function(){
+						app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]")); //function accepts a jquery object.
+						}).appendTo($('.ui-widget-anymessage',$parent));
 					}
 				}
 			},
