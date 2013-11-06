@@ -1132,7 +1132,7 @@ app.u.throwMessage(responseData); is the default error handler.
 
 				if(macroResponses && macroResponses['@RESPONSES'])	{
 					var $target = _rtag.jqObj || $("#globalMessaging");
-					macroResponses.persistent = _rtag.persistent || false;
+					macroResponses.persistent = _rtag.persistent === false ? false : true; //these responses should be displayed till turned off.
 					$target.anymessage(macroResponses);
 					}
 				else	{
