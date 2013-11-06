@@ -154,7 +154,6 @@ and offMenu is toggle off, hiding the change button.
 	border-radius: 4px;
 	}
 
-/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
 .appMessage .appMessageTxt	{float:left;}
 
 .ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae !important; background:#e3f6e3 !important; color:#333333 !important;}
