@@ -1672,7 +1672,14 @@ if(ps.indexOf('?') >= 1)	{
 				var url = URL; //leave original intact.
 				var hashObj;
 				if(url.indexOf('#') > -1)	{
-					var tmp = url.split("#");
+//*** 201344 Adds support for #! syntax, which allows links for escaped fragment syntax to be parsed directly over their href. -mc
+					var tmp;
+					if(url.indexOf('#!') > -1){
+						tmp = url.split("#!");
+						}
+					else {
+						tmp = url.split("#");
+						}
 					url = tmp[0]; //strip off everything after hash (#)
 					hashObj = this.getPageInfoFromHash(tmp[1]); //will be an object if the hash was a valid pageInfo anchor. otherwise false.
 					}
