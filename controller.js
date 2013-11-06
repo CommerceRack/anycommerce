@@ -2039,7 +2039,7 @@ VALIDATION
 
 // * 201336 -> make sure a number input has a numerical value.
 					else if($input.attr('type') == 'number' && $input.val())	{
-						app.u.dump(" -> number validation. value: "+$input.val()+" and isNaN: "+isNaN($input.val()));
+//						app.u.dump(" -> number validation. value: "+$input.val()+" and isNaN: "+isNaN($input.val()));
 						if (!isNaN($input.val())) {
 							if($input.attr('min') && (Number($input.val()) < Number($input.attr('min'))))	{
 								r = false;

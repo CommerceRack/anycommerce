@@ -226,7 +226,7 @@ additionally, will apply some conditional form logic.
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
-			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
+//			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
 				$(self.options.trackSelector,self.element).each(function(){
@@ -260,7 +260,7 @@ pass in an event name and a function and it will be added as an eventAction.
 
 //used to update the save buttons, both the master and the individuals.
 		_updateSaveButtonInContext : function($context,selector)	{
-			app.u.dump(" -> running anydelegate._handleSaveButtonByEditedClass.");
+//			app.u.dump(" -> running anydelegate._handleSaveButtonByEditedClass.");
 //run over EACH button individually.  some may have had button() run on them, some may not.
 			$(selector,$context).each(function(){
 				var $button = $(this);

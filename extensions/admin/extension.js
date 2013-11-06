@@ -5003,12 +5003,12 @@ else	{
 //used on an array of objects. [{some:value},{some:othervalue}]
 //in ex above, pass in 'some and 'other value' and 1 will be returned.
 		getIndexInArrayByObjValue : function(array,objkey,objvalue)	{
-			app.u.dump("BEGIN admin.u.getIndexInArrayByObjValue");
-			app.u.dump(" -> objvalue: "+objvalue);
+//			app.u.dump("BEGIN admin.u.getIndexInArrayByObjValue");
+//			app.u.dump(" -> objvalue: "+objvalue);
 			
 			var r = false;  //what is returned. the variation index if a match is found.
 			if(array && objkey && objvalue)	{
-				app.u.dump(" -> all required params are present.");
+//				app.u.dump(" -> all required params are present.");
 				var L = array.length;
 				for(var i = 0; i < L; i+=1)	{
 					if(array[i][objkey] == objvalue)	{

@@ -440,7 +440,7 @@ $target.anydelegate();
 								});
 							//now hide all the options in the 'global' list that are already enabled on the product.
 							$("tbody[data-app-role='variationsOptionsTbody'] tr",$r).each(function(){
-								app.u.dump(" -> $(this).data('v'): "+$(this).data('v'));
+//								app.u.dump(" -> $(this).data('v'): "+$(this).data('v'));
 								$("[data-v='"+$(this).data('v')+"']",$tbody).empty().remove(); //removed instead of just hidden so that css even/odd works. also, not necessary on DOM for anything.
 								})
 							//data-v="00"			
@@ -1920,7 +1920,7 @@ Required params include:
 						}
 					});
 
-				app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
+//				app.u.dump(" -> cmdObj for inventory:"); app.u.dump(cmdObj);
 //				app.u.dump(" -> cmdObj._tag: "); app.u.dump(cmdObj._tag);
 				
 				if(cmdObj['@updates'].length)	{
@@ -3353,7 +3353,7 @@ app.model.dispatchThis("immutable");
 
 					var pid = $btn.closest("[data-app-role='productVariationManager']").data('pid');
 					if(pid)	{
-						app.u.dump(" -> pid: "+pid);
+//						app.u.dump(" -> pid: "+pid);
 						if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@variations'])	{
 
 							$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
@@ -3479,7 +3479,7 @@ app.model.dispatchThis('mutable');
 
 				var varEditorData = $btn.closest(".variationEditorContainer").data();
 				if(!varEditorData.ispog && varEditorData.variationid)	{
-					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
+//					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
 					if(varEditorData.variationid.indexOf('#') == 0)	{
 						app.u.dump("setting ispog to true because variationid contains a #");
 						varEditorData.ispog = true;
@@ -3542,8 +3542,8 @@ app.model.dispatchThis('mutable');
 				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
 					vars = vars || {};
 					
-					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
-					app.u.dump(" -> $btn.data('variationmode'): "+$btn.data('variationmode'));
+//					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
+//					app.u.dump(" -> $btn.data('variationmode'): "+$btn.data('variationmode'));
 					
 					if($btn.data('variationmode') == 'store')	{
 						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]));
@@ -3554,12 +3554,12 @@ app.model.dispatchThis('mutable');
 // if isnew is true, that means this is a sog or pog that was just added to the product.
 // pogs do not have an ID immediately after they're added, so the guid is used to get the data from the product object in memory.
 						if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('ispog'))	{
-							app.u.dump(" -> this is a newly added POG");
+//							app.u.dump(" -> this is a newly added POG");
 							variationID = ""; //set to blank so modal title doesn't show 'undefined'.
 							data = app.data['adminProductDetail|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'guid',$btn.closest('tr').data('guid'))]
 							}
 						else if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('issog'))	{
-							app.u.dump(" -> this is a sog just added to the pid");
+//							app.u.dump(" -> this is a sog just added to the pid");
 							data = app.data.adminSOGComplete['%SOGS'][variationID]
 							}
 						else	{
