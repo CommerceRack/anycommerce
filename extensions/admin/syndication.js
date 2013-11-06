@@ -1603,7 +1603,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 			ebayTokenLinkTo : function($btn)	{
 				$btn.button();
 				$btn.off('click.ebayGetToken').on('click.ebayGetToken',function(){
-					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1') : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet')
+					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1&domain='+document.domain) : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&domain='+document.domain);
 					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
 					});
 				}, //ebayTokenLinkTo
