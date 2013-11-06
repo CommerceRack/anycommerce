@@ -51,9 +51,9 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="STYLESHEET" type="text/css" href="app-admin/styles.css" /><!-- lots of UI specific styles. load early to avoid popping -->
 
 
-
-<script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<!-- ** 201344 -> reversed the order of these two w/ to solve the issue w/ selected files preview not showing up -->
 <script src="extensions/admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 
 
 <!-- not much is going to run without these two. load em early -->
