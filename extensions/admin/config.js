@@ -581,7 +581,7 @@ var admin_config = function() {
 								}
 							}}	
 						]);
-					$D.dialog('open');
+					$D.dialog('open').anydelegate();
 					
 					//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
 					var DMIVars = {

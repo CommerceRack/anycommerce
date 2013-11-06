@@ -241,7 +241,7 @@ app.model.dispatchThis('mutable');
 
 
 			batchJobExec : function($btn)	{
-				$btn.button({text: false,icons: {primary: "ui-icon-refresh"}})
+				$btn.button({text: false,icons: {primary: $btn.attr('data-icon-primary') || "ui-icon-refresh"}})
 				$btn.off('click.batchJobExec').on('click.batchJobExec',function(event){
 					event.preventDefault();
 					var data = $btn.closest("[data-element]").data();
