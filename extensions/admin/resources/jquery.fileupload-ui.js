@@ -436,6 +436,7 @@
             return valid;
         },
 
+
         _renderTemplate: function (func, files) {
 			app.u.dump("BEGIN _renderTemplate");
 			app.u.dump(" -> typeof func: "+typeof func);

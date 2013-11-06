@@ -1757,6 +1757,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
 					else	{} //could get here if ext passed but obj.ext doesn't exist.
 					}
+				app.u.dump("DPS for "+ext+"/"+ns+" = "+r);
 				return r;
 				},
 
@@ -1765,7 +1766,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
+				app.u.dump(" -> ext: "+ext); app.u.dump(" -> ns: "+ns); app.u.dump(" -> varObj: "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
