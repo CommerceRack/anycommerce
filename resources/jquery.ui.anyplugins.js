@@ -226,6 +226,7 @@ additionally, will apply some conditional form logic.
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
+			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
 				$(self.options.trackSelector,self.element).each(function(){

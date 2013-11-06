@@ -241,7 +241,7 @@ _rtag.jqObj.anydelegate({
 				if($target instanceof jQuery && pid)	{
 
 					$target.empty().showLoading({'message':'Fetching product record'});
-					$target.attr('data-pid',pid);
+					$target.attr({'data-pid':pid});
 					
 					app.model.addDispatchToQ({
 						'_cmd':'adminProductReviewList',
@@ -1819,6 +1819,9 @@ Required params include:
 				if(!$.isEmptyObject(cmdObj['%attribs']))	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
+				else	{
+					$form.hideLoading();
+					}
 				}, //attributes
 
 
@@ -1862,6 +1865,9 @@ Required params include:
 				
 				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
+				else	{
+					$form.hideLoading();
 					}
 				
 				}, //schedule
@@ -1920,6 +1926,9 @@ Required params include:
 				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
+				else	{
+					$form.hideLoading();
+					}
 				
 				}, //inventory
 
@@ -1950,9 +1959,13 @@ Required params include:
 					if(cmdObj['@updates'].length)	{
 						app.model.addDispatchToQ(cmdObj,'immutable');
 						}
+					else	{
+						$form.hideLoading();
+						}
 					}
 				else	{
 					//no changes in navcats.
+					$form.hideLoading();
 					}
 				}, //navigation
 
@@ -1983,8 +1996,11 @@ Required params include:
 					if(cmdObj['@updates'].length)	{
 						app.model.addDispatchToQ(cmdObj,'immutable');
 						}
+					else	{
+						$form.hideLoading();
+						}
 					}
-				else	{} //no changes to sku imagery.
+				else	{$form.hideLoading();} //no changes to sku imagery.
 
 				},
 
@@ -2034,8 +2050,12 @@ Required params include:
 				if(cmdObj['@updates'].length || !$.isEmptyObject(cmdObj['%attribs']))	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
+				else	{
+					$form.hideLoading();
+					}
 
 				},
+
 			prodImages : function($form)	{
 
 				var $prodImageUL = $("[data-app-role='prodImagesContainer']",$form);
@@ -2055,30 +2075,32 @@ Required params include:
 						}
 					if(!$.isEmptyObject(cmdObj['%attribs']))	{
 						app.model.addDispatchToQ(cmdObj,'immutable');
-						}				
+						}
+					else	{
+						$form.hideLoading();
+						}
 
 					}
-				else	{} //no changes to the images. that's fine.
+				else	{$form.hideLoading();} //no changes to the images. that's fine.
 
 				}, //prodImages
 			
 			variations : function($form)	{
 				//data-app-role='productVariationManager'
-
-
+				if($('.edited',$form).length)	{
 					var cmdObj = {
 						'_cmd' : 'adminProductOptionsUpdate', 
 						pid : $form.closest("[data-pid]").data('pid'),
 						'_tag' : {
 							'callback' : function(rd){
 								$form.hideLoading();
-								
 								if(app.model.responseHasErrors(rd)){
 									$form.anymessage({'message':rd});
 									}
 								else	{
 									$form.anymessage(app.u.successMsgObject('Variations have been updated.'));
 									app.ext.admin_prodEdit.a.showProductVariationManager($("[data-app-role='productVariations']",$form).empty(),cmdObj.pid);
+									$form.closest('.eventDelegation').anydelegate('updateChangeCounts'); //execute AFTER showPordVarMan above or the counts will be off (cuz old variation data still on DOM).
 									}
 								}
 							},
@@ -2106,6 +2128,8 @@ Required params include:
 					
 					app.model.addDispatchToQ(cmdObj,'immutable');
 //					app.model.dispatchThis('immutable');
+					}
+				else	{$form.hideLoading();}
 				},
 			
 // executed from the save button in the variations panel. called sku because it doesn't impact add/removing variations, just updating attribs for each option.
@@ -2144,6 +2168,7 @@ else	{} //no changes in sku attribs.
 				if(cmdObj['@updates'].length)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
+				else{$form.hideLoading();}
 				}, //prodImages
 				
 			buycom : function($form)	{
@@ -2167,10 +2192,11 @@ else	{} //no changes in sku attribs.
 					$editedInputs.each(function(){
 						cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest('tr').data('sku')+"&"+$(this).attr('name')+"="+this.value);
 						})
+//					app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
+					app.model.addDispatchToQ(cmdObj,'immutable');
 					}
+				else	{$form.hideLoading();}
 
-//				app.u.dump(" -> cmdObj for buycom:"); app.u.dump(cmdObj);
-				app.model.addDispatchToQ(cmdObj,'immutable');
 				} //buycom
 
 			}, //saveProductByTab
@@ -3008,7 +3034,7 @@ else	{
 					app.u.dump(" -> "+index+" form");
 //					app.u.dump(" -> save button length: "+$("[data-app-role='saveButton']",this).length);
 //skipDispatch tells the individual save buttons to not dispatch themselves. We'll do one dispatch at the end.
-					$("[data-app-role='saveButton']",this).trigger('click',{'skipDispatch':true});
+					$("button[data-app-role='saveButton']",this).trigger('click',{'skipDispatch':true});
 					app.model.dispatchThis('immutable');
 					});
 				},
@@ -3273,8 +3299,15 @@ app.model.dispatchThis("immutable");
 
 // pog editor just applies changes in memory till master 'save' is done.
 					if(variationData.variationmode == 'product')	{
+						//update the variations manager so this variation is tagged as edited. 
+						$btn.closest("[data-app-role='productVariations']").find("tr[data-id='"+variationID+"']:first").addClass('edited');
+						var $EDParent = $btn.closest('.eventDelegation'); //find the parent before the modal is closed/destroyed (or it won't be found).
 						$btn.closest('.ui-dialog-content').dialog('close');
-						$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
+//update change counts AFTER dialog is destroyed or the changes to the variation itself will be in the count.
+//This may sound like a good idea, but it isn't because the dialog is destroyed and if another variation is edited, the count change could be misleading .
+//so ALL changes to one variation count as 1 edit.
+						$EDParent.anydelegate('updateChangeCounts');
+//						$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
 						}
 					else	{
 						$form.showLoading({"message":"Saving Changes To Variations"});
@@ -3537,7 +3570,8 @@ app.model.dispatchThis('mutable');
 
 						var $D = app.ext.admin.i.dialogCreate({
 							'title' : 'Edit Variation '+variationID+' for '+vars.pid,
-							'showLoading' : false
+							'showLoading' : false,
+							'appendTo' : $btn.closest("[data-app-role='productVariations']") //appended to the variation editor so that the dialog can look up the tree to modify the variation editor itself.
 							});
 
 						$D.append(app.ext.admin_prodEdit.a.getVariationEditor('product',data,vars.pid));
