@@ -433,9 +433,10 @@ templateID - the template id used (from app.templates)
 //if no detail level is specified, only what is in the actual value (typically, id, pretty and @products) will be available. Considerably less data, but no request per category.
 					else	{
 						for(var i = 0; i < L; i += 1)	{
-							var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
+// ** 201336+ appNavcatDetail id param changed to path -mc
+							var parentID = data.value[i].path+"_catgid+"+(app.u.guidGenerator().substring(10));
 							if(data.value[i].pretty[0] != '!')	{
-								$tag.append(app.renderFunctions.transmogrify({'id':parentID,'catsafeid':data.value[i].id},data.bindData.loadsTemplate,data.value[i]));
+								$tag.append(app.renderFunctions.transmogrify({'id':parentID,'catsafeid':data.value[i].path},data.bindData.loadsTemplate,data.value[i]));
 								}
 							}
 						}
