@@ -420,6 +420,7 @@ In both cases, keep watching for further changes.
 			message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
 			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
+			errtype : null,
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 			persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 			},
@@ -481,6 +482,7 @@ In both cases, keep watching for further changes.
 			msg = o.message,
 			r; //what is returned
 			if(o.iconClass)		{}
+			if(o.errtype)		{o.iconClass = 'app-icon-'+o.errtype}
 			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'app-icon-'+msg.errtype}
 			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'app-icon-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
 			else	{o.iconClass = 'app-icon-info'}

@@ -39,6 +39,10 @@ ADMIN
 	bug fix - master save button in product now doesn't 'lock' all panels that had no edits.
 	bug fix - product that no longer exist can now be removed using the product finder (product list editor).
 
+
+
+
+
 ANYPLUGINS
 	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.
 

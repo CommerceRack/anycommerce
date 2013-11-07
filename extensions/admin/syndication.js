@@ -1608,16 +1608,17 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						'_cmd':'adminPartnerSet',
 						'partner' : 'EBAY',
 						'sessionID' : app.data.adminPartnerGet.SessionID,
+						'RuName' : app.data.adminPartnerGet.RuName,
 						'_tag':	{
-							'datapointer' : 'adminPartnerTokenGet',
+							'datapointer' : 'adminPartnerSet',
 							'callback':function(rd){
 								if(app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									$('#globalMessaging').anymessage({'message':'eBay authorization is now complete.'});
+									$('#globalMessaging').anymessage({'message':'eBay authorization is now complete.','errtype':'success'});
 									//reload the ebay interface so that presence of valid token enables UI as needed.
-									app.ext.admin_syndication.a.showDSTDetails('EBF',$ele.closest("[data-app-role='slimLeftContentSection']"))
+									app.ext.admin_syndication.a.showDSTDetails('EBF',$btn.closest("[data-app-role='slimLeftContentSection']"))
 									}
 								}
 							}
@@ -1641,9 +1642,14 @@ app.model.addDispatchToQ({
 				$('#globalMessaging').anymessage({'message':rd});
 				}
 			else	{
+				if(app.data[rd.datapointer].SessionID && app.data[rd.datapointer].RuName)	{
 				//show the button the user needs to click. disable the rest to avoid confusion.
-				$btn.parent().find('button').button('disable').end().find("button[data-app-event='ebayTokenVerify']").button('enable').show();
-				linkOffSite(($btn.data('sandbox') == 1 ? 'https://signin.sandbox.ebay.com' : 'https://signin.ebay.com') + '/ws/eBayISAPI.dll?SignIn&RuName=RuName&SessionID='+app.data[rd.datapointer].SessionID);
+					$btn.parent().find('button').button('disable').end().find("button[data-app-event='admin_syndication|ebayTokenVerify']").button('enable').show().end().anymessage({'message':'Upon returning from eBay, you MUST push the complete authorization button below to finish the process','errtype':'todo','persistent':true});
+					linkOffSite(($btn.data('sandbox') == 1 ? 'https://signin.sandbox.ebay.com' : 'https://signin.ebay.com') + '/ws/eBayISAPI.dll?SignIn&RuName='+app.data[rd.datapointer].RuName+'&SessID='+encodeURIComponent(app.data[rd.datapointer].SessionID));
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'The response for appPartnerGet did not include SessionID ['+app.data[rd.datapointer].SessionID+'] and/or RuName ['+app.data[rd.datapointer].RuName+']. Both are required.','gMessage':true,'errtype':'fail-soft'});
+					}
 				}
 			}
 		}
