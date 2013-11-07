@@ -1607,7 +1607,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					app.model.addDispatchToQ({
 						'_cmd':'adminPartnerSet',
 						'partner' : 'EBAY',
-						'sessionID' : app.data.adminPartnerGet.SessionID,
+						'SessionID' : app.data.adminPartnerGet.SessionID,
 						'RuName' : app.data.adminPartnerGet.RuName,
 						'_tag':	{
 							'datapointer' : 'adminPartnerSet',
@@ -1645,6 +1645,7 @@ app.model.addDispatchToQ({
 				if(app.data[rd.datapointer].SessionID && app.data[rd.datapointer].RuName)	{
 				//show the button the user needs to click. disable the rest to avoid confusion.
 					$btn.parent().find('button').button('disable').end().find("button[data-app-event='admin_syndication|ebayTokenVerify']").button('enable').show().end().anymessage({'message':'Upon returning from eBay, you MUST push the complete authorization button below to finish the process','errtype':'todo','persistent':true});
+					//no, that's not a typo, ebay is expecting SessID. We left it as SessionID because that's how it is referred to EVERYWHERE else.
 					linkOffSite(($btn.data('sandbox') == 1 ? 'https://signin.sandbox.ebay.com' : 'https://signin.ebay.com') + '/ws/eBayISAPI.dll?SignIn&RuName='+app.data[rd.datapointer].RuName+'&SessID='+encodeURIComponent(app.data[rd.datapointer].SessionID));
 					}
 				else	{
