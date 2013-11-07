@@ -280,6 +280,9 @@ var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpd
 $('form',$panel).append($saveButton);
 app.ext.admin.u.handleAppEvents($panel);
 
+		$panel.showLoading({'message':'Gathering nuts, berries and user details.'});
+		$panel.slideDown('fast');
+
 
 if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 	'callback':function(rd){
@@ -320,7 +323,6 @@ if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 		}
 	},'mutable'))	{
 //showloading is run AFTER the animation so that it places itself correctly over the target.
-		$panel.slideDown('fast',function(){$panel.showLoading({'message':'Gathering nuts, berries and user details.'});});
 		app.model.dispatchThis('mutable');
 		}
 	else	{
