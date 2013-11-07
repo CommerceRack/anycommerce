@@ -460,6 +460,7 @@ In both cases, keep watching for further changes.
 				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+				errtype : null,
 				persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 				}
 			}, //_init
