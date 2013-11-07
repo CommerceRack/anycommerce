@@ -1600,11 +1600,58 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 				
 				}, //ebayTokenDeleteButtonset
 
+			ebayTokenVerify : function($btn)	{
+				$btn.button();
+				$btn.off('click.ebayTokenVerify').on('click.ebayTokenVerify',function(){
+					//get a token and use that in the redirect to ebay.					
+					app.model.addDispatchToQ({
+						'_cmd':'adminPartnerSet',
+						'partner' : 'EBAY',
+						'sessionID' : app.data.adminPartnerGet.SessionID,
+						'_tag':	{
+							'datapointer' : 'adminPartnerTokenGet',
+							'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$('#globalMessaging').anymessage({'message':'eBay authorization is now complete.'});
+									//reload the ebay interface so that presence of valid token enables UI as needed.
+									app.ext.admin_syndication.a.showDSTDetails('EBF',$ele.closest("[data-app-role='slimLeftContentSection']"))
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');						
+					})
+				},
+
+
 			ebayTokenLinkTo : function($btn)	{
 				$btn.button();
 				$btn.off('click.ebayGetToken').on('click.ebayGetToken',function(){
-					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1&domain='+document.domain) : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&domain='+document.domain);
-					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
+//get a token and use that in the redirect to ebay.					
+app.model.addDispatchToQ({
+	'_cmd':'adminPartnerGet',
+	'partner' : 'EBAY',
+	'_tag':	{
+		'datapointer' : 'adminPartnerGet',
+		'callback':function(rd){
+			if(app.model.responseHasErrors(rd)){
+				$('#globalMessaging').anymessage({'message':rd});
+				}
+			else	{
+				//show the button the user needs to click. disable the rest to avoid confusion.
+				$btn.parent().find('button').button('disable').end().find("button[data-app-event='ebayTokenVerify']").button('enable').show();
+				linkOffSite(($btn.data('sandbox') == 1 ? 'https://signin.sandbox.ebay.com' : 'https://signin.ebay.com') + '/ws/eBayISAPI.dll?SignIn&RuName=RuName&SessionID='+app.data[rd.datapointer].SessionID);
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');					
+					
+//					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1&domain='+document.domain) : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&domain='+document.domain);
+//					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
 					});
 				}, //ebayTokenLinkTo
 
