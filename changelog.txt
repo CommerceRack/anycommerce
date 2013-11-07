@@ -38,7 +38,8 @@ ADMIN
 	feature - new tool in support utilities to add PID to product task list
 	bug fix - master save button in product now doesn't 'lock' all panels that had no edits.
 	bug fix - product that no longer exist can now be removed using the product finder (product list editor).
-
+	bug fix - user manager > edit user would get stuck in 'loading' mode.
+	enhancement - change eBay 'link account' flow.
 
 
 
