@@ -633,7 +633,11 @@ SETUP PAGE TEMPLATE
 	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITEPTR;">
 	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
 	</span>
-
+	
+	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:APP;">
+	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
+	</span>
+	
 	<button data-app-event="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	</td>
 </tr>
