@@ -421,7 +421,7 @@ var admin_support = function() {
 				$btn.off('click.execTicketUpdate').on('click.execTicketUpdate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
-					$panelContents = $btn.closest('.ui-widget-content');
+					$panelContents = $btn.closest('.ui-widget-anypanel');
 					
 					if(app.u.validateForm($form))	{
 						$panelContents.showLoading({'message':'Updating ticket'});
