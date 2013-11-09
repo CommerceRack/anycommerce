@@ -413,6 +413,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='INVENTORY'>
 <fieldset>
+	<h3>Import Type &amp; Target</h3>
 	<label><input type='radio' name='HEADERS' checked value='BASETYPE=SIMPLE'> SIMPLE (%SKU,%QTY,%NOTE,%COST)</label>
 
 	<div data-app-role='fileImportWMSContainer'></div>
@@ -431,7 +432,11 @@ account being billed for the time necessary to diagnose and repair the issue.
 	<label><input type="checkbox" name="ENABLEINVENTORY"> Enable Inventory for each SKU imported</label>
 	<label><input type="checkbox" name="STRIPDASH"> Strip Dashes from SKU field.</label>
 -->
-	<label><input type="checkbox" name="INCREMENTAL"> Incremental: Treat %QTY as ADD/SUB (+/-) instead of SET.</label>
+	<h3>Action</h3>
+	<label><input type="radio" name="CMD" checked value="SET"> SET: %QTY is the absolute number.</label>
+	<label><input type="radio" name="CMD" value="INC"> INC: %QTY is an incremental (+/-) number that should be added or removed.</label>
+	<label><input type="radio" name="CMD" value=""> CMD: Use the CMD= specified in file header, or %CMD column.</label>
+	<br>
 	<label><input type="checkbox" name="CHECKSKU"> Skip Invalid: Verify PID's exist and SKU's are valid.</label>
 </fieldset>
 
