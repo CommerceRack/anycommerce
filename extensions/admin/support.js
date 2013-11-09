@@ -88,7 +88,7 @@ var admin_support = function() {
 					'controls' : app.templates.supportManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminTicketList',
-						'detail' : 'open',
+						'disposition' : 'open',
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
 							'datapointer':'adminTicketList'
@@ -243,7 +243,7 @@ var admin_support = function() {
 				if(Number($tag.data('is_highpriority')) == 1)	{
 					$tag.addClass('alert');
 					}
-				else if($tag.data('disposition') == 'WAITING')	{
+				else if($tag.data('disposition') == 'waiting')	{
 					$tag.addClass('warning');
 					}
 				else	{}

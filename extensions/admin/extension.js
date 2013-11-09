@@ -1164,8 +1164,8 @@ if giftcard is on there, no paypal will appear.
 				},
 			dispatch : function(ticketid,macro,_tag,Q)	{
 				var obj = {};
-				obj._cmd = "adminTicketMacro"
-				obj.ticketid = ticketid
+				obj._cmd = "adminTicketMacro";
+				obj.ticketid = ticketid;
 				obj['@updates'] = macro;
 				obj._tag = _tag || {};
 				obj._tag.datapointer = "adminTicketMacro";
