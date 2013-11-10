@@ -595,7 +595,7 @@ Columns headers are as follows:<br />
 	<label><input form="csvUploadToBatchForm" type="checkbox" name="PRODNAVCAT" CHECKED> Configure Management Categories using Navigation Categories schema.</label>
 	<label><input form="csvUploadToBatchForm" type='checkbox' name="REMOVEREST"> Remote System Synchronization: Delete products which were are not found in this import.</label>
 	<label><input form="csvUploadToBatchForm" type="checkbox" name="RESORT_NAVCATS"> Reorder navigation categories after import. (only necessary if updating category sort fields via update - VERY SLOW)</label>
-	<label><input form="csvUploadToBatchForm" type="checkbox" name="NONDESTRUCTIVE" CHECKED> Perform Non-Destructive Import - updates products, rather than doing a complete overwrite of a products data! (slower)</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="DESTRUCTIVE" > Destructive Import - deletes all data from product before doing import (very dangerous)</label>
 </fieldset>
 
 <!-- adds the file upload area -->
