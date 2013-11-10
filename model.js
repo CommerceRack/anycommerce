@@ -714,27 +714,29 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 	//gets called for each response in a pipelined request (or for the solo response in a non-pipelined request) in most cases. request-specific responses may opt to not run this, but most do.
 		handleResponse_defaultAction : function(responseData)	{
-//			app.u.dump('BEGIN handleResponse_defaultAction');
+			app.u.dump('BEGIN handleResponse_defaultAction');
 			var callback = false; //the callback name.
 			var uuid = responseData['_uuid']; //referenced enough to justify saving to a var.
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-//			app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
-//			app.u.dump(" -> responseData:"); app.u.dump(responseData);
+			app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
+			if(responseData._rcmd == 'adminTicketFileGet')	{
+				app.u.dump(" -> responseData:"); app.u.dump(responseData);
+				}
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
 	//callback has been defined in the call/response.
 				callback = responseData['_rtag']['callback']; //shortcut
-//				app.u.dump(' -> callback: '+callback);
+				app.u.dump(' -> callback: '+(typeof callback == 'string' ? callback : 'function'));
 				if(typeof callback == 'function'){} //do nothing to callback. will get executed later.
 				else if(responseData['_rtag']['extension'] && app.ext[responseData['_rtag']['extension']] && app.ext[responseData['_rtag']['extension']].callbacks && !$.isEmptyObject(app.ext[responseData['_rtag']['extension']].callbacks[callback]))	{
 					callback = app.ext[responseData['_rtag']['extension']].callbacks[callback];
-//					app.u.dump(' -> callback node exists in app.ext['+responseData['_rtag']['extension']+'].callbacks');
+					app.u.dump(' -> callback node exists in app.ext['+responseData['_rtag']['extension']+'].callbacks');
 					}
 				else if(!$.isEmptyObject(app.callbacks[callback]))	{
 					callback = app.callbacks[callback];
-//					app.u.dump(' -> callback node exists in app.callbacks');
+					app.u.dump(' -> callback node exists in app.callbacks');
 					}
 				else	{
 					callback = false;
