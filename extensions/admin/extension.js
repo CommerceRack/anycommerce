@@ -2009,7 +2009,6 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				}
 			}, //showElementEditorHTML
 
-
 //executed after a 'save' is pushed for a specific element while editing in the builder.
 		handleElementSave : {
 			
@@ -2018,7 +2017,6 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				var msg = app.u.successMsgObject("Thank you, your changes are saved.");
 				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
 				app.u.throwMessage(msg);
-
 				if(app.ext.admin.vars.tab)	{
 //					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
 					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.data[tagObj.datapointer].html)
@@ -2038,6 +2036,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
+				
 				app.u.throwMessage(responseData);
 //				if(responseData.errid == "100")	{
 //					app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
