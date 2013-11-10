@@ -996,6 +996,7 @@ app.u.throwMessage(responseData); is the default error handler.
 
 		fileDownloadInModal : {
 			onSuccess : function(_rtag)	{
+				app.u.dump("BEGIN callbacks.fileDownloadInModal");
 				app.u.fileDownloadInModal({
 					'filename':app.data[_rtag.datapointer].FILENAME || _rtag.filename,
 					'mime_type':app.data[_rtag.datapointer].MIMETYPE,
@@ -1290,14 +1291,17 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //opted to force this into a modal to reduce the likely of a bunch of unused blobs remaining on the DOM.
 //the dialog will empty/remove itself when closed.
 		fileDownloadInModal : function(vars)	{
+			app.u.dump("BEGIN app.u.fileDownloadInModal");
 			vars = vars || {};
 			if(vars.mime_type && vars.body)	{
+				app.u.dump(" -> mime type and body are set");
 				var filename = vars.filename || 'file';
 				var MIME_TYPE = vars.mime_type;
 
-				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />");
+				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />").appendTo(document.body);
 				$D.dialog({
 					'modal' : true,
+					'autoOpen' : true,
 					'width' : 300,
 					'height' : 200,
 					close: function(event, ui)	{
