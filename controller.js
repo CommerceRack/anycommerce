@@ -1003,6 +1003,14 @@ app.u.throwMessage(responseData); is the default error handler.
 					'body':app.data[_rtag.datapointer].body,
 					'skipDecode':_rtag.skipDecode || false
 					});
+				if(_rtag.button && _rtag.button instanceof jQuery)	{
+					if(_rtag.button.is('button') && _rtag.button.hasClass('ui-button'))	{
+						_rtag.button.button('enable');
+						}
+					else if(_rtag.button.is('button'))	{
+						_rtag.button.prop('disabled','').removeProp('disabled');
+						}
+					}
 				if(_rtag.jqObj && _rtag.jqObj instanceof jQuery)	{
 					_rtag.jqObj.hideLoading();
 					}

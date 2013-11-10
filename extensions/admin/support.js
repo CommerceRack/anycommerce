@@ -393,18 +393,27 @@ var admin_support = function() {
 //executed when the download button for a file is clicked.
 			adminTicketFileGetExec : function($ele,p)	{
 				p.preventDefault();
-				app.model.addDispatchToQ({
-					'_cmd':'adminTicketFileGet',
-					'ticketid' : $ele.closest("[data-ticketid]").data('ticketid'),
-					'remote' : $ele.closest('tr').data('remote'),
-					'base64' : 1,
-					'_tag':	{
-						'callback':'fileDownloadInModal',
-						'datapointer':'adminTicketFileGet',
-						'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Fetching Download'})
-						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
+				var ticketID = $ele.closest(".ui-widget-anypanel").data('ticketid');
+				$ele.button('disable');
+				if(ticketID)	{
+					$(document.body).showLoading({'message':'Fetching file contents'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminTicketFileGet',
+						'ticketid' : ticketID,
+						'remote' : $ele.closest('tr').data('remote'),
+						'base64' : 1,
+						'_tag':	{
+							'callback':'fileDownloadInModal',
+							'datapointer':'adminTicketFileGet',
+							'jqObj' : $(document.body), //used for hideLoading
+							'button' : $ele //used to re-enable the download button
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.parent().anymessage({"message":'In admin_support.e.admiNTicketFileGetExec, unable to ascertain ticket ID.','gMessage':true});
+					}
 				},
 
 			adminTicketLastUpdateShow : function($ele,p)	{
