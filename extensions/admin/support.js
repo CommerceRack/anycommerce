@@ -389,33 +389,6 @@ var admin_support = function() {
 				
 				},
 
-<<<<<<< HEAD
-=======
-			execTicketUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.execTicketUpdate').on('click.execTicketUpdate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					$panelContents = $btn.closest('.ui-widget-anypanel');
-					
-					if(app.u.validateForm($form))	{
-						$panelContents.showLoading({'message':'Updating ticket'});
-						app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
-							$panelContents.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd});
-								}
-							else	{
-								$form.empty().anymessage({'message':app.u.successMsgObject('Ticket '+$panelContents.data('ticketid')+' has been updated')})
-								}
-							}},'immutable');
-							app.model.dispatchThis('immutable');
-						}
-					else	{} //validateForm handles displaying errors.
-					});
-				}, //execTicketUpdate
->>>>>>> origin
-
 //executed when the download button for a file is clicked.
 			adminTicketFileGetExec : function($ele,p)	{
 				p.preventDefault();
