@@ -339,7 +339,7 @@ var admin_support = function() {
 			//this event is used both in create and edit.
 			fileAttach2TicketShow : function($ele,p)	{
 				p.preventDefault();
-				var $panelContents = $ele.closest('.ui-widget-content'); //in create, the dialog body get this same class, so the selector works in both places.
+				var $panelContents = $ele.closest('.ui-widget-anypanel'); //in create, the dialog body get this same class, so the selector works in both places.
 				if($panelContents instanceof jQuery && $panelContents.length && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
 					app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
 					}
@@ -370,7 +370,7 @@ var admin_support = function() {
 				p.preventDefault();
 				var
 					$form = $ele.closest('form'),
-					$panelContents = $ele.closest('.ui-widget-content');
+					$panelContents = $ele.closest('.ui-widget-anypanel');
 				
 				if(app.u.validateForm($form))	{
 					$panelContents.showLoading({'message':'Updating ticket'});
