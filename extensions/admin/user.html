@@ -9,9 +9,9 @@
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
 		<td><ul data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></ul></td>
 		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
-		<td>
-		<button data-app-event="admin_user|bossUserDetail">edit</button>
+		<td class='alignRight'>
 		<button data-app-event="admin_user|bossUserDelete" class='marginLeft hideInDetailMode'>delete</button>
+		<button data-app-click="admin_user|bossUserDetailShow">edit</button>
 		</td>
 	</tr>
 
@@ -50,7 +50,7 @@
 
 <fieldset class='labelsAsBreaks marginBottom roles'>
 	<legend>Roles</legend>
-	<table class='gridTable fullWidth' data-app-role='roleList'>
+	<table class='gridTable fullWidth' data-app-role='roleList' data-bind="var:user(@roles); format:userRoles; extension:admin_user;">
 	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 	<thead>
 	<tr>

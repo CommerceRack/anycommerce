@@ -87,7 +87,16 @@ var admin_user = function() {
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {}, //renderFormats
+		renderFormats : {
+			
+			userRoles : function($tag,data)	{
+				for(var i = 0, L = data.value.length; i < 0; i += 1)	{
+					$("[name='"+data.value[i]+"']",$tag).attr('checked','checked');
+					$("[name='"+data.value[i]+"']",$tag).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
+					}
+				}
+			
+			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -159,6 +168,58 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				},
 
 
+			bossUserDetailShow : function($ele,p)	{
+				
+				var
+					userID = $ele.closest("[data-uid]").data('uid'),
+					luser = $ele.closest("[data-luser]").data('luser');
+					
+				if(userID && luser)	{
+
+					var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'userManagerUserCreateUpdateTemplate',
+						'panelID' : 'user_'+userID,
+						'header' : 'Edit User: '+luser
+						});
+					$panel.showLoading({'message':'Fetching user details'}).attr({'data-uid':userID,'data-luser':luser});
+
+					app.model.addDispatchToQ({
+						'_cmd':'bossUserDetail',
+						'login':luser,
+						'_tag':	{
+							'datapointer' : 'bossUserDetail|'+userID,
+							'callback': 'anycontent',
+							'translateOnly' : true,
+							'jqObj' : $panel,
+							'extendByDatapointers' : ['bossRoleList']
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+
+
+//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
+					$("<button \/>").attr('data-app-click','admin|submitForm').html("Save <span class='numChanges'></span> Changes").button({'disabled':true}).appendTo($('form',$panel));
+
+					$("[data-app-role='roleList']",$panel).on("sortupdate",function(evt,ui){
+						ui.item.find(':checkbox').addClass('edited');
+						$('.numChanges',$panel).text($(".edited",$panel).length);
+						$saveButton.button('enable').addClass('ui-state-highlight');
+						});
+
+					$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
+					$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
+					}
+				else	{
+					//missing some required params. throw error.
+					$('#globalMessaging').anymessage({"message":"In admin_user.e.bossUserDetailShow, either user "+luser+" or uid "+userID+" not found and both are required.","gMessage":true});
+					}
+				},
+
+
+
+
+
+
 
 //on a user update, only the fields that have changed are sent and roles are always sent.
 // so the form object is serialized for validation, but not sent.
@@ -228,37 +289,9 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				$btn.addClass('editUser'); //used for triggering click after user update.
 				$btn.off('click.bossUserUpdate').on('click.bossUserUpdate',function(event){
 					event.preventDefault();
-//					app.u.dump("BEGIN admin_user.e.bossUserUpdate click event");
-
-					var $target = $("[data-app-role='dualModeDetail']","#userManagerContent"),
-					index = $(this).closest('tr').data('obj_index');
-					user = app.data.bossUserList['@USERS'][index];
-					user['@ROLES'] = {};
-
-					$.extend(user['@ROLES'],app.data.bossRoleList['@ROLES']);
-
-//					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-var panelID = app.u.jqSelector('','userDetail_'+user.luser),
-$panel = $("<div\/>").data('luser',user.luser).hide().anypanel({
-	'header':'Edit: '+user.luser,
-	'templateID':'userManagerUserCreateUpdateTemplate',
-//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-	'dataAttribs': {'id':panelID,'luser':user.luser,'usermode':'update'}
-	}).prependTo($target);
-
-$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
-
-//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
-var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpdateSave').html("Save <span class='numChanges'></span> Changes").button({'disabled':true});
-
-$('form',$panel).append($saveButton);
-app.ext.admin.u.handleAppEvents($panel);
-
-		$panel.showLoading({'message':'Gathering nuts, berries and user details.'});
-		$panel.slideDown('fast');
 
 
 if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
@@ -271,23 +304,9 @@ if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 			}
 		else	{		
 			
-			var userData = $.extend(app.data[rd.datapointer],app.data.bossRoleList);
-			
-//			app.u.dump(" -> userData:"); app.u.dump(userData);
-			app.renderFunctions.translateSelector('#'+panelID,userData);
-//the list is already sortable by an app event. this just makes sure a change in role order increments # of changes and allows a save.
-			$("[data-app-role='roleList']",$panel).on("sortupdate",function(evt,ui){
-				ui.item.find(':checkbox').addClass('edited');
-				$('.numChanges',$panel).text($(".edited",$panel).length);
-				$saveButton.button('enable').addClass('ui-state-highlight');
-				});
 
-			$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
-				$(this).addClass('edited');
-				$('.numChanges',$panel).text($(".edited",$panel).length);
-				$saveButton.button('enable').addClass('ui-state-highlight');
-				});
-			$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
+
+
 			var L = userData['@roles'].length;
 //loop backwards so that each row can be moved to the top but the original order will be preserved.
 			for(var i = (L-1); i >= 0; i -= 1)	{

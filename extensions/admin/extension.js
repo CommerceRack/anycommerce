@@ -1485,27 +1485,6 @@ if giftcard is on there, no paypal will appear.
 			}, //finder
 
 
-		bossUserCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(!$.isEmptyObject(obj))	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.bossUserCreate, obj is empty.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'bossUserCreate';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserCreate';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
 		bossUserList : {
 			init : function(_tag,Q)	{
 				var r = 0;
