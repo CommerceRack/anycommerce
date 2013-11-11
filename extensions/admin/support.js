@@ -327,7 +327,9 @@ var admin_support = function() {
 						if(sfo[index] && index != 'description' && index.indexOf('_tag') < 0){messagebody += "\n"+index+": "+sfo[index]}
 						}
 					messagebody += app.ext.admin_support.u.gatherIntel();
-					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
+// ** 201346 -> w/ a hidden input, if an apostrophe is in messagebody, everything after it gets dropped.
+//					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
+					$form.append($("<textarea \/>").attr('name','body').val(messagebody)).hide();
 					app.ext.admin.a.processForm($form,'immutable');
 					app.model.dispatchThis('immutable');
 
