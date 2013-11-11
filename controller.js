@@ -1517,7 +1517,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						}
 					else	{
 						//don't throw error to user. target 'could' be in memory.
-						app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.",'warn');
+						app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+($target instanceof jQuery)+"] or does not exist on DOM.",'warn');
 						}
 					
 					}, //handleAppEvents

@@ -35,7 +35,8 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 .hideBtnDownload .btnDownload	{display:none;}
 
 
-
+/* hide the buttons until after the file is uploaded */
+#mediaFilesUL .newMediaFile button	{display:none;}
 
 
 #mediaLibControlsTabContainer .ui-icon { float: left; margin-right: 5px;}

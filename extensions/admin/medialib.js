@@ -258,13 +258,14 @@ var admin_medialib = function() {
 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.js']); //
 
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
 //here to solve a safari/chrome issue if these scripts load before fileupload.js
 //not a great solution. will have to come up with something better. callback?
+/*
 setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/canvas-to-blob.min.js']); //
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-fp.js']); //The File Upload file processing plugin
@@ -273,7 +274,7 @@ setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 	},3000);
-
+*/
 
 //mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
 //B may also trigger medialibrary by linking to #mediaLibModeManage. This case gets handled in admin.u.handleLinkRewrites.
@@ -318,10 +319,53 @@ setTimeout(function(){
 //					app.u.dump(" -> app.ext.admin_medialib.u.getOpenFolderName(): "+app.ext.admin_medialib.u.getOpenFolderName());
 					app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())
 					}
+				
+				$('#mediaFilesUL').anyupload({
+					'instantUpload' : true,
+					'stripExtension' : true,
+					'templateID' : 'mediaFileTemplate',
+					'filesChange' : function(files,ui)	{
+						//scroll to bottom of div to show new images
+						$("#mediaLibInfiniteScroller").scrollTop($("#mediaLibInfiniteScroller")[0].scrollHeight);
+						},
+					'ajaxRequest' : function(data,ui){
+						app.u.dump("BEGIN ajaxUpload callback.");
+						var fname = ui.container.data('fname');
+						app.model.destroy('adminImageFolderDetail|'+fname);
+						
+						var newFileName = data.filename.substr(0, data.filename.lastIndexOf('.')) || data.filename; //strip file extension
+						newFileName = newFileName.replace(/[^A-Za-z0-9]+/ig, "_").toString().toLowerCase(); //alphanumeric only (this will allow underscores). the +/ig will replace multiple spaces/specialcharacters in a row w/ 1 underscore.
+
+						
+						app.model.addDispatchToQ({
+							'_cmd':'adminImageUpload',
+							'base64' : data.base64, //btoa is binary to base64
+							'folder' : fname,
+							'filename' : newFileName,
+							'_tag':	{
+								'callback' : function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$('#mediaLibMessaging').anymessage({'message':rd});
+										}
+									else	{
+										//success content goes here.
+										ui.fileElement.data({
+											'fname':fname,
+											'name':data.filename,
+											'path':fname+"/"+data.filename})
+										app.u.handleButtons(ui.fileElement);
+										}
+									}
+								}
+							},'passive');
+						app.model.dispatchThis('passive');
+						}
+					});
+				
 //for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
-				setTimeout(function(){
-					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
-					},2000);
+//				setTimeout(function(){
+//					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+//					},2000);
 				}
 			}, //showMediaLibrary
 
@@ -1157,8 +1201,10 @@ $('#mediaLibActionsBar button',$target).each(function(){
 		$button.attr('title','create and/or select a folder to add files to').button({icons: {primary: "ui-icon-plus"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
 	//		app.u.dump("Uploads Button Pushed.");
-			$('.fileUploadButtonBar',$target).show();
-			$('[type=file]',$target).click();
+// ** 201346 -> no longer necessary. file upload button is moved.
+//			$('.fileUploadButtonBar',$target).show();
+//			$('[type=file]',$target).click(); 
+			$("[type='file']",$('#mediaLibInfiniteScroller')).trigger('click');
 			})
 		$button.button('disable');
 		}

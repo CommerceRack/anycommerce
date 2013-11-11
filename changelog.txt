@@ -5,6 +5,12 @@
 #
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
+
+201346
+ADMIN
+	enhancement - updated users interface. faster and more memory efficient for browser.
+
+
 201344
 ADMIN
 	feature - product editor now supports a sku-specific price per schedule (attributes panel)
