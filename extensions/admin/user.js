@@ -87,16 +87,8 @@ var admin_user = function() {
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {
-			
-			userRoles : function($tag,data)	{
-				for(var i = 0, L = data.value.length; i < 0; i += 1)	{
-					$("[name='"+data.value[i]+"']",$tag).attr('checked','checked');
-					$("[name='"+data.value[i]+"']",$tag).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
-					}
-				}
-			
-			}, //renderFormats
+		renderFormats : {}, //renderFormats
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -127,19 +119,20 @@ not necessary in users 2.0
 					}
 				return roles;
 				}
+
 			}, //u
 
 		macrobuilders : {
 
-			'bossUserCreate' : function(sfo,$form)	{
+			'bossUserCreateUpdate' : function(sfo,$form)	{
 				app.u.dump("BEGIN admin_support.macrobuilders.bossUserCreate");
 				sfo.roles = app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
-				sfo._cmd = "bossUserCreate"
+//asdf				sfo._cmd = "bossUserCreate"
 //clean up sfo to minimize the request.
 				$(":checkbox",$form).each(function(){
 					delete sfo[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
 					});
-app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				return sfo;
 				} //adminGiftcardMacro			
 			
@@ -149,7 +142,7 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 
 
 
-			"bossUserCreateShow" : function($ele,p){
+			bossUserCreateShow : function($ele,p){
 
 				var $D = app.ext.admin.i.dialogCreate({
 					'title' : 'Create New User',
@@ -158,7 +151,7 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 					'extendByDatapointers' : ['bossRoleList']
 					});
 //create and update share a template.  The inputs below are for the callback.
-				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='The user has been created.' /><input type='hidden' name='_macrobuilder' value='admin_user|bossUserCreate' />");
+				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_cmd' value='bossUserCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='The user has been created.' /><input type='hidden' name='_macrobuilder' value='admin_user|bossUserCreateUpdate' />");
 
 				$('form',$D).append("<div class='buttonset alignRight'><button data-app-click='admin|submitForm' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create User</button></div>");
 
@@ -182,6 +175,8 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 						'header' : 'Edit User: '+luser
 						});
 					$panel.showLoading({'message':'Fetching user details'}).attr({'data-uid':userID,'data-luser':luser});
+
+					$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_cmd' value='bossUserUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' /><input type='hidden' name='_tag/message' value='The user has been updated.' /><input type='hidden' name='_macrobuilder' value='admin_user|bossUserCreateUpdate' />");
 
 					app.model.addDispatchToQ({
 						'_cmd':'bossUserDetail',
@@ -224,12 +219,8 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 							}
 						});
 
-//					$("[data-app-role='roleList']",$panel).on("sortupdate",function(evt,ui){
-//						ui.item.find(':checkbox').addClass('edited');
-//						$(this).closest('.eventDelegation').anydelegate('updateChangeCounts');						
-//						});
-
 					$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
+					$("[name='password']",$panel).prop('required','').removeProp('required');
 					$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
 					}
 				else	{
@@ -238,160 +229,39 @@ app.u.dump(" -> sfo: "); app.u.dump(sfo);
 					}
 				},
 
-
-
-
-
-
-
-//on a user update, only the fields that have changed are sent and roles are always sent.
-// so the form object is serialized for validation, but not sent.
-			"bossUserUpdateSave" : function($btn)	{
-				$btn.button();
-				$btn.off('click.bossUserUpdateSave').on('click.bossUserUpdateSave',function(event){
-					event.preventDefault();
-					app.u.dump("BEGIN admin_user.e.bossUserUpdateSave");
-					var $panel = $btn.closest('.ui-widget-anypanel'),
-					frmObj = $btn.closest('form').serializeJSON();
-					
-					if($panel.length == 0)	{app.u.throwGMessage("In admin_user.e.bossUserUpdateSave, unable to determine $panel [$panel.length = "+$panel.length+"].");}
-					else if($.isEmptyObject(frmObj))	{app.u.throwGMessage("In admin_user.e.bossUserUpdateSave, the serialized form object was empty.");}
-					else if(!frmObj.email || !frmObj.fullname )	{
-						var msg = 'Please populate the following fields:<ol>';
-						if(!frmObj.email)	{msg += "<li>email<\/li>"}
-						if(!frmObj.fullname)	{msg += "<li>fullname<\/li>"}
-						msg += "<\/ol>";
-						var msgObj = app.u.errMsgObject(msg);
-						app.u.throwMessage(msgObj,true);
-						}
-					else	{
-//						app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
-						var update = {};
-						update.login = frmObj.login; //for now, set both luser and login. Eventually, we'll use one or the other.
-						update.luser = frmObj.login;
-
-						update['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($panel);
-//add all CHANGED attributes to the update object.
-						$(".edited",$panel).each(function(){
-							update[$(this).attr('name')] = $(this).val();
-							});
-
-//the call will return a 1 if it's going to request and a zero if an error occured. only proceed if no errors.
-						if(app.ext.admin.calls.bossUserUpdate.init(update,{},'immutable'))	{
-							$('body').showLoading({'message':'Saving your changes for '+update.login});
-
-//to ensure new copies of the data, destroy the old.						
-							app.model.destroy('bossUserList');
-							app.model.destroy('bossUserDetail|'+update.luser);
-
-							app.ext.admin.calls.bossUserDetail.init(update.luser,{},'immutable');
-							app.ext.admin.calls.bossUserList.init({
-								'callback': function(rd)	{
-									$('body').hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										app.u.throwMessage(rd);
+			bossUserDeleteConfirm : function($ele,p)	{
+				var luser = $ele.closest("[data-luser]").data('luser');
+				if(luser)	{
+					var $D = app.ext.admin.i.dialogConfirmRemove({
+						"message" : "Are you sure you wish to delete user "+luser+"? There is no undo for this action.",
+						"removeButtonText" : "Remove User", //will default if blank
+						"title" : "Remove user: "+luser, //will default if blank
+						"removeFunction" : function(vars,$D){
+							$D.showLoading({"message":"Deleting user "+luser});
+							app.model.addDispatchToQ({
+								'_cmd':'bossUserDelete',
+								'login' : luser,
+								'_tag':	{
+									'callback':function(rd){
+										$D.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											$D.dialog('close');
+											$ele.closest("[data-app-role='dualModeContainer']").find("[data-app-event='admin|refreshDMI']").trigger('click');
+											}
 										}
-									else	{
-										app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
-										$panel.anypanel('destroy');
-										$("[data-luser='"+update.luser+"'] .editUser",'#userManagerContent').trigger('click');
-										}
-									}},'immutable');
-							app.model.dispatchThis('immutable');
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
 							}
-						else	{} //error handling handled by call in if statement.
-						}
-					
-					});
-				}, //bossUserUpdateSave
-
-
-			
-			"bossUserDetail" : function($btn){
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
-				$btn.addClass('editUser'); //used for triggering click after user update.
-				$btn.off('click.bossUserUpdate').on('click.bossUserUpdate',function(event){
-					event.preventDefault();
-					if(!$.isEmptyObject(user))	{
-					//see bossUserCreateUpdateSave app event to see what usermode is used for.
-
-
-
-if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
-	'callback':function(rd){
-//		app.u.dump("BEGIN admin_user.e.bossUserUpdate anonymous callback");
-//		app.u.dump(" -> panelID: "+panelID);
-//		app.u.dump(" -> user.luser: "+user.luser);
-		if(app.model.responseHasErrors(rd)){
-			app.u.throwMessage(rd);
-			}
-		else	{		
-			
-
-
-
-			var L = userData['@roles'].length;
-//loop backwards so that each row can be moved to the top but the original order will be preserved.
-			for(var i = (L-1); i >= 0; i -= 1)	{
-//				app.u.dump(" -> userData['@roles'][i]: "+userData['@roles'][i]);
-				$("[name='"+userData['@roles'][i]+"']",$panel).attr('checked','checked');
-				$("[name='"+userData['@roles'][i]+"']",$panel).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
-				}
-			$panel.hideLoading();
-			}
-		}
-	},'mutable'))	{
-//showloading is run AFTER the animation so that it places itself correctly over the target.
-		app.model.dispatchThis('mutable');
-		}
-	else	{
-//no dispatch is occuring. Don't do a showLoading cuz the data will be added immediately.
-		$panel.slideDown('fast');
-		}
-
-						}
-//append detail children before changing modes. descreases 'popping'.
-					app.ext.admin.u.toggleDualMode($('#userManagerContent'),'detail');
-
-					});
-				},
-			
-			"bossUserDelete" : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.bossUserCreate').on('click.bossUserCreate',function(event){
-					event.preventDefault();
-					var data = $(this).closest('tr').data(),
-					$D = $("<div \/>").attr('title','Delete User').append("Are you sure you want to delete user <b>"+(data.fullname || data.luser)+"<\/b>? This action can not be undone.");
-
-					$D.dialog({
-resizable: false,
-modal: true,
-buttons: {
-	"Delete User": function() {
-		$D.dialog('close');
-		$('body').showLoading({'message':'Deleting User'});
-		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
-		app.ext.admin.calls.bossUserDelete.init(data.luser,{},'immutable');
-		app.ext.admin.calls.bossUserList.init({'callback':function(rd){
-			if(app.model.responseHasErrors(rd)){
-				app.u.throwMessage(rd);
-				}
-			else	{
-				app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
-				}
-			$('body').hideLoading();
-			}},'immutable');
-		app.model.dispatchThis('immutable');
-		},
-	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
-	}
-        });
-					});
-				
-				}
-			
-
-			}
+						})
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_users.e.bossUserDeleteConfirm, unable to ascertain L-user name.","gMessage":true});}
+				} //bossUserDeleteConfirm
+			} //E/events
 		} //r object.
 	return r;
 	}

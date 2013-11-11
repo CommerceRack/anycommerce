@@ -10,8 +10,8 @@
 		<td><ul data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></ul></td>
 		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
 		<td class='alignRight'>
-		<button data-app-event="admin_user|bossUserDelete" class='marginLeft hideInDetailMode'>delete</button>
-		<button data-app-click="admin_user|bossUserDetailShow">edit</button>
+		<button data-app-click="admin_user|bossUserDeleteConfirm" class='marginLeft applyButton' data-text='false' data-icon-primary='ui-icon-trash'>delete</button>
+		<button data-app-click="admin_user|bossUserDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>edit</button>
 		</td>
 	</tr>
 
@@ -20,7 +20,7 @@
 		<td data-bind="var: role(title); format:text;"></td>
 		<td class='roleDetail' data-bind="var: role(detail); format:text;"></td>
 		<td data-bind="var: role(id); format:text;"></td>
-		<td>
+		<td class='width1'>
 <div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
 		</td>
 	</tr>
@@ -50,7 +50,7 @@
 
 <fieldset class='labelsAsBreaks marginBottom roles'>
 	<legend>Roles</legend>
-	<table class='gridTable fullWidth' data-app-role='roleList' data-bind="var:user(@roles); format:userRoles; extension:admin_user;">
+	<table class='gridTable fullWidth' data-app-role='roleList'>
 	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 	<thead>
 	<tr>
@@ -58,6 +58,7 @@
 		<th>Title</th>
 		<th class='roleDetail'>Detail</th>
 		<th>ID</th>
+		<th></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: roles(@ROLES); format:processList; loadsTemplate:userManagerRoleRowTemplate;" data-app-role='roleListTbody'></tbody>
