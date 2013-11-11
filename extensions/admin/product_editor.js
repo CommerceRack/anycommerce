@@ -1017,9 +1017,9 @@ $target.anydelegate();
 							},
 						'revert' : true
 						});
-		
+
 					$(".sortableImagery",$context).anydropzone({
-						folder : 'product/'+pid.toLowerCase(),
+						folder : 'product/'+pid.toString().toLowerCase().replace(/[^A-Z0-9]/ig, "_"), //folders are lowercase w/ no special characters except underscore.
 						drop : function(files,event,self){
 		
 							for (var i = 0; i < files.length; i++) {

@@ -9,7 +9,9 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201346
 ADMIN
 	enhancement - updated users interface. faster and more memory efficient for browser.
-
+	enhancement - update media library file upload to a much smaller plugin.
+	bug - in support > create ticket, apostrophes were causing content after the apostrophe to drop.
+	bug - drag and dropping images would create a folder with a dash if the sku had a dash. now creates dash-free folders.
 
 201344
 ADMIN
