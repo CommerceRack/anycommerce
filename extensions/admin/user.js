@@ -21,7 +21,7 @@
 
 
 var admin_user = function() {
-	var theseTemplates = new Array('userManagerPageTemplate','userManagerUserRowTemplate','userManagerRoleRowTemplate','userManagerUserCreateUpdateTemplate');
+	var theseTemplates = new Array('userManagerUserRowTemplate','userManagerRoleRowTemplate','userManagerUserCreateUpdateTemplate');
 	var r = {
 
 
@@ -53,20 +53,36 @@ var admin_user = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-//This is how the task manager is opened. Just execute this function.
-// later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showUserManager : function($target) {
-				app.u.dump("BEGIN admin_user.a.showUserManager");
 
-//generate some of the task list content right away so the user knows something is happening.
-				$target.empty();
-				$target.append(app.renderFunctions.createTemplateInstance('userManagerPageTemplate',{'id':'userManagerContent'})); //placeholder
-				$('#userManagerContent').showLoading({'message':'Fetching your user list.'});
+			showUserManager : function($target)	{
+				app.u.dump("BEGIN admin_user.a.showUserManager 2.0");
 
-				app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
-				app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':'#userManagerContent'},'mutable');
+				$target.intervaledEmpty();
+				var $DMI = app.ext.admin.i.DMICreate($target,{
+					'header' : 'User Manager',
+					'className' : 'userManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['id','Username','Name','Email','Roles','Created',''], //leave blank at end if last row is buttons.
+					'tbodyDatabind' : "var: tickets(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;",
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_user|bossUserCreateShow'>Create A New User</button>"],	
+					'cmdVars' : {
+						'_cmd' : 'bossUserList',
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'bossUserList'
+							}
+						}
+					});
+				//only need to fetch the boss role list once. Doesn't change much.
+				if(app.data.bossRoleList)	{}
+				else	{
+					app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
+					}
 				app.model.dispatchThis('mutable');
-				} //showTaskManager
+				
+				app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
+
+				}			
+				
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -77,16 +93,16 @@ var admin_user = function() {
 
 		u : {
 
-
+/*
+not necessary in users 2.0
 			resetUsersTable : function()	{
 				var $table = $("[data-app-role='dualModeListContents']","#userManagerContent")
 				$table.empty();
 				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data.bossUserList);
 				app.ext.admin.u.handleAppEvents($table);
 				app.ext.admin.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
-
 				},
-
+*/
 			getRoleCheckboxesAsArray : function($parent)	{
 				var roles = new Array();
 				if($parent && $parent.length)	{
@@ -104,13 +120,45 @@ var admin_user = function() {
 				}
 			}, //u
 
+		macrobuilders : {
+
+			'bossUserCreate' : function(sfo,$form)	{
+				app.u.dump("BEGIN admin_support.macrobuilders.bossUserCreate");
+				sfo.roles = app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
+				sfo._cmd = "bossUserCreate"
+//clean up sfo to minimize the request.
+				$(":checkbox",$form).each(function(){
+					delete sfo[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
+					});
+app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				return sfo;
+				} //adminGiftcardMacro			
+			
+			},
+
 		e : {
 
 
-			"roleListEdit" : function($this)	{
-				app.u.dump("BEGIN admin_users.e.roleListEdit");
-				$this.sortable({ handle: ".handle" });
-				}, //roleListEdit
+
+			"bossUserCreateShow" : function($ele,p){
+
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Create New User',
+					'templateID':'userManagerUserCreateUpdateTemplate',
+					'data':$ele.data(),
+					'extendByDatapointers' : ['bossRoleList']
+					});
+//create and update share a template.  The inputs below are for the callback.
+				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='The user has been created.' /><input type='hidden' name='_macrobuilder' value='admin_user|bossUserCreate' />");
+
+				$('form',$D).append("<div class='buttonset alignRight'><button data-app-click='admin|submitForm' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create User</button></div>");
+
+				app.u.handleButtons($D.anydelegate());
+				$D.dialog('open');
+				$("[data-app-role='roleListTbody']",$D).sortable();
+				},
+
+
 
 //on a user update, only the fields that have changed are sent and roles are always sent.
 // so the form object is serialized for validation, but not sent.
@@ -173,78 +221,7 @@ var admin_user = function() {
 					});
 				}, //bossUserUpdateSave
 
-/*
-the create and update template is recycled. the button has the same app event, but performs a different action based on whether or not a save or update is being perfomed.
-Whether it's a create or update is based on the data-usermode on the parent.
-*/
-			"bossUserCreateSave" : function($btn){
-				$btn.button();
-				$btn.off('click.bossUserCreateUpdateSave').on('click.bossUserCreateUpdateSave',function(event){
-					event.preventDefault();
-					app.u.dump("BEGIN admin_user.e.bossUserCreateUpdateSave");
-					var $parent = $('#bossUserCreateModal'),
-					frmObj = $(this).closest("form").serializeJSON(); //used to generate roles array and also sent directly as part of create. not used in update.
-					
-					$(".appMessage",$parent).empty().remove(); //clean any existing errors.
-					
-					if($.isEmptyObject(frmObj))	{
-						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to locate form object for serialization or serialized object is empty.');
-						}
-					else if(!frmObj.email || !frmObj.password || !frmObj.fullname || !frmObj.login)	{
-						
-						var msg = 'Please populate the following fields:<ol>';
 
-						if(!frmObj.email)	{msg += "<li>email<\/li>"}
-						if(!frmObj.password)	{msg += "<li>password<\/li>"}
-						if(!frmObj.fullname)	{msg += "<li>fullname<\/li>"}
-						if(!frmObj.login)	{msg += "<li>login<\/li>"}
-						msg += "<\/ol>";
-						
-						var msgObj = app.u.errMsgObject(msg);
-						msgObj.parentID = 'bossUserCreateModal';
-						app.u.throwMessage(msgObj,true);
-						$parent.animate({scrollTop: 0}, 'fast');
-						}
-					else {
-						$parent.showLoading({'message':'Creating user '+frmObj.login});
-
-//build an array of the roles that are checked. order is important.
-						frmObj['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($parent);
-						$(":checkbox",$parent).each(function(){
-							delete frmObj[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
-							});
-
-						app.model.destroy('bossUserList');
-						app.ext.admin.calls.bossUserCreate.init(frmObj,{'callback':function(rd){ //rd is responseData.
-							if(app.model.responseHasErrors(rd)){
-								$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
-								rd.parentID = 'bossUserCreateModal'; //set so errors appear in modal.
-								app.u.throwMessage(rd);
-								$parent.dialog({buttons: {"Close": function() {$( this ).dialog( "close" ).empty().remove();}}}); //adds a 'close' button.
-								}
-							else	{
-								var msg = app.u.successMsgObject("User has been created!");
-								msg.parentID = 'bossUserCreateModal';
-								$parent.empty(); //only empty if no error occurs. That way user can correct and re-submit.
-								app.u.throwMessage(msg,true);
-								$( ".selector" ).dialog( "option", "buttons", [ { text: "Close", click: function() { $( this ).dialog( "close" ); }} ] );
-								}
-							$parent.hideLoading();
-							}},'immutable');
-						app.ext.admin.calls.bossUserDetail.init(frmObj.login,{},'immutable'); //get this local. better UX if merchant goes straight to edit mode.
-						app.ext.admin.calls.bossUserList.init({'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								app.u.throwMessage(rd);
-								}
-							else	{
-								app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
-								}
-							$('body').hideLoading();
-							}},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					});
-				}, //bossUserCreateUpdateSave
 			
 			"bossUserDetail" : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
@@ -369,28 +346,9 @@ buttons: {
         });
 					});
 				
-				},
-			
-			"bossUserCreate" : function($btn){
-				$btn.button();
-				$btn.off('click.bossUserCreate').on('click.bossUserCreate',function(event){
-					event.preventDefault();
-					var $target = $('#bossUserCreateModal');
-					if($target.length)	{$target.empty();}
-					else	{
-						$target = $("<div \/>").attr({'id':'bossUserCreateModal','title':'Create User'});
-						$target.appendTo("body");
-						$target.dialog({width:500,height:600,autoOpen:false,modal:true});
-						}
-					$target.dialog('open');
-					//see bossUserCreateUpdateSave app event to see what usermode is used for.
-					$target.append(app.renderFunctions.transmogrify({'id':'bossUserCreateContent','usermode':'create'},'userManagerUserCreateUpdateTemplate',app.data.bossRoleList)); //populate content.
-					//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
-					$('form',$target).append("<button data-app-event='admin_user|bossUserCreateSave' class='alignCenter'>Create User</button>");
-
-					app.ext.admin.u.handleAppEvents($target);
-					});
 				}
+			
+
 			}
 		} //r object.
 	return r;
