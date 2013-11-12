@@ -2357,14 +2357,18 @@ function type2class(type)	{
 
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
 					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
-						$("[data-app-role='skuSchedulesContainer']",$PE).show();
+						var $scheduleContainer = $("[data-app-role='skuSchedulesContainer']",$PE).show();
 //build the table headers for the schedules.
 						if(app.data['adminProductDetail|'+pid]['@skus'][0] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
-							var o = '';
-							for(var i = 0, L = app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length; i < L; i += 1)	{
-								o += "<th>"+app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'][i].schedule+"</th>";
+							//make sure to only add the headers once.
+							if($scheduleContainer.data('headersAdded'))	{}
+							else	{
+								var o = '';
+								for(var i = 0, L = app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length; i < L; i += 1)	{
+									o += "<th>"+app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'][i].schedule+"</th>";
+									}
+								$scheduleContainer.data('headersAdded',true).find('thead tr').append(o);
 								}
-							$("[data-app-role='skuSchedulesContainer']",$PE).find('thead tr').append(o);
 							}
 						}
 					else	{
