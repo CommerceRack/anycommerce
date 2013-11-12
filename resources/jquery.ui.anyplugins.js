@@ -1021,7 +1021,8 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			fileclass : null, //can be a more blanket 'type'. vals: image, text, spreadsheet. ignored if filetypes is specified (would be redundant)
 			filetypes : [], //pass in an array of file types supported. ex ['csv','xls']
 			templateID : null, // will be used to generate the preview.
-			instantUpload : true, //will upload the file as soon as it's dragged/selected.
+			encode : null, // supports base64 or null
+			autoUpload : true, //will upload the file as soon as it's dragged/selected.
 			stripExtension : false, //used within media library where the file extension should be stripped prior to non-alphanumeric character removal. (or .png becomes _png)
 			maxSelectableFiles : null, //if a # is set, only that # of files will be allowed.
 //			maxConcurrentUploads : 4, //if X, only X requests will run simultaneously and when one finishes, the next one fires.
@@ -1058,15 +1059,18 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 		_addButtons : function()	{
 			var
 				self = this,
-				$buttonSet = $("<div \/>").addClass('ui-widget-anyupload-buttonset smallButton');
+				$buttonSet = $("<div \/>").addClass('ui-widget-anyupload-buttonset');
 
 			$buttonSet.append('<input type="file" class="ui-widget-anyfile-fileinput" '+(self.options.maxSelectableFiles === 1 ? '' : 'multiple' )+' name="files[]" style="display:none;" />');
 			$("<button \/>").text('Select Files').button({icons: {primary: "ui-icon-document"},text: true}).on('click',function(event){
 				event.preventDefault();
 				$(this).parent().find(".ui-widget-anyfile-fileinput").trigger('click');
 				}).appendTo($buttonSet);
-			if(!self.options.autoUpload)	{
-				$("<button \/>").text('Start Upload').button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: false}).button('disable'); //will be enabled once a file is selected
+			if(self.options.autoUpload === false)	{
+				$("<button \/>").addClass('ui-widget-anyfile-uploadbutton').text('Start Upload').button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: true}).button('disable').on('click',function(event){
+					event.preventDefault();
+					self._sendFiles();
+					}).appendTo($buttonSet); //will be enabled once a file is selected
 				}
 			$('.ui-widget-anyfile-fileinput',$buttonSet).on('change',function(event){
 				self.filesChangeEvent(event,self);
@@ -1116,16 +1120,26 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 		_buildPreviews : function(files,event,self){
 			var self = self || this;
 			var filteredFiles = self._filteredFiles(files);
+app.u.dump(" -> self.options.autoUpload: "+self.options.autoUpload);
+			if(self.options.autoUpload === false && filteredFiles.length)	{
+				$('.ui-widget-anyfile-uploadbutton',self.element).button('enable');
+				}
+
 			for (var i = 0; i < filteredFiles.length; i++) {
 				var file = filteredFiles[i];
 				var fileType = file.type.match('image.*') ? 'image' : 'file';
 
 				if(self.options.templateID)	{
-//s					app.u.dump(" -> file: "); app.u.dump(file);
+//					app.u.dump(" -> file: "); app.u.dump(file);
 					//create a template instance.  apply data('file') to it.  translate. then append to self.element.
 					//this can't be done till the plugin is in anyplugins or the 'app' calls wont work
-					var $ele = app.renderFunctions.transmogrify({'name':file.filename},self.options.templateID,{'name':file.filename,'Name':file.filename,'path':'i/imagenotfound'}); //Name is for media lib.
+					var $ele = app.renderFunctions.createTemplateInstance(self.options.templateID,{'name':file.filename});
+					//transmogrify({'name':file.filename},self.options.templateID,{'name':file.filename,'Name':file.filename,'path':'i/imagenotfound'}); //Name is for media lib.
 					self.element.append($ele);
+					$ele.anycontent({
+						data : {'name':file.name,'Name':file.name,'path':'i/imagenotfound','type':file.type,'size':file.size,'lastModifiedData':file.lastModifiedData},
+						translateOnly : true
+						})
 					}
 				else	{
 					//may not support this once deployed, but anycontent is not here for development testing.
@@ -1140,9 +1154,14 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //build the thumbnail.
 				if(fileType == 'image')	{
 					var $img = $ele.is('img') ? $ele : $('img',$ele);
-					var reader = new FileReader();
-					reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })($img[0]);
-					reader.readAsDataURL(file);
+					if($img.length)	{
+						var reader = new FileReader();
+						reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })($img[0]);
+						reader.readAsDataURL(file);
+						}
+					else	{
+						//filetype is image, but no image was found within the preview (could be an image was selected for a file based upload and no filter was enabled
+						}
 					}
 				if(self.element.closest('eventDelegation').length)	{
 					self.element.closest('eventDelegation').anydelegate('updateChangeCounts'); // updates the save button change count.
@@ -1193,11 +1212,18 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			//create an object.  pass that object into a user-defined 'ajaxRequest' function. {'filename':newFileName,'base64':btoa(evt.target.result)}. second param is this.element (which can be used to get folder or other vars)
 			reader.onload = function(evt) {
 				app.u.dump("reader.onload function has been triggered.");
-				
+				var filecontents;
+				if(self.options.encode == 'base64')	{
+					filecontents = btoa(evt.target.result);
+					}
+				else	{
+					filecontents = evt.target.result;
+					}
+					
 				$ele.removeClass('newMediaFile').data('queued',true);
 				self.options.ajaxRequest($.extend(true,{
 					'filename' : file.name,
-					'base64' : btoa(evt.target.result)
+					'filecontents' : filecontents,
 					},file),{'container' : self.element,'fileElement':$ele});
 //				xhr.sendAsBinary(evt.target.result);
 				};

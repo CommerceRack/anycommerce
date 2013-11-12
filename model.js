@@ -544,9 +544,9 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if the error is on the parent/piped request, no qid will be set.
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
-					app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)');
+					app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)','warn');
 					if(Q && Q.length)	{
-						app.u.dump(" -> Q.length: "+Q.length); app.u.dump(Q);
+//						app.u.dump(" -> Q.length: "+Q.length); app.u.dump(Q);
 						for(var i = 0, L = Q.length; i < L; i += 1)	{
 							this.handleErrorByUUID(Q[i]._uuid,QID,responseData);
 							}

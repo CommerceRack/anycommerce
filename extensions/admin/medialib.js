@@ -24,7 +24,7 @@ An extension for managing the media library in addition to ALL other file upload
 
 var admin_medialib = function() {
 	var theseTemplates = new Array('mediaLibTemplate',
-	'mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate',
+	'mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','fileUploadFilePreviewTemplate',
 	'mediaLibSelectedFileTemplate','fileUploadTemplate','page-setup-import-help',
 	'page-setup-publicfiles','page-setup-import-customers','page-setup-import-images',
 	'page-setup-import-inventory','page-setup-import-listings','page-setup-import-navcats',
@@ -323,6 +323,7 @@ setTimeout(function(){
 				$('#mediaFilesUL').anyupload({
 					'instantUpload' : true,
 					'stripExtension' : true,
+					'encode' : 'base64',
 					'templateID' : 'mediaFileTemplate',
 					'filesChange' : function(files,ui)	{
 						//scroll to bottom of div to show new images
@@ -339,7 +340,7 @@ setTimeout(function(){
 						
 						app.model.addDispatchToQ({
 							'_cmd':'adminImageUpload',
-							'base64' : data.base64, //btoa is binary to base64
+							'base64' : data.filecontents, //btoa is binary to base64
 							'folder' : fname,
 							'filename' : newFileName,
 							'_tag':	{
@@ -841,7 +842,8 @@ if(selector && mode)	{
 
 //The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 //This code could get executed several times during a large batch of files. Any code needed for 1 time execution (at the end) should be in the fileuploadstopped function.
-		'mediaLibrary' : function(data,textStatus){
+// *** 201346 -> media lib calls anyfileupload() directly.
+/*		'mediaLibrary' : function(data,textStatus){
 			var L = data.length;
 			var tagObj;
 			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
@@ -852,7 +854,7 @@ if(selector && mode)	{
 				}
 //*** 201324 -> this wasn't getting dispatched!
 			app.model.dispatchThis('immutable');
-			},
+			}, */
 		'publicFileUpload' : function(data,textStatus)	{
 //			app.u.dump("Got to csvUploadToBatch success.");
 //* 201320 -> the adminPublicFileList is slow, so on upload, we do not reload content. The destroy below will remove the data from localStorage so a merchant can exit publick files and return to see their updated list.
@@ -933,7 +935,42 @@ if(selector && mode)	{
 	
 	//add domain to form so that it gets passed along to fileupload.cgi
 	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
-	
+
+
+	$("[data-app-role='anyuploadContainer']",$selector).anyupload({
+		'autoUpload' : false,
+		'stripExtension' : false,
+		'maxSelectableFiles' : 1,
+		'instantUpload' : false,
+		'templateID' : 'fileUploadFilePreviewTemplate',
+		'ajaxRequest' : function(data,ui){
+			app.u.dump("BEGIN ajaxUpload callback (specific to the anyupload instance)."); // app.u.dump(data);
+			$.ajax({
+				'url' : app.vars.jqurl+'upload/',
+				type: 'POST',
+				processData: false,
+				contentType: data.type,
+				data: data,
+				success: function(object,textStatus,jqXHR){
+					app.u.dump("SUCCESS!!")
+					app.u.dump("object: "); app.u.dump(object);
+					app.u.dump("textStatus: "); app.u.dump(textStatus);
+//					app.u.dump("jqXHR: "); app.u.dump(jqXHR);
+					},
+				error: function(jqXHR,textStatus,errorThrown)	{
+					app.u.dump("ERROR!!")
+//					app.u.dump("jqXHR: "); app.u.dump(jqXHR);
+//					app.u.dump("textStatus: "); app.u.dump(textStatus);
+//					app.u.dump("errorThrown: "); app.u.dump(errorThrown);
+					}
+				}); //don't hard code to http or https. breaks safari and chrome.			
+
+			}
+		});
+
+
+
+/*	
 	// Initialize the jQuery File Upload widget:
 	$selector.fileupload({
 		// Uncomment the following to send cross-domain cookies:
@@ -971,7 +1008,7 @@ if(selector && mode)	{
 	
 	
 	//$('.btn-success',$selector).on('click', function(){$(".fileUploadButtonBar").show()});
-
+*/
 
 	}
 else	{
