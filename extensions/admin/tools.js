@@ -294,7 +294,7 @@ $target.append("<br \/>");
 //				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
-//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				if(Number(sfo.SELECTALL) === 1)	{
 					r = 'all'
 					}
@@ -325,8 +325,7 @@ $target.append("<br \/>");
 
 					if(sfo.csv)	{
 						r += "csv="+sfo.csv.replace(/[\s\t\r\n]+/g,",")+"\n"; //strip out all whitespace of any kind and replace with a comma. adjacent whitespace will only get 1 comma
-						app.u.dump(" -> r: "); app.u.dump(r);
-						die();
+//						app.u.dump(" -> r: "); app.u.dump(r);
 						}
 					}
 //				app.u.dump(" -> r: "+r);

@@ -14,6 +14,7 @@ ADMIN
 	enhancement - product selector (used in powertool and product export) > Comma Separated List now handles whitespace, tabs and returns better.
 	bug - CRM escalate ticket now working.
 	enhancement - 'about' link now contains link to version changelogs. videos archives will now open in dialog.
+	bug - order edit > send mail would send mail twice.
 
 201344
 ADMIN

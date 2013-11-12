@@ -3425,7 +3425,15 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 			//return a boolean. NO MESSAGING>  that's use-case specific.
 			validatePicker : function($picker) {
-				return ($("[data-app-role='pickerContainer']",$picker).find(':checkbox:checked').length || $("[name='csv']",$picker).val()) ? true : false;
+				var r = false;
+				if($("[data-app-role='pickerContainer']",$picker).find(':checkbox:checked').length)	{
+					r = true;
+					}
+				else if($("[name='csv']",$picker).val() || ($("[name='rstart']",$picker).val() && $("[name='rend']",$picker).val()) || ($("[name='createstart']",$picker).val() && $("[name='createend']",$picker).val()))	{
+					r = true;
+					}
+				else	{}
+				return r;
 				},	
 
 
