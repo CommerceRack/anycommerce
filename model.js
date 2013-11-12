@@ -289,7 +289,7 @@ function zoovyModel() {
 			if(app.globalAjax.overrideAttempts < 30)	{
 				setTimeout("app.model.dispatchThis('"+QID+"')",500); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
 				}
-			else if(app.globalAjax.overrideAttempts < 60)	{
+			else if(app.globalAjax.overrideAttempts < 75)	{
 // slow down a bit. try every second for a bit and see if the last response has completed.
 				setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. if the first attempt is still in progress, this code block will get re-executed till it succeeds or until
 				}
@@ -410,9 +410,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 			}
 		});
 
-	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
-		delete app.globalAjax.requests[QID][pipeUUID];
-		app.model.handleResponse(d,QID);
+		app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
+			delete app.globalAjax.requests[QID][pipeUUID];
+			app.model.handleResponse(d,QID,Q);
 			}
 		)
 	r = pipeUUID; //return the pipe uuid so that a request can be cancelled if need be.
@@ -531,25 +531,29 @@ set adjustAttempts to true to increment by 1.
 QID is the dispatchQ ID (either passive, mutable or immutable. required for the handleReQ function.
 	*/
 	
-		handleResponse : function(responseData,QID)	{
+		handleResponse : function(responseData,QID,Q)	{
 //			app.u.dump('BEGIN model.handleResponse.');
 			
 //if the request was not-pipelined or the 'parent' pipeline request contains errors, this would get executed.
 //the handlereq function manages the error handling as well.
 			if(responseData && !$.isEmptyObject(responseData))	{
 				var uuid = responseData['_uuid'];
-				var QID = QID || this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
-				
-//				app.storageFunctions.writeLocal("response_"+uuid, JSON.stringify(responseData),'session'); //save a copy of each dispatch to sessionStorage for entymologist
+				var QID = QID || this.whichQAmIFrom(uuid);
 				
 //				app.u.dump(" -> responseData is set. UUID: "+uuid);
 //if the error is on the parent/piped request, no qid will be set.
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
-					
+					app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)');
+					if(Q && Q.length)	{
+						app.u.dump(" -> Q.length: "+Q.length); app.u.dump(Q);
+						for(var i = 0, L = Q.length; i < L; i += 1)	{
+							this.handleErrorByUUID(Q[i]._uuid,QID,responseData);
+							}
+						}
 //QID will b set if this is a NON pipelined request.
-					if(QID)	{
-						app.u.dump(' -> High Level Error in '+QID+' response!');
+// could get here in a non-pipelined request.
+					else if(QID)	{
 //					app.u.dump(responseData);
 						this.handleErrorByUUID(responseData['_uuid'],QID,responseData);
 						}
