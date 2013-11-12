@@ -3,7 +3,7 @@
 <table>
 
 	<tr id='userManagerUserRowTemplate'>
-		<td data-bind="var: user(uid); format:text;"></td>
+		<td data-bind="var: user(uid); format:text;" data-app-click="admin_user|bossUserDetailShow" class='lookLikeLink'></td>
 		<td data-bind="var: user(luser); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(fullname); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
