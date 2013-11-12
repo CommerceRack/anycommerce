@@ -628,7 +628,7 @@ SETUP PAGE TEMPLATE
 	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITEPTR;">
 	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
 	</span>
-	
+	<!-- ## 201401 -> APP is no longer a supported HOSTTYPE. remove this button at indicated release. -->
 	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:APP;">
 	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
 	</span>
