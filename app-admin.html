@@ -15,7 +15,7 @@ var myCreole;
 
 var baseURL = '';
 //in admin, used for loading app-specific files. do NOT set the base href tho.
-if (document.location.protocol  == 'file:') { 
+if (document.location.protocol  == 'file:') {
 	baseURL = '';
 	}
 else if (document.location.port == 8888) {
@@ -54,8 +54,8 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <!-- ** 201344 -> reversed the order of these two to solve the issue w/ selected files preview not showing up -->
-<!-- <script src="extensions/admin/resources/load-image.min.js"></script>required for media lib. loading in extension causes issues. -->
-<!-- <script src="extensions/admin/resources/tmpl.min.js"></script>required for media lib. loading in extension causes issues. -->
+<script src="extensions/admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 
 
 <!-- not much is going to run without these two. load em early -->
@@ -339,7 +339,7 @@ Having these on the DOM seems to make the JQ File Upload plugin work better so t
 template-upload modified from original. data-name added to tr.
 data-fid and data-fname will be added in the fileuploadadd
 These two pieces of data are used for mapping after the uploads to set what folder each file is saved to.
-
+-->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade" data-filename="{%=file.name%}">
@@ -372,8 +372,8 @@ These two pieces of data are used for mapping after the uploads to set what fold
         {% } %}</td>
     </tr>
 {% } %}
-</script>-->
-<!-- The template to display files available for download
+</script>
+<!-- The template to display files available for download-->
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade"  data-filename="{%=file.name%}">
@@ -401,7 +401,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
     </tr>
 {% } %}
 </script>
- -->
+
 
 
 

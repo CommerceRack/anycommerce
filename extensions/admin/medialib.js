@@ -24,7 +24,8 @@ An extension for managing the media library in addition to ALL other file upload
 
 var admin_medialib = function() {
 	var theseTemplates = new Array('mediaLibTemplate',
-	'mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','fileUploadFilePreviewTemplate',
+	'mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate',
+//	'fileUploadFilePreviewTemplate',
 	'mediaLibSelectedFileTemplate','fileUploadTemplate','page-setup-import-help',
 	'page-setup-publicfiles','page-setup-import-customers','page-setup-import-images',
 	'page-setup-import-inventory','page-setup-import-listings','page-setup-import-navcats',
@@ -258,14 +259,14 @@ var admin_medialib = function() {
 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.js']); //
 
-//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
-//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
 
-//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
 //here to solve a safari/chrome issue if these scripts load before fileupload.js
 //not a great solution. will have to come up with something better. callback?
-/*
+
 setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/canvas-to-blob.min.js']); //
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-fp.js']); //The File Upload file processing plugin
@@ -274,7 +275,7 @@ setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 	},3000);
-*/
+
 
 //mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
 //B may also trigger medialibrary by linking to #mediaLibModeManage. This case gets handled in admin.u.handleLinkRewrites.
@@ -319,7 +320,7 @@ setTimeout(function(){
 //					app.u.dump(" -> app.ext.admin_medialib.u.getOpenFolderName(): "+app.ext.admin_medialib.u.getOpenFolderName());
 					app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())
 					}
-				
+/*
 				$('#mediaFilesUL').anyupload({
 					'instantUpload' : true,
 					'stripExtension' : true,
@@ -362,11 +363,11 @@ setTimeout(function(){
 						app.model.dispatchThis('passive');
 						}
 					});
-				
+*/
 //for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
-//				setTimeout(function(){
-//					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
-//					},2000);
+				setTimeout(function(){
+					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+					},2000);
 				}
 			}, //showMediaLibrary
 
@@ -842,8 +843,7 @@ if(selector && mode)	{
 
 //The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 //This code could get executed several times during a large batch of files. Any code needed for 1 time execution (at the end) should be in the fileuploadstopped function.
-// *** 201346 -> media lib calls anyfileupload() directly.
-/*		'mediaLibrary' : function(data,textStatus){
+		'mediaLibrary' : function(data,textStatus){
 			var L = data.length;
 			var tagObj;
 			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
@@ -854,7 +854,7 @@ if(selector && mode)	{
 				}
 //*** 201324 -> this wasn't getting dispatched!
 			app.model.dispatchThis('immutable');
-			}, */
+			}, 
 		'publicFileUpload' : function(data,textStatus)	{
 //			app.u.dump("Got to csvUploadToBatch success.");
 //* 201320 -> the adminPublicFileList is slow, so on upload, we do not reload content. The destroy below will remove the data from localStorage so a merchant can exit publick files and return to see their updated list.
@@ -936,7 +936,7 @@ if(selector && mode)	{
 	//add domain to form so that it gets passed along to fileupload.cgi
 	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
 
-
+/*
 	$("[data-app-role='anyuploadContainer']",$selector).anyupload({
 		'autoUpload' : false,
 		'stripExtension' : false,
@@ -968,14 +968,15 @@ if(selector && mode)	{
 			}
 		});
 
+*/
 
 
-/*	
 	// Initialize the jQuery File Upload widget:
 	$selector.fileupload({
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
-		url: document.location.protocol == 'file:' ? 'http://www.zoovy.com/jsonapi/upload/' : '/jsonapi/upload/', //don't hard code to http or https. breaks safari and chrome.
+		url: app.vars.jqurl+'upload/', //** 201346 -> more consistent to use this url
+//		url: document.location.protocol == 'file:' ? 'http://www.zoovy.com/jsonapi/upload/' : '/jsonapi/upload/', //don't hard code to http or https. breaks safari and chrome.
 		'limitConcurrentUploads' : 4,
 		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 		success : function(data,textStatus){
@@ -984,7 +985,7 @@ if(selector && mode)	{
 			}
 		});
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
-	
+
 	function fileuploadstopped() {
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
@@ -1008,7 +1009,7 @@ if(selector && mode)	{
 	
 	
 	//$('.btn-success',$selector).on('click', function(){$(".fileUploadButtonBar").show()});
-*/
+
 
 	}
 else	{
@@ -1238,10 +1239,9 @@ $('#mediaLibActionsBar button',$target).each(function(){
 		$button.attr('title','create and/or select a folder to add files to').button({icons: {primary: "ui-icon-plus"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
 	//		app.u.dump("Uploads Button Pushed.");
-// ** 201346 -> no longer necessary. file upload button is moved.
-//			$('.fileUploadButtonBar',$target).show();
-//			$('[type=file]',$target).click(); 
-			$("[type='file']",$('#mediaLibInfiniteScroller')).trigger('click');
+			$('.fileUploadButtonBar',$target).show();
+			$('[type=file]',$target).click(); 
+//			$("[type='file']",$('#mediaLibInfiniteScroller')).trigger('click');
 			})
 		$button.button('disable');
 		}
