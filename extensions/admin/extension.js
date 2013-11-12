@@ -5319,6 +5319,17 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 		e : {
+//add a class of allowBulkCheck to the checkboxes that you want toggled on event 
+			checkAllCheckboxesExec : function($ele,p)	{
+				if($ele.data('selected'))	{
+					$ele.data('selected',false);
+					$ele.closest(".dualModeList").find(":checkbox.allowBulkCheck").prop('checked','').removeProp('checked');
+					}
+				else	{
+					$ele.data('selected',true);
+					$ele.closest(".dualModeList").find(":checkbox.allowBulkCheck").prop('checked','checked');
+					}
+				},
 
 			adjustHeightOnFocus : function($ele,p)	{
 				$ele.height('300');
