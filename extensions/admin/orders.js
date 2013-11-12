@@ -355,8 +355,11 @@ else	{
 
 				$("[data-app-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
 				$("[data-app-role='admin_orders|itemUpdateBulkEditMenu']",$target).menu().hide();
-				
-				
+
+				//Adds the click events to the order bulk update dropdown menu. The render format that generates the list is shared, so the events are added separately.
+				$("[data-app-role='bulkEmailMessagesList']",$target).find('a').each(function(){
+					$(this).attr('data-app-click','admin_orders|bulkImpactOrderItemListExec');
+					})
 
 
 //note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
@@ -821,9 +824,10 @@ else	{
 //used for adding email message types to the actions dropdown.
 //recycled in list mode and edit mode. #MAIL| is important in list mode and stripped in edit mode during click event.
 //designed for use with the vars object in this extension, not the newer adminEmailList _cmd
+//this is shared, so do NOT add an app-click to the li here, do it with JS. -> used by bulk edit AND in order edit.
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
-				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"' data-app-click='admin_orders|bulkImpactOrderItemListExec'>"+data.value[key]+" ("+key+")</a></li>");
+				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"' >"+data.value[key]+" ("+key+")</a></li>");
 				}
 			},
 
@@ -2232,7 +2236,7 @@ else	{
 				menu.css({'position':'absolute','width':'300px','z-index':'10000'}).parent().css('position','relative');
 				
 				menu.find('li a').each(function(){
-					$(this).on('click',function(event){
+					$(this).off('click.sendmail').on('click.sendmail',function(event){
 						event.preventDefault();
 						if($(this).attr('href') == '#MAIL|CUSTOMMESSAGE')	{
 							app.ext.admin_orders.a.showCustomMailEditor(orderID,app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
