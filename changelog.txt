@@ -13,6 +13,7 @@ ADMIN
 	bug - fix login if invalid username is supplied (would get stuck in showLoading)
 	enhancement - product selector (used in powertool and product export) > Comma Separated List now handles whitespace, tabs and returns better.
 	bug - CRM escalate ticket now working.
+	enhancement - 'about' link now contains link to version changelogs. videos archives will now open in dialog.
 
 201344
 ADMIN
