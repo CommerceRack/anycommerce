@@ -5376,7 +5376,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						sfo = $btn.closest('form').serializeJSON({"cb":true}),
 						$DMI = $btn.closest("[data-app-role='dualModeList']");
 					
-					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo)
+					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo);
 					sfo._tag.jqObj = $DMI;
 					if(sfo._cmd)	{
 						$DMI.showLoading();

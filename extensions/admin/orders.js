@@ -1774,13 +1774,13 @@ $('.editable',$container).each(function(){
 					});
 				$tbody.closest('table').data("ui-selectable")._mouseStop(null); // trigger the mouse stop event 
 				}, //orderListUpdateDeselectAll
-			
+
 			"bulkImpactOrderItemListExec" : function($ele,P)	{
 
 				if($ele.attr('href') == '#')	{
 				//if the li has a child list, do nothing on click, the children contain the actions.
 					app.u.dump(" -> selected command has children.");
-					} 
+					}
 				else	{
 					var command = $ele.attr('href').substring(1), //substring drops the #. will = POOL|PENDING or  PRNT|INVOICE
 					actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
@@ -2245,6 +2245,7 @@ else	{
 							}
 						});
 					});
+
 
 //simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){

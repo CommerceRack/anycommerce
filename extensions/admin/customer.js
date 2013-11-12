@@ -207,7 +207,7 @@ var admin_customer = function() {
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
-					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Reviews List<\/button><button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;",
 					'cmdVars' : {
