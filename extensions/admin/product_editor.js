@@ -3367,7 +3367,8 @@ app.model.dispatchThis("immutable");
 								'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
 								})
 							app.u.handleAppEvents($tbody,{'pid':pid});
-							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).addClass('edited').appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+							app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest('form'));
 							}
 						else	{
 							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
