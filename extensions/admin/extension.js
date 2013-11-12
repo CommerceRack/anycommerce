@@ -69,16 +69,16 @@ var admin = function() {
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
-			versionMetaData : {
-				'youtubeVideoIDs' : {
-					'201342':'Zq8Ac5YzP3M',
-					'201338':'A8TNbpQtgas',
-					'201336':'UOfn6tiQqiw',
-					'201334':'FUO0NALw6sI',
-					'201332':'tKQ_SJzjbXI',
-					'201330':'fEWSsblLQ94'
-					}
-				},
+			versionData : [
+				{'branch' : '201346','youtubeVideoID' : ''},
+				{'branch' : '201344','youtubeVideoID' : ''},
+				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
+				{'branch' : '201336','youtubeVideoID' : 'UOfn6tiQqiw'},
+				{'branch' : '201334','youtubeVideoID' : 'FUO0NALw6sI'},
+				{'branch' : '201332','youtubeVideoID' : 'tKQ_SJzjbXI'},
+				{'branch' : '201330','youtubeVideoID' : 'fEWSsblLQ94'}
+				],
+
 			templates : theseTemplates,
 			willFetchMyOwnTemplates : true,
 			"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],

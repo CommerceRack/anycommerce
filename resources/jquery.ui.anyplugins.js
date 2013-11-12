@@ -421,6 +421,7 @@ In both cases, keep watching for further changes.
 			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 			errtype : null,
+			showCloseButton : true,
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 			persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 			},
@@ -439,8 +440,9 @@ In both cases, keep watching for further changes.
 			
 			var i = self.outputArr.push(self._getContainer()) - 1;  //the jquery object of the message output.
 			self.outputArr[i].attr('id',o.messageElementID);
-			
-			self.outputArr[i].append(self._getCloseButton()); //a close button is always generated, even on a persistent message.
+			if(o.showCloseButton)	{
+				self.outputArr[i].append(self._getCloseButton()); //a close button must be specifically disabled, even for persistent.
+				}
 			self.outputArr[i].append(self._getIcon());
 			self.outputArr[i].append(self._getFormattedMessage(i));
 			$t.prepend(self.outputArr[i]); //
@@ -460,6 +462,7 @@ In both cases, keep watching for further changes.
 				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+				showCloseButton : true,
 				errtype : null,
 				persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 				}

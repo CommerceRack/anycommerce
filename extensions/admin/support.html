@@ -8,7 +8,7 @@
 	<!-- platformInfo will automatically be appended to the bottom of this -->
 		</td>
 		<td>
-		<div data-app-role='platformInfoDetailsContainer'></div>
+		<div data-app-role='platformInfoDetailsContainer' ></div>
 		<table class='fullWidth gridTable'>
 		<thead>
 		<tr>
@@ -16,7 +16,7 @@
 			<th><h3>Change log</h3></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: releaseMeta(youtubeVideoIDs); format:processList; loadsTemplate:platformVideoItemTemplate;">
+		<tbody data-bind="useParentData:true; format:processList; loadsTemplate:platformVideoItemTemplate;">
 		
 		</tbody>
 		</table>
@@ -26,7 +26,7 @@
 
 <table>
 <tr id='platformVideoItemTemplate'>
-	<td data-app-click='admin_support|platformInfoWatchVideo' data-bind='var:video(key); format:text;' class='lookLikeLink'></td>
+	<td data-app-click='admin_support|platformInfoWatchVideo' data-bind='var:history(branch); format:text;' class='lookLikeLink'></td>
 	<td data-app-click='admin_support|platformInfoViewChangelog' class='lookLikeLink'>Change log</td>
 </tr>
 </table>

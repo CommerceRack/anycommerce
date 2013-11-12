@@ -103,16 +103,18 @@ var admin_support = function() {
 
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
-				if(app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version])	{
-					app.ext.admin.vars.versionMetaData.youtubeVideoID = app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version];
-					}
-					
+				
 				var $D = app.ext.admin.i.dialogCreate({
 					'title':'Platform Information',
 					'templateID':'platformInfoTemplate',
-					'data' : app.ext.admin.vars.versionMetaData
+					'data' : app.ext.admin.vars.versionData
 					}).addClass('objectInspector');
 				$D.attr('id','platformInformation');
+//populate the video section w/ the current release data.
+				$("[data-app-role='platformInfoVideoContainer']").anycontent({
+					data : app.ext.admin.vars.versionData[0]
+					})
+				
 				var $platInfo = $("[data-app-role='platformInfoContainer']",$D);
 				$platInfo.showLoading({'message':'Fetching platform data'});
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
@@ -296,12 +298,21 @@ var admin_support = function() {
 		e : {
 
 			platformInfoWatchVideo : function($ele,p)	{
-				var data = $ele.closest('tr').data();
-				app.u.dump(" -> data.value: "+data.value);
-				$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().anycontent({
-					data : {'youtubeVideoID':data.value},
-					translateOnly: true
-					});
+				var data = $ele.closest("[data-youtubevideoid]").data();
+				if(data.youtubevideoid)	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().anycontent({
+						data : data,
+						translateOnly: true
+						});
+					}
+				else	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().show().anymessage({
+						'message' : 'No video present for this release',
+						'errtype' : 'warn',
+						'showCloseButton' : false,
+						'persistent' : true
+						})
+					}
 				},
 			
 			platformInfoViewChangelog : function($ele,p)	{
