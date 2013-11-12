@@ -3592,7 +3592,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$context.anydelegate('resetTracking');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('resetTracking');
+					$context.closest('.eventDelegation').anydelegate('resetTracking',$context);
 					}
 				},
 			

@@ -333,10 +333,14 @@ pass in an event name and a function and it will be added as an eventAction.
 				if($CT.data(index))	{this._formEventActions[index]($CT,this.element);}
 				}
 			},
-
-		resetTracking : function()	{
-			$('.edited',this.element).removeClass('edited');
-			var $button = $("[data-app-role='saveButton'], [data-app-role='masterSaveButton']",this.element);
+//passing in a context allows this reset to impact just a portion of the delegated. useful in conjuction w/ trackSelector
+		resetTracking : function($context)	{
+			$context = $context || this.element;
+			$('.edited',$context).removeClass('edited');
+			this._updateSaveButtonInContext($context,"[data-app-role='saveButton']");
+			this._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']");
+			
+/*			var $button = $("[data-app-role='saveButton'], [data-app-role='masterSaveButton']",$context);
 			$('.numChanges',$button).text("");
 			$button.removeClass('ui-state-highlight');
 			$button.each(function(){
@@ -347,7 +351,7 @@ pass in an event name and a function and it will be added as an eventAction.
 					$(this).attr('disabled','disabled');
 					}
 				});
-			},
+*/			},
 
 		_handleAppEvents : function($CT,ep)	{
 //by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
