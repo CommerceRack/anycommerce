@@ -322,9 +322,11 @@ $target.append("<br \/>");
 					if(sfo.createstart && sfo.createend)	{
 						r += "created="+sfo.createstart+"|"+sfo.createend+"\n";
 						}
-					
+
 					if(sfo.csv)	{
-						r += "csv="+sfo.csv.replace(/\n/gm,",")+"\n"; //linebreaks instead of commas are acceptable for the input, but the API wants commas.
+						r += "csv="+sfo.csv.replace(/[\s\t\r\n]+/g,",")+"\n"; //strip out all whitespace of any kind and replace with a comma. adjacent whitespace will only get 1 comma
+						app.u.dump(" -> r: "); app.u.dump(r);
+						die();
 						}
 					}
 //				app.u.dump(" -> r: "+r);
