@@ -121,18 +121,14 @@ var admin_support = function() {
 						$D.anymessage({'message':rd});
 						}
 					else	{
+						//add platform info to the top of the section.
+						$("[data-app-role='platformInfoDetailsContainer']",$platInfo).prepend(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release}))).prepend("<h3>Platform Information<\/h3>");
 						
-						$platInfo.append("<h3>Platform Information<\/h3>");
-						$platInfo.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
-						$platInfo.append("<h3>Video History<\/h3>");
-						for(var index in app.ext.admin.vars.versionMetaData.youtubeVideoIDs)	{
-							$platInfo.append($("<div class='lookLikeLink' onclick='linkOffSite(\"http://www.youtube.com/watch?v="+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]+"\"); return false;' title='http://www.youtube.com/watch?v="+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]+"'> &#187; "+index+"<\/div>"))
-							}
-						app.u.handleAppEvents($D);
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
 				$D.dialog('option','modal',false);
+				$D.anydelegate();
 				$D.dialog('open');
 				},
 
@@ -298,6 +294,19 @@ var admin_support = function() {
 
 
 		e : {
+
+			platformInfoWatchVideo : function($ele,p)	{
+				var data = $ele.closest('tr').data();
+				app.u.dump(" -> data.value: "+data.value);
+				$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().anycontent({
+					data : {'youtubeVideoID':data.value},
+					translateOnly: true
+					});
+				},
+			
+			platformInfoViewChangelog : function($ele,p)	{
+				linkOffSite('https://raw.github.com/zoovy/AnyCommerce-Development/'+$ele.closest('tr').data('key')+'/changelog.txt')
+				},
 
 			adminTicketCreateShow : function($ele,p)	{
 				var $D = app.ext.admin.i.dialogCreate({

@@ -1,20 +1,35 @@
 
 
-<div id='platformInfoTemplate'>
+<div id='platformInfoTemplate' data-app-role='platformInfoContainer'>
 	<table>
 	<tr>
 		<td>
-		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubeVideo;'></div>
+		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubeVideo;' data-app-role='platformInfoVideoContainer'></div>
 	<!-- platformInfo will automatically be appended to the bottom of this -->
 		</td>
 		<td>
-		<div data-app-role='platformInfoContainer'></div>
-		</td>
+		<div data-app-role='platformInfoDetailsContainer'></div>
+		<table class='fullWidth gridTable'>
+		<thead>
+		<tr>
+			<th><h3>Video History</h3></th>
+			<th><h3>Change log</h3></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: releaseMeta(youtubeVideoIDs); format:processList; loadsTemplate:platformVideoItemTemplate;">
+		
+		</tbody>
+		</table>
 	</tr>
 	</table>
 </div>
 
-
+<table>
+<tr id='platformVideoItemTemplate'>
+	<td data-app-click='admin_support|platformInfoWatchVideo' data-bind='var:video(key); format:text;' class='lookLikeLink'></td>
+	<td data-app-click='admin_support|platformInfoViewChangelog' class='lookLikeLink'>Change log</td>
+</tr>
+</table>
 
 
 

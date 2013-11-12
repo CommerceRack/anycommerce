@@ -1,7 +1,6 @@
 #
 # This file will be updated with each release
-# It will contain a list of the changes that apply to quickstart.html to facilitate an easier upgrade process on custom apps.
-# Items indicated with an asterisk indiciate a feature or enhancement that may not directly impact quickstart.html, but deserves attention.
+# It will contain a list of changes made to the admin and quickstart apps.
 #
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
