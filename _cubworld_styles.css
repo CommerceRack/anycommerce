@@ -876,6 +876,10 @@ fieldset.variationsFieldset{
 	width: 100%;
 	vertical-align: middle;
 }
+
+.buyBox .ztxt {font-size: 9pt;}
+.buyBox .ztxt .zwarn{font-weight: bold; color:#990000;}
+
 .buyBox > div {
 	display: table-cell;
 	vertical-align: middle;
@@ -921,6 +925,14 @@ fieldset.variationsFieldset{
 	margin: 0px 5px;
 }
 
+#phone-order-form input,
+#phone-order-form textarea,
+#phone-order-form label{
+	display: inline-block;
+	width: 100%;
+}
+
+#phone-order-form input[name=pid]{display:none;}
 
 /****************************************************************
 

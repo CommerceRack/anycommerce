@@ -282,6 +282,43 @@ var cubworld = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+			showPhoneOrderForm : function(pid){
+				$('#phone-order-form').dialog({'modal':true, 'title':'Contact to purchase '+pid});
+				$('#phone-order-form input[name=pid]').val(pid);
+				},
+			submitPhoneOrderForm : function($form){
+				var form = $form.serializeJSON();
+
+				if(form.name && form.email && form.pid){
+					var obj = {};
+					obj.sender = form.email;
+					obj.subject = "Phone order message for pid: "+form.pid
+					obj.body = 
+							"Name: "+form.name+"\n"
+						+	"Email: "+form.email+"\n";
+					if(form.phone){
+						obj.body += "Phone: "+form.phone+"\n";
+						}
+					obj.body += "Product: "+form.pid+"\n";
+					if(form.message){
+						obj.body += "Message:\n"+form.message+"\n";
+						}
+					
+					var _tag = {
+						"callback" : function(){
+							$('#phone-order-form').dialog('close');
+							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted"));
+							}
+						}
+					
+					app.calls.appSendMessage.init(obj,_tag, 'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else {
+					app.u.dump(form);
+					$form.anymessage(app.u.errMsgObject("You must provide a name and email!"));
+					}
+				},
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
 				},

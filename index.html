@@ -1670,11 +1670,13 @@ this will likely become more flexible in the future. ###
 
 
 	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
-		<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
-			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
+		<div data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
+			<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
+				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
+			</div>
 		</div>
 		<div class="buyBoxContainer">
-		<div class="buyBox">
+		<div class="buyBox" >
 			<div class='priceContainer'>
 				<div>
 					<span class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; before: <span class="prodLabel">Our Price: </span>;'></span>
@@ -1685,14 +1687,22 @@ this will likely become more flexible in the future. ###
 				</div>
 			</div>
 			
-			<div>
+			<div data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
 				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 			</div>
 			
-			<div class="alignRight">
+			<div class="alignRight" data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
 				<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 			</div>
+			
+			<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
+				Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
+				Call 888-428-2967 or 
+					<a href="#" onClick="app.ext.cubworld.a.showPhoneOrderForm($(this).attr('data-pid')); return false;" data-bind="var:product(pid); format:assignAttribute; attribute:data-pid;">click here</a> 
+				to contact us - we will get in touch with you shortly.
+			</div>
 		</div>
+		
 		</div>
 
 	</form>
@@ -1895,11 +1905,13 @@ this will likely become more flexible in the future. ###
 
 
 	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
-		<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
-			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
+		<div data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
+			<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
+				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
+			</div>
 		</div>
 		<div class="buyBoxContainer">
-		<div class="buyBox">
+		<div class="buyBox" >
 			<div class='priceContainer'>
 				<div>
 					<span class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; before: <span class="prodLabel">Our Price: </span>;'></span>
@@ -1910,14 +1922,20 @@ this will likely become more flexible in the future. ###
 				</div>
 			</div>
 			
-			<div>
+			<div data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
 				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 			</div>
 			
-			<div class="alignRight">
+			<div class="alignRight" data-bind="var:product(user:prod_phoneorder_only); format:hideIfSet;">
 				<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 			</div>
+			
+			<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
+				Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
+				Call 888-428-2967 or <a>click here</a> to contact us - we will get in touch with you shortly.
+			</div>
 		</div>
+		
 		</div>
 
 	</form>
@@ -3040,6 +3058,23 @@ The 'data-action' attribute is used to assign an onclick.
 				<br />
 				Chicago, IL 60657
 			</div>
+	</form>
+</div>
+
+<div id="phone-order-form" class="displayNone">
+	<form onSubmit="return false;">
+		<label>Your Name:</label>
+		<input type="text" name="name" required="required"/>
+		<label>Email:</label>
+		<input type="email" name="email" required="required"/>
+		<label>Phone (optional):</label>
+		<input type="tel" name="phone"/>
+		<label>Message (optional):</label>
+		<textarea name="message"></textarea>
+		<input type="text" name="pid"/>
+		<button class='ui-button-text-only ui-button ui-button ui-state-default ui-corner-all' onClick="app.ext.cubworld.a.submitPhoneOrderForm($(this).parent()); return false;">
+			<span class="ui-button-text">Submit</span>
+		</button>
 	</form>
 </div>
 
