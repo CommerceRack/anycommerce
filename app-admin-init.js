@@ -38,7 +38,7 @@ app.rq.push(['extension',0,'admin_batchJob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',0,'admin_customer','extensions/admin/customer.js']);
 app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']);
 app.rq.push(['extension',0,'admin_user','extensions/admin/user.js']);
-app.rq.push(['extension',0,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
+app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 app.rq.push(['extension',0,'admin_trainer','extensions/admin/trainer.js']); //load in pass 0 for local testing.
 
 

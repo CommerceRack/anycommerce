@@ -28,7 +28,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201346.b",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201346.c",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -121,19 +121,19 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 	<div id='loginFormContainer'>
 		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom'>
+		<input type='hidden' name='authtype' value='md5' /><!-- required for the 'call' -->
 		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 			<legend>Merchant Login</legend>
 			
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
 			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
-			
 	
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
 <!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
 			<label class='hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><b><a href='/201342/app-admin.html'> &#187; Use previous version</a></b></div>
-
+			<div class="hint"><b><a href='/201344/app-admin.html'> &#187; Use previous version</a></b></div>
+<!-- add google auth -->
 		</fieldset>
 		</form>
 		<div class='showForAnyCommerceOnly'>

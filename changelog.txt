@@ -16,6 +16,7 @@ ADMIN
 	enhancement - 'about' link now contains link to version changelogs. videos archives will now open in dialog.
 	bug - order edit > send mail would send mail twice.
 	enhancement - 'select all' button added to task list (click twice for unselect all).
+	bug fix - product editor > variations > apply didn't activate the 'save' button.
 
 201344
 ADMIN

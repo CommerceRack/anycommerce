@@ -357,7 +357,7 @@ else	{
 				}, //wholesaleScheduleSelect
 
 			warehouseCodeOrZone : function($tag,data)	{
-//			app.u.dump(data.value); die();
+//			app.u.dump(data.value); 
 				if(data.value._OBJECT == 'GEO')	{
 					$tag.text(data.value.GEO);
 					}

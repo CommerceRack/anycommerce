@@ -41,7 +41,7 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
-		this.u.dump(" -> initialize executed.");
+//		this.u.dump(" -> initialize executed.");
 
 //		app = this;
 //		this.u.dump(P);
@@ -143,7 +143,7 @@ copying the template into memory was done for two reasons:
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
 //after login, the admin vars are set in the model. 
 	handleAdminVars : function(){
-		app.u.dump("BEGIN handleAdminVars");
+//		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
 		
 		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}
@@ -177,7 +177,7 @@ copying the template into memory was done for two reasons:
 			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.cartID)	{
-			app.u.dump(" -> app.vars.cartID set. verify.");
+//			app.u.dump(" -> app.vars.cartID set. verify.");
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
 			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
@@ -185,7 +185,7 @@ copying the template into memory was done for two reasons:
 			}
 //if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(app.u.isSet(app.u.getParameterByName('cartID')))	{
-			app.u.dump(" -> cartID from URI used.");
+//			app.u.dump(" -> cartID from URI used.");
 			app.vars.cartID = app.u.getParameterByName('cartID');
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
@@ -194,7 +194,7 @@ copying the template into memory was done for two reasons:
 			}
 //check localStorage
 		else if(app.model.fetchCartID())	{
-			app.u.dump(" -> session retrieved from localstorage..");
+//			app.u.dump(" -> session retrieved from localstorage..");
 			app.vars.cartID = app.model.fetchCartID();
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
@@ -202,15 +202,15 @@ copying the template into memory was done for two reasons:
 			app.model.dispatchThis('immutable');
 			}
 		else	{
-			app.u.dump(" -> go get a new cart id.");
+//			app.u.dump(" -> go get a new cart id.");
 			app.calls.appCartCreate.init({'callback':'handleNewSession'},'immutable');
 			app.model.dispatchThis('immutable');
 			}
-		this.u.dump(" -> finished onready except thirdPartyInits");
+//		this.u.dump(" -> finished onready except thirdPartyInits");
 //if third party inits are not done before extensions, the extensions can't use any vars loaded by third parties. yuck. would rather load our code first.
 // -> EX: username from FB and OPC.
 		app.u.handleThirdPartyInits();
-		this.u.dump(" -> finished thirdPartyInits");
+//		this.u.dump(" -> finished thirdPartyInits");
 		}, //onReady
 					// //////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\		
 
@@ -543,14 +543,16 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(obj,_tag){
 				app.u.dump("Attempting to log in");
 				obj._cmd = 'authAdminLogin';
-				app.vars.userid = obj.userid.toLowerCase();	 // important!
-				obj.authtype = "md5";
-				obj.ts = app.u.ymdNow();
-				obj.authid = Crypto.MD5(obj.password+obj.ts);
+				if(obj.authtype == 'md5')	{
+					app.vars.userid = obj.userid.toLowerCase();	 // important!
+					obj.ts = app.u.ymdNow();
+					obj.authid = Crypto.MD5(obj.password+obj.ts);
+					obj.device_notes = "";
+					delete obj.password;
+					}
+
 				obj._tag = _tag || {};
-				obj.device_notes = "";
-				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true.
-				delete obj.password;
+				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true OR it's passed in _tag
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //authentication
@@ -1029,6 +1031,41 @@ app.u.throwMessage(responseData); is the default error handler.
 				app.model.addExtensions(app.vars.extensions);
 				}
 			},//convertSessionToOrder
+
+
+
+		handleThirdPartyLogin : {
+			onSuccess : function(_rtag)	{
+				app.u.dump("BEGIN callbacks.handleThirdPartyLogin");
+				if(app.data[_rtag.datapointer].authtype == 'google:id_token')	{
+					var uriParams = app.u.kvp2Array(location.hash.substring(1));
+					app.u.dump(" -> uriParams: "); app.u.dump(uriParams);
+					if(uriParams.state)	{
+						app.u.dump(" -> state was defined as a uri param");
+						var state = jQuery.parseJSON(atob(uriParams.state));
+						app.u.dump(" -> post decode/parse state:");	app.u.dump(state);
+						if(state.action == 'return2Domain' && state.domain)	{
+							alert(' this would redirect to ' + state.domain);
+//							document.location = state.domain+"?access_token="+uriParams.access_token+"&id_token="+uriParams.id_token
+							}
+						else	{
+							app.u.dump(" -> state was defined but either action ["+state.action+"] was not valid or the actions required params were not present.");
+							}
+						}
+					else	{
+						//this wasn't an attempt to log in w/ google.
+						}
+					}
+
+				}
+			},//convertSessionToOrder
+
+
+
+
+
+
+
 
 	
 //very similar to the original translate selector in the control and intented to replace it. 
@@ -1706,16 +1743,18 @@ URI PARAM
 					return decodeURIComponent(results[1].replace(/\+/g, " "));
 				}, //getParameterByName
 	
-//turn a set of key value pairs (a=b&c=d) into an object. if string is from URI, use getParametersAsObject which handles encoding and executes this after.
-//formerly getParametersAsObject
+//turn a set of key value pairs (a=b&c=d) into an object. pass location.search.substring(1); for URI params or location.hash.substring(1) for hash based params
 			kvp2Array : function(s)	{
 				var r = false;
 				if(s && s.indexOf('=') > -1)	{
+// ** 201346 -> an improved method for building the object. built in URI decoding.
 	//				app.u.dump(s.replace(/"/g, "\",\x22"));
-					s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
+//					s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
 					// .replace(/"/g, "\",\x22")
 	//				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
-					r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
+//					r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
+					r = s?JSON.parse('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
+//					app.u.dump(" -> r: "); app.u.dump(r);
 					}
 				else	{}
 				return r;
@@ -2548,7 +2587,35 @@ for now, all it does is save the facebook user data as needed, if the user is au
 later, it will handle other third party plugins as well.
 */
 		handleThirdPartyInits : function()	{
-//			app.u.dump("BEGIN app.u.handleThirdPartyInits");
+			app.u.dump("BEGIN app.u.handleThirdPartyInits");
+
+			var uriParams = app.u.kvp2Array(location.hash.substring(1));
+			//landing on the admin app, having been redirected after logging in to google.
+			if(uriParams.trigger == 'googleAuth')	{
+				app.calls.authAdminLogin.init({
+					'authtype' : 'google:id_token',
+					'id_token' : uriParams.id_token
+					},{'datapointer' : 'authAdminLogin','callback':'showHeader','extension':'admin'},'immutable');
+				app.model.dispatchThis('immutable');
+				}
+			//just returned from google
+			else if(uriParams.id_token && uriParams.state)	{
+
+				if(uriParams.state)	{
+					app.u.dump(" -> state was defined as a uri param");
+					var state = jQuery.parseJSON(atob(uriParams.state));
+					app.u.dump(" -> post decode/parse state:");	app.u.dump(state);
+					if(state.action == 'return2Domain' && state.domain)	{
+//						alert(' this would redirect to ' + state.domain);
+						document.location = state.domain+"#trigger=googleAuth&access_token="+uriParams.access_token+"&id_token="+uriParams.id_token
+						}
+					else	{
+						app.u.dump(" -> state was defined but either action ["+state.action+"] was not valid or the actions required params were not present.");
+						}
+					}
+
+				}
+
 //initial init of fb app.
 			if(typeof zGlobals !== 'undefined' && zGlobals.thirdParty.facebook.appId && typeof FB !== 'undefined')	{
 //				app.u.dump(" -> facebook appid set. load user data.");

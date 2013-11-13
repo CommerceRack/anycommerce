@@ -1642,7 +1642,7 @@ if giftcard is on there, no paypal will appear.
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 $('title').append(" - release: "+app.vars.release).prepend(document.domain+' - ');
@@ -1944,7 +1944,6 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				$(app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
-
 
 
 		handleLogout : {
@@ -3335,7 +3334,6 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 
-
 		u : {
 //executed after preloader if device is logged in.
 //executed after login if a login is required.
@@ -3420,6 +3418,9 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					}
 
 				}, //showHeader
+
+
+
 
 
 
@@ -3542,6 +3543,18 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 
+			jump2GoogleLogin : function(state){
+//				app.u.dump(" -> state: "+state);
+				var p = {
+					'scope':'openid email',
+					'response_type' : 'token id_token',
+					'client_id' : '286671899262-sc5b20vin5ot00tqvl8g8c93iian6lt5.apps.googleusercontent.com',
+					'redirect_uri' : 'https://www.zoovy.com/app/latest/app-support.html',
+					'state' : state || ""
+					};
+				window.location = 'https://accounts.google.com/o/oauth2/auth?'+$.param(p);
+				},
+
 //used in ebay and campaign to generate toolbar for html editor.
 //buttons is optional. if passed, should be an array. [{'css':'','text':'','action':function(){}},{'css':'','text':'','action':function(){}}]
 			buildToolbarForEditor : function(buttons)	{
@@ -3592,7 +3605,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$context.anydelegate('resetTracking');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('resetTracking');
+					$context.closest('.eventDelegation').anydelegate('resetTracking',$context);
 					}
 				},
 			
