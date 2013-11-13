@@ -147,7 +147,7 @@ app.u.initMVC = function(attempts){
 		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication. note this is NOT app.rq
 		var tmp = new zController(app);
 //instantiate wiki parser.
-		myCreole = new Parse.Simple.Creole();
+//		myCreole = new Parse.Simple.Creole();
 		
 		}
 	else if(attempts > 100)	{

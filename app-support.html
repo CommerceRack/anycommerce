@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201346.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201346.b",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -43,7 +43,7 @@ var app = {vars:{
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="app-acreate/styles.css">
+
 <link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.custom.css" /><!-- tho the jqueryui js lib isn't used for this app, the styles are (for now) -->
 <link rel="stylesheet" type="text/css" href="resources/anyplugins.css">
 <link rel="stylesheet" type="text/css" href="app-admin/styles.css">
@@ -69,7 +69,6 @@ $(document).ready(function(){
 //	myCreole = new Parse.Simple.Creole();
 	app.model.addExtensions([{'namespace':'admin_support','filename':'extensions/admin/support.js'}]);
 	app.model.addExtensions([{'namespace':'admin','filename':'extensions/admin/extension.js'}]);
-//handling the token and state starts with handleThirdPartyInits and handleThirdPartyLogin, both of which are in the controller.
 	});
 
 /*
@@ -85,10 +84,26 @@ function zLogin($form)	{
 	app.model.dispatchThis('immutable')
 	}
 */
+	function supportAppLogin(state,uriParams)	{
+		$('#appLogin').showLoading({'message':'Verifying authentication'});
+		app.calls.authAdminLogin.init({
+			'authtype' : 'google:id_token',
+			'id_token' : uriParams.id_token
+			},{'datapointer' : 'authAdminLogin','callback':function(rd){
+				if(app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+					$('#appLogin').hideLoading().slideUp();
+					app.ext.admin_support.a.showTicketManager($('#appView').show());
+					}
+				}},'immutable');
+		app.model.dispatchThis('immutable');
+		}
 
 	function jump2GoogleLogin(){
 		//base64 encoding 'may' add = or == to the end of the string to 'pad' it. so we encode it. This'll get double-encoded when run through $.param(), but the kvp2array function will unencode.
-		app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"action":"return2Domain","domain":"https://admin-sporks-zoovy-com.app-hosted.com/latest/index.html"})))); 
+		app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"supportAppLogin"})))); 
 		}
 </script>
 
@@ -102,7 +117,7 @@ function zLogin($form)	{
 <body class="control">
 <!-- this div handles getting content to appear below the fixed header -->
 
-<div id='appLookup' class='ui-widget ui-widget-content ui-corner-all'>
+<div id='appLogin' class='ui-widget ui-widget-content ui-corner-all'>
 	
 	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 	
@@ -126,14 +141,14 @@ function zLogin($form)	{
 		
 		<div class='alignCenter clearfix marginBottom'>
 			<!-- <p>Or Connect With</p> -->
-			<span class='threePLSprite google' id="authorize-button" onClick="jump2GoogleLogin();"></span>
+			<span class='threePLSprite google' onClick="jump2GoogleLogin();"></span>
 		</div>
 	
 	</div>
 
 </div>
 
-<div id="appView"></div>
+<div id="appView" class='displayNone stdMargin'></div>
 
 </body>
 </html>
