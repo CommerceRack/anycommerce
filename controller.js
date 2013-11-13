@@ -1034,38 +1034,6 @@ app.u.throwMessage(responseData); is the default error handler.
 
 
 
-		handleThirdPartyLogin : {
-			onSuccess : function(_rtag)	{
-				app.u.dump("BEGIN callbacks.handleThirdPartyLogin");
-				if(app.data[_rtag.datapointer].authtype == 'google:id_token')	{
-					var uriParams = app.u.kvp2Array(location.hash.substring(1));
-					app.u.dump(" -> uriParams: "); app.u.dump(uriParams);
-					if(uriParams.state)	{
-						app.u.dump(" -> state was defined as a uri param");
-						var state = jQuery.parseJSON(atob(uriParams.state));
-						app.u.dump(" -> post decode/parse state:");	app.u.dump(state);
-						if(state.action == 'return2Domain' && state.domain)	{
-							alert(' this would redirect to ' + state.domain);
-//							document.location = state.domain+"?access_token="+uriParams.access_token+"&id_token="+uriParams.id_token
-							}
-						else	{
-							app.u.dump(" -> state was defined but either action ["+state.action+"] was not valid or the actions required params were not present.");
-							}
-						}
-					else	{
-						//this wasn't an attempt to log in w/ google.
-						}
-					}
-
-				}
-			},//convertSessionToOrder
-
-
-
-
-
-
-
 
 	
 //very similar to the original translate selector in the control and intented to replace it. 
@@ -2602,15 +2570,22 @@ later, it will handle other third party plugins as well.
 			else if(uriParams.id_token && uriParams.state)	{
 
 				if(uriParams.state)	{
+					
 					app.u.dump(" -> state was defined as a uri param");
 					var state = jQuery.parseJSON(atob(uriParams.state));
 					app.u.dump(" -> post decode/parse state:");	app.u.dump(state);
-					if(state.action == 'return2Domain' && state.domain)	{
-//						alert(' this would redirect to ' + state.domain);
-						document.location = state.domain+"#trigger=googleAuth&access_token="+uriParams.access_token+"&id_token="+uriParams.id_token
+//to keep the DOM as clean as possible, only declare this function if it's needed.					
+					if(state.onReturn == 'return2Domain')	{
+						window.return2Domain = function(s,uP){
+							document.location = s.domain+"#trigger=googleAuth&access_token="+uP.access_token+"&id_token="+uP.id_token
+							}
+						}
+					
+					if(state.onReturn && typeof window[state.onReturn] == 'function')	{
+						window[state.onReturn](state,uriParams);
 						}
 					else	{
-						app.u.dump(" -> state was defined but either action ["+state.action+"] was not valid or the actions required params were not present.");
+						app.u.dump(" -> state was defined but either onReturn ["+state.onReturn+"] was not set or not a function [typeof: "+typeof window[state.onReturn]+"].");
 						}
 					}
 

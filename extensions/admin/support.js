@@ -262,6 +262,7 @@ var admin_support = function() {
 				r += "\ndevice id: "+app.vars.deviceid;
 				r += "\nuser id: "+app.vars.userid;
 				r += "\nlogged in to: "+app.vars.domain;
+				r += "\ndomain: "+location.domain;
 				r += "\nbrowser and OS: "+app.vars.passInDispatchV;
 				r += "\n\nuserAgent: "+navigator.userAgent;
 				r += "\nappVersion: "+navigator.appVersion;
