@@ -350,7 +350,7 @@ var admin_support = function() {
 					messagebody += app.ext.admin_support.u.gatherIntel();
 // ** 201346 -> w/ a hidden input, if an apostrophe is in messagebody, everything after it gets dropped.
 //					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
-					$form.append($("<textarea \/>").attr('name','body').val(messagebody)).hide();
+					$form.append($("<textarea \/>").attr('name','body').val(messagebody).hide());
 					app.ext.admin.a.processForm($form,'immutable');
 					app.model.dispatchThis('immutable');
 
