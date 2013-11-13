@@ -121,6 +121,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 	<div id='loginFormContainer'>
 		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom'>
+		<input type='hidden' name='authtype' value='md5' /><!-- required for the 'call' -->
 		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 			<legend>Merchant Login</legend>
 			

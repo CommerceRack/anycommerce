@@ -30,7 +30,7 @@ var app = {vars:{
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
-	"jqurl": (document.location.protocol == 'file:') ? "https://www.zoovy.com/jsonapi/" : "/jsonapi/",
+	"jqurl": (document.location.protocol == 'file:') ? "https://admin-sporks-zoovy-com.app-hosted.com/jsonapi/" : "/jsonapi/",
 //	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
@@ -69,35 +69,10 @@ $(document).ready(function(){
 //	myCreole = new Parse.Simple.Creole();
 	app.model.addExtensions([{'namespace':'admin_support','filename':'extensions/admin/support.js'}]);
 	app.model.addExtensions([{'namespace':'admin','filename':'extensions/admin/extension.js'}]);
-	var uriParams = app.u.kvp2Array(location.hash.substring(1));
-	if(uriParams.state == 'googleid')	{
-		app.model.addDispatchToQ({
-			'_cmd':'authAdminLogin',
-			'authtype' : 'google:id_token',
-			'id_token' : uriParams.id_token,
-			'_tag':	{
-				'datapointer' : 'authAdminLogin',
-				'callback':function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						if(app.data[rd.datapointer].authtoken)	{
-							$('#appLookup').slideUp();
-							app.ext.admin_support.a.showTicketManager($('#appView').show().addClass('stdMargin'));
-							}
-						else	{
-							//hhhmm... should have been successful but no auth token. odd.
-							$('#appLookup').anymessage({"message":"No authtoken was returned in the authAdminLogin response.","gMessage":true});
-							}
-						}
-					}
-				}
-			},'immutable');
-		app.model.dispatchThis('immutable');
-		}
+//handling the token and state starts with handleThirdPartyInits and handleThirdPartyLogin, both of which are in the controller.
 	});
 
+/*
 function zLogin($form)	{
 	app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':function(rd){
 		if(app.model.responseHasErrors(rd)){
@@ -109,7 +84,12 @@ function zLogin($form)	{
 		}},'immutable');
 	app.model.dispatchThis('immutable')
 	}
+*/
 
+	function jump2GoogleLogin(){
+		//base64 encoding 'may' add = or == to the end of the string to 'pad' it. so we encode it. This'll get double-encoded when run through $.param(), but the kvp2array function will unencode.
+		app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"action":"return2Domain","domain":"https://admin-sporks-zoovy-com.app-hosted.com/latest/index.html"})))); 
+		}
 </script>
 
 
@@ -125,7 +105,10 @@ function zLogin($form)	{
 <div id='appLookup' class='ui-widget ui-widget-content ui-corner-all'>
 	
 	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
-
+	
+	<div class='appMessaging'></div>
+	
+<!--
 	<div id='loginFormContainer'>
 		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' onSubmit='return false'>
 		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
@@ -138,12 +121,12 @@ function zLogin($form)	{
 		</fieldset>
 		</form>
 	</div>
-
+-->
 	<div>
 		
 		<div class='alignCenter clearfix marginBottom'>
-			<p>Or Connect With</p>
-			<span class='threePLSprite google' id="authorize-button" onClick="document.location = 'https://accounts.google.com/o/oauth2/auth?response_type=token%20id_token&client_id=286671899262-sc5b20vin5ot00tqvl8g8c93iian6lt5.apps.googleusercontent.com&redirect_uri=https://www.zoovy.com/app/latest/app-support.html&scope=openid%20email&state=googleid';"></span>
+			<!-- <p>Or Connect With</p> -->
+			<span class='threePLSprite google' id="authorize-button" onClick="jump2GoogleLogin();"></span>
 		</div>
 	
 	</div>
