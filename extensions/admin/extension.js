@@ -6162,7 +6162,7 @@ else	{
 				},
 			googleLogin : function($btn)	{
 				$btn.off('click.googleLogin').on('click.googleLogin',function(){
-					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.domain+"/"+app.model.version+"/index.html"})))); 
+					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
 					});
 				},
 			linkOffSite : function($btn)	{

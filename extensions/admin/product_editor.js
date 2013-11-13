@@ -2155,7 +2155,14 @@ if($('.edited',$tbody).length)	{
 		var $tr = $(this);
 		var SKU = $(this).closest("[data-sku]").data('sku');
 		if($('.edited',$tr).length)	{
-			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'}))); //if any input changed, all are updated.
+			var update = "SET-SKU?SKU="+SKU;
+			$('.edited',$tr).each(function(){
+				update += "&"+$(this).attr('name')+"="+encodeURIComponent($(this).val());
+				})
+			cmdObj['@updates'].push(update);
+			//this was encoding keys for some reason.
+			app.u.dump(" -> for testing. the old way of doing it: SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'})));
+//			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'}))); //if any input changed, all are updated.
 			}
 		else	{} //no updates in this row.
 		});
