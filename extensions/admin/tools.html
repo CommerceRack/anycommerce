@@ -246,6 +246,14 @@ has to be within the fieldset to for data-table to work right.
 					<td colspan='3'>Strip CR/LF</td>
 				</tr>
 				<tr>
+					<td><input type="radio" value="set-empty-sku-from-product" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td colspan='3'>Copy Base Product attribute into ALL EMPTY SKUs</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="set-sku-from-product" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td colspan='3'>Copy Base Product attribute into ALL SKUs</td>
+				</tr>
+				<tr>
 					<td><input type="radio" value="fmakeupc" name="verb"  data-app-event="admin_tools|powerToolVerbChange" /></td>
 					<td colspan='3'>Generate *FAKE* UPC</td>
 				</tr>
@@ -644,9 +652,16 @@ has to be within the fieldset to for data-table to work right.
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{}}); return false; ">Elastic Rebuild</button></td>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'public'}}); return false; ">Elastic Rebuild (Public)</button></td>
 			<td class='valignTop small'>
-			Elastic Search Rebuild (note: will be offline/unavailable during rebuild)
+			Elastic Product Search Rebuild (note: will be offline/unavailable during rebuild)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'private'}}); return false; ">Elastic Rebuild (Private)</button></td>
+			<td class='valignTop small'>
+			Elastic Private Search Rebuild (note: will be offline/unavailable during rebuild)
 			</td>
 		</tr>
 		<tr>
