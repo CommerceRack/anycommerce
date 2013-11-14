@@ -106,16 +106,18 @@ var admin_config = function() {
 				},
 
 			showBillingHistory : function($target)	{
-				$target.empty()
+				$target.empty();
 				$target.anycontent({'templateID':'billingHistoryTemplate','showLoading':false});
+				$("[data-app-role='billingHistory']",$target).anydelegate({'trackEdits':true});
 				app.u.handleCommonPlugins($target);
-				app.u.handleEventDelegation($target);
+//				app.u.handleEventDelegation($target);
 				app.u.handleButtons($target);
-				$('form',$target).each(function(){
+// 201346 -> replaced by anydelegate
+/*				$('form',$target).each(function(){
 					app.ext.admin.u.handleFormConditionalDelegation($(this));
 					app.ext.admin.u.applyEditTrackingToInputs($(this));
 					});
-
+*/
 				var $tabContent = $("[data-anytab-content='invoices']",$target);
 				$tabContent.showLoading({'message':'Fetching invoice list'});
 

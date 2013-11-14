@@ -2155,7 +2155,8 @@ if($('.edited',$tbody).length)	{
 		var $tr = $(this);
 		var SKU = $(this).closest("[data-sku]").data('sku');
 		if($('.edited',$tr).length)	{
-			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'}))); //if any input changed, all are updated.
+			//$.param sends the keys encoded, which is OK.
+			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$('.edited',$tr).serialize());
 			}
 		else	{} //no updates in this row.
 		});
@@ -3129,7 +3130,9 @@ $D.showLoading({"message":"Creating inventory record"});
 app.model.addDispatchToQ({
 	_cmd : 'adminProductMacro',
 	pid : pid,
-	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+// * 201346 -> changed to a more effient method for serializing inputs.
+//	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$('form',$D).serialize()],
 	_tag : {
 		callback : function(rd){
 			$D.hideLoading();

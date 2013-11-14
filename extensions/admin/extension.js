@@ -1714,9 +1714,9 @@ if(!$.isEmptyObject(adminObj))	{
 	app.vars.https_domain = adminObj.https_domain;
 	}
 			
-				app.u.dump(" -> domain: "+app.vars.domain);
-				app.u.dump(" -> partition: "+app.vars.partition);
-				app.u.dump(" -> https_domain: "+app.vars.https_domain);
+//				app.u.dump(" -> domain: "+app.vars.domain);
+//				app.u.dump(" -> partition: "+app.vars.partition);
+//				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
 					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
@@ -6162,7 +6162,7 @@ else	{
 				},
 			googleLogin : function($btn)	{
 				$btn.off('click.googleLogin').on('click.googleLogin',function(){
-					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.domain+"/"+app.model.version+"/index.html"})))); 
+					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
 					});
 				},
 			linkOffSite : function($btn)	{
