@@ -17,6 +17,7 @@ ADMIN
 	bug - order edit > send mail would send mail twice.
 	enhancement - 'select all' button added to task list (click twice for unselect all).
 	bug fix - product editor > variations > apply didn't activate the 'save' button.
+	bug fix - add new payment method in billing history works again.
 
 201344
 ADMIN
