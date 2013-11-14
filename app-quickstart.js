@@ -124,8 +124,8 @@ if(typeof window.onpopstate == 'object')	{
 	}
 //if popstate isn't supporeted, hashchange will use the anchor.
 else if ("onhashchange" in window)	{ // does the browser support the hashchange event?
-		_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
-		window.onhashchange = function () {
+	_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
+	window.onhashchange = function () {
 		app.ext.myRIA.u.handleHashState();
 		}
 	}
@@ -182,13 +182,14 @@ document.write = function(v){
 //adds submit functionality to search form. keeps dom clean to do it here.
 				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
 				app.ext.myRIA.vars.mcSetInterval = setInterval(function(){app.ext.myRIA.u.handleMinicartUpdate({'datapointer':'cartDetail'})},4000); //make sure minicart stays up to date.
-				showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
-				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
+				
+				window.showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
+				window.quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 				
 				app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
 				if(typeof app.u.appInitComplete == 'function'){app.u.appInitComplete(page)}; //gets run after app has been init
 				
-				app.ext.myRIA.u.bindAppNav();
+				app.ext.myRIA.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
 
 				}
 			}, //startMyProgram 
@@ -2272,8 +2273,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				infoObj.state = 'onInits';
 				infoObj.parentID = parentID;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				
-				
 
 //only create instance once.
 				if($('#mainContentArea_company').length)	{
@@ -2289,7 +2288,6 @@ effects the display of the nav buttons only. should be run just after the handle
 					app.calls.appProfileInfo.init({'profile':app.vars.profile},{'callback':'showCompany','extension':'myRIA','infoObj':infoObj,'parentID':parentID},'mutable');
 					app.model.dispatchThis();
 					}
-					
 
 				}, //showCompany
 				
