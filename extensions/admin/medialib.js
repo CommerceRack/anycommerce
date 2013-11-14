@@ -933,7 +933,7 @@ if(selector && mode)	{
 			}
 		}
 	
-	//add domain to form so that it gets passed along to fileupload.cgi
+	//add domain to form so that it gets passed along to fileupload
 	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
 
 /*
@@ -1275,6 +1275,7 @@ $('#mediaLibActionsBar button',$target).each(function(){
 //next, delete the folder.
 
 				app.ext.admin_medialib.calls.adminImageFolderDelete.init(folderInfo['focus-folder-name'],{},'immutable');
+				$("#mediaFilesUL").empty(); //clear out any images in the list.
 				app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 				app.model.dispatchThis('immutable');
 
