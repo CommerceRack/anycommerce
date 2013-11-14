@@ -1714,9 +1714,9 @@ if(!$.isEmptyObject(adminObj))	{
 	app.vars.https_domain = adminObj.https_domain;
 	}
 			
-				app.u.dump(" -> domain: "+app.vars.domain);
-				app.u.dump(" -> partition: "+app.vars.partition);
-				app.u.dump(" -> https_domain: "+app.vars.https_domain);
+//				app.u.dump(" -> domain: "+app.vars.domain);
+//				app.u.dump(" -> partition: "+app.vars.partition);
+//				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
 					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
