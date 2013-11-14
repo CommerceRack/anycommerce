@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"http://www.ylh.zoovy.com/" //used ONLY if protocol is file: (for testing)
+	"testURL":"http://www.zephyrpaintball.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -44,6 +44,7 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link rel="stylesheet" type="text/css" href="_zephyrapp_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
 
 
@@ -64,11 +65,6 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </head>
 
 <body>
-<!-- DELETE THIS WHEN YOU GET STARTED -->
-<h1>WELCOME TO QUICKSTART</h1>
-This file is intended to go along with the 10-step tutorial at:
-<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
-<!-- /DELETE THIS WHEN YOU GET STARTED -->
 
 
 
@@ -101,13 +97,43 @@ This file is intended to go along with the 10-step tutorial at:
 
 <div id='appView' class='displayNone'>
 
-<!--
-ANIMATION TESTING
-<div style="background: black; float: left;">
-	<div data-animation-mouseenter="cogs?animFunc=fwd" data-animation-mouseout="cogs?animFunc=back" style="width: 55px; height: 55px;" id="cogs"></div>
+<div id="topBar">
+	<div id="header">
+		<div id='logo' onClick="showContent('homepage');" class='pointer logoSection'>
+			<img width="317" height="105" src="images/zephyr_logo.png"/>
+		</div>
+		<div id="headerBar">
+			<div class="headerBarLinks"></div>
+		</div>
+	</div>
+	<div class="topNav">
+		<div class="topNavLeft">
+			<a class="pointer" onClick="return showContent('category',{'navcat':'.1newitems'});"><img src="images/zs_newitems-81x23.gif"/></a>
+			<a class="pointer" onClick="return showContent('category',{'navcat':'.1weekly_specials'});"><img src="images/zs10_menu_weeklyspecials3-109x23.gif"/></a>
+			<a class="pointer" onClick="return showContent('category',{'navcat':'.2clearance'});"><img src="images/zs_clearanceitem-107x23.gif"/></a>
+			<a class="pointer" onClick="return showContent('category',{'navcat':'.buyers_guide'});"><img src="images/zs_buyersguide-94x23.gif"/></a>
+			<a class="pointer" onClick="return showContent('category',{'navcat':'.3packagespecials'});"><img src="images/zs12_packages-109x23.gif"/></a>
+		</div>
+		<div class="topNavRight">
+			<a class="pointer"  onClick="return showContent('cart',{});">
+				<img src="images/zs_mycart-78x25.gif"/>
+				<span class="cartDetails">&#40;<span class="cartItemCount"></span> Items <span class="cartSubtotal"></span>&#41;</span>
+			</a>
+			<a class="pointer" onClick="return showContent('checkout',{});"><img class="headerCheckoutBtn"src="images/zs_topnavchecko-188x18.gif"/></a>
+		</div>
+	</div>
+	<div class="searchSection">
+		<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
+			<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault searchBar" placeholder="Search" id="searchBar"/>
+			<input class="search searchBtn pointer" type="submit" value="" src="images/zs_btn_search-48x18.gif" id="searchButton" />
+		</form>
+		<div class="socialIcons">
+			<a class="pointer" target="_blank" src="http://blog.zephyrsports.com/category/paintball-product-review-blog/"><img width="20" height="20" src="images/wordpress-32x32.png"/></a>
+			<a class="pointer" target="_blank" src="http://www.youtube.com/user/zephyrsports"><img width="20" height="20" src="images/youtube-32x32.png"/></a>
+			<a class="pointer" target="_blank" src="https://myspace.com/zephyrsports"><img width="20" height="20" src="images/myspace-32x32.png"/></a>
+		</div>
+	</div>
 </div>
--->
-
 
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
