@@ -3599,7 +3599,7 @@ $tmp.empty().remove();
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location,debug)	{
 			location = location || 'local';
-			app.u.dump("WRITELOCAL: Key = "+key);
+			app.u.dump("WRITELOCAL: Key = "+key+" and location: "+location);
 			var r = false;
 			if(location+'Storage' in window && window[location+'Storage'] !== null && typeof window[location+'Storage'] != 'undefined')	{
 				r = true;
@@ -3620,6 +3620,10 @@ $tmp.empty().remove();
 //					app.u.dump(e);
 					}
 				
+				}
+			else	{
+				app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
+				app.u.dump(" -> window."+location+"Storage is not defined.");
 				}
 			return r;
 			}, //writeLocal
