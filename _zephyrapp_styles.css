@@ -32,6 +32,47 @@ body {
 	top: 45px;
 	width: 100%;
 }
+.headerBarLinks {
+	width:483px;
+	float:right;
+}
+.headerBarLinks > ul {
+    float: left;
+    color: #FFFFFF;
+    font-family: Tahoma,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    margin: 6px 0px;
+}
+.headerBarLinks li {
+    display: inline;
+    padding: 0 3px;
+}
+.headerBarLinks a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.mcAfeeBadge {
+	margin: 12px 7px;
+	float:right;
+}
+.freeShipTopBar {
+	float: right;
+}
+.questionsTopBar{
+	color: #FFFFFF;
+    font-family: Tahoma,Arial,Helvetica,sans-serif;
+    font-size: 12px;
+}
+.questionsTopBar img {
+	padding: 0px 7px 0px 0px;
+}
+.phoneTopBar {
+	color: #FFC000;
+	margin: 3px;
+	font-weight: bold;
+	font-size: 16px;
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+}
 .topNav {
 	background: url(images/topbar_topnav_bg.jpg) repeat-x;
 	height: 26px;
