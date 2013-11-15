@@ -18,6 +18,7 @@ ADMIN
 	enhancement - 'select all' button added to task list (click twice for unselect all).
 	bug fix - product editor > variations > apply didn't activate the 'save' button.
 	bug fix - add new payment method in billing history works again.
+	enhancement - new button in utilities for private elastic rebuild.
 
 201344
 ADMIN

@@ -1094,11 +1094,11 @@ else	{
 				}, //showFoldersByParentFID
 
 			buildDeleteMediaRequests : function(){
-				app.u.dump("BEGIN admin_medialib.u.buildDeleteMediaRequests");
+//				app.u.dump("BEGIN admin_medialib.u.buildDeleteMediaRequests");
 				$('#mediaFilesUL .btnDelete').each(function(){
 					if($(this).hasClass('ui-state-error'))	{
 						var data = $(this).closest('li').data();
-						app.u.dump(" -> match!"); app.u.dump(data);
+//						app.u.dump(" -> match!"); app.u.dump(data);
 						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
 					else	{} //do nothing.
