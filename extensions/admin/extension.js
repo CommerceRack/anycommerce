@@ -1197,20 +1197,7 @@ if giftcard is on there, no paypal will appear.
 			}, //adminTicketList
 
 
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIDomainPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-				_tag.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
-				this.dispatch(obj,_tag,Q);
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIDomainPanelExecute";
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelList
+
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
@@ -1746,7 +1733,6 @@ if(!$.isEmptyObject(adminObj))	{
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
-				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 
 
@@ -4809,37 +4795,6 @@ else	{
 
 //$t is 'this' which is the button.
 
-			adminUIDomainPanelExecute : function($t){
-//				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
-
-				var data = $t.data();
-				if(data && data.verb && data.domain)	{
-					var obj = {},
-					$panel = $t.closest("[data-app-role='domainPanel']"),
-					$fieldset = $("[data-app-role='domainEditorContents']",$panel);
-					
-					$fieldset.showLoading({'message':'Loading information for domain: '+data.domain});
-					$t.parent().find('.panelContents').show()
-					if(data.verb == 'LOAD')	{
-						//do nothing. data gets passed in as is.
-						}
-					else	{
-						data = $.extend(data,$t.closest('form').serializeJSON());
-						}
-					
-					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback': function(rd){
-						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
-						else	{
-							$fieldset.hideLoading().removeClass('loadingBG').html(app.data[rd.datapointer].html);
-							}
-						}},'immutable');
-					app.model.dispatchThis('immutable')
-					}
-				else	{
-					app.u.throwGMessage("WARNING! required params for admin.u.showDomainPanel were not set. verb and domain are required: ");
-					app.u.dump(data);
-					}
-				},
 
 /*
 CODE FOR URL MANAGEMENT
