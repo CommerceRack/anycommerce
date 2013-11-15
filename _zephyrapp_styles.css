@@ -11,7 +11,9 @@ body {
 #mainContentArea{
 	background: #ffffff;
 }
-
+.clear {
+	clear:both;
+}
 /***** Top Bar CSS Start *****/
 #header{
 	position:relative; /* Must be non-static for children to position correctly */
@@ -122,3 +124,38 @@ body {
 	padding: 0px 1px;
 }
 /***** Top Bar CSS End *****/
+
+
+/***** Footer CSS Start *****/
+#footer {
+	background:#ffffff;
+}
+.zephyrHelpHeader{
+	background: #C7C7C7;
+}
+.zephyrHelpBox {
+	width:978px;
+	height: 169px;
+	border: 1px solid #a9a9a9;
+	margin: 5px auto;
+}
+.infoFooter {
+	min-height:150px;
+	background: url(images/zs_new_footer3_bg-1x114.jpg) repeat-x #000000;
+}
+.infoFooter p {
+	color: #CCCCCC;
+	margin: 0px;
+	font-size: 11px;
+}
+.infoFooter a {
+	text-decoration: none;
+	color: #333333;
+}
+.infoFooter a:hover {
+	color: #0a76d9;
+}
+.storeHoursFooter{
+	padding: 10px 8px;
+}
+/***** Footer CSS End *****/
