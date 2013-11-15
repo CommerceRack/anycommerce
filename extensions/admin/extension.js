@@ -34,8 +34,6 @@ var admin = function() {
 		'adminChooserElasticResult',
 		'productTemplateChooser',
 
-		'domainPanelTemplate',
-
 		'pageSetupTemplate',
 		'pageUtilitiesTemplate',
 //		'pageTemplateSetupAppchooser',
@@ -1681,7 +1679,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 
 
 //get list of domains and show chooser.
-				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
 				$domainChooser.dialog({
 					'autoOpen':false,
 					'modal':true,
@@ -1706,7 +1704,7 @@ if(!$.isEmptyObject(adminObj))	{
 //				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
+					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
 
@@ -4772,22 +4770,6 @@ else	{
 				},
 
 
-/*
-** 201332 -> new domain interface
-//executed after the domain data is in memory and up to date.
-// note - empty should already be done.  There should be an a.showDomainConfig that executes a call and this is what gets executed in the call back.  
-// that 'a' should do a showloading
-			domainConfig : function(){
-//				app.u.dump("BEGIN admin.u.domainConfig");
-				$target = $('#setupContent');
-				$target.hideLoading();
-				var data = app.data['adminDomainList']['@DOMAINS'];
-				var L = data.length;
-				for(var i = 0; i < L; i += 1)	{
-					$target.append(app.renderFunctions.transmogrify({'domain':app.data['adminDomainList']['@DOMAINS'][i].id},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
-					}
-				},
-*/
 
 			uiCompatAuthKVP : function()	{
 				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;

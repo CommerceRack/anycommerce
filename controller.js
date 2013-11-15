@@ -3599,11 +3599,12 @@ $tmp.empty().remove();
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
-		//	app.u.dump("WRITELOCAL: Key = "+key);
+			app.u.dump("WRITELOCAL: Key = "+key);
 			var r = false;
 			if(location+'Storage' in window && window[location+'Storage'] !== null && typeof window[location+'Storage'] != 'undefined')	{
 				r = true;
 				if (typeof value == "object") {
+					app.u.dump(" -> value 4 storage: "+value);
 					value = JSON.stringify(value);
 					}
 //				localStorage.removeItem(key); //here specifically to solve a iphone/ipad issue as a result of 'private' browsing.
