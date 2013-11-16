@@ -1792,7 +1792,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 //					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
 
-					app.storageFunctions.writeLocal('session',sessionData,'local',true); //update the localStorage session var.
+					app.storageFunctions.writeLocal('session',sessionData,'local'); //update the localStorage session var.
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
