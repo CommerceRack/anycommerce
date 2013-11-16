@@ -933,7 +933,7 @@ if(selector && mode)	{
 			}
 		}
 	
-	//add domain to form so that it gets passed along to fileupload.cgi
+	//add domain to form so that it gets passed along to fileupload
 	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
 
 /*
@@ -1094,11 +1094,11 @@ else	{
 				}, //showFoldersByParentFID
 
 			buildDeleteMediaRequests : function(){
-				app.u.dump("BEGIN admin_medialib.u.buildDeleteMediaRequests");
+//				app.u.dump("BEGIN admin_medialib.u.buildDeleteMediaRequests");
 				$('#mediaFilesUL .btnDelete').each(function(){
 					if($(this).hasClass('ui-state-error'))	{
 						var data = $(this).closest('li').data();
-						app.u.dump(" -> match!"); app.u.dump(data);
+//						app.u.dump(" -> match!"); app.u.dump(data);
 						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
 					else	{} //do nothing.
@@ -1275,6 +1275,7 @@ $('#mediaLibActionsBar button',$target).each(function(){
 //next, delete the folder.
 
 				app.ext.admin_medialib.calls.adminImageFolderDelete.init(folderInfo['focus-folder-name'],{},'immutable');
+				$("#mediaFilesUL").empty(); //clear out any images in the list.
 				app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 				app.model.dispatchThis('immutable');
 

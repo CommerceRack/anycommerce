@@ -34,8 +34,6 @@ var admin = function() {
 		'adminChooserElasticResult',
 		'productTemplateChooser',
 
-		'domainPanelTemplate',
-
 		'pageSetupTemplate',
 		'pageUtilitiesTemplate',
 //		'pageTemplateSetupAppchooser',
@@ -1197,20 +1195,7 @@ if giftcard is on there, no paypal will appear.
 			}, //adminTicketList
 
 
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIDomainPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-				_tag.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
-				this.dispatch(obj,_tag,Q);
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIDomainPanelExecute";
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelList
+
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
@@ -1694,7 +1679,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 
 
 //get list of domains and show chooser.
-				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
 				$domainChooser.dialog({
 					'autoOpen':false,
 					'modal':true,
@@ -1719,7 +1704,7 @@ if(!$.isEmptyObject(adminObj))	{
 //				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
+					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
 
@@ -1746,7 +1731,6 @@ if(!$.isEmptyObject(adminObj))	{
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
-				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 
 
@@ -4786,22 +4770,6 @@ else	{
 				},
 
 
-/*
-** 201332 -> new domain interface
-//executed after the domain data is in memory and up to date.
-// note - empty should already be done.  There should be an a.showDomainConfig that executes a call and this is what gets executed in the call back.  
-// that 'a' should do a showloading
-			domainConfig : function(){
-//				app.u.dump("BEGIN admin.u.domainConfig");
-				$target = $('#setupContent');
-				$target.hideLoading();
-				var data = app.data['adminDomainList']['@DOMAINS'];
-				var L = data.length;
-				for(var i = 0; i < L; i += 1)	{
-					$target.append(app.renderFunctions.transmogrify({'domain':app.data['adminDomainList']['@DOMAINS'][i].id},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
-					}
-				},
-*/
 
 			uiCompatAuthKVP : function()	{
 				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;
@@ -4809,37 +4777,6 @@ else	{
 
 //$t is 'this' which is the button.
 
-			adminUIDomainPanelExecute : function($t){
-//				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
-
-				var data = $t.data();
-				if(data && data.verb && data.domain)	{
-					var obj = {},
-					$panel = $t.closest("[data-app-role='domainPanel']"),
-					$fieldset = $("[data-app-role='domainEditorContents']",$panel);
-					
-					$fieldset.showLoading({'message':'Loading information for domain: '+data.domain});
-					$t.parent().find('.panelContents').show()
-					if(data.verb == 'LOAD')	{
-						//do nothing. data gets passed in as is.
-						}
-					else	{
-						data = $.extend(data,$t.closest('form').serializeJSON());
-						}
-					
-					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback': function(rd){
-						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
-						else	{
-							$fieldset.hideLoading().removeClass('loadingBG').html(app.data[rd.datapointer].html);
-							}
-						}},'immutable');
-					app.model.dispatchThis('immutable')
-					}
-				else	{
-					app.u.throwGMessage("WARNING! required params for admin.u.showDomainPanel were not set. verb and domain are required: ");
-					app.u.dump(data);
-					}
-				},
 
 /*
 CODE FOR URL MANAGEMENT

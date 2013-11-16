@@ -1780,7 +1780,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
 					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
-					sessionData = (typeof sessionData === 'object') ? sessionData : {};
+					sessionData = sessionData || {};
 					if(typeof sessionData[ext] === 'object'){
 						sessionData[ext][ns] = varObj;
 						}
@@ -1792,7 +1792,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 //					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
 
-					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
+					app.storageFunctions.writeLocal('session',sessionData,'local',true); //update the localStorage session var.
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
