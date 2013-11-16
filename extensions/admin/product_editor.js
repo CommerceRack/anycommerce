@@ -599,7 +599,7 @@ $target.anydelegate();
 							$btn.parent().find('.toggleMe').hide();
 							}
 						}).appendTo($tag);
-					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['%IS'])).appendTo($tag);
+					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['SKU'],data.value['%IS'])).appendTo($tag);
 					}
 				else	{} //all the values of the is report are zero. no point showing an empty report.
 				},
@@ -677,7 +677,7 @@ $target.anydelegate();
 				return r;
 				},
 
-			amazonFeeds2Message : function(feedsObj) {
+			amazonFeeds2Message : function(SKU,feedsObj) {
 			
 				var $messaging = $("<div \/>");
 			
@@ -772,31 +772,31 @@ $target.anydelegate();
 			// lets summarize the product's state.
 				if ((feedsObj['TODO'] & feedLookupObj['init'])>0) {
 					// all feeds waiting to be sent
-					$("<div class='summary' \/>").text(feedsObj['SKU'] + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
+					$("<div class='summary' \/>").text(SKU + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
 					}
 				else if ( ((feedsObj['ERROR'] > 0) && (feedsObj['DONE'] & feedLookupObj['init'])==0) ) {
 					// we have an error and init is still turned on
-					$("<div class='summary' \/>").text(" An error has been returned for the [" + describe_bw(feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + feedsObj['SKU'] + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
+					$("<div class='summary' \/>").text(" An error has been returned for the [" + describe_bw(feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + SKU + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
 					}
 				else if (feedsObj['ERROR'] > 0) {
 					// we have an error but init has been turned off - the feeds that don't have errors will still be sent
-					$("<div class='summary' \/>").text(" An error has been returned for the ["+describe_bw(feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
+					$("<div class='summary' \/>").text(" An error has been returned for the ["+describe_bw(feedsObj['ERROR']) + "feed/feeds of "+SKU+". Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
 					}
 				else if ((feedsObj['SENT'] & feedLookupObj['init'])>0 && (feedsObj['DONE'] & feedLookupObj['init'])==0) {
 					// init sent - waiting to process
-					$("<div class='summary' \/>").text("The initial product feed has been sent for" + feedsObj['SKU'] + "In order for the other feeds [" + describe_bw[feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
+					$("<div class='summary' \/>").text("The initial product feed has been sent for" + SKU + "In order for the other feeds [" + describe_bw[feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
 					}
 				else if ((feedsObj['DONE'] & feedLookupObj['init'])>0 && feedsObj['TODO']>0) {
 					// init done - waiting for others to sync
-					$("<div class='summary' \/>").text("The initial product feed for $row->{'SKU'} has been processed. The other feeds [" + describe_bw[feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
+					$("<div class='summary' \/>").text("The initial product feed for "+SKU+" has been processed. The other feeds [" + describe_bw[feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
 					}
 				else if ((feedsObj['SENT'] & feedLookupObj['all']) == feedLookupObj['all']){
 					// all feeds have been sent but we're waiting for Amazon to process
-					$("<div class='summary' \/>").text("All feeds have now been sent for " + feedsObj['SKU'] + ". We are now waiting for Amazon to process them.").appendTo($messaging);
+					$("<div class='summary' \/>").text("All feeds have now been sent for " + SKU + ". We are now waiting for Amazon to process them.").appendTo($messaging);
 					}
 				else if ((feedsObj['DONE'] & feedLookupObj['all']) == feedLookupObj['all']) {
 					// all feeds finished
-					$("<div class='summary' \/>").text("Amazon has notified us that all feeds have been processed, and" + feedsObj['SKU'] + " is now live on Seller Central.").appendTo($messaging);
+					$("<div class='summary' \/>").text("Amazon has notified us that all feeds have been processed, and" + SKU + " is now live on Seller Central.").appendTo($messaging);
 					}
 				else {
 					// should never be reached
