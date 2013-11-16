@@ -172,6 +172,7 @@ additionally, will apply some conditional form logic.
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
 					}
 				},
+			
 //allows one form input to set the value of another.
 			"set-value-selector" : function($CT)	{
 				$($CT.data('set-value-selector'),$CT.closest('form')).val($CT.is('select') ? $("option:selected",$CT).data('set-value') : $CT.data('set-value')).trigger('keyup.trackform').trigger('change.trackform');

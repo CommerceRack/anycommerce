@@ -2316,6 +2316,7 @@ function type2class(type)	{
 					for(var i = 0; i < L; i += 1)	{
 						if(logArr[i].type == 'ERROR') {errors++}
 						var $P = $("<p \/>").addClass('marginTop marginBottom');
+						if(logArr[i].detail)	{$P.addClass('isDetail displayNone')}
 						$P.append("<span class='floatLeft marginRight marginBottom app-icon app-icon-"+logArr[i].type.toLowerCase()+"'><\/span>");
 						$P.append($("<h5>"+logArr[i].type+"<\/h5>").addClass(type2class(logArr[i].type)));
 						$P.append("<h6>Feed: "+logArr[i].feed+"<\/h6>");
@@ -2324,6 +2325,14 @@ function type2class(type)	{
 						$P.appendTo($D);
 						}
 					if(errors)	{$D.prepend("<h5>There are "+errors+" for this sku")}
+					$D.prepend($("<label>").text("Show more detail").prepend($("<input \/>").prop('type','checkbox').on('click',function(){
+						if($(this).is(':checked'))	{
+							$('.isDetail',$(this).closest('.ui-dialog-content')).show();
+							}
+						else	{
+							$('.isDetail',$(this).closest('.ui-dialog-content')).hide();
+							}
+						})));
 					$D.dialog('open');
 					}
 				else	{

@@ -1752,11 +1752,11 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //this allows for one extension to read anothers preferences and use/change them.
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
-				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
+//				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
 				var r = false, obj = app.storageFunctions.readLocal('session');
 //				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
 				if(obj == undefined)	{
-					app.u.dump(" ^^ Entire 'session' object is empty.");
+//					app.u.dump(" ^^ Entire 'session' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
 				else	{
@@ -1764,7 +1764,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 					else if(ext && obj[ext])	{r = obj[ext]} //an extension was passed and an object exists.
 					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
 					else	{} //could get here if ext passed but obj.ext doesn't exist.
-					app.u.dump(" ^^ value for DPS Get: "); app.u.dump(r);
+//					app.u.dump(" ^^ value for DPS Get: "); app.u.dump(r);
 					}
 				return r;
 				},
@@ -1774,12 +1774,12 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-				app.u.dump(" * DPS SET. \next: "+ext+"\nns: "+ns);
-				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
+//				app.u.dump(" * DPS SET. \next: "+ext+"\nns: "+ns);
+//				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
-					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
+//					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
 					sessionData = sessionData || {};
 					if(typeof sessionData[ext] === 'object'){
 						sessionData[ext][ns] = varObj;

@@ -761,13 +761,13 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<tr>
 				<th>SKU</th>
 				<th>Desc</th>
-				<th>Assembly</th>
-				<th>Mfg ID</th>
-				<th>UPC</th>
-				<th>ASIN</th>
+				<th class='width20'>Assembly</th>
+				<th class='width20'>Mfg ID</th>
+				<th class='width20'>UPC</th>
+				<th class='width20'>ASIN</th>
 <!--				<th>Condition</th>-->
 				<th>Price</th>
-				<th>Base Cost</th>
+				<th title="Base Cost - your cost for the sku">Cost</th>
 				<th>Weight</th>
 			</tr>
 			</thead>
@@ -943,10 +943,10 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE">Queue Now</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER">Queue Later</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE">Remove</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductAmazonValidateExec' title="Test this product for Amazon errors">Validate</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE" title="Send item to Amazon and clear history log.">Queue Now</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER" title="Send item later (30 hours) to Amazon and clear history log.">Queue Later</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE" title="Send a delete command to Amazon. Can take up to 24 hours for Amazon to remove.">Remove</button>
 	</div>
 	</fieldset>
 
@@ -1485,9 +1485,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td class='width1' data-bind='var:sku(sku); format:text;'></td>
 	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
 	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' class='fullWidth' /></td>
-	<td class='width1'><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.sku:mfgid); defaultVar:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
-	<td class='width1'><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.sku:upc); defaultVar:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
-	<td class='width1'><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
+	<td class='width1'><input name="sku:mfgid" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:mfgid); defaultVar:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td class='width1'><input name="sku:upc" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:upc); defaultVar:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td class='width1'><input name="sku:amz_asin" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
 <!--	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
 		<option value="NEW">New</option>
 		<option value="OPEN">Open</option>

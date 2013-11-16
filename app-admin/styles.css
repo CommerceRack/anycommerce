@@ -240,6 +240,8 @@ if you want the list responsive, apply the .fluidList class.
 /* for non-datagrid tables. ex: setup page. */
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
 td.width1	{width:1%;}
+.width20	{width:20%;}
+.width75	{width:75%;}
 
 /* 201336 -> removed limitations by type so any element could use this class */
 /* table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}*/
@@ -422,8 +424,7 @@ STICKY TABS
 .nwColumnW	{width:60%;}
 
 
-.width20	{width:20%;}
-.width75	{width:75%;}
+
 
 
 /* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
