@@ -1370,6 +1370,7 @@ var tabs = [
 	{"link":"/biz/setup/import/index.cgi?VERB=CUSTOMERS","name":"Customers","selected":0},
 	{"link":"/biz/setup/import/index.cgi?VERB=REVIEWS","name":"Reviews","selected":0},
 	{"link":"/biz/setup/import/index.cgi?VERB=NAVCATS","name":"Categories","selected":0},
+	{"link":"/biz/setup/import/index.cgi?VERB=VARIATIONS","name":"Variations","selected":0},
 	{"link":"/biz/setup/import/index.cgi?VERB=REWRITES","name":"URL Rewrites","selected":0},
 	{"link":"/biz/setup/import/index.cgi?VERB=ORDERS","name":"Orders","selected":0},
 	{"link":"/biz/setup/import/index.cgi?VERB=TRACKING","name":"Tracking","selected":0},

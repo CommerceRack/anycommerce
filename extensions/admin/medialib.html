@@ -374,6 +374,20 @@ PAGE TEMPLATES FOR setup/import
 
 
 
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-variations'>
+<h1>Load Variations from CSV File</h1>
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='VARIATIONS'>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+
+</form>
+</div>
+
+
+
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-help'>
 
 <h1>Welcome to the Comma Separated Value (CSV) Import utility.</h1>
