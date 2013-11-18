@@ -3806,7 +3806,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if (path == '#!appChooser')	{
-					app.ext.admin_config.a.showAppChooser();
+					app.ext.admin_templateEditor.a.showAppChooser();
 					}
 				else if (path == '#!projects')	{
 					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));

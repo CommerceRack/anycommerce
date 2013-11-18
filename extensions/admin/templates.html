@@ -579,7 +579,7 @@ SETUP PAGE TEMPLATE
 	<td></td>
 	<td class='alignRight width50'>
 <!--	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button> -->
-	<span  class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;"><!-- buttons not working yet.  -->
+	<span  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;"><!-- buttons not working yet.  -->
 		<button data-app-event='admin_templateEditor|templateChooserShow' data-hidebuttontext='1' data-mode='Site'>Choose a Template</button>
 		<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
 <!-- buttons locked UNLESS a project is in place -->

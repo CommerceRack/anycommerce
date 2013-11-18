@@ -1245,7 +1245,8 @@ $target.anydelegate();
 						$("<button \/>").button().on('click',function(event){
 							event.preventDefault();
 							$image.attr('src','app-admin/images/blank.gif');
-							$input.val('');
+							$input.val('').addClass('edited'); //save uses the input, so add the class there.
+							app.ext.admin.u.handleSaveButtonByEditedClass($(this)); //make sure save button unlocks.
 							}).text('Clear').appendTo($r);
 						}
 					else	{
