@@ -8,9 +8,6 @@ body {
 	width: 990px;
 	margin: 0 auto;
 }
-#mainContentArea{
-	background: #ffffff;
-}
 .clear {
 	clear:both;
 }
@@ -159,3 +156,34 @@ body {
 	padding: 10px 8px;
 }
 /***** Footer CSS End *****/
+
+
+/***** Sidebar Left CSS Start *****/
+#sideBarLeft {
+	width: 185px;
+	float: left;
+}
+/***** Sidebar Left CSS End *****/
+
+
+/***** Sidebar Right CSS End *****/
+#sideBarRight {
+	width: 185px;
+	float: right;
+}
+#sideBarRight .marginBottom{
+	margin-bottom: 9px;
+}
+/***** Sidebar Right CSS End *****/
+
+
+/***** Main Content Area CSS End *****/
+#container {
+	background: #ffffff;
+	padding:5px;
+}
+#mainContentArea{
+	width: 610px;
+	float:left;
+}
+/***** Main Content Area CSS End *****/
