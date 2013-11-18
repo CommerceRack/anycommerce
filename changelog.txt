@@ -21,6 +21,12 @@ ADMIN
 	enhancement - new button in utilities for private elastic rebuild.
 	enhancement - product editor > amazon > error and history report. Added # of errors @ top and message type icons.
 
+
+QUICKSTART
+	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
+	enhancement - company nav links now generated based on what articles exist w/in company (and in that order). H1 is used to build title.
+
+
 201344
 ADMIN
 	feature - product editor now supports a sku-specific price per schedule (attributes panel)

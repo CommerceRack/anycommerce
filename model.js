@@ -396,9 +396,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 			for(var index in Q) {
 				app.model.changeDispatchStatusInQ(QID,Q[index]['_uuid'],'abort');
 				}
-
 			}
 		else	{
+//			app.u.dump(j);
 			app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
 //			app.u.dump("pipeUUID: "+pipeUUID);
 			delete app.globalAjax.requests[QID][pipeUUID];
@@ -458,7 +458,7 @@ set adjustAttempts to true to increment by 1.
 				msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
 				msgDetails += "<\/ul>";
 				
-				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ISE','persistent':true,'errmsg':'The request has failed. The app may continue to operate normally.<br \/>Please try again or contact the site administrator with the following details:'+msgDetails})
+				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ise','persistent':true,'errmsg':'The request has failed. The app may continue to operate normally.<br \/>Please try again or contact the site administrator with the following details:'+msgDetails})
 				}
 			},
 	
