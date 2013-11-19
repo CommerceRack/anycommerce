@@ -45,7 +45,7 @@ jQuery.extend(zController.prototype, {
 
 //		app = this;
 //		this.u.dump(P);
-		app = $.extend(true,P,this); //deep extend to make sure nexted functions are preserved. If duplicates, 'this' will override P.
+		app = $.extend(true,P,this); //deep extend to make sure nested functions are preserved. If duplicates, 'this' will override P.
 		app.model = zoovyModel(); // will return model as object. so references are app.model.dispatchThis et all.
 
 		app.vars = app.vars || {};
