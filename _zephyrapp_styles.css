@@ -163,6 +163,25 @@ body {
 	width: 185px;
 	float: left;
 }
+.sideBarCategories {
+	padding: 4px;
+}
+.sideBarCategories div {
+    border-bottom: 1px solid #E6E6E6;
+    font-size: 11px;
+    margin-top: 3px;
+    padding-bottom: 3px;
+}
+.sideBarCategories div a {
+    background: url("images/zs_new_cat_arrow-8x12.gif") no-repeat scroll left top rgba(0, 0, 0, 0);
+    color: #000000;
+    display: block;
+    padding-left: 15px;
+	text-decoration: none;
+}
+.sideBarCategories div a:hover {
+    color: #FF7F00;
+}
 /***** Sidebar Left CSS End *****/
 
 
@@ -187,3 +206,4 @@ body {
 	float:left;
 }
 /***** Main Content Area CSS End *****/
+
