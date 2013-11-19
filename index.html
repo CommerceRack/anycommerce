@@ -151,7 +151,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 <div id="container">
 <div id="sideBarLeft">
 	<img src="images/zs_cat_hdr1-183x30.gif"/>
-	<div class="sideBarCategories">
+	<div class="sideBarCategories marginBottom">
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance'});">Paintball Sale Gear</a></div>
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.3packagespecials'});">Paintball Packages</a></div>
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.airsoft'});">Airsoft</a></div>
@@ -168,6 +168,150 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.paintballs'});">Paintballs</a></div>
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.safetygear'});">Protective Gear</a></div>
 		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.scenarioupgrades'});">Scenario Gear</a></div>
+	</div>
+	
+	<div style="width:183px; margin-bottom:4px; ">
+		<div><img width="183" height="30" border="0" alt="" src="images/zs_cat_hdr2-183x30.gif"></div>
+		<div align="center" id="brandcats" class="no_underline" style="padding:6px 0; border:1px solid #686b6d; border-top-width:0px;">
+		
+
+		<div style="border-bottom:solid 1px #b3b5b6; padding-bottom:5px;">
+			<form style="display:inline;" id="subcatsSelectList" name="subcatsSelectList">
+				<select style="width:175px; font-size:11px;" onchange="window.open(this.options[this.selectedIndex].value,'_top')" class="zfrom_select" id="newUrl" name="newUrl">
+					<option value="">Brands</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.511_tactical/">5.11 Tactical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.action_sport_games/">Action Sport Games</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.airow_gun/">Airow Gun</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.airsoft_innovations/">Airsoft Innovations</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.alien_paintball/">Alien Paintball</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.allen_paintball_products/">Allen Paintball Products</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.alta_tactical/">Alta Tactical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.aps_airsoft/">APS Airsoft</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.azodin/">Azodin</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.blackstar_paintball/">Blackstar</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.bob_long/">Bob Long</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.bravo_airsoft/">Bravo Airsoft</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.bt_battle_tested/">BT Battle Tested</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.camelbak/">Camelbak</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.cci/">CCI</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.classic_army/">Classic Army</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.condor_tactical/">Condor Tactical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.contract_killer_clothing/">Contract Killer</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.converse/">Converse</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.critical_paintball/">Critical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.crossfire/">Crossfire</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.custom_products/">Custom Products</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.dakine/">Dakine</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.dangerous_power/">Dangerous Power</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.deadlywind_paintball/">Deadlywind</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.defcon_tactical_gear/">Defcon Tactical Gear</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.draxxus_dxs/">Draxxus DXS</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.dye/">Dye</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.echo_1/">Echo 1</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.eclipse_paintball/">Planet Eclipse</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.electric/">Electric</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.elite_force_airsoft/">Elite Force</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.empire/">Empire</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.energy_paintball_batteries/">Energy</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.exalt/">Exalt</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.extreme_rage/">Extreme Rage</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.filtrate_sunglasses/">Filtrate Sunglasses</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.full_clip/">Full Clip</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.g_g/">G&amp;G</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.genx_global_paintball/">Genx Global</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.gi_sportz_paintball/">GI Sportz</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.gog_paintball/">GOG </option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.gopro_action_sports_cameras/">GoPro Cameras</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.guard_dogs/">Guard Dogs</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.guerrilla_air/">Guerrilla Air</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.hakkotsu_airsoft/">Hakkotsu</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.hater/">Hater</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.hk_army_-_pb_fashion/">HK Army</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.hurley_clothing_clothes_apparel_buy_online/">Hurley</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.ics_airsoft_buy_online_free_shipping_now/">ICS</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.infamous/">Infamous</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.intellect_airsoft_batteries/">Intellect</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.invert/">Invert</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.j_j_performance/">J&amp;J Performance</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.jox_sox/">Jox Sox</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.jt_usa/">JT USA</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.king_arms/">King Arms</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.km/">KM</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.kwa/">KWA</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.lapco/">Lapco</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.leapers_utg/">Leapers UTG</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.madbull_airsoft/">Mad Bull</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.maddog_sports/">Maddog Sports</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.magpul/">Magpul</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.major_paintball/">Major Paintball</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.matix_clothing/">Matix</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.metal_mulisha/">Metal Mulisha</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.midland_airsoft/">Midland Airsoft</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.mission_first_tactical/">Mission First Tactical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.modefy_airsoft/">Modefy</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.nc_star/">NC Star</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.neff/">Neff</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.new_designz/">New Designz</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.ninja_paintball/">Ninja Paintball</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.nixon/">Nixon</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.nxe/">Nxe</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.oakley/">Oakley</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.propper/">Propper</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.proto/">Proto</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.prowin_airsoft/">ProWin Airsoft</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.pure_energy/">Pure Energy</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.rap_4_paintball/">Rap 4</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.raptors_airsoft/">Raptors Airsoft</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.reebok/">Reebok</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.revision_eyewear/">Revision Eyewear</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.rothco/">Rothco</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.sandana_paintball/">Sandana</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.save_phace/">Save Phace</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.sector_9/">Sector 9</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.sly_paintball/">Sly</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.smart_parts_paintball/">Smart Parts</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.socom_gear_airsoft/">Socom Gear</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.spyder/">Spyder</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.srh_apparel/">SRH</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.stiffi_carbon_fiber_paintball_barrels/">Stiffi</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.tanked/">Tanked</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.team_sd/">Team SD</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.techt_paintball/">TechT Paintball</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.tenergy_batteries/">Tenergy Batteries</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.tiberius_arms/">Tiberius Arms</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.tippmann/">Tippmann</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.umarex/">Umarex</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.unity_paintball/">Unity</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.us_army/">US Army</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.v-force/">V-Force</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.valken/">Valken</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.viewloader/">Viewloader</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.virtue_paintball/">Virtue Paintball</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.von_zipper/">Von Zipper</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.voodoo_tactical/">Voodoo Tactical</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.young___reckless/">Young &amp; Reckless</option>
+					<option value="http://WWW.zephyrpaintball.com/category/shop_by_brand.zephyr_sports/">Zephyr Sports</option>
+				</select>
+			</form>
+		</div>
+		<div style=" text-align:left; padding: 5px; display:block;"><img width="92" height="11" alt="" src="//d37k32vdhhvi22.cloudfront.net/media/merchant/zephyrsports/_ticket_2547453/zs10_featuredbrands-92x11.gif"></div>
+		<div style="padding:0px 5px;">
+			<!-- BANNER: LEFT_BRAND1 --><div style="margin-bottom:5px; float:left;"><a href="http://WWW.zephyrpaintball.com/category/shop_by_brand.eclipse_paintball/" title="Planet Eclipse Paintball" id="LEFT_BRAND1_href" onclick="if(typeof PleaseTrackClick == 'function') { PleaseTrackClick('banner-LEFT_BRAND1','zephyr_buttons/featured_brands/eclipse_shop.jpg|/category/shop_by_brand.eclipse_paintball/'); }">
+			<img width="80" height="40" border="0" alt="Planet Eclipse Paintball" src="images/eclipse_shop.jpg" id="LEFT_BRAND1_img">
+			</a></div><!-- /BANNER: LEFT_BRAND1 -->
+			<!-- BANNER: LEFT_BRAND2 --><div style="margin-bottom:5px; margin-left:5px; float:left;"><a href="http://WWW.zephyrpaintball.com/category/shop_by_brand.spyder/" title="Kingman Spyder Paintball" id="LEFT_BRAND2_href" onclick="if(typeof PleaseTrackClick == 'function') { PleaseTrackClick('banner-LEFT_BRAND2','zephyr_buttons/featured_brands/kingman_spyder_paintball.jpg|/category/shop_by_brand.spyder/'); }">
+			<img width="80" height="40" border="0" alt="Kingman Spyder Paintball" src="images/kingman_spyder_paintball.jpg" id="LEFT_BRAND2_img">
+			</a></div><!-- /BANNER: LEFT_BRAND2 -->
+			<!-- BANNER: LEFT_BRAND3 --><div style="margin-bottom:5px; float:left;"><a href="http://WWW.zephyrpaintball.com/category/shop_by_brand.valken/" title="Valken Paintball" id="LEFT_BRAND3_href" onclick="if(typeof PleaseTrackClick == 'function') { PleaseTrackClick('banner-LEFT_BRAND3','zephyr_buttons/featured_brands/valken_fbrand002.jpg|/category/shop_by_brand.valken/'); }">
+			<img width="80" height="40" border="0" alt="Valken Paintball" src="images/valken_fbrand002.jpg" id="LEFT_BRAND3_img">
+			</a></div><!-- /BANNER: LEFT_BRAND3 -->
+			<!-- BANNER: LEFT_BRAND4 --><div style="margin-bottom:5px; margin-left:5px; float:left;"><a href="http://WWW.zephyrpaintball.com/category/shop_by_brand.empire/" title="Empire Paintball" id="LEFT_BRAND4_href" onclick="if(typeof PleaseTrackClick == 'function') { PleaseTrackClick('banner-LEFT_BRAND4','zephyr_buttons/featured_brands/empire_fbrand002.jpg|/category/shop_by_brand.empire/'); }">
+			<img width="80" height="40" border="0" alt="Empire Paintball" src="images/empire_fbrand002.jpg" id="LEFT_BRAND4_img">
+			</a></div><!-- /BANNER: LEFT_BRAND4 -->
+			<div class="clear"></div>
+		</div>
+
+		</div>
 	</div>
 </div>
 
