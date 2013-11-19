@@ -7,7 +7,7 @@ app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 
-app.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js','startExtension']);
+app.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js']);
 app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',0,'store_search','extensions/store_search.js']);

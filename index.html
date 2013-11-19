@@ -320,9 +320,11 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 	<a><img class="marginBottom" src="images/43holiday_return_shipping_sidebanner.jpg"/></a>
 	<a href="#" onClick="return showContent('category', {'navcat':'.goggles.virtue'});"><img class="marginBottom" src="images/virtue_vio_goggles_preorder_sidebanner_template.jpg"/></a>
 	<a href="#" onClick="return showContent('category', {'navcat':'.goggles.hk_army_paintball_masks'});"><img class="marginBottom" src="images/klr_hkarmy_mask_preorder_sidebanner.jpg"/></a>
-	<img src="images/zs_recent_header-183x26.gif"/>
-	<div id='recentlyViewedItemsContainer' class='marginBottom'>
-		<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplateRecentlyViewed; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<div id='recentlyViewedItemsContainer' class="displayNone">
+		<img src="images/zs_recent_header-183x26.gif"/>
+		<div class='marginBottom'>
+			<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplateRecentlyViewed; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+		</div>
 	</div>
 	<a href="#" ><img class="marginBottom" src="images/dye_2014_sidebanner_template.jpg"/></a>
 	<a href="#" ><img class="marginBottom" src="images/1oakley_sunglass_blowout_sidebanner.jpg"/></a>
@@ -521,6 +523,14 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	
 </li>
 
+
+<li id='productListTemplateRecentlyViewed' class="recentViewList" class='loadingBG' >
+	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
+		<h6 class="recentViewProdName" data-bind='var: product(zoovy:prod_name); format:text;'></h6>
+		<div class="clear"></div>
+	</div>
+</li>
 
 <!--
 for product lists with addToCart feature (accessories, for example)
