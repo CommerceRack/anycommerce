@@ -193,6 +193,12 @@ body {
 #sideBarRight .marginBottom{
 	margin-bottom: 9px;
 }
+#recentlyViewedItemsContainer{
+	height: 156px;
+	width:177px;
+	border:1px solid #CCCCCC;
+	padding:2px;
+}
 /***** Sidebar Right CSS End *****/
 
 
