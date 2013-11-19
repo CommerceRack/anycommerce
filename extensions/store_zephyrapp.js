@@ -41,6 +41,18 @@ var store_zephyrapp = function() {
 					$("ul",$container).empty(); //empty product list
 					$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
 					}]);
+					
+				app.rq.push(['templateFunction','categoryTemplate','onCompletes', function(P){
+					var breadcrumb = P.navcat.split(".");
+					var topNavcat = "."+breadcrumb[1];
+					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').show();
+					}]);
+					
+				app.rq.push(['templateFunction','categoryTemplate','onDeparts', function(P){
+					var breadcrumb = P.navcat.split(".");
+					var topNavcat = "."+breadcrumb[1];
+					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').hide();
+					}]);	
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 

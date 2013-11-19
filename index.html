@@ -152,22 +152,55 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 <div id="sideBarLeft">
 	<img src="images/zs_cat_hdr1-183x30.gif"/>
 	<div class="sideBarCategories marginBottom">
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance'});">Paintball Sale Gear</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.3packagespecials'});">Paintball Packages</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.airsoft'});">Airsoft</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.airsystems'});">Air Systems</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.apparel'});">Player Clothing</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.barrels'});">Barrels</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.casual_clothing'});">Casual Clothing</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.goggles'});">Goggles and Masks</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.harnessesbags'});">Harnesses & Bags</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.loaders'});">Hoppers & Loaders</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.markers'});">Paintball Guns</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.markerupgrades'});">Marker Upgrades</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.misc_items'});">Misc Items</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.paintballs'});">Paintballs</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.safetygear'});">Protective Gear</a></div>
-		<div><a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.scenarioupgrades'});">Scenario Gear</a></div>
+		<div data-navcat=".2clearance">
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance'});">Paintball Sale Gear</a>
+			<div class="subCatList displayNone">
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.airsoft'});">&bull; Airsoft</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_air_systems'});">&bull; Air Systems</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_barrels'});">&bull; Barrels</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_bottle_covers'});">&bull; Bottle Covers</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_goggles'});">&bull; Goggles</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_harnesses'});">&bull; Harnesses</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_hoppers'});">&bull; Hoppers</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_jerseys___apparel'});">&bull; Clothing</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_knee___elbow_pads'});">&bull; Knee & Elbow Pads</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_paintball_guns'});">&bull; Paintball Guns</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_sunglasses'});">&bull; Sunglasses</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.clearance_upgrades'});">&bull; Upgrades</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.under__10_paintball_clearance'});">&bull; Under $10</a>
+				<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.2clearance.under__25_paintball_clearance'});">&bull; Under $20</a>
+			</div>
+		</div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.3packagespecials'});">Paintball Packages</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.airsoft'});">Airsoft</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.airsystems'});">Air Systems</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.apparel'});">Player Clothing</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.barrels'});">Barrels</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.casual_clothing'});">Casual Clothing</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.goggles'});">Goggles and Masks</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.harnessesbags'});">Harnesses & Bags</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.loaders'});">Hoppers & Loaders</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.markers'});">Paintball Guns</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.markerupgrades'});">Marker Upgrades</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.misc_items'});">Misc Items</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.paintballs'});">Paintballs</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.safetygear'});">Protective Gear</a></div>
+		<div>
+			<a class="pointer" href="#" onClick="return showContent('category',{'navcat':'.scenarioupgrades'});">Scenario Gear</a></div>
 	</div>
 	
 	<div style="width:183px; margin-bottom:4px; ">
