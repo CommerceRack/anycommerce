@@ -1137,14 +1137,26 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<label>
 				<span>Fixed price </span>
 				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				<span class='toolTip' title="The 'BuyItNow' price on eBay">?</span>
 			</label>
-			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
-				<span>Fixed qty</span>
+			<label>
+				<span>Offer qty</span>
 				<input type="number" step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<span class='toolTip' title="
+				Set offer quantity to positive integer to restrict the number of units offered on eBay.
+				Regardless of the quantity set the quantity will never exceed available inventory.
+				Use -1 to list all available inventory, or 0 to disable/remove syndicated listings.
+				Offer qty is used to work around the selling limits eBay places on all new accounts.
+				By reducing the number of units offered it reduces the total value of the listing, 
+				allowing sellers to list a larger variety of SKU's. 
+				">?</span>
 			</label>
 			</div>
 
-			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
+			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">
+			NOTE: Automatic syndication is ENABLED on the Marketplaces tab. 
+			Listing Duration and Quantity is automatically managed. 
+			</div>
 		
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
