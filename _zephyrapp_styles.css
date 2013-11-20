@@ -221,3 +221,26 @@ body {
 }
 /***** Main Content Area CSS End *****/
 
+
+/***** Category Page CSS Start *****/
+.categoryList{
+	background-color: #E6E6E6;
+    border: 1px double #BBBBBB;
+	padding: 3px;
+}
+.categoryList > li{
+	width:82px; 
+	height:108px;
+	margin: 2px;
+}
+.categoryList .catName {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #BBBBBB;
+    font-size: 10px;
+    height: 16px;
+    margin-top: 5px;
+    overflow: hidden;
+    text-align: center;
+}
+/***** Category Page CSS End *****/
+
