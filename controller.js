@@ -1469,6 +1469,9 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			handleButtons : function($target)	{
 //			app.u.dump("BEGIN app.u.handleButtons");
 				if($target && $target instanceof jQuery)	{
+					$('.applyButtonset',$target).each(function(){
+						$(this).buttonset();
+						});
 					$('.applyButton',$target).each(function(index){
 //					app.u.dump(" -> index: "+index);
 						var $btn = $(this);
