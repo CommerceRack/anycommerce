@@ -22,6 +22,8 @@ ADMIN
 	enhancement - product editor > amazon > error and history report. Added # of errors @ top and message type icons.
 	bug fix - flexedit 'clear' for images didn't clear in product editor or unlock the 'save' button.
 	bug fix - UPS reapply > form submit > didn't close dialog or show success message in a viewable location. does now.
+	enhancement - ticket updates and file attach will update ticket panel to more clearly indicate a change occured.
+
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
