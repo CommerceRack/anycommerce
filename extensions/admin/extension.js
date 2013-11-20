@@ -5379,6 +5379,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						event.preventDefault();
 						$DMI.showLoading({'message' : 'Refreshing list...' });
 						$("[data-app-role='dualModeListTbody']",$DMI).empty();
+						$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
 						var cmdVars = {};
 						if($btn.data('serializeform'))	{
 							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
