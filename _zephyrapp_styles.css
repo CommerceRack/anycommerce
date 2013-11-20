@@ -215,10 +215,12 @@ body {
 	background: #ffffff;
 	padding:5px;
 }
-#mainContentArea{
-	width: 610px;
+#contentArea {
+	width: 600px;
 	float:left;
+	padding:5px;
 }
+
 /***** Main Content Area CSS End *****/
 
 
