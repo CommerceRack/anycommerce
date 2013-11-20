@@ -112,6 +112,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				tagObj.jqObj.hideLoading();
 				$("[data-app-role='dualModeListTbody']",tagObj.jqObj).empty().anycontent({'translateOnly':true,'data':{'@TASKS':filteredTasks}});
 				app.u.handleButtons(tagObj.jqObj);
+				tagObj.jqObj.find("[data-app-click='admin|checkAllCheckboxesExec']").data('selected',false);
 				},
 			onError : function(responseData, uuid)	{
 				app.u.throwMessage(responseData);
@@ -251,7 +252,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 											$D.anymessage({'message':rd});
 											}
 										else	{
-											$D.dialog('close')
+											$D.dialog('close');
+											$ele.closest(".dualModeContainer").find("[data-app-click='admin|checkAllCheckboxesExec']").data('selected',false); //resets 'select all' button to false so a click selects everything.
 											}
 										}
 									}
@@ -297,6 +299,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						},'immutable');
 					app.model.dispatchThis('immutable');
+					
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"Please select at least on task from the list below for modification.",'errtype':'youerr'});
