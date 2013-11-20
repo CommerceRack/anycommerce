@@ -986,7 +986,7 @@ if(selector && mode)	{
 		});
 	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
 
-	function fileuploadstopped() {
+	function mediafileuploadstopped() {
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
@@ -998,7 +998,19 @@ if(selector && mode)	{
 	//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 	if(mode == 'mediaLibrary')	{
 //		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
-		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
+		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',mediafileuploadstopped); //do not double-bind the event. remove then re-add.
+		}
+	else if(mode == 'adminTicketFileAttach')	{
+		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',function(a){
+//			app.u.dump(" -> a: "); app.u.dump(a);
+			var ticketID = $("[name='ticketid']",a.target).val();
+			var uuid = $("[name='ticketid']",a.target).val();
+			if(ticketID && uuid && $(app.u.jqSelector('#','ticket_'+ticketID),'#supportContent').length)	{
+				app.ext.admin_support.u.loadTicketContent($(app.u.jqSelector('#','ticket_'+ticketID),'#supportContent'),ticketID,uuid,'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			$('#ticketFileUploadModal').dialog('close');
+			}); //do not double-bind the event. remove then re-add.
 		}
 	// Enable iframe cross-domain access via redirect option:
 	$selector.fileupload(

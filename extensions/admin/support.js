@@ -101,6 +101,7 @@ var admin_support = function() {
 				},
 
 
+
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
 				
@@ -291,7 +292,44 @@ var admin_support = function() {
 						app.ext.admin_support.a.showHelpDocInDialog(docID);
 						});
 					});
-				}
+				},
+
+
+//is a separate function because it's called by both the ticket DMI and the media library.
+			loadTicketContent : function($context,ticketID,uuid,q)	{
+				
+				if($context instanceof jQuery)	{
+					if(ticketID && uuid)	{
+	
+						$context.showLoading({'message':'Fetching ticket details'}).data({'ticketid':ticketID, 'uuid':uuid});
+
+//Clear the follows and attachment lists, but not the rest of the panel.  That way, anything in the message input is preserved.
+						$("[data-app-role='ticketAttatchmentList']",$context).empty();
+						$("[data-app-role='ticketFollowupList']",$context).empty();
+						
+						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminTicketDetail',
+							'ticketid':ticketID,
+							'_tag':	{
+								'datapointer' : 'adminTicketDetail|'+ticketID,
+								'callback': 'anycontent',
+								'translateOnly' : true,
+								'jqObj' : $context,
+								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
+								}
+							},q);
+						}
+					else	{
+						$context.anymessage({"message":"In admin_support.e.adminTicketDetailShow, unable to ascertain ticketID ["+ticketID+"] and/or UUID ["+uuid+"], both of which are required.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_support.e.adminTicketDetailShow, $context in not a valid jquery instance.","gMessage":true});
+					}
+
+				},
+
 			
 			}, //u
 
@@ -324,7 +362,9 @@ var admin_support = function() {
 				var $D = app.ext.admin.i.dialogCreate({
 					'title' : 'Create a New Ticket',
 					'templateID' : 'supportTicketCreateTemplate',
-					'data' : {},
+					'data' : {
+						'domain' : 'http://'+app.vars.domain
+						},
 					});
 				
 				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
@@ -393,20 +433,23 @@ var admin_support = function() {
 				p.preventDefault();
 				var
 					$form = $ele.closest('form'),
-					$panelContents = $ele.closest('.ui-widget-anypanel');
+					$panel = $ele.closest('.ui-widget-anypanel');
 				
 				if(app.u.validateForm($form))	{
-					$panelContents.showLoading({'message':'Updating ticket'});
-					app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
-						$panelContents.hideLoading();
+					$panel.showLoading({'message':'Updating ticket'});
+					app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
+						$panel.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd});
 							}
 						else	{
-							$form.empty().anymessage({'message':app.u.successMsgObject('Ticket '+$panelContents.data('ticketid')+' has been updated')})
+							$form.anymessage({'message':app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
+							$("textarea",$form).val(''); //clear the values from the text areas.
 							}
 						}},'immutable');
-						app.model.dispatchThis('immutable');
+					//refresh the ticket.
+					app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
+					app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles displaying errors.
 				
@@ -479,24 +522,12 @@ app.model.dispatchThis('mutable');
 
 					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'supportTicketDetailTemplate',
-						'panelID' : 'task_'+ticketID,
+						'panelID' : 'ticket_'+ticketID,
 						'header' : 'Edit Ticket: '+ticketID
 						});
-					$panel.showLoading({'message':'Fetching ticket details'}).data({'ticketid':ticketID, 'uuid':uuid})
-					app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
-					app.model.addDispatchToQ({
-						'_cmd':'adminTicketDetail',
-						'ticketid':ticketID,
-						'_tag':	{
-							'datapointer' : 'adminTicketDetail|'+ticketID,
-							'callback': 'anycontent',
-							'translateOnly' : true,
-							'jqObj' : $panel,
-							'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
 
+					app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
+					app.model.dispatchThis('mutable');
 
 					}
 				else	{
