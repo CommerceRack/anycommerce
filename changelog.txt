@@ -30,6 +30,7 @@ ADMIN
 	enhancement - In some places, it's necessary to show a dialog interstitial when trying to open a popup. Reduced these in places it isn't required.
 	feature - plugins > communication > apple/ios added. (for native app push notifications)
 	feature - plugins > cloud services > Amazon Simple Email Services
+	feature - setup > notifications. allows for events to trigger actions (currently supports customer inquiry. more to come...)
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
