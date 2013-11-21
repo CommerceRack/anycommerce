@@ -136,33 +136,7 @@ and offMenu is toggle off, hiding the change button.
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
 
-
-
-
-/****** APP specific styles ******/
-
-
-/* messaging css. some error css is defined in the jqueryui styles */
-
-.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
-.zMessage	{margin:6px; 0}
-
-.appMessage	{margin-bottom:12px; position:relative;}
-.appMessage .stdMargin {padding:5px;}
-.appMessage .ui-button	{position:absolute; top:-3px; right:-3px; z-index:100;}
-.appMessage .ui-icon	{float:left; margin-right:12px;}
-
-/* some messages have a red bg. add a white circle around the icon in these cases. */
-.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
-	background-color:#ffffff;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	}
-
-.appMessage .appMessageTxt	{float:left;}
-
-.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae !important; background:#e3f6e3 !important; color:#333333 !important;}
-.ui-state-warning	{border:1px solid #f58d48 !important; background:#ffdfc9 !important; color:#333333 !important;}
+/* ** 201346 -> messaging styles are now in anyplugins.css */
 
 
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
