@@ -3765,6 +3765,9 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!notifications')	{
+					app.ext.admin_config.a.showNotifications($target);
+					}
 				else if(path == '#!trainer')	{
 					app.ext.admin_trainer.a.showTrainer($target);
 					}
@@ -5362,7 +5365,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 			submitForm : function($ele,p)	{
 				var $form = $ele.closest('form');
 				
-				if(app.u.validateForm($form))	{					
+				if($ele.data('skipvalidation') || app.u.validateForm($form))	{					
 					if(app.ext.admin.a.processForm($form,'immutable',p))	{
 						$form.showLoading({'message':'Updating...'});	
 						app.model.dispatchThis('immutable');

@@ -27,6 +27,9 @@ ADMIN
 	feature - supply chain interface allows creation of batch jobs for get inventory, process orders or update tracking for a given supplier (or a group of suppliers).  Each job/supplier is 1 batch job
 	feature - export pages.json file added to sites for app based hosts.
 	enhancement - addition of pages.json file was just one button to many. app utilities are now in a dropdown.
+	enhancement - In some places, it's necessary to show a dialog interstitial when trying to open a popup. Reduced these in places it isn't required.
+	feature - plugins > communication > apple/ios added. (for native app push notifications)
+	feature - plugins > cloud services > Amazon Simple Email Services
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.

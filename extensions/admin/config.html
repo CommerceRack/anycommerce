@@ -2938,6 +2938,114 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 <!--
+/////////////////////////   setup > notifications
+-->
+
+
+<div id='notificationPageTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+
+<form onSubmit='return false' class='labelsAsBreaks alignedLabels clearfix'>
+	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
+	<input type='hidden' name='_cmd' value='adminConfigMacro' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
+	<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
+
+
+	<div class='buttonset'>
+	<h1>Notifications</h1>
+	<button class='floatRight' data-app-event='admin|processForm' data-skipvalidation='true' >Save Changes</button><!-- skip validation cuz we're only using the data-table -->
+	</div>
+
+
+	<fieldset>
+		<legend>Routes</legend>
+		
+		<section class='floatLeft marginRight'>
+		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
+		<thead>
+		<tr>
+			<th>Event</th>
+			<th>Method</th>
+			<th>More</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var:notifications(@NOTIFICATIONS); format:processList; loadsTemplate:notificationsListTemplate;">
+		
+		</tbody>
+		</table>
+		</section>
+			
+		<section class='floatLeft marginLeft notificationDatatableInputs'>
+
+<!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
+	
+			<label><input type='radio' name='event' required='required' value="ENQUIRY">Enquiry <span class='toolTip' title="A message from the website, likely from the contact form on the website.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ENQUIRY.ORDER">Order Enquiry <span class='toolTip' title="A message from the website with a confirmed order id.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Order Cancel <span class='toolTip' title="">?</span></label>
+
+			<label>
+				<span>Method</span>
+				<select name='verb' required='required' data-panel-selector=".notificationMethodPanel" data-input-change='show-panel'>
+	<!--				<option>everything</option> -->
+					<option data-show-panel='notificationMethodPanelEmail' value='email'>Email</option>
+					<option data-show-panel='notificationMethodPanelURL' value='http'>Http</option>
+					<option value='task'>Task</option>
+					<option data-show-panel='notificationMethodPanelURL' value='awssqs'>AWS SQS</option>
+					<option value='crmticket'>CRM ticket</option>
+					<option value='noop'>Do nothing</option><!-- NO OPeration -->
+		<!--		<option>sms</option>
+					 -->
+				</select>
+			</label>
+		
+			<div data-panel-id='notificationMethodPanelEmail' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>Email(s)</span>
+					<input type='email' required='required' name='email' data-validation-rules='skipIfHidden' />
+				</label>
+			</div>		
+			<div data-panel-id='notificationMethodPanelURL' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>URL</span>
+					<input type='url' required='required' name='url'  data-validation-rules='skipIfHidden'  />
+				</label>
+			</div>
+	
+			<button data-app-event="admin_config|dataTableAddExec">Add</button>
+	
+		
+		
+		</section>
+
+
+</fieldset>
+
+
+	
+</form>
+
+
+</div>
+
+
+<table>
+<tr id='notificationsListTemplate'>
+	<td data-bind="var: notification(event); format:text;"></td>
+	<td data-bind="var: notification(verb); format:text;"></td>
+	<td>
+		<span data-bind="var: notification(email); format:text;"></span>
+		<span data-bind="var: notification(url); format:text;"></span>
+	</td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+</table>
+
+
+
+
+<!--
 /////////////////////////   partner/plugin/auth
 -->
 
@@ -2957,18 +3065,18 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 			<li data-plugin='auth_facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
 			<li data-plugin='auth_google' data-app-event="admin_config|pluginUpdateShow">Google</li>
 		</ul>
-	
+<!--	
 		<h4>Cloud Services</h4>
 		<ul>
-			<li>Coming soon</li>
 		</ul>
-		
-		<h4>Communications</h4>
+-->		
+		<h4>Communication</h4>
 		<ul>
+			<li data-plugin='communication_amazon_ses' data-app-event="admin_config|pluginUpdateShow" title='Amazon Simple Email Services'>Amazon SES</li>
 			<li data-plugin='platform_android' data-app-event="admin_config|pluginUpdateShow">Android</li>
 			<li data-plugin='platform_appleios' data-app-event="admin_config|pluginUpdateShow">Apple/iOS</li>
 		</ul>
-		
+<!--
 		<h4>Infrastructure</h4>
 		<ul>
 			<li>Coming soon</li>
@@ -2983,7 +3091,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<ul>
 			<li>Coming soon</li>
 		</ul>
-
+-->
 	</section>
 
 	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
@@ -3013,10 +3121,56 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 
+<fieldset id='pluginTemplate_communication_amazon_ses'>
+	<input type='hidden' name='plugin' value='esp_awsses' />
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		Enable
+	</label>
+	<h3>Amazon Account Information</h3>
+	
+	<p class='hint'>Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effective bulk and transactional email sending service for businesses and developers.<br />
+	<a href='#' onClick="linkOffSite('http://aws.amazon.com/ses/','',true); return false;">Click here for signup / more details</a></p>
+	
+	<label>
+		<span>IAM username</span>
+		<input type='text' name='iam-username' value='' data-bind="var: plugin(iam-username); format:popVal;" />
+	</label>	
+	<label>
+		<span>SMTP username</span>
+		<input type='text' name='smtp-username' value='' data-bind="var: plugin(smtp-username); format:popVal;" />
+	</label>	
+	<label>
+		<span>SMTP password</span>
+		<input type='text' name='~smtp-password' value='' data-bind="var: plugin(~smtp-password); format:popVal;" />
+	</label>
+
+
+	<h3 class='marginTop marginBottom'>Email Addresses</h3>
+	<label>
+		<span>From email address (automated/orders)</span>
+		<input type='text' name='from_email_auto' value='' data-bind="var: plugin(from_email_auto); format:popVal;" /><span class='toolTip' title='Used by all automated mailings, such as order confirmations, password recovery, etc'>?</span>
+	</label>
+
+	<label>
+		<span>From email address (campaigns)</span>
+		<input type='text' name='from_email_campaign' value='' data-bind="var: plugin(from_email_campaign); format:popVal;" /><span class='toolTip' title='used in conjunction with the outbound campaign mail system'>?</span>
+	</label>
+	
+	<label>
+		<span>From email address (staff/support)</span>
+		<input type='text' name='from_email_support' value='' data-bind="var: plugin(from_email_support); format:popVal;" /><span class='toolTip' title='used in conjunction with the CRM system'>?</span>
+	</label>
+
+	
+</fieldset>
+
+
+
 <fieldset id='pluginTemplate_auth_google'>
 	<input type='hidden' name='plugin' value='auth_google' />
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' />
+		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
 		Enable
 	</label>
 
@@ -3035,7 +3189,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <fieldset id='pluginTemplate_auth_facebook'>
 	<input type='hidden' name='plugin' value='auth_facebook' />
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' />
+		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
 		Enable
 	</label>
 
@@ -3057,7 +3211,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <fieldset id='pluginTemplate_platform_android'>
 	<input type='hidden' name='plugin' value='platform_android' />
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' />
+		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
 		Enable
 	</label>
 
@@ -3074,9 +3228,27 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 </fieldset>
 
 
-<fieldset id='pluginTemplate_platform_appleios'>
+<fieldset id='pluginTemplate_platform_appleios' class='alignedInputs alignedLabels'>
 	<input type='hidden' name='plugin' value='platform_appleios' />
-Coming Soon	
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		Enable
+	</label>
+
+	<label>
+		<span>Password</span>
+		<input type='text' name='~passwd' value='' data-bind="var: plugin(~passwd); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Certificate</span>
+		<textarea name='~cert' data-bind="var: plugin(~cert); format:popVal;" rows='10'></textarea>
+	</label>
+	
+	<label>
+		<span>Key</span>
+		<textarea name='~key' data-bind="var: plugin(~key); format:popVal;" rows='10'></textarea>
+	</label>
 </fieldset>
 
 

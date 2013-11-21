@@ -102,7 +102,27 @@ var admin_config = function() {
 			showEmailAuth : function($target)	{
 				//app vars is passed in so the email input can be prepopulated w/ the domain in focus.
 				$target.empty().append($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':app.vars}).anydelegate());
-				app.u.handleButtons($target)
+				app.u.handleButtons($target);
+				},
+
+			showNotifications : function($target)	{
+				$target.intervaledEmpty();
+				$target.append($("<div \/>").anycontent({
+					'templateID' : 'notificationPageTemplate'
+					}).anydelegate({'trackEdits':true}));
+				app.u.handleButtons($target);
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigDetail',
+					'notifications' : true,
+					'_tag':	{
+						'datapointer' : 'adminConfigDetail',
+						'callback':'anycontent',
+						'translateOnly' : true,
+						'jqObj' : $target.find("div:first")
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+
 				},
 
 			showBillingHistory : function($target)	{
@@ -875,6 +895,56 @@ $D.dialog('open');
 //in the form, set _tag/macrobuilder='extension/name' where name is the name of the function in mb. should be same or derive from macro cmd.
 		macrobuilders : {
 
+
+/*
+This is a destructive update.
+when an event type is changed, all the event types are dropped, then re-added.
+
+*/
+			
+			"NOTIFICATION/DATATABLE" : function(sfo,$form)	{
+				sfo = sfo || {};
+
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					};
+
+
+				var updatedEvents = new Array(); //each time an event type is updated, add it here. This'll be used to make sure duplicate updates don't occur. one edit from an 'event type' updates all
+				var $tbody = $("[data-app-role='dataTable'] tbody",$form);
+				$("[data-app-role='dataTable'] tbody tr.edited",$form).each(function(index){
+					app.u.dump(" -> index: "+index);
+					var $tr = $(this);
+					var eventType = $tr.data('event');
+					if(eventType)	{
+						if($.inArray(eventType,updatedEvents) == -1)	{
+							updatedEvents.push(eventType);
+							newSfo['@updates'].push("NOTIFICATION/DATATABLE-EMPTY?event="+eventType);
+							//yes, i know. loops in loops, what are you thinking? we're talking about a pretty small data-set here. If this changes, re-evaluate this code.
+							$("tr[data-event='"+$tr.data('event')+"']").each(function(){
+								var $updateTR = $(this);
+								if($updateTR.hasClass('rowTaggedForRemove'))	{} //ignore this row, it's being deleted.
+								else	{
+									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(app.u.getWhitelistedObject($tr.data(),['event','verb','url','email'])));
+									}
+								});
+							
+							} 
+						else	{
+							//this event has already been updated.
+							}
+						}
+					else	{
+						//no event type on row. That's not valid.
+						}
+					});
+
+				return newSfo;
+				},
+			
 			
 			"adminConfigMacro" : function(sfo)	{
 				sfo = sfo || {};
