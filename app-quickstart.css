@@ -445,6 +445,7 @@ CART
 
 ***************************************************/
 
+/* ** 201346 -> css redux to make cart responsive. big update in template as well. see media query at bottom of doc too. */
 .cartStuffContainer	{width:100%; margin:0 0 1em 0;}
 #cartStuffList	{list-style:none; margin:0; padding:0; font-size:.85em;}
 #cartStuffList li	{display:block; margin:0 0 1em 0;}
@@ -541,7 +542,7 @@ CHECKOUT
 
 
 
-
+/* ** 201346 -> for responsive cart layout. */
 @media only screen and (min-width: 640px) {
 	#cartTemplateShippingContainer	{width:49%;}
 	#cartTemplateCostSummary	{float:right; width:49%;}

@@ -32,6 +32,7 @@ QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
 	enhancement - company nav links now generated based on what articles exist w/in company (and in that order). H1 is used to build title.
 	bug fix - searchTemplate onCompletes were not running.
+	enhancement - cartTemplate is now responsive. (major changes to css and the template itself)
 
 201344
 ADMIN
