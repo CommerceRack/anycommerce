@@ -228,21 +228,23 @@ body {
 .categoryList{
 	background-color: #E6E6E6;
     border: 1px double #BBBBBB;
-	padding: 3px;
+	padding: 5px;
 }
 .categoryList > li{
-	width:82px; 
-	height:108px;
+	width:80px; 
+	height: 82px;
 	margin: 2px;
+	overflow:hidden;
+}
+.categoryList .catThumb{
+	margin-bottom: 5px;
 }
 .categoryList .catName {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #BBBBBB;
     font-size: 10px;
-    height: 16px;
-    margin-top: 5px;
-    overflow: hidden;
     text-align: center;
+	padding: 2px;
 }
 /***** Category Page CSS End *****/
 

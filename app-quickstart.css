@@ -202,7 +202,6 @@ and override using classes or id's as needed.
 
 .lineItemProdlist .prodThumb	{margin-right:12px;}
 
-.categoryList > li	{width:150px; height:200px;}
 
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
 
