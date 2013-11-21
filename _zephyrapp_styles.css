@@ -345,7 +345,7 @@ body {
     padding-top: 3px;
 }
 .randomList {
-	height:822px;
+	height:845px;
 	overflow:hidden;
 }
 /***** Homepage CSS End *****/
@@ -377,6 +377,14 @@ body {
 
 
 /***** ProductListTemplate CSS Start *****/
+.productList {
+	width:540px;
+	margin: 0 auto;
+}
+.productList > li {
+	height:255px;
+	margin: 15px;
+}
 .prodListName {
 	color: #0B487F;
 	font-size:11px;
@@ -401,6 +409,30 @@ body {
 .prodListSavings {
 	color:#F05E0F;
 	font-size:11px;
+}
+.prodViewerAddToCartForm{
+	position:absolute;
+	bottom:0px;
+	left:21%;
+}
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.addToCartButton{
+	background: -moz-linear-gradient(center top , #6F6F6F 0%, #464646 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    border-radius: 3px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-top: 3px;
+    padding: 2px 0;
+    text-align: center;
+    width: 85px;
+	font-weight:normal;
+	font-size: 11px;
+}
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.addToCartButton:hover {
+	background:-moz-linear-gradient(center top , #F4720C 0%, #FF3800 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.addToCartButton .ui-button-text {
+	padding:2px;
 }
 /***** ProductListTemplate CSS End *****/
 

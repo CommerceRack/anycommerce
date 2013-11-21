@@ -264,7 +264,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .grpType_PARENT	{display:block; margin-bottom:12px;}
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
 
-.prodViewerAddToCartForm	{margin-bottom:24px;}
+
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
 .variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
 
