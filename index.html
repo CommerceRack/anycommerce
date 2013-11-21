@@ -697,22 +697,18 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
-	
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
-<!-- a sample of how to format an elastic native search in a data-bind -->
-<!--
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
-	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
--->
-<!-- a sample of how to get a 'list' src onto the page. -->
-<!--
-	<ul data-bind="var: list($somelistname.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
--->
-
+	<div id="slideshowContainer" class="clearfix marginBottom displayNoneLandscape displayNonePortrait displayNoneMobile">
+		<div id="slideshowNav"></div>
+		<ul id="slideshow">
+			<li><a href="#" onClick="return showContent('category', {'navcat':'.3packagespecials.proto_paintball_gun_packages'});"><img src='images/holiday_proto_packages_slideshow.jpg' /></a></li>
+			<li><a href="#" onClick="return showContent('category', {'navcat':'.2clearance'});"><img src='images/early_black_friday_sale_slideshow.jpg' /></a></li>
+			<li><a href="#" onClick="return showContent('search',{'KEYWORDS':'spire 260'});"><img src='images/spire260_zephyr.jpg' /></a></li>
+			<li><a href="#" onClick="return showContent('category', {'navcat':'.markers.azodin'});"><img src='images/holiday_azodin_packages_slideshow.jpg' /></a></li>
+			<li><a href="#" onClick="return showContent('category', {'navcat':'.3packagespecials'});"><img src='images/package_deals_slideshow_template.jpg' /></a></li>
+		</ul>
+	</div>
+	<div class="featuredItemHeader">Featured Items</div>
+	<ul data-bind="var: list($homepage_products.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; items_per_page: 25; hide_summary:1; withInventory:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 
 

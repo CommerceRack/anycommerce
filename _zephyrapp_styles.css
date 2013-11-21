@@ -224,6 +224,112 @@ body {
 /***** Main Content Area CSS End *****/
 
 
+/***** Homepage CSS Start *****/
+#slideshowContainer {
+	margin-bottom: 5px;
+    height: 265px;
+    overflow: hidden;
+    position: relative;
+    width: 600px;
+    z-index: 10;
+}
+#slideshow {
+	width: 600px;	
+	height: 284px;
+	position:absolute; 
+	left:0; 
+	top:0;
+	overflow:hidden;
+}
+#slideshowNav {
+    bottom: 5px;
+    right: 10px;
+    position: absolute;
+    text-align: left;
+    z-index: 50;
+}
+#slideshowNav a {
+    background: none repeat scroll 0 0 #333333;
+    border: 2px solid #FE8B21;
+    border-radius: 3px;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    height: 16px;
+    margin: 0 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 15px;
+}
+#slideshowNav a:hover, #nav a.activeSlide {
+    color: #FE8B21;
+}
+#slideshowNav a:focus {
+    outline: medium none;
+}
+#slideshowContainer {
+    margin-bottom: 5px;
+    max-height: 265px;
+    overflow: hidden;
+    position: relative;
+    width: 600px;
+    z-index: 10;
+}
+#slideshowContainer #slideshow {
+    margin: 0;
+    padding: 0;
+}
+#slideshowContainer #slideshow li {
+    float: left;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+#slideshowNav {
+    bottom: 15px;
+    left: 10px;
+    position: absolute;
+    text-align: left;
+    width: 100%;
+    z-index: 50;
+}
+#slideshowNav a {
+    background: none repeat scroll 0 0 #333333;
+    border: 2px solid #FE8B21;
+    border-radius: 3px;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    height: 16px;
+    margin: 0 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 15px;
+}
+#slideshowNav a:hover, #slideshowNav a.activeSlide {
+    color: #FE8B21;
+}
+#slideshowNav a:focus {
+    outline: medium none;
+}
+.featuredItemHeader {
+	background-image: url("images/zs11_h_title_bg-1x25.jpg");
+    color: #FFFFFF;
+    font-family: Arial,Verdana,Sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    height: 22px;
+    margin-bottom: 3px;
+    padding-left: 7px;
+    padding-top: 3px;
+}
+/***** Homepage CSS End *****/
+
+
 /***** Category Page CSS Start *****/
 .categoryList{
 	background-color: #E6E6E6;

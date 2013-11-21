@@ -35,6 +35,17 @@ var store_zephyrapp = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
+				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+					//run slideshow code
+					var $context = $(app.u.jqSelector('#',P.parentID));
+						if (!$('#slideshow', $context).hasClass('slideshowSet')){
+							$('#slideshow', $context).addClass('slideshowSet').cycle({
+								pause:  1,
+								pager:  '#slideshowNav'
+							});
+						}
+					}]);
+				
 				app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
 					var $container = $('#recentlyViewedItemsContainer');
 					$container.show();
