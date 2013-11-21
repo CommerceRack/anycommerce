@@ -344,6 +344,10 @@ body {
     padding-left: 7px;
     padding-top: 3px;
 }
+.randomList {
+	height:822px;
+	overflow:hidden;
+}
 /***** Homepage CSS End *****/
 
 

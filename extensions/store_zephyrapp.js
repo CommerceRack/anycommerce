@@ -16,9 +16,21 @@
 
 ************************************************************** */
 
+// Adding shuffle into jquery options
+(function($){
+ 
+        $.fn.shuffle = function () {
+        var j;
+        for (var i = 0; i < this.length; i++) {
+            j = Math.floor(Math.random() * this.length);
+            $(this[i]).before($(this[j]));
+        }
+        return this;
+    };
+ 
+})(jQuery);
 
 
-//    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
 var store_zephyrapp = function() {
 	var theseTemplates = new Array('');
@@ -64,7 +76,15 @@ var store_zephyrapp = function() {
 					var topNavcat = "."+breadcrumb[1];
 					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').hide();
 					}]);	
-				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
+			
+				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+
+					$('.randomList', $context).each(function(){
+							app.ext.store_zephyrapp.u.randomizeList($(this));
+							});
+					}]);
+					
 				r = true;
 
 				return r;
@@ -101,6 +121,10 @@ var store_zephyrapp = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			randomizeList : function($list){
+				$list.children().shuffle();
+				}
+		
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
