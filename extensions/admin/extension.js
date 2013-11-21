@@ -2300,6 +2300,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
 						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
 						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
 						}
 					if($menu.children().length)	{
 						$menu.menu();
