@@ -604,7 +604,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 		<div id='recentlyViewedItemsContainer' class="displayNone">
 			<img src="images/zs_recent_header-183x26.gif"/>
 			<div class='marginBottom'>
-				<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplateRecentlyViewed; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplateRecentlyViewed; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productListRecentlyViewed'></ul>
 			</div>
 		</div>
 		<a href="#" ><img class="marginBottom" src="images/dye_2014_sidebanner_template.jpg"/></a>
@@ -804,8 +804,9 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 <li id='productListTemplateRecentlyViewed' class="recentViewList" class='loadingBG' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
-		<h6 class="recentViewProdName" data-bind='var: product(zoovy:prod_name); format:text;'></h6>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
+		<div class="recentViewProdName" data-bind='var: product(zoovy:prod_name); format:text;'></div>
+		<span class="recentViewProdPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price;'></span>|
 		<div class="clear"></div>
 	</div>
 </li>

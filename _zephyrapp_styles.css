@@ -201,11 +201,28 @@ body {
 #sideBarRight .marginBottom{
 	margin-bottom: 9px;
 }
-#recentlyViewedItemsContainer{
-	height: 156px;
-	width:177px;
-	border:1px solid #CCCCCC;
+.productListRecentlyViewed {
 	padding:2px;
+	border:1px solid #CCCCCC;
+	width:177px;
+	min-height:156px;
+}
+.productListRecentlyViewed li {
+	height:50px;
+	margin: 2px 0px 0px;
+}
+.recentViewList .prodThumb {
+	float:left;
+	margin-right: 4px;
+}
+.recentViewProdName {
+    color: #3D1F00;
+    font-size: 10px;
+}
+.recentViewProdPrice {
+    color: #D36101;
+    font-size: 10px;
+	padding-right:5px;
 }
 /***** Sidebar Right CSS End *****/
 
