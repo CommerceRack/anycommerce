@@ -163,6 +163,9 @@ body {
 	width: 185px;
 	float: left;
 }
+#sideBarLeft .marginBottom{
+	margin-bottom: 9px;
+}
 .sideBarCategories {
 	padding: 4px;
 }
@@ -189,6 +192,41 @@ body {
 }
 .sideBarCategories .subCatList {
     border: 0 none;
+}
+.sideBarLogin {
+	background: #cbe3f7;
+	width: 183px;
+	height: 68px;
+}
+.sideBarLogin div {
+    height: 18px;
+    padding-bottom: 3px;
+}
+.sideBarLogin label {
+    color: #153F64;
+    float: left;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: right;
+    width: 58px;
+}
+.sideBarLogin fieldset {
+    border: 0 none;
+    margin: 0;
+    padding: 3px 6px;
+    width: 170px;
+}
+.sideBarLogin input {
+    border: 1px solid #A5A5A5;
+    float: right;
+    height: 14px;
+    padding: 1px 0;
+    width: 94px;
+}
+.sideBarLogin .sideBarSignIn {
+    border: medium none;
+    height: 17px;
+    width: 58px;
 }
 /***** Sidebar Left CSS End *****/
 
@@ -333,7 +371,7 @@ body {
 #slideshowNav a:focus {
     outline: medium none;
 }
-.featuredItemHeader {
+.listHeader {
 	background-image: url("images/zs11_h_title_bg-1x25.jpg");
     color: #FFFFFF;
     font-family: Arial,Verdana,Sans-serif;
@@ -348,6 +386,73 @@ body {
 	height:845px;
 	overflow:hidden;
 }
+/***** Copied CSS Start *****/
+.info-wrapper {
+	height: auto;
+	width: 595px;
+	margin: auto;
+	padding: 0 0 2em 0;
+	position: relative;
+}
+.info {
+	max-height: 300px;
+	height: 10000px;
+	padding: 0em 0em -2em 1em;
+	border-bottom: solid 1px #fff;
+	border-radius: 0 0 1em 1em;
+	overflow: hidden;
+	position: relative;
+	transition: 1s;
+}
+.info:after, .aftershadow {
+	bottom: 0;
+	width: 99%;
+	height: 3em;
+	border-radius: 0 0 1em 1em;
+	position: absolute;
+	content: '';
+}
+.aftershadow {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00cccccc, endColorstr=#ffcccccc);
+}
+.info-wrapper input[type=checkbox] {
+	display: none;
+}
+.info-wrapper label {
+	left: 50%;
+	bottom: .1em;
+	width: 9em;
+	height: 1.7em;
+	margin:  0 0 0 -4.5em;
+	border-bottom: solid 1px #fff;
+	border-radius: 0 0 1em 1em;
+	overflow: hidden;
+	position: absolute;
+	font: 800 1em/1.5em Arial;
+	text-align: center;
+	text-shadow: 0 1px 0 #fff;
+	cursor: pointer;
+}
+.info-wrapper label .more { margin: -.1em 0 .35em; transition: 1s; }
+.info-wrapper .switch {
+	width: 4em;
+	display: inline-block;
+}
+.info-wrapper input[type=checkbox]:checked ~ .info {
+	max-height: 2840px;
+}
+.info-wrapper input[type=checkbox]:checked + label .more {
+	margin-top: -1.65em;
+}
+.info-wrapper h2 {
+    color: #FF7F00;
+    font-size: 13px;
+}
+.info-wrapper p {
+    font-size: 12px;
+    margin: 10px;
+}
+/***** Copied CSS End *****/
 /***** Homepage CSS End *****/
 
 
