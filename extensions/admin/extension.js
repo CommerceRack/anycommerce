@@ -2287,6 +2287,38 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					}
 				},
 				
+				//pass in HOSTTYPE as data.
+				appHostButtons : function($tag,data)	{
+					var $menu = $("<menu \/>").hide();
+					
+					if(data.value == 'SITEPTR')	{
+						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						}
+					
+					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						}
+					if($menu.children().length)	{
+						$menu.menu();
+						$tag.append($menu); //so menu appears where it should.
+						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
+						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
+						$button.on('click',function(){
+							$menu.show();
+							$( document ).one( "click", function() {
+								$menu.hide();
+								});
+							return false;
+							})
+						$tag.append($button);
+						}
+					else	{
+						//host/domain isn't app based.
+						}
+					},
 				
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {

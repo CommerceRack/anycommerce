@@ -1517,7 +1517,9 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
 				containerFileUploadShow : function($btn){
-					$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
+					if($btn.is('button'))	{
+						$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
+						}
 
 					if($btn.data('mode') == 'Site')	{
 						var domainname = $btn.closest("[data-domainname]").data('domainname');
@@ -1526,11 +1528,11 @@ var $input = $(app.u.jqSelector('#',ID));
 								//this domain has a project. open the editor. that occurs later as long as pass=true.
 								}
 							else	{
-								$btn.button('disable').attr('title','Upload not available because no project exists for this domain.');
+								$btn.hide();
 								}
 							}
 						else 	{
-							$btn.button('disable').attr('title','Upload not available because domain ['+domainname+'] data not in memory.');
+							$btn.hide();
 							}	
 						}
 
@@ -1762,7 +1764,9 @@ else	{
 
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{
-					$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
+					if($btn.is('button'))	{
+						$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
+						}
 					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
 
 						if($btn.data('mode') == 'Campaign')	{
@@ -1790,8 +1794,9 @@ else	{
 
 				templateEditorShow : function($btn)	{
 //					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
-					$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
-					
+					if($btn.is('button'))	{
+						$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
+						}
 				
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
 						var pass = true;

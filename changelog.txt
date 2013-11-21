@@ -24,6 +24,7 @@ ADMIN
 	bug fix - UPS reapply > form submit > didn't close dialog or show success message in a viewable location. does now.
 	enhancement - ticket updates and file attach will update ticket panel to more clearly indicate a change occured.
 	enhancement - add a 'return' filter to orders interface.
+	enhancement - supply chain interface allows creation of batch jobs for get inventory, process orders or update tracking for a given supplier (or a group of suppliers).  Each job/supplier is 1 batch job
 
 
 QUICKSTART

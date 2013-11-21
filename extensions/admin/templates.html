@@ -578,31 +578,8 @@ SETUP PAGE TEMPLATE
 	</td>
 	<td></td>
 	<td class='alignRight width50'>
-<!--	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button> -->
-	<span  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;"><!-- buttons not working yet.  -->
-		<button data-app-event='admin_templateEditor|templateChooserShow' data-hidebuttontext='1' data-mode='Site'>Choose a Template</button>
-		<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
-<!-- buttons locked UNLESS a project is in place -->
-		<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site' data-hidebuttontext='true'>Download Zip of Template</button>
-		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
-<!-- end project dependant buttons -->
-	</span>
-
-
-	<!-- ### when this is upgraded to delegated events, change the two buttons below to one custom render format w/ a button in it -->
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITEPTR;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	<!-- ## 201401 -> APP is no longer a supported HOSTTYPE. remove this button at indicated release. -->
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:APP;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	
 	<button data-app-event="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
+	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin;" class='positionRelative'></span>
 	</td>
 </tr>
 
