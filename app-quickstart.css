@@ -18,7 +18,12 @@ span.wait	{display:inline-block;}
 /******* global styles - added for cross-browser uniformity or usability ******/
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+
 button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
+
 p	{margin-bottom:12px;}
 
 
@@ -440,21 +445,17 @@ CART
 
 ***************************************************/
 
-.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
-.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
-.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
+.cartStuffContainer	{width:100%; margin:0 0 1em 0;}
+#cartStuffList	{list-style:none; margin:0; padding:0; font-size:.85em;}
+#cartStuffList li	{display:block; margin:0 0 1em 0;}
+.cartButtons	{text-align:center;}
+.cartButtons span	{display:block; margin-bottom:.5em;}
+.cartSummaryTotalsContainer h2	{font-size:.8em;} 
 
-.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
-.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
-
-.checkoutButtonsContainer > span	{display:block; float:left; margin:0 12px 12px 0;}
-
-.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
-
-.cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
-
-.checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
-
+/* cart product list */
+@media only screen and (max-width: 400px) {
+	.cartQuantityInput	{clear:both;} /* this is wide, so put it on it's own line so that it doesn't wrap (only in small screens) */
+	}
 
 
 
@@ -537,3 +538,13 @@ CHECKOUT
 
 
 .debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+
+
+
+
+@media only screen and (min-width: 640px) {
+	#cartTemplateShippingContainer	{width:49%;}
+	#cartTemplateCostSummary	{float:right; width:49%;}
+	.cartButtons span	{float:right; margin:0 0 .4em .4em;}
+	.cartButtons .continueShoppingSpan	{float:left; margin:0;}
+	}
