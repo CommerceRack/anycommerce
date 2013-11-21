@@ -355,7 +355,7 @@ var admin_support = function() {
 				},
 			
 			platformInfoViewChangelog : function($ele,p)	{
-				linkOffSite('https://raw.github.com/zoovy/AnyCommerce-Development/'+$ele.closest('tr').data('key')+'/changelog.txt')
+				linkOffSite('https://raw.github.com/zoovy/AnyCommerce-Development/'+$ele.closest('tr').data('branch')+'/changelog.txt','',true)
 				},
 
 			adminTicketCreateShow : function($ele,p)	{

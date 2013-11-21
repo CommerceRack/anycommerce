@@ -4288,16 +4288,21 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						});
 					}
 				}, //rewriteLink
-
-			linkOffSite : function(url,pretty){
+//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true of being triggered by a click.
+			linkOffSite : function(url,pretty,skipInterstitial){
 				app.u.dump("BEGIN admin.u.linkOffSite to "+url);
 				if(url)	{
+					if(skipInterstitial)	{
+						window.open(url);
+						}
+					else	{
 //** 201344 -> FF now treating window.open w/ no params as a popup and requiring auth. 
-					pretty = pretty || "<br>"+url;
-					$("<div>",{'title':'Link offsite'}).append("<a href='"+url+"' target='_blank'>click here to continue to </a> "+pretty).on('click','a',function(){
-						$(this).closest('.ui-dialog-content').dialog('close');
-						}).dialog({'modal':true});
-//					window.open(url);
+						pretty = pretty || "<br>"+url;
+						$("<div>",{'title':'Link offsite'}).append("<a href='"+url+"' target='_blank'>click here to continue to </a> "+pretty).on('click','a',function(){
+							$(this).closest('.ui-dialog-content').dialog('close');
+							}).dialog({'modal':true});
+						}
+	//					window.open(url);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.linkOffSite, no URL passed.","gMessage":true});
@@ -5769,14 +5774,14 @@ if(domainname)	{
 	if($btn.data('mode') == 'host')	{
 		var hostname = $btn.closest("[data-hostname]").data('hostname');
 		if(hostname)	{
-			linkOffSite("http://"+hostname+"."+domainname+"/");
+			linkOffSite("http://"+hostname+"."+domainname+"/",'',true);
 			}
 		else {
 			$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
 			}
 		}
 	else	{
-		linkOffSite("http://www."+domainname+"/");
+		linkOffSite("http://www."+domainname+"/",'',true);
 		}
 	}
 else	{
@@ -6140,7 +6145,7 @@ else	{
 				$btn.button();
 				$btn.off('click.linkOffSite').on('click.linkOffSite',function(){
 					if($btn.data('url'))	{
-						linkOffSite($btn.data('url'));
+						linkOffSite($btn.data('url'),'',true);
 						}
 					else	{
 						$btn.button('disable');

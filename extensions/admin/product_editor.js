@@ -541,7 +541,7 @@ $target.anydelegate();
 
 			link2eBayByID : function($tag,data)	{
 				$tag.off('click.link2eBayByID').on('click.link2eBayByID',function(){
-					linkOffSite("http://www.ebay.com/itm/"+data.value);
+					linkOffSite("http://www.ebay.com/itm/"+data.value,'',true);
 					});
 				},
 
@@ -2870,7 +2870,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 				app.u.dump("BEGIN admin_prodEdit.e.viewProductOnWebsite");
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid)	{
-					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/");
+					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/",'',true);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});

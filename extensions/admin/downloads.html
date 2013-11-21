@@ -32,7 +32,7 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 <!-- order manager box -->
 		<h4>Release: 2013.42 - (<span class='lookLikeLink' data-docid='51349' data-app-click='admin_support|showHelpDocInDialog' >Release Notes</span>)</h4>				
 		<form action="#" method="GET" target="_blank" data-jqueryoverride="true">
-		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZIDsetup-v201342.msi'); return false;" class="button2" type="submit">Download Now</button>
+		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZIDsetup-v201342.msi','',true); return false;" class="button2" type="submit">Download Now</button>
 		</form>	
 
 	</div>
@@ -48,7 +48,7 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 	<div class='marginBottom'>
 		<h3>Zoovy Network Sync Manager</h3>
 		<p class='hint'>A windows service that automatically synchronizes your local databases with Zoovy servers. This is intended for clients running network databases and manages the synchronization process automatically. </p>
-		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZNSMsetup-v201342.msi'); return false;" class="applyButton">Download Sync Manager</button>
+		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZNSMsetup-v201342.msi','',true); return false;" class="applyButton">Download Sync Manager</button>
 	</div>
 	
 	<p>If you do not currently have a supported database installed on your server, you will also need to select a database that fits your network environment. A discussion of network databases, and deployment options along with frequently asked questions is located in:</p>
@@ -58,11 +58,11 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 	
 	<ul>
 		<li>
-			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/mysql/5.1.html'); return false;">MySQL 5.1 Community Edition</a>
+			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/mysql/5.1.html','',true); return false;">MySQL 5.1 Community Edition</a>
 			<span class="hint">A high performance free database, recommended!</span>
 		</li>
 		<li>
-			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/connector/net/5.2.html'); return false;">MySQL 5.2 Connector/Net</a>
+			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/connector/net/5.2.html','',true); return false;">MySQL 5.2 Connector/Net</a>
 			<span class="hint">Necessary for the server, and must be installed on each client as well.</span>
 		</li>
 	</ul>
@@ -70,7 +70,7 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 	<h3>Microsoft SQL Server 2008</h3>
 	<ul>
 		<li>
-			<a href="http://www.microsoft.com/express/sql/default.aspx">Microsoft SQL Server 2008</a>
+			<a href="http://www.microsoft.com/express/sql/default.aspx" target="_blank">Microsoft SQL Server 2008</a>
 			<span class="hint">The free version of SQL Server supports up to 4gb databases and 1gb of memory.</span>
 		</li>
 	</ul>
@@ -92,15 +92,15 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 		All applications require the Windows Installer 3.1, and Microsoft .NET 3.5 sp1 framework to be installed for proper operation.
 		Please use the links to download:</p>
 		<ul class='marginBottom'>
-			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=5A58B56F-60B6-4412-95B9-54D056D6F9F4&amp;displaylang=en">Windows Installer 4.5</a></li>
-			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&amp;displaylang=en">Microsoft .Net 3.5 sp1 Download Site</a></li>
+			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=5A58B56F-60B6-4412-95B9-54D056D6F9F4&amp;displaylang=en" target="_blank">Windows Installer 4.5</a></li>
+			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&amp;displaylang=en" target="_blank">Microsoft .Net 3.5 sp1 Download Site</a></li>
 		</ul>
 		
 		<h3>Network Database Installation</h3>
 		<p class='hint'>Installation documentation can be found: 
 		<ul>
 			<li><span class='lookLikeLink' data-docid='50491' data-app-click='admin_support|showHelpDocInDialog'>Webdoc #50491</span>.
-			<div class='hint'>Warning: Network Database installations are difficult multi-step processes with lots of room for mistakes. We encourage companies who do not employ a fulltime database administrator (which is different than a "Tech Guy") to consult with our <a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK">Geek Services</a> to deploy your database. In order to speed up the installation appointment, please view our <span class='lookLikeLink' data-docid='51357' data-app-click='admin_support|showHelpDocInDialog'>Webdoc #51357</span> prior to your appointment.</div>
+			<div class='hint'>Warning: Network Database installations are difficult multi-step processes with lots of room for mistakes. We encourage companies who do not employ a fulltime database administrator (which is different than a "Tech Guy") to consult with our <a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" target="_blank">Geek Services</a> to deploy your database. In order to speed up the installation appointment, please view our <span class='lookLikeLink' data-docid='51357' data-app-click='admin_support|showHelpDocInDialog'>Webdoc #51357</span> prior to your appointment.</div>
 			</li>
 		</ul>
 		
@@ -109,7 +109,7 @@ If a new panel is needed, just add a new section w/ an h2 and one other child (a
 		<p class='hint'>
 		Only one database may be active per account. If you have multiple sites
 		or remote users you will need to use a VPN solution to connect them.<br>
-		<a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK">Zoovy Geek Services</a> 
+		<a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" target="_blank">Zoovy Geek Services</a> 
 		can assist you with multi-site VPN deployments.
 		</p>
 		
