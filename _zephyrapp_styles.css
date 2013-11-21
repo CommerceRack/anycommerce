@@ -375,3 +375,32 @@ body {
 }
 /***** Category Page CSS End *****/
 
+
+/***** ProductListTemplate CSS Start *****/
+.prodListName {
+	color: #0B487F;
+	font-size:11px;
+	line-height:14px;
+}
+.prodListName:hover {
+	color:#FF7F00;
+}
+.prodListPricing {
+    height: 30px;
+    margin: 2px 0;
+}
+.prodListPrice {
+	font-size: 12px;
+	font-weight: bold;
+	color: #2c2c2c;
+	line-height:15px;
+}
+.prodListPrice span {
+	color:#D11919;
+}
+.prodListSavings {
+	color:#F05E0F;
+	font-size:11px;
+}
+/***** ProductListTemplate CSS End *****/
+
