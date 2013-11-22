@@ -1702,11 +1702,13 @@ this will likely become more flexible in the future. ###
 				<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 			</div>
 			
-			<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
-				Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
-				Call 888-428-2967 or 
-					<a href="#" onClick="app.ext.cubworld.a.showPhoneOrderForm($(this).attr('data-pid')); return false;" data-bind="var:product(pid); format:assignAttribute; attribute:data-pid;">click here</a> 
-				to contact us - we will get in touch with you shortly.
+			<div>
+				<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
+					Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
+					Call 888-428-2967 or 
+						<a href="#" onClick="app.ext.cubworld.a.showPhoneOrderForm($(this).attr('data-pid')); return false;" data-bind="var:product(pid); format:assignAttribute; attribute:data-pid;">click here</a> 
+					to contact us - we will get in touch with you shortly.
+				</div>
 			</div>
 		</div>
 		
