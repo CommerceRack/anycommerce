@@ -666,6 +666,13 @@ has to be within the fieldset to for data-table to work right.
 		</tr>
 		<tr>
 			<td class='valignTop'>
+			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_LISTING_SYNC','%vars':{}}); return false; ">Elastic Rebuild (Private)</button></td>
+			<td class='valignTop small'>
+			eBay Listing Complete Download (note: do not launch any new listings while this is running, eBay limits this to once per day per token)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
 			<button onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_SALESRANK','%vars':{}}); return false; ">Update SalesRanks</button></td>
 			<td class='valignTop small'>
 			Goes through all products which have customer reviews and updates zoovy:prod_salesrank

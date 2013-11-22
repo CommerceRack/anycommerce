@@ -595,7 +595,7 @@ app.ext.admin.u.handleAppEvents($order);
 					$('li',$menu).hide();  //hide all the items in the base type menu. show as needed. li is used to hide (as opposed to using anchor) otherwise extra spacing occurs
 					//done means done. no adjusting price or quantity at this point.
 					if(invDetail.BASETYPE == "DONE")	{
-						$tr.attr('title','This item has been shipped. It is no longer editable');
+						$tr.attr('title','This item is DONE. It is no longer editable');
 						$('button',$tr).button('disable');
 						$(':input',$tr).prop('disabled','disabled');
 						}
