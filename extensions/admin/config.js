@@ -115,7 +115,7 @@ var admin_config = function() {
 					'_cmd':'adminConfigDetail',
 					'notifications' : true,
 					'_tag':	{
-						'datapointer' : 'adminConfigDetail',
+						'datapointer' : 'adminConfigDetail|notifications',
 						'callback':'anycontent',
 						'translateOnly' : true,
 						'jqObj' : $target.find("div:first")
@@ -928,7 +928,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								var $updateTR = $(this);
 								if($updateTR.hasClass('rowTaggedForRemove'))	{} //ignore this row, it's being deleted.
 								else	{
-									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(app.u.getWhitelistedObject($tr.data(),['event','verb','url','email'])));
+									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(app.u.getWhitelistedObject($updateTR.data(),['event','verb','url','email'])));
 									}
 								});
 							
