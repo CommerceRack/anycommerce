@@ -860,8 +860,9 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
-		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+		<div class='prodThumbContainer'>
 			<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='150' />
+			<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodListTagsContainer'></div>
 		</div>
 
 		<div class="prodListName" data-bind='var: product(zoovy:prod_name); format:text;'></div>
