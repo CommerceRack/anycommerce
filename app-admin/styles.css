@@ -1150,7 +1150,7 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 NOTIFICATIONS
 */
 
-.notificationDatatableInputs	{min-width:220px;}
+.notificationDatatableInputs	{min-width:40%;}
 
 
 /*
