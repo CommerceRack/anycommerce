@@ -31,6 +31,8 @@ ADMIN
 	feature - plugins > communication > apple/ios added. (for native app push notifications)
 	feature - plugins > cloud services > Amazon Simple Email Services
 	feature - setup > notifications. allows for events to trigger actions (currently supports customer inquiry. more to come...)
+	feature - utilities > support tools > ebay listing sync button. Complete download of ebay listings. [201346.i]
+	bug fix - setup > shipping > ups.  checkboxes under 'rating services' header didn't save. [201346.i]
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
