@@ -103,7 +103,7 @@ var admin_customer = function() {
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'CRM Manager',
 					'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
-					'thead' : ['','id','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
+					'thead' : ['','ID','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;",
 					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton'>Add Ticket</button>"],	
 					'controls' : app.templates.crmManagerControls,
@@ -207,7 +207,7 @@ var admin_customer = function() {
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
-					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Reviews List<\/button><button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;",
 					'cmdVars' : {
@@ -901,17 +901,16 @@ else	{
 			crmAdminTicketEscalationToggle : function($ele,p)	{
 
 				var tktcode = $ele.closest("[data-tktcode]").data('tktcode');
-//escalateTicket is what gets passed as the value for escalate on the update. so if the ticket is NOT escalated already, escalateTicket is set to 1 and, when passed, the ticket is escalated.
 				p.preventDefault();
 				if(tktcode)	{
 					$ele.button('disable');
-					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$ele.data('escalateTicket')],{'callback':function(rd){
+					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+(app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? 0 : 1)],{'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							app.u.throwMessage(rd);
 							}
 						else	{		
 							$ele.button('enable');
-							$ele.data('escalateTicket') === 1 ? $ele.button({ label: "De-Escalate" }).data('escalateTicket',0) : $ele.button({ label: "Escalate" }).data('escalateTicket',1) ;
+							app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? $ele.button({ label: "De-Escalate" }) : $ele.button({ label: "Escalate" });
 							}
 						}},'immutable');
 						

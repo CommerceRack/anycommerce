@@ -19,9 +19,9 @@ a.file	{background:url(/biz/images/trial/file_icon-17x17.png) no-repeat; padding
 div.zbutton_group	{text-align:right;}
 
 
-/* used in sitebuilder for category picture placeholder.
+/* used in sitebuilder for category picture placeholder. */
 .navcatThumbnailImagePlaceholder	{background:url(images/camera_icon-26x21.gif) no-repeat; text-decoration:none; line-height:21px;}
- */
+
 
 /* 'link selected' is used where you have a list of links and, once one is clicked, the selected link needs to highlight.
 An example of this would be in the sitebuilder when a layout or email template has DIV's present   */

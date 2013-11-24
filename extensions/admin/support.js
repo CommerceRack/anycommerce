@@ -101,18 +101,21 @@ var admin_support = function() {
 				},
 
 
+
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
-				if(app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version])	{
-					app.ext.admin.vars.versionMetaData.youtubeVideoID = app.ext.admin.vars.versionMetaData.youtubeVideoIDs[app.model.version];
-					}
-					
+				
 				var $D = app.ext.admin.i.dialogCreate({
 					'title':'Platform Information',
 					'templateID':'platformInfoTemplate',
-					'data' : app.ext.admin.vars.versionMetaData
+					'data' : app.ext.admin.vars.versionData
 					}).addClass('objectInspector');
 				$D.attr('id','platformInformation');
+//populate the video section w/ the current release data.
+				$("[data-app-role='platformInfoVideoContainer']").anycontent({
+					data : app.ext.admin.vars.versionData[0]
+					})
+				
 				var $platInfo = $("[data-app-role='platformInfoContainer']",$D);
 				$platInfo.showLoading({'message':'Fetching platform data'});
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
@@ -121,18 +124,14 @@ var admin_support = function() {
 						$D.anymessage({'message':rd});
 						}
 					else	{
+						//add platform info to the top of the section.
+						$("[data-app-role='platformInfoDetailsContainer']",$platInfo).prepend(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release}))).prepend("<h3>Platform Information<\/h3>");
 						
-						$platInfo.append("<h3>Platform Information<\/h3>");
-						$platInfo.append(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release})));
-						$platInfo.append("<h3>Video History<\/h3>");
-						for(var index in app.ext.admin.vars.versionMetaData.youtubeVideoIDs)	{
-							$platInfo.append($("<div class='lookLikeLink' onclick='linkOffSite(\"http://www.youtube.com/watch?v="+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]+"\"); return false;' title='http://www.youtube.com/watch?v="+app.ext.admin.vars.versionMetaData.youtubeVideoIDs[index]+"'> &#187; "+index+"<\/div>"))
-							}
-						app.u.handleAppEvents($D);
 						}
 					}}},'mutable');
 				app.model.dispatchThis('mutable');
 				$D.dialog('option','modal',false);
+				$D.anydelegate();
 				$D.dialog('open');
 				},
 
@@ -264,6 +263,7 @@ var admin_support = function() {
 				r += "\ndevice id: "+app.vars.deviceid;
 				r += "\nuser id: "+app.vars.userid;
 				r += "\nlogged in to: "+app.vars.domain;
+				r += "\ndomain: "+location.domain;
 				r += "\nbrowser and OS: "+app.vars.passInDispatchV;
 				r += "\n\nuserAgent: "+navigator.userAgent;
 				r += "\nappVersion: "+navigator.appVersion;
@@ -292,18 +292,79 @@ var admin_support = function() {
 						app.ext.admin_support.a.showHelpDocInDialog(docID);
 						});
 					});
-				}
+				},
+
+
+//is a separate function because it's called by both the ticket DMI and the media library.
+			loadTicketContent : function($context,ticketID,uuid,q)	{
+				
+				if($context instanceof jQuery)	{
+					if(ticketID && uuid)	{
+	
+						$context.showLoading({'message':'Fetching ticket details'}).data({'ticketid':ticketID, 'uuid':uuid});
+
+//Clear the follows and attachment lists, but not the rest of the panel.  That way, anything in the message input is preserved.
+						$("[data-app-role='ticketAttatchmentList']",$context).empty();
+						$("[data-app-role='ticketFollowupList']",$context).empty();
+						
+						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminTicketDetail',
+							'ticketid':ticketID,
+							'_tag':	{
+								'datapointer' : 'adminTicketDetail|'+ticketID,
+								'callback': 'anycontent',
+								'translateOnly' : true,
+								'jqObj' : $context,
+								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
+								}
+							},q);
+						}
+					else	{
+						$context.anymessage({"message":"In admin_support.e.adminTicketDetailShow, unable to ascertain ticketID ["+ticketID+"] and/or UUID ["+uuid+"], both of which are required.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_support.e.adminTicketDetailShow, $context in not a valid jquery instance.","gMessage":true});
+					}
+
+				},
+
 			
 			}, //u
 
 
 		e : {
 
+			platformInfoWatchVideo : function($ele,p)	{
+				var data = $ele.closest("[data-youtubevideoid]").data();
+				if(data.youtubevideoid)	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().anycontent({
+						data : data,
+						translateOnly: true
+						});
+					}
+				else	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().show().anymessage({
+						'message' : 'No video present for this release',
+						'errtype' : 'warn',
+						'showCloseButton' : false,
+						'persistent' : true
+						})
+					}
+				},
+			
+			platformInfoViewChangelog : function($ele,p)	{
+				linkOffSite('https://raw.github.com/zoovy/AnyCommerce-Development/'+$ele.closest('tr').data('branch')+'/changelog.txt','',true)
+				},
+
 			adminTicketCreateShow : function($ele,p)	{
 				var $D = app.ext.admin.i.dialogCreate({
 					'title' : 'Create a New Ticket',
 					'templateID' : 'supportTicketCreateTemplate',
-					'data' : {},
+					'data' : {
+						'domain' : 'http://'+app.vars.domain
+						},
 					});
 				
 				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
@@ -327,7 +388,9 @@ var admin_support = function() {
 						if(sfo[index] && index != 'description' && index.indexOf('_tag') < 0){messagebody += "\n"+index+": "+sfo[index]}
 						}
 					messagebody += app.ext.admin_support.u.gatherIntel();
-					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
+// ** 201346 -> w/ a hidden input, if an apostrophe is in messagebody, everything after it gets dropped.
+//					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
+					$form.append($("<textarea \/>").attr('name','body').val(messagebody).hide());
 					app.ext.admin.a.processForm($form,'immutable');
 					app.model.dispatchThis('immutable');
 
@@ -370,20 +433,23 @@ var admin_support = function() {
 				p.preventDefault();
 				var
 					$form = $ele.closest('form'),
-					$panelContents = $ele.closest('.ui-widget-anypanel');
+					$panel = $ele.closest('.ui-widget-anypanel');
 				
 				if(app.u.validateForm($form))	{
-					$panelContents.showLoading({'message':'Updating ticket'});
-					app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
-						$panelContents.hideLoading();
+					$panel.showLoading({'message':'Updating ticket'});
+					app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
+						$panel.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd});
 							}
 						else	{
-							$form.empty().anymessage({'message':app.u.successMsgObject('Ticket '+$panelContents.data('ticketid')+' has been updated')})
+							$form.anymessage({'message':app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
+							$("textarea",$form).val(''); //clear the values from the text areas.
 							}
 						}},'immutable');
-						app.model.dispatchThis('immutable');
+					//refresh the ticket.
+					app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
+					app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles displaying errors.
 				
@@ -456,24 +522,12 @@ app.model.dispatchThis('mutable');
 
 					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'supportTicketDetailTemplate',
-						'panelID' : 'task_'+ticketID,
+						'panelID' : 'ticket_'+ticketID,
 						'header' : 'Edit Ticket: '+ticketID
 						});
-					$panel.showLoading({'message':'Fetching ticket details'}).data({'ticketid':ticketID, 'uuid':uuid})
-					app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
-					app.model.addDispatchToQ({
-						'_cmd':'adminTicketDetail',
-						'ticketid':ticketID,
-						'_tag':	{
-							'datapointer' : 'adminTicketDetail|'+ticketID,
-							'callback': 'anycontent',
-							'translateOnly' : true,
-							'jqObj' : $panel,
-							'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
 
+					app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
+					app.model.dispatchThis('mutable');
 
 					}
 				else	{

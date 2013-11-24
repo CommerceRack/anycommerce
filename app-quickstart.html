@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201344.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -206,7 +206,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
 
-	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(path); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
 
@@ -676,18 +676,12 @@ if you change these, you should move them above this comment so that when you (o
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='companyTemplate' class='clearfix loadingBG'>
+<div id='companyTemplate' class='clearfix'>
 
 	<div class='sideline' >
 <nav id='companyNav'>
 <ul class='listStyleNone noPadOrMargin'>
-	<li><a href='#company?show=about'>About Us</a></li>
-	<li><a href='#company?show=contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'>FAQ</a></li>
-	<li><a href='#company?show=payment'>Payment Policy</a></li>
-	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
-	<li><a href='#company?show=return'>Return Policy</a></li>
-	<li><a href='#company?show=shipping'>Shipping Information</a></li>
+<!-- these are generated via javascript, based on the myRIA.pages object. -->
 </ul>
 </nav>
 	</div>
@@ -1010,18 +1004,17 @@ So the cart template should contain these two elements and the extension should 
 <div id='cartTemplate' class='loadingBG'>
 
 <form id='cartTemplateForm' action='#' onSubmit='return false'>
-<table class='cartContainer'>
-<tr>
-	<td class='cartStuffContainer'>
+
+<div class='cartStuffContainer'>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
-	</td>
+</div>
 
-	<td class='cartSummaryTotalsContainer'>
+<div class='cartSummaryTotalsContainer'>
 	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
-		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
-		<div class='cartSummaryContainer'>
+		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding'>Cart Totals</h2>
+		<div class='cartSummaryContainer stdPadding'>
 
-<section id='cartTemplateCostSummary' class='cartSummary'>
+<section id='cartTemplateCostSummary' class='cartSummary marginBottom'>
 
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 
@@ -1039,48 +1032,43 @@ So the cart template should contain these two elements and the extension should 
 
 </section>
 
-<section id='cartTemplateShippingContainer'>
+<section id='cartTemplateShippingContainer' class='marginBottom'>
 	<h3>Shipping:</h3>
+
+	<div class='cartZipCodeContainer marginBottom'>
+		<label for='data-ship_zip'>Zip/Postal Code:</label>
+		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+			app.ext.store_cart.u.updateCartSummary();
+			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+			app.model.dispatchThis('immutable');"  />
+	</div>
+
 	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
 </section>
 
-<section class='stdMargin'>
+<section class='marginBottom'>
 
-	<div class='cartZipCodeContainer'>
-	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
-	app.ext.store_cart.u.updateCartSummary();
-	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-	app.model.dispatchThis('immutable');"  />
-	</div>
-
-
-
-	<!-- some buttons that are alternatives to checkout. fewer is better -->
-	<menu class='cartAltButtonsContainer noPadOrMargin'>
-	<button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button>
-	</menu>
-
-	<div class='checkoutButtonsContainer'>
-
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
-
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
-
-		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
-
-	</div>
+	
 
 </section>
 
 		</div>
-	</div>
-	</td>
-</tr>
+		<div class='ui-state-default cartButtons stdPadding clearfix'>
+			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
+			<span class='continueShoppingSpan'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
+	
+			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+	
+			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+	
+			<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
+	
+			<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+	
+		</div>
 
-</table>
+	</div>
+</div>
 </form>
 </div><!-- /cartTemplate -->
 

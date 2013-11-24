@@ -37,7 +37,7 @@ app.rq.push(['extension',0,'admin_reports','extensions/admin/reports.js']);
 app.rq.push(['extension',0,'admin_batchJob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',0,'admin_customer','extensions/admin/customer.js']);
 app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']);
-app.rq.push(['extension',1,'admin_user','extensions/admin/user.js']);
+app.rq.push(['extension',0,'admin_user','extensions/admin/user.js']);
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 app.rq.push(['extension',0,'admin_trainer','extensions/admin/trainer.js']); //load in pass 0 for local testing.
 
@@ -147,7 +147,7 @@ app.u.initMVC = function(attempts){
 		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication. note this is NOT app.rq
 		var tmp = new zController(app);
 //instantiate wiki parser.
-		myCreole = new Parse.Simple.Creole();
+//		myCreole = new Parse.Simple.Creole();
 		
 		}
 	else if(attempts > 100)	{

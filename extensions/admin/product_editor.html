@@ -479,7 +479,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
-			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button>
+<!--			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button> -->
 			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
 			<button class='applyButton floatLeft' data-attribute='zoovy:accessory_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
 			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
@@ -662,7 +662,11 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 
 	
 	<section data-anytab-content='attributes' class='clearfix'>
+<!--
 
+Once an inventory-able option is enabled for a product, qty pricing is NO LONGER AVAILABLE.
+
+-->
 	<form action='#' onSubmit='return false'>
 	
 	<div class='marginBottom displayNone' data-app-role='pidSchedulesContainer'>
@@ -757,13 +761,13 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<tr>
 				<th>SKU</th>
 				<th>Desc</th>
-				<th>Assembly</th>
-				<th>Mfg ID</th>
-				<th>UPC</th>
-				<th>ASIN</th>
+				<th class='width20'>Assembly</th>
+				<th class='width20'>Mfg ID</th>
+				<th class='width20'>UPC</th>
+				<th class='width20'>ASIN</th>
 <!--				<th>Condition</th>-->
 				<th>Price</th>
-				<th>Base Cost</th>
+				<th title="Base Cost - your cost for the sku">Cost</th>
 				<th>Weight</th>
 			</tr>
 			</thead>
@@ -939,10 +943,10 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductAmazonValidateExec'>Validate</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE">Queue Now</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER">Queue Later</button>
-		<button class='floatLeft applyButton' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE">Remove</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductAmazonValidateExec' title="Test this product for Amazon errors">Validate</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE" title="Send item to Amazon and clear history log.">Queue Now</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER" title="Send item later (30 hours) to Amazon and clear history log.">Queue Later</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE" title="Send a delete command to Amazon. Can take up to 24 hours for Amazon to remove.">Remove</button>
 	</div>
 	</fieldset>
 
@@ -1133,14 +1137,26 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			<label>
 				<span>Fixed price </span>
 				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				<span class='toolTip' title="The 'BuyItNow' price on eBay">?</span>
 			</label>
-			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
-				<span>Fixed qty</span>
+			<label>
+				<span>Offer qty</span>
 				<input type="number" step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<span class='toolTip' title="
+				Set offer quantity to positive integer to restrict the number of units offered on eBay.
+				Regardless of the quantity set the quantity will never exceed available inventory.
+				Use -1 to list all available inventory, or 0 to disable/remove syndicated listings.
+				Offer qty is used to work around the selling limits eBay places on all new accounts.
+				By reducing the number of units offered it reduces the total value of the listing, 
+				allowing sellers to list a larger variety of SKU's. 
+				">?</span>
 			</label>
 			</div>
 
-			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">NOTE: Automatic syndication is ENABLED on the Marketplaces tab. Listing Duration and Quantity is automatically managed.</div>
+			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">
+			NOTE: Automatic syndication is ENABLED on the Marketplaces tab. 
+			Listing Duration and Quantity is automatically managed. 
+			</div>
 		
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
@@ -1481,9 +1497,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td class='width1' data-bind='var:sku(sku); format:text;'></td>
 	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
 	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' class='fullWidth' /></td>
-	<td class='width1'><input name="sku:mfgid" size="4" type="text" data-bind='var:sku(%attribs.sku:mfgid); defaultVar:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
-	<td class='width1'><input name="sku:upc" size="4" type="text" data-bind='var:sku(%attribs.sku:upc); defaultVar:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
-	<td class='width1'><input name="sku:amz_asin" size="4" type="text" data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
+	<td class='width1'><input name="sku:mfgid" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:mfgid); defaultVar:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td class='width1'><input name="sku:upc" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:upc); defaultVar:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td class='width1'><input name="sku:amz_asin" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
 <!--	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
 		<option value="NEW">New</option>
 		<option value="OPEN">Open</option>

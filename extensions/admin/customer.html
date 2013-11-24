@@ -533,13 +533,13 @@ The checkbox below does not work.
 <table>
 <tr id='crmManagerResultsRowTemplate' class='pointer'>
 	<td><span  data-bind='var: ticket(ESCALATED); format:showIfSet;' class='ui-icon ui-icon-flag displayNone'></span></td>
-	<td data-bind='var: ticket(TKTCODE); format:text;'></td>
+	<td data-bind='var: ticket(TKTCODE); format:text;'  data-app-click="admin_customer|crmAdminTicketDetailShow" class='lookLikeLink'></td>
 	<td data-bind='var: ticket(STATUS); format:text;'></td>
 	<td data-bind='var: ticket(SUBJECT); format:text;'></td>
 	<td data-bind='var: ticket(CLASS); format:text;'></td>
 	<td data-bind='var: ticket(CREATED_GMT); format:epoch2pretty;'></td>
 	<td data-bind='var: ticket(UPDATED_GMT); format:epoch2pretty;'></td>
-	<td>
+	<td class='width1 alignRight'>
 	<button data-app-click="admin_customer|crmAdminTicketDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' >Edit Ticket</button>
 	</td>
 </tr>

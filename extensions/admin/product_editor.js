@@ -541,7 +541,7 @@ $target.anydelegate();
 
 			link2eBayByID : function($tag,data)	{
 				$tag.off('click.link2eBayByID').on('click.link2eBayByID',function(){
-					linkOffSite("http://www.ebay.com/itm/"+data.value);
+					linkOffSite("http://www.ebay.com/itm/"+data.value,'',true);
 					});
 				},
 
@@ -599,7 +599,7 @@ $target.anydelegate();
 							$btn.parent().find('.toggleMe').hide();
 							}
 						}).appendTo($tag);
-					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['%IS'])).appendTo($tag);
+					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['SKU'],data.value['%IS'])).appendTo($tag);
 					}
 				else	{} //all the values of the is report are zero. no point showing an empty report.
 				},
@@ -677,7 +677,7 @@ $target.anydelegate();
 				return r;
 				},
 
-			amazonFeeds2Message : function(feedsObj) {
+			amazonFeeds2Message : function(SKU,feedsObj) {
 			
 				var $messaging = $("<div \/>");
 			
@@ -772,31 +772,31 @@ $target.anydelegate();
 			// lets summarize the product's state.
 				if ((feedsObj['TODO'] & feedLookupObj['init'])>0) {
 					// all feeds waiting to be sent
-					$("<div class='summary' \/>").text(feedsObj['SKU'] + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
+					$("<div class='summary' \/>").text(SKU + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
 					}
 				else if ( ((feedsObj['ERROR'] > 0) && (feedsObj['DONE'] & feedLookupObj['init'])==0) ) {
 					// we have an error and init is still turned on
-					$("<div class='summary' \/>").text(" An error has been returned for the [" + describe_bw(feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + feedsObj['SKU'] + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
+					$("<div class='summary' \/>").text(" An error has been returned for the [" + describe_bw(feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + SKU + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
 					}
 				else if (feedsObj['ERROR'] > 0) {
 					// we have an error but init has been turned off - the feeds that don't have errors will still be sent
-					$("<div class='summary' \/>").text(" An error has been returned for the ["+describe_bw(feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
+					$("<div class='summary' \/>").text(" An error has been returned for the ["+describe_bw(feedsObj['ERROR']) + "feed/feeds of "+SKU+". Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
 					}
 				else if ((feedsObj['SENT'] & feedLookupObj['init'])>0 && (feedsObj['DONE'] & feedLookupObj['init'])==0) {
 					// init sent - waiting to process
-					$("<div class='summary' \/>").text("The initial product feed has been sent for" + feedsObj['SKU'] + "In order for the other feeds [" + describe_bw[feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
+					$("<div class='summary' \/>").text("The initial product feed has been sent for" + SKU + "In order for the other feeds [" + describe_bw[feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
 					}
 				else if ((feedsObj['DONE'] & feedLookupObj['init'])>0 && feedsObj['TODO']>0) {
 					// init done - waiting for others to sync
-					$("<div class='summary' \/>").text("The initial product feed for $row->{'SKU'} has been processed. The other feeds [" + describe_bw[feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
+					$("<div class='summary' \/>").text("The initial product feed for "+SKU+" has been processed. The other feeds [" + describe_bw[feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
 					}
 				else if ((feedsObj['SENT'] & feedLookupObj['all']) == feedLookupObj['all']){
 					// all feeds have been sent but we're waiting for Amazon to process
-					$("<div class='summary' \/>").text("All feeds have now been sent for " + feedsObj['SKU'] + ". We are now waiting for Amazon to process them.").appendTo($messaging);
+					$("<div class='summary' \/>").text("All feeds have now been sent for " + SKU + ". We are now waiting for Amazon to process them.").appendTo($messaging);
 					}
 				else if ((feedsObj['DONE'] & feedLookupObj['all']) == feedLookupObj['all']) {
 					// all feeds finished
-					$("<div class='summary' \/>").text("Amazon has notified us that all feeds have been processed, and" + feedsObj['SKU'] + " is now live on Seller Central.").appendTo($messaging);
+					$("<div class='summary' \/>").text("Amazon has notified us that all feeds have been processed, and" + SKU + " is now live on Seller Central.").appendTo($messaging);
 					}
 				else {
 					// should never be reached
@@ -1017,9 +1017,9 @@ $target.anydelegate();
 							},
 						'revert' : true
 						});
-		
+
 					$(".sortableImagery",$context).anydropzone({
-						folder : 'product/'+pid.toLowerCase(),
+						folder : 'product/'+pid.toString().toLowerCase().replace(/[^A-Z0-9]/ig, "_"), //folders are lowercase w/ no special characters except underscore.
 						drop : function(files,event,self){
 		
 							for (var i = 0; i < files.length; i++) {
@@ -1245,7 +1245,8 @@ $target.anydelegate();
 						$("<button \/>").button().on('click',function(event){
 							event.preventDefault();
 							$image.attr('src','app-admin/images/blank.gif');
-							$input.val('');
+							$input.val('').addClass('edited'); //save uses the input, so add the class there.
+							app.ext.admin.u.handleSaveButtonByEditedClass($(this)); //make sure save button unlocks.
 							}).text('Clear').appendTo($r);
 						}
 					else	{
@@ -2155,7 +2156,8 @@ if($('.edited',$tbody).length)	{
 		var $tr = $(this);
 		var SKU = $(this).closest("[data-sku]").data('sku');
 		if($('.edited',$tr).length)	{
-			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$.param($tr.serializeJSON({'selector':'.edited'}))); //if any input changed, all are updated.
+			//$.param sends the keys encoded, which is OK.
+			cmdObj['@updates'].push("SET-SKU?SKU="+SKU+"&"+$('.edited',$tr).serialize());
 			}
 		else	{} //no updates in this row.
 		});
@@ -2293,7 +2295,8 @@ else	{} //no changes in sku attribs.
 			amazonLogShow : function($ele,p)	{
 				var
 					pid = $ele.closest("[data-pid]").data('pid'),
-					index = $ele.closest("[data-obj_index]").attr('data-obj_index');
+					index = $ele.closest("[data-obj_index]").attr('data-obj_index'),
+					errors = 0; //the number of 'error' messages in @LOG
 				
 				if(pid && index && app.data["adminProductAmazonDetail|"+pid] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index] && app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'])	{
 					var 
@@ -2312,13 +2315,25 @@ function type2class(type)	{
 	}
 
 					for(var i = 0; i < L; i += 1)	{
+						if(logArr[i].type == 'ERROR') {errors++}
 						var $P = $("<p \/>").addClass('marginTop marginBottom');
+						if(logArr[i].detail)	{$P.addClass('isDetail displayNone')}
+						$P.append("<span class='floatLeft marginRight marginBottom app-icon app-icon-"+logArr[i].type.toLowerCase()+"'><\/span>");
 						$P.append($("<h5>"+logArr[i].type+"<\/h5>").addClass(type2class(logArr[i].type)));
 						$P.append("<h6>Feed: "+logArr[i].feed+"<\/h6>");
 						$P.append("<h6>"+app.u.unix2Pretty(logArr[i].ts,true)+"<\/h6>");
 						$P.append(logArr[i].msg);
 						$P.appendTo($D);
 						}
+					if(errors)	{$D.prepend("<h5>There are "+errors+" for this sku")}
+					$D.prepend($("<label>").text("Show more detail").prepend($("<input \/>").prop('type','checkbox').on('click',function(){
+						if($(this).is(':checked'))	{
+							$('.isDetail',$(this).closest('.ui-dialog-content')).show();
+							}
+						else	{
+							$('.isDetail',$(this).closest('.ui-dialog-content')).hide();
+							}
+						})));
 					$D.dialog('open');
 					}
 				else	{
@@ -2357,14 +2372,18 @@ function type2class(type)	{
 
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
 					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
-						$("[data-app-role='skuSchedulesContainer']",$PE).show();
+						var $scheduleContainer = $("[data-app-role='skuSchedulesContainer']",$PE).show();
 //build the table headers for the schedules.
 						if(app.data['adminProductDetail|'+pid]['@skus'][0] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
-							var o = '';
-							for(var i = 0, L = app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length; i < L; i += 1)	{
-								o += "<th>"+app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'][i].schedule+"</th>";
+							//make sure to only add the headers once.
+							if($scheduleContainer.data('headersAdded'))	{}
+							else	{
+								var o = '';
+								for(var i = 0, L = app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length; i < L; i += 1)	{
+									o += "<th>"+app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'][i].schedule+"</th>";
+									}
+								$scheduleContainer.data('headersAdded',true).find('thead tr').append(o);
 								}
-							$("[data-app-role='skuSchedulesContainer']",$PE).find('thead tr').append(o);
 							}
 						}
 					else	{
@@ -2851,7 +2870,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 				app.u.dump("BEGIN admin_prodEdit.e.viewProductOnWebsite");
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid)	{
-					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/");
+					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/",'',true);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});
@@ -3125,7 +3144,9 @@ $D.showLoading({"message":"Creating inventory record"});
 app.model.addDispatchToQ({
 	_cmd : 'adminProductMacro',
 	pid : pid,
-	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+// * 201346 -> changed to a more effient method for serializing inputs.
+//	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$('form',$D).serialize()],
 	_tag : {
 		callback : function(rd){
 			$D.hideLoading();
@@ -3367,7 +3388,8 @@ app.model.dispatchThis("immutable");
 								'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
 								})
 							app.u.handleAppEvents($tbody,{'pid':pid});
-							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).addClass('edited').appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+							app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest('form'));
 							}
 						else	{
 							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});

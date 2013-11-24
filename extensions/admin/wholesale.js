@@ -220,7 +220,7 @@ else	{
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
 			showSupplierManager : function($target)	{
 				app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for create and update.
-				app.ext.admin.i.DMICreate($target,{
+				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Supplier Manager',
 					'className' : 'supplierManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
@@ -229,7 +229,8 @@ else	{
 						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all'>Unordered Items</button>",
 						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
 						],
-					'thead' : ['Name','ID','Type','Mode',''],
+					'thead' : ['','Name','ID','Type','Mode',''],
+					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_wholesale|supplierBatchExec' data-verb='INVENTORY'>Get Inventory</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='PROCESS' title='Will cause any pending orders to be set to a supplier'>Process Orders</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='TRACKING'>Update Tracking</button><\/span>",
 					'tbodyDatabind' : "var: users(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminSupplierList',
@@ -238,6 +239,8 @@ else	{
 							}
 						}
 					});
+				app.u.handleButtons($DMI.closest('.dualModeContainer').anydelegate());
+				
 				app.model.dispatchThis('mutable');
 				}, //showSupplierManager
 
@@ -264,7 +267,9 @@ else	{
 										$(".panel[data-panel-id='supplierOurFBAConfig']",$editorContainer).show()
 										$('.panel',$editorContainer).not("[data-panel-id='supplierOurFBAConfig']").find(":input").attr('disabled','disabled');
 										$("select[name='FORMAT']",$editorContainer).val('FBA');
-										$("input[name='PREFERENCE']",$editorContainer).prop('disabled','').removeAttr('disabled');
+										$('select[name="INVENTORY_CONNECTOR"]',$editorContainer).prop('disabled','').removeProp('disabled').find("option[value='GENERIC']").hide();
+										
+										$("input[name='PREFERENCE']",$editorContainer).prop('disabled','').removeProp('disabled');
 //to compensate for a bug where FORMAT was getting dropped.
 //if code is FBA, force format to FBA. this is a reserved name (user formats are more characters).
 										if(!app.data[rd.datapointer].FORMAT)	{
@@ -357,7 +362,7 @@ else	{
 				}, //wholesaleScheduleSelect
 
 			warehouseCodeOrZone : function($tag,data)	{
-//			app.u.dump(data.value); die();
+//			app.u.dump(data.value); 
 				if(data.value._OBJECT == 'GEO')	{
 					$tag.text(data.value.GEO);
 					}
@@ -941,6 +946,14 @@ else	{
 
 var sfo = $form.serializeJSON();
 sfo._cmd = 'adminSupplierCreate'
+
+if(sfo['INIT-DEFAULTS'])	{
+	sfo['@updates'] = ["INIT-DEFAULTS"];
+	delete sfo['INIT-DEFAULTS']
+	}
+
+if(sfo.FORMAT == 'FBA')	{sfo.VENDORID = 'FBA'}
+
 sfo._tag =	{
 	'callback':'showMessaging',
 	'jqObj' : $form,
@@ -1174,6 +1187,27 @@ app.model.dispatchThis('immutable');
 					});
 				}, //showSupplierEditor
 
+	
+			supplierBatchExec : function($ele,p)	{
+				app.u.dump(" -> BEGIN admin_wholesale.e.supplierBatchExec");
+				if($ele.data('verb'))	{
+					app.u.dump(" -> verb: "+$ele.data('verb'));
+					$ele.closest('.dualModeContainer').find(":checked").each(function(){
+						var $row = $(this).closest('tr');
+						app.u.dump(" -> $row.data('code'): "+$row.data('code'));
+						if($row.data('code'))	{
+							app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'SUPPLIER/'+$row.data('code')+'/'+$ele.data('verb')});
+							}
+						else	{
+							$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.supplierBatchExec, unable to ascertain vendor code.","gMessage":true});
+							}
+						});
+					}
+				else	{
+					//no data-verb
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.supplierBatchExec, no data-verb set on trigger element.","gMessage":true});
+					}
+				},
 	
 			adminSupplierUnorderedItemListShow : function($btn)	{
 				$btn.button();

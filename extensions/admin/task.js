@@ -57,9 +57,6 @@ var admin_task = function() {
 
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
 
-//used for the delete confirmation dialog.
-$('body').append("<div id='removeTaskConfirmModal' class='displayNone' title='Please confirm delete'><p><span class='ui-icon ui-icon-alert floatLeft marginRight marginBottom'></span>These tasks will be permanently deleted and cannot be recovered. Are you sure?</p></div>");
-
 //used for the add new modal.
 $('body').append("<div id='createTaskModal' class='displayNone' title='Create a new task'></div>");
 $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
@@ -115,6 +112,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				tagObj.jqObj.hideLoading();
 				$("[data-app-role='dualModeListTbody']",tagObj.jqObj).empty().anycontent({'translateOnly':true,'data':{'@TASKS':filteredTasks}});
 				app.u.handleButtons(tagObj.jqObj);
+				tagObj.jqObj.find("[data-app-click='admin|checkAllCheckboxesExec']").data('selected',false);
 				},
 			onError : function(responseData, uuid)	{
 				app.u.throwMessage(responseData);
@@ -141,7 +139,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					'thead' : ['','Created','Task','Due Date','Priority','Type','Assigned To',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tasks(@TASKS); format:processList; loadsTemplate:taskListRowTemplate;",
 					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_task|adminTaskCreateShow'>Add Task<\/button>"],	
-					'controls' : "<span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_task|adminTaskCompletedBulkExec'>Tag as Completed</button><button data-app-click='admin_task|adminTaskRemoveBulkConfirm'>Deleted</button><\/span>",
+					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_task|adminTaskCompletedBulkExec'>Tag as Completed</button><button data-app-click='admin_task|adminTaskRemoveBulkConfirm'>Deleted</button><\/span>",
 					'cmdVars' : {
 						'_cmd' : 'adminTaskList',
 						'limit' : '50', //not supported for every call yet.
@@ -192,7 +190,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 
 		e : {
 
-			
+
+
 			adminTaskCreateShow : function($ele,p)	{
 
 				var $target = $('#createTaskModal'); //created as part of init process.
@@ -253,7 +252,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 											$D.anymessage({'message':rd});
 											}
 										else	{
-											$D.dialog('close')
+											$D.dialog('close');
+											$ele.closest(".dualModeContainer").find("[data-app-click='admin|checkAllCheckboxesExec']").data('selected',false); //resets 'select all' button to false so a click selects everything.
 											}
 										}
 									}
@@ -299,6 +299,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						},'immutable');
 					app.model.dispatchThis('immutable');
+					
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"Please select at least on task from the list below for modification.",'errtype':'youerr'});

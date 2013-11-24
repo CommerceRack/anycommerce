@@ -2,7 +2,7 @@
 
 <div id='mediaLibTemplate'>
 
-<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+<form id="mediaLibUploadForm" action="#" onsubmit="return false;" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
 	<td>
@@ -166,12 +166,26 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </div>
 
 
+<!--
+not in use yet.
+<div id='fileUploadFilePreviewTemplate'>
+	<span class='fileUpload_file fileUpload_default'></span>
+	<b data-bind="var: file(name); format:text;"></b><br />
+	<span data-bind="var: file(size); format:text; pretext:size: ;"></span><br />
+	<span data-bind="var: file(type); format:text; pretext:type: ;"></span><br />
+	<span data-bind="var: file(lastModifiedData); format:text; pretext:last modified: ;"></span>
+</div>
+-->
+
+<div id='fileUploadTemplate_anyupload' data-app-role='anyuploadContainer' class='genericFileUpload width50'>
+<!-- here for some backward compatibility -->
+</div>
 
 
 
 <div id='fileUploadTemplate'>
 
-<div id='fileUploadMessaging'></div>
+	<div id='fileUploadMessaging'></div>
 
 <!-- START JQFU CODE THAT SHOULD BE LOADED FROM DIV ABOVE -->
 <fieldset class='borderNone'>
@@ -357,6 +371,20 @@ PAGE TEMPLATES FOR setup/import
 
 
 
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-variations'>
+<h1>Load Variations from CSV File</h1>
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='VARIATIONS'>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+
+</form>
+</div>
 
 
 

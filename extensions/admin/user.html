@@ -1,51 +1,17 @@
-<div id='userManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='buttonSet'>
-				<button data-app-event='admin_user|bossUserCreate'>Create A New User</button>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</div>
-			<h3 class='heading'>User List</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th>ID</th>
-			<th>Username</th>
-			<th class='hideInDetailMode'>Name</th>
-			<th class='hideInDetailMode'>Email</th>
-			<th>Roles</th>
-			<th class='hideInDetailMode'>Created</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
-</div>
-
-
 
 
 <table>
 
 	<tr id='userManagerUserRowTemplate'>
-		<td data-bind="var: user(uid); format:text;"></td>
+		<td data-bind="var: user(uid); format:text;" data-app-click="admin_user|bossUserDetailShow" class='lookLikeLink'></td>
 		<td data-bind="var: user(luser); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(fullname); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
 		<td><ul data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></ul></td>
 		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
-		<td>
-		<button data-app-event="admin_user|bossUserDetail">edit</button>
-		<button data-app-event="admin_user|bossUserDelete" class='marginLeft hideInDetailMode'>delete</button>
+		<td class='alignRight'>
+		<button data-app-click="admin_user|bossUserDeleteConfirm" class='marginLeft applyButton' data-text='false' data-icon-primary='ui-icon-trash'>delete</button>
+		<button data-app-click="admin_user|bossUserDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>edit</button>
 		</td>
 	</tr>
 
@@ -54,7 +20,7 @@
 		<td data-bind="var: role(title); format:text;"></td>
 		<td class='roleDetail' data-bind="var: role(detail); format:text;"></td>
 		<td data-bind="var: role(id); format:text;"></td>
-		<td>
+		<td class='width1'>
 <div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
 		</td>
 	</tr>
@@ -69,7 +35,7 @@
 
 <div id='userManagerUserCreateUpdateTemplate' title='User' class='createUpdateUserContainer'>
 
-<form action='#'>
+<form action='#' onSubmit='return false;'>
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 	<legend>User Information</legend>
 	
@@ -78,7 +44,7 @@
 	<label><span>Login:</span> <input type='text' name='login' value='' required='required' data-bind="var:user(luser);format:popVal;" /></label>
 	<label><span>Job Title:</span> <input type='text' name='jobtitle' value=''  data-bind="var:user(jobtitle);format:popVal;" /></label>
 	<label><span>Phone:</span> <input type='tel' name='phone' value='' data-bind="var:user(phone);format:popVal;" /></label>
-	<label class='passwordContainer'><span>Password:</span> <input type='password' name='password' value='' data-bind="var:user(password);format:popVal;" /></label>
+	<label class='passwordContainer'><span>Password:</span> <input type='password' name='password' required='required' value='' data-bind="var:user(password);format:popVal;" /></label>
 	
 </fieldset>
 
@@ -92,9 +58,10 @@
 		<th>Title</th>
 		<th class='roleDetail'>Detail</th>
 		<th>ID</th>
+		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: roles(@ROLES); format:processList; loadsTemplate:userManagerRoleRowTemplate;" data-app-event="admin_user|roleListEdit"></tbody>
+	<tbody data-bind="var: roles(@ROLES); format:processList; loadsTemplate:userManagerRoleRowTemplate;" data-app-role='roleListTbody'></tbody>
 	</table>
 	<p>Use drag handles to sort role list in order of priority for this user.</p>
 </fieldset>

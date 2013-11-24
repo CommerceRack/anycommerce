@@ -1242,7 +1242,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 								
 								
 								app.u.dump(graphs);
-								die();
+
 								if(mode == 'add')	{
 									sfo.uuid = app.u.guidGenerator();
 									graphs.push(sfo);
@@ -1257,7 +1257,6 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 										}
 									}
 								app.u.dump(graphs);
-								die();
 								app.model.destroy(rd.datapointer);
 								app.ext.admin.calls.adminKPIDBCollectionUpdate.init({'uuid':collection,'@GRAPHS':graphs},{'callback':function(rd){
 									$context.hideLoading();

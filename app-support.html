@@ -1,0 +1,154 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Administrative Interface Login</title>
+
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"><!-- don't cache this file. -->
+<META NAME="ROBOTS" CONTENT="NONE">
+
+<script type="text/javascript">
+
+var myCreole;
+
+var baseURL = '';
+//in admin, used for loading app-specific files. do NOT set the base href tho.
+if (document.location.protocol  == 'file:') { 
+	baseURL = '';
+	}
+else if (document.location.port == 8888) {
+	// local webserver (node.js?)
+	baseURL = '/';
+	}
+else {
+   baseURL = "";
+   }
+
+var app = {vars:{
+	/////////////////////////////////\
+	"release":"201346.b",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	//////////////////////////////////
+	"thisSessionIsAdmin": true,
+	"_clientid":"admin",
+	"jqurl": (document.location.protocol == 'file:') ? "https://admin-sporks-zoovy-com.app-hosted.com/jsonapi/" : "/jsonapi/",
+//	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
+//	"secureURL" : "https://www.zoovy.com",
+	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
+	"baseURL" : baseURL,
+	},u:{},rq:[]};
+
+</script>
+
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+
+<link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.custom.css" /><!-- tho the jqueryui js lib isn't used for this app, the styles are (for now) -->
+<link rel="stylesheet" type="text/css" href="resources/anyplugins.css">
+<link rel="stylesheet" type="text/css" href="app-admin/styles.css">
+
+<!-- not much is going to run without these two. load em early -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="controller.js"></script>
+<script type="text/javascript" src="model.js"></script>
+<script type="text/javascript" src="includes.js"></script>
+<script type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<script type="text/javascript" src="extensions/admin/support.js"></script>
+<script src="resources/jquery.showloading-v1.0.jt.js"></script>
+<script type="text/javascript" src="extensions/admin/extension.js"></script>
+<script src='https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js'></script>
+
+<script type="text/javascript">
+//don't execute script till both jquery AND the dom are ready.
+$(document).ready(function(){
+	var tmp = new zController(app);
+//instantiate wiki parser.
+//	myCreole = new Parse.Simple.Creole();
+	app.model.addExtensions([{'namespace':'admin_support','filename':'extensions/admin/support.js'}]);
+	app.model.addExtensions([{'namespace':'admin','filename':'extensions/admin/extension.js'}]);
+	});
+
+/*
+function zLogin($form)	{
+	app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':function(rd){
+		if(app.model.responseHasErrors(rd)){
+			$('#loginFormContainer').anymessage({'message':rd});
+			}
+		else	{
+			//login successful. now go do something.
+			}
+		}},'immutable');
+	app.model.dispatchThis('immutable')
+	}
+*/
+	function supportAppLogin(state,uriParams)	{
+		$('#appLogin').showLoading({'message':'Verifying authentication'});
+		app.calls.authAdminLogin.init({
+			'authtype' : 'google:id_token',
+			'id_token' : uriParams.id_token
+			},{'datapointer' : 'authAdminLogin','callback':function(rd){
+				if(app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+					$('#appLogin').hideLoading().slideUp();
+					app.ext.admin_support.a.showTicketManager($('#appView').show());
+					}
+				}},'immutable');
+		app.model.dispatchThis('immutable');
+		}
+
+	function jump2GoogleLogin(){
+		//base64 encoding 'may' add = or == to the end of the string to 'pad' it. so we encode it. This'll get double-encoded when run through $.param(), but the kvp2array function will unencode.
+		app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"supportAppLogin"})))); 
+		}
+</script>
+
+
+
+
+
+
+
+</head>
+<body class="control">
+<!-- this div handles getting content to appear below the fixed header -->
+
+<div id='appLogin' class='ui-widget ui-widget-content ui-corner-all'>
+	
+	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+	
+	<div class='appMessaging'></div>
+	
+<!--
+	<div id='loginFormContainer'>
+		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' onSubmit='return false'>
+		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+			<legend>Merchant Login</legend>
+			
+			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
+			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
+			
+			<button class='loginbutton' onClick="zLogin($(this).closest('form'));">login</button>
+		</fieldset>
+		</form>
+	</div>
+-->
+	<div>
+		
+		<div class='alignCenter clearfix marginBottom'>
+			<!-- <p>Or Connect With</p> -->
+			<span class='threePLSprite google' onClick="jump2GoogleLogin();"></span>
+		</div>
+	
+	</div>
+
+</div>
+
+<div id="appView" class='displayNone stdMargin'></div>
+
+</body>
+</html>

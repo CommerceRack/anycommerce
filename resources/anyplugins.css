@@ -97,3 +97,37 @@
 
 
 fieldset.ui-widget-anypanel	{border:none; padding:0; margin:0;} /* get rid of some browser defaults if fieldset is the container for anypanel. */
+
+
+
+
+
+/* ANYFILEUPLOAD */
+  .fileUpload_default {
+    height: 45px;
+    border: 1px solid #ccc;
+    margin: 0px 5px 0 0;
+	float: left;
+  }
+.fileUpload_file {
+    height: 45px;
+	width:45px;
+	background:url(images/file-45x45.png) no-repeat;
+	display:block;
+  }
+  
+.ui-widget-anyupload-buttonset	{
+	position:absolute;
+	top:0;
+	right:0;
+	}
+/*
+.ui-widget-anyupload-buttonset button.ui-button	{
+	font-size:.65em;
+	height:1.6em;	
+	}
+.ui-widget-anyupload-buttonset button.ui-button .ui-button-text	{
+	padding: 0 .7em 0 2.2em;
+	line-height:1.4em;
+	}
+*/

@@ -1,10 +1,45 @@
 #
 # This file will be updated with each release
-# It will contain a list of the changes that apply to quickstart.html to facilitate an easier upgrade process on custom apps.
-# Items indicated with an asterisk indiciate a feature or enhancement that may not directly impact quickstart.html, but deserves attention.
+# It will contain a list of changes made to the admin and quickstart apps.
 #
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
+
+201346
+ADMIN
+	enhancement - updated users interface. faster and more memory efficient for browser.
+	bug - in support > create ticket, apostrophes were causing content after the apostrophe to drop.
+	bug - In product editor, drag and dropping images would create a folder with a dash if the sku had a dash. now creates dash-free folders.
+	bug - fix login if invalid username is supplied (would get stuck in showLoading)
+	enhancement - product selector (used in powertool and product export) > Comma Separated List now handles whitespace, tabs and returns better.
+	bug - CRM escalate ticket now working.
+	enhancement - 'about' link now contains link to version changelogs. videos archives will now open in dialog.
+	bug - order edit > send mail would send mail twice.
+	enhancement - 'select all' button added to task list (click twice for unselect all).
+	bug fix - product editor > variations > apply didn't activate the 'save' button.
+	bug fix - add new payment method in billing history works again.
+	enhancement - new button in utilities for private elastic rebuild.
+	enhancement - product editor > amazon > error and history report. Added # of errors @ top and message type icons.
+	bug fix - flexedit 'clear' for images didn't clear in product editor or unlock the 'save' button.
+	bug fix - UPS reapply > form submit > didn't close dialog or show success message in a viewable location. does now.
+	enhancement - ticket updates and file attach will update ticket panel to more clearly indicate a change occured.
+	enhancement - add a 'return' filter to orders interface.
+	feature - supply chain interface allows creation of batch jobs for get inventory, process orders or update tracking for a given supplier (or a group of suppliers).  Each job/supplier is 1 batch job
+	feature - export pages.json file added to sites for app based hosts.
+	enhancement - addition of pages.json file was just one button to many. app utilities are now in a dropdown.
+	enhancement - In some places, it's necessary to show a dialog interstitial when trying to open a popup. Reduced these in places it isn't required.
+	feature - plugins > communication > apple/ios added. (for native app push notifications)
+	feature - plugins > cloud services > Amazon Simple Email Services
+	feature - setup > notifications. allows for events to trigger actions (currently supports customer inquiry. more to come...)
+	feature - utilities > support tools > ebay listing sync button. Complete download of ebay listings. [201346.i]
+	bug fix - setup > shipping > ups.  checkboxes under 'rating services' header didn't save. [201346.i]
+
+QUICKSTART
+	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
+	enhancement - company nav links now generated based on what articles exist w/in company (and in that order). H1 is used to build title.
+	bug fix - searchTemplate onCompletes were not running.
+	enhancement - cartTemplate is now responsive. (major changes to css and the template itself)
+
 201344
 ADMIN
 	feature - product editor now supports a sku-specific price per schedule (attributes panel)

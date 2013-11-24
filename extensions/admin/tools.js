@@ -294,7 +294,7 @@ $target.append("<br \/>");
 //				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
-//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				if(Number(sfo.SELECTALL) === 1)	{
 					r = 'all'
 					}
@@ -322,9 +322,10 @@ $target.append("<br \/>");
 					if(sfo.createstart && sfo.createend)	{
 						r += "created="+sfo.createstart+"|"+sfo.createend+"\n";
 						}
-					
+
 					if(sfo.csv)	{
-						r += "csv="+sfo.csv.replace(/\n/gm,",")+"\n"; //linebreaks instead of commas are acceptable for the input, but the API wants commas.
+						r += "csv="+sfo.csv.replace(/[\s\t\r\n]+/g,",")+"\n"; //strip out all whitespace of any kind and replace with a comma. adjacent whitespace will only get 1 comma
+//						app.u.dump(" -> r: "); app.u.dump(r);
 						}
 					}
 //				app.u.dump(" -> r: "+r);
@@ -617,7 +618,7 @@ $target.append("<br \/>");
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
 						else	{
-							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/'+$form['EXPORT']});
+							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/PRODUCTS'});
 							}
 						}
 					else	{

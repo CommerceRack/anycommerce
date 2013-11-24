@@ -240,6 +240,8 @@ if you want the list responsive, apply the .fluidList class.
 /* for non-datagrid tables. ex: setup page. */
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
 td.width1	{width:1%;}
+.width20	{width:20%;}
+.width75	{width:75%;}
 
 /* 201336 -> removed limitations by type so any element could use this class */
 /* table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}*/
@@ -422,8 +424,7 @@ STICKY TABS
 .nwColumnW	{width:60%;}
 
 
-.width20	{width:20%;}
-.width75	{width:75%;}
+
 
 
 /* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
@@ -634,7 +635,13 @@ LOGIN and preView
 */
 
 
-#appPreView, #appLogin, #createAccountContainer, #appPasswordRecover	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
+#appLogin	{max-width:350px}
+#appLogin input.textbox, #appLogin .loginbutton	{width:100%; display:block; margin-bottom:6px;}
+#appLogin .ui-button	{margin-right:0;}	
+
+#appPreView, #createAccountContainer, #appPasswordRecover	{width:500px;} /* top margin F's up FF and body/html 100% height */
+#appPreView, #createAccountContainer, #appPasswordRecover, #appLogin	{font-size:1.2em; margin: auto;  position:relative; top:200px;}
+
 
 #appLogin label	{display:block; text-align:left; margin-bottom:12px;}
 #appLogin .hint	{font-size:14px;}
@@ -643,6 +650,16 @@ LOGIN and preView
 
 
 #appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
+
+
+.treatAsthreePLSprite, .threePLSprite	{height:30px; width:162px; display:inline-block; margin:4px; text-align:left;}
+.threePLSprite	{background-image:url(images/third_party_logins-176x276.png); background-repeat:no-repeat;}
+.twitter	{background-position:0 0;}
+.facebook	{background-position:0 -48px;}
+.linkedin	{background-position:0 -93px;}
+.yahoo	{background-position:0 -141px;}
+.openid	{background-position:0 -188px;}
+.google	{background-position:0 -235px;}
 
 
 
@@ -1125,6 +1142,16 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 
 .pageSyndication .market	{border:1px solid #ffffff; padding:8px;}
 .pageSyndication .selectedMarket	{border:1px solid #efefef;}
+
+
+
+
+/*
+NOTIFICATIONS
+*/
+
+.notificationDatatableInputs	{min-width:40%;}
+
 
 /*
 http://codepad.co/s/7cca38#select

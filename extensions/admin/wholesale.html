@@ -174,6 +174,7 @@
 <!-- used in the list mode for each supplier -->
 <table>
 <tr id='supplierListItemTemplate'>
+	<td class='hideInMinifyMode'><input class='allowBulkCheck' type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
 	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
 	<td data-bind="var:supplier(FORMAT); format:text;"></td>
@@ -379,12 +380,12 @@
 		<option value='STOCK' data-show-panel='supplierFormatVendorID'>Stock/Vendor : orders are shipped from vendor to your warehouse(s)</option>
 		<option value='DROPSHIP' data-show-panel='supplierFormatVendorID'>Dropship : orders will be shipped to customer out of vendors inventory</option>
 		<option value='FULFILL' data-show-panel='supplierFormatVendorID'>Fulfillment/3PL : outsourced warehouse/logistics services</option>
-		<option value='FBA' data-change-input='VENDORID' data-change-newval='FBA'>FBA: fulfillment by amazon</option>
+		<option value='FBA' >FBA: fulfillment by amazon</option>
 		<option value='RIVER' data-show-panel='supplierFormatVendorID'>River : transmits wire-speed copies of all orders for integrations</option>
 	</select>
 	</label>
 
-
+	<input type='hidden' name='INIT-DEFAULTS' value='1' /><!-- if set, API will set some sane defaults -->
 	
 	<label class='label displayNone supplierFormatPanel' data-panel-id='supplierFormatVendorID' >
 		<span>Supplier ID</span>

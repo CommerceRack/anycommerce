@@ -34,8 +34,6 @@ var admin = function() {
 		'adminChooserElasticResult',
 		'productTemplateChooser',
 
-		'domainPanelTemplate',
-
 		'pageSetupTemplate',
 		'pageUtilitiesTemplate',
 //		'pageTemplateSetupAppchooser',
@@ -69,16 +67,16 @@ var admin = function() {
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
-			versionMetaData : {
-				'youtubeVideoIDs' : {
-					'201342':'Zq8Ac5YzP3M',
-					'201338':'A8TNbpQtgas',
-					'201336':'UOfn6tiQqiw',
-					'201334':'FUO0NALw6sI',
-					'201332':'tKQ_SJzjbXI',
-					'201330':'fEWSsblLQ94'
-					}
-				},
+			versionData : [
+				{'branch' : '201346','youtubeVideoID' : 'cW_DvZ2HOy8'},
+				{'branch' : '201344','youtubeVideoID' : 'cW_DvZ2HOy8'},
+				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
+				{'branch' : '201336','youtubeVideoID' : 'UOfn6tiQqiw'},
+				{'branch' : '201334','youtubeVideoID' : 'FUO0NALw6sI'},
+				{'branch' : '201332','youtubeVideoID' : 'tKQ_SJzjbXI'},
+				{'branch' : '201330','youtubeVideoID' : 'fEWSsblLQ94'}
+				],
+
 			templates : theseTemplates,
 			willFetchMyOwnTemplates : true,
 			"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
@@ -1197,20 +1195,7 @@ if giftcard is on there, no paypal will appear.
 			}, //adminTicketList
 
 
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIDomainPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-				_tag.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
-				this.dispatch(obj,_tag,Q);
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIDomainPanelExecute";
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelList
+
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
@@ -1485,27 +1470,6 @@ if giftcard is on there, no paypal will appear.
 			}, //finder
 
 
-		bossUserCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(!$.isEmptyObject(obj))	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.bossUserCreate, obj is empty.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'bossUserCreate';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserCreate';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
 		bossUserList : {
 			init : function(_tag,Q)	{
 				var r = 0;
@@ -1663,7 +1627,7 @@ if giftcard is on there, no paypal will appear.
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 $('title').append(" - release: "+app.vars.release).prepend(document.domain+' - ');
@@ -1715,7 +1679,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 
 
 //get list of domains and show chooser.
-				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
 				$domainChooser.dialog({
 					'autoOpen':false,
 					'modal':true,
@@ -1735,12 +1699,12 @@ if(!$.isEmptyObject(adminObj))	{
 	app.vars.https_domain = adminObj.https_domain;
 	}
 			
-				app.u.dump(" -> domain: "+app.vars.domain);
-				app.u.dump(" -> partition: "+app.vars.partition);
-				app.u.dump(" -> https_domain: "+app.vars.https_domain);
+//				app.u.dump(" -> domain: "+app.vars.domain);
+//				app.u.dump(" -> partition: "+app.vars.partition);
+//				app.u.dump(" -> https_domain: "+app.vars.https_domain);
 				
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain, partition or https_domain not set. set domain to blank to trigger domain chooser.");
+					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
 
@@ -1767,7 +1731,6 @@ if(!$.isEmptyObject(adminObj))	{
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
-				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 
 
@@ -1965,7 +1928,6 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				$(app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
-
 
 
 		handleLogout : {
@@ -2325,6 +2287,39 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					}
 				},
 				
+				//pass in HOSTTYPE as data.
+				appHostButtons : function($tag,data)	{
+					var $menu = $("<menu \/>").hide();
+					
+					if(data.value == 'SITEPTR')	{
+						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						}
+					
+					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+						}
+					if($menu.children().length)	{
+						$menu.menu();
+						$tag.append($menu); //so menu appears where it should.
+						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
+						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
+						$button.on('click',function(){
+							$menu.show();
+							$( document ).one( "click", function() {
+								$menu.hide();
+								});
+							return false;
+							})
+						$tag.append($button);
+						}
+					else	{
+						//host/domain isn't app based.
+						}
+					},
 				
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {
@@ -2998,7 +2993,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					
 					
 					if(obj._macrobuilder)	{
-//						app.u.dump(" -> is a macrobuilder.");
+						app.u.dump(" -> is a macrobuilder.");
 						var mbArr = obj._macrobuilder.split('|');
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 						if(mbArr.length > 1 && app.ext[mbArr[0]] && app.ext[mbArr[0]].macrobuilders &&  typeof app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
@@ -3356,7 +3351,6 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 
-
 		u : {
 //executed after preloader if device is logged in.
 //executed after login if a login is required.
@@ -3444,9 +3438,20 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 
+
+
+
 			//return a boolean. NO MESSAGING>  that's use-case specific.
 			validatePicker : function($picker) {
-				return ($("[data-app-role='pickerContainer']",$picker).find(':checkbox:checked').length || $("[name='csv']",$picker).val()) ? true : false;
+				var r = false;
+				if($("[data-app-role='pickerContainer']",$picker).find(':checkbox:checked').length)	{
+					r = true;
+					}
+				else if($("[name='csv']",$picker).val() || ($("[name='rstart']",$picker).val() && $("[name='rend']",$picker).val()) || ($("[name='createstart']",$picker).val() && $("[name='createend']",$picker).val()))	{
+					r = true;
+					}
+				else	{}
+				return r;
 				},	
 
 
@@ -3555,6 +3560,18 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 
+			jump2GoogleLogin : function(state){
+//				app.u.dump(" -> state: "+state);
+				var p = {
+					'scope':'openid email',
+					'response_type' : 'token id_token',
+					'client_id' : '286671899262-sc5b20vin5ot00tqvl8g8c93iian6lt5.apps.googleusercontent.com',
+					'redirect_uri' : 'https://www.zoovy.com/app/latest/app-support.html',
+					'state' : state || ""
+					};
+				window.location = 'https://accounts.google.com/o/oauth2/auth?'+$.param(p);
+				},
+
 //used in ebay and campaign to generate toolbar for html editor.
 //buttons is optional. if passed, should be an array. [{'css':'','text':'','action':function(){}},{'css':'','text':'','action':function(){}}]
 			buildToolbarForEditor : function(buttons)	{
@@ -3605,7 +3622,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$context.anydelegate('resetTracking');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('resetTracking');
+					$context.closest('.eventDelegation').anydelegate('resetTracking',$context);
 					}
 				},
 			
@@ -3748,6 +3765,9 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!notifications')	{
+					app.ext.admin_config.a.showNotifications($target);
+					}
 				else if(path == '#!trainer')	{
 					app.ext.admin_trainer.a.showTrainer($target);
 					}
@@ -3822,7 +3842,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if (path == '#!appChooser')	{
-					app.ext.admin_config.a.showAppChooser();
+					app.ext.admin_templateEditor.a.showAppChooser();
 					}
 				else if (path == '#!projects')	{
 					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
@@ -4271,16 +4291,21 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						});
 					}
 				}, //rewriteLink
-
-			linkOffSite : function(url,pretty){
+//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true of being triggered by a click.
+			linkOffSite : function(url,pretty,skipInterstitial){
 				app.u.dump("BEGIN admin.u.linkOffSite to "+url);
 				if(url)	{
+					if(skipInterstitial)	{
+						window.open(url);
+						}
+					else	{
 //** 201344 -> FF now treating window.open w/ no params as a popup and requiring auth. 
-					pretty = pretty || "<br>"+url;
-					$("<div>",{'title':'Link offsite'}).append("<a href='"+url+"' target='_blank'>click here to continue to </a> "+pretty).on('click','a',function(){
-						$(this).closest('.ui-dialog-content').dialog('close');
-						}).dialog({'modal':true});
-//					window.open(url);
+						pretty = pretty || "<br>"+url;
+						$("<div>",{'title':'Link offsite'}).append("<a href='"+url+"' target='_blank'>click here to continue to </a> "+pretty).on('click','a',function(){
+							$(this).closest('.ui-dialog-content').dialog('close');
+							}).dialog({'modal':true});
+						}
+	//					window.open(url);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.linkOffSite, no URL passed.","gMessage":true});
@@ -4786,22 +4811,6 @@ else	{
 				},
 
 
-/*
-** 201332 -> new domain interface
-//executed after the domain data is in memory and up to date.
-// note - empty should already be done.  There should be an a.showDomainConfig that executes a call and this is what gets executed in the call back.  
-// that 'a' should do a showloading
-			domainConfig : function(){
-//				app.u.dump("BEGIN admin.u.domainConfig");
-				$target = $('#setupContent');
-				$target.hideLoading();
-				var data = app.data['adminDomainList']['@DOMAINS'];
-				var L = data.length;
-				for(var i = 0; i < L; i += 1)	{
-					$target.append(app.renderFunctions.transmogrify({'domain':app.data['adminDomainList']['@DOMAINS'][i].id},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
-					}
-				},
-*/
 
 			uiCompatAuthKVP : function()	{
 				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;
@@ -4809,37 +4818,6 @@ else	{
 
 //$t is 'this' which is the button.
 
-			adminUIDomainPanelExecute : function($t){
-//				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
-
-				var data = $t.data();
-				if(data && data.verb && data.domain)	{
-					var obj = {},
-					$panel = $t.closest("[data-app-role='domainPanel']"),
-					$fieldset = $("[data-app-role='domainEditorContents']",$panel);
-					
-					$fieldset.showLoading({'message':'Loading information for domain: '+data.domain});
-					$t.parent().find('.panelContents').show()
-					if(data.verb == 'LOAD')	{
-						//do nothing. data gets passed in as is.
-						}
-					else	{
-						data = $.extend(data,$t.closest('form').serializeJSON());
-						}
-					
-					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback': function(rd){
-						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
-						else	{
-							$fieldset.hideLoading().removeClass('loadingBG').html(app.data[rd.datapointer].html);
-							}
-						}},'immutable');
-					app.model.dispatchThis('immutable')
-					}
-				else	{
-					app.u.throwGMessage("WARNING! required params for admin.u.showDomainPanel were not set. verb and domain are required: ");
-					app.u.dump(data);
-					}
-				},
 
 /*
 CODE FOR URL MANAGEMENT
@@ -5332,6 +5310,17 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 		e : {
+//add a class of allowBulkCheck to the checkboxes that you want toggled on event 
+			checkAllCheckboxesExec : function($ele,p)	{
+				if($ele.data('selected'))	{
+					$ele.data('selected',false);
+					$ele.closest(".dualModeList").find(":checkbox.allowBulkCheck").prop('checked','').removeProp('checked');
+					}
+				else	{
+					$ele.data('selected',true);
+					$ele.closest(".dualModeList").find(":checkbox.allowBulkCheck").prop('checked','checked');
+					}
+				},
 
 			adjustHeightOnFocus : function($ele,p)	{
 				$ele.height('300');
@@ -5376,7 +5365,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 			submitForm : function($ele,p)	{
 				var $form = $ele.closest('form');
 				
-				if(app.u.validateForm($form))	{					
+				if($ele.data('skipvalidation') || app.u.validateForm($form))	{					
 					if(app.ext.admin.a.processForm($form,'immutable',p))	{
 						$form.showLoading({'message':'Updating...'});	
 						app.model.dispatchThis('immutable');
@@ -5397,7 +5386,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						sfo = $btn.closest('form').serializeJSON({"cb":true}),
 						$DMI = $btn.closest("[data-app-role='dualModeList']");
 					
-					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo)
+					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo);
 					sfo._tag.jqObj = $DMI;
 					if(sfo._cmd)	{
 						$DMI.showLoading();
@@ -5431,6 +5420,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						event.preventDefault();
 						$DMI.showLoading({'message' : 'Refreshing list...' });
 						$("[data-app-role='dualModeListTbody']",$DMI).empty();
+						$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
 						var cmdVars = {};
 						if($btn.data('serializeform'))	{
 							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
@@ -5787,14 +5777,14 @@ if(domainname)	{
 	if($btn.data('mode') == 'host')	{
 		var hostname = $btn.closest("[data-hostname]").data('hostname');
 		if(hostname)	{
-			linkOffSite("http://"+hostname+"."+domainname+"/");
+			linkOffSite("http://"+hostname+"."+domainname+"/",'',true);
 			}
 		else {
 			$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
 			}
 		}
 	else	{
-		linkOffSite("http://www."+domainname+"/");
+		linkOffSite("http://www."+domainname+"/",'',true);
 		}
 	}
 else	{
@@ -6143,21 +6133,22 @@ else	{
 	callback({});
 	}
 
-
-
-
 					});
 				},
 			
 			showYTVInDialog : function($ele)	{
 				app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
 				},
-		
+			googleLogin : function($btn)	{
+				$btn.off('click.googleLogin').on('click.googleLogin',function(){
+					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
+					});
+				},
 			linkOffSite : function($btn)	{
 				$btn.button();
 				$btn.off('click.linkOffSite').on('click.linkOffSite',function(){
 					if($btn.data('url'))	{
-						linkOffSite($btn.data('url'));
+						linkOffSite($btn.data('url'),'',true);
 						}
 					else	{
 						$btn.button('disable');

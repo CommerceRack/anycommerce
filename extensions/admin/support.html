@@ -1,20 +1,35 @@
 
 
-<div id='platformInfoTemplate'>
+<div id='platformInfoTemplate' data-app-role='platformInfoContainer'>
 	<table>
 	<tr>
 		<td>
-		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubeVideo;'></div>
+		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubeVideo;' data-app-role='platformInfoVideoContainer'></div>
 	<!-- platformInfo will automatically be appended to the bottom of this -->
 		</td>
 		<td>
-		<div data-app-role='platformInfoContainer'></div>
-		</td>
+		<div data-app-role='platformInfoDetailsContainer' ></div>
+		<table class='fullWidth gridTable'>
+		<thead>
+		<tr>
+			<th><h3>Video History</h3></th>
+			<th><h3>Change log</h3></th>
+		</tr>
+		</thead>
+		<tbody data-bind="useParentData:true; format:processList; loadsTemplate:platformVideoItemTemplate;">
+		
+		</tbody>
+		</table>
 	</tr>
 	</table>
 </div>
 
-
+<table>
+<tr id='platformVideoItemTemplate'>
+	<td data-app-click='admin_support|platformInfoWatchVideo' data-bind='var:history(branch); format:text;' class='lookLikeLink'></td>
+	<td data-app-click='admin_support|platformInfoViewChangelog' class='lookLikeLink'>Change log</td>
+</tr>
+</table>
 
 
 
@@ -95,14 +110,14 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 
 <fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicStorefront'>
 	<legend>Storefront</legend>
-	<label><span>Domain: </span><input type='url' name='storefront_domain' data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Domain: </span><input type='url' name='storefront_domain' data-bind="var: ticket(domain); format:popVal;" data-validation-rules='skipIfHidden' required='required' /></label>
 	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 
 <fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicDNS'>
 	<legend>Domain/DNS</legend>
-	<label><span>Domain: </span><input type='url' name='DNS_domain'  data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Domain: </span><input type='url' name='DNS_domain' data-bind="var: ticket(domain); format:popVal;" data-validation-rules='skipIfHidden' required='required' /></label>
 </fieldset>
 
 <fieldset class='displayNone ticketPriority' data-panel-id='ticketPriorityHigh'>
@@ -129,10 +144,11 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 </fieldset>
 
 <button class='floatRight ui-state-highlight applyButton' data-app-click="admin_support|adminTicketCreateExec" data-text='true' data-icon-primary='ui-icon-circle-plus'>Create Ticket</button>
-<button class='floatRight marginRight applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-app-click="admin_support|fileAttach2TicketShow">Attach Files</button>
+<!--<button class='floatRight marginRight applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-app-click="admin_support|fileAttach2TicketShow">Attach Files</button>-->
 <button data-app-click="admin|dialogCloseExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-close'>Cancel</button>
 
 <p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
+<p class='hint'>Once the ticket is created, you'll be able to attach files.</p>
 <p class='hint'>Also, remember that the more details you provide, the more likely we are to be able to reproduce and resolve.</p>
 
 </form>
@@ -161,7 +177,7 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 	
 	
 	<table class='fullWidth gridTable marginBottom'>
-		<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;"></tbody>
+		<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;" data-app-role='ticketFollowupList'></tbody>
 	</table>
 	
 	<div class='labelsAsBreaks alignedLabels alignedInputs'>
@@ -174,7 +190,7 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;"></tbody>
+	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
 	</table>
 
 	<form class='marginTop'>

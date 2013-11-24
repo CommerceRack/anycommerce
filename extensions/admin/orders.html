@@ -24,8 +24,6 @@
 </form>
 		</div>
 
-
-
 	
 	
 		<h2>Item Filters</h2>
@@ -34,6 +32,7 @@
 			<ul class='noPadOrMargin listStyleNone filterGroup'>
 				<li data-filtervalue='backorder' data-app-click='admin_orders|itemListFilterUpdate'>Backorder</li>
 				<li data-filtervalue='preorder' data-app-click='admin_orders|itemListFilterUpdate'>Preorder</li>
+				<li data-filtervalue='return' data-app-click='admin_orders|itemListFilterUpdate'>Returns</li>
 				<li data-filtervalue='pick_noroute' data-app-click='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
 				<li data-filtervalue='pick_unshipped' data-app-click='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
 			</ul>
@@ -140,7 +139,7 @@
 						</li>
 
 						<li><a href='#'>Send email</a>
-						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
+						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;" data-app-role='bulkEmailMessagesList'>
 						</ul>
 						</li>
 	

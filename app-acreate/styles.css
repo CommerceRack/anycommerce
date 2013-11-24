@@ -48,11 +48,3 @@ img {border:0px;}
 .alignedInputs input[type=url],
 .alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
 
-.treatAsthreePLSprite, .threePLSprite	{height:30px; width:162px; display:block; float:left; margin:0 4px 4px 0; text-align:left;}
-.threePLSprite	{background-image:url(third_party_logins-176x276.png); background-repeat:no-repeat;}
-.twitter	{background-position:0 0;}
-.facebook	{background-position:0 -48px;}
-.linkedin	{background-position:0 -93px;}
-.yahoo	{background-position:0 -141px;}
-.openid	{background-position:0 -188px;}
-.google	{background-position:0 -235px;}

@@ -248,37 +248,6 @@ LANDING PAGE
 </tr>
 </table>
 
-<!--
-########################
-
-
-DOMAIN CONFIG
-
-
-########################
--->
-
-
-
-
-<div id='domainPanelTemplate' class='panel domainPanel stackedPanels' data-app-role='domainPanel'>
-	<h3 data-bind="var: domain(id); format: assignAttribute; attribute:data-domain;" data-verb="LOAD" onClick="adminUIDomainPanelExecute($(this));" class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix'>
-		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-		<span data-bind="var: domain(id); format:text;"></span>
-	</h3>
-
-	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom' >
-	
-	
-	<form action="#" onSubmit="return false;">
-	<fieldset data-app-role='domainEditorContents'></fieldset>
-	</form>
-	
-	</div>	
-
-</div>
-
-
 
 
 
@@ -351,11 +320,6 @@ SETUP PAGE TEMPLATE
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 
 			
-			<a href="#" onClick="navigateTo('/biz/vstore/billing/index.cgi'); return false;" title="/biz/setup/billing/index.cgi">Billing History</a><br />
-			<div class="helper marginBottom">View your billing history, update payment information.</div>
-			
-			
-
 			<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
 			<div class="helper">Put in Logo, Address, Policies, etc.</div>
 
@@ -493,6 +457,9 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('#!globalSettings'); return false;">Global Settings</a><br />
 			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
 			
+			<a href="#" onClick="navigateTo('#!notifications'); return false;">Notifications</a><br />
+			<div class="helper marginBottom">Configure notifications based on system events.</div>
+			
 			<a href="#" onClick="navigateTo('#!partitionManager'); return false;">Partitions</a><br />
 			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
 
@@ -614,31 +581,8 @@ SETUP PAGE TEMPLATE
 	</td>
 	<td></td>
 	<td class='alignRight width50'>
-<!--	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button> -->
-	<span  class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;"><!-- buttons not working yet.  -->
-		<button data-app-event='admin_templateEditor|templateChooserShow' data-hidebuttontext='1' data-mode='Site'>Choose a Template</button>
-		<button data-app-event='admin_templateEditor|templateEditorShow' data-hidebuttontext='1' data-mode='Site'>Edit Project</button>
-<!-- buttons locked UNLESS a project is in place -->
-		<button data-app-event='admin_templateEditor|containerZipDownloadExec' data-mode='Site' data-hidebuttontext='true'>Download Zip of Template</button>
-		<button data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site' data-hidebuttontext='true'>Upload Template Files</button>
-<!-- end project dependant buttons -->
-	</span>
-
-
-	<!-- ### when this is upgraded to delegated events, change the two buttons below to one custom render format w/ a button in it -->
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITE;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:SITEPTR;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	
-	<span class='displayNone'  data-bind="var: host(HOSTTYPE); format:showIfMatch; matchValue:APP;">
-	<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL' data-icon-primary="ui-icon-transferthick-e-w">Pull from GitHub</button>
-	</span>
-	
 	<button data-app-event="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
+	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin;" class='positionRelative'></span>
 	</td>
 </tr>
 
@@ -1272,7 +1216,7 @@ ACHIEVEMENTS
 	
 	<label>
 		<span>Feed Link</span>
-			<input type="url" name="feed_link" value="" data-bind="var: rss(feed_link); format: popVal;" />
+			<input type="text" name="LINK" value="" data-bind="var: rss(LINK); format: popVal;" readonly="readonly" />
 			<span class="toolTip" title="The URL to your store, or for this promotion.">?</span>
 	</label>
 	<label>
@@ -1473,6 +1417,7 @@ data-contentloaded is used to determine if dynamic content has already been load
 		<div data-bind="var: list(%CATEGORIES); format: manageCatsList; extension:admin_prodEdit; loadsTemplate:pickerManageCatsRowTemplate;"></div>
 		
 		<h6 data-pickmethod='CUSTOM'>Comma Separated List</h6>
+
 		<div data-contentloaded='true'>
 <textarea name='csv' rows='10' class='fullWidth'></textarea>
 <span class='hint'>use commas or linebreaks to separate each product</span>

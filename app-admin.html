@@ -15,7 +15,7 @@ var myCreole;
 
 var baseURL = '';
 //in admin, used for loading app-specific files. do NOT set the base href tho.
-if (document.location.protocol  == 'file:') { 
+if (document.location.protocol  == 'file:') {
 	baseURL = '';
 	}
 else if (document.location.port == 8888) {
@@ -28,7 +28,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201344.n",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201346.i",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -115,25 +115,35 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 <div id='appLogin' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
-	<div class='logo alignCenter'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+	<div class='logo alignCenter marginBottom'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 
 	<div class='appMessaging'></div>
 
 	<div id='loginFormContainer'>
 		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom'>
-		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+		<input type='hidden' name='authtype' value='md5' /><!-- required for the 'call' -->
+		<fieldset class='labelsAsBreaks alignedInputs'>
 			<legend>Merchant Login</legend>
 			
-			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
-			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
+			<div class='clearfix marginBottom'>
+				<input placeholder='login' type='text' name='userid' value='' required='required' class='textbox' />
+				<input placeholder='password' type='password' name='password' value=''  required='required' class='textbox' />
+				<button class='loginbutton' data-app-event="admin|accountLogin">login</button>
+			</div>
 			
-	
-			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
+			<div class='clearfix marginBottom'>
+				<label class='hint floatRight'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
 <!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
-			<div class="hint">App Release #: <span id="appversion">??</span></div>
-			<label class='hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><b><a href='/201342/app-admin.html'> &#187; Use previous version</a></b></div>
-
+				<div class="hint">App Release #: <span id="appversion">??</span></div>
+			
+				<div class="hint"><a href='/201344/app-admin.html'> &#187; Use previous version</a></div>
+			</div>
+			
+			<div class='clearfix marginBottom alignCenter'>
+				<div class='marginBottom hint'> - or - </div>
+				<span data-app-event="admin|googleLogin" class='threePLSprite google'></span>
+			</div>
+			
 		</fieldset>
 		</form>
 		<div class='showForAnyCommerceOnly'>
@@ -373,7 +383,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
     </tr>
 {% } %}
 </script>
-<!-- The template to display files available for download -->
+<!-- The template to display files available for download-->
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade"  data-filename="{%=file.name%}">
