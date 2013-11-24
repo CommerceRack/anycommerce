@@ -265,7 +265,7 @@ body {
 	min-height:156px;
 }
 .productListRecentlyViewed li {
-	height:50px;
+	min-height:50px;
 	margin: 2px 0px 0px;
 }
 .recentViewList .prodThumb {
@@ -276,10 +276,18 @@ body {
     color: #3D1F00;
     font-size: 10px;
 }
+.recentViewPriceDetail{
+	font-size: 10px;
+}
 .recentViewProdPrice {
     color: #D36101;
-    font-size: 10px;
 	padding-right:5px;
+}
+.recentViewMoreDetails{
+	color: #0B487F;
+}
+.recentViewMoreDetails:hover{
+	color:#FF7F00;
 }
 /***** Sidebar Right CSS End *****/
 
