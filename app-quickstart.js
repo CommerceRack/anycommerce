@@ -922,6 +922,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, app.ext.myRIA.vars.session.recentlyViewedItems), 1)[0]);
 							}
 						infoObj.parentID = app.ext.myRIA.u.showProd(infoObj);
+// ** START ZEPHYRAPP CUSTOMIZATION
+						app.ext.store_zephyrapp.u.cacheRecentlyViewedItems();
+// ** END ZEPHYRAPP CUSTOMIZATION
 						break;
 	
 					case 'homepage':

@@ -90,10 +90,34 @@ var store_zephyrapp = function() {
 				return r;
 				
 				},
+			
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				}
+			},
+			startExtension: {
+				onSuccess : function()	{
+					var temp = JSON.parse(app.storageFunctions.readLocal('recentlyViewedItems'));
+					var oldTime = JSON.parse(app.storageFunctions.readLocal('timeStamp'));
+					var d = new Date().getTime();
+					if(d - oldTime > 90*24*60*60*1000) {
+						var expired = true;
+					}
+					else {
+						var expired = false;
+					}
+					if(temp && !expired){
+						app.ext.myRIA.vars.session.recentlyViewedItems = temp;
+						app.u.dump(app.ext.myRIA.vars.session.recentlyViewedItems);
+						var $container = $('#recentlyViewedItemsContainer');
+						$container.show();
+						$("ul",$container).empty(); //empty product list
+						$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
+					}
+				},
+				onError : function()	{
 				}
 			}
 		}, //callbacks
@@ -123,8 +147,13 @@ var store_zephyrapp = function() {
 		u : {
 			randomizeList : function($list){
 				$list.children().shuffle();
-				}
-		
+				},
+			cacheRecentlyViewedItems: function ($container){
+				app.u.dump ('Caching product to recently viewed');
+				var d = new Date().getTime();
+				app.storageFunctions.writeLocal('recentlyViewedItems', app.ext.myRIA.vars.session.recentlyViewedItems);
+				app.storageFunctions.writeLocal('timeStamp',d);// Add timestamp
+			}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
