@@ -2979,14 +2979,20 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
 	
+			<b>Enquiries</b><br>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY">Enquiry <span class='toolTip' title="Triggered by enquiry based events.">?</span></label>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY.ORDER">Order Enquiry <span class='toolTip' title="Triggered through website 'contact us' with a confirmed order id.">?</span></label>
 			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Customer Order Cancel <span class='toolTip' title="Triggered when a customer cancels an order.">?</span></label>
 
-			<label><input type='radio' name='event' required='required' value="ERROR.SYNDICATION">Syndication Error</label>
-			<label><input type='radio' name='event' required='required' value="ALERT.SYNDICATION">Syndication Alert</label>
-			<label><input type='radio' name='event' required='required' value="APIERR.SUPPLIER">Order Enquiry</label>
+			<b>Errors and Alerts</b><br>
+			<label><input type='radio' name='event' required='required' value="ERROR.SYNDICATION">Syndication Failure</label>
+			<label><input type='radio' name='event' required='required' value="ALERT.SYNDICATION">Syndication Alert/Warning</label>
+			<label><input type='radio' name='event' required='required' value="APIERR.SUPPLIER">Supplier API Error</label>
 
+			<b>Inventory</b><br>
+			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.SHOW">Show on Website</label>
+			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.HIDE">Hide from Website</label>
+			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.FAIL">Website Change Failure</label>
 
 
 			<label>
