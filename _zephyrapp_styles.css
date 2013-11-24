@@ -488,7 +488,7 @@ body {
 }
 .productList > li {
 	height:260px;
-	margin: 15px;
+	margin: 10px 15px 15px;
 }
 .prodListName {
 	color: #0B487F;
