@@ -73,26 +73,19 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-<table>
-<tr>
-	<td><!-- put logo here --></td>
-	<td>
-
-	<div id="loader">
+	<img id="appPreViewLogo" width="317" height="105" src="images/zephyr_logo.png"/>
+	<div id="loader" class="alignCenter marginTop">
 		<h3>One moment please.</h3>
 
 		<div class='alignCenter'>
 		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
 		</div>
-		<div id='appPreViewProgressText'>0% Complete</div>
+		<div id='appPreViewProgressText alignCenter'>0% Complete</div>
 	</div>
 	<div id="clickToLoad" class="displayNone pointer">
 		Click here to load your shopping experience!
 	</div>
 	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
 </div>
 
 

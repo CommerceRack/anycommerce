@@ -1,5 +1,5 @@
 body {
-	background: url(images/zs10_body_bg-2000x16.gif) repeat scroll center #000000;
+	background: url(images/zs10_body_bg-2000x16.gif) repeat scroll center #717171;
 	color: #000000;
 	font-family: Arial,Helvetica,sans-serif;
 	margin: 0px;
@@ -11,6 +11,25 @@ body {
 .clear {
 	clear:both;
 }
+
+
+/***** appPreView CSS Start *****/
+#appPreView {
+    background: none repeat scroll 0 0 #C7C7C7;
+    border: 2px solid #464646;
+    border-radius: 15px;
+    margin: 10px auto;
+    padding: 8px;
+    width: 400px;
+}
+#appPreViewLogo {
+	margin: 0 auto;
+	display:block;
+}
+
+/***** appPreView CSS End *****/
+
+
 /***** Top Bar CSS Start *****/
 #header{
 	position:relative; /* Must be non-static for children to position correctly */
