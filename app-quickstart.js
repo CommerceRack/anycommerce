@@ -842,8 +842,13 @@ fallback is to just output the value.
 				var msrp = Number(pData['zoovy:prod_msrp']);
 				if(price > 0 && (msrp - price > 0))	{
 					var savings = (( msrp - price ) / msrp) * 100;
-					o = savings.toFixed(0)+'%';
-					$tag.append(o);
+						if(savings > 10) {
+							o = savings.toFixed(0)+'%';
+							$tag.append(o);
+						}
+						else {
+							 $tag.parent().hide();
+						}
 					}
 				else	{
 					$tag.hide(); //if msrp > price, don't show savings because it'll be negative.
