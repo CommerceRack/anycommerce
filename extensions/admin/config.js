@@ -743,8 +743,10 @@ $D.dialog('open');
 		u : {
 
 			getPluginData : function(plugin)	{
+//				app.u.dump("BEGIN admin_config.u.getPluginData");
 				var r = {}; //what is returned.
 				if(plugin)	{
+//					app.u.dump(" -> plugin: "+plugin);
 					if(app.data['adminConfigDetail|plugins'] && app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
 						var L = app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
 						for(var i = 0; i < L; i += 1)	{
@@ -761,7 +763,7 @@ $D.dialog('open');
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, plugin ["+plugin+"] not set.","gMessage":true});
 					}
-					
+//				app.u.dump(" -> r: "); app.u.dump(r);
 				return r;
 				}, //getPluginData
 
