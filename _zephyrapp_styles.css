@@ -638,6 +638,18 @@ body {
 	width:545px;
 	padding: 0px;
 }
+.imgZoomPlugin {
+	float:left;
+	border:1px solid #CCCCCC;
+}
+.thumbImageCont.thumbCarousel {
+    float: left;
+    width: 96px;
+}
+.thumbImageCont.thumbCarousel img {
+    border: 2px solid #CCCCCC;
+    margin: 0px 5px 3px;
+}
 .prodSummaryContainer{
 	width:225px;
 	padding-right: 20px;

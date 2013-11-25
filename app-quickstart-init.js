@@ -19,6 +19,7 @@ app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 app.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
 app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/jquery-cycle.js']);
+app.rq.push(['extension',0,'tools_zoom','extensions/tools_zoom/tools_zoom.js']);
 
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);

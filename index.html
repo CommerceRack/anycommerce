@@ -1050,20 +1050,7 @@ this will likely become more flexible in the future. ###
 	<table class='prodViewerContainer'>
 		<tr>
 		<td class='imageContainer'>
-			<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-				<img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
-			</div>
-
-		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
-
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='100' height='100' /></div>
-
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='100' height='100' /></div>
-
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='100' height='100' /></div>
-
-		</div>
-
+			<a class="imgZoomPlugin" data-bind="useParentData:true; format:imageZoom; extension:tools_zoom; isThumbs:1; hrefAttr:%attribs.zoovy:prod_image1; w:500; h:500;" data-thumbclass='thumbCarousel' height='262' width='413' zheight='524' zwidth='826' theight='54' twidth='82'></a>
 		</td>
 
 		<td class='prodSummaryContainer marginBottom no_underline alignRight'>
@@ -1120,6 +1107,7 @@ this will likely become more flexible in the future. ###
 
 		</td>
 	</tr>
+	<div class="clear"></div>
 	<tr>
 		<td colspan='2' class="tabbedProductContentTD">
 	<!--
