@@ -541,13 +541,13 @@ it has no inventory AND inventory matters to merchant
 //if variations are NOT present, inventory count is readily available.
 				if(app.data['appProductGet|'+pid])	{
 					if((app.data['appProductGet|'+pid]['@variations'] && $.isEmptyObject(app.data['appProductGet|'+pid]['@variations'])) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
-						inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].available);
+						inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].AVAILABLE);
 	//					app.u.dump(" -> item has no variations. inv = "+inv);
 						}
 	//if variations ARE present, inventory must be summed from each inventory-able variation.
 					else	{
 						for(var index in app.data['appProductGet|'+pid]['@inventory']) {
-							inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].available)
+							inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].AVAILABLE)
 							}
 	//					app.u.dump(" -> item HAS variations. inv = "+inv);
 						}
