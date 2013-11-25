@@ -85,6 +85,34 @@ var store_zephyrapp = function() {
 							});
 					}]);
 					
+				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').hide();
+					$('#contentArea').css({"width":"785px"});
+				}]);
+				
+				app.rq.push(['templateFunction', 'productTemplate','onDeparts',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px"});
+				}]);	
+				
+				
+				app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').hide();
+					$('#contentArea').css({"width":"785px"});
+				}]);
+				
+				app.rq.push(['templateFunction', 'checkoutTemplate','onDeparts',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px"});
+				}]);	
 				r = true;
 
 				return r;
