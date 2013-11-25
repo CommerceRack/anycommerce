@@ -586,11 +586,11 @@ body {
 	background: url(images/zephyr_tags.png) no-repeat;
 }
 .prodListTagsContainer .is_bestseller{background-position:-1px -1px;}
-.prodListTagsContainer .is_discontinued{background-position:-1px -55px;}
 .prodListTagsContainer .is_preorder{background-position:-1px -136px;}
 .prodListTagsContainer .is_sale{background-position:-1px -163px;}
 .prodListTagsContainer .is_specialorder{background-position:-1px -190px;}
 .prodListTagsContainer .is_newarrival{background-position:-1px -82px;}
+.prodListTagsContainer .is_discontinued{display:none;}
 .prodListTagsContainer .is_user3 {display:none;}
 .prodListTagsContainer .is_user5 {display:none;}
 .prodListTagsContainer .is_user6 {display:none;}
