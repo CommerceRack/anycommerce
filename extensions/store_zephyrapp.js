@@ -89,14 +89,14 @@ var store_zephyrapp = function() {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
-					$('#contentArea').css({"width":"785px"});
+					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
 				}]);
 				
 				app.rq.push(['templateFunction', 'productTemplate','onDeparts',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px"});
+					$('#contentArea').css({"width":"600px","padding":"5px"});
 				}]);	
 				
 				
@@ -104,15 +104,29 @@ var store_zephyrapp = function() {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
-					$('#contentArea').css({"width":"785px"});
+					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
 				}]);
 				
 				app.rq.push(['templateFunction', 'checkoutTemplate','onDeparts',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px"});
-				}]);	
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);
+
+				app.rq.push(['templateFunction', 'cartTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').hide();
+					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
+				}]);
+				
+				app.rq.push(['templateFunction', 'cartTemplate','onDeparts',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);
 				r = true;
 
 				return r;
