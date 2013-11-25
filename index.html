@@ -728,7 +728,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</ul>
 	</div>
 	<div class="listHeader">Featured Items</div>
-	<ul data-bind="var: list($homepage_products.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; items_per_page: 25; hide_summary:1; withInventory:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList randomList'></ul>
+	<ul data-bind="var: list($homepage_products.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; items_per_page: 25; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList randomList'></ul>
 	<div class="listHeader marginTop">About Zephyr Paintball</div>
 	<!-- Start Copied Code from Vstore -->
 	<div style="border:1px double #BBBBBB; padding: 5px 5px 5px 5px; text-align:justify; width:auto; font-size:0.96em; margin-bottom:.3em;">
@@ -811,7 +811,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
 	</div>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; withInventory: 1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; withInventory: 1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
