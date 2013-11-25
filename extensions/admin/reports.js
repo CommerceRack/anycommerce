@@ -149,6 +149,7 @@ var admin_reports = function() {
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
+								$target.anydelegate();
 								var
 									data = app.data[rd.datapointer]['@PARAMETERS'];
 //* 201338 -> better handling if no parameters are returned.
@@ -158,9 +159,9 @@ var admin_reports = function() {
 										$invReports = $("[data-app-role='inventoryReportsCustomContainer_inventory']:first",$target);
 							
 										function display(job){
-											return "<a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a> (last run: "+job.LASTRUN_TS+") <br />"
+											return "<p data-app-role='batchContainer'><a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a><br>(last run: "+job.LASTRUN_TS+")<br><a href='#' data-app-click='admin_batchJob|adminBatchJobParametersRemoveConfirm' data-uuid='"+job.UUID+"'>Remove<\/a><\/p>"
 											}
-							
+
 										for(var i = 0; i < L; i += 1)	{
 											if(data[i].BATCH_EXEC == 'REPORT/SKU')	{
 												$skuReports.append(display(data[i]));
@@ -1412,6 +1413,8 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					else	{} //validateForm handles error display.
 					});
 				},
+
+
 
 			adminInventoryReportSaveExec : function($btn)	{
 				$btn.button();

@@ -240,6 +240,43 @@ app.model.dispatchThis('mutable');
 		e : {
 
 
+			adminBatchJobParametersRemoveConfirm : function($ele,p)	{
+				if($ele.data('uuid'))	{
+
+					app.ext.admin.i.dialogConfirmRemove({
+						"message" : "Are you sure you want to delete this saved batch process? There is no undo for this action.",
+						"removeButtonText" : "Remove", //will default if blank
+						"title" : "Remove Saved Batch Process", //will default if blank
+						"removeFunction" : function(vars,$D){
+							$D.showLoading({"message":"Deleting saved batch process"});
+							app.model.addDispatchToQ({
+								'_cmd':'adminBatchJobParametersRemove',
+								'UUID' : $ele.data('uuid'),
+								'_tag':	{
+									'callback':function(rd){
+										$D.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											//success content goes here.
+											$ele.closest("[data-app-role='batchContainer']").empty().remove();
+											$D.dialog('close');
+											}
+										}
+									}
+								},'mutable');
+							app.model.dispatchThis('mutable');
+							//now go delete something.
+							}
+						})
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_reports.e.adminBatchJobParametersRemove, data-uuid not set on trigger element.","gMessage":true});
+					}
+				},
+
+
 			batchJobExec : function($btn)	{
 				if($btn.is('button'))	{
 					$btn.button({text: false,icons: {primary: $btn.attr('data-icon-primary') || "ui-icon-refresh"}})
