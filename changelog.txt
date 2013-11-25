@@ -33,12 +33,16 @@ ADMIN
 	feature - setup > notifications. allows for events to trigger actions (currently supports customer inquiry. more to come...)
 	feature - utilities > support tools > ebay listing sync button. Complete download of ebay listings. [201346.i]
 	bug fix - setup > shipping > ups.  checkboxes under 'rating services' header didn't save. [201346.i]
+	enhancement - reports > inventory > saved reports can now be deleted. [201346.i]
+	bug fix - product > edit product > web page edit now working again.
+	
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
 	enhancement - company nav links now generated based on what articles exist w/in company (and in that order). H1 is used to build title.
 	bug fix - searchTemplate onCompletes were not running.
 	enhancement - cartTemplate is now responsive. (major changes to css and the template itself)
+	bug fix - inventory in appProductGet working again.
 
 201344
 ADMIN
