@@ -785,7 +785,8 @@ fallback is to just output the value.
 						buttonText = 'Choose Size'; className = 'variational sizeable';
 						}
 //pdata is a shortcut to attribs.
-					else if(!$.isEmptyObject(data.value['@variations']))	{
+//*** 201346 Must also check for product children as variations, as parent products cannot be added to cart.
+					else if(!$.isEmptyObject(data.value['@variations']) || pData['zoovy:grp_children'])	{
 						buttonText = 'Choose Options'; className = 'variational';
 						}
 					else	{
