@@ -2862,7 +2862,7 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 
 			webPageEditor : function($ele,p)	{
 				var pid = $ele.closest("[data-pid]").data('pid');
-				if(pid)	{navigateTo('/biz/vstore/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
+				if(pid)	{navigateTo('/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PRODUCT&FS=P&SKU='+pid);}
 				else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
 				}, //webPageEditor
 
