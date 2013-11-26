@@ -2133,6 +2133,44 @@ Required params include:
 				else	{$form.hideLoading();}
 				},
 			
+// ### TODO ### -> when this is done, see if pricetag and skus can be merged.			
+			pricetags : function($form)	{
+				var pid = $("input[name='pid']",$form).val();
+				var cmdObj = {
+					_cmd : 'adminProductMacro',
+					pid : pid,
+					'@updates' : new Array(),
+					_tag : {
+						callback : 'showMessaging',
+						"message" : "Pricetags have been udpated.",
+						restoreInputsFromTrackingState : true,
+						jqObj : $form
+						}
+					}
+
+//the :input pseudo selector will match all form field types.
+var $tbody = $("[data-app-role='prodEditSkuAttribsTbody']",$form);
+//high level check to see if any updates occured within sku attribs.
+if($('.edited',$tbody).length)	{
+	
+	$('.edited',$tbody).each(function(){
+		var $input = $(this);
+		var SKU = $input.closest("[data-sku]").data('sku');
+		cmdObj['@updates'].push("SET-SKU-PRICETAG?SKU="+SKU+"&tag="+$input.attr('name')+'&price='+$input.val());		
+		});
+	}
+else	{} //no changes in pricetags.
+
+//app.u.dump(" -> cmdObj for sku:"); app.u.dump(cmdObj);
+				//The save button that exectutes this also runs skuImages. So it's possible this was run without any sku attribs changes 
+				//to avoid an API error (no @updates set), only add to Q if updates are present.
+				if(cmdObj['@updates'].length)	{
+					app.model.addDispatchToQ(cmdObj,'immutable');
+					}
+				else{$form.hideLoading();}
+				
+				},
+			
 // executed from the save button in the variations panel. called sku because it doesn't impact add/removing variations, just updating attribs for each option.
 			sku : function($form)	{
 				var pid = $("input[name='pid']",$form).val();
@@ -2363,6 +2401,22 @@ function type2class(type)	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element.","gMessage":true});
 					}
 				},
+
+			handleCompetitionTabContent : function($ele,p)	{
+				var
+					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
+					pid = $PE.data('pid');
+				
+//Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
+					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+//item has inventory-able variations
+						}
+					else	{
+//item does not have inventory-able variations.
+						}				
+				
+				},
+
 
 			handleAttributesTabContent : function($ele,p)	{
 				var
