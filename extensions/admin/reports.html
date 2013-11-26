@@ -575,7 +575,15 @@
 
 
 <div class='twoColumn'>
-	<h2>Sku Reporting</h2>
+	<h2>
+		SKU Summary Reporting
+		<span class='toolTip' title="SKU level reports include summary fields
+		such as AVAILABLE, ONSHELF, etc. Summary fields are computed based on
+		the Inventory Detail records. Changes in inventory summary values such
+		as AVAILABLE are also responsible for generating notifications such as INV.GOTINSTOCK, and
+		INV.OUTOFSTOCK.  Each inventory summary is the combinatin of one or
+		more inventory detail records with the same SKU.">?</span>
+	</h2>
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 		<div class='stdMargin'>
@@ -601,7 +609,16 @@
 
 
 <div class='twoColumn column2'>
-	<h2>Inventory Reporting</h2>
+	<h2>
+		Inventory Detail Records
+		<span class='toolTip' title="Inventory detail records track the
+		individual disposition of each record. Every inventory record has a
+		BASETYPE field which indicates the type of inventory detail it
+		contains common BASETYPEs are SIMPLE, SUPPLIER, WMS, PICK, DONE.
+		Inventory detail records are automatically summed to create a SKU summary
+		that is used for decision logic in syndication, and shopping cart checkouts.
+		">?</span>
+	</h2>
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 			<div class='stdMargin'>
