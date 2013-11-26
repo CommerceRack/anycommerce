@@ -584,6 +584,7 @@ app.ext.admin.u.handleAppEvents($order);
 
 		//now is the time on sprockets when we enhance.
 		//go through lineitems and make item-specific changes. locking inputs. color changes, etc.
+		//INVDETAIL 'may' be blank.
 		if(orderData['@ITEMS'] && orderData['%INVDETAIL'])	{
 			var $table = $("[data-app-role='orderContentsTable']",$order); //used for context.
 			var L = orderData['@ITEMS'].length;
@@ -2596,9 +2597,10 @@ else	{
 								cmd = "ITEM-UUID-DONE?"
 								}
 							cmd += "UUID="+uuid;
-//							app.u.dump(" -> CMD: "+cmd);
+							app.u.dump(" -> CMD: "+cmd);
+							app.u.dump(" -> orderID: "+orderID);
 							app.ext.admin.calls.adminOrderMacro.init(orderID,[cmd],{});
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]"),'immutable');
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]").intervaledEmpty().attr('id'),'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{
