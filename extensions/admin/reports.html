@@ -611,10 +611,21 @@
 <div class='twoColumn column2'>
 	<h2>
 		Inventory Detail Records
-		<span class='toolTip' title="Inventory detail records track the
-		individual disposition of each record. Every inventory record has a
-		BASETYPE field which indicates the type of inventory detail it
+		<span class='toolTip' title="The purpose of an Inventory detail is to
+		track each unique instance of SKU, quantity.  
+		For example if a store had a warehouse with the same SKU (Stock
+		Keeping Unit) at two locations in a warehouse each would have their
+		own Inventory Detail. 
+		
+		Every inventory detail record has a BASETYPE field which indicates the type of inventory detail it
 		contains common BASETYPEs are SIMPLE, SUPPLIER, WMS, PICK, DONE.
+		Each order that is placed creates a PICK reservation, which is
+		ultimately convert into a DONE record when the physical inventory is
+		pulled from the shelf.  (This makes keeping accurate on-shelf
+		quantites possible).  In the case of SIMPLE inventory records which
+		are just +/- counters the quantities are automatically decremented
+		from SIMPLE inventory the moment the order is placed (so no advanced
+		item routing is necessary/possible -- hence the name 'SIMPLE').
 		Inventory detail records are automatically summed to create a SKU summary
 		that is used for decision logic in syndication, and shopping cart checkouts.
 		">?</span>
