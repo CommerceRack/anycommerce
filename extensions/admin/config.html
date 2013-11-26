@@ -2932,7 +2932,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <div id='notificationPageTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 
-<form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix'>
+<form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
 	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
 	<input type='hidden' name='_cmd' value='adminConfigMacro' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -3011,7 +3011,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 				</label>
 			</div>
 	
-			<button data-app-event="admin_config|dataTableAddExec">Add</button>
+			<button data-app-event="admin_config|dataTableAddExec" onClick='return false'>Add</button>
 	
 		
 		

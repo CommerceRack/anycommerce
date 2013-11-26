@@ -1702,6 +1702,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
 					event.preventDefault();
 					app.ext.admin_config.e.dataTableAddUpdate($btn,vars);
+					return false;
 					});
 				}, //dataTableAddExec
 
