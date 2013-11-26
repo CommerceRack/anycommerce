@@ -1795,7 +1795,7 @@ else	{
 								$('tbody',$(this)).find('tr').each(function(){
 									if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 									else	{
-										macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+										macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['weight','fee','subtotal','guid'])));
 										}
 									});
 								});
@@ -1806,7 +1806,7 @@ else	{
 							$('tbody',$dataTable).find('tr').each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
-									macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+									macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['country','type','match','guid'])));
 									}
 								});
 							}
