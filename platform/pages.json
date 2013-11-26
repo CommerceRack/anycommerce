@@ -2623,31 +2623,7 @@
       "description2" : "SportsWorldChicago.com has one of the only Live Web Cameras in Wrigleyville at the corner of Clark and Addison Streets.  Directly across from Wrigley Field, home of the Chicago Cubs, you can always see night and day what is happening at the epicenter of baseball in Chicago.\n\n\n\nBe sure to browse through SportsWorldChicago.com to shop for all your [[Chicago Cubs shirts]:category=l_shirts/] and Wrigley Field hats.  Sports World has one of the largest selections of [[Cubs caps and hats]:category=ww/], plus all [[Chicago Cubs authentic jerseys]:category=m_jerseys/] and on-field merchandise needed to make you a true Chicago Cubs fan!",
       "banner3" : "advertising/sia_banner_ad_v4",
       "prodlist4_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24hot_items&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
-      "html" : "<iframe width="650" height="366" frameborder="0" marginheight="0" marginwidth="0"  scrolling="no" src="http://www.earthcam.com/js/cubworld.php"></iframe>
-<div class="fb-like" data-href="https://www.facebook.com/SportsWorldChicago" data-layout="standard" data-action="like" data-show-faces="false" data-share="true"></div>
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style">
-<a class="addthis_button_tweet"></a>
-<a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal" pi:pinit:url="http://www.addthis.com/features/pinterest" pi:pinit:media="http://www.addthis.com/cms-content/images/features/pinterest-lg.png"></a>
-<a class="addthis_button_linkedin_counter"></a>
-<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-<a class="addthis_counter addthis_pill_style"></a>
-</div>
-<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52866a542daf3da7"></script>
-<!-- AddThis Button END -->
-
-<!-- EarthCam Player -->
-<script language="JavaScript"
-src="http://www.earthcam.com/js/webcamviewer.v1.js"
-type="text/javascript"></script>
-<script language="JavaScript" type="text/javascript">
-var camU = "http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg";
-camW = '650';
-camH = '480';
-camViewer(camU,camW,camH);
-</script>
-<!--/EarthCam Player -->",
+      "html" : "<iframe width=\"650\" height=\"366\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"  scrolling=\"no\" src=\"http://www.earthcam.com/js/cubworld.php\"></iframe><div class=\"fb-like\" data-href=\"https://www.facebook.com/SportsWorldChicago\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"false\" data-share=\"true\"></div><!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style\"><a class=\"addthis_button_tweet\"></a><a class=\"addthis_button_pinterest_pinit\" pi:pinit:layout=\"horizontal\" pi:pinit:url=\"http://www.addthis.com/features/pinterest\" pi:pinit:media=\"http://www.addthis.com/cms-content/images/features/pinterest-lg.png\"></a><a class=\"addthis_button_linkedin_counter\"></a><a class=\"addthis_button_google_plusone\" g:plusone:size=\"medium\"></a><a class=\"addthis_counter addthis_pill_style\"></a></div><script type=\"text/javascript\">var addthis_config = {\"data_track_addressbar\":true};</script><script type=\"text/javascript\" src=\"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52866a542daf3da7\"></script><!-- AddThis Button END --><!-- EarthCam Player --><script language=\"JavaScript\"src=\"http://www.earthcam.com/js/webcamviewer.v1.js\"type=\"text/javascript\"></script><script language=\"JavaScript\" type=\"text/javascript\">var camU = \"http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg\";camW = '650';camH = '480';camViewer(camU,camW,camH);</script><!--/EarthCam Player -->",
       "page_title" : "LIVE Wrigley Field Cam, Chicago Cubs Tickets - Across From Wrigley Field",
       "banner11_link" : "http://www.collectorzoo.com/?meta=swc",
       "banner2" : "advertising/side3",
