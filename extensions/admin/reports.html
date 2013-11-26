@@ -575,7 +575,15 @@
 
 
 <div class='twoColumn'>
-	<h2>Sku Reporting</h2>
+	<h2>
+		SKU Summary Reporting
+		<span class='toolTip' title="SKU level reports include summary fields
+		such as AVAILABLE, ONSHELF, etc. Summary fields are computed based on
+		the Inventory Detail records. Changes in inventory summary values such
+		as AVAILABLE are also responsible for generating notifications such as INV.GOTINSTOCK, and
+		INV.OUTOFSTOCK.  Each inventory summary is the combinatin of one or
+		more inventory detail records with the same SKU.">?</span>
+	</h2>
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 		<div class='stdMargin'>
@@ -601,7 +609,27 @@
 
 
 <div class='twoColumn column2'>
-	<h2>Inventory Reporting</h2>
+	<h2>
+		Inventory Detail Records
+		<span class='toolTip' title="The purpose of an Inventory detail is to
+		track each unique instance of SKU, quantity.  
+		For example if a store had a warehouse with the same SKU (Stock
+		Keeping Unit) at two locations in a warehouse each would have their
+		own Inventory Detail. 
+		
+		Every inventory detail record has a BASETYPE field which indicates the type of inventory detail it
+		contains common BASETYPEs are SIMPLE, SUPPLIER, WMS, PICK, DONE.
+		Each order that is placed creates a PICK reservation, which is
+		ultimately convert into a DONE record when the physical inventory is
+		pulled from the shelf.  (This makes keeping accurate on-shelf
+		quantites possible).  In the case of SIMPLE inventory records which
+		are just +/- counters the quantities are automatically decremented
+		from SIMPLE inventory the moment the order is placed (so no advanced
+		item routing is necessary/possible -- hence the name 'SIMPLE').
+		Inventory detail records are automatically summed to create a SKU summary
+		that is used for decision logic in syndication, and shopping cart checkouts.
+		">?</span>
+	</h2>
 	<div class='marginTop'>
 		<h3>Quick Reports</h3>
 			<div class='stdMargin'>

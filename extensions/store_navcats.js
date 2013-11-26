@@ -476,6 +476,8 @@ templateID - the template id used (from app.templates)
 //pass in category safe id as value
 			breadcrumb : function($tag,data)	{
 app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); 
+// * 201346 -> necessary for breadcrumb being supported in master header.
+$tag.empty(); //reset each time
 var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
 
 if(app.u.isSet(data.value))	{

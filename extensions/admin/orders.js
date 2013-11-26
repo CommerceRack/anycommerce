@@ -584,6 +584,7 @@ app.ext.admin.u.handleAppEvents($order);
 
 		//now is the time on sprockets when we enhance.
 		//go through lineitems and make item-specific changes. locking inputs. color changes, etc.
+		//INVDETAIL 'may' be blank.
 		if(orderData['@ITEMS'] && orderData['%INVDETAIL'])	{
 			var $table = $("[data-app-role='orderContentsTable']",$order); //used for context.
 			var L = orderData['@ITEMS'].length;
@@ -595,9 +596,10 @@ app.ext.admin.u.handleAppEvents($order);
 					$('li',$menu).hide();  //hide all the items in the base type menu. show as needed. li is used to hide (as opposed to using anchor) otherwise extra spacing occurs
 					//done means done. no adjusting price or quantity at this point.
 					if(invDetail.BASETYPE == "DONE")	{
-						$tr.attr('title','This item is DONE. It is no longer editable');
-						$('button',$tr).button('disable');
-						$(':input',$tr).prop('disabled','disabled');
+//						$tr.attr('title','This item is DONE. It is no longer editable');
+						$tr.attr('title','This item is DONE. Be very cautions about editing it.');
+//						$('button',$tr).button('disable'); //** 201346 -> commented out for holidays (till we have a permanent solution.
+//						$(':input',$tr).prop('disabled','disabled'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 						}
 					else if(invDetail.BASETYPE == 'UNPAID')	{
 						$("button[data-app-role='inventoryDetailOptionsButton']",$tr).button('disable').attr('title',"This item is unpaid. The base type can not be modified.");
@@ -2596,9 +2598,10 @@ else	{
 								cmd = "ITEM-UUID-DONE?"
 								}
 							cmd += "UUID="+uuid;
-//							app.u.dump(" -> CMD: "+cmd);
+							app.u.dump(" -> CMD: "+cmd);
+							app.u.dump(" -> orderID: "+orderID);
 							app.ext.admin.calls.adminOrderMacro.init(orderID,[cmd],{});
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]"),'immutable');
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]").intervaledEmpty().attr('id'),'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{

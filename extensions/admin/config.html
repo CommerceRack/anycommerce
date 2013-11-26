@@ -57,7 +57,7 @@
 <div class='clearfix marginBottom'>
 
 	<fieldset class='twoColumn'>
-		<legend>Inventory Configuration</legend>
+		<legend>Inventory Display</legend>
 		<label>
 			<input type="radio" value="1" name="inv_mode" data-bind="var: config(%INVENTORY.inv_mode); format:popVal; " />
 			Internal Use
@@ -82,19 +82,7 @@
 	
 	<fieldset class='twoColumn column2'>
 		<legend>Inventory Behavior</legend>
-		
-		<h4 class='marginTop'>Notifications</h4>
-		<label>
-		<span>Inventory Notifications</span>
-		<select name='inv_notify' data-bind="var:config(%INVENTORY.inv_notify); format:popVal;">
-			<option value='0'>None</option>
-			<option value='1'>Remove</option>
-			<option value='7'>Remove/add</option>
-			<option value='55'>Remove/add + restock</option>
-		</select>
-		</label>
-
-		
+	
 		<h4>Out of Stock/Reserve Exceeded</h4>
 		<label>
 		<input type="checkbox" name="inv_website_remove" data-bind="var:config(%INVENTORY.inv_website_remove); format:popVal;" class='applyAnycb' /> Remove from Website
@@ -2112,7 +2100,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Wallets</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
 		<li data-tender='AMZCBA'>Amazon</li>
-		<li data-tender='GOOGLE'>Google</li>
+<!--		<li data-tender='GOOGLE'>Google</li> -->
 		<li data-tender='PAYPALEC'>PayPal</li>
 	</ul>
 </div>
@@ -2944,7 +2932,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <div id='notificationPageTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 
-<form onSubmit='return false' class='labelsAsBreaks alignedLabels clearfix'>
+<form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
 	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
 	<input type='hidden' name='_cmd' value='adminConfigMacro' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -3023,7 +3011,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 				</label>
 			</div>
 	
-			<button data-app-event="admin_config|dataTableAddExec">Add</button>
+			<button data-app-event="admin_config|dataTableAddExec" onClick='return false'>Add</button>
 	
 		
 		
@@ -3082,7 +3070,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin='communication_amazon_ses' data-app-event="admin_config|pluginUpdateShow" title='Amazon Simple Email Services'>Amazon SES</li>
+			<li data-plugin='esp_awsses' data-app-event="admin_config|pluginUpdateShow" title='Amazon Simple Email Services'>Amazon SES</li>
 			<li data-plugin='platform_android' data-app-event="admin_config|pluginUpdateShow">Android</li>
 			<li data-plugin='platform_appleios' data-app-event="admin_config|pluginUpdateShow">Apple/iOS</li>
 		</ul>
@@ -3131,7 +3119,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 
-<fieldset id='pluginTemplate_communication_amazon_ses'>
+<fieldset id='pluginTemplate_esp_awsses'>
 	<input type='hidden' name='plugin' value='esp_awsses' />
 	<label>
 		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />

@@ -1664,7 +1664,7 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
 				var L = app.rq.length-1;
 //load any remaining resources into the app.
 				for(var i = L; i >= 0; i -= 1)	{
@@ -2395,10 +2395,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //put this on a select element.  Will generate the 'options'. var should be the value of the schedule already selected.
 		wholesaleScheduleSelect : function($tag,data)	{
-			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect");
+//			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect");
 			app.ext.admin.calls.adminPriceScheduleList.init({
 				'callback' : function(rd){
-					app.u.dump(" -> in to callback");
+//					app.u.dump(" -> in to callback");
 					if(app.model.responseHasErrors(rd)){
 						$tag.parent().anymessage({'message':rd})
 						}
@@ -2412,7 +2412,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							for(var i = 0; i < L; i += 1)	{
 								$select.append($("<option \/>",{'value':schedules[i].SID}).text(schedules[i].SID));
 								}
-							app.u.dump(" -> $select:"); app.u.dump($select);
+//							app.u.dump(" -> $select:"); app.u.dump($select);
 							$tag.append($select.children());
 							if(data.value)	{
 								$select.val(data.value);
