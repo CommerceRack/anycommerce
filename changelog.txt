@@ -37,6 +37,7 @@ ADMIN
 	bug fix - product > edit product > web page edit now working again.
 	deprecate - setup > payments > google checkout removed (service no longer provided)
 	deprecate - setup > global settings > inventory notifications moved to setup > notifications
+	change - orders > items set to DONE are now editable (short term change).
 
 QUICKSTART
 	enhancement - content of company pages (except faq) is now hard coded into their respective articles.

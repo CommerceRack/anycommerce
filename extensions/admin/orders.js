@@ -598,8 +598,8 @@ app.ext.admin.u.handleAppEvents($order);
 					if(invDetail.BASETYPE == "DONE")	{
 //						$tr.attr('title','This item is DONE. It is no longer editable');
 						$tr.attr('title','This item is DONE. Be very cautions about editing it.');
-//						$('button',$tr).button('disable');
-//						$(':input',$tr).prop('disabled','disabled');
+//						$('button',$tr).button('disable'); //** 201346 -> commented out for holidays (till we have a permanent solution.
+//						$(':input',$tr).prop('disabled','disabled'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 						}
 					else if(invDetail.BASETYPE == 'UNPAID')	{
 						$("button[data-app-role='inventoryDetailOptionsButton']",$tr).button('disable').attr('title',"This item is unpaid. The base type can not be modified.");
