@@ -295,7 +295,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 <button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
 <button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
 -->
-	<ul>
+	<ul class='productTabsUL'>
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li><!-- add this: <span data-anydelegate-changes='numGeneralChanges'><span class='numChanges'></span></span> and set this on the corresponding form:data-changes-container='numGeneralChanges' -->
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
 		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
@@ -1229,23 +1229,34 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<fieldset>
 	<legend>Competition</legend>
 
-
+	
+	<div data-app-role='competitionSkuInputs'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Floor Price</th>
+		<th>Ceiling Price</th>
+		<th>Standard</th>
+		<th>Expedited</th>
+		<th>Second Day</th>
+		<th>Next Day</th>
+	</tr>
+	</thead>
+	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
+	</table>
+	</div>
 
 ### TODO ###
 list of skus.
  -> actionable buttons per sku.
  -> a graph or two per sku.
 
-per sku:
-	low price (floor)
-	high price (ceiling)
-
-
 
 	</fieldset>
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="pricetags">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /social tab content -->
@@ -1366,21 +1377,15 @@ if it already has a simple, lock the button
 	</td>
 </tr>
 
-
-<!--
-	<th></th>
-	<th class='alignLeft'>SKU</th>
-	<th class='alignLeft'>Cost</th>
-	<th class='alignLeft'>Origin</th>
-	<th class='alignLeft'>Qty</th>
-	<th class='alignLeft'>Base Type</th>
-	<th class='alignLeft'>Ref 1</th>
-	<th class='alignLeft'>Ref 2</th>
-	<th class='alignLeft'>Note</th>
-	<th></th>
-	<th class='alignLeft'>Diagnostics</th>
--->	
-
+<tr id='competitionSkuRowTemplate'>
+	<td data-bind="var: detail(sku); format:text;"></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='floor' data-bind="var:product(%pricetags.floor); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='ceiling' data-bind="var:product(%pricetags.ceiling); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='standard' data-bind="var:product(%pricetags.standard); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='expedited' data-bind="var:product(%pricetags.expedited); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='secondday' data-bind="var:product(%pricetags.secondday); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='nextday' data-bind="var:product(%pricetags.nextday); format:popVal;" /></td>
+</tr>
 
 <tr id='inventoryDetailRowTemplate' data-bind="var: detail(BASETYPE); format: addClass; className:invDetail_;">
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
@@ -1391,18 +1396,16 @@ if it already has a simple, lock the button
 		<input data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
-	
+
 	<!-- REF 1 column -->
 	<td>
-	
 	<div data-bind="var: detail(WMS_GEO); format:text;"></div>
 	<div data-bind="var: detail(SUPPLIER_ID); format:text;"></div>
 	<div data-bind="var: detail(OUR_ORDERID); format:text;"></div>
-	
 	<div data-bind="var: detail(MARKET_DST); format:text;"></div>
 	<div data-bind="var: detail(GRPASM_REF); format:text;"></div>
-	
 	</td>
+
 	<!-- REF 2 column -->
 	<td class='alignLeft'>
 	<div>

@@ -16,7 +16,7 @@ General tab
 .peGeneralTabContent legend,
 .peGeneralTabContent h4	{margin:0 0 12px 0; padding:0; clear:both;}
 
-
+.productTabsUL	{font-size:.85em;}
 
 .tagging	{
 	margin-left:0; padding-left:0;
