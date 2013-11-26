@@ -622,7 +622,7 @@ NOTES
 						}
 					
 					
-					$parent.dialog('open');
+					$parent.dialog('open').append(app.renderFunctions.createTemplateInstance(P.templateID,P));
 
 					app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
 						if(app.model.responseHasErrors(rd)){
@@ -630,12 +630,12 @@ NOTES
 							}
 						else	{
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
-							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
+							$parent.anycontent({'templateID':P.templateID,'translateOnly':true,'datapointer':"appProductGet|"+P.pid});
 							}
 						}});
 					app.ext.store_product.calls.appReviewsList.init(P.pid); //
 					app.model.dispatchThis();
-
+					app.u.handleCommonPlugins($parent);
 					}
 				else	{
 					app.u.dump(" -> pid ("+P.pid+") or templateID ("+P.templateID+") not set for viewer. both are required.");
