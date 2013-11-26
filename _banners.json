@@ -1,19 +1,7 @@
 [
 	{
-		"src":"banners/2012/nike589.png",
-		"alt":"Chicago Cubs Nike Gear at SportsWorldChicago.com",
-		"title":"",
-		"searchLink":{"KEYWORDS":"Nike","fields":["prod_mfg"]}
-	},
-	{
-		"src":"100yearsofwrigley/chicago_cubs_wrigley_field100_years_banner_v2.jpg",
-		"alt":"Chicago Cubs Wrigley Field 100 Year Anniversary",
-		"title":"",
-		"catLink":".new-arrivals.100_years_of_wrigley_field"
-	},
-	{
-		"src":"banners/2013/47_brand_sale_banner.jpg",
-		"alt":"2013 Inventory Clearance!",
+		"src":"banners/2013/2013holiday/holiday_homepage_banner_2.jpg",
+		"alt":"FREE Shipping on Everything at SportsWorldChicago.com",
 		"title":"",
 		"catLink":""
 	},
@@ -24,9 +12,21 @@
 		"catLink":".new-arrivals.100_years_of_wrigley_field"
 	},
 	{
-		"src":"banners/2013/cubs_authentic_gear_banner_v2.jpg",
-		"alt":"Official Chicago Cubs On-Field Apparel at SportsWorldchicago.com",
+		"src":"banners/2013/2013holiday/holiday_homepage_banner_2.jpg",
+		"alt":"FREE Shipping on Everything at SportsWorldChicago.com",
 		"title":"",
-		"catLink":".on-field-gear"
+		"catLink":""
+	},
+	{
+		"src":"100yearsofwrigley/chicago_cubs_wrigley_field100_years_banner_v2.jpg",
+		"alt":"Chicago Cubs Wrigley Field 100 Year Anniversary",
+		"title":"",
+		"catLink":".new-arrivals.100_years_of_wrigley_field"
+	},
+	{
+		"src":"banners/seasonal_2/2jersey_deadline_updated_banner.jpg",
+		"alt":"Custom Chicago Cubs Apparel and Jerseys at SportsWorldchicago.com",
+		"title":"",
+		"catLink":".chicago-cubs-jerseys.custom"
 	}
 ]
