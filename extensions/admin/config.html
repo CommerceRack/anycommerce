@@ -57,7 +57,7 @@
 <div class='clearfix marginBottom'>
 
 	<fieldset class='twoColumn'>
-		<legend>Inventory Configuration</legend>
+		<legend>Inventory Display</legend>
 		<label>
 			<input type="radio" value="1" name="inv_mode" data-bind="var: config(%INVENTORY.inv_mode); format:popVal; " />
 			Internal Use
@@ -82,19 +82,7 @@
 	
 	<fieldset class='twoColumn column2'>
 		<legend>Inventory Behavior</legend>
-		
-		<h4 class='marginTop'>Notifications</h4>
-		<label>
-		<span>Inventory Notifications</span>
-		<select name='inv_notify' data-bind="var:config(%INVENTORY.inv_notify); format:popVal;">
-			<option value='0'>None</option>
-			<option value='1'>Remove</option>
-			<option value='7'>Remove/add</option>
-			<option value='55'>Remove/add + restock</option>
-		</select>
-		</label>
-
-		
+	
 		<h4>Out of Stock/Reserve Exceeded</h4>
 		<label>
 		<input type="checkbox" name="inv_website_remove" data-bind="var:config(%INVENTORY.inv_website_remove); format:popVal;" class='applyAnycb' /> Remove from Website
