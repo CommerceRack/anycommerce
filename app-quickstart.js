@@ -148,7 +148,7 @@ document.write = function(v){
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
-				app.calls.appProfileInfo.init({'profile':app.vars.profile},{callback : function(rd){
+				app.calls.appProfileInfo.init({'domain':zGlobals.appSettings.domain_only},{callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
@@ -157,7 +157,7 @@ document.write = function(v){
 							var $logo = $(this);
 							if($logo.is('img') || $('img',$logo).length)	{} //the element with the logo class already has an image. do nothing.
 							else if(app.data[rd.datapointer]['zoovy:logo_website'])	{
-								$logo.append(app.u.makeImage({'tag':true,'m':true,'b':'TTTTTT','w':$logo.width(),'h':$logo.height(),'alt':app.data[rd.datapointer]['zoovy:company_name'] || "",'name':app.data[rd.datapointer]['zoovy:logo_website']}))
+								$logo.append(app.u.makeImage({'tag':true,'m':false,'b':'TTTTTT','w':$logo.width(),'h':$logo.height(),'alt':app.data[rd.datapointer]['zoovy:company_name'] || "",'name':app.data[rd.datapointer]['zoovy:logo_website']}))
 								}
 							else	{} //logo field not set.
 							});
