@@ -307,6 +307,7 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 		<li><a href='#amazon' data-app-role='amazonTab' data-app-click="admin_prodEdit|handleAmazonTabContent">Amazon</a></li>
 		<li><a href='#buycom' data-app-role='buycomTab'>Buy.com</a></li>
 		<li><a href='#ebay' data-app-role='ebayTab' data-app-click="admin_prodEdit|handleEbayTabContent">eBay</a></li>
+		<li><a href='#competition' data-app-role='competitionTab' data-app-click="admin_prodEdit|handleCompetitionTabContent">Competition</a></li>
 	</ul>
 	
 	
@@ -1217,7 +1218,39 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	</div>
 	</form>
 	</section>
+
+
+
+
+
 	
+	<section data-anytab-content='competition' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	<fieldset>
+	<legend>Competition</legend>
+
+
+
+### TODO ###
+list of skus.
+ -> actionable buttons per sku.
+ -> a graph or two per sku.
+ -> some editable fields per sku.
+
+
+	</fieldset>
+
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /social tab content -->
+
+
+
+
+
+
 	</div>
 </div>
 </div>
