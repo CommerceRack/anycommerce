@@ -798,7 +798,8 @@ fallback is to just output the value.
 				if(!price)	{
 					buttonState = 'disable';
 					}
-				else if(inv && inv <= 0)	{buttonState = 'disable';}
+//*** 201352 original inventory check - if(inv...) -was short circuiting on 0/false inventory, meaning that prods with no inventory were not getting this button disabled. -mc
+				else if(typeof inv !== "undefined" && (!inv || inv <= 0))	{buttonState = 'disable';}
 				else{}
 				
 //				app.u.dump(" -> inv: "+inv);
