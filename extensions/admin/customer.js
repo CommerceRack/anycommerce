@@ -742,17 +742,23 @@ if(app.u.validateForm($form))	{
 			jqObj : $form
 			}
 		}),'immutable');
-	app.model.addDispatchToQ({
-		'_cmd':'adminCampaignFileSave',
-		'FILENAME' : 'index.html',
-		'CAMPAIGNID' : campaignID,
-		'body' : HTML,
-		'_tag':	{
-			'callback':'showMessaging',
-			'message' : 'Your template changes have been saved.',
-			jqObj : $form
-			}
-		},'immutable');
+
+	if (HTML != "") {
+		// no html changes for you!
+		}
+	else {
+		app.model.addDispatchToQ({
+			'_cmd':'adminCampaignFileSave',
+			'FILENAME' : 'index.html',
+			'CAMPAIGNID' : campaignID,
+			'body' : HTML,
+			'_tag':	{
+				'callback':'showMessaging',
+				'message' : 'Your template changes have been saved.',
+				jqObj : $form
+				}
+			},'immutable');
+		}
 //update the campaign Template
 	
 
