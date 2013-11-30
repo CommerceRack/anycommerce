@@ -634,15 +634,15 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			}, //handleResponse
 
 
-//this will remove data from both local storage AND memory.
+//this will remove data from both local storage, session storage AND memory.
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
-//admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
 		destroy : function(key)	{
 //			app.u.dump(" -> destroying "+key);
 			if(app.data[key])	{
 				delete app.data[key];
 				}
 			localStorage.removeItem(key);
+			sessionStorage.removeItem(key);
 			},
 
 
