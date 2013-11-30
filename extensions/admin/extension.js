@@ -1726,7 +1726,6 @@ if(!$.isEmptyObject(adminObj))	{
 	
 //create shortcuts. these are used in backward compatibility areas where brian loads the content.
 				window.navigateTo = app.ext.admin.a.navigateTo;
-				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
@@ -1935,19 +1934,19 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				document.location = 'admin_logout.html'
 				}
 			},
-//in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)
+//in cases where the content needs to be reloaded after making an API call, but when a navigateTo directly won't do (because of sequencing, perhaps)
 //For example, after new files are added to a ticket (comatability mode), this is executed on a ping to update the page behind the modal.
-		showUI : {
+		navigateTo : {
 			onSuccess : function(tagObj)	{
-				if(tagObj && tagObj.path){showUI(tagObj.path)
+				if(tagObj && tagObj.path){navigateTo(tagObj.path)
 					}
 				else {
-					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.showUI.onSuccess.");
-					app.u.dump("admin.callbacks.showUI.onSuccess tagObj (_rtag)");
+					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.navigateTo.onSuccess.");
+					app.u.dump("admin.callbacks.navigateTo.onSuccess tagObj (_rtag)");
 					app.u.dump(tagObj);
 					}
 				}
-			}, //showUI
+			}, //navigateTo
 		showDomainConfig : {
 			onSuccess : function(){
 				app.ext.admin.u.domainConfig();
@@ -2453,9 +2452,9 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 // -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
 //    it's in opts to make debugging easier.
 
-			showUI : function(path,opts){
+			navigateTo : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
-//app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+//app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 //app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
@@ -2549,15 +2548,15 @@ if($target && $target.length)	{
 
 		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
 		if(mode == 'app')	{
-//			app.u.dump(" -> showUI mode = app");
+//			app.u.dump(" -> navigateTo mode = app");
 			app.ext.admin.u.loadNativeApp(path,opts,$target);
 			}
 		else if(mode == 'legacy')	{
-//			app.u.dump(" -> showUI mode = legacy");
+//			app.u.dump(" -> navigateTo mode = legacy");
 			app.ext.admin.u.handleShowSection(path,opts,$target);
 			}
 		else if(mode == 'tabClick')	{
-//			app.u.dump(" -> showUI mode = tabClick");
+//			app.u.dump(" -> navigateTo mode = tabClick");
 //determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
 			if(opts.tab == app.ext.admin.vars.tab)	{
 //				app.u.dump(" -> targeted tab and open tab match.");
@@ -2589,30 +2588,24 @@ if($target && $target.length)	{
 		}
 	}
 else	{
-	app.u.throwGMessage("Warning! In in showUI, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
+	app.u.throwGMessage("Warning! In in navigateTo, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
 	}
 						} //end 'if' for mode.
 					else	{	
-						app.ext.admin.a.showUI("#!dashboard");
-						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.showUI.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
+						app.ext.admin.a.navigateTo("#!dashboard");
+						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.navigateTo.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
 
 						}
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
+					app.u.throwGMessage("Warning! path not set for admin.a.navigateTo");
 					}
-//app.u.dump(" -> END showUI. ");
+//app.u.dump(" -> END navigateTo. ");
 				return false;
-				}, //showUI
+				}, //navigateTo
 
-//this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can add extra functionality if needed.
-//the app itself should never use this function.
-			navigateTo : function(path,$t)	{
-				return this.showUI(path,$t ? $t : {});
-				},
-				
+			
 				
 //show YouTubeVideo in a dialog.
 			showYTVInDialog : function(videoID,vars){
@@ -3103,7 +3096,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 							}
 	*/
 	//					app.u.dump(" -> path: "+path);
-						showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
+						navigateTo(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
 
 						}
 					else	{
@@ -3412,15 +3405,15 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					if(linkFrom)	{
 						app.u.dump("INCOMING! looks like we've just returned from a partner page");
 						if(linkFrom == 'amazon-token')	{
-							app.ext.admin.a.showUI('#!syndication');
+							app.ext.admin.a.navigateTo('#!syndication');
 							app.ext.admin.a.showAmzRegisterModal();
 							}
 						else	{
-							app.ext.admin.a.showUI('#!dashboard');
+							app.ext.admin.a.navigateTo('#!dashboard');
 							}
 						}
 					else	{
-						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+						app.ext.admin.a.navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
 
 						if(document.URL.indexOf("/future/") > 0)	{
 							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
@@ -3463,7 +3456,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
-					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
+					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz navigateTo wants #.
 					else	{
 						page = page.replace(/^#/, ''); //strip preceding # from hash.
 						}
@@ -3959,7 +3952,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 
-//executed from within showUI. probably never want to execute this function elsewhere.
+//executed from within navigateTo. probably never want to execute this function elsewhere.
 //this is for handling legacy paths.
 			handleShowSection : function(path,P,$target)	{
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
@@ -4042,7 +4035,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					}
 				}, //handleShowSection
 
-// !!! when the old showUI goes away, so can this function.
+// !!! when the old navigateTo goes away, so can this function.
 			getId4UIContent : function(path){
 				return this.getTabFromPath(path)+"Content";
 				},
@@ -4176,7 +4169,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					for(var i = 0; i < L; i += 1)	{
 						if(i){$target.append(" &#187; ")}
 						if(bc[i]['link'])	{
-							$target.append("<a href='#' onClick='return showUI(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
+							$target.append("<a href='#' onClick='return navigateTo(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
 							}
 						else	{
 							$target.append(bc[i].name);
@@ -4209,7 +4202,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						else	{
 //the extra anonymous function here and above is for support passing in a var.
 //see http://stackoverflow.com/questions/5540280/
-							$a.click(function(j){return function(){showUI(j);}}(tabs[i]['link']));
+							$a.click(function(j){return function(){navigateTo(j);}}(tabs[i]['link']));
 							}
 						$target.append($a);
 						}
@@ -4273,7 +4266,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
-						return showUI(href);
+						return navigateTo(href);
 						});
 					}
 				}, //rewriteLink
@@ -4812,8 +4805,8 @@ When a page change occurs, the hash is updated.
 This hash change triggers a 'state' in the browser so that the back button will work.
 when the browser detects a hash change, it will execute this code.
 Of course, if we change the hash with JS, it will also trigger this code.
-so, in our js for changing pages (showUI), we start by setting the global var _ignoreHashChange to true.
-Then this function will know to NOT perform a showUI of it's own.
+so, in our js for changing pages (navigateTo), we start by setting the global var _ignoreHashChange to true.
+Then this function will know to NOT perform a navigateTo of it's own.
 because this feature should be on most of the time, ignorehashchange is turned off each 
 time a hash change occurs.
 I didn't have this function actually trigger the page handler instead of toggling ignore... on/off because
@@ -4826,7 +4819,7 @@ just lose the back button feature.
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 //				app.u.dump(" -> hash: "+hash);
 				if(hash.substr(0,5) == "/biz/" && !_ignoreHashChange)	{
-					showUI(hash);
+					navigateTo(hash);
 					}
 				else	{
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.

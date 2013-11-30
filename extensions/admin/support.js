@@ -282,7 +282,7 @@ var admin_support = function() {
 				app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
 				app.u.dump("$('.linkdoc',$target).length: "+$('.linkdoc',$target).length);
 				//syllabus_product_basics -> good place to test linkdoc
-				// !!! link this to a search, not an individual docs.  build in support for passing keywords in showUI obj var. set as val of keywords in put and submit form.
+				// !!! link this to a search, not an individual docs.  build in support for passing keywords in navigateTo obj var. set as val of keywords in put and submit form.
 				$('.linkdoc',$target).each(function(){
 					var $a = $(this),
 					docID = $a.attr('href').split('=')[1];
