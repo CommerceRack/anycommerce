@@ -2447,153 +2447,118 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-//tmp while in dev so pushes can occur without UI being impacted.
-//opts is options (options is a reserved JS name)
+//opts is options 
 // -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
 //    it's in opts to make debugging easier.
 
 			navigateTo : function(path,opts){
-//make sure path passed in conforms to standard naming conventions.
-//app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
-//app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
+				app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
-					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
-					
-					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
+					if(path.substr(0,5) == "/biz/" || path.substr(0,6) == "#/biz/") {
+						mode = 'legacy';
+						}
+//#: denotes to open a tab, but not refresh the content.
 					else if(path.substr(0,2) == "#:")	{
-//						app.u.dump(" -> is #:");
-						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
 						opts.tab = opts.tab || path.substring(2);
-						path = "/biz/"+path.substring(2)+"/index.cgi";
-//						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
-					else if (path.substr(0,2) == "#!") {mode = 'app'; }
+					else if (path.substr(0,2) == "#!") {
+						mode = 'app';
+						}
 					else	{}
-					
+
 					if(mode)	{
 
-//app.u.dump(" -> mode: "+mode);
-//app.u.dump(" -> path: "+path);
-//app.u.dump(" -> opts: "); app.u.dump(opts);
+						var $target = undefined; //jquery object of content destination
+						
+						opts = opts || {}; //opts may b empty. treat as object.
+						
+						_ignoreHashChange = true; //see handleHashChange for details on what this does.
+						document.location.hash = path; //update hash on URI.
+						
+						//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
+						if(opts.tab){} // if tab is specified, always use it. this covers mode = tabClick too.
+						else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
+						else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined. dialog is only used for legacy mode, currently.
+						else if(mode == 'legacy'){
+							opts.tab = app.ext.admin.u.getTabFromPath(path);
+							}
+						else	{
+							//hhmm. how did we get here?
+							$('#globalMessaging').anymessage({'message':'In admin.a.navigateTo, invalid mode ['+opts.mode+'] passed.','gMessage':true});
+							}
 
-
-var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
-var $target = undefined; //jquery object of content destination
-
-opts = opts || {}; //opts may b empty. treat as object.
-
-_ignoreHashChange = true; //see handleHashChange for details on what this does.
-document.location.hash = path; //update hash on URI.
-
-//app.u.dump(" -> opts: "); app.u.dump(opts);
-
-//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
-if(opts.tab){} // if tab is specified, always use it.
-else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
-else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
-
-//* 201220 -> tab is already set in the if(path) code at the top.
-//else if(mode == 'legacy' || (mode == 'tabClick' ){
-else if(mode == 'legacy'){
-	opts.tab = app.ext.admin.u.getTabFromPath(path);
-	} //#: denotes to open a tab, but not refresh the content.
-else	{
-	//hhmm. how did we get here?
-	}
-
-if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab in the header is in focus.
-else	{} //do nothing. perfectly normal to not change what tab is in focus.
-
-
-//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
 //this is JUST setting targetID. it isn't showing content or opening modals.
-if(opts.dialog){
-	opts.targetID = 'uiDialog';
-	$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
-	}
-//load content into whatever tab is specified.
-else if(opts.tab)	{
-	opts.targetID = opts.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
-
+						if(opts.dialog){
+							opts.targetID = 'uiDialog';
+							$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
+							}
+						else	{
+							opts.tab = opts.tab || app.ext.admin.vars.tab; //use tab in focus if none is specified by now. (opts.tab WILL be set if a tab was clicked)
+							app.ext.admin.u.bringTabIntoFocus(opts.tab);
+							opts.targetID = opts.tab+"Content";
+							$target = $(app.u.jqSelector('#',opts.targetID));
+						
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
-$('#stickytabs').empty(); //clear all the sticky tabs.
-	
-	}
-//no tab was specified. use the open tab, if it's set.
-else if(app.ext.admin.vars.tab)	{
-	opts.targetID = app.ext.admin.vars.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
-	} //load into currently open tab. common for apps.
-else	{
-	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
-	}
-
-
-//app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
-
-if($target && $target.length)	{
-
-	if(opts.dialog)	{
-		app.ext.admin.u.handleShowSection(path,opts,$target); 
-		}
-	else	{
-
-		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
-		if(mode == 'app')	{
-//			app.u.dump(" -> navigateTo mode = app");
-			app.ext.admin.u.loadNativeApp(path,opts,$target);
-			}
-		else if(mode == 'legacy')	{
-//			app.u.dump(" -> navigateTo mode = legacy");
-			app.ext.admin.u.handleShowSection(path,opts,$target);
-			}
-		else if(mode == 'tabClick')	{
-//			app.u.dump(" -> navigateTo mode = tabClick");
-//determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
-			if(opts.tab == app.ext.admin.vars.tab)	{
-//				app.u.dump(" -> targeted tab and open tab match.");
-				reloadTab = 1; //tab clicked from a page within that tab. show new content.
-				}
-//			app.u.dump(" -> $target.children().length: "+$target.children().length);
-			if ($target.children().length === 0)	{
-//				app.u.dump(" -> no content presently in target. targetID = "+$target.attr('id')+" and $target.length: "+$target.length);
-				reloadTab = 1; //no content presently in target. load it.
-				} 
-			if(reloadTab)	{
-//* 201336 -> moved this code down. It nukes any data set by anycontent. It was being run much earlier but should only be run if new content is being added. it empties the tab contents.
-				if($target && $target.data('anycontent'))	{
-//					app.u.dump(" -> execute anycontent('destroy')");
-					$target.anycontent('destroy');
-					}
-				app.ext.admin.u.handleShowSection(path,opts,$target);
-				}
-			else	{
-				app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
-				//when RETURNING to the product page, build navtabs again (search).
-				if(opts.tab == 'product')	{
-					app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
-					}
-				} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
-			}
-		else	{}// should never get here. error case for mode not being set is already passed.
-		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
-		}
-	}
-else	{
-	app.u.throwGMessage("Warning! In in navigateTo, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
-	}
+							$('#stickytabs').empty(); //clear all the sticky tabs.
+							
+							} //do nothing. perfectly normal to not change what tab is in focus.
+						
+						if($target && $target.length)	{
+						
+							if(opts.dialog)	{
+								app.ext.admin.u.handleShowSection(path,opts,$target); 
+								}
+							else	{
+						
+								if(mode == 'app')	{
+						//			app.u.dump(" -> navigateTo mode = app");
+									app.ext.admin.u.loadNativeApp(path,opts,$target);
+									}
+//in tabclick mode, if the tab has not been opened, show the default content.
+//if the tab has been opened, show existing content.
+//if the tab has been opened AND is active/in focus, show the default content (effectively, double-click on tab shows default content)
+								else if(mode == 'tabClick')	{
+//either tab clicked from a page within that tab or that tab was opened and has no content. Load the content.
+									if(opts.tab == app.ext.admin.vars.tab || $target.children().length === 0)	{
+//anycontent(destroy) should only be run if new content is being added cuz it kills data(). it also empties the tab contents.
+										if($target && $target.data('anycontent'))	{
+											$target.anycontent('destroy');
+											}
+										app.ext.admin.u.showTabLandingPage(path,$target); //pass in as #!tab so that loadNative doesn't have to check for both.
+										}
+//tab click show existing conten
+									else	{
+										app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
+										app.ext.admin.u.bringTabContentIntoFocus($target);
+										//when RETURNING to the product page, build navtabs again (search).
+//### TODO ### -> this code should not be here. it should be in the product editor. make it all selfcontained in showProductManager.
+										if(opts.tab == 'product')	{
+											app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+											}
+										} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
+									}
+								else if(mode == 'legacy')	{
+									app.ext.admin.u.bringTabContentIntoFocus($target);
+									app.ext.admin.u.handleShowSection(path,opts,$target);
+									}
+								else	{}// should never get here. error case for mode not being set is already handled.
+								if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
+								}
+							}
+						else	{
+							app.u.throwGMessage("Warning! In in navigateTo, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
+							}
 						} //end 'if' for mode.
 					else	{	
 						app.ext.admin.a.navigateTo("#!dashboard");
-						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.navigateTo.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
+//						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.navigateTo.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
 
 						}
 					
@@ -2633,127 +2598,127 @@ else	{
 				
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data,selectors)	{
-var r = false;  //what is returned. either false of a jquery object.
-data = data || {};
-selectors = selectors || "";
-
-if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
-	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
-	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
-	$D.data('pickermode',data.mode);
-
-	if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
-	
-	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
-		heightStyle: "content",
-		activate : function(event,ui)	{
-//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
-//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
-//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
-			if(!ui.newPanel.data('contentloaded'))	{
-				ui.newPanel.showLoading({'message':'Fetching List'});
-				var _tag = {}
-				_tag.callback = function(rd)	{
-					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd})
+				var r = false;  //what is returned. either false of a jquery object.
+				data = data || {};
+				selectors = selectors || "";
+				
+				if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
+					var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
+					$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
+					$D.data('pickermode',data.mode);
+				
+					if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
+					
+					$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
+						heightStyle: "content",
+						activate : function(event,ui)	{
+				//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+				//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+				//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
+							if(!ui.newPanel.data('contentloaded'))	{
+								ui.newPanel.showLoading({'message':'Fetching List'});
+								var _tag = {}
+								_tag.callback = function(rd)	{
+									if(app.model.responseHasErrors(rd)){
+										$target.anymessage({'message':rd})
+										}
+									else	{
+										//applies the content to the panel.
+										ui.newPanel.anycontent(rd).data('contentloaded',true);
+				
+				if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+					$('label',ui.newPanel).each(function () {  
+						if($(this).data('value').charAt(0) != '.')	{
+							$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
+							}
+						});
+					}
+				
+				//selectors are values passed in that get 'checked' (turned on).
+					if(selectors)	{
+				//		app.u.dump("selectors are set: "+selectors);
+						var selArr = selectors.split('\n');
+						var L = selArr.length;
+				//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
+						for(var i = 0; i < L; i += 1)	{
+							if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+								//csv and 'all' are handled already.
+								}
+							else	{
+								//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+				//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+				//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+								$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+								}
+							}
 						}
-					else	{
-						//applies the content to the panel.
-						ui.newPanel.anycontent(rd).data('contentloaded',true);
-
-if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-	$('label',ui.newPanel).each(function () {  
-		if($(this).data('value').charAt(0) != '.')	{
-			$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
-			}
-		});
-	}
-
-//selectors are values passed in that get 'checked' (turned on).
-	if(selectors)	{
-//		app.u.dump("selectors are set: "+selectors);
-		var selArr = selectors.split('\n');
-		var L = selArr.length;
-//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
-		for(var i = 0; i < L; i += 1)	{
-			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
-				//csv and 'all' are handled already.
-				}
-			else	{
-				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
-//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
-				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
-				}
-			}
-		}
+										}
+									}
+								if(ui.newHeader.data('pickmethod') == 'LIST')	{
+									app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+									app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
+									app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
+									_tag.datapointer = 'adminEBAYProfileList'
+									app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
+									_tag.datapointer = 'adminSupplierList'
+				//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
+									if(app.model.fetchData(_tag.datapointer) == false)	{
+										app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
+										}
+									else	{
+										app.u.handleCallback(_tag);
+										}
+									}
+								else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
+									app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+									}
+								else	{
+									//ERROR! unrecognized pick method. !!!
+									ui.newPanel.hideLoading();
+									ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+									}
+								app.model.dispatchThis('mutable');
+								}
+							else	{}
+							}
+						
+						});
+				
+					if(selectors)	{
+						if(selectors == 'all')	{
+							$("[name='SELECTALL']",$D).prop('checked','checked');
+							}
+						else	{
+							
+							var selArr = selectors.split('\n');
+							var L = selArr.length;
+							for(var i = 0; i < L; i += 1)	{
+								if(selArr[i].indexOf('csv') === 0)	{
+									$("[name='csv']",$D).val(selArr[i].substring(4));
+									}
+								else	{
+									//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+					//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
+									}
+								}
+							}
 						}
-					}
-				if(ui.newHeader.data('pickmethod') == 'LIST')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
-					app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-					_tag.datapointer = 'adminEBAYProfileList'
-					app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-					_tag.datapointer = 'adminSupplierList'
-//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
-					app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+				
+				
+				
+					r = $D.children();
 					}
 				else	{
-					//ERROR! unrecognized pick method. !!!
-					ui.newPanel.hideLoading();
-					ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
 					}
-				app.model.dispatchThis('mutable');
-				}
-			else	{}
-			}
-		
-		});
-
-	if(selectors)	{
-		if(selectors == 'all')	{
-			$("[name='SELECTALL']",$D).prop('checked','checked');
-			}
-		else	{
-			
-			var selArr = selectors.split('\n');
-			var L = selArr.length;
-			for(var i = 0; i < L; i += 1)	{
-				if(selArr[i].indexOf('csv') === 0)	{
-					$("[name='csv']",$D).val(selArr[i].substring(4));
-					}
-				else	{
-					//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-	//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
-					}
-				}
-			}
-		}
-
-
-
-	r = $D.children();
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
-	}
 //use this to disable the accordion if 'select all' is checked.	
 //$( ".selector" ).accordion( "option", "disabled", true );
 				return r;
@@ -3951,94 +3916,66 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return $target;
 				},
 
+			showTabLandingPage : function(path,$target)	{
+				var r = true;
+				var tab = path.substring(2);
+				this.bringTabIntoFocus(tab);
+				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+				app.ext.admin.u.bringTabContentIntoFocus($target);
+
+				if(tab == 'product')	{
+					app.ext.admin_prodEdit.a.showProductManager(P);					
+					}
+				else if(tab == 'kpi')	{
+					app.ext.admin_reports.a.showKPIInterface();
+					}
+				else if(tab == 'sites')	{
+					app.ext.admin.a.showSitesTab($target);
+					}
+				else if(tab == 'reports')	{
+					app.ext.admin_reports.a.showReportsPage($target);
+					}
+				else if(tab == 'setup')	{
+					$target.anycontent({'templateID':'pageSetupTemplate','showLoading':false});
+					}
+				else if(tab == 'support')	{
+					app.ext.admin_support.a.showTicketManager($target);
+					}
+				else if(tab == 'syndication')	{
+					app.ext.admin_syndication.a.showSyndication($target);
+					}
+				else if(tab == 'crm')	{
+					app.ext.admin_customer.a.showCRMManager($target);
+					}
+				else if(tab == 'orders')	{
+					app.ext.admin.u.loadNativeApp('#!orders',P);
+					}
+				else if(tab == 'utilities')	{
+					$target.anycontent({'templateID':'pageUtilitiesTemplate','showLoading':false});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.u.showTabLandingPage, unrecognized tab ["+tab+"]","gMessage":true});
+					r = false;
+					}
+				return r;
+				},
 
 //executed from within navigateTo. probably never want to execute this function elsewhere.
 //this is for handling legacy paths.
 			handleShowSection : function(path,P,$target)	{
+				app.u.dump("BEGIN admin.u.handleShowSection. path: "+path); app.u.dump(P);
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
-				this.bringTabIntoFocus(tab);
-//				app.u.dump(" -> tab: "+tab);
-//				app.u.dump(" -> path: "+path);
-				if(tab == 'product' && !P.dialog)	{
-//					app.u.dump(" -> open product editor");
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.u.showProductEditor(path,P);
-					app.ext.admin_prodEdit.a.showProductManager(P);					
-					}
-				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('kpi');
-					app.ext.admin.u.bringTabContentIntoFocus($('#kpiContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_reports.a.showKPIInterface();
-					}
-				else if(tab == 'sites' || path == '/biz/sites/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($('#sitesContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
-					}
-				else if(tab == 'reports' || path == '/biz/reports/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('reports');
-					app.ext.admin.u.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
-					}
-				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});  //navigateTo's hard coded on 2012/30
-					}
-				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_syndication.a.showSyndication($('#syndicationContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
-					}
-				else if(tab == 'crm' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_customer.a.showCRMManager($('#crmContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
-					}
-				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.u.loadNativeApp('#!orders',P);
-					}
-				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#utilitiesContent').intervaledEmpty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'}); //navigateTo's hard coded on 2012/30
-					}
-				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
+//				this.bringTabIntoFocus(tab);
+				if(tab == 'setup' && path.split('/')[3] == 'import')	{
 					app.u.dump(" -> open import editor");
 					app.ext.admin_medialib.u.showFileUploadPage(path,P);
 					}
-// * 201332 -> interface was replaced a version or two ago and this was overlooked.
-//				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
-//					app.u.dump(" -> open public files list");
-//					app.ext.admin_medialib.u.showPublicFiles(path,P);
-//					}
 				else	{
-//					app.u.dump(" -> open something wonderful .. "+path); app.u.dump(" -> P: "); app.u.dump(P);
-					$target.empty().append("<div class='loadingBG'></div>");
-//					alert(path);
+					$target.intervaledEmpty().append("<div class='loadingBG'></div>");
 					app.model.fetchAdminResource(path,P);
-//					app.ext.admin.calls.adminUIExecuteCGI.init(path,{infoObj:P})
 					}
 				}, //handleShowSection
-
-// !!! when the old navigateTo goes away, so can this function.
-			getId4UIContent : function(path){
-				return this.getTabFromPath(path)+"Content";
-				},
 
 			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
 			getTabFromPath : function(path)	{
@@ -4049,8 +3986,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				if (r == 'batch') { r = 'reports'} //symlinked
 				if (r == 'download') { r = 'reports'} //symlinked
 				if (r == 'todo') { r = 'reports'} //symlinked
-				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
-					// yay, we have a valid tab				
+				if($.inArray(r,app.ext.admin.vars.tabs) >= 0){ //is a supported tab.
+					// yay, we have a valid tab	
 					} 
 				else	{
 					// default tab
