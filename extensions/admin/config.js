@@ -1838,11 +1838,17 @@ $('body').showLoading({'message':'Updating tax table'});
 
 var macros = new Array();
 macros.push("TAXRULES/EMPTY");
-$btn.closest('form').find('tbody tr').each(function(){ //tbody needs to be is selector so that tr in thead isn't included.
+
+//build an array of the form input names for a whitelist.
+//need a whitelist because the tr.data() may have a lot of extra kvp in it
+var whitelist = new Array('type','enable','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
+
+$btn.closest('form').find('tbody tr').each(function(index){ //tbody needs to be is selector so that tr in thead isn't included.
 	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 	else	{
 //		app.u.dump($(this).data());
-		macros.push("TAXRULES/INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+		if(!$(this).data('guid'))	{$(this).data('guid',index)}
+		macros.push("TAXRULES/INSERT?"+$.param(app.u.getWhitelistedObject($(this).data(),whitelist)));
 		}
 	});
 
@@ -1961,7 +1967,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 			$('tr',$tbody).each(function(){
 				if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 				else	{
-					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
 					}
 				});
 			
@@ -1976,7 +1982,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 					//these are being removed. since the entire table was emptied, just don't pass and they'll be nuked.
 					}
 				else	{
-					macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+					macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','hint','match','matchvalue','filter','exec','value'])));
 					}
 				});
 

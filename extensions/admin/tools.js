@@ -372,17 +372,6 @@ $target.append("<br \/>");
 				return r;
 				},
 
-			powertoolActions2Array : function($tbody)	{
-				var r = new Array();
-				$('tr',$tbody).each(function(){
-					var
-						data = $(this).data(),
-						verb = data.verb;
-					delete data.verb;
-					r.push(verb+"?"+app.ext.admin.u.getSanitizedKVPFromObject(data));
-					});
-				return r;
-				},
 
 			powertoolActions2KVP : function($tbody)	{
 				var r = "";

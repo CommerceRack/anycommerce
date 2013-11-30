@@ -287,8 +287,10 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 
 <form  id='rulesInputsTemplate_shipping'>
-
-<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
+<!--
+SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
+keep all inputs within one fieldset for the save function.
+-->
 <fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 
 	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
@@ -475,8 +477,10 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 
 <form id='rulesInputsTemplate_coupons'>
-
-<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
+<!--
+SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
+keep all inputs within one fieldset for the save function.
+-->
 <fieldset class='labelsAsBreaks alignedLabels'>
 
 	<input type='hidden' name='guid' value='' data-bind='var: rule(guid); format:popVal;' />
@@ -2650,7 +2654,9 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 -->
 
 <div id='taxConfigTemplate'>
-
+<!--
+SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
+-->
 <section class='ui-widget twoColumn labelsAsBreaks alignedLabels'>
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom'>
@@ -2775,10 +2781,10 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<div class='label'>
 		Also applies to:
 			<div class='stdMargin'>
-<label class='clearfix'><input type="checkbox" name="SHIPPING" class='applyAnycb' /> Shipping</label>
-<label class='clearfix'><input type="checkbox" name="HANDLING" class='applyAnycb' /> Handling</label>
-<label class='clearfix'><input type="checkbox" name="INSURANCE" class='applyAnycb' /> Insurance</label>
-<label class='clearfix'><input type="checkbox" name="SPECIAL" class='applyAnycb' /> Speciality Fees</label>
+<label class='clearfix'><input type="checkbox" name="enable_shipping" class='applyAnycb' /> Shipping</label>
+<label class='clearfix'><input type="checkbox" name="enable_handling" class='applyAnycb' /> Handling</label>
+<label class='clearfix'><input type="checkbox" name="enable_insurance" class='applyAnycb' /> Insurance</label>
+<label class='clearfix'><input type="checkbox" name="enable_special" class='applyAnycb' /> Speciality Fees</label>
 			</div>
 		</div>
 	

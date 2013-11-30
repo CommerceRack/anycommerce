@@ -3646,20 +3646,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 
-
-// ### time permittting, replace use of function below with getWhitlestedObject
-//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
-			getSanitizedKVPFromObject : function(obj)	{
-				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
-//				var whitelist = new Array('fee','weight','subtotal');
-				delete newObj.isTranslated;
-				delete newObj.sortableItem;
-				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
-				return $.param(newObj);
-				},
-
-
-
 //pass in an object (probably a Serialized Form Object) and any tag that starts with _tag/ will be returned as part of an object.
 			getTagObjFromSFO : function(sfo)	{
 				var r = {}; //what is returned.
