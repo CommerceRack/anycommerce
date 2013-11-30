@@ -1424,7 +1424,8 @@ var $input = $(app.u.jqSelector('#',ID));
 									}
 								}
 
-							dObj._cmd = (mode == 'EBAYProfile') ? 'adminEBAYTemplateCreateFrom' : 'admin'+mode+'TemplateCreateFrom';
+							// we should fix this naming: .. CopyFrom makes the most sense to me. -bh
+							dObj._cmd = (mode == 'EBAYProfile') ? 'adminEBAYTemplateCreateFrom' : 'admin'+mode+'TemplateCopyFrom';
 
 							if(mode == 'EBAYProfile')	{dObj.PROFILE = $D.data('profile');}
 							else if(mode == 'Campaign')	{dObj.CAMPAIGNID = $D.data('campaignid');}
