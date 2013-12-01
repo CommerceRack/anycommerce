@@ -2510,7 +2510,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							
 							} //do nothing. perfectly normal to not change what tab is in focus.
 						
-						if($target && $target.length)	{
+						if($target instanceof jQuery)	{
 						
 							if(opts.dialog)	{
 								app.ext.admin.u.handleShowSection(path,opts,$target); 
@@ -2527,11 +2527,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 								else if(mode == 'tabClick')	{
 //either tab clicked from a page within that tab or that tab was opened and has no content. Load the content.
 									if(opts.tab == app.ext.admin.vars.tab || $target.children().length === 0)	{
-//anycontent(destroy) should only be run if new content is being added cuz it kills data(). it also empties the tab contents.
-										if($target && $target.data('anycontent'))	{
-											$target.anycontent('destroy');
-											}
-										app.ext.admin.u.showTabLandingPage(path,$target); //pass in as #!tab so that loadNative doesn't have to check for both.
+										app.ext.admin.u.showTabLandingPage(path,$target,opts); //pass in as #!tab so that loadNative doesn't have to check for both.
 										}
 //tab click show existing conten
 									else	{
@@ -3622,7 +3618,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 			loadNativeApp : function(path,opts,$target){
-//				app.u.dump("BEGIN loadNativeApp");
+				app.u.dump("BEGIN loadNativeApp");
+				$target.intervaledEmpty();
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
@@ -3634,25 +3631,18 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!domainConfigPanel')	{
 // * 201332 -> new domain interface
 //					app.ext.admin.a.showDomainConfig();
-					app.ext.admin_config.a.showDomainManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showDomainManager($target);
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
-				else if(path == '#!launchpad')	{
+/*				else if(path == '#!launchpad')	{
 					app.ext.admin.vars.tab = 'launchpad';
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
 					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
 					}
-				else if(path == '#!organizationManager')	{
+*/				else if(path == '#!organizationManager')	{
 					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
-					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showOrganizationManager($target);
 					}
-				else if(path == '#!reports')	{
-					app.ext.admin.vars.tab = 'reports';
-					this.bringTabIntoFocus('reports');
-					this.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
-					}
-				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
 				else if(path == '#!batchManager')	{
 					app.ext.admin.vars.tab = 'utilities';
@@ -3660,22 +3650,16 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					this.bringTabContentIntoFocus($('#utilitiesContent'));
 					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
 					}
-				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));}
+				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
 				else if(path == '#!variationsManager')	{
 //					app.u.dump("$target: "); app.u.dump($target);
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $target);
 					}
 				else if(path == '#!help')	{
 					$('#supportContent').empty();
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
 					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
-					}
-				else if(path == '#!support')	{
-					$('#supportContent').empty();
-					this.bringTabIntoFocus('support');
-					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin_support.a.showTicketManager($('#supportContent'));
 					}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
@@ -3704,10 +3688,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!showEmailAuth')	{
 					app.ext.admin_config.a.showEmailAuth($target);
 					}
-					
-					
+				else if(path == '#!fileImport')	{
+					app.ext.admin_medialib.a.showFileImportPage($target);
+					}
 				else if(path == '#!giftcardManager')	{
-					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showGiftcardManager($target);
 					}
 				else if(path == '#!notifications')	{
 					app.ext.admin_config.a.showNotifications($target);
@@ -3716,130 +3701,103 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.ext.admin_trainer.a.showTrainer($target);
 					}
 				else if(path == '#!categoriesAndLists')	{
-					app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_navcats.a.showCategoriesAndLists($target);
 					}
 				else if(path == '#!billingHistory')	{
-					app.ext.admin_config.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showBillingHistory($target);
 					}
 				else if(path == '#!globalVariations')	{
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($target);
 					}
 				else if(path == '#!publicFiles')	{
 					app.ext.admin_medialib.u.showPublicFiles(path,opts);
 					}
 
 				else if(path == '#!globalSettings')	{
-					app.ext.admin_config.a.showGlobalSettings($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showGlobalSettings($target);
 					}
 				else if(path == '#!billingHistory')	{
-					app.ext.admin_tools.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showBillingHistory($target);
 					}
 
 
 				else if(path == '#!showPlatformInfo')	{
-					app.ext.admin_support.a.showPlatformInfo($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_support.a.showPlatformInfo($target);
 					}
 
 				else if(path == '#!partitionManager')	{
-					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showPartitionManager($target);
 					}
 
 				else if(path == '#!privateFiles')	{
-					app.ext.admin_tools.a.showPrivateFiles($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showPrivateFiles($target);
 					}
 
 				else if(path == '#!manageFlexedit')	{
-					app.ext.admin_tools.a.showManageFlexedit($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showManageFlexedit($target);
 					}
 
 				else if(path == '#!pluginManager')	{
-					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showPluginManager($target);
 					}
 				else if(path == '#!campaignManager')	{
-					app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showCampaignManager($target);
 					}
 				else if(path == '#!ciEngineAgentManager')	{
-					app.ext.admin_tools.a.showciEngineAgentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showciEngineAgentManager($target);
 					}
 				else if(path == '#!couponManager')	{
-					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showCouponManager($target);
 					}
 				else if(path == '#!priceSchedules')	{
-					app.ext.admin_wholesale.a.showPriceSchedules($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showPriceSchedules($target);
 					}
 				else if(path == '#!accountUtilities')	{
-					app.ext.admin_tools.a.showAccountUtilities($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showAccountUtilities($target);
 					}
 				else if(path == '#!productPowerTool')	{
-					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showPPT($target);
 					}
 				else if(path == '#!productExport')	{
-					app.ext.admin_tools.a.showProductExport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showProductExport($target);
 					}
 				else if(path == '#!warehouseManager')	{
-					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showWarehouseManager($target);
 					}
 				else if(path == '#!warehouseUtilities')	{
 					app.ext.admin_wholesale.a.showWarehouseUtilities($target);
 					}
 				else if(path == '#!reviewsManager')	{
-					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showReviewsManager($target);
 					}
 				else if (path == '#!appChooser')	{
 					app.ext.admin_templateEditor.a.showAppChooser();
 					}
 				else if (path == '#!projects')	{
-					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					app.ext.admin.a.showProjects($target);
 					}
 				else if (path == '#!rss')	{
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					app.ext.admin.a.showRSS($target);
 					}
 				else if (path == '#!paymentManager')	{
-					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					app.ext.admin_config.a.showPaymentManager($target);
 					}
 				else if (path == '#!shippingManager')	{
-					app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					app.ext.admin_config.a.showShippingManager($target);
 					}
 				else if (path == '#!contactInformation')	{
-					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
-					}
-				else if (path == '#!syndication')	{
-					app.ext.admin.vars.tab = 'syndication';
-					app.ext.admin.u.bringTabIntoFocus('syndication');
-					app.ext.admin.u.bringTabContentIntoFocus($("#syndicationContent"));
-					app.ext.admin_syndication.a.showSyndication($("#syndicationContent"));
-					}
-				else if(path == '#!sites')	{
-					app.ext.admin.vars.tab = 'sites';
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($("#sitesContent"));
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
+					app.ext.admin_config.a.showContactInformation($target);
 					}
 				else if(path == '#!taxConfig')	{
 					app.ext.admin_config.a.showTaxConfig($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 					}
-				else if(path == '#!orders')	{
-//					app.u.dump("into loadNativeApp -> #!orders");
-					app.ext.admin.vars.tab = 'orders';
-					app.ext.admin.u.bringTabIntoFocus('orders');
-					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
-					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
-//					app.u.dump("end of loadNativeApp  else statement -> #! orders");
-					}
-				else if(path == '#!product')	{
-//					app.u.dump("Go to product editor");
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
-					app.ext.admin.vars.tab = 'product';
-					app.ext.admin.u.bringTabIntoFocus('product');
-					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-					app.ext.admin_prodEdit.a.showProductManager(opts);
-					}
+
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager($target);
 					}
 				else	{
-					app.u.throwGMessage("WARNING! unrecognized path/app ["+path+"] passed into loadNativeApp.");
+					$('#globalMessaging').anymessage({"message":"In admin.u.loadNativeApp, unrecognized path/app ["+path+"] passed.","gMessage":true});
+					app.u.throwGMessage("WARNING! ");
 					}
 //				app.u.dump("END loadNativeApp");
 				},
@@ -3916,16 +3874,22 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return $target;
 				},
 
-			showTabLandingPage : function(path,$target)	{
+			showTabLandingPage : function(path,$target,opts)	{
 				var r = true;
 				var tab = path.substring(2);
 				this.bringTabIntoFocus(tab);
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+
+//anycontent(destroy) should only be run if new content is being added cuz it kills data(). it also empties the tab contents.
+				if($target && $target.data('anycontent'))	{
+					$target.anycontent('destroy');
+					}
+
 				app.ext.admin.u.bringTabContentIntoFocus($target);
 
 				if(tab == 'product')	{
-					app.ext.admin_prodEdit.a.showProductManager(P);					
+					app.ext.admin_prodEdit.a.showProductManager(opts);					
 					}
 				else if(tab == 'kpi')	{
 					app.ext.admin_reports.a.showKPIInterface();
@@ -3945,11 +3909,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(tab == 'syndication')	{
 					app.ext.admin_syndication.a.showSyndication($target);
 					}
+				else if (tab == 'orders')	{
+					app.ext.admin_orders.a.initOrderManager(opts);
+					}
 				else if(tab == 'crm')	{
 					app.ext.admin_customer.a.showCRMManager($target);
-					}
-				else if(tab == 'orders')	{
-					app.ext.admin.u.loadNativeApp('#!orders',P);
 					}
 				else if(tab == 'utilities')	{
 					$target.anycontent({'templateID':'pageUtilitiesTemplate','showLoading':false});
@@ -3963,18 +3927,12 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 //executed from within navigateTo. probably never want to execute this function elsewhere.
 //this is for handling legacy paths.
+// ### TODO -> shouldn't need this anymore.
 			handleShowSection : function(path,P,$target)	{
 				app.u.dump("BEGIN admin.u.handleShowSection. path: "+path); app.u.dump(P);
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
-//				this.bringTabIntoFocus(tab);
-				if(tab == 'setup' && path.split('/')[3] == 'import')	{
-					app.u.dump(" -> open import editor");
-					app.ext.admin_medialib.u.showFileUploadPage(path,P);
-					}
-				else	{
-					$target.intervaledEmpty().append("<div class='loadingBG'></div>");
-					app.model.fetchAdminResource(path,P);
-					}
+				$target.intervaledEmpty().append("<div class='loadingBG'></div>");
+				app.model.fetchAdminResource(path,P);
 				}, //handleShowSection
 
 			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
