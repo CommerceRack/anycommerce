@@ -3073,8 +3073,8 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin='auth_facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
-			<li data-plugin='auth_google' data-app-event="admin_config|pluginUpdateShow">Google</li>
+			<li data-plugin='auth_facebook' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Facebook</li>
+			<li data-plugin='auth_google' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3083,9 +3083,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin='esp_awsses' data-app-event="admin_config|pluginUpdateShow" title='Amazon Simple Email Services'>Amazon SES</li>
-			<li data-plugin='platform_android' data-app-event="admin_config|pluginUpdateShow">Android</li>
-			<li data-plugin='platform_appleios' data-app-event="admin_config|pluginUpdateShow">Apple/iOS</li>
+			<li data-plugin='esp_awsses' data-app-click="admin_config|pluginUpdateShow" title='Amazon Simple Email Services' class='lookLikeLink'>Amazon SES</li>
+			<li data-plugin='platform_android' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Android</li>
+			<li data-plugin='platform_appleios' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Apple/iOS</li>
 		</ul>
 <!--
 		<h4>Infrastructure</h4>
@@ -3112,7 +3112,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
 			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-event="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
 			<div data-app-role='slimLeftContent'>

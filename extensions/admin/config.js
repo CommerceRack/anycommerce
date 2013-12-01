@@ -154,7 +154,7 @@ var admin_config = function() {
 				},
 		
 			showPluginManager : function($target)	{
-				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
+				$target.showLoading({'message':'Fetching Your Integration Data'});
 
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
@@ -166,7 +166,8 @@ var admin_config = function() {
 								}
 							else	{
 								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
-								app.u.handleAppEvents($target);
+								$target.anydelegate();
+								app.u.handleButtons($target);
 								$("[data-app-role='slimLeftNav']",$target).accordion();
 								}
 							},
@@ -183,7 +184,7 @@ var admin_config = function() {
 				if($target instanceof jQuery && vars.plugin)	{
 //					app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
 					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin)});
-					$('.applyAnycb',$target).anycb();
+					app.u.handleCommonPlugins($target);
 					$target.parent().find('.buttonset').show();
 //					app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
 					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
@@ -2087,32 +2088,24 @@ else {
 					});
 				},
 
-			pluginUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.pluginUpdateExec').on('click.pluginUpdateExec',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					$form.showLoading({'message':'Saving Changes'});
-					app.model.addDispatchToQ({
-	'_cmd':'adminConfigMacro',
-	'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
-	'_tag':	{
-		'callback':'showMessaging',
-		'restoreInputsFromTrackingState' : true,
-		'message' : "Your changes have been saved.",
-		'jqObj' : $form
-		}
-	},'immutable');
-app.model.dispatchThis('immutable');
-					});
+			pluginUpdateExec : function($ele,p)	{
+				var $form = $ele.closest('form');
+				$form.showLoading({'message':'Saving Changes'});
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigMacro',
+					'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+					'_tag':	{
+						'callback':'showMessaging',
+						'restoreInputsFromTrackingState' : true,
+						'message' : "Your changes have been saved.",
+						'jqObj' : $form
+						}
+					},'immutable');
+				app.model.dispatchThis('immutable');
 				},
 
-			pluginUpdateShow : function($ele)	{
-				$ele.addClass('lookLikeLink');
-				$ele.off('click.pluginUpdateShow').on('click.pluginUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
-					})
+			pluginUpdateShow : function($ele,p)	{
+				app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
 				},
 
 //delegated events
