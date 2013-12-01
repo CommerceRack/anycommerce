@@ -217,33 +217,15 @@ var admin_config = function() {
 				},
 			
 			showPaymentManager : function($target)	{
-				$target.showLoading({'message':'Fetching Your Active Payment Methods'});
+				$target.showLoading({'message':'Fetching your payment method settings'});
 				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
-				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition,callback : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						$target.hideLoading();
-						$target.anycontent({'templateID':'paymentManagerPageTemplate',data:{}});
-						app.u.handleAppEvents($target);
-						
-						var
-							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
-							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
-						
-						$leftColumn.find('li').each(function(){
-							var $li = $(this);
-							$li.addClass('ui-corner-none pointer').on('click',function(){
-								$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
-								$li.addClass('ui-state-focus');
-								$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$li.text());
-								app.u.handleAppEvents($contentColumn); //handles app events outside the content area.
-								app.ext.admin_config.a.showPaymentTypeEditorByTender($li.data('tender'),$contentColumn);
-								});
-							});
-						}
-					}},'mutable');
+				$target.anydelegate();
+				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
+					'callback' : 'anycontent',
+					'datapointer' : 'adminConfigDetail|payment|'+app.vars.partition,
+					'templateID' : 'paymentManagerPageTemplate',
+					jqObj : $target
+					},'mutable');
 				app.model.dispatchThis('mutable');
 				}, //showPaymentManager
 			
@@ -1092,6 +1074,19 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 		e : {
 			
+
+			payMethodEditorShow : function($ele,p)	{
+				var
+					$target = $ele.closest("[data-app-role='slimLeftContainer']"),
+					$leftColumn = $ele.closest("[data-app-role='slimLeftNav']"),
+					$contentColumn = $("[data-app-role='slimLeftContent']",$target);
+				
+				$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
+				$ele.addClass('ui-state-focus');
+				$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$ele.text());
+				$contentColumn.anydelegate();
+				app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
+				},
 
 			shipMeterDetailInModal : function($btn)	{
 				$btn.button();
