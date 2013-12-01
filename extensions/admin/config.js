@@ -1076,16 +1076,21 @@ when an event type is changed, all the event types are dropped, then re-added.
 			
 
 			payMethodEditorShow : function($ele,p)	{
-				var
-					$target = $ele.closest("[data-app-role='slimLeftContainer']"),
-					$leftColumn = $ele.closest("[data-app-role='slimLeftNav']"),
-					$contentColumn = $("[data-app-role='slimLeftContent']",$target);
-				
-				$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
-				$ele.addClass('ui-state-focus');
-				$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$ele.text());
-				$contentColumn.anydelegate();
-				app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
+				if($ele.data('tender'))	{
+					var
+						$target = $ele.closest("[data-app-role='slimLeftContainer']"),
+						$leftColumn = $ele.closest("[data-app-role='slimLeftNav']"),
+						$contentColumn = $("[data-app-role='slimLeftContent']",$target);
+					
+					$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
+					$ele.addClass('ui-state-focus');
+					$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$ele.text());
+					$contentColumn.anydelegate();
+					app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_config.e.payMethodEditorShow, data-tender not set on trigger element.","gMessage":true});
+					}
 				},
 
 			shipMeterDetailInModal : function($btn)	{
