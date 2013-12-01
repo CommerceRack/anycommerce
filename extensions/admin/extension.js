@@ -2502,8 +2502,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						else	{
 							opts.tab = opts.tab || app.ext.admin.vars.tab; //use tab in focus if none is specified by now. (opts.tab WILL be set if a tab was clicked)
 							app.ext.admin.u.bringTabIntoFocus(opts.tab);
-							opts.targetID = opts.tab+"Content";
-							$target = $(app.u.jqSelector('#',opts.targetID));
+//							opts.targetID = opts.tab+"Content";
+							$target = $(app.u.jqSelector('#',opts.tab+"Content"));
 						
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 							$('#stickytabs').empty(); //clear all the sticky tabs.
