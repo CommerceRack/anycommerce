@@ -706,19 +706,16 @@ setTimeout(function(){
 				}, //showMediaAndSubs
 
 			showFileImportPage : function($target,vars)	{
-				app.u.dump("BEGIN admin_medialib.a.showFileImportPage");
-
 				$target.anycontent({
 					'templateID' : 'pageFileImportTemplate',
 					'showLoading' : false
 					}).anydelegate();
-
-				var $contentArea = $("[data-app-role='slimLeftContentContainer']",$target);
-
+					
+				$("[data-app-role='fileImportMenu']",$target).menu();
 
 				vars = vars || {};
 				if(!vars.VERB)(vars.VERB = "HELP"); //default to showing the help page.
-				app.ext.admin_medialib.u.handleImportPageByVerb($contentArea,vars.VERB);
+				app.ext.admin_medialib.u.handleImportPageByVerb($("[data-app-role='slimLeftContentContainer']",$target),vars.VERB);
 				} //showCSVImports
 
 			}, //Actions
@@ -830,7 +827,6 @@ else	{
 			handleImportPageByVerb : function($contentArea,verb)	{
 				if(verb && $contentArea instanceof jQuery)	{
 
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
 					$contentArea.intervaledEmpty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+verb.toLowerCase(),{})); //load the page template.
 					app.ext.admin_medialib.u.convertFormToJQFU('#csvUploadToBatchForm','csvUploadToBatch');
 					
@@ -881,7 +877,7 @@ else	{
 						app.model.dispatchThis('mutable');
 						}
 
-					app.u.handleAppEvents($contentArea);
+					app.u.handleButtons($contentArea);
 
 					}
 				else	{
@@ -1109,10 +1105,6 @@ else	{
 
 				}, //convertFormToJQFU
 
-
-
-
-
 			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
 				var L = app.data.adminImageFolderList['@folders'].length;
@@ -1234,7 +1226,7 @@ else	{
 				else	{
 					app.u.throwGMessage("WARNING! no path specified an admin_medialib.u.openMediaFoldersByFilePath.");
 					}
-				},
+				}, //openMediaFolderByFilePath
 
 			resetAndGetMediaFolders : function(Q)	{
 				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove(); //folders will be re-added later.
@@ -1246,43 +1238,15 @@ else	{
 //also gets run over the image details area in the header when opening media lib for a field that already has an image selected.
 			handleMediaFileButtons : function($target,mode)	{
 				app.u.handleButtons($target);
-
 //mode is set on the UL when the media library is initialized or reopened.
 // ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
-if(mode == 'manage')	{
-	$("button[data-btn-action='selectMedia']").hide(); //leave button selector or images will be hidden.
-	}
-else	{
-	$("button[data-btn-action='selectMedia']").show();
-	}
+				if(mode == 'manage')	{
+					$("button[data-btn-action='selectMedia']").hide(); //leave button selector or images will be hidden.
+					}
+				else	{
+					$("button[data-btn-action='selectMedia']").show();
+					}
 
-/*
-** 201338 -> w/ delegated events in use, this is no longer necessary.
-				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					$(this).toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
-					});
-				$("[data-btn-action='selectMedia']",$target).addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-circle-check"}}).off('click.selectMedia').on('click.selectMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					$(this).closest('li').find('img').click();
-					});
-				$("[data-btn-action='mediaDetails']",$target).addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).off('click.mediaDetails').on('click.mediaDetails',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data());
-					});
-
-				$("[data-btn-action='clearMedia']",$target).addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).off('click.clearMedia').on('click.clearMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					app.ext.admin_medialib.a.selectThisMedia($(this),true);
-					});
-
-
-				
-				$("[data-btn-action='downloadMedia']",$target).addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).off('click.downloadMedia').on('click.downloadMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
-					});				
-				*/
 				}, //handleMediaFileButtons
 
 
@@ -1454,7 +1418,6 @@ $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 
 		e : {
 
-
 			fileImportPageShow : function($ele,P)	{
 				if($ele.data('verb'))	{
 					app.ext.admin_medialib.u.handleImportPageByVerb($ele.closest("[data-app-role='fileImportContainer']").find("[data-app-role='slimLeftContentContainer']"),$ele.data('verb'));
@@ -1462,8 +1425,7 @@ $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_medialib.e.fileImportPageShow, no data-verb set on trigger element.","gMessage":true});
 					}
-				},
-
+				}, //fileImportPageShow
 
 			handleMediaFileButton : function($ele,P)	{
 //				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
@@ -1515,51 +1477,40 @@ $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				else	{
 					
 					}
-				},
+				}, //handleMediaFileButton
 
-/**/
+			adminCSVExportRewritesExec : function($ele,p)	{
+				$ele.parent().showLoading({"message":"Building URL Rewrite File"});
+				app.model.addDispatchToQ({
+					'_cmd':'adminCSVExport',
+					'base64' : 1,
+					'export' : 'REWRITES',
+					'_tag':	{
+						'callback':'fileDownloadInModal',
+						'filename' : 'rewrites.csv',
+						'datapointer':'adminCSVExport|REWRITE',
+						'jqObj' : $ele.parent()
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				}, //adminCSVExportRewritesExec
 
-
-
-			adminCSVExportRewritesExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-$btn.parent().showLoading({"message":"Building URL Rewrite File"});
-app.model.addDispatchToQ({
-	'_cmd':'adminCSVExport',
-	'base64' : 1,
-	'export' : 'REWRITES',
-	'_tag':	{
-		'callback':'fileDownloadInModal',
-		'filename' : 'rewrites.csv',
-		'datapointer':'adminCSVExport|REWRITE',
-		'jqObj' : $btn.parent()
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-
-					});
-				},		
-			adminCSVExportNavcatsExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-$btn.parent().showLoading({"message":"Building Category File"});
-app.model.addDispatchToQ({
-	'_cmd':'adminCSVExport',
-	'export' : 'CATEGORY',
-	'base64' : 1,
-	'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
-	'_tag':	{
-		'callback':'fileDownloadInModal',
-		'datapointer':'adminCSVExport|CATEGORY',
-		'filename' : 'categories.csv',
-		'jqObj' : $btn.parent()
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-
-					});
-				}
+			adminCSVExportNavcatsExec : function($ele,p)	{
+				$ele.parent().showLoading({"message":"Building Category File"});
+				app.model.addDispatchToQ({
+					'_cmd':'adminCSVExport',
+					'export' : 'CATEGORY',
+					'base64' : 1,
+					'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
+					'_tag':	{
+						'callback':'fileDownloadInModal',
+						'datapointer':'adminCSVExport|CATEGORY',
+						'filename' : 'categories.csv',
+						'jqObj' : $ele.parent()
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				} //adminCSVExportNavcatsExec
 			
 			}
 

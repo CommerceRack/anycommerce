@@ -356,37 +356,25 @@ PAGE TEMPLATES FOR utilities/import
 <div id='pageFileImportTemplate' class='page pageFileImport' data-app-role='fileImportContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
-
-<div class='ui-widget-header ui-corner-top'><h3>File Types</h3></div>
-<div class='ui-widget-content ui-corner-bottom stdPadding slimLeftContentContainer'>
-
-<ul data-app-role='fileImportMenu'>
-	<li data-verb="PRODUCTS" data-app-click="admin_medialib|fileImportPageShow">Products</li>
-	<li data-verb="INVENTORY" data-app-click="admin_medialib|fileImportPageShow">Inventory</li>
-	<li data-verb="CUSTOMERS" data-app-click="admin_medialib|fileImportPageShow">Customers</li>
-	<li data-verb="REVIEWS" data-app-click="admin_medialib|fileImportPageShow">Reviews</li>
-	<li data-verb="NAVCATS" data-app-click="admin_medialib|fileImportPageShow">Categories</li>
-	<li data-verb="VARIATIONS" data-app-click="admin_medialib|fileImportPageShow">Variations</li>
-	<li data-verb="REWRITES" data-app-click="admin_medialib|fileImportPageShow">URL</li>
-	<li data-verb="ORDERS" data-app-click="admin_medialib|fileImportPageShow">Orders</li>
-	<li data-verb="TRACKING" data-app-click="admin_medialib|fileImportPageShow">Tracking</li>
-	<li data-verb="RULES" data-app-click="admin_medialib|fileImportPageShow">Rules</li>
-	<li data-verb="LISTINGS" data-app-click="admin_medialib|fileImportPageShow">Listings</li>
-	<li data-verb="IMAGES" data-app-click="admin_medialib|fileImportPageShow">Images</li>
-	<li data-verb="OTHER" data-app-click="admin_medialib|fileImportPageShow">Other</li>
-</ul>
-
-</div>
-
-
+		<ul data-app-role='fileImportMenu'>
+			<li><a href='#' data-verb="PRODUCTS" data-app-click="admin_medialib|fileImportPageShow">Products</a></li>
+			<li><a href='#' data-verb="INVENTORY" data-app-click="admin_medialib|fileImportPageShow">Inventory</a></li>
+			<li><a href='#' data-verb="CUSTOMERS" data-app-click="admin_medialib|fileImportPageShow">Customers</a></li>
+			<li><a href='#' data-verb="REVIEWS" data-app-click="admin_medialib|fileImportPageShow">Reviews</a></li>
+			<li><a href='#' data-verb="NAVCATS" data-app-click="admin_medialib|fileImportPageShow">Categories</a></li>
+			<li><a href='#' data-verb="VARIATIONS" data-app-click="admin_medialib|fileImportPageShow">Variations</a></li>
+			<li><a href='#' data-verb="REWRITES" data-app-click="admin_medialib|fileImportPageShow">URL</a></li>
+			<li><a href='#' data-verb="ORDERS" data-app-click="admin_medialib|fileImportPageShow">Orders</a></li>
+			<li><a href='#' data-verb="TRACKING" data-app-click="admin_medialib|fileImportPageShow">Tracking</a></li>
+			<li><a href='#' data-verb="RULES" data-app-click="admin_medialib|fileImportPageShow">Rules</a></li>
+			<li><a href='#' data-verb="LISTINGS" data-app-click="admin_medialib|fileImportPageShow">Listings</a></li>
+			<li><a href='#' data-verb="IMAGES" data-app-click="admin_medialib|fileImportPageShow">Images</a></li>
+			<li><a href='#' data-verb="OTHER" data-app-click="admin_medialib|fileImportPageShow">Other</a></li>
+		</ul>
 	</section>
 	
 	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
-
-		<div class='ui-widget-header ui-corner-top'>
-			<h3 class='heading'>File Import Utility</h3>
-		</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
+		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
 		<!-- page contents will go here -->
 		</div>
 	</section>
@@ -553,43 +541,39 @@ to export ebay listings go to: <a href="#" onClick="navigateTo('/biz/utilities/e
 
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-navcats'>
-<h1>Navigation categories</h1>
+	<h1>Navigation categories</h1>
 
-<section>
-<h2>Import navigation categories from CSV file</h2>
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<fieldset>
-	<input type='hidden' name='filetype' value='NAVCATS'>
-	<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
-	<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
-	<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
-	<label><input type="checkbox" name="CAT_DESTRUCTIVE"> Destructive Overwrite (nukes all categories before running).</label>
-</fieldset>
-
-<!-- adds the file upload area -->
-<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
-</form>
-</section>
-
-
-
-<section>
-<h2>Export navigation categories</h2>
-
-
-<label>Additional headers: <input type="text" name="headers" id='navcatExportHeader'></label>
-<div class="hint">
-Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
-However any field that is stored in page namespace can be accessed.
-</div>
-
-<button data-app-event='admin_medialib|adminCSVExportNavcatsExec' class='ui-button ui-state-default ui-corner-all'>Export Categories</button>
-
-
-
-
-
-</section>
+	<section>
+		<h2>Import navigation categories from CSV file</h2>
+		<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+		<fieldset>
+			<input type='hidden' name='filetype' value='NAVCATS'>
+			<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
+			<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
+			<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
+			<label><input type="checkbox" name="CAT_DESTRUCTIVE"> Destructive Overwrite (nukes all categories before running).</label>
+		</fieldset>
+		
+		<!-- adds the file upload area -->
+		<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+		</form>
+		</section>
+		
+		
+		
+		<section>
+		<h2>Export navigation categories</h2>
+		
+		
+		<label>Additional headers: <input type="text" name="headers" id='navcatExportHeader'></label>
+		<div class="hint">
+		Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
+		However any field that is stored in page namespace can be accessed.
+		</div>
+		
+		<button data-app-click='admin_medialib|adminCSVExportNavcatsExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-s'>Export Categories</button>
+	
+	</section>
 
 </div>
 
@@ -618,7 +602,7 @@ or product page. That is because a rewrite lookup is only done immediately befor
 
 <section>
 <h2>Export Rewrites</h2>
-<button data-app-event='admin_medialib|adminCSVExportRewritesExec' class='ui-button ui-state-default ui-corner-all'>Export URL Rewrites</button>
+<button data-app-click='admin_medialib|adminCSVExportRewritesExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-s'>Export URL Rewrites</button>
 </section>
 
 
