@@ -3619,7 +3619,7 @@ $tmp.empty().remove();
 					}
 				catch(e)	{
 					r = false;
-					app.u.dump(' -> '+location+'Storage defined but not available (no space? no write permissions?)');
+					app.u.dump(' -> '+location+'Storage for '+key+' defined but not available (no space? no write permissions?)');
 					app.u.dump(e.message);
 					}
 				
