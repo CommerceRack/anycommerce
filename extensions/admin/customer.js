@@ -642,7 +642,7 @@ else	{
 							sfo = $form.serializeJSON(),
 							date = new Date(),
 							month = date.getMonth() + 1,
-							CAMPAIGNID = sfo.CAMPAIGNID.toUpperCase()+"_"+date.getFullYear()+(month < 10 ? '0'+month : month)+date.getDate(); //appending unix timestamp increases likelyhood that campaignID will be globally unique. upper case will be enforced by the API
+							CAMPAIGNID = sfo.CAMPAIGNID.toUpperCase()+"_"+date.getFullYear()+(month < 10 ? '0'+month : month)+date.getDate(); //appending epoch timestamp increases likelyhood that campaignID will be globally unique. upper case will be enforced by the API
 
 						app.model.addDispatchToQ({
 							'_cmd':'adminCampaignCreate',
