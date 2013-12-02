@@ -2452,7 +2452,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //    it's in opts to make debugging easier.
 
 			navigateTo : function(path,opts){
-				app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
+//				app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
@@ -2501,14 +2501,15 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							}
 						else	{
 							opts.tab = opts.tab || app.ext.admin.vars.tab; //use tab in focus if none is specified by now. (opts.tab WILL be set if a tab was clicked)
-							app.ext.admin.u.bringTabIntoFocus(opts.tab);
-//							opts.targetID = opts.tab+"Content";
+							app.ext.admin.u.bringTabIntoFocus(opts.tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
 							$target = $(app.u.jqSelector('#',opts.tab+"Content"));
-							
+							app.ext.admin.u.bringTabContentIntoFocus($target); //brings the tabContent div (homeContent, productContent, etc) into focus.
+							opts.targetID = opts.tab+"Content"; //used in legacy compatability mode.
+
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 							$('#stickytabs').empty(); //clear all the sticky tabs.
-							
-							} //do nothing. perfectly normal to not change what tab is in focus.
+
+							}
 						
 						if($target instanceof jQuery)	{
 						
@@ -2538,7 +2539,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //tab click show existing conten
 									else	{
 										app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
-										app.ext.admin.u.bringTabContentIntoFocus($target);
 										//when RETURNING to the product page, build navtabs again (search).
 //### TODO ### -> this code should not be here. it should be in the product editor. make it all selfcontained in showProductManager.
 										if(opts.tab == 'product')	{
@@ -2547,7 +2547,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 										} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
 									}
 								else if(mode == 'legacy')	{
-									app.ext.admin.u.bringTabContentIntoFocus($target);
 									app.ext.admin.u.handleShowSection(path,opts,$target);
 									}
 								else	{}// should never get here. error case for mode not being set is already handled.
