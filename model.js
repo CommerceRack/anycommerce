@@ -666,7 +666,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
 					var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 					obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
-					app.storageFunctions.writeLocal(datapointer,obj4Save); //save to local storage, if feature is available.
+					app.storageFunctions.writeLocal(datapointer,obj4Save,'session'); //save to local storage, if feature is available.
 					}
 				else	{}
 				}
