@@ -612,10 +612,6 @@ else	{
 
 
 
-
-
-
-
 		e : {
 //custom event instead of using openDialog because of html editor.
 			adminCampaignCreateShow : function($btn)	{
@@ -623,10 +619,20 @@ else	{
 				$btn.button();
 				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
 					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({'templateID':'caimpaignCreateTemplate','data':app.data.adminCampaignTemplateList,'showLoading':false,'title':'Create a New Campaign'});
-//					app.u.handleAppEvents($D);
-					$D.dialog('option','width','60%');
+					var $D = app.ext.admin.i.dialogCreate({'templateID':'campaignCreateTemplate','title':'Create a New Campaign','showLoading':false});
 					$D.dialog('open');
+					$D.showLoading({'message':'Fetching campaign template list'});
+					
+					app.model.addDispatchToQ({
+						'_cmd':'adminCampaignTemplateList',
+						'_tag':	{
+							'datapointer' : 'adminCampaignTemplateList',
+							'callback':'anycontent',
+							'translateOnly' : true,
+							jqObj : $D
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 //may need to add some for attributes for processForm or a custom app event button. That'll depend on how the file vs other changes get saved.
 					});
 				},

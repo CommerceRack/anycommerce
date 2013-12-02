@@ -3602,6 +3602,7 @@ $tmp.empty().remove();
 // !!! at some point, these should get moved to the model. the model should handle loading data from any source.
 		
 	storageFunctions : {
+
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
@@ -3612,8 +3613,7 @@ $tmp.empty().remove();
 				if (typeof value == "object") {
 					value = JSON.stringify(value);
 					}
-//				localStorage.removeItem(key); //here specifically to solve a iphone/ipad issue as a result of 'private' browsing.
-//the function above wreaked havoc in IE. do not implement without thorough testing (or not at all).
+
 				try	{
 					window[location+'Storage'].setItem(key, value);
 					}
@@ -3630,8 +3630,21 @@ $tmp.empty().remove();
 				}
 			return r;
 			}, //writeLocal
-		
-		
+
+		nukeLocal : function(key)	{
+			function remove(loc,k){
+				if(typeof window[loc+'Storage'] == 'object' && typeof window[loc+'Storage'].removeItem == 'function')	{
+					try	{
+						window[loc+'Storage'].removeItem(k);
+						}
+					catch(e)	{}
+					}
+				}
+			remove('local',key);
+			remove('session',key);
+			this.deleteCookie(key);
+			},
+
 		readLocal : function(key,location)	{
 			location = location || 'local';
 		//	app.u.dump("GETLOCAL: key = "+key);

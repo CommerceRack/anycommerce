@@ -59,7 +59,7 @@ var tools_ABtesting = function() {
 				var cachedGroupings = app.storageFunctions.readLocal(app.ext.tools_ABtesting.vars.localStorageKey);
 				
 				//Delete the stored groupings.  They will be rewritten after any non-existing groupings are assigned.
-				localStorage.removeItem(app.ext.tools_ABtesting.vars.localStorageKey);
+				app.storageFunctions.nukeLocal(app.ext.tools_ABtesting.vars.localStorageKey);
 
 				//if no value was present in localstorage, the storageFunctions attempts to readCookie instead
 				//if no cookie is present, false is returned.  In this case start fresh.
