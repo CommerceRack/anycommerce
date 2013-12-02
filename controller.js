@@ -55,6 +55,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
 		app.handleSession(); //get existing session or create a new one.
+		app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
@@ -2732,6 +2733,20 @@ later, it will handle other third party plugins as well.
 			return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);
+			},
+		
+		updatejQuerySupport : function()	{
+			if(jQuery && typeof jQuery.support == 'object')	{
+//If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.
+//So we first test to make sure the test doesn't cause an error. thanks ff.
+				jQuery.support.localStorage = true;
+				try{window.localStorage}
+				catch(e){jQuery.support.localStorage = false;}
+
+				jQuery.support.sessionStorage = true;
+				try{window.sessionStorage}
+				catch(e){jQuery.support.sessionStorage = false;}
+				}
 			}
 
 		}, //util
@@ -3608,25 +3623,31 @@ $tmp.empty().remove();
 			location = location || 'local';
 //			app.u.dump("WRITELOCAL: Key = "+key+" and location: "+location);
 			var r = false;
-			if(location+'Storage' in window && window[location+'Storage'] !== null && typeof window[location+'Storage'] != 'undefined')	{
-				r = true;
-				if (typeof value == "object") {
-					value = JSON.stringify(value);
-					}
 
-				try	{
-					window[location+'Storage'].setItem(key, value);
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].setItem == 'function' )	{
+					r = true;
+					if (typeof value == "object") {
+						value = JSON.stringify(value);
+						}
+//a try is used here so that if storage is full, the error is handled gracefully.
+					try	{
+						window[location+'Storage'].setItem(key, value);
+						}
+					catch(e)	{
+						r = false;
+						app.u.dump(' -> '+location+'Storage for '+key+' defined but not available (no space? no write permissions?)');
+						app.u.dump(e.message);
+						}
+					
 					}
-				catch(e)	{
-					r = false;
-					app.u.dump(' -> '+location+'Storage for '+key+' defined but not available (no space? no write permissions?)');
-					app.u.dump(e.message);
+				else	{
+					app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
+					app.u.dump(" -> window."+location+"Storage is not defined.");
 					}
-				
 				}
 			else	{
-				app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
-				app.u.dump(" -> window."+location+"Storage is not defined.");
+				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
 			return r;
 			}, //writeLocal
@@ -3640,8 +3661,13 @@ $tmp.empty().remove();
 					catch(e)	{}
 					}
 				}
-			remove('local',key);
-			remove('session',key);
+			if($.support[location+'Storage'])	{
+				remove('local',key);
+				remove('session',key);
+				}
+			else	{
+				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
 			this.deleteCookie(key);
 			},
 
