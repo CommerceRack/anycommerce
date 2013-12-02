@@ -82,8 +82,7 @@ var admin_tools = function() {
 				},
 			
 			showManageFlexedit : function($target)	{
-				$target.empty();
-				$target.append($("<div \/>").anycontent({'templateID':'manageFlexeditTemplate',data:{}}));
+				$target.anycontent({'templateID':'manageFlexeditTemplate',data:{}}).anydelegate();
 				
 				var $enabled = $("[data-app-role='flexeditEnabledListContainer']",$target);
 				$enabled.showLoading({'message':'Fetching your list of enabled fields'})
@@ -99,14 +98,14 @@ var admin_tools = function() {
 					stop : function(event,ui)	{
 						//if the item ends up in the enabled list, change from left/right arrows to up/down. also tag row to denote it's new (for save later).
 						if($(ui.item).closest('tbody').hasClass('connectMe'))	{
-							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')})
-							app.u.handleAppEvents($(ui.item)); //handled here instead of when right list is generated for efficiency.
+							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')});
+							app.u.handleButtons($(ui.item));
 							}
 						}
 					});
 
 				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
-				app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor.
+				app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor. ### TODO -> don't call these till necessary
 				app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
 					$master.hideLoading();
 					$('tr',$enabled).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
@@ -115,14 +114,11 @@ var admin_tools = function() {
 						}
 					else	{
 						$master.anycontent({'datapointer':rd.datapointer});
-						app.u.handleAppEvents($master);
+						app.u.handleButtons($master);
 						}
 					},'datapointer':'appResource|product_attribs_popular.json'}},'mutable');
-//				app.u.handleAppEvents($target);
 				app.model.dispatchThis('mutable');
-//manageFlexeditorTemplate
-
-				},
+				}, //showManageFlexedit
 			
 			showProductExport : function($target)	{
 				$target.empty().anycontent({'templateID':'productExportToolTemplate','showLoading':false});
@@ -217,7 +213,6 @@ $target.append("<br \/>");
 
 				app.model.dispatchThis('mutable');
 				},
-
 			
 			showciEngineAgentManager : function($target)	{
 				
@@ -372,7 +367,6 @@ $target.append("<br \/>");
 				return r;
 				},
 
-
 			powertoolActions2KVP : function($tbody)	{
 				var r = "";
 				$('tr',$tbody).not('.rowTaggedForRemove').each(function(){
@@ -423,7 +417,7 @@ $target.append("<br \/>");
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
-			
+
 			rawJSONRequestExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.rawJSONRequestExec').on('click.rawJSONRequestExec',function(event){
@@ -455,7 +449,7 @@ $target.append("<br \/>");
 						}
 				});
 			},
-			
+
 			inspectorExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
@@ -525,7 +519,7 @@ $target.append("<br \/>");
 					else	{}
 					});
 				},
-			
+
 			powerToolBatchJobExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(event){
@@ -559,7 +553,7 @@ $target.append("<br \/>");
 					
 					})
 				},
-			
+
 			powerToolAttribChange : function($ele)	{
 				$ele.off('change.powerToolAttribChange').on('change.powerToolAttribChange',function(){
 					var $fieldset = $ele.closest('fieldset');
@@ -584,7 +578,6 @@ $target.append("<br \/>");
 					});
 				}, //powerToolConditionalChange
 
-			
 			powerToolVerbChange : function($radio)	{
 				$radio.off('click.powerToolVerbChange').on('click.powerToolVerbChange',function(){
 					var $fieldset = $radio.closest('fieldset');
@@ -594,7 +587,6 @@ $target.append("<br \/>");
 					$radio.closest('tr').find('input').attr('disabled','').removeAttr('disabled').attr('required','required'); //enable input(s) related to this verb.
 					});
 				}, //powerToolVerbChange
-
 
 			productExportBatchJobCreateExec : function($btn)	{
 				$btn.button();
@@ -673,48 +665,36 @@ $target.append("<br \/>");
 					});
 				}, //agentCreateShow
 
+			flexeditAttributesFullListShow : function($ele,P)	{
+				var $tbody = $ele.closest("[data-app-role='flexeditMasterListContainer']").find("[data-app-role='flexeditAttributeListTbody']");
+				$tbody.empty()
+				$tbody.parent().showLoading({'message':'Fetching full attribute list'});
 
-			flexeditAttributesFullListShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.flexeditAttributesFullListShow').on('click.flexeditAttributesFullListShow',function(event){
-					event.preventDefault();
-					var $tbody = $btn.closest("[data-app-role='flexeditMasterListContainer']").find("[data-app-role='flexeditAttributeListTbody']");
-					$tbody.empty()
-					$tbody.parent().showLoading({'message':'Fetching full attribute list'});
-
-					app.ext.admin.calls.appResource.init('product_attribs_all.json',{
-						'callback' : function(rd){
-							$tbody.parent().hideLoading();
-							
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$tbody.anycontent({'datapointer':rd.datapointer});
-								$('tr',$tbody).each(function(){
-									$(this).attr('data-guid',app.u.guidGenerator())
-									}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
-//started implementing a button for 'move this to enabled list'.  Worked fine on the short list of attribs. dies on the full list.
-//the issue is handleAppEvents.  Once this uses delegated events, it should work fine (handlebuttons did run w/out dying).
-//however, can't migrate this yet because the data-table format uses app events, not delegated, and I don't want two copies of that.
-//								app.u.handleButtons($tbody);
-								}
-							},
-						'datapointer':'appResource|product_attribs_all.json'
-						},'mutable'); //total sales
+				app.ext.admin.calls.appResource.init('product_attribs_all.json',{
+					'callback' : function(rd){
+						$tbody.parent().hideLoading();
+						
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							$tbody.anycontent({'datapointer':rd.datapointer});
+							$('tr',$tbody).each(function(){
+								$(this).attr('data-guid',app.u.guidGenerator());
+								//this list is too big for running the handleButton script. 
+								}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
+							}
+						},
+					'datapointer':'appResource|product_attribs_all.json'
+					},'mutable'); //total sales
 				app.model.dispatchThis('mutable');
-
-
-					});
 				},
 
-			flexeditAttributeAdd2EnabledList : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false}).off('click.flexeditAttributeUpdateShow').on('click.flexeditAttributeUpdateShow',function(event){
-					event.preventDefault();
-					var $tr = $btn.closest('tr');
-//					app.u.dump(" -> $btn.closest('form').find(tbody[data-app-role='flexeditEnabledListTbody']:first): "+$btn.closest('form').find("[data-app-role='flexeditEnabledListTbody']:first").length);
-					$btn.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr)
-					});
+			flexeditAttributeAdd2EnabledList : function($ele,P)	{
+				var $tr = $ele.closest('tr');
+				$ele.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr);
+				$tr.attr('data-id',$tr.attr('data-obj_index'));
+				app.u.handleButtons($tr);
 				},
 /*
 till events support multiple actions, can't implement this.
@@ -728,71 +708,55 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 					$btn.closest("[data-app-role='flexeditAttributeAddUpdateContainer']").slideUp();
 					})
 				},
-*/			flexeditAttributeCreateUpdateShow : function($btn)	{
-				
-				if($btn.data('mode') == 'update')	{
-					$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-					}
-				
-				$btn.button().off('click.flexeditAttributeUpdateShow').on('click.flexeditAttributeUpdateShow',function(){
-					var $inputContainer = $btn.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
+*/			flexeditAttributeCreateUpdateShow : function($ele,p)	{
+				var $inputContainer = $ele.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
 //disable the add and edit buttons so as to not accidentally lose data while it's being entered (form would clear or populate w/ 'edit' contents )
 //					$btn.button('disable');
 //					$btn.closest('[data-app-role="flexeditManager"]').find("[data-app-event='admin_tools|flexeditAttributeCreateUpdateShow']").button('disable');
-					
+				
 //need to make sure form input area is 'on screen'. scroll to it.
-					$('html, body').animate({
-						scrollTop: $inputContainer.offset().top
-						}, 1000);
-					
-					if($btn.data('mode') == 'update')	{
-						$inputContainer.show();
-						$inputContainer.anycontent({'data':$.extend({},$btn.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$btn.closest('tr').data('id')])})
-						app.u.dump(" -> bunch o data: "); app.u.dump($.extend({},$btn.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$btn.closest('tr').data('id')]))
-						}
-					else if($btn.data('mode') == 'create')	{
-						$('input, select',$inputContainer).val(''); //clear all the inputs
-						$inputContainer.show();
-						}
-					else	{
-						$btn.closest('form').anymessage({"message":"In admin_tools.e.flexeditAttributeAddUpdateShow, mode not valid. only create or update are accepted.","gMessage":true});
-						}
-					
-					});
+				$('html, body').animate({scrollTop: $inputContainer.offset().top}, 1000);
+				$(':input',$inputContainer).val(''); //clear all the inputs. important even if in 'edit' cuz anycontent will NOT clear and if a field is not set for this item, it'll leave the previously edited attributes content.
+				$inputContainer.show();
+
+				if($ele.data('mode') == 'update')	{
+					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
+					$("[name='type']",$inputContainer).trigger('change'); //will conditionally show 'options' input if necessary.
+					}
+				else if($ele.data('mode') == 'create')	{
+					//valid mode
+					}
+				else	{
+					$inputContainer.hide();
+					$ele.closest('form').anymessage({"message":"In admin_tools.e.flexeditAttributeAddUpdateShow, mode not valid. only create or update are accepted.","gMessage":true});
+					}
 				},
 			
-			flexeditSaveExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.flexeditSaveExec').on('click.flexeditSaveExec',function(event){
-					event.preventDefault();
-					var json = new Array();
-					var keys = new Array();
-					$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
-
-						if($.inArray($(this).data('id'),keys) >= 0)	{
-							//if an id is already in keys, it's already added to the flex json. This keeps duplicate id's from being added.
-							}
-						else	{
-							keys.push($(this).data('id'));
-							json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
-							}
-						})
-					app.model.addDispatchToQ({
-						'_cmd':'adminConfigMacro',
-						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
-						'_tag':	{
-							'callback' : 'showMessaging',
-							'jqObj' : $btn.closest('form'),
-							'removeFromDOMItemsTaggedForDelete' : true,
-							'restoreInputsFromTrackingState' : true,
-							'message':'Your changes have been saved'
-							}
-						},'immutable');
-					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
-					app.model.dispatchThis('immutable');
-
-					});
-				//FLEXEDIT-SAVE
+			flexeditSaveExec : function($ele,P)	{
+				var json = new Array();
+				var keys = new Array();
+				$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
+					if($.inArray($(this).data('id'),keys) >= 0)	{
+						//if an id is already in keys, it's already added to the flex json. This keeps duplicate id's from being added.
+						}
+					else	{
+						keys.push($(this).data('id'));
+						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+						}
+					})
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigMacro',
+					'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
+					'_tag':	{
+						'callback' : 'showMessaging',
+						'jqObj' : $btn.closest('form'),
+						'removeFromDOMItemsTaggedForDelete' : true,
+						'restoreInputsFromTrackingState' : true,
+						'message':'Your changes have been saved'
+						}
+					},'immutable');
+				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+				app.model.dispatchThis('immutable');
 				},
 			
 			adminPrivateFileDownloadExec : function($btn)	{
@@ -810,7 +774,7 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 						},'mutable');
 					app.model.dispatchThis('mutable');
 					});
-				},
+				}, //adminPrivateFileDownloadExec
 			
 			adminPlatformLogDownloadExec : function($btn)	{
 				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
@@ -827,7 +791,7 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 						},'mutable');
 					app.model.dispatchThis('mutable');
 					});
-				},
+				}, //adminPlatformLogDownloadExec
 
 
 			adminPrivateFileRemoveConfirm : function($btn)	{
@@ -890,7 +854,7 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 						$('#globalMessaging').anymessage({"message":"Please tag at least one file for removal (click the trash can icon)."});
 						}
 					})
-				}, //agentRemoveConfirm,
+				}, //adminPrivateFileRemoveConfirm
 
 
 			agentRemoveConfirm : function($btn)	{

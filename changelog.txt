@@ -7,6 +7,9 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201401
 
+GLOBAL
+	The default storage for data was changed from 'local' to 'session'. This means a refresh will clear most data.
+
 ADMIN
 	enhancement -> several pages moved to a delegated events model, improving performance/memory consumption.
 
