@@ -1908,16 +1908,17 @@ TIME/DATE
 			return dateStr;
 			},
 
-//current time in unix format. stop using this.
+//current time in epoch format.
 		epochNow : function()	{
 			return Math.round(new Date().getTime()/1000.0)
-			}, //unixnow
-//very simple date translator. if something more sprmatecific is needed, create a custom function.
+			}, //epochNow
+//very simple date translator. if something more specific is needed, create a custom function.
+//ts should be an epoch timestamp
 //will support a boolean for showtime, which will show the time, in addition to the date.
-		epoch2Pretty : function(unix_timestamp,showtime)	{
+		epoch2Pretty : function(ts,showtime)	{
 //			app.u.dump('BEGIN app.u.epoch2Pretty');
-//			app.u.dump(' -> tx = '+unix_timestamp);
-			var date = new Date(Number(unix_timestamp)*1000);
+//			app.u.dump(' -> tx = '+ts);
+			var date = new Date(Number(ts)*1000);
 			var r;
 			r = app.u.jsMonth(date.getMonth());
 			r += ' '+date.getDate();
