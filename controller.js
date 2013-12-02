@@ -1909,13 +1909,13 @@ TIME/DATE
 			},
 
 //current time in unix format. stop using this.
-		unixNow : function()	{
+		epochNow : function()	{
 			return Math.round(new Date().getTime()/1000.0)
 			}, //unixnow
 //very simple date translator. if something more sprmatecific is needed, create a custom function.
 //will support a boolean for showtime, which will show the time, in addition to the date.
-		unix2Pretty : function(unix_timestamp,showtime)	{
-//			app.u.dump('BEGIN app.u.unix2Pretty');
+		epoch2Pretty : function(unix_timestamp,showtime)	{
+//			app.u.dump('BEGIN app.u.epoch2Pretty');
 //			app.u.dump(' -> tx = '+unix_timestamp);
 			var date = new Date(Number(unix_timestamp)*1000);
 			var r;
@@ -3351,8 +3351,8 @@ $tmp.empty().remove();
 			},
 
 
-		unix2mdy : function($tag,data)	{
-			$tag.text(app.u.unix2Pretty(data.value,data.bindData.showtime))
+		epoch2mdy : function($tag,data)	{
+			$tag.text(app.u.epoch2Pretty(data.value,data.bindData.showtime))
 			},
 	
 		text : function($tag,data){

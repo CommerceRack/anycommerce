@@ -96,7 +96,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				var L = tasks.length;
 				
 				for(var i = (L-1); i >= 0; i--)	{
-					if(Number(tasks[i].completed_gmt) > 0 && (app.u.unixNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
+					if(Number(tasks[i].completed_gmt) > 0 && (app.u.epochNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
 						app.u.dump("completed more than three days ago");
 						} //don't include tasks completed more than a few days ago
 					else	{
@@ -166,13 +166,13 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 		renderFormats : {
 			taskClass : function($tag,data)	{
 				if(Number(data.value.completed_gmt))	{
-					if((app.u.unixNow() - Number(data.value.completed_gmt)) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
+					if((app.u.epochNow() - Number(data.value.completed_gmt)) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
 					else	{} //do nothing.
 					}
 				else if(Number(data.value.due_gmt))	{
-					app.u.dump(" -> has a due date. Number(data.value.due_gmt) - app.u.unixNow(): "+(Number(data.value.due_gmt) - app.u.unixNow()));
-					if(app.u.unixNow() > Number(data.value.due_gmt)) {$tag.addClass('red');} //past due date.
-					else if ((Number(data.value.due_gmt) - app.u.unixNow()) < (60*60*24*2)){$tag.addClass('orange')} //due within 2 days. highlight.
+					app.u.dump(" -> has a due date. Number(data.value.due_gmt) - app.u.epochNow(): "+(Number(data.value.due_gmt) - app.u.epochNow()));
+					if(app.u.epochNow() > Number(data.value.due_gmt)) {$tag.addClass('red');} //past due date.
+					else if ((Number(data.value.due_gmt) - app.u.epochNow()) < (60*60*24*2)){$tag.addClass('orange')} //due within 2 days. highlight.
 					else	{} //not past due or too close to due date.
 					}
 				else	{} // no due data and not completed. do nothing.

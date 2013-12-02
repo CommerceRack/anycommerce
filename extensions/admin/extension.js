@@ -416,7 +416,7 @@ var admin = function() {
 				}
 			}, //adminDataQuery
 			
-//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)}
+//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.epochNow() - (60*60*24*10)}
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{

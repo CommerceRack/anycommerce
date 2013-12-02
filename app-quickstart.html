@@ -1139,7 +1139,7 @@ used on a product layout. Some product have 'children' which may represent the s
 		<li data-bind='var:review(RATING); format:addClass; format:addClass; className:review_;' class='reviewSprite'></li>
 		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
 		<li data-bind='var:review(LOCATION); format:text; pretext:of ;'></li>
-		<li data-bind='var:review(CREATED_GMT); format:unix2mdy; pretext:on ;'></li>
+		<li data-bind='var:review(CREATED_GMT); format:epoch2mdy; pretext:on ;'></li>
 
 	</ul>
 	<blockquote>
@@ -1258,7 +1258,7 @@ used for store_crm.js
 	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
 	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
-	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
+	<span data-bind='var:order(MODIFIED_GMT);format:epoch2mdy; pretext: Placed on ;'></span>
 	</div>
 
 	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
