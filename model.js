@@ -641,7 +641,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			if(app.data[key])	{
 				delete app.data[key];
 				}
-			app.storageFunctions.nukeLocal(key); //removes local and session
+			app.storageFunctions.nukeLocal(key,'local');
+			app.storageFunctions.nukeLocal(key,'session');
 			},
 
 
