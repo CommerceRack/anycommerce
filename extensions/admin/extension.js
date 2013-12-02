@@ -2504,7 +2504,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							app.ext.admin.u.bringTabIntoFocus(opts.tab);
 //							opts.targetID = opts.tab+"Content";
 							$target = $(app.u.jqSelector('#',opts.tab+"Content"));
-						
+							
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 							$('#stickytabs').empty(); //clear all the sticky tabs.
 							
@@ -2516,10 +2516,16 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 								app.ext.admin.u.handleShowSection(path,opts,$target); 
 								}
 							else	{
-						
+
+
+
 								if(mode == 'app')	{
 						//			app.u.dump(" -> navigateTo mode = app");
-									app.ext.admin.u.loadNativeApp(path,opts,$target);
+									$target.intervaledEmpty(); //clear all previous content. this does a 'remove', which clears events.
+//in general, we don't want the native app to add data or delegated events to the tabContent element itself, so a child is added and passed as target.
+//This means the native app can directly effect 'target' without having to drill down to it's first child or create a temporary container itself.
+//then, anytime a new app is loaded, the data and event delegation is automatically dropped.
+									app.ext.admin.u.loadNativeApp(path,opts,$("<div \/>").addClass('contentContainer').appendTo($target));
 									}
 //in tabclick mode, if the tab has not been opened, show the default content.
 //if the tab has been opened, show existing content.
@@ -2773,117 +2779,54 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 			showMailTool : function(vars)	{
-vars = vars || {};
-
-
-
-if(vars.listType && vars.partition)	{
-//listType must match one of these. an array is used because there will be more types:
-//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
-	var types = ['ORDER','CUSTOMER']; 
-	if(types.indexOf(vars.listType) >= 0)	{
-
-		var $mailTool = $('#mailTool');
-		if($mailTool.length)	{
-			$mailTool.empty();
-			}
-		else	{
-			$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
-			$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
-			}
-
-		$mailTool.dialog('open');
-
-		$mailTool.showLoading({'message':'Fetching list of email messages/content'});
-		app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
-			$mailTool.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$mailTool.anymessage({'message':rd})
-				}
-			else	{
-				$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
-				app.u.handleAppEvents($mailTool,vars);
-				}
-			}},'mutable');
-		app.model.dispatchThis('mutable');
-		
-		}
-	else	{
-		$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
-		}
-
-//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
-//though not a modal, only one can be open at a time.
-/*			if(orderID && Number(prt) >= 0)	{
-	
-				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						if(rd._rtag && rd._rtag.selector)	{
-							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+				vars = vars || {};
+				
+				
+				
+				if(vars.listType && vars.partition)	{
+				//listType must match one of these. an array is used because there will be more types:
+				//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
+					var types = ['ORDER','CUSTOMER']; 
+					if(types.indexOf(vars.listType) >= 0)	{
+				
+						var $mailTool = $('#mailTool');
+						if($mailTool.length)	{
+							$mailTool.empty();
 							}
-						app.u.throwMessage(rd);
+						else	{
+							$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
+							$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
+							}
+				
+						$mailTool.dialog('open');
+				
+						$mailTool.showLoading({'message':'Fetching list of email messages/content'});
+						app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
+							$mailTool.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$mailTool.anymessage({'message':rd})
+								}
+							else	{
+								$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
+								app.u.handleAppEvents($mailTool,vars);
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						
 						}
 					else	{
-						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-						app.ext.admin.u.handleAppEvents($target);
+						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
 						}
-		
-					}},'mutable');
-				app.model.dispatchThis('mutable');
-				}
-			else	{
-				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
-				}
-*/
-	}
-else	{
-	$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
-	}
 				
-				
-				},
-
-
-/* loading content and adding a new 'page' */
-
-/*
-load page looks in app.ext.admin.pages to see if a 'page' exists.
-pages only exists for apps. the absense of a page in the page object will be treated as legacy compatibility.
-vars allows for overrides of default page variables. Out of the gate, tab will be supported. don't know about any others.
- -> tab being set determines whether breadcrumb and navtabs are reset. no tab, no reset. allows pages to be loaded inside another tab.
- -> set vars.tab to 'current' to open page in current tab/tabcontent.
-
-			loadPage : function(pageID,vars)	{
-				var pages = app.ext.admin.pages; //shortcut
-				if(pageID && pages[pageID])	{
-					
-					}
-				else if(pageID)	{
-					//pageID set, but does not exists in pages var. report error.
 					}
 				else	{
-					//no pageID passed. report error.
-					}
-				},
-
-			addPage : function(pageID,obj){
-				if(pageID && typeof obj === 'object' && typeof obj.exec === 'function'){
-					var pages = app.ext.admin.pages;
-					if(!pages[pageID])	{
-						//required vars present
-						pages[pageID] = obj;
-						}
-					else	{
-						//HHmmmmmm... do we allow pages to be overwritten?
-						}
-					}
-				else	{
-					//page ID and obj.exec as a function are required.
+					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
 					}
 				
+				
 				},
-*/
+
+
 
 /*
 HEADER CODE
@@ -3619,7 +3562,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 			loadNativeApp : function(path,opts,$target){
 				app.u.dump("BEGIN loadNativeApp");
-				$target.intervaledEmpty();
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
