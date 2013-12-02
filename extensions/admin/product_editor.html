@@ -1879,7 +1879,7 @@ time.
 
 <div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<div class='clearfix marginBottom'>
-		<button class='floatRight' data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="store">Add New</button>
+		<button class='floatRight applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store">Add New</button>
 		<h1>Store Variations</h1>
 	</div>
 <table class='fullWidth gridTable applyAnytable'>
@@ -2593,7 +2593,7 @@ Snacks|Doughnuts<br />
 	</label>
 	
 	<div class='displayNone marginBottom label  imgOnly'>
-		<span>Image <a data-app-event="admin_prodEdit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
+		<span>Image <a data-app-click="admin_prodEdit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
 
 		<img width="70" height="70" src="app-admin/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
 		
@@ -2660,7 +2660,7 @@ Snacks|Doughnuts<br />
 			<td class='valignTop'>
 			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
 		<div class='clearfix'>
-			<button class='floatRight' data-app-event='admin_prodEdit|storeVariationsRefresh'>Refresh Store Variations</button>
+			<button class='floatRight applyButton' data-app-click='admin_prodEdit|storeVariationsRefresh' data-icon-secondary='ui-icon-refresh' data-text='false'>Refresh Store Variations</button>
 			<h2>Store Variations</h2>
 		</div>
 		<div class='storeVariationsListContainer'>
@@ -2685,11 +2685,11 @@ Snacks|Doughnuts<br />
 <!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
 			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
 			
-			<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
+			<button title="Add a new product-specific variation group." data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
 			<!-- when this is upgraded to app events, change this to be a menu() -->
 			<div class='displayNone ui-widget ui-widget-content ui-corner-all alignCenter'>
-				<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="product">Product Specific</button>
-				<button title="Add a new product-specific variation group."  data-app-event='admin_prodEdit|variationCreateShow' data-variationmode="store">Store Wide</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="product">Product Specific</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store">Store Wide</button>
 			</div>
 		</div>
 
