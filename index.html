@@ -1722,7 +1722,7 @@ this will likely become more flexible in the future. ###
 
 	</form>
 	<div class="prodUtils" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-		<img class="pointer" width="87" height="25" src="img/prodPage/sizing_chart-87x25.png" onClick="app.ext.cubworld.a.showSizeChart(); return false;" />
+		<img class="pointer displayNone" width="87" height="25" data-bind="var:product(zoovy:prod_enable_feature1); format:showIfSet; displayType: inline-block;" src="img/prodPage/sizing_chart-87x25.png" onClick="app.ext.cubworld.a.showSizeChart(); return false;" />
 		<!--
 		<img class="pointer" width="87" height="25" src="img/prodPage/tell_friend-87x25.png" onClick="app.ext.cubworld.a.showTellAFriendBox({'pid':$(this).parent().data('pid'),'templateID':'tellafriendFrmTemplate'}); return false;" />
 		-->
