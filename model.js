@@ -641,8 +641,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			if(app.data[key])	{
 				delete app.data[key];
 				}
-			localStorage.removeItem(key);
-			sessionStorage.removeItem(key);
+			app.storageFunctions.nukeLocal(key); //removes local and session
 			},
 
 
@@ -1768,8 +1767,9 @@ methods of getting data from non-server side sources, such as cookies, local or 
 				return r;
 				},
 
-//Device Persistent Settings (DPS) Set
-//For updating 'session' preferences, which are currently device specific.
+//Device Persistent Storage (DPS) Set
+//For updating preferences, which are currently device specific.
+//Uses local storage
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
