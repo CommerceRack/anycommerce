@@ -366,7 +366,7 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 //and your code breaks.
 //if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
 
-app.globalAjax.lastDispatch = app.u.unixNow();
+app.globalAjax.lastDispatch = app.u.epochNow();
 app.globalAjax.overrideAttempts = 0;
 
 //IMPORTANT
@@ -599,7 +599,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 //handle all the call specific handlers.
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
-						responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
+						responseData['@rcmds'][i].ts = app.u.epochNow()  //set a timestamp on local data
 
 						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
 							this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']](responseData['@rcmds'][i])	//executes a function called handleResponse_X where X = _cmd, if it exists.
@@ -1207,7 +1207,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 //				app.u.dump(' -> data in localStorage');
 	//			app.u.dump(local);
 				if(local.ts)	{
-					if((app.u.unixNow() - local.ts) > expires)	{
+					if((app.u.epochNow() - local.ts) > expires)	{
 						r = false; // data is more than 24 hours old.
 						}
 					else	{

@@ -5,6 +5,18 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201401
+
+ADMIN
+	enhancement -> several pages moved to a delegated events model, improving performance/memory consumption.
+
+CONTROLLER
+	unixNow renamed to epochNow (utility)
+	unix2Pretty renamed to epoch2Pretty (utility)
+	unix2mdy renamed to epoch2mdy (render format)
+
+
+
 201346
 ADMIN
 	enhancement - updated users interface. faster and more memory efficient for browser.

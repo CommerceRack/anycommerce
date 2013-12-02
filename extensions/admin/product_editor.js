@@ -2359,7 +2359,7 @@ function type2class(type)	{
 						$P.append("<span class='floatLeft marginRight marginBottom app-icon app-icon-"+logArr[i].type.toLowerCase()+"'><\/span>");
 						$P.append($("<h5>"+logArr[i].type+"<\/h5>").addClass(type2class(logArr[i].type)));
 						$P.append("<h6>Feed: "+logArr[i].feed+"<\/h6>");
-						$P.append("<h6>"+app.u.unix2Pretty(logArr[i].ts,true)+"<\/h6>");
+						$P.append("<h6>"+app.u.epoch2Pretty(logArr[i].ts,true)+"<\/h6>");
 						$P.append(logArr[i].msg);
 						$P.appendTo($D);
 						}

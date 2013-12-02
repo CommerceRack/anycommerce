@@ -31,7 +31,7 @@ var myRIA = function() {
 			quickAdd : {
 				init : function(pid,tagObj)	{
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-					tagObj.datapointer = 'atc_'+app.u.unixNow(); //unique datapointer for callback to work off of, if need be.
+					tagObj.datapointer = 'atc_'+app.u.epochNow(); //unique datapointer for callback to work off of, if need be.
 					this.dispatch({'product_id':pid,'quantity':'1'},tagObj);
 					return 1;
 					},
