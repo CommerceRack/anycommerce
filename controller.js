@@ -3652,23 +3652,17 @@ $tmp.empty().remove();
 			return r;
 			}, //writeLocal
 
-		nukeLocal : function(key)	{
-			function remove(loc,k){
-				if(typeof window[loc+'Storage'] == 'object' && typeof window[loc+'Storage'].removeItem == 'function')	{
+		nukeLocal : function(key,location)	{
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
 					try	{
-						window[loc+'Storage'].removeItem(k);
+						window[location+'Storage'].removeItem(k);
 						}
 					catch(e)	{}
-					}
-				}
-			if($.support[location+'Storage'])	{
-				remove('local',key);
-				remove('session',key);
-				}
+					}				}
 			else	{
 				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
-			this.deleteCookie(key);
 			},
 
 		readLocal : function(key,location)	{
