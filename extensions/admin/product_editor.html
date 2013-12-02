@@ -1911,8 +1911,8 @@ time.
 	<td data-bind="var:variation(type); format:text;"></td>
 	<td class='alignRight'>
 	
-		<button data-app-event='admin_prodEdit|adminSOGDeleteConfirm'>Delete</button>
-		<button data-app-event="admin_prodEdit|variationSearchByIDExec" title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
+		<button data-app-click='admin_prodEdit|adminSOGDeleteConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
+		<button data-app-event="admin_prodEdit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
 		<button data-variationmode="store" data-app-event='admin_prodEdit|variationUpdateShow'>Edit</button>
 	</td>
 </tr>
@@ -2621,9 +2621,9 @@ Snacks|Doughnuts<br />
 	<td data-bind="var:option(asm); format:text;"></td>
 	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
-	<button data-app-event='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions'>Move</button>
-	<button data-app-event="admin|tagRowForRemove" class='toggleByAppRole optionsEnabledOnProduct'>Delete</button>
-	<button data-app-event="admin_prodEdit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
+	<span data-app-click='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w'>Move</span>
+	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct'>Delete</button>
+	<button data-app-click="admin_prodEdit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-pencil' data-text='false'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
 	</td>
 </tr>
 </table>
@@ -2713,7 +2713,7 @@ Snacks|Doughnuts<br />
 	<td data-bind="var: variation(prompt); format:text;"></td>
 	<td data-bind="var: variation(type); format:text;"></td>
 	<td data-bind="var: variation(id); format:text;"></td>
-	<td><button title="Add store option group to product" data-app-event='admin_prodEdit|variationAddToProduct'>Apply</button></td>
+	<td><button title="Add store option group to product" data-app-click='admin_prodEdit|variationAddToProduct' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-w'>Apply</button></td>
 </tr>
 
 <tr id='productVariationManagerProductRowTemplate' class='pointer'>
