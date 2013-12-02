@@ -411,7 +411,7 @@ In both cases, keep watching for further changes.
 			for(var i = 0; i < supportedEvents.length; i += 1)	{
 				this.element.off(supportedEvents[i]+".app");
 				}
-			this.element.addClass('delegationRemoved'); //here for troubleshooting purposes.
+			this.element.removeClass('eventDelegation').addClass('delegationRemoved'); //here for troubleshooting purposes.
 			}
 		}); // create the widget
 

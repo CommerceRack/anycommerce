@@ -673,7 +673,6 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			else	{
 //catch. not writing to local. Either not necessary or an error occured.
 				}
-			
 			}, //writeToMemoryAndLocal
 
 		thisGetsSavedToMemory : function(cmd)	{

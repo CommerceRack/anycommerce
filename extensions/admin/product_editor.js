@@ -335,7 +335,7 @@ $target.anydelegate();
 	
 	
 			showStoreVariationsManager : function($target)	{
-	//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
+//				app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
 				if($target && $target instanceof jQuery)	{
 					var _tag = {
 						'datapointer' : 'adminSOGComplete',
@@ -344,14 +344,14 @@ $target.anydelegate();
 						'templateID' : 'variationsManagerTemplate'
 						}
 					
-					$target.empty()
+					$target.anydelegate();
 					
 					//use local copy, if available
 					if(app.model.fetchData('adminSOGComplete'))	{
 						app.u.handleCallback(_tag)
 						}
 					else	{
-						$target.showLoading({"message":"Fetching Variations..."});
+						$target.showLoading({"message":"Fetching variations..."});
 						app.model.addDispatchToQ({
 							'_cmd':'adminSOGComplete',
 							'_tag':	_tag
