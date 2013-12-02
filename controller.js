@@ -3168,8 +3168,10 @@ return $r;
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
 //			app.u.dump(" -> showIfSet: "+data.value);
+// *** 201352 add support for whatever display type is necessary (ie 'inline' for spans, 'inline-block' for imgs) default to block. -mc
+			var displayType = data.bindData.displayType || 'block'
 			if(data.value)	{
-				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
+				$tag.show().css('display',displayType); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
 
