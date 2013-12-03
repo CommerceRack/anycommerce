@@ -1623,10 +1623,81 @@ when an event type is changed, all the event types are dropped, then re-added.
 					});
 				}, //paymentMethodUpdateExec
 
-//This is the event to use for delegated events (as oppsed to app events).  It is also executed by the app event code.
+//This is the event to use for delegated events (as oppsed to app events).
 			dataTableAddUpdate : function($ele,P)	{
-//					app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				var r = false; //what is returned. will be true if data-table passes muster.
+				app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				var
+					$DTC = $ele.closest("[data-table-role='container']");// Data Table Container. This element should encompass the inputs AND the table itself.
+					$inputContainer = $("[data-table-role='inputs']",$DTC), //likely a fieldset, but that's not a requirement.
+					$dataTbody = $("tbody[data-table-role='content']",$DTC);
 				
+				if($inputContainer.length && $dataTbody.length)	{
+					app.u.dump(" -> all necessary jquery objects found.");
+					if($dataTbody.data('bind'))	{
+						app.u.dump(" -> $dataTbody has data-bind.");
+	
+						if(app.u.validateForm($inputContainer))	{
+							app.u.dump(" -> form is validated.");
+							var 
+								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+								sfo = $inputContainer.serializeJSON({'cb':true}),
+								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+							
+							$tr.anycontent({data:sfo});
+							$tr.addClass('edited');
+							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+							app.u.handleButtons($tr);
+					
+	//if a row already exists with this guid, this is an UPDATE, not an ADD.
+	//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
+							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
+								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
+								}
+							else	{
+								$tr.appendTo($dataTbody);
+								}
+	// by default, the data table inputs are reset on save. This can be disabled as needed by setting data-form-skipreset on the apply button.
+							if($ele.data('form-skipreset'))	{
+								}
+							else	{
+								$(':input',$inputContainer).not(':radio').not(":checkbox").val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
+								$(':radio',$inputContainer).prop('checked',false);
+								$(':checkbox',$inputContainer).prop('checked',false);
+								}
+							app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
+							r = true;
+							}
+						else	{
+							app.u.dump("form did not validate");
+							//validateForm handles error display.
+							}
+						}
+					else	{
+						$inputContainer.anymessage({"message":"In admin_config.e.dataTableAddUpdate, data-table-role='contents' has no data-bind set.","gMessage":true});
+						}
+				//	$('input',$container).attr('required','').removeAttr('required');
+					
+					}
+				else	{
+					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddUpdate, either table-role='container' found ["+$DTC.length+"] or table-role='content' ["+$dataTbody.length+"] and/or  table-role='inputs' ["+$inputContainer.length+"] found and all three are required.","gMessage":true});
+					app.u.dump(" -> $DTC.length: "+$DTC.length);
+					app.u.dump(" -> $inputContainer.length: "+$inputContainer.length);
+					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+					}	
+				return r;
+				},
+
+//This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
+//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
+//the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
+// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes. that form is NOT validated or included in the serialized Form Object.
+// $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
+// $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
+			dataTableAddExec : function($btn,vars)	{
+				$btn.button();
+				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
+					event.preventDefault();
 				var
 					$container = P['$container'] ? P['$container'] : $ele.closest('fieldset'),
 				//tbody can be passed in thru P or, if not passed, it will look for one within the fieldset. rules engine uses P approach. shipping doesn't. same for form.
@@ -1690,19 +1761,6 @@ when an event type is changed, all the event types are dropped, then re-added.
 					app.u.dump(" -> $form.length: "+$form.length);
 					app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
 					}
-				},
-
-//This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
-//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
-//the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
-// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes. that form is NOT validated or included in the serialized Form Object.
-// $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
-// $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
-			dataTableAddExec : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
-					event.preventDefault();
-					app.ext.admin_config.e.dataTableAddUpdate($btn,vars);
 					return false;
 					});
 				}, //dataTableAddExec
