@@ -1151,21 +1151,16 @@ else	{
 						});
 					})
 				}, //addTriggerPayMethodUpdate
-// ### TODO -> upgrade this to delegated events.
-			addTriggerShipMethodUpdate : function($ul)	{
-				$("input",$ul).each(function(){
-
-					var $rb = $(this), //Radio Button
-					shipID = $(this).val();
-					
-					$rb.off("change.addTriggerShipMethodUpdate").on("change.addTriggerShipMethodUpdate", function(){
-						app.calls.cartSet.init({'want/shipping_id':shipID}); 
-						//destroys cart and updates big three panels (shipping, payment and summary)
-						app.ext.orderCreate.u.handleCommonPanels($ul.closest('form'));
-						app.model.dispatchThis("immutable");
-						});
-					})
-				}, //addTriggerShipMethodUpdate
+			
+			shipOrPayMethodSelectExec : function($ele,p)	{
+				var obj = {};
+				obj[$ele.attr('name')] = $ele.val();
+				app.calls.cartSet.init(obj);
+//destroys cart and updates big three panels (shipping, payment and summary)
+				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+				app.model.dispatchThis("immutable");
+				},
+			
 
 //triggered on specific address inputs. When an address is updated, several things could be impacted, including tax, shipping options and payment methods.
 			execAddressUpdate : function($ele,p)	{
@@ -1231,7 +1226,7 @@ else	{
 					app.model.dispatchThis('immutable');
 					}
 				}, //execBuyerEmailUpdate
-			
+
 			execBuyerLogin : function($ele,p)	{
 				var $fieldset = $ele.closest('fieldset'),
 				$email = $("[name='bill/email']",$fieldset),
@@ -1288,53 +1283,48 @@ else	{
 					}
 				}, //execBuyerLogin
 
-			execCartOrderCreate : function($btn)	{
-				$btn.addClass('ui-state-highlight').button().css('display','block');
-
-				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					
+			execCartOrderCreate : function($ele,p)	{
+				var $form = $ele.closest('form');
+				
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
-					if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.cco.u.thisSessionIsPayPal())	{
-						$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
-						app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$('body').hideLoading();
-								$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
-								$fieldset.anymessage({'message':rd});
-								}
-							else	{
-								window.location = app.data[rd.datapointer].URL
-								}
-							},"extension":"orderCreate",'parentID': $btn.closest("[data-app-role='checkout']").parent().attr('id')},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-					
-						if(app.ext.orderCreate.validate.checkout($form))	{
-							$('body').showLoading({'message':'Creating order...'});
-							app.ext.cco.u.sanitizeAndUpdateCart($form);
+				if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.cco.u.thisSessionIsPayPal())	{
+					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
+					app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('body').hideLoading();
+							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
+							$fieldset.anymessage({'message':rd});
+							}
+						else	{
+							window.location = app.data[rd.datapointer].URL
+							}
+						},"extension":"orderCreate",'parentID': $ele.closest("[data-app-role='checkout']").parent().attr('id')},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+				
+					if(app.ext.orderCreate.validate.checkout($form))	{
+						$('body').showLoading({'message':'Creating order...'});
+						app.ext.cco.u.sanitizeAndUpdateCart($form);
 //paypal payments are added to the q as soon as the user returns from paypal.
 //This will solve the double-add to the payment Q
 //payment method validation ensures a valid tender is present.
-							if(app.ext.cco.u.thisSessionIsPayPal())	{}
-							else	{
-								app.ext.cco.u.buildPaymentQ($form);
-								}
-							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
-							app.model.dispatchThis('immutable');						
-							
-							}
+						if(app.ext.cco.u.thisSessionIsPayPal())	{}
 						else	{
-							//even though validation failed, take this opportunity to update the cart on the server.
-							app.ext.cco.u.sanitizeAndUpdateCart($form);
-							app.model.dispatchThis('immutable');
-							//scrolls up to first instance of an error.
-							$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage, .ui-state-error',$form).first().offset().top},1000); //scroll to first instance of error.
+							app.ext.cco.u.buildPaymentQ($form);
 							}
+						app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
+						app.model.dispatchThis('immutable');						
+						
 						}
-					})
+					else	{
+						//even though validation failed, take this opportunity to update the cart on the server.
+						app.ext.cco.u.sanitizeAndUpdateCart($form);
+						app.model.dispatchThis('immutable');
+						//scrolls up to first instance of an error.
+						$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage, .ui-state-error',$form).first().offset().top},1000); //scroll to first instance of error.
+						}
+					}
 				}, //execCartOrderCreate
 
 //update the cart. no callbacks or anything like that, just get the data to the api.
@@ -1450,17 +1440,17 @@ else	{
 					});
 				}, //showBuyerAddressAdd
 
-			showBuyerAddressUpdate : function($btn,p)	{
+			showBuyerAddressUpdate : function($ele,p)	{
 				p = p || {};
-				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
-				$checkoutAddrFieldset = $btn.closest('fieldset');
+				var $checkoutForm = $ele.closest('form'), //used in some callbacks later.
+				$checkoutAddrFieldset = $ele.closest('fieldset');
 
-				var addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype');
+				var addressType = $ele.closest("[data-app-addresstype]").data('app-addresstype');
 				
 				app.ext.store_crm.u.showAddressEditModal({
-					'addressID' : $btn.closest("address").data('_id'),
+					'addressID' : $ele.closest("address").data('_id'),
 					'addressType' : addressType,
-					'validateForm' : $btn.data('validate-form')
+					'validateForm' : $ele.data('validate-form')
 					},function(){
 //by here, the new address has been edited.
 //set appropriate address panel to loading.
@@ -1487,32 +1477,24 @@ else	{
 				app.model.dispatchThis('immutable');
 				}, //tagAsAccountCreate
 
-			tagAsBillToShip : function($cb)	{
-				
-				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
-					var $form = $cb.closest('form');
-
-					app.calls.cartSet.init({'want/bill_to_ship':($cb.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
+			tagAsBillToShip : function($ele,p)	{
+				var $form = $ele.closest('form');
+				app.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
 //when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
 // re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
 // originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
-					if($cb.is(':checked'))	{
+				if($ele.is(':checked'))	{
 //** Fixes bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
-						app.ext.cco.u.sanitizeAndUpdateCart($form,{
-							'callback':function(rd){app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic'])}
-							});
-						
-//						app.calls.cartSet.init({'ship/postal': ""},{'callback':function(rd){
-//							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-//							}},'immutable'); //update ship zip to bill zip.
-						}
-					else	{
-						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
-						}
-					app.model.destroy('cartDetail');
-					app.ext.orderCreate.u.handleCommonPanels($form);
-					app.model.dispatchThis('immutable');
-					});
+					app.ext.cco.u.sanitizeAndUpdateCart($form,{
+						'callback':function(rd){app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic'])}
+						});
+					}
+				else	{
+					app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
+					}
+				app.model.destroy('cartDetail');
+				app.ext.orderCreate.u.handleCommonPanels($form);
+				app.model.dispatchThis('immutable');
 				} //tagAsBillToShip
 			},
 
@@ -1821,7 +1803,7 @@ app.model.dispatchThis('passive');
 					if(isSelectedMethod)
 						o+= ' selected ';
 					o += "shipcon_"+safeid; 
-					o += "'><label><input type='radio' name='want/shipping_id' value='"+id+"' ";
+					o += "'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+id+"' "; // note to self -> if a different app event is required for admin, pass it in data-bind
 					if(isSelectedMethod)
 						o += " checked='checked' "
 					o += "/>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
@@ -1847,7 +1829,7 @@ app.model.dispatchThis('passive');
 						id = data.value[i].id;
 
 //onClick event is added through an app-event. allows for app-specific events.
-						o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' name='want/payby' value='"+id+"' ";
+						o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/payby' value='"+id+"' ";
 						o += " />"+data.value[i].pretty+"<\/label></div>";
 						}
 					$tag.html(o);
@@ -1860,7 +1842,7 @@ app.model.dispatchThis('passive');
 					
 					$tag.append("It appears no payment options are currently available.");
 					if(document.location.protocol != "https:")	{
-						$tag.append("This is not a secure session, so credit card payment is not available.");
+						$tag.append("This session is <b>not secure</b>, so credit card payment is not available.");
 						}
 					}
 				} //payMethodsAsRadioButtons

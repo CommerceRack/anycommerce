@@ -1971,12 +1971,15 @@ VALIDATION
 			}, //isSet
 		
 		numbersOnly : function(e)	{
-			var unicode=e.charCode? e.charCode : e.keyCode
-			// if (unicode!=8||unicode!=9)
-			if (unicode<8||unicode>9)        {
-				if (unicode<48||unicode>57) //if not a number
-				return false //disable key press
-				}
+			var unicode=e.charCode? e.charCode : e.keyCode;
+			var r = true;
+			if(unicode >= 48 && unicode <= 57)	{r = true; app.u.dump('got here')} // allow 0 - 9.
+			else if(unicode == 9 || unicode == 8 || unicode == 46 || unicode == 13)	{r = true;} //allow backspace, tab, delete and enter.
+			else if(unicode == 37 || unicode == 39)	{r = true;} //allow left and right arrow.
+			else if(unicode == 36 || unicode == 35)	{r = true;} //allow home and end keys
+			else	{r = false;}
+//			app.u.dump(" -> unicode: "+unicode);
+			return r;
 			},
 
 //* 201320 -> changed to support tab key.
