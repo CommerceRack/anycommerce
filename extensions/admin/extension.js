@@ -2514,7 +2514,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						if($target instanceof jQuery)	{
 						
 							if(opts.dialog)	{
-								app.ext.admin.u.handleShowSection(path,opts,$target); 
+								app.model.fetchAdminResource(path,opts);
 								}
 							else	{
 
@@ -2547,7 +2547,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 										} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
 									}
 								else if(mode == 'legacy')	{
-									app.ext.admin.u.handleShowSection(path,opts,$target);
+									app.model.fetchAdminResource(path,opts);
 									}
 								else	{}// should never get here. error case for mode not being set is already handled.
 								if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
@@ -2999,7 +2999,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 							}
 	*/
 	//					app.u.dump(" -> path: "+path);
-						navigateTo(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
+						navigateTo(app.ext.admin.u.whatPageToShow(path || '#!dashboard'));
 
 						}
 					else	{
@@ -3751,7 +3751,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
-//this will replace handleShowSection
 			bringTabContentIntoFocus : function($target){
 				
 				if($target instanceof jQuery)	{
@@ -3866,15 +3865,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return r;
 				},
 
-//executed from within navigateTo. probably never want to execute this function elsewhere.
-//this is for handling legacy paths.
-// ### TODO -> shouldn't need this anymore.
-			handleShowSection : function(path,P,$target)	{
-				app.u.dump("BEGIN admin.u.handleShowSection. path: "+path); app.u.dump(P);
-				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
-				$target.intervaledEmpty().append("<div class='loadingBG'></div>");
-				app.model.fetchAdminResource(path,P);
-				}, //handleShowSection
 
 			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
 			getTabFromPath : function(path)	{
