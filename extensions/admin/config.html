@@ -2653,119 +2653,114 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 /////////////////////// TAXES INFO \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
 
-<div id='taxConfigTemplate'>
+<div id='taxConfigTemplate' data-table-role='container' data-app-role='taxConfigContainer'>
 <!--
 SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
 -->
-<section class='ui-widget twoColumn labelsAsBreaks alignedLabels'>
+<section class='ui-widget twoColumn labelsAsBreaks alignedLabels' >
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom'>
-	<form onsubmit="return false" data-app-role='taxTableInputForm'>
-	
+	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate="novalidate">
+
 	<input type='hidden' name='enable' value='1' />
 	<fieldset>
 		<label>
 		<span>Rule type</span>
-		<select name="type" required='required' data-app-event='admin|showSiblingFieldset'>
+		<select name="type" required='required' data-panel-selector=".taxTypeConfiguration" data-input-change='show-panel'>
 			<option selected='selected' disabled='disabled'>Please Choose</option>
-			<option value="state">State: US Two Digit Abbreviation.</option>
-			<option value="city">Local: US State+City</option>
-			<option value="zipspan">Local: US Zip Range</option>
-			<option value="zip4">Local: US Zip+4</option>
-			<option value="country">State: Country</option>
-			<option value="intprovince">Local: Country+Province</option>
-			<option value="intzip">Local: Country+Zip</option>
+			<option value="state" data-show-panel='taxTypeConfigurationState'>State: US Two Digit Abbreviation.</option>
+			<option value="city" data-show-panel='taxTypeConfigurationCity'>Local: US State+City</option>
+			<option value="zipspan" data-show-panel='taxTypeConfigurationZipSpan'>Local: US Zip Range</option>
+			<option value="zip4" data-show-panel='taxTypeConfigurationZip4'>Local: US Zip+4</option>
+			<option value="country" data-show-panel='taxTypeConfigurationCountry'>State: Country</option>
+			<option value="intprovince" data-show-panel='taxTypeConfigurationIntProvince'>Local: Country+Province</option>
+			<option value="intzip" data-show-panel='taxTypeConfigurationIntZip'>Local: Country+Zip</option>
 		</select>
 		</label>
 	</fieldset>
 
 
-<!-- fieldsets for rule type selection go here -->
-	<div data-app-role='connectorFieldsetContainer'>
+	<fieldset data-app-role='state' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationState'>
+		<label>
+		<span>US state </span>
+		<input type="text" value="" name="state" size="2" maxlength="2" />
+		</label>
+		<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
+	</fieldset>
 
-		<fieldset data-app-role='state'>
-			<label>
-			<span>US state </span>
-			<input type="text" value="" name="state" size="2" maxlength="2" />
-			</label>
-			<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
-		</fieldset>
+	<fieldset data-app-role='city' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationCity'>
+		<label>
+		<span>State</span>
+		<input type="text" value="" name="citys" size="2" maxlength="2" />
+		</label>
+		
+		<label>
+		<span>City</span>
+		<input type="text" value="" name="city" size="20" />
+		</label>
+		
+		<p class='hint'>For City, rules is an exact string match, you can also use wildcards. ex: <br />
+		"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
+		<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
+	</fieldset>
 
-		<fieldset data-app-role='city'>
-			<label>
-			<span>State</span>
-			<input type="text" value="" name="citys" size="2" maxlength="2" />
-			</label>
-			
-			<label>
-			<span>City</span>
-			<input type="text" value="" name="city" size="20" />
-			</label>
-			
-			<p class='hint'>For City, rules is an exact string match, you can also use wildcards. ex: <br />
-			"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
-			<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
-		</fieldset>
+	<fieldset data-app-role='zipspan' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationZipSpan'>
+		<label>
+		<span>Start Zip</span>
+		<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
+		</label>
+		
+		<label>
+		<span>End zip</span>
+		<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
+		</label>
+		
+		<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
 
-		<fieldset data-app-role='zipspan'>
-			<label>
-			<span>Start Zip</span>
-			<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
-			</label>
-			
-			<label>
-			<span>End zip</span>
-			<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
-			</label>
-			
-			<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
+	</fieldset>
 
-		</fieldset>
+	<fieldset data-app-role='zip4' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationZip4'>
+		<label>
+		<span>Zip +4</span>
+		<input type="text" value="" name="zip4" size="10" maxlength="10" />
+		</label>
+		<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
+		<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
+	</fieldset>
 
-		<fieldset data-app-role='zip4'>
-			<label>
-			<span>Zip +4</span>
-			<input type="text" value="" name="zip4" size="10" maxlength="10" />
-			</label>
-			<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
-			<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
-		</fieldset>
+	<fieldset data-app-role='country' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationCountry'>
+		<label>
+		<span>ISO code</span>
+		<input type="text" value="" name="country" size="2" maxlength="2" data-minlength='2' data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+	</fieldset>
 
-		<fieldset data-app-role='country'>
-			<label>
-			<span>ISO code</span>
-			<input type="text" value="" name="country" size="2" maxlength="2" data-minlength='2' data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-		</fieldset>
+	<fieldset data-app-role='intprovince' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationIntProvince'>
+		<label>
+		<span>ISO country code</span>
+		<input type="text" value="" name="ipcountry" size="2" maxlength="2" data-minlength='2'  data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+		<label>
+		<span>Country province</span>
+		<input type="text" value="" name="ipstate" size="20" maxlength="20" />
+		</label>
+		<p class='hint'>Enter a province code, or province name for matching.</p>
+	</fieldset>
 
-		<fieldset data-app-role='intprovince'>
-			<label>
-			<span>ISO country code</span>
-			<input type="text" value="" name="ipcountry" size="2" maxlength="2" data-minlength='2'  data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-			<label>
-			<span>Country province</span>
-			<input type="text" value="" name="ipstate" size="20" maxlength="20" />
-			</label>
-			<p class='hint'>Enter a province code, or province name for matching.</p>
-		</fieldset>
-
-		<fieldset data-app-role='intzip'>
-			<label>
-			<span>ISO country code</span>
-			<input type="text" value="" name="izcountry" size="2" maxlength="2"  data-minlength='2'  data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-			<label>
-			<span>Zip</span>
-			<input type="text" value="" name="izzip" size="20" maxlength="20">
-			</label>
-			<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
-		</fieldset>
-	
-	</div>
+	<fieldset data-app-role='intzip' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationIntZip'>
+		<label>
+		<span>ISO country code</span>
+		<input type="text" value="" name="izcountry" size="2" maxlength="2"  data-minlength='2'  data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+		<label>
+		<span>Zip</span>
+		<input type="text" value="" name="izzip" size="20" maxlength="20">
+		</label>
+		<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
+	</fieldset>
 
 
 
@@ -2808,7 +2803,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</fieldset>
 
 	<div class='buttonset smallPadding alignRight'>
-	<button data-app-event="admin_config|dataTableAddExec">Add Rule to Tax Table</button>
+	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Rule to Tax Table</button>
 	</div>
 	
 	</form>
@@ -2833,7 +2828,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
+	<tbody  data-table-role='content' data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
 	</table>
 	<div class='buttonset smallPadding alignRight'>
 		<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
