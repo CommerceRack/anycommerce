@@ -2747,7 +2747,7 @@ later, it will handle other third party plugins as well.
 				catch(e){}
 
 				jQuery.support.sessionStorage = false;
-				try{window.sessionStorage; jQuery.support.sessionStorage = false;}
+				try{window.sessionStorage; jQuery.support.sessionStorage = true;}
 				catch(e){}
 
 //update jQuery.support with whether or not placeholder is supported.
