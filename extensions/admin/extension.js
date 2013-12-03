@@ -63,11 +63,12 @@ var admin = function() {
 		
 		vars : {
 			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities','launchpad'],
+			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','utilities','launchpad'],
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
 			versionData : [
+				{'branch' : '201452','youtubeVideoID' : ''},
 				{'branch' : '201346','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201344','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
@@ -237,7 +238,7 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-
+//used in reports
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -254,8 +255,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminDataQuery
-			
-//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.epochNow() - (60*60*24*10)}
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{
@@ -275,7 +274,6 @@ var admin = function() {
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
 				}			
 			}, //adminDomainList
-
 
 //* 201324 -> though moving towards a non-defined call based approach, for calls that need/want local storage, we'll still declare them (like this one)
 		adminEBAYCategory :  {
