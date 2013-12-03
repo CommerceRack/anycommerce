@@ -309,30 +309,27 @@ var admin_config = function() {
 
 
 			showTaxConfig : function($target)	{
-				$target.empty().showLoading({'message':'Fetching tax details'});
+				
+				$target.anycontent({
+					'templateID':'taxConfigTemplate',
+					'showLoadingMessage' : 'Fetching tax details'
+					}).anydelegate();
+
+				$("[name='expires']",$target).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					minDate: 0,
+					dateFormat : "yymmdd"
+					});
+
 				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
-
 				app.model.destroy(datapointer);
-				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{'datapointer' : datapointer, 'callback' : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						$target.hideLoading();
-						$target.append($("<div \/>").anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer}).anydelegate());
-						app.u.handleButtons($target);
-						app.u.handleCommonPlugins($target);
-						$("[name='expires']",$target).datepicker({
-							changeMonth: true,
-							changeYear: true,
-							minDate: 0,
-							dateFormat : "yymmdd"
-							});
-						
-						app.u.handleAppEvents($target,{'$form':$("[data-app-role='taxTableExecForm']",$target),'$container':$("[data-app-role='taxTableInputForm']",$target),'$dataTbody':$("[data-app-role='dataTableTbody']",$target)});
-						}
-
-					}},'mutable');
+				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{
+					'datapointer' : datapointer,
+					'callback' : 'anycontent',
+					'translateOnly' : true,
+					'jqObj' : $target
+					},'mutable');
 				app.model.dispatchThis('mutable');
 				}, //showTaxConfig
 
@@ -1889,41 +1886,36 @@ else	{
 				}, //shipmethodAddUpdateExec
 
 
-			taxTableUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.taxTableUpdateExec').on('click.taxTableUpdateExec',function(){
-
-$('body').showLoading({'message':'Updating tax table'});
-
-var macros = new Array();
-macros.push("TAXRULES/EMPTY");
+			taxTableUpdateExec : function($ele,p)	{
+//updating the tax table is a destructive update, meaning the entire table is emptied and then rebuilt.
+				var $container = $ele.closest("[data-app-role='taxConfigContainer']"), macros = new Array();
+				macros.push("TAXRULES/EMPTY");
 
 //build an array of the form input names for a whitelist.
 //need a whitelist because the tr.data() may have a lot of extra kvp in it
-var whitelist = new Array('type','enable','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
+				var whitelist = new Array('type','enable','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
 
-$btn.closest('form').find('tbody tr').each(function(index){ //tbody needs to be is selector so that tr in thead isn't included.
-	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
-	else	{
-//		app.u.dump($(this).data());
-		if(!$(this).data('guid'))	{$(this).data('guid',index)}
-		macros.push("TAXRULES/INSERT?"+$.param(app.u.getWhitelistedObject($(this).data(),whitelist)));
-		}
-	});
-
-//app.u.dump(" -> macros: "); app.u.dump(macros);
-app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
-	$('body').hideLoading();	
-	if(app.model.responseHasErrors(rd)){
-		$('#globalMessaging').anymessage({'message':rd});
-		}
-	else	{
-		$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
-		navigateTo('#!taxConfig');
-		}
-	}},'immutable');
-app.model.dispatchThis('immutable');
+				$ele.closest('form').find('tbody tr').each(function(index){ //tbody needs to be in the selector so that tr in thead isn't included.
+					var $tr = $(this);
+					if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+					else	{
+						if(!$tr.data('guid'))	{$tr.data('guid',index)} //a newly added rule
+						macros.push("TAXRULES/INSERT?"+$.param(app.u.getWhitelistedObject($tr.data(),whitelist)));
+						}
 					});
+
+				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
+					$container.hideLoading();	
+					if(app.model.responseHasErrors(rd)){
+						$container.anymessage({'message':rd});
+						}
+					else	{
+						$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
+						navigateTo('#!taxConfig');
+						}
+					}},'immutable');
+				app.model.dispatchThis('immutable');
+
 				},
 
 //executed on a manage rules button.  shows the rule builder.
