@@ -3705,11 +3705,11 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 </fieldset>
 -->
-<fieldset class='labelsAsBreaks'>
+<fieldset class='labelsAsBreaks' data-table-role='container'>
 	<legend>Configured Billing Methods</legend>
 
 	<div class='twoColumn'>
-		<table data-app-role='dataTable' class='gridTable fullWidth'>
+		<table class='gridTable fullWidth'>
 		<thead>
 		<tr>
 			<th>Type</th>
@@ -3719,14 +3719,14 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-app-role='paymentMethodTbody' data-bind="var: shipping(@PAYMENT_METHODS); format:processList; loadsTemplate:billingPaymentsRowTemplate;">
+		<tbody data-table-role='content' data-app-role='paymentMethodTbody' data-bind="var: shipping(@PAYMENT_METHODS); format:processList; loadsTemplate:billingPaymentsRowTemplate;">
 		
 		</tbody>
 		</table>
 	</div>
 	
 	
-	<div class='twoColumn column2'>
+	<div class='twoColumn column2' data-table-role='inputs'>
 
 		<label>
 			<span>Type</span>

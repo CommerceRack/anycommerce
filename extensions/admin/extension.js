@@ -2518,8 +2518,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 								}
 							else	{
 
-
-
 								if(mode == 'app')	{
 						//			app.u.dump(" -> navigateTo mode = app");
 									$target.intervaledEmpty(); //clear all previous content. this does a 'remove', which clears events.
@@ -5514,11 +5512,12 @@ not in use
 
 //used for delegated events and is triggered by app-event tagRowForRemove
 			tagRow4Remove : function($ele,p)	{
+				app.u.dump("tagRow4Remove click!");
 //if this class is already present, the button is set for delete already. unset the delete.
 //added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
 				if($ele.hasClass('ui-state-error'))	{
-// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
-					$ele.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+// the find("button[role='button']") is to refine to elmeents that have been through button(). avoids a JS error
+					$ele.removeClass('ui-state-error').closest('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('enable');
 						}); //enable the other buttons
 					$ele.button('enable');
@@ -5536,12 +5535,8 @@ not in use
 				},
 			
 //make sure button is withing the table. tfoot is good.
-			tagAllRowsForRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-closethick"},text: true});
-				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
-					event.preventDefault();
-					$btn.closest('table').find("button[data-app-event='admin|tagRowForRemove']").trigger('click');
-					});
+			toggleAllRows4Remove : function($ele,p)	{
+				$ele.closest('table').find("button[data-app-click='admin|tagRow4Remove']").trigger('click');
 				},
 
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)

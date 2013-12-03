@@ -181,7 +181,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 
 <!-- used for the product Queue/task list -->
 <ul>
-<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom smallPadding' data-app-role='taskItemContainer'>
+<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom smallPadding isProductContainer' data-app-role='taskItemContainer'>
 	<div class='clearfix' data-app-role='taskItemPreview'>
 		<div class='prodThumbContainer floatLeft marginRight marginLeft'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image0); defaultVar: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
@@ -290,11 +290,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
 	<button class='floatRight applyButton' data-app-role='masterSaveButton' data-app-click="admin_prodEdit|adminProductMacroSaveAllTabsExec">Save All <span class='numChanges'></span> Changes</button>
-<!--
-These are the old save buttons for the panels.  Here so I know where to get the existing code when the new save is built.  Delete these are they're migrated into the save button.
-<button class='floatRight' title='Save the changes made within this panel' data-app-role='saveButton' data-app-event='admin_prodEdit|saveProdImagesPanel'>Save <span class='changeCount'></span> Changes</button>
-<button class='floatRight' data-app-event="admin_prodEdit|adminProductMacroNavcats" title='Save the changes made within this panel' data-app-role='saveButton'>Save <span class='changeCount'></span> Changes</button>
--->
+
 	<ul class='productTabsUL'>
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li><!-- add this: <span data-anydelegate-changes='numGeneralChanges'><span class='numChanges'></span></span> and set this on the corresponding form:data-changes-container='numGeneralChanges' -->
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
@@ -445,39 +441,6 @@ These are the old save buttons for the panels.  Here so I know where to get the 
 			</div>		
 		</fieldset>
 	
-	<!--
-	<div id="html_you_have_been_warned" class="displayNone warning marginBottom">
-	<b>***COMPATIBILITY ALERT*** HTML Editing is *NOT* Recommended</b>
-	HTML Editors (such as this one) create HTML4 markup code which embed formatting with text content. 
-	The Internet (collectively) is in the process of upgrading to HTML5 which uses a technology known as CSS3 
-	(cascading style sheets) to control layout and formatting (and has been since mid 2007).
-	Sites which use older style HTML4 markup will see slower pages (resulting in lower SEO rankings), 
-	in addition most marketplaces such as Amazon explicitly prohibit any HTML4 markup code.
-	HTML4 is not optimized for mobile and does not scale well to different screen sizes.
-	As part of our ongoing commitment to our clients success Zoovy has (since 2009) 
-	been recommending WikiCreole instead of HTML because of it's portability and ease to learn.
-	If you continue - you are acknowledging that you understand that HTML4 is not compatible with any 
-	shopping applications or any future technologies that will be introduced.  
-	We strongly recommend you stop immediately, turn off HTML editing and use Wiki Creole formatting instead.
-	This HTML Editor option will be removed altogether in the future. 
-	
-	</div>
-	
-	
-	<label><span>Product description:</span><textarea name='zoovy:prod_desc' onFocus=" 	jQuery(this).prop('rows',25); 	if(jQuery().htmlarea && jQuery('#use_html').is(':checked')){	 		jQuery(this).htmlarea({ 			'toolbar':[ 		'bold', 'italic', 'p', '|','h1', 'h2', 'h3', 'h4', '|', 'indent', 'outdent', 'orderedList', 'unorderedList', '|',  		'justifyleft', 'justifycenter','justifyright','|', 		'forecolor','link', 'unlink', 'image'	 		]});	 		} 		" data-bind="var: product(zoovy:prod_desc); format:popVal;" rows='10'></textarea></label>
-	<div class='alignRight'><input type='checkbox' onChange="$('#html_you_have_been_warned').show();" id='use_html'> Use HTML Editor</div>
-	-->
-	<!--
-	<div class='clearfix alignRight'>
-		<div data-app-event="admin_prodEdit|textareaEditorMode" data-ui-target-name="zoovy:prod_desc" class='ui-corner-bottom floatRight'>
-			<h4 class='floatLeft marginRight paddingRight'>Editor: </h4>
-			<button data-ui-edit-mode='text' >Text</button>
-			<button data-ui-edit-mode='wiki' >Wiki</button>
-			<button data-ui-edit-mode='html' >HTML</button>
-		</div>
-	</div>
-	-->
-
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
 <!--			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button> -->
@@ -1877,7 +1840,7 @@ time.
 -->
 
 
-<div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+<div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding' data-app-role='variationManager'>
 	<div class='clearfix marginBottom'>
 		<button class='floatRight applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store">Add New</button>
 		<h1>Store Variations</h1>
@@ -1912,8 +1875,8 @@ time.
 	<td class='alignRight'>
 	
 		<button data-app-click='admin_prodEdit|adminSOGDeleteConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
-		<button data-app-event="admin_prodEdit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
-		<button data-variationmode="store" data-app-event='admin_prodEdit|variationUpdateShow'>Edit</button>
+		<button data-app-click="admin_prodEdit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
+		<button data-variationmode="store" data-app-click='admin_prodEdit|variationUpdateShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
 	</td>
 </tr>
 </table>
@@ -1926,7 +1889,7 @@ time.
 
 <div id='variationsManagerCreateTemplate'>
 
-<form action='#' onSubmit='return false' class='labelsAsBreaks'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks' >
 
 <fieldset>
 	<label>
@@ -1942,33 +1905,33 @@ time.
 <div class='threeColumn floatLeft'>
 
 	<label>
-	<input type="radio" value="select" name='type' required='required' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="select" name='type' required='required' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Select box (drop down)*
 	<span class='toolTip' title="A select list is also commonly known as a drop down list. A select list should be used when the number of options exceeds 5 or more. As a rule when designing options you should never use more than 25 options in a select list since it will make it difficult for the user to see all the choices and arrive at a decision.">?</span>
 	</label>
 
 
 	<label>
-	<input type="radio" value="radio" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="radio" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Radio buttons*
 	<span class='toolTip' title="Used to display all the options available with a circle next to each option. The user chooses the appropriate option and the circle becomes filled in. Unlike select lists a radio button		always displays all options to the customer. Radio buttons should typically be used with 10 or less options since they consume a lot of screen space and make the customer need to scroll.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="cb" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="cb" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Checkbox*
 	<span class='toolTip' title="Have only two possible states, either ON or OFF. Checkboxes should be used whenever the user has only two possible choices. ">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="hidden" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="hidden" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Hidden Attributes
 	<span class='toolTip' title="A hidden attribute allows you to specify additional text which will appear in the product description. Such as a disclaimer or any text which you want to be printed in the product description to the customer and which is NOT editable by the customer.">?</span>
 	</label>
 
 
 	<label>
-	<input type="radio" value="assembly" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="assembly" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Base Assembly 
 	<span class='toolTip' title="A hidden attribute uses the option subsystem to set/store properties of an item (usually this is done through a custom javascript module).">?</span>
 	</label>
@@ -1978,25 +1941,25 @@ time.
 
 <div class='threeColumn floatLeft'>
 	<label>
-	<input type="radio" value="text" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="text" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Free-Form text
 	<span class='toolTip' title="This is the simpliest form of customer input. A text input should be used for limited text entry. 	If you need multiple lines consider using a text area. 	You can assses additional fees per character or per line. Fees are additive and will be summed together to present a total.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="number" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="number" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Free-Form Number
 	<span class='toolTip' title="Allows a customer to input a number. This is NOT the same as quantity, and should not be used for any sort of inventory control. You can restrict the number to a specific minimum and maximu value.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="textarea" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="textarea" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Multi-Line Text Area
 	<span class='toolTip' title="Large format text box in which users can enter a block of text. You can also restrict the number of characters. Like a text you can assess fees per character (excluding spaces and punctuation), and per word.  The textarea also allows you assess fees per line. Fees are additive and can be used together.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="readonly" name='type' />
+	<input type="radio" value="readonly" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Readonly Instructions	
 	<span class='toolTip' title="Displays contents to buyer but allows no interaction or input.">?</span>
 	</label>
@@ -2006,28 +1969,28 @@ time.
 
 
 	<label>
-	<input type="radio" value="biglist" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="biglist" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Dynamic "BIG" List
 	<span class='toolTip' title="Biglist lets you create a multi-stage select (drop down) list. When the first option is chosen, then the customer must make a second selection in another box which appears. The boxes may only go two deep. Use this when you have options which are tiered to reduce the number of decisions a customer needs to make. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="imgselect" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="imgselect" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Image Select List*
 	<span class='toolTip' title="When a customer chooses an option an image (if available) will be displayed adjacent to it. Image select lists are ideally suited for situations where there are 10 or more options and it is likely the customer will NOT want to look at all the pictures before making a choice. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="imggrid" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="imggrid" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Image Grid*
 	<span class='toolTip' title="Unlike an image select list which the user must manually choose each option in order to see the image associated with it - instead all images are displayed in a grid with a radio button below each option. The advantage of an image grid is it displays ALL the possible choices and their respective images to the customer, which is also it's disadvantage if you have a product with a lot of pictures it can consume a vast amount of real-estate and increase page load times. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="calendar" name='type' data-app-event='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="calendar" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
 	Calendar
 	<span class='toolTip' title="Allows the user to easily choose a date. The date is stored in a text field in YYYY/MM/DD format. The calendar has the ability to apply a rush fee if the date is within a certain number of days of today. This allows you to create additional revenue for speciality things like 'Rush Fees'. ">?</span>
 	</label>
@@ -2041,7 +2004,7 @@ time.
 <fieldset data-app-role='variationInventorySettings' class='displayNone'>
 	<legend>Inventory</legend>
 	<label>
-		<input type='checkbox' name='inv' class='applyAnycb' data-app-event="admin_prodEdit|variationHandleInventoryChange" />
+		<input type='checkbox' name='inv' class='applyAnycb' data-app-change="admin_prodEdit|variationHandleInventoryChange" />
 		This option affects inventory.
 		<span class='toolTip' title="If you want to have price and/or weight modifiers or track inventory per variation, enable this.">?</span>
 	</label>
@@ -2066,7 +2029,7 @@ time.
 </fieldset>
 <p class='hint'>Before saving please take a moment to review your choices as most of the settings on this page cannot be edited once the option group is saved.</p>
 
-<button data-app-event="admin_prodEdit|variationCreateExec" data-app-role='saveButton'>Save</button>
+<button data-app-click="admin_prodEdit|variationCreateExec" data-app-role='saveButton' class='applyButton'>Save Variation</button>
 </form>
 
 </div>
@@ -2251,7 +2214,7 @@ time.
 <!-- show this only for select/radio style editor. allows left side of editor to be minimized so there's more room for dataTable. -->
 	<td class='variationEditorSplitter smallButton'>
 	<div>
-	<button data-app-event="admin_prodEdit|variationSettingsToggle" class='displayNone'>Toggle Variations Settings Display</button>
+	<button data-app-click="admin_prodEdit|variationSettingsToggle" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-triangle-w'>Toggle Variations Settings Display</button>
 	</div>
 	</td>
 
@@ -2260,8 +2223,8 @@ time.
 <div data-app-role='variationsTypeSpecificsContainer' class='marginLeft marginRight marginBottom'></div>
 
 <div class='buttonset alignRight marginRight'>
-<!--<button data-app-event='admin|execDialogClose'>Cancel Changes</button> -->
-<button data-app-event='admin_prodEdit|variationAdminProductMacroExec' data-app-role='saveButton'>Save Changes</button>
+<!--<button data-app-click='admin|execDialogClose'>Cancel Changes</button> -->
+<button class='applyButton' data-app-click='admin_prodEdit|variationAdminProductMacroExec' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 </div>
 
 	</td>
@@ -2500,7 +2463,7 @@ Snacks|Doughnuts<br />
 </fieldset>
 
 <!-- a shared template used by select and radio input variation types -->
-<div id='optionsEditor' data-app-role='variationOptionEditorContainer'>
+<div id='optionsEditor' data-app-role='variationOptionEditorContainer' data-table-role='container'>
 <table class='fullWidth'>
 <tbody>
 <tr>
@@ -2519,20 +2482,20 @@ Snacks|Doughnuts<br />
 	</tr>
 	</thead>
 <!-- sogs return @options, product return options. nice. -->	
-	<tbody data-app-role='variationsOptionsTbody' class='variationGroupOptions' data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
+	<tbody data-app-role='variationsOptionsTbody' class='variationGroupOptions' data-table-role='content' data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
 	
 	</tbody>
 	<tfoot>
 	<tr>
 		<td colspan='8' class='alignRight'>
-		<button data-app-event='admin|tagAllRowsForRemove'>Tag All As Remove</button>
+		<button data-app-click='admin|toggleAllRows4Remove' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-close'>Tag All As Remove</button>
 		</td>
 	</tr>
 	</tfoot>
 	</table>
 	</td>
 	
-	<td class='threeColumn valignTop' >
+	<td class='threeColumn valignTop'>
 	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group.
 	databind on tbody added w/ js later so that it isn't translated prematurely (wrong data was getting set) -->
 
@@ -2552,13 +2515,15 @@ Snacks|Doughnuts<br />
 	<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
 	</table>
 
-	<div class='buttonset alignRight'>
-		<button data-app-role='addNewOptionButton' data-app-event='admin_prodEdit|variationOptionAddShow'>Add New Option</button>
-	</div>
-	
-	<div  data-app-role='varitionOptionAddUpdateContainer'>
-	<!-- gets populated w/ the input forms for either update or add option -->
-	</div>
+
+		<div class='buttonset alignRight'>
+			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodEdit|variationOptionAddShow'>Add New Option</button>
+		</div>
+		
+		<div  data-table-role='inputs' data-app-role='varitionOptionAddUpdateContainer' >
+		<!-- gets populated w/ the input forms for either update or add option -->
+		</div>
+
 	</td>
 </tr>
 </tbody>
@@ -2568,28 +2533,31 @@ Snacks|Doughnuts<br />
 </div>
 
 
-<!-- this is it's own template so that it can be easily cleared and repopulated w/ option specific data (for update and create) -->
+<!--
+this is it's own template so that it can be easily cleared and repopulated w/ option specific data (for update and create)
+skipTrack is on the elements so that when this is used in the data-table in the variations editor, these inputs don't impact the save button num changes.
+ -->
 <div id='optionEditorInputsTemplate' class='alignedLabels'>
 	<input type='hidden' name='guid' value='' data-bind="var: variation(guid); format:popVal;" />
 	<input type='hidden' name='v' value='' data-bind="var: variation(v); format:popVal; hideZero:false;" />
 	<label>
 		<span>Text</span>
-		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" />
+		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" class='skipTrack' />
 	</label>
 	
 	<label class='displayNone nonInvOnly'>
 		<span>Weight modifier</span>
-		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" />
+		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
 	</label>
 	
 	<label class='displayNone nonInvOnly'>
 		<span>Price modifier</span>
-		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" />
+		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />
 	</label>
 	
 	<label class='displayNone nonInvOnly'>
 		<span>Assembly</span>
-		<input type="text" name="asm" value="" data-bind="var: variation(asm); format:popVal;" />
+		<input type="text" name="asm" value="" data-bind="var: variation(asm); format:popVal;" class='skipTrack' />
 	</label>
 	
 	<div class='displayNone marginBottom label  imgOnly'>
@@ -2597,7 +2565,7 @@ Snacks|Doughnuts<br />
 
 		<img width="70" height="70" src="app-admin/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
 		
-		<input type='text' name='img' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+		<input type='text' name='img' class='displayNone skipTrack' /><!-- use text input cuz hidden inputs don't support change events, which are used for updating the save button -->
 
 
 	</div>
@@ -2605,7 +2573,7 @@ Snacks|Doughnuts<br />
 
 	<label>
 		<span>RTF/HTML/Wiki detail text</span>
-		<textarea name="html" rows="5" class='fullWidth' data-bind="var: variation(html); format:popVal;"></textarea>
+		<textarea name="html" rows="5" class='fullWidth skipTrack' data-bind="var: variation(html); format:popVal;" ></textarea>
 	</label>
 </div>
 
@@ -2621,8 +2589,8 @@ Snacks|Doughnuts<br />
 	<td data-bind="var:option(asm); format:text;"></td>
 	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
-	<span data-app-click='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w'>Move</span>
-	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct'>Delete</button>
+	<div data-app-click='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
+	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-circle-close' data-text='false'>Delete</button>
 	<button data-app-click="admin_prodEdit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-pencil' data-text='false'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
 	</td>
 </tr>
@@ -2682,14 +2650,14 @@ Snacks|Doughnuts<br />
 		</table>
 
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
-<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-event="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
+<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-click="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
 			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
 			
-			<button title="Add a new product-specific variation group." data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
+			<button title="Add a new product-specific variation group." class='applyButton' data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
 			<!-- when this is upgraded to app events, change this to be a menu() -->
 			<div class='displayNone ui-widget ui-widget-content ui-corner-all alignCenter'>
 				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="product">Product Specific</button>
-				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store">Store Wide</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store" data-ui-source='productEditor'>Store Wide</button>
 			</div>
 		</div>
 
@@ -2719,8 +2687,8 @@ Snacks|Doughnuts<br />
 <tr id='productVariationManagerProductRowTemplate' class='pointer'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
 	<td>
-		<button data-app-event='admin_prodEdit|variationUpdateShow' data-variationmode='product'>Edit Variations</button>
-		<button data-app-event="admin|tagRowForRemove">Remove</button>
+		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-close'>Remove</button>
+		<button data-bind="var:variation(global); format:hideIfSet; extension:admin_prodEdit;" data-app-click='admin_prodEdit|variationUpdateShow' data-variationmode='product' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Variations</button>
 	</td>
 	<td data-bind="var: variation(prompt); format:text;"></td>
 	<td>
