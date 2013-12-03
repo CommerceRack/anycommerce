@@ -114,7 +114,6 @@ var admin = function() {
 				}
 			}, //adminAppTicketCreate
 
-
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
@@ -150,8 +149,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminConfigDetail
-
-
 
 		adminConfigMacro : {
 			init : function(macros,_tag,Q)	{
@@ -196,29 +193,6 @@ var admin = function() {
 				}
 			}, //adminCustomerDetail
 
-		adminCustomerRemove : {
-			init : function(CID,_tag,Q)	{
-				var r = 0;
-				if(CID)	{
-//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
-					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerRemove";
-					this.dispatch(CID,_tag);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerRemove, no CID specified.");
-					}
-				return r;
-				},
-			dispatch : function(CID,_tag)	{
-				var obj = {};
-				obj.CID = CID;
-				obj._cmd = "adminCustomerRemove";
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerDetail
-
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
 			init : function(obj,_tag,Q)	{
@@ -239,31 +213,7 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
-
-//email is required in macro
-		adminCustomerCreate : {
-			init : function(updates,_tag)	{
-				var r = 0;
-				if(updates)	{
-					this.dispatch(updates,_tag)
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerSet, macro not set or setObj was empty");
-					}
-				return r;
-				},
-			dispatch : function(updates,_tag)	{
-				var obj = {};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerCreate';
-				obj._cmd = "adminCustomerCreate";
-				obj.CID = 0; //create wants a zero customer id
-				obj['@updates'] = updates;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerSet
-			
+		
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -287,117 +237,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-
-
-
-		adminCustomerOrganizationSearch : {
-			init : function(obj,_tag,Q)	{
-//				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerSet, no variables passed. some sort of search query needed.",'gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationSearch';
-				obj._cmd = "adminCustomerOrganizationSearch";
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //adminCustomerOrganizationSearch
-		adminCustomerOrganizationCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationCreate, no variables passed."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationCreate';
-				obj._cmd = "adminCustomerOrganizationCreate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationCreate
-		adminCustomerOrganizationUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.ORGID)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationUpdate, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationUpdate';
-				obj._cmd = "adminCustomerOrganizationUpdate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationUpdate
-		adminCustomerOrganizationDetail : {
-			init : function(orgID,_tag,Q)	{
-				var r = 0;
-				if(orgID)	{
-					_tag = _tag || {};
-					_tag.datapointer = 'adminCustomerOrganizationDetail|'+orgID;
-					
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(orgID,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(orgID,_tag,Q)	{
-				var obj = {}
-				obj._tag = _tag || {};
-				
-				obj._cmd = "adminCustomerOrganizationDetail";
-				obj.ORGID = orgID
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationDetail
-		adminCustomerOrganizationRemove : {
-			init : function(ORGID,_tag,Q)	{
-				var r = 0;
-				if(ORGID)	{
-					this.dispatch(ORGID,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(ORGID,_tag,Q)	{
-				var obj = {};
-				obj.ORGID = ORGID;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
-				obj._cmd = "adminCustomerOrganizationRemove";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationRemove
 
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{
@@ -512,7 +351,7 @@ var admin = function() {
 				obj._tag.datapointer = 'adminEmailSave';
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
-			}, //adminDataQuery
+			}, //adminEmailSave
 
 
 //obj requires title and uuid, priority and @GRAPHS are optional.
