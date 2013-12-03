@@ -2739,13 +2739,19 @@ later, it will handle other third party plugins as well.
 			if(jQuery && typeof jQuery.support == 'object')	{
 //If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.
 //So we first test to make sure the test doesn't cause an error. thanks ff.
-				jQuery.support.localStorage = true;
-				try{window.localStorage}
-				catch(e){jQuery.support.localStorage = false;}
+				jQuery.support.localStorage = false;
+				try{window.localStorage; jQuery.support.localStorage = true;}
+				catch(e){}
 
-				jQuery.support.sessionStorage = true;
-				try{window.sessionStorage}
-				catch(e){jQuery.support.sessionStorage = false;}
+				jQuery.support.sessionStorage = false;
+				try{window.sessionStorage; jQuery.support.sessionStorage = false;}
+				catch(e){}
+
+//update jQuery.support with whether or not placeholder is supported.
+				jQuery.support.placeholder = false;
+				var test = document.createElement('input')
+				if('placeholder' in test) {jQuery.support.placeholder = true};
+
 				}
 			}
 

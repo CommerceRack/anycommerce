@@ -172,6 +172,10 @@ additionally, will apply some conditional form logic.
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
 					}
 				},
+//allows an input to specify a button to get triggered if 'enter' is pushed while the input is in focus.
+			"trigger-button-id" : function($CT,$t,ep)	{
+				if(ep.keyCode==13){$CT.closest(".eventDelegation").find("button[data-button-id='"+$CT.attr('data-trigger-button-id')+"']").first().trigger('click')}
+				},
 			
 //allows one form input to set the value of another.
 			"set-value-selector" : function($CT)	{
@@ -331,7 +335,7 @@ pass in an event name and a function and it will be added as an eventAction.
 //			app.u.dump("BEGIN _handleFormEvents");
 			//for each event action, determine if the element should trigger it and, if so, trigger it.
 			for(index in this._formEventActions)	{
-				if($CT.data(index))	{this._formEventActions[index]($CT,this.element);}
+				if($CT.data(index))	{this._formEventActions[index]($CT,this.element,ep);}
 				}
 			},
 // * 201346 -> support for $context added.
