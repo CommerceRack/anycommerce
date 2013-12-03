@@ -1242,30 +1242,38 @@ setTimeout(function(){
 					var $form = $btn.closest('form');
 					
 					if(app.u.validateForm($form))	{
-var updates = new Array(),
-formObj = $form.serializeJSON();
-
-$form.showLoading({'message':'Creating customer record'});
-//app.u.dump(" -> formObj: "); app.u.dump(formObj);
-
-updates.push("CREATE?email="+formObj.email);
-if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
-if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
-if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
-
-// $('body').showLoading("Creating customer record for "+formObj.email);
-app.ext.admin.calls.adminCustomerCreate.init(updates,{'callback':function(rd){
-	$form.hideLoading();
-	if(app.model.responseHasErrors(rd)){
-		$('#globalMessaging').anymessage({'message':rd});
-		}
-	else	{
-		$('#customerUpdateModal').dialog('close');
-		$('.dualModeListMessaging',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty();
-		app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'CID':app.data[rd.datapointer].CID})
-		}
-	}});
-app.model.dispatchThis('immutable');
+						var updates = new Array(),
+						formObj = $form.serializeJSON();
+						
+						$form.showLoading({'message':'Creating customer record'});
+						//app.u.dump(" -> formObj: "); app.u.dump(formObj);
+						
+						updates.push("CREATE?email="+formObj.email); //setting email @ create is required.
+						if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
+						if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
+						if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+						
+						// $('body').showLoading("Creating customer record for "+formObj.email);
+						app.model.addDispatchToQ({
+							'_cmd':'adminCustomerCreate',
+							'CID' : 0, //create wants a zero customer id
+							'@updates' : updates,
+							'_tag':	{
+								'datapointer' : 'adminCustomerCreate',
+								'callback': function(rd){
+									$form.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										$('#customerUpdateModal').dialog('close');
+										$('.dualModeListMessaging',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty();
+										app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'CID':app.data[rd.datapointer].CID})
+										}
+									}
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
 
 						}
 					else	{
@@ -1452,16 +1460,22 @@ app.model.dispatchThis('immutable');
 							{text: 'Delete Customer', click: function(){
 								$D.parent().showLoading({"message":"Deleting Customer"});
 								app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
-								app.ext.admin.calls.adminCustomerRemove.init(CID,{'callback':function(rd){
-									$D.parent().hideLoading();
-									if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
-									else	{
-										$(".defaultText",$D).hide(); //clear the default message.
-										$D.anymessage(app.u.successMsgObject('The customer has been removed.'));
-										$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
-										app.ext.admin_customer.a.showCustomerManager();
+								app.model.addDispatchToQ({
+									'_cmd':'adminCustomerRemove',
+									'_tag':	{
+										'datapointer' : 'adminCustomerRemove',
+										'callback':function(rd){
+											$D.parent().hideLoading();
+											if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+											else	{
+												$(".defaultText",$D).hide(); //clear the default message.
+												$D.anymessage(app.u.successMsgObject('The customer has been removed.'));
+												$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
+												app.ext.admin_customer.a.showCustomerManager();
+												}
+											}
 										}
-									}},'immutable');
+									},'immutable');
 								app.model.dispatchThis('immutable');
 								}}	
 							]
