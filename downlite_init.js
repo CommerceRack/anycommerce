@@ -15,6 +15,8 @@ app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 
+app.rq.push(['extension',0,'tracking_hubspot','extensions/tracking_hubspot.js','startExtension']);
+
 app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']); //old default callback.
 app.rq.push(['extension',1,'partner_addthis','extensions/partner_addthis.js','startExtension']); //old default callback.
 app.rq.push(['extension',0,'google_dynamicremarketing','extensions/partner_google_dynamicremarketing.js']); 

@@ -1487,6 +1487,9 @@ if(ps.indexOf('?') >= 1)	{
 				if(app.u.getUsernameFromCart())	{
 					$('.username').text(app.u.getUsernameFromCart());
 					}
+				if(app.ext.tracking_hubspot){
+					app.ext.tracking_hubspot.u.trackBuyerTarget(app.u.getUsernameFromCart());
+					}
 				},
 			
 			
@@ -3013,6 +3016,9 @@ else	{
 							app.model.destroy('cartDetail');
 							app.calls.cartDetail.init({'callback':function(rd){
 								if(obj.action === "modal"){
+									if(app.u.getUsernameFromCart() && app.ext.tracking_hubspot){
+										app.ext.tracking_hubspot.u.trackBuyerTarget(app.u.getUsernameFromCart());
+										}
 									showContent('cart',obj);
 									}
 								}},'immutable');
