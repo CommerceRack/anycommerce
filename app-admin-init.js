@@ -5,8 +5,9 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 app.rq.push(['extension',0,'admin_prodEdit','extensions/admin/product_editor.js']);
-app.rq.push(['extension',0,'admin_orders','extensions/admin/orders.js']); 
-app.rq.push(['extension',0,'admin_launchpad','extensions/admin/launchpad.js']); 
+app.rq.push(['extension',0,'admin_orders','extensions/admin/orders.js']);
+app.rq.push(['extension',0,'admin_sites','extensions/admin/sites.js']);
+//app.rq.push(['extension',0,'admin_launchpad','extensions/admin/launchpad.js']); 
 
 //these can be loaded later because none of them are required for a page to load.
 //this will change going forward.
