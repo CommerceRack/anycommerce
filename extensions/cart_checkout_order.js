@@ -16,8 +16,6 @@
 
 
 
-The intention of this extension is to replace store_checkout and store_cart, since there's a lot of redundant code between them.
-
 ************************************************************** */
 //SCO = Shared Checkout Object
 var cco = function() {
@@ -29,9 +27,6 @@ unlike other extensions, checkout calls rarely do a 'fetchData'. The thought her
 calls should always return the number of dispatches needed. allows for cancelling a dispatchThis if not needed.
    so in most of these, a hard return of 1 is set.
 
-initially, this extension auto-executed. Later, after callbacks were added to the extension object
-the startCheckout call was added, which contains the code that was auto-executed as part of the INIT callback.
-a callback was also added which just executes this call, so that checkout COULD be auto-started onload.
 */
 	calls : {
 
@@ -215,7 +210,7 @@ left them be to provide guidance later.
 				return 1;
 				},
 			dispatch : function()	{
-				var tagObj = {'callback':'',"datapointer":"cartAmazonPaymentURL","extension":"store_cart"}
+				var tagObj = {'callback':'',"datapointer":"cartAmazonPaymentURL","extension":"cco"}
 				app.model.addDispatchToQ({
 "_cmd":"cartAmazonPaymentURL",
 "shipping":1,
@@ -336,23 +331,23 @@ left them be to provide guidance later.
 						}				
 					else if(payby == 'ECHECK')	{
 						app.ext.cco.calls.cartPaymentQ.init({
-	"cmd":"insert",
-	"TN":"ECHECK",
-	"EA":sfo['payment/EA'],
-	"ER":sfo['payment/ER'],
-	"EN":sfo['payment/EN'],
-	"EB":sfo['payment/EB'],
-	"ES":sfo['payment/ES'],
-	"EI":sfo['payment/EI']
+							"cmd":"insert",
+							"TN":"ECHECK",
+							"EA":sfo['payment/EA'],
+							"ER":sfo['payment/ER'],
+							"EN":sfo['payment/EN'],
+							"EB":sfo['payment/EB'],
+							"ES":sfo['payment/ES'],
+							"EI":sfo['payment/EI']
 							});
 						}
 					else	{
 						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
 						}
 					}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
-						}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
+					}
 				},
 
 
@@ -647,48 +642,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 
 
-/*
-executing when quantities are adjusted for a given cart item.
-call is made to update quantities.
-When a cart item is updated, it'll end up getting re-rendered, so data-request-state doesn't need to be updated after the request.
-Since theres no 'submit' or 'go' button on the form, there was an issue where the 'enter' keypress would double-execute the onChange event.
-so now, the input is disabled the first time this function is executed and a disabled class is added to the element. The presence of this class
-allows us to check and make sure no request is currently in progress.
-*/
-			updateCartQty : function($input,_tag)	{
-				
-				var stid = $input.attr('data-stid');
-				var qty = $input.val();
-				
-				if(stid && qty && !$input.hasClass('disabled'))	{
-					$input.attr('disabled','disabled').addClass('disabled').addClass('loadingBG');
-					app.u.dump('got stid: '+stid);
-//some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
-//then create a callback that does nothing. IMHO, you should always let the user know the item was modified.
-//you can do something more elaborate as well, just by passing a different callback.
-					_tag = _tag || {};
-					_tag.callback = _tag.callback ? _tag.callback : 'updateCartLineItem';
-					_tag.extension = _tag.extension ? _tag.extension : 'store_cart';
-					_tag.parentID = 'cartViewer_'+app.u.makeSafeHTMLId(stid);
-/*
-the request for quantity change needs to go first so that the request for the cart reflects the changes.
-the dom update for the lineitem needs to happen last so that the cart changes are reflected, so a ping is used.
-*/
-					app.ext.store_cart.calls.cartItemUpdate.init(stid,qty);
-					this.updateCartSummary();
-//lineitem template only gets updated if qty > 1 (less than 1 would be a 'remove').
-					if(qty >= 1)	{
-						app.calls.ping.init(_tag,'immutable');
-						}
-					else	{
-						$('#cartViewer_'+app.u.makeSafeHTMLId(stid)).empty().remove();
-						}
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					app.u.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
-					}
-				},
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
@@ -792,8 +745,6 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				$tag.html(r);
 				},
 
-
-
 //data.value should be the item object from the cart.
 			cartItemRemoveButton : function($tag,data)	{
 
@@ -806,12 +757,23 @@ $tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCar
 //the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
 $tag.one('click',function(event){
 	event.preventDefault();
-	app.ext.store_cart.u.updateCartQty($tag);
+	app.ext.cco.u.updateCartQty($tag);
 	app.model.dispatchThis('immutable');
 	});
 					}
 				},
-				
+
+			cartItemQty : function($tag,data)	{
+				$tag.val(data.value.qty);
+//for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
+				if((data.value.stid && data.value.stid[0] == '%') || data.value.asm_master)	{
+					$tag.prop('disabled',true).css('border-width','0')
+					} 
+				else	{
+					$tag.attr('data-stid',data.value.stid);
+					}
+				},
+
 //for displaying order balance in checkout order totals.
 //changes value to 0 for negative amounts. Yes, this can happen.			
 			orderBalance : function($tag,data)	{
@@ -901,7 +863,35 @@ $tag.one('click',function(event){
 				$tag.addClass('paycon_'+data.value.substring(0,4).toLowerCase());
 				}
 
-			} //renderFormats
+			}, //renderFormats
+		
+		e : {
+			
+			cartItemQuantityUpdate : function($ele,p){
+
+				var stid = $ele.closest('[data-stid]')
+				if(stid)	{
+					app.ext.cco.calls.cartItemUpdate.init(stid,$ele.val(),{
+						'callback' : function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$ele.closest('form').anymessage({'message':rd});
+								}
+							else	{
+								if($ele.val() == 0)	{
+									$ele.closest('[data-obj_index]').hide(); //objIndex added by processList on items template container;
+									}
+								$ele.closest('form').anymessage({'message':'Item '+stid+' removed from your shopping cart'})
+								}
+							}
+						});
+					}
+				else	{
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
+					}
+
+				}
+			
+			}
 		
 		} // r
 	return r;
