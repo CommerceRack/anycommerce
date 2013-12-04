@@ -13,6 +13,9 @@ GLOBAL
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption.
 	bug - store variations > search by variation ID fixed.
+	change - UPS option for 'perform rule processing' has been removed. If rules are present, they'll be applied.
+	bug - rss feeds can now be deleted.
+	bug - user roles now saving.
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
