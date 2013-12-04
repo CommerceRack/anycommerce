@@ -328,6 +328,7 @@ else	{
 			app.u.dump("BEGIN admin_orders.a.initOrderManager.");
 			var $target = $('#ordersContent');
 			
+			
 //			app.u.dump(P);
 			app.ext.admin_orders.u.handleOrderListTab('deactivate');
 			var oldFilters = app.model.dpsGet('admin_orders');
@@ -443,7 +444,8 @@ else	{
 						});
 					});
 					
-//go get the list of orders.
+//go get the list of orders and any other necessary data
+				app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
 //assigns all the button click events.

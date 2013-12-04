@@ -602,7 +602,7 @@ $target.anydelegate();
 				},
 
 			ebayLaunchProfiles : function($tag,data)	{
-//				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
+				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
 				if(app.data.adminEBAYProfileList)	{
 					if(app.data.adminEBAYProfileList['@PROFILES'].length)	{
 						var profiles = app.data.adminEBAYProfileList['@PROFILES']; //shortcut.
