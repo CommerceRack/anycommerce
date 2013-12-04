@@ -2410,7 +2410,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					$('#globalMessaging').anymessage({"message":"In admin.a.showYTVInDialog, no videoID passed.","gMessage":true});
 					}
 				},
-				
+
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data,selectors)	{
 				var r = false;  //what is returned. either false of a jquery object.
@@ -2441,32 +2441,32 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 										//applies the content to the panel.
 										ui.newPanel.anycontent(rd).data('contentloaded',true);
 				
-				if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-					$('label',ui.newPanel).each(function () {  
-						if($(this).data('value').charAt(0) != '.')	{
-							$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
-							}
-						});
-					}
-				
-				//selectors are values passed in that get 'checked' (turned on).
-					if(selectors)	{
-				//		app.u.dump("selectors are set: "+selectors);
-						var selArr = selectors.split('\n');
-						var L = selArr.length;
-				//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
-						for(var i = 0; i < L; i += 1)	{
-							if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
-								//csv and 'all' are handled already.
-								}
-							else	{
-								//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-				//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
-				//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
-								$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
-								}
-							}
-						}
+										if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+											$('label',ui.newPanel).each(function () {  
+												if($(this).data('value').charAt(0) != '.')	{
+													$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
+													}
+												});
+											}
+										
+										//selectors are values passed in that get 'checked' (turned on).
+										if(selectors)	{
+									//		app.u.dump("selectors are set: "+selectors);
+											var selArr = selectors.split('\n');
+											var L = selArr.length;
+									//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
+											for(var i = 0; i < L; i += 1)	{
+												if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+													//csv and 'all' are handled already.
+													}
+												else	{
+													//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+									//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+									//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+													$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+													}
+												}
+											}
 										}
 									}
 								if(ui.newHeader.data('pickmethod') == 'LIST')	{
@@ -2479,11 +2479,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 									app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
 									}
 								else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-									_tag.datapointer = 'adminEBAYProfileList'
+									_tag.datapointer = 'adminEBAYProfileList';
 									app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
 									}
 								else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-									_tag.datapointer = 'adminSupplierList'
+									_tag.datapointer = 'adminSupplierList';
 				//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
 									if(app.model.fetchData(_tag.datapointer) == false)	{
 										app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
@@ -2538,10 +2538,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //$( ".selector" ).accordion( "option", "disabled", true );
 				return r;
 				},
-				
-
-
-
 
 			showDownloads : function($target)	{
 				$target.anycontent({'templateID':'downloadsPageTemplate','showLoading':false});
@@ -2554,7 +2550,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.u.handleCommonPlugins($target);
 				app.u.handleButtons($target);
 				},
-
 
 			showSitesTab : function($target)	{
 				$target.empty();
@@ -2589,7 +2584,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.model.dispatchThis('mutable');
 
 				},
-
 
 			showMailTool : function(vars)	{
 				vars = vars || {};
@@ -2638,7 +2632,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				
 				
 				},
-
 
 
 /*
@@ -3094,12 +3087,13 @@ app.ext.admin_prodEdit.a.showProductManager();
 
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 app.u.handleEventDelegation($('#messagesContent'));
+/*
 app.model.addDispatchToQ({
 	'detail':'more',
 	'_cmd': 'adminNavTreeList',
 	'_tag' : {datapointer: 'adminNavTreeList'}
 	},'immutable');
-app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
+*/
 app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				
@@ -5547,6 +5541,7 @@ else	{
 					}
 				},
 
+
 			adminRSSRemove : function($ele,p)	{
 				var data = $ele.closest('tr').data();
 				var $D = app.ext.admin.i.dialogConfirmRemove({
@@ -5677,7 +5672,8 @@ else	{
 					$D.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
 					}
 				},
-			
+
+
 			showYTVInDialog : function($ele)	{
 				app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
 				},
