@@ -366,7 +366,7 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 //and your code breaks.
 //if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
 
-app.globalAjax.lastDispatch = app.u.unixNow();
+app.globalAjax.lastDispatch = app.u.epochNow();
 app.globalAjax.overrideAttempts = 0;
 
 //IMPORTANT
@@ -599,7 +599,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 //handle all the call specific handlers.
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
-						responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
+						responseData['@rcmds'][i].ts = app.u.epochNow()  //set a timestamp on local data
 
 						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
 							this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']](responseData['@rcmds'][i])	//executes a function called handleResponse_X where X = _cmd, if it exists.
@@ -634,62 +634,77 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			}, //handleResponse
 
 
-//this will remove data from both local storage AND memory.
+//this will remove data from both local storage, session storage AND memory.
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
-//admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
 		destroy : function(key)	{
 //			app.u.dump(" -> destroying "+key);
 			if(app.data[key])	{
 				delete app.data[key];
 				}
-			localStorage.removeItem(key);
+			app.storageFunctions.nukeLocal(key,'local');
+			app.storageFunctions.nukeLocal(key,'session');
 			},
 
 
 //this will write the respose both to localStorage and into app.data
 		writeToMemoryAndLocal : function(responseData)	{
-//			app.u.dump("BEGIN model.writeToMemoryAndLocal");
-//			app.u.dump(" -> responseData: "); app.u.dump( responseData );
 
 			var datapointer = false;
 			if(responseData['_rtag'])	{datapointer = responseData['_rtag']['datapointer']}
 
-//			app.u.dump(" -> datapointer: "+datapointer);
 //if datapointer is not set, data is automatically NOT saved to localstorage or memory.
 //however, there is (ping) already, and could be more, cases where datapointers are set, but we don't want the data locally or in memory.
 //so we have simple functions to check by command.
 			if(datapointer && !app.model.responseHasErrors(responseData))	{
-				if(this.thisGetsSavedToMemory(responseData['_rcmd']))	{
-					app.data[datapointer] = responseData;
+//				if(this.thisGetsSaved2Memory(responseData['_rcmd']))	{
+//					app.data[datapointer] = responseData;
+//					}
+
+//this is the data that will be saved into local or session.
+				var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
+				obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
+// *** 201401 -> BIG change. The data stored in memory no longer contains the _rtag. left original code above in case this comes back to haunt.
+				if(this.thisGetsSaved2Memory(responseData['_rcmd']))	{
+					app.data[datapointer] = obj4Save;
+					}				
+				if(this.thisGetsSaved2Local(responseData['_rcmd'])){
+					app.storageFunctions.writeLocal(datapointer,obj4Save,'local'); //save to localStorage, if feature is available.
 					}
-				else	{}
-				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
-					var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
-					obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
-					app.storageFunctions.writeLocal(datapointer,obj4Save); //save to local storage, if feature is available.
+				if(this.thisGetsSaved2Session(responseData['_rcmd']))	{
+					app.storageFunctions.writeLocal(datapointer,obj4Save,'session'); //save to sessionStorage, if feature is available.
 					}
-				else	{}
+
 				}
 			else	{
 //catch. not writing to local. Either not necessary or an error occured.
 				}
-			
 			}, //writeToMemoryAndLocal
 
-		thisGetsSavedToMemory : function(cmd)	{
+		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
 			switch(cmd)	{
 				case 'appPageGet': //saved into category object earlier in process. redundant here.
 				case 'cartSet': //changes are reflected in cart object.
-				case 'ping':
+//				case 'ping': //ping may be necessary in memory for anycontent in conjunction w/ extending by datapointers. rss is a good example of this.
 				r = false
 				break;
 				}
 			return r;
 			},
 
-//some commands should not get saved locally, either because they contain sensitive data or because of the nature of the call.
-		thisGetsSavedLocally : function(cmd)	{
+//localStorage is reserved for data that MUST be carried between sessions. For everything else, sessionStorage is used.
+		thisGetsSaved2Local : function(cmd){
+			var r = false;
+			switch(cmd)	{
+				case 'authAdminLogin':
+				case 'appBuyerLogin':
+				r = true;
+				}
+			return r;
+			},
+
+//Session is a safe place to store most data, as it'll be gone once the browser is closed. Still, keep CC data out of there.
+		thisGetsSaved2Session : function(cmd)	{
 			var r = true; //what is returned. is set to false if the cmd should not get saved to local storage.
 			switch(cmd)	{
 				case 'adminCustomerUpdate': //may contain cc
@@ -698,18 +713,12 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				case 'adminOrderDetail': //may contain cc
 				case 'adminOrderPaymentAction': //may contain cc
 				case 'adminOrderMacro': //may contain cc
-				case 'adminTicketCreate':
-				case 'adminTicketUpdate':
-				case 'adminTicketDetail': //should be updated each visit.
 				case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
-				case 'appPageGet': //
 				case 'buyerWalletList': //conains some cc info.
-				case 'cartItemsInventoryVerify': //these adjustments are never stored.
 				case 'cartOrderCreate': //may contain cc
 				case 'cartPaymentQ': //may contain cc
 				case 'cartSet': //changes are reflected in cart object.
 				case 'ping':
-				case 'whoAmI': //contains login info. needs to be session specific.
 				r = false
 				break;
 				}
@@ -911,6 +920,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				app.vars.userid = responseData.userid.toLowerCase();
 				app.vars.username = responseData.username.toLowerCase();
 				app.vars.thisSessionIsAdmin = true;
+				
 				}
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
@@ -1207,7 +1217,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 //				app.u.dump(' -> data in localStorage');
 	//			app.u.dump(local);
 				if(local.ts)	{
-					if((app.u.unixNow() - local.ts) > expires)	{
+					if((app.u.epochNow() - local.ts) > expires)	{
 						r = false; // data is more than 24 hours old.
 						}
 					else	{
@@ -1769,8 +1779,9 @@ methods of getting data from non-server side sources, such as cookies, local or 
 				return r;
 				},
 
-//Device Persistent Settings (DPS) Set
-//For updating 'session' preferences, which are currently device specific.
+//Device Persistent Storage (DPS) Set
+//For updating preferences, which are currently device specific.
+//Uses local storage
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{

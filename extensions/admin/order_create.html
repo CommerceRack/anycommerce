@@ -412,8 +412,8 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
 	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:convertSessionToOrder;"></span>
 </h4>
-<div data-bind='var: order(our/order_ts); format:unix2mdy; pretext:Created on: ;'></div>
-<div data-bind='var: order(flow/paid_ts); format:unix2mdy; pretext:Paid on: ; hideZero:true;'></div>
+<div data-bind='var: order(our/order_ts); format:epoch2mdy; pretext:Created on: ;'></div>
+<div data-bind='var: order(flow/paid_ts); format:epoch2mdy; pretext:Paid on: ; hideZero:true;'></div>
 	</td>
 </tr>
 <tr>

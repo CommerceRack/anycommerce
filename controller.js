@@ -55,6 +55,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
 		app.handleSession(); //get existing session or create a new one.
+		app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
@@ -1041,14 +1042,13 @@ app.u.throwMessage(responseData); is the default error handler.
 //jqObj is required and should be a jquery object.
 		anycontent : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN callbacks.anycontent");
+//				app.u.dump("BEGIN callbacks.anycontent"); app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
 					var $target = _rtag.jqObj; //shortcut
 					
 //anycontent will disable hideLoading and loadingBG classes.
-/*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
-// * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
+//to maintain flexibility, pass all anycontent params in thru _tag
 					$target.anycontent(_rtag);
 
 					app.u.handleCommonPlugins($target);
@@ -1908,16 +1908,17 @@ TIME/DATE
 			return dateStr;
 			},
 
-//current time in unix format. stop using this.
-		unixNow : function()	{
+//current time in epoch format.
+		epochNow : function()	{
 			return Math.round(new Date().getTime()/1000.0)
-			}, //unixnow
-//very simple date translator. if something more sprmatecific is needed, create a custom function.
+			}, //epochNow
+//very simple date translator. if something more specific is needed, create a custom function.
+//ts should be an epoch timestamp
 //will support a boolean for showtime, which will show the time, in addition to the date.
-		unix2Pretty : function(unix_timestamp,showtime)	{
-//			app.u.dump('BEGIN app.u.unix2Pretty');
-//			app.u.dump(' -> tx = '+unix_timestamp);
-			var date = new Date(Number(unix_timestamp)*1000);
+		epoch2Pretty : function(ts,showtime)	{
+//			app.u.dump('BEGIN app.u.epoch2Pretty');
+//			app.u.dump(' -> tx = '+ts);
+			var date = new Date(Number(ts)*1000);
 			var r;
 			r = app.u.jsMonth(date.getMonth());
 			r += ' '+date.getDate();
@@ -1969,12 +1970,15 @@ VALIDATION
 			}, //isSet
 		
 		numbersOnly : function(e)	{
-			var unicode=e.charCode? e.charCode : e.keyCode
-			// if (unicode!=8||unicode!=9)
-			if (unicode<8||unicode>9)        {
-				if (unicode<48||unicode>57) //if not a number
-				return false //disable key press
-				}
+			var unicode=e.charCode? e.charCode : e.keyCode;
+			var r = true;
+			if(unicode >= 48 && unicode <= 57)	{r = true; app.u.dump('got here')} // allow 0 - 9.
+			else if(unicode == 9 || unicode == 8 || unicode == 46 || unicode == 13)	{r = true;} //allow backspace, tab, delete and enter.
+			else if(unicode == 37 || unicode == 39)	{r = true;} //allow left and right arrow.
+			else if(unicode == 36 || unicode == 35)	{r = true;} //allow home and end keys
+			else	{r = false;}
+//			app.u.dump(" -> unicode: "+unicode);
+			return r;
 			},
 
 //* 201320 -> changed to support tab key.
@@ -2731,6 +2735,26 @@ later, it will handle other third party plugins as well.
 			return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);
+			},
+		
+		updatejQuerySupport : function()	{
+			if(jQuery && typeof jQuery.support == 'object')	{
+//If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.
+//So we first test to make sure the test doesn't cause an error. thanks ff.
+				jQuery.support.localStorage = false;
+				try{window.localStorage; jQuery.support.localStorage = true;}
+				catch(e){}
+
+				jQuery.support.sessionStorage = false;
+				try{window.sessionStorage; jQuery.support.sessionStorage = true;}
+				catch(e){}
+
+//update jQuery.support with whether or not placeholder is supported.
+				jQuery.support.placeholder = false;
+				var test = document.createElement('input')
+				if('placeholder' in test) {jQuery.support.placeholder = true};
+
+				}
 			}
 
 		}, //util
@@ -3167,8 +3191,10 @@ return $r;
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
 //			app.u.dump(" -> showIfSet: "+data.value);
+// *** 201352 add support for whatever display type is necessary (ie 'inline' for spans, 'inline-block' for imgs) default to block. -mc
+			var displayType = data.bindData.displayType || 'block'
 			if(data.value)	{
-				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
+				$tag.show().css('display',displayType); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
 
@@ -3351,8 +3377,8 @@ $tmp.empty().remove();
 			},
 
 
-		unix2mdy : function($tag,data)	{
-			$tag.text(app.u.unix2Pretty(data.value,data.bindData.showtime))
+		epoch2mdy : function($tag,data)	{
+			$tag.text(app.u.epoch2Pretty(data.value,data.bindData.showtime))
 			},
 	
 		text : function($tag,data){
@@ -3599,35 +3625,54 @@ $tmp.empty().remove();
 // !!! at some point, these should get moved to the model. the model should handle loading data from any source.
 		
 	storageFunctions : {
+
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
 //			app.u.dump("WRITELOCAL: Key = "+key+" and location: "+location);
 			var r = false;
-			if(location+'Storage' in window && window[location+'Storage'] !== null && typeof window[location+'Storage'] != 'undefined')	{
-				r = true;
-				if (typeof value == "object") {
-					value = JSON.stringify(value);
+
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].setItem == 'function' )	{
+					r = true;
+					if (typeof value == "object") {
+						value = JSON.stringify(value);
+						}
+//a try is used here so that if storage is full, the error is handled gracefully.
+					try	{
+						window[location+'Storage'].setItem(key, value);
+						}
+					catch(e)	{
+						r = false;
+						app.u.dump(' -> '+location+'Storage for '+key+' defined but not available (no space? no write permissions?)');
+						app.u.dump(e.message);
+						}
+					
 					}
-//				localStorage.removeItem(key); //here specifically to solve a iphone/ipad issue as a result of 'private' browsing.
-//the function above wreaked havoc in IE. do not implement without thorough testing (or not at all).
-				try	{
-					window[location+'Storage'].setItem(key, value);
+				else	{
+					app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
+					app.u.dump(" -> window."+location+"Storage is not defined.");
 					}
-				catch(e)	{
-					r = false;
-					app.u.dump(' -> '+location+'Storage defined but not available (no space? no write permissions?)');
-					app.u.dump(e.message);
-					}
-				
 				}
 			else	{
-				app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
-				app.u.dump(" -> window."+location+"Storage is not defined.");
+				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
 			return r;
 			}, //writeLocal
-		
+
+		nukeLocal : function(key,location)	{
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
+					try	{
+						window[location+'Storage'].removeItem(k);
+						}
+					catch(e)	{}
+					}				}
+			else	{
+				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
+			},
+
 		readLocal : function(key,location)	{
 			location = location || 'local';
 		//	app.u.dump("GETLOCAL: key = "+key);

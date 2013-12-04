@@ -56,10 +56,10 @@ var tools_ABtesting = function() {
 				//DETERMINE EXPERIMENTAL GROUPS
 				
 				//Grab any stored groupings for user consistency (a user will experience the same feature on returning to the app)
-				var cachedGroupings = app.storageFunctions.readLocal(app.ext.tools_ABtesting.vars.localStorageKey);
+				var cachedGroupings = app.storageFunctions.readLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
 				
 				//Delete the stored groupings.  They will be rewritten after any non-existing groupings are assigned.
-				localStorage.removeItem(app.ext.tools_ABtesting.vars.localStorageKey);
+				app.storageFunctions.nukeLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
 
 				//if no value was present in localstorage, the storageFunctions attempts to readCookie instead
 				//if no cookie is present, false is returned.  In this case start fresh.

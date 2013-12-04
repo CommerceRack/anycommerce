@@ -386,7 +386,7 @@ setTimeout(function(){
 		handleFileUpload2Batch : {
 			onSuccess : function(tagObj){
 				var jobID = app.data[tagObj.datapointer].JOBID;
-				$("<div \/>").attr({'id':'batchDialog_'+jobID,'title':'Job ID: '+jobID}).append("<p class='pointer' onClick='showUI(\"#!batchManager\"); $(this).closest(\".ui-dialog-content\").dialog(\"close\");'>File uploaded. <span class='lookLikeLink'>click here</span> to see job status. job id: "+jobID+"<\/p>").dialog();
+				$("<div \/>").attr({'id':'batchDialog_'+jobID,'title':'Job ID: '+jobID}).append("<p class='pointer' onClick='navigateTo(\"#!batchManager\"); $(this).closest(\".ui-dialog-content\").dialog(\"close\");'>File uploaded. <span class='lookLikeLink'>click here</span> to see job status. job id: "+jobID+"<\/p>").dialog();
 				}
 			},
 
@@ -703,7 +703,20 @@ setTimeout(function(){
 					app.u.dump(folderProperties);
 					}
 
-				} //showMediaAndSubs
+				}, //showMediaAndSubs
+
+			showFileImportPage : function($target,vars)	{
+				$target.anycontent({
+					'templateID' : 'pageFileImportTemplate',
+					'showLoading' : false
+					}).anydelegate();
+					
+				$("[data-app-role='fileImportMenu']",$target).menu();
+
+				vars = vars || {};
+				if(!vars.VERB)(vars.VERB = "HELP"); //default to showing the help page.
+				app.ext.admin_medialib.u.handleImportPageByVerb($("[data-app-role='slimLeftContentContainer']",$target),vars.VERB);
+				} //showCSVImports
 
 			}, //Actions
 
@@ -811,6 +824,67 @@ else	{
 
 		u : {
 
+			handleImportPageByVerb : function($contentArea,verb)	{
+				if(verb && $contentArea instanceof jQuery)	{
+
+					$contentArea.intervaledEmpty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+verb.toLowerCase(),{})); //load the page template.
+					app.ext.admin_medialib.u.convertFormToJQFU('#csvUploadToBatchForm','csvUploadToBatch');
+					
+					if(verb == 'INVENTORY')	{
+						var $sc = $("[data-app-role='fileImportSupplierContainer']",$contentArea).showLoading({"message":"Fetching supplier list"}); //Supplier Container
+						var $wc = $("[data-app-role='fileImportWMSContainer']",$contentArea).showLoading({"message":"Fetching warehouse list"}); //Warehouses Container
+					
+						app.model.addDispatchToQ({
+							'_cmd':'adminSupplierList',
+							'_tag':	{
+								'datapointer' : 'adminSupplierList',
+								'callback':function(rd){
+									$sc.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										var suppliers = app.data[rd.datapointer]['@SUPPLIERS'];
+										for(var index in suppliers)	{
+											$sc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=SUPPLIER|SUPPLIER_ID="+index+"'> SUPPLIER ID:"+index+" (%SKU,%QTY,%COST,%SUPPLIER_SKU) </label>");
+											}					
+										}
+									}
+								}
+							},'mutable');
+					
+						app.model.addDispatchToQ({
+							'_cmd':'adminWarehouseList',
+							'_tag':	{
+								'datapointer' : 'adminWarehouseList',
+								'callback':function(rd){
+									$wc.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										var L = app.data[rd.datapointer]['@ROWS'].length;
+										for(var i = 0; i < L; i += 1)	{
+											var tw = app.data[rd.datapointer]['@ROWS'][i]; //This Warehouse
+											$wc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO="+tw.GEO+"'> WMS GEO:"+tw.GEO+" (%SKU,%WMS_ZONE,%WMS_POS,%NOTE,%QTY,%COST)<</label>");
+											}
+										}
+									}
+								}
+							},'mutable');
+							
+							
+						app.model.dispatchThis('mutable');
+						}
+
+					app.u.handleButtons($contentArea);
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_medialib.u.handleImportPageByVerb, either verb ["+verb+"] not passed or $contentArea is not a jquery instance ["+($contentArea instanceof jQuery)+"].","gMessage":true});
+					}
+				},
+
 //a way to consistently get the folder name for what folder is open.
 //is a function to regularize it and so that if where the name is stored changes, only one update needs to be made.
 			getOpenFolderName : function(){
@@ -869,7 +943,7 @@ if(selector && mode)	{
 //			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
 //			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
 			app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
-//			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
+//			app.calls.ping.init({'callback':'navigateTo','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the navigateTo request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
 		'adminFileUpload' : function(data,textStatus)	{
@@ -1031,10 +1105,6 @@ else	{
 
 				}, //convertFormToJQFU
 
-
-
-
-
 			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
 				var L = app.data.adminImageFolderList['@folders'].length;
@@ -1156,7 +1226,7 @@ else	{
 				else	{
 					app.u.throwGMessage("WARNING! no path specified an admin_medialib.u.openMediaFoldersByFilePath.");
 					}
-				},
+				}, //openMediaFolderByFilePath
 
 			resetAndGetMediaFolders : function(Q)	{
 				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove(); //folders will be re-added later.
@@ -1168,43 +1238,15 @@ else	{
 //also gets run over the image details area in the header when opening media lib for a field that already has an image selected.
 			handleMediaFileButtons : function($target,mode)	{
 				app.u.handleButtons($target);
-
 //mode is set on the UL when the media library is initialized or reopened.
 // ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
-if(mode == 'manage')	{
-	$("button[data-btn-action='selectMedia']").hide(); //leave button selector or images will be hidden.
-	}
-else	{
-	$("button[data-btn-action='selectMedia']").show();
-	}
+				if(mode == 'manage')	{
+					$("button[data-btn-action='selectMedia']").hide(); //leave button selector or images will be hidden.
+					}
+				else	{
+					$("button[data-btn-action='selectMedia']").show();
+					}
 
-/*
-** 201338 -> w/ delegated events in use, this is no longer necessary.
-				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					$(this).toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
-					});
-				$("[data-btn-action='selectMedia']",$target).addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-circle-check"}}).off('click.selectMedia').on('click.selectMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					$(this).closest('li').find('img').click();
-					});
-				$("[data-btn-action='mediaDetails']",$target).addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).off('click.mediaDetails').on('click.mediaDetails',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data());
-					});
-
-				$("[data-btn-action='clearMedia']",$target).addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).off('click.clearMedia').on('click.clearMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					app.ext.admin_medialib.a.selectThisMedia($(this),true);
-					});
-
-
-				
-				$("[data-btn-action='downloadMedia']",$target).addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).off('click.downloadMedia').on('click.downloadMedia',function(event){
-					event.preventDefault(); //keeps button from submitting the form.
-					window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
-					});				
-				*/
 				}, //handleMediaFileButtons
 
 
@@ -1370,91 +1412,20 @@ $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
 				app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
 				app.model.dispatchThis();
-				},
-
-
-			showFileUploadPage : function(path,P)	{
-
-var tabs = [
-	{"link":"/biz/setup/import/index.cgi?VERB=","name":"HELP","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=PRODUCTS","name":"Products","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=INVENTORY","name":"Inventory","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=CUSTOMERS","name":"Customers","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=REVIEWS","name":"Reviews","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=NAVCATS","name":"Categories","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=VARIATIONS","name":"Variations","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=REWRITES","name":"URL Rewrites","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=ORDERS","name":"Orders","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=TRACKING","name":"Tracking","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=RULES","name":"Rules","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=LISTINGS","name":"Listings","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=IMAGES","name":"Images","selected":0},
-	{"link":"/biz/setup/import/index.cgi?VERB=OTHER","name":"Other","selected":0}
-	]
-
-//				app.u.dump("BEGIN admin_medialib.u.showFileUploadPage");
-				var $target = $('#setupContent')
-				pathParams = app.u.kvp2Array(path.split('?')[1]);
-				if(!pathParams.VERB)(pathParams.VERB = "HELP"); //default to showing the help page.
-//				app.u.dump(" -> pathParams: "); app.u.dump(pathParams);
-				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+pathParams.VERB.toLowerCase(),{})); //load the page template.
-				app.ext.admin_medialib.u.convertFormToJQFU('#csvUploadToBatchForm','csvUploadToBatch');
-if(pathParams.VERB == 'INVENTORY')	{
-	var $sc = $("[data-app-role='fileImportSupplierContainer']",$target).showLoading({"message":"Fetching supplier list"}); //Supplier Container
-	var $wc = $("[data-app-role='fileImportWMSContainer']",$target).showLoading({"message":"Fetching warehouse list"}); //Warehouses Container
-
-	app.model.addDispatchToQ({
-		'_cmd':'adminSupplierList',
-		'_tag':	{
-			'datapointer' : 'adminSupplierList',
-			'callback':function(rd){
-				$sc.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$('#globalMessaging').anymessage({'message':rd});
-					}
-				else	{
-var suppliers = app.data[rd.datapointer]['@SUPPLIERS'];
-for(var index in suppliers)	{
-	$sc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=SUPPLIER|SUPPLIER_ID="+index+"'> SUPPLIER ID:"+index+" (%SKU,%QTY,%COST,%SUPPLIER_SKU) </label>");
-	}					
-					}
-				}
-			}
-		},'mutable');
-
-	app.model.addDispatchToQ({
-		'_cmd':'adminWarehouseList',
-		'_tag':	{
-			'datapointer' : 'adminWarehouseList',
-			'callback':function(rd){
-				$wc.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$('#globalMessaging').anymessage({'message':rd});
-					}
-				else	{
-var L = app.data[rd.datapointer]['@ROWS'].length;
-for(var i = 0; i < L; i += 1)	{
-	var tw = app.data[rd.datapointer]['@ROWS'][i]; //This Warehouse
-	$wc.append("<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO="+tw.GEO+"'> WMS GEO:"+tw.GEO+" (%SKU,%WMS_ZONE,%WMS_POS,%NOTE,%QTY,%COST)<</label>");
-	}
-					}
-				}
-			}
-		},'mutable');
-		
-		
-	app.model.dispatchThis('mutable');
-	}
-				app.ext.admin.u.uiHandleNavTabs(tabs);
-				app.u.handleAppEvents($target);
 				}
 
 			}, //u
 
 		e : {
 
-
-
+			fileImportPageShow : function($ele,P)	{
+				if($ele.data('verb'))	{
+					app.ext.admin_medialib.u.handleImportPageByVerb($ele.closest("[data-app-role='fileImportContainer']").find("[data-app-role='slimLeftContentContainer']"),$ele.data('verb'));
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_medialib.e.fileImportPageShow, no data-verb set on trigger element.","gMessage":true});
+					}
+				}, //fileImportPageShow
 
 			handleMediaFileButton : function($ele,P)	{
 //				app.u.dump("BEGIN admin_medialib.e.handleMediaFileButton (Click!)");
@@ -1506,51 +1477,40 @@ for(var i = 0; i < L; i += 1)	{
 				else	{
 					
 					}
-				},
+				}, //handleMediaFileButton
 
-/**/
+			adminCSVExportRewritesExec : function($ele,p)	{
+				$ele.parent().showLoading({"message":"Building URL Rewrite File"});
+				app.model.addDispatchToQ({
+					'_cmd':'adminCSVExport',
+					'base64' : 1,
+					'export' : 'REWRITES',
+					'_tag':	{
+						'callback':'fileDownloadInModal',
+						'filename' : 'rewrites.csv',
+						'datapointer':'adminCSVExport|REWRITE',
+						'jqObj' : $ele.parent()
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				}, //adminCSVExportRewritesExec
 
-
-
-			adminCSVExportRewritesExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-$btn.parent().showLoading({"message":"Building URL Rewrite File"});
-app.model.addDispatchToQ({
-	'_cmd':'adminCSVExport',
-	'base64' : 1,
-	'export' : 'REWRITES',
-	'_tag':	{
-		'callback':'fileDownloadInModal',
-		'filename' : 'rewrites.csv',
-		'datapointer':'adminCSVExport|REWRITE',
-		'jqObj' : $btn.parent()
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-
-					});
-				},		
-			adminCSVExportNavcatsExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-s"},text: true});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-$btn.parent().showLoading({"message":"Building Category File"});
-app.model.addDispatchToQ({
-	'_cmd':'adminCSVExport',
-	'export' : 'CATEGORY',
-	'base64' : 1,
-	'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
-	'_tag':	{
-		'callback':'fileDownloadInModal',
-		'datapointer':'adminCSVExport|CATEGORY',
-		'filename' : 'categories.csv',
-		'jqObj' : $btn.parent()
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-
-					});
-				}
+			adminCSVExportNavcatsExec : function($ele,p)	{
+				$ele.parent().showLoading({"message":"Building Category File"});
+				app.model.addDispatchToQ({
+					'_cmd':'adminCSVExport',
+					'export' : 'CATEGORY',
+					'base64' : 1,
+					'@OTHER_COLUMNS' : $('#navcatExportHeader').val() ? $('#navcatExportHeader').val().split(',') : [],
+					'_tag':	{
+						'callback':'fileDownloadInModal',
+						'datapointer':'adminCSVExport|CATEGORY',
+						'filename' : 'categories.csv',
+						'jqObj' : $ele.parent()
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				} //adminCSVExportNavcatsExec
 			
 			}
 

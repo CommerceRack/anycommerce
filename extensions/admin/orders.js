@@ -325,7 +325,10 @@ else	{
 		
 		initOrderManager : function(P)	{
 			P = P || {};
-			app.u.dump("BEGIN admin_orders.a.initOrderManager. targetID:"+P.targetID);
+			app.u.dump("BEGIN admin_orders.a.initOrderManager.");
+			var $target = $('#ordersContent');
+			
+			
 //			app.u.dump(P);
 			app.ext.admin_orders.u.handleOrderListTab('deactivate');
 			var oldFilters = app.model.dpsGet('admin_orders');
@@ -345,12 +348,12 @@ else	{
 				}
 			else{}
 
-			if(P.filters && P.targetID)	{
-				var $target = $(app.u.jqSelector('#',P.targetID));
+			if(P.filters)	{
+				
 
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_'+P.targetID},'orderManagerTemplate',app.ext.admin_orders.vars));
+				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_orderManager'},'orderManagerTemplate',app.ext.admin_orders.vars));
 // SANITY: the template is now on the DOM in target. you can now safely affect it.
 
 				$("[data-app-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
@@ -441,7 +444,8 @@ else	{
 						});
 					});
 					
-//go get the list of orders.
+//go get the list of orders and any other necessary data
+				app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
 //assigns all the button click events.
@@ -451,7 +455,7 @@ else	{
 				app.u.handleButtons($target);
 				}
 			else	{
-				app.u.throwGMessge("WARNING! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
+				$('#globalMessaging').anymessage({"message":"In admin_orders.a.initOrderManager, pool ["+P.pool+"] not passed into initOrderManager.","gMessage":true});
 				}
 //			app.u.dump("END initOrderManager");
 			}, //initOrderManager

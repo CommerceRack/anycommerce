@@ -126,7 +126,7 @@ not necessary in users 2.0
 
 			'bossUserCreateUpdate' : function(sfo,$form)	{
 				app.u.dump("BEGIN admin_support.macrobuilders.bossUserCreate");
-				sfo.roles = app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
+				sfo['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
 //asdf				sfo._cmd = "bossUserCreate"
 //clean up sfo to minimize the request.
 				$(":checkbox",$form).each(function(){

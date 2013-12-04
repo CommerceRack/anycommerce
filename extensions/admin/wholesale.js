@@ -193,23 +193,32 @@ else	{
 					$target.empty();
 					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
 					app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
-					app.ext.admin.calls.adminCustomerOrganizationDetail.init(vars.orgID,{'callback':function(rd){
-						$target.hideLoading();
-						if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
-						else	{
-							$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate',datapointer:rd.datapointer});
-							$('form',$target).data('orgid',vars.orgID);
-							$("input",$target).each(function(){
-								var $input = $(this);
-								$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
-								if($input.is(':checkbox'))	{
-									$input.anycb();
+
+					app.model.addDispatchToQ({
+						'_cmd':'adminCustomerOrganizationDetail',
+						'ORGID' : vars.orgID,
+						'_tag':	{
+							'datapointer' : 'adminCustomerOrganizationDetail|'+vars.orgID,
+							'callback':function(rd){
+								$target.hideLoading();
+								if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
+								else	{
+									$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate',datapointer:rd.datapointer});
+									$('form',$target).data('orgid',vars.orgID);
+									$("input",$target).each(function(){
+										var $input = $(this);
+										$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
+										if($input.is(':checkbox'))	{
+											$input.anycb();
+											}
+										});
+									$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate' data-app-role='saveButton'>Save Changes</button>");
+									app.u.handleAppEvents($target);
 									}
-								});
-							$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate' data-app-role='saveButton'>Save Changes</button>");
-							app.u.handleAppEvents($target);
+								}
 							}
-						}},'mutable');
+						},'mutable');
+
 					app.model.dispatchThis('mutable');
 					}
 				else	{
@@ -1361,24 +1370,29 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 						sfo[sfo.searchby] = sfo.keywords;
 						delete sfo.keywords; delete sfo.searchby; //sanitize before sending to API.
 						
-						app.ext.admin.calls.adminCustomerOrganizationSearch.init(sfo,{'callback':function(rd){
-							$dualModeContainer.hideLoading();
-
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd})
+						sfo._cmd = 'adminCustomerOrganizationSearch';
+						sfo._tag = {
+							'datapointer' : 'adminCustomerOrganizationSearch',
+							'callback' : function(rd){
+								$dualModeContainer.hideLoading();
+	
+								if(app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd})
+									}
+								else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
+									$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
+									}
+								else	{
+									$table.show();
+									$table.anycontent({'datapointer':rd.datapointer});
+									$table.anytable();
+									app.u.handleAppEvents($table,{'$context':$dualModeContainer});
+									}
+								
 								}
-							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
-								$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
-								}
-							else	{
-								$table.show();
-								$table.anycontent({'datapointer':rd.datapointer});
-								$table.anytable();
-								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
-								}
-
-							}},'mutable');
-						app.model.dispatchThis();
+							};
+						app.model.addDispatchToQ(sfo,'mutable');
+						app.model.dispatchThis('mutable');
 						}
 					else if (!sfo)	{
 						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execOrganizationSearch, unable to find form OR to serialize as JSON.','gMessage':true});
@@ -1414,15 +1428,22 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 							{text: 'Delete Organization', click: function(){
 								$D.parent().showLoading({"message":"Deleting Organization..."});
 								app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
-								app.ext.admin.calls.adminCustomerOrganizationRemove.init(orgID,{'callback':function(rd){
-									$D.parent().hideLoading();
-									if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
-									else	{
-										$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
-										$btn.closest('tr').empty().remove(); //remove row in results list.
-										$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
+								app.model.addDispatchToQ({
+									'_cmd':'adminCustomerOrganizationRemove',
+									'ORGID' : orgID,
+									'_tag':	{
+										'datapointer' : 'adminCustomerOrganizationRemove',
+										'callback':function(rd){
+											$D.parent().hideLoading();
+											if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+											else	{
+												$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
+												$btn.closest('tr').empty().remove(); //remove row in results list.
+												$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
+												}
+											}
 										}
-									}},'immutable');
+									},'i,mutable');
 								app.model.dispatchThis('immutable');
 								}}	
 							]
@@ -1451,15 +1472,21 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 						});
 
 
-					app.model.destroy('adminCustomerOrganizationDetail|'+sfo.ORGID)
-					app.ext.admin.calls.adminCustomerOrganizationUpdate.init(sfo,{'callback':function(rd){
-						$form.hideLoading();
-						if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
-						else	{
-							$form.anymessage(app.u.successMsgObject('Your changes have been saved.'));
+					app.model.destroy('adminCustomerOrganizationDetail|'+sfo.ORGID);
+
+					sfo._cmd = 'adminCustomerOrganizationUpdate';
+					sfo._tag = {
+						'datapointer' : 'adminCustomerOrganizationUpdate',
+						'callback' : function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+							else	{
+								$form.empty().anymessage(app.u.successMsgObject('Your changes have been saved.'));
+								}
 							}
-						}},'immutable');
-					app.model.dispatchThis('immutable');
+						};
+					app.model.addDispatchToQ(sfo,'immutable');
+
 					});
 				}, //execOrganizationUpdate
 
@@ -1596,14 +1623,23 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 							var $CB = $(this);
 							sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
 							});
-						
-						app.ext.admin.calls.adminCustomerOrganizationCreate.init(sfo,{callback : function(rd){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
-							else	{
-								$form.empty().anymessage(app.u.successMsgObject('The organization has been created.'));
-//								$form.append("<button>Close Window<\/button><button>Edit Organization<\/button><button>Add New Organization<\/button>");
+						sfo._cmd = 'adminCustomerOrganizationCreate';
+						sfo._tag = {
+							'datapointer' : 'adminCustomerOrganizationCreate',
+							'callback' : function(rd){
+								$form.hideLoading();
+								if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+								else	{
+									$form.empty().anymessage(app.u.successMsgObject('The organization has been created.'));
+						//								$form.append("<button>Close Window<\/button><button>Edit Organization<\/button><button>Add New Organization<\/button>");
+									}
 								}
+							};
+						app.model.addDispatchToQ(sfo,'immutable');
+
+
+						app.ext.admin.calls.adminCustomerOrganizationCreate.init(sfo,{callback : function(rd){
+
 							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}

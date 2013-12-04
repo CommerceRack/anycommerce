@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"http://www.powerlandonline.com/" //used ONLY if protocol is file: (for testing)
+	"testURL":"http://www.ylh.zoovy.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -174,7 +174,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
@@ -987,26 +987,15 @@ onclicks are recursive, so only add it to the parent element.
 
 
 <!--
-used for store_cart.js
-
-
-The cart viewer is basically just a container for two other elements that get translated.
-Currently, the elements within that get translated have 'fixed' template ID's and element IDs.
-cartTemplateContents is the id used for a list of the items in the cart, and it uses template id cartTemplateProductTemplate.
-cartSummaryTotals is the id used for totals, subtotal, tax, shipping, etc. It uses template id cartSummaryTotalsTemplate.
-
-fixed id's and templates was a decision that was made for usability. transferring around the two id's for each template was
-sticky, so they're fixed. Makes it easier on the designer and the developer.
-
-So the cart template should contain these two elements and the extension should contain these two templates.
+This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
 -->
 
-<div id='cartTemplate' class='loadingBG'>
+<div id='cartTemplate' class='loadingBG' data-app-role='cartContainer'>
 
-<form id='cartTemplateForm' action='#' onSubmit='return false'>
+<form action='#' onSubmit='return false'>
 
 <div class='cartStuffContainer'>
-	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
+	<ul data-bind="var: cart(@ITEMS); format:processList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
 </div>
 
 <div class='cartSummaryTotalsContainer'>
@@ -1014,13 +1003,13 @@ So the cart template should contain these two elements and the extension should 
 		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding'>Cart Totals</h2>
 		<div class='cartSummaryContainer stdPadding'>
 
-<section id='cartTemplateCostSummary' class='cartSummary marginBottom'>
+<section class='cartSummary marginBottom'>
 
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
 
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 
@@ -1028,22 +1017,19 @@ So the cart template should contain these two elements and the extension should 
 	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
 
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:cco;'></div>
 
 </section>
 
-<section id='cartTemplateShippingContainer' class='marginBottom'>
+<section data-app-role='cartTemplateShippingContainer' class='marginBottom'>
 	<h3>Shipping:</h3>
 
 	<div class='cartZipCodeContainer marginBottom'>
 		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
-			app.ext.store_cart.u.updateCartSummary();
-			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-			app.model.dispatchThis('immutable');"  />
+		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' data-app-change='myRIA|cartZipUpdateExec' />
 	</div>
 
-	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:orderCreate;'></ul>
 </section>
 
 <section class='marginBottom'>
@@ -1083,7 +1069,7 @@ So the cart template should contain these two elements and the extension should 
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' >Remove Item From Cart</button>
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
@@ -1093,7 +1079,7 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
+		qty: <input type='number' class='qtyInput numberInput' data-app-change="myRIA|"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1139,7 +1125,7 @@ used on a product layout. Some product have 'children' which may represent the s
 		<li data-bind='var:review(RATING); format:addClass; format:addClass; className:review_;' class='reviewSprite'></li>
 		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
 		<li data-bind='var:review(LOCATION); format:text; pretext:of ;'></li>
-		<li data-bind='var:review(CREATED_GMT); format:unix2mdy; pretext:on ;'></li>
+		<li data-bind='var:review(CREATED_GMT); format:epoch2mdy; pretext:on ;'></li>
 
 	</ul>
 	<blockquote>
@@ -1258,7 +1244,7 @@ used for store_crm.js
 	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
 	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
-	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
+	<span data-bind='var:order(MODIFIED_GMT);format:epoch2mdy; pretext: Placed on ;'></span>
 	</div>
 
 	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
@@ -1401,7 +1387,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
 	<table  class='listStyleNone lineItemProdlist'>
-		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+		<tbody data-bind="var: order(order/@ITEMS); format:processList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
 	</table>
 	</td>
 </tr>
@@ -1501,7 +1487,6 @@ The 'data-action' attribute is used to assign an onclick.
 		<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
 		<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
 		<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
-		<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
 		<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
 		<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>

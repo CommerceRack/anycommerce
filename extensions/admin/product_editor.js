@@ -192,8 +192,6 @@ else {
 
 
 $('form',_rtag.jqObj).each(function(){
-// ** 201344 -> edit tracking now in anydelegate.
-//	app.ext.admin.u.applyEditTrackingToInputs($(this));
 	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 	});
 
@@ -335,7 +333,7 @@ $target.anydelegate();
 	
 	
 			showStoreVariationsManager : function($target)	{
-	//			app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
+//				app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
 				if($target && $target instanceof jQuery)	{
 					var _tag = {
 						'datapointer' : 'adminSOGComplete',
@@ -344,14 +342,13 @@ $target.anydelegate();
 						'templateID' : 'variationsManagerTemplate'
 						}
 					
-					$target.empty()
-					
+					$target.anydelegate();
 					//use local copy, if available
 					if(app.model.fetchData('adminSOGComplete'))	{
 						app.u.handleCallback(_tag)
 						}
 					else	{
-						$target.showLoading({"message":"Fetching Variations..."});
+						$target.showLoading({"message":"Fetching variations..."});
 						app.model.addDispatchToQ({
 							'_cmd':'adminSOGComplete',
 							'_tag':	_tag
@@ -365,20 +362,18 @@ $target.anydelegate();
 					}
 				}, //showStoreVariationsManager
 				
-	//mode = store or product.
-	//varObj = variation Object.
-	//PID is required for mode = product.
-	//executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
+//mode = store or product.
+//varObj = variation Object.
+//PID is required for mode = product.
+//executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
+//what's built gets returned, which means it is NOT added to the dom within this function. so event delegation should occur OUTSIDE this function or double-execution could occur.
 			getVariationEditor : function(mode, varObj, PID)	{
-	//			app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
+//				app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
 				varObj = varObj || {}; //defauilt to object to avoid JS error in error checking.
 				var $r = $("<div \/>").addClass('variationEditorContainer'); //what is returned. Either the editor or some error messaging.
 				if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
-	//				app.u.dump(" -> mode: "+mode);
-	//				app.u.dump(" -> varObj:"); app.u.dump(varObj);
-	// * 201332 -> make sure ispog is set.
+// ispog is used during save. allows editor to know where to go to get variations data.
 					varObj.ispog = varObj.ispog || (varObj.id && varObj.id.charAt(0) == '#') ? true : false;
-//					app.u.dump(" -> varObj.id: "+varObj.id);
 					$r.data({
 						'variationtype':varObj.type,
 						'variationmode':mode,
@@ -393,17 +388,17 @@ $target.anydelegate();
 						} 
 					//build the generic editor.
 					$r.anycontent({'templateID':'variationEditorTemplate','data':varObj});
+					
 					//add the editor specific to the variation type.
 					$("[data-app-role='variationsTypeSpecificsContainer']",$r).anycontent({'templateID':'variationsEditor_'+varObj.type.toLowerCase(),'data':varObj})
-	//				app.u.dump(" -> varObj");app.u.dump(varObj);
 					
 					if(mode == 'product')	{
-	//when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
+//when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
 						$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
 						}
 	
 					
-					app.u.handleAppEvents($r);
+					app.u.handleButtons($r);
 					$('.toolTip',$r).tooltip();
 	
 	//for 'select' based variations, need to add some additional UI functionality.
@@ -413,17 +408,13 @@ $target.anydelegate();
 							var $tr = $(this);
 							$tr.attr('data-guid','option_'+$tr.data('v')) //necessary for the dataTable feature to work. doesn't have to be a 'true' guid. option_ prefix is so option value 00 doesn't get ignored.
 							})
-	//in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
-	//app.u.dump(varObj);
-	//app.u.dump(" -> "+varObj.id+".indexOf('#'): "+varObj.id.indexOf('#'));
-	//
+//in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
 						if(mode == 'product' && ((varObj.isnew && varObj.ispog) || (varObj.id && varObj.id.indexOf('#') == -1)))	{
 							var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 							$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 							$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
-	//						$('button',$tbody).hide();
-							$("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
-							app.u.handleAppEvents($("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tbody).andSelf());
+							$("[data-app-click='admin_prodEdit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
+
 							$tbody.sortable({
 								connectWith: '.sortGroup',
 								stop : function(event,ui){
@@ -432,8 +423,8 @@ $target.anydelegate();
 									else	{
 										//moved to new parent.
 										$('button',$tr).show();
-										$("[data-app-event='admin_prodEdit|variationsOptionToggle']",$tr).hide();
-										app.u.handleAppEvents($tr);
+										$("[data-app-click='admin_prodEdit|variationsOptionToggle']",$tr).hide();
+										app.u.handleButtons($tr);
 										}
 									//optionsEditorRowTemplate
 									}
@@ -485,44 +476,42 @@ $target.anydelegate();
 						'dataAttribs':{'pid':pid}
 						});
 					$target.showLoading({"message":"Fetching Product Record and Store Variations"});
-	
-	//Need both the product data and the entire sog list. Need both of these to be up to date.
-	app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete','callback':function(rd){
-		$target.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$('#globalMessaging').anymessage({'message':rd});
-			}
-		else	{
-	
-			var $prodOptions = $("[data-app-role='productVariationManagerProductContainer']",$target);
-			$prodOptions.anycontent({'data':app.data['adminProductDetail|'+pid]})
-			$('.gridTable tbody',$prodOptions).sortable({
-				'stop' : function(e,ui){
-					app.u.dump('stop triggered');
-					if(Number(ui.item.data('inv')) > 0 && !ui.item.closest('table').data('shown_inv_warning'))	{
-						ui.item.closest('table').data('shown_inv_warning',true); //only show warning once per varation edit session.
-						ui.item.closest("[data-app-role='productVariationManagerContainer']").anymessage({"message":"A product Stock Keeping Unit (SKU) is determined by the variation order of inventory-able variations, which you have just changed. Saving this change will alter your SKU. Proceed with caution.<br />note - you can change the order of non-inventory-able variations around the inventory-able variations with no concern."});
-						$(window).scrollTop(ui.item.closest("[data-app-role='productVariationManagerContainer']").position().top)
-						}
-					$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');}
-				}); //rows are draggable to specify variation order.
-			
-			var $storeOptions = $("[data-app-role='productVariationManagerStoreContainer']",$target);
-			$('tbody',$storeOptions).empty(); //tmp fix. time permitting, remove this and determine why content is being double-added. ###
-			$storeOptions.anycontent({'data':app.data.adminSOGComplete});
-			$('.gridTable',$storeOptions).anytable(); //make header click/sortable to make it easier to find sogs.
-			
-			app.u.handleAppEvents($target,{'pid':pid});
-			app.u.handleButtons($('.buttonset',$target)); //the save button uses delegated events. the rest was built prior to the new product editor.
-	// compare the sog list and the variations on the product and disable the buttons.
-	// this avoids the same SOG being added twice.
-			app.ext.admin_prodEdit.u.handleApply2ProdButton($target);
-			
-			}		
-		
-		}}},'mutable');
-	
-	app.model.dispatchThis('mutable');
+//sog data must be up to date.					
+					app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag': {'datapointer':'adminSOGComplete','callback':function(rd){
+						$target.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+					
+							var $prodOptions = $("[data-app-role='productVariationManagerProductContainer']",$target);
+							$prodOptions.anycontent({'data':app.data['adminProductDetail|'+pid]})
+							$('.gridTable tbody',$prodOptions).sortable({
+								'stop' : function(e,ui){
+									app.u.dump('stop triggered');
+									if(Number(ui.item.data('inv')) > 0 && !ui.item.closest('table').data('shown_inv_warning'))	{
+										ui.item.closest('table').data('shown_inv_warning',true); //only show warning once per varation edit session.
+										ui.item.closest("[data-app-role='productVariationManagerContainer']").anymessage({"message":"A product Stock Keeping Unit (SKU) is determined by the variation order of inventory-able variations, which you have just changed. Saving this change will alter your SKU. Proceed with caution.<br />note - you can change the order of non-inventory-able variations around the inventory-able variations with no concern."});
+										$(window).scrollTop(ui.item.closest("[data-app-role='productVariationManagerContainer']").position().top)
+										}
+									$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');}
+								}); //rows are draggable to specify variation order.
+							
+							var $storeOptions = $("[data-app-role='productVariationManagerStoreContainer']",$target);
+							$('tbody',$storeOptions).empty(); //tmp fix. time permitting, remove this and determine why content is being double-added. ###
+							$storeOptions.anycontent({'data':app.data.adminSOGComplete});
+							$('.gridTable',$storeOptions).anytable(); //make header click/sortable to make it easier to find sogs.
+							
+							app.u.handleButtons($target);
+// compare the sog list and the variations on the product and disable the buttons.
+// this avoids the same SOG being added twice.
+							app.ext.admin_prodEdit.u.handleApply2ProdButton($target);
+							
+							}		
+						
+						}}},'mutable');
+					
+					app.model.dispatchThis('mutable');
 	
 					}
 				else	{
@@ -613,7 +602,7 @@ $target.anydelegate();
 				},
 
 			ebayLaunchProfiles : function($tag,data)	{
-//				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
+				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
 				if(app.data.adminEBAYProfileList)	{
 					if(app.data.adminEBAYProfileList['@PROFILES'].length)	{
 						var profiles = app.data.adminEBAYProfileList['@PROFILES']; //shortcut.
@@ -1461,7 +1450,7 @@ app.model.dispatchThis('immutable');
 
 	
 
-//hides the other children in the manager template (such as the landing page content or a product that is being edited.)
+//hides the other children in the manager template (such as the landing page content.)
 //shows the results container and clears any previous results.
 //ensures results table is an anytable.
 //also clears the stickytab, if open.
@@ -1488,7 +1477,7 @@ app.model.dispatchThis('immutable');
 					
 					var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
 					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
-					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'})
+					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'});
 					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
 					app.model.dispatchThis();
 					}
@@ -1508,7 +1497,7 @@ app.model.dispatchThis('immutable');
 	//the default option editor shows all the inputs.  Need to clear some out that are image or inventory specific.
 	//executed from variationOptionUpdateShow and variationOptionAddShow
 			handleOptionEditorInputs : function($target,data)	{
-				app.u.dump("BEGIN admin_prodEdit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
+//				app.u.dump("BEGIN admin_prodEdit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
 				$("[name='html']",$target).val(unescape($("[name='html']",$target).val()))
 	//an inventory-able option does not have price or weight modifiers. price and weight are set by STID in the inventory panel.
 				if(Number(data.inv))	{} else {$('.nonInvOnly',$target).removeClass('displayNone')}
@@ -2245,27 +2234,17 @@ else	{} //no changes in sku attribs.
 
 
 
-//e is for 'events'. This are used in handleAppEvents and event delegation (which is replacing handleAppEvents).
+//e is for 'events'. This are used in event delegation
 		e : {
 
 // * 201334 -> new product editor.
 			productFiltersShow : function($ele,p)	{
 				var $filterMenu = $ele.closest("[data-app-role='productEditorNavtab']").find("[data-app-role='productManagerFilters']");
 				$filterMenu.slideDown();
-//hide filter if anything is clicked.
-/*				setTimeout(function(){
-//close the filter menu if a click occurs outside of the filter menu itself. The 'one' handles the close, the stopPropogation handles making sure the click is outside the menu.
-					$filterMenu.on('click',function(event){
-						event.stopPropagation();
-						});
-					 $( document ).one( "click", function() {
-						$filterMenu.slideUp('fast');
-						});
-					},100);
-*/				},
+				},
 
 			productFiltersExec : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
+				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
 
 				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='productManager']");
 				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
@@ -2359,7 +2338,7 @@ function type2class(type)	{
 						$P.append("<span class='floatLeft marginRight marginBottom app-icon app-icon-"+logArr[i].type.toLowerCase()+"'><\/span>");
 						$P.append($("<h5>"+logArr[i].type+"<\/h5>").addClass(type2class(logArr[i].type)));
 						$P.append("<h6>Feed: "+logArr[i].feed+"<\/h6>");
-						$P.append("<h6>"+app.u.unix2Pretty(logArr[i].ts,true)+"<\/h6>");
+						$P.append("<h6>"+app.u.epoch2Pretty(logArr[i].ts,true)+"<\/h6>");
 						$P.append(logArr[i].msg);
 						$P.appendTo($D);
 						}
@@ -2553,19 +2532,19 @@ function type2class(type)	{
 						'_tag':	{
 							'datapointer' : 'adminEBAYStoreCategoryList',
 							'callback' : function(rd){
-if(app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	//success content goes here.
-//	app.u.dump(" -> pid: "+pid+"\nebay:storecat: "+app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
-//	app.u.dump(" -> select.length: "+$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("input[name='ebay:storecat']").length);
-	$("[data-app-role='ebayStoreCategoryContainer']",$PE)
-		.anycontent(rd)
-		.find("select[name='ebay:storecat']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat'])
-		.end()
-		.find("select[name='ebay:storecat2']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat2']);
-	}
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+								//	app.u.dump(" -> pid: "+pid+"\nebay:storecat: "+app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat']);
+								//	app.u.dump(" -> select.length: "+$("[data-app-role='ebayStoreCategoryContainer']",$PE).anycontent(rd).find("input[name='ebay:storecat']").length);
+									$("[data-app-role='ebayStoreCategoryContainer']",$PE)
+										.anycontent(rd)
+										.find("select[name='ebay:storecat']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat'])
+										.end()
+										.find("select[name='ebay:storecat2']").val(app.data['adminProductDetail|'+pid]['%attribs']['ebay:storecat2']);
+									}
 								}
 							}
 						},'mutable');
@@ -2597,40 +2576,40 @@ else	{
 						'_tag':	{
 							'datapointer':'adminProductAmazonDetail|'+pid,
 							callback : function(rd)	{
-if(app.model.responseHasErrors(rd)){
-	$fieldset.anymessage({'message':rd});
-	}
-else	{
-	//success content goes here.
-	var $thes = $("[name='amz:thesaurus']",$fieldset);
-	if($thes.children().length > 1)	{} //already added these.
-	else	{
-		var selectedThes = app.data['adminProductDetail|'+pid]['%attribs']['amz:thesaurus'] || "";
-
-//	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
-//	app.u.dump(" -> $thesaurus select length: "+$thes.length);
-//	app.u.dump(" -> selectedThes: "+selectedThes);
-
-	
-		//build the thesaurii dropdown.
-		for(var index in app.data[rd.datapointer]['%thesaurus'])	{
-	//		app.u.dump(" -> index: "+index);
-			$thes.append("<option value='"+app.data[rd.datapointer]['%thesaurus'][index]+"'>"+app.data[rd.datapointer]['%thesaurus'][index]+"<\/option>");
-			}
-		if(selectedThes && $("[value='"+selectedThes+"']",$thes).length)	{
-			//match found! set is as selected.
-			$thes.val(selectedThes)
-			}
-		else if(selectedThes)	{
-			$thes.insertAfter("Thesaurus "+selectedThes+" is no longer available");
-			}
-		else	{} //no thesaurus has been selected 
-		}
-
-	//interpret the marketplace status table.
-	$mktStatusTbody.anycontent({'datapointer':rd.datapointer});
-	app.u.handleButtons($mktStatusTbody);
-	}
+								if(app.model.responseHasErrors(rd)){
+									$fieldset.anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									var $thes = $("[name='amz:thesaurus']",$fieldset);
+									if($thes.children().length > 1)	{} //already added these.
+									else	{
+										var selectedThes = app.data['adminProductDetail|'+pid]['%attribs']['amz:thesaurus'] || "";
+								
+								//	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
+								//	app.u.dump(" -> $thesaurus select length: "+$thes.length);
+								//	app.u.dump(" -> selectedThes: "+selectedThes);
+								
+									
+										//build the thesaurii dropdown.
+										for(var index in app.data[rd.datapointer]['%thesaurus'])	{
+									//		app.u.dump(" -> index: "+index);
+											$thes.append("<option value='"+app.data[rd.datapointer]['%thesaurus'][index]+"'>"+app.data[rd.datapointer]['%thesaurus'][index]+"<\/option>");
+											}
+										if(selectedThes && $("[value='"+selectedThes+"']",$thes).length)	{
+											//match found! set is as selected.
+											$thes.val(selectedThes)
+											}
+										else if(selectedThes)	{
+											$thes.insertAfter("Thesaurus "+selectedThes+" is no longer available");
+											}
+										else	{} //no thesaurus has been selected 
+										}
+								
+									//interpret the marketplace status table.
+									$mktStatusTbody.anycontent({'datapointer':rd.datapointer});
+									app.u.handleButtons($mktStatusTbody);
+									}
 								}
 							}
 						},'mutable');
@@ -2698,9 +2677,9 @@ else	{
 								$ele.closest('form').anymessage({'message':rd});
 								}
 							else	{
-$ele.closest('form').anymessage(app.u.successMsgObject("Removed product "+pid+" from all categories"));
-//uncheck all the checkboxes to reflect the change.
-$(":checkbox",$ele.closest('form')).prop('checked','');
+								$ele.closest('form').anymessage(app.u.successMsgObject("Removed product "+pid+" from all categories"));
+								//uncheck all the checkboxes to reflect the change.
+								$(":checkbox",$ele.closest('form')).prop('checked','');
 								}
 							}
 						}
@@ -2725,9 +2704,6 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 					$target = $ele.closest('tr').find('td:last-child'), //drop contents into the last column of the row. event is triggered from sku link and button (in different columns)
 					$btn = $("button[data-app-click='admin_prodEdit|inventoryDetailsToggle']:first",$target),
 					icons = $btn.button( "option", "icons" );
-
-
-				app.u.dump(" -> icons: "); app.u.dump(icons);
 				
 				if($ele.data('sku'))	{
 					//details are visible. close them and nuke the table.
@@ -2843,8 +2819,6 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 					}
 				}, //amazonProductDefinitionsShow
 
-
-			
 			adminProductMacroExec : function($ele,p)	{
 //				app.u.dump("BEGIN admin_prodEdit.e.adminProductMacroExec (Click!)");
 				var
@@ -2901,9 +2875,9 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 				},
 
 //The variations tab is hidden unless the item has variations. However, since variations can't be added except from within that tab, there needs to be a mechanism for showing the tab. this is it.
-			productVariationsTabShow : function($ele,p)	{
-				$ele.closest("[data-app-role='productEditorContainer']").find("[data-app-role='variationsTab']").trigger('click').parent().show();
-				}, //productVariationsManagerShow
+//			productVariationsTabShow : function($ele,p)	{
+//				$ele.closest("[data-app-role='productEditorContainer']").find("[data-app-role='variationsTab']").trigger('click').parent().show();
+//				}, //productVariationsManagerShow
 			
 			productAttributeFinderShow : function($ele,p)	{
 				if($ele.data('attribute'))	{
@@ -2991,25 +2965,25 @@ $(":checkbox",$ele.closest('form')).prop('checked','');
 						'pid' : pid,
 						'_tag':{
 							'callback' : function(rd){
-var data = app.data[rd.datapointer];
-/*
-The response here could come back in one of two flavors. Either as a txt file or using @BODY/@HEAD, which is a csv file (just like batches).
-*/
-if(data)	{
-	if(data.body)	{
-		rd.filename = report+'.txt';
-		app.callbacks.fileDownloadInModal.onSuccess(rd)
-		}
-	else if(data['@BODY'] && data['@HEAD'])	{
-		app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
-		}
-	else	{
-		$debugWin.anymessage({'message':'In admin_prodEdit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});
-		}
-	}
-else	{
-	$debugWin.anymessage(rd);
-	}								},
+								var data = app.data[rd.datapointer];
+								/*
+								The response here could come back in one of two flavors. Either as a txt file or using @BODY/@HEAD, which is a csv file (just like batches).
+								*/
+								if(data)	{
+									if(data.body)	{
+										rd.filename = report+'.txt';
+										app.callbacks.fileDownloadInModal.onSuccess(rd)
+										}
+									else if(data['@BODY'] && data['@HEAD'])	{
+										app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
+										}
+									else	{
+										$debugWin.anymessage({'message':'In admin_prodEdit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});
+										}
+									}
+								else	{
+									$debugWin.anymessage(rd);
+									}								},
 							'jqObj' : $reportEle,
 							'skipDecode' : true, //contents are not base64 encoded (feature not supported on this call)
 							'datapointer':'adminProductDebugLog|'+pid
@@ -3194,28 +3168,28 @@ else	{
 //add the 'save' button
 						$D.dialog( "option", "buttons", [ { text: "Save", click: function() {
 							if(app.u.validateForm($('form',$D)))	{
-$D.showLoading({"message":"Creating inventory record"});
-app.model.addDispatchToQ({
-	_cmd : 'adminProductMacro',
-	pid : pid,
-// * 201346 -> changed to a more effient method for serializing inputs.
-//	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
-	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$('form',$D).serialize()],
-	_tag : {
-		callback : function(rd){
-			$D.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$D.anymessage({'message':rd});
-				}
-			else	{			
-				$D.dialog('close');
-				$("[data-anytabs-tab='inventory']:first a",$PE).trigger('click');
-				$ele.closest('form').anymessage({'message':'Updated inventory record'});
-				}
-			}
-		}
-	},"immutable");
-app.model.dispatchThis("immutable");
+								$D.showLoading({"message":"Creating inventory record"});
+								app.model.addDispatchToQ({
+									_cmd : 'adminProductMacro',
+									pid : pid,
+								// * 201346 -> changed to a more effient method for serializing inputs.
+								//	'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$.param($('form',$D).serializeJSON())],
+									'@updates' : ["INV-"+$ele.data('detail-type')+"-SKU-INIT?SKU="+sku+"&"+$('form',$D).serialize()],
+									_tag : {
+										callback : function(rd){
+											$D.hideLoading();
+											if(app.model.responseHasErrors(rd)){
+												$D.anymessage({'message':rd});
+												}
+											else	{			
+												$D.dialog('close');
+												$("[data-anytabs-tab='inventory']:first a",$PE).trigger('click');
+												$ele.closest('form').anymessage({'message':'Updated inventory record'});
+												}
+											}
+										}
+									},"immutable");
+								app.model.dispatchThis("immutable");
 
 
 								}
@@ -3235,452 +3209,366 @@ app.model.dispatchThis("immutable");
 				},
 
 // END new/updated product editor events
-
-
-//not currently in use. planned for when html4/5, wiki and text editors are available.
-/*			"textareaEditorMode" : function($t)	{
-//				$t.addClass('ui-widget-header ui-corner-bottom');
-				$("button :first",$t).addClass('ui-corner-left');
-				$("button :last",$t).addClass('ui-corner-right');
-				$("button",$t).each(function(){
-
-					var $btn = $(this),
-					jhtmlVars = {
-						toolbar: [["bold", "italic", "underline"],["h1", "h2", "h3", "h4", "h5", "h6"],["link", "unlink"]]
-						}
-					
-					$btn.button().removeClass('ui-corner-all'); //only the first and last buttons should have corners.
-					$btn.css({'margin':'0 -2px'}).addClass('smallButton');  //reduce margins so buttons 'merge'.
-
-					$btn.off('click.textareaEditorMode').on('click.textareaEditorMode',function(event){
-						app.u.dump(" -> a click occured.");
-						event.preventDefault();
-						var mode = $btn.data('ui-edit-mode');
-						$('#html_you_have_been_warned').hide();
-						$('.ui-state-active',$t).removeClass('ui-state-active');
-						if(mode == 'wiki')	{
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
-							$(this).addClass('ui-state-active');
-							}
-						else if(mode == 'html')	{
-						$('#html_you_have_been_warned').show();
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
-							$(this).addClass('ui-state-active');
-							}
-						else if(mode == 'text')	{
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea();
-							$(this).addClass('ui-state-active');
-							}
-						else	{
-							app.u.throwGMessage("In admin_prodEdit.buttonActions.textareaEditorMode, unsupported or blank mode ["+mode+"]");
-							}
-						});
-					});
-				}, //textareaEditorMode
-*/
-
 			
-			variationSearchByIDExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
-				$btn.off('click.variationSearchByIDExec').on('click.variationSearchByIDExec',function(){
-					var varID = $btn.closest('tr').data('id');
-					app.ext.admin_prodEdit.u.prepContentArea4Results($('#productContent'));
-					
-					app.model.addDispatchToQ({
-						"mode":"elastic-native",
-						"size":250,
-						"filter":{"term":{"pogs":varID}},
-						"_cmd":"appPublicSearch",
-						"_tag" : {
-							'callback':'handleElasticResults',
-							'extension':'store_search',
-							'datapointer' : 'appPublicSearch|variation|'+varID,
-							'templateID':'prodManagerProductResultsTemplate',
-							'list': $("[data-app-role='productManagerSearchResults']",$('#productContent'))
-							},
-						"type":"product"
-						},"mutable");
-					navigateTo('#!product');
-					app.model.dispatchThis("mutable");
-					});
+			variationSearchByIDExec : function($ele,p)	{
+				var varID = $ele.closest('tr').data('id');
+				app.ext.admin_prodEdit.u.prepContentArea4Results($('#productContent'));
+
+				$("[data-app-role='productManagerSearchResults']",$('#productContent')).showLoading({'message':'Performing search...'});
+
+				app.model.addDispatchToQ({
+					"mode":"elastic-native",
+					"size":250,
+					"filter":{"term":{"pogs":varID}},
+					"_cmd":"appPublicSearch",
+					"_tag" : {
+						'callback':'handlePMSearchResults',
+						'extension':'admin_prodEdit',
+						'datapointer' : 'appPublicSearch|variation|'+varID,
+						'templateID':'prodManagerProductResultsTemplate',
+						'list': $("[data-app-role='productManagerSearchResults']",$('#productContent'))
+						},
+					"type":"product"
+					},"mutable");
+				navigateTo('#:product');
+				app.model.dispatchThis("mutable");
 				}, //variationSearchByIDExec
 
 //well crap.  This button does two very different things.
 //when in store mode, this actually executes the save.
 //when in product mode, this does an 'apply', so the @variations object in memory is updated, but not saved yet.
 //button is executed in the 'edit variation' screen.
-			variationAdminProductMacroExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.variationAdminProductMacroExec').on('click.variationAdminProductMacroExec',function(event){
-					app.u.dump("BEGIN admin_prodEdit.e.variationAdminProductMacroExec click event.");
-					event.preventDefault();
-					var
-						$form = $btn.closest('form'),
-						variationData = $btn.closest('.variationEditorContainer').data(),
-						sfo = {}, 
-						variationID = $("[name='id']",$form).val();
-					
-					app.u.dump(" -> $([name='id'],$form).length: "+$("[name='id']",$form).length);
-					app.u.dump(" -> variationID: "+variationID);
-
-					if(variationData.variationmode == 'product')	{
-						sfo._cmd ='adminProductPOGUpdate';
+			variationAdminProductMacroExec : function($ele)	{
+				var
+					$form = $ele.closest('form'),
+					variationData = $ele.closest('.variationEditorContainer').data(),
+					sfo = {}, 
+					variationID = $("[name='id']",$form).val();
+				
+				if(variationData.variationmode == 'product')	{
+					sfo._cmd ='adminProductPOGUpdate';
 //						sfo.autoid = 1; //tells api to add id's to variations or options if none are set.
-						sfo.pid = variationData.pid;
+					sfo.pid = variationData.pid;
 //for a product update, need to send up entire variation object, not just a given sog/pog.
-						sfo['%sog'] = app.data['adminProductDetail|'+sfo.pid]['@variations'];
+					sfo['%sog'] = app.data['adminProductDetail|'+sfo.pid]['@variations'];
 //if guid is present, use it.  That means this was a pog just added to the product.
-						var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
+					var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
 // * 201336 -> added validating to ensure index is set. also, 00 IS a valid sog id, so that needs to be supported.
-						if(index || Number(index) == 0)	{
-							$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
-							sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
-							}
-						else	{
-							$('#globalMessaging').anymessage({'message':'Unable to determine index (sog id = '+variationID+').','gMessage':true});
-							}
+					if(index || Number(index) == 0)	{
+						$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
+						sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
 						}
 					else	{
-						sfo._cmd ='adminSOGUpdate';
-						//destructive update, so merge new data over old (which preserves old/unchanged).
-						sfo['%sog'] = $.extend(true,{},app.data.adminSOGComplete['%SOGS'][variationID],$form.serializeJSON({'cb':true}));
-						sfo['%sog']['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
+						$('#globalMessaging').anymessage({'message':'Unable to determine index (sog id = '+variationID+').','gMessage':true});
 						}
+					}
+				else	{
+					sfo._cmd ='adminSOGUpdate';
+					//destructive update, so merge new data over old (which preserves old/unchanged).
+					sfo['%sog'] = $.extend(true,{},app.data.adminSOGComplete['%SOGS'][variationID],$form.serializeJSON({'cb':true}));
+					sfo['%sog']['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
+					}
 
 
 //data for saving options in a 'select' based option requires some manipulation to get into '@options' array.
-					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
+				if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
 //						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
 //						app.u.dump(" -> index: "+index);
 //						app.u.dump(" -> sfo['%sog']: "); app.u.dump(sfo['%sog']);
-						$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
-							if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
-							else	{
-								var whitelist = new Array('v','prompt','w','p','asm','html','img');
-								(variationData.variationmode == 'product') ? sfo['%sog'][index]['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist)) : sfo['%sog']['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist))
-								}
-							});						
-						}
-					else if(variationData.variationtype == 'biglist')	{
-						app.u.dump(" -> variation type IS biglist.");
-						var optionsArr = $("[name='biglist_contents']",$form).val().split("\n");
-						var L = optionsArr.length;
-						for(var i = 0; i < L; i += 1)	{
-							sfo['%sog']['@options'].push({'prompt':optionsArr[i]});
+					$("[data-app-role='dataTable']:first tbody tr",$form).each(function(){
+						if($(this).hasClass('rowTaggedForRemove'))	{} //don't include rows tagged for deletion.
+						else	{
+							var whitelist = new Array('v','prompt','w','p','asm','html','img');
+							(variationData.variationmode == 'product') ? sfo['%sog'][index]['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist)) : sfo['%sog']['@options'].push(app.u.getWhitelistedObject($(this).data(),whitelist))
 							}
-//						app.u.dump(sfo);
+						});						
+					}
+				else if(variationData.variationtype == 'biglist')	{
+					app.u.dump(" -> variation type IS biglist.");
+					var optionsArr = $("[name='biglist_contents']",$form).val().split("\n");
+					var L = optionsArr.length;
+					for(var i = 0; i < L; i += 1)	{
+						sfo['%sog']['@options'].push({'prompt':optionsArr[i]});
 						}
-					else	{}
+//						app.u.dump(sfo);
+					}
+				else	{}
 
 // pog editor just applies changes in memory till master 'save' is done.
-					if(variationData.variationmode == 'product')	{
-						//update the variations manager so this variation is tagged as edited. 
-						$btn.closest("[data-app-role='productVariations']").find("tr[data-id='"+variationID+"']:first").addClass('edited');
-						var $EDParent = $btn.closest('.eventDelegation'); //find the parent before the modal is closed/destroyed (or it won't be found).
-						$btn.closest('.ui-dialog-content').dialog('close');
+				if(variationData.variationmode == 'product')	{
+					//update the variations manager so this variation is tagged as edited. 
+					$ele.closest("[data-app-role='productVariations']").find("tr[data-id='"+variationID+"']:first").addClass('edited');
+					var $EDParent = $ele.closest('.eventDelegation'); //find the parent before the modal is closed/destroyed (or it won't be found).
+					$ele.closest('.ui-dialog-content').dialog('close');
 //update change counts AFTER dialog is destroyed or the changes to the variation itself will be in the count.
 //This may sound like a good idea, but it isn't because the dialog is destroyed and if another variation is edited, the count change could be misleading .
 //so ALL changes to one variation count as 1 edit.
-						$EDParent.anydelegate('updateChangeCounts');
+					$EDParent.anydelegate('updateChangeCounts');
 //						$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
-						}
-					else	{
-						$form.showLoading({"message":"Saving Changes To Variations"});
-						sfo._tag = {
-							callback : function(rd){
-								$form.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anymessage(app.u.successMsgObject('Your changes have been saved'));
-									}
-								}
-							}
-
-						app.model.addDispatchToQ(sfo,'immutable');
-						app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag':{'datapointer':'adminSOGComplete'}},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					});
-				}, //variationAdminProductMacroExec
-
-			variationSettingsToggle : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-triangle-w"},text: false});
-				var type = $btn.closest('.variationEditorContainer').data('variationtype');
-				if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(type))	{$btn.show()}
-				$btn.off('click.variationSettingsToggle').on('click.variationSettingsToggle',function(){
-					var $td = $btn.closest('table').find("[data-app-role='variationSettingsContainer']");
-					if($td.is(':visible'))	{
-						$td.hide();
-						$btn.button('option','icons',{primary: "ui-icon-circle-triangle-e"})
-						}
-					else	{
-						$td.show();
-						$btn.button('option','icons',{primary: "ui-icon-circle-triangle-w"})
-						}
-					});
-				}, //variationSettingsToggle
-
-			variationAddToProduct : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-w"},text: true});
-				$btn.off('click.variationAddToProduct').on('click.variationAddToProduct',function(){
-
-					var pid = $btn.closest("[data-app-role='productVariationManager']").data('pid');
-					if(pid)	{
-//						app.u.dump(" -> pid: "+pid);
-						if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@variations'])	{
-
-							$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
-							$btn.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
-							var variationID = $btn.closest('tr').data('id');
-							app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{'sog':variationID+'-'+app.data.adminSOGComplete['@SOGS'][variationID]},app.data.adminSOGComplete['%SOGS'][variationID])); //add to variation object in memory.
-							
-							var $tbody = $("<tbody \/>").anycontent({
-								'templateID':'productVariationManagerProductRowTemplate',
-								'data':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')],
-								'dataAttribs':app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]
-								})
-							app.u.handleAppEvents($tbody,{'pid':pid});
-							$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).addClass('edited').appendTo($btn.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
-							app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest('form'));
-							}
-						else	{
-							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
-							}
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, unable to resolve PID.","gMessage":true});
-						}
-
-					});
-				}, //variationAddToProduct
-
-			adminSOGDeleteConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.adminSOGDeleteConfirm').on('click.adminSOGDeleteConfirm',function(event){
-					event.preventDefault();
-					var 
-						$tr = $btn.closest('tr'),
-						data = $tr.data();
-
-					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'title' : 'Please confirm removal of variation '+data.id,
-						'removeFunction':function(vars,$D){
-							$D.parent().showLoading({"message":"Deleting Variation"});
-							app.model.addDispatchToQ({'_cmd':'adminSOGDelete','id':data.id,'_tag':{'callback':function(rd){
-								$D.parent().hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									$D.dialog('close');
-									$('#globalMessaging').anymessage(app.u.successMsgObject('The variation has been removed.'));
-									$tr.empty().remove(); //removes row for list.
-									}
-								}
-							}
-						},'immutable');
-						app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag':{'datapointer' : 'adminSOGComplete'}},'immutable'); //update coupon list in memory.
-						app.model.dispatchThis('immutable');
-						}});
-var $div = $("<div \/>").css({'width':200,'height':100}).appendTo($D);
-$div.showLoading({"message":"Fetching # of items using this variation"});
-app.model.addDispatchToQ({
-	"mode":"elastic-native",
-	"size":3,
-	"filter":{"term":{"pogs":data.id}},
-	"_cmd":"appPublicSearch",
-	"_tag" : {
-		'callback' : function(rd){
-				$div.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$div.anymessage({'message':rd});
-				}
-			else	{
-				if(app.data[rd.datapointer] && app.data[rd.datapointer].hits && app.data[rd.datapointer].hits.total)	{
-					$div.append("A search resulted in "+app.data[rd.datapointer].hits.total+" items using this variation group that will be impacted if you delete it.");
-					}
-				else if(app.data[rd.datapointer] && app.data[rd.datapointer]._count == 0)	{
-					$div.append("A search resulted in zero items using this variation group.");
 					}
 				else	{
-					$div.append("Unable to determine how many product may be using this variation group.");
-					}
-				}
-			},
-		'datapointer' : 'appPublicSearch|variation|'+data.id
-		},
-	"type":"product"
-	},"mutable");
-app.model.dispatchThis('mutable');
+					$form.showLoading({"message":"Saving changes to variations"});
+					sfo._tag = {
+						callback : function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								app.ext.admin.u.restoreInputsFromTrackingState($form);
+								$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anydelegate({'trackEdits':true}).anymessage(app.u.successMsgObject('Your changes have been saved'));
+								}
+							}
+						}
 
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag':{'datapointer':'adminSOGComplete'}},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				}, //variationAdminProductMacroExec
+
+			variationSettingsToggle : function($ele)	{
+				var $td = $ele.closest('table').find("[data-app-role='variationSettingsContainer']");
+				if($td.is(':visible'))	{
+					$td.hide();
+					$ele.button('option','icons',{primary: "ui-icon-circle-triangle-e"})
+					}
+				else	{
+					$td.show();
+					$ele.button('option','icons',{primary: "ui-icon-circle-triangle-w"})
+					}
+				}, //variationSettingsToggle
+
+			variationAddToProduct : function($ele,p)	{
+				var pid = $ele.closest("[data-app-role='productVariationManager']").data('pid');
+				if(pid)	{
+//						app.u.dump(" -> pid: "+pid);
+					if(app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@variations'])	{
+
+						$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
+						$ele.closest('tr').find("button").button('disable'); //Disable the 'add' button so sog isn't added twice.
+						var variationID = $ele.closest('tr').data('id');
+						app.data['adminProductDetail|'+pid]['@variations'].push($.extend(true,{'sog':variationID+'-'+app.data.adminSOGComplete['@SOGS'][variationID]},app.data.adminSOGComplete['%SOGS'][variationID])); //add to variation object in memory.
 						
-					})
+						var $tbody = $("<tbody \/>").anycontent({
+							'templateID':'productVariationManagerProductRowTemplate',
+							'data':app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')],
+							'dataAttribs':app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]
+							})
+						app.u.handleButtons($tbody);
+						$tbody.children().attr({'data-isnew':'true','data-issog':'true'}).addClass('edited').appendTo($ele.closest("[data-app-role='productVariationManagerContainer']").find("[data-app-role='productVariationManagerProductTbody']"));
+						app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, unable to resolve PID.","gMessage":true});
+					}
+				}, //variationAddToProduct
+
+			adminSOGDeleteConfirm : function($ele,p)	{
+				var 
+					$tr = $ele.closest('tr'),
+					data = $tr.data();
+
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					'title' : 'Please confirm removal of variation '+data.id,
+					'removeFunction':function(vars,$D){
+						$D.parent().showLoading({"message":"Deleting Variation"});
+						app.model.addDispatchToQ({'_cmd':'adminSOGDelete','id':data.id,'_tag':{'callback':function(rd){
+							$D.parent().hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$D.dialog('close');
+								$('#globalMessaging').anymessage(app.u.successMsgObject('The variation has been removed.'));
+								$tr.empty().remove(); //removes row for list.
+								}
+							}
+						}
+					},'immutable');
+				app.model.addDispatchToQ({'_cmd':'adminSOGComplete','_tag':{'datapointer' : 'adminSOGComplete'}},'immutable'); //update coupon list in memory.
+				app.model.dispatchThis('immutable');
+				}});
+				var $div = $("<div \/>").css({'width':200,'height':100}).appendTo($D);
+				$div.showLoading({"message":"Fetching # of items using this variation"});
+				app.model.addDispatchToQ({
+					"mode":"elastic-native",
+					"size":3,
+					"filter":{"term":{"pogs":data.id}},
+					"_cmd":"appPublicSearch",
+					"_tag" : {
+						'callback' : function(rd){
+								$div.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$div.anymessage({'message':rd});
+								}
+							else	{
+								if(app.data[rd.datapointer] && app.data[rd.datapointer].hits && app.data[rd.datapointer].hits.total)	{
+									$div.append("A search resulted in "+app.data[rd.datapointer].hits.total+" items using this variation group that will be impacted if you delete it.");
+									}
+								else if(app.data[rd.datapointer] && app.data[rd.datapointer]._count == 0)	{
+									$div.append("A search resulted in zero items using this variation group.");
+									}
+								else	{
+									$div.append("Unable to determine how many product may be using this variation group.");
+									}
+								}
+							},
+						'datapointer' : 'appPublicSearch|variation|'+data.id
+						},
+					"type":"product"
+					},"mutable");
+				app.model.dispatchThis('mutable');
 				}, //variationRemoveConfirm
 
 //clicked when editing an option for a 'select' type. resets and populates inputs so option can be edited.
-			variationOptionUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.variationOptionUpdateShow').on('click.variationOptionUpdateShow',function(){
-					var
-						$optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
-						$saveButton = $btn.closest('form').find("[data-app-role='saveButton']");
-					
+			variationOptionUpdateShow : function($ele,p)	{
+				var
+					$optionEditor = $ele.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
+					$saveButton = $ele.closest('form').find("[data-app-role='saveButton']");
+				
 
-					$saveButton.button('disable'); //can't save changes while option editor is open. 'prompt' input name is also in variation settings. will save over it.
-					$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
-						.empty()
-						.anycontent({'templateID':'optionEditorInputsTemplate','data':$btn.closest('tr').data()})
-						.append($("<div class='buttonset alignRight' \/>")
-							.append($("<button>Cancel Changes<\/button>").button().on('click',function(){
-								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
-								$saveButton.button('enable');
-								}))
-							.append("<button data-app-event='admin_config|dataTableAddExec'>Update Option<\/button>").on('click.closeEditor',function(){
-								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
-								$saveButton.button('enable');
-								})
-							);
- //below, closest.form includes 'type' and other globals necessary for what inputs are available in editor.
-					app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$.extend(true,{},$btn.closest('form').serializeJSON(),$btn.closest('tr').data()));
-					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
-					})
+				$saveButton.button('disable'); //can't save changes while option editor is open. 'prompt' input name is also in variation settings. will save over it.
+				$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
+					.empty()
+					.anycontent({'templateID':'optionEditorInputsTemplate','data':$ele.closest('tr').data()})
+					.append($("<div class='buttonset alignRight' \/>")
+						.append($("<button>Cancel Changes<\/button>").button().on('click',function(){
+							$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+							app.ext.admin.u.handleSaveButtonByEditedClass($(this).closest('form'));
+							}))
+						.append($("<button>Update Option<\/button>").button().on('click.closeEditor',function(e){
+							if(app.ext.admin_config.e.dataTableAddUpdate($(this),e)){
+								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //kill the form on update for usability purposes.
+								}
+							
+							}))
+						);
+//below, closest.form includes 'type' and other globals necessary for what inputs are available in editor.
+				app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$.extend(true,{},$ele.closest('form').serializeJSON(),$ele.closest('tr').data()));
 				}, //variationOptionUpdateShow
 
 //executed when the 'add new option' button is clicked within a select or radio style variation group.
 //The code below is very similar to variationOptionUpdateShow. Once the save is in place, see about merging these if reasonable.
-			variationOptionAddShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-
-				var varEditorData = $btn.closest(".variationEditorContainer").data();
+			variationOptionAddShow : function($ele,p)	{
+				var varEditorData = $ele.closest(".variationEditorContainer").data();
 				if(!varEditorData.ispog && varEditorData.variationid)	{
-//					app.u.dump("ispog was not set. varEditorData.variationid.indexOf('#'): "+varEditorData.variationid.indexOf('#'));
 					if(varEditorData.variationid.indexOf('#') == 0)	{
 						app.u.dump("setting ispog to true because variationid contains a #");
 						varEditorData.ispog = true;
 						}
 					}
-				//app.u.dump("BEGIN admin_prodEdit.e.variationOptionAddShow");
-				//app.u.dump("varEditorData: "); app.u.dump(varEditorData);
-				
-				//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
+			
+/*				//if MODE= product and this is a SOG not a POG, then disable the button. SOGs can only use options from their original list.
 				if(varEditorData.variationmode == 'product')	{
 //					app.u.dump(" -> variationmode == product. varEditorData: "); app.u.dump(varEditorData);
 					if(varEditorData.ispog)	{
 						
 						}
 					else	{
-						$btn.attr('title',"Can not add a new option because this is a store group.");
-						$btn.button('disable');
+						$ele.attr('title',"Can not add a new option because this is a store group.");
+						$ele.button('disable');
 // ** 201330 -> no point showing this button if it can't be clicked. building a new interface to allow for the SOG options to be added.
-						$btn.hide();
+						$ele.hide();
 						}
 					}
-
+*/
 				
-				$btn.off('click.variationOptionAddShow').on('click.variationOptionAddShow',function(){
-					var
-						$optionEditor = $btn.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
-						$saveButton = $btn.closest('form').find("[data-app-role='saveButton']");
+				var
+					$optionEditor = $ele.closest("[data-app-role='variationOptionEditorContainer']"), //used for setting context
+					$saveButton = $ele.closest('form').find("[data-app-role='saveButton']");
 
-					$saveButton.button('disable');
-					$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
-						.empty()
-						.anycontent({'templateID':'optionEditorInputsTemplate','data':{'guid':app.u.guidGenerator()}}) //a guid is passed to populate that form input. required for editing a non-saved option
-						.append($("<div class='buttonset alignRight' \/>")
-							.append($("<button>Cancel<\/button>").button().on('click',function(){
-								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
-								$saveButton.button('enable');
-								}))
-							.append("<button data-app-event='admin_config|dataTableAddExec'>Add Option</button>").on('click.closeEditor',function(){
-								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
-								$saveButton.button('enable');
-								})
-							);
-					app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$btn.closest('form').serializeJSON());
-					app.u.handleAppEvents($("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor));
-					})
+				$saveButton.button('disable');
+				$("[data-app-role='varitionOptionAddUpdateContainer']",$optionEditor)
+					.empty()
+					.anycontent({'templateID':'optionEditorInputsTemplate','data':{'guid':app.u.guidGenerator()}}) //a guid is passed to populate that form input. required for editing a non-saved option
+					.append($("<div class='buttonset alignRight' \/>")
+						.append($("<button>Cancel<\/button>").button().on('click',function(){
+							$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
+							app.ext.admin.u.handleSaveButtonByEditedClass($(this).closest('form'));
+							}))
+						.append($("<button>Add Option</button>").button().on('click.closeEditor',function(e){
+							if(app.ext.admin_config.e.dataTableAddUpdate($(this),e)){
+								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //kill the form on update for usability purposes.
+								}
+							})));
+				app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$ele.closest('form').serializeJSON());
 				}, //variationOptionAddShow
 
-			variationOptionImgLibShow : function($ele)	{
-				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
-					event.preventDefault();
-					var $context = $ele.closest('fieldset');
-					mediaLibrary($("[data-app-role='variationImg']",$context),$("[name='img']",$context),'Choose Dropship Logo');
-					});
+			variationOptionImgLibShow : function($ele,p)	{
+				var $context = $ele.closest('fieldset');
+				mediaLibrary($("[data-app-role='variationImg']",$context),$("[name='img']",$context),'Choose Dropship Logo');
 				},
 
 //clicked when editing a variation group.
-			variationUpdateShow : function($btn,vars)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				if(Number($btn.closest('tr').data('global')) == 1 && $btn.closest("[data-variationmode]").data('variationmode') == 'product'){$btn.button('disable').attr('title','Variations not editable because group is globally managed')} //globally manages sogs are not editable.
-				$btn.off('click.variationUpdateShow').on('click.variationUpdateShow',function(){
-					vars = vars || {};
+			variationUpdateShow : function($ele,p)	{
+			
+				p = p || {};
+				if($ele.data('variationmode') == 'store')	{
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anydelegate({'trackEdits':true}));
+					}
+				else if($ele.data('variationmode') == 'product')	{
+					var data, variationID = $ele.closest('tr').data('id'), pid = $ele.closest("[data-pid]").data('pid');
 					
-//					app.u.dump("BEGIN admin_prodEdit.e.variationUpdateShow click event");
-//					app.u.dump(" -> $btn.data('variationmode'): "+$btn.data('variationmode'));
-					
-					if($btn.data('variationmode') == 'store')	{
-						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$btn.closest('tr').data('id')]));
-						}
-					else if($btn.data('variationmode') == 'product')	{
-						var data, variationID = $btn.closest('tr').data('id');
-						var L = app.data['adminProductDetail|'+vars.pid]['@variations'].length;
+					if(pid)	{
+
+
+						var L = app.data['adminProductDetail|'+pid]['@variations'].length;
 // if isnew is true, that means this is a sog or pog that was just added to the product.
 // pogs do not have an ID immediately after they're added, so the guid is used to get the data from the product object in memory.
-						if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('ispog'))	{
-//							app.u.dump(" -> this is a newly added POG");
+						if($ele.closest('tr').data('isnew') && $ele.closest('tr').data('ispog'))	{
 							variationID = ""; //set to blank so modal title doesn't show 'undefined'.
-							data = app.data['adminProductDetail|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'guid',$btn.closest('tr').data('guid'))]
+							data = app.data['adminProductDetail|'+pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+pid]['@variations'],'guid',$ele.closest('tr').data('guid'))]
 							}
-						else if($btn.closest('tr').data('isnew') && $btn.closest('tr').data('issog'))	{
-//							app.u.dump(" -> this is a sog just added to the pid");
+						else if($ele.closest('tr').data('isnew') && $ele.closest('tr').data('issog'))	{
 							data = app.data.adminSOGComplete['%SOGS'][variationID]
 							}
 						else	{
-//							app.u.dump(" -> this is an existing variation.");
-//							app.u.dump(" -> index in variation object: "+app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'id',variationID));
-							data = app.data['adminProductDetail|'+vars.pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+vars.pid]['@variations'],'id',variationID)]
+							data = app.data['adminProductDetail|'+pid]['@variations'][app.ext.admin.u.getIndexInArrayByObjValue(app.data['adminProductDetail|'+pid]['@variations'],'id',variationID)]
 							}
-
+	
 						var $D = app.ext.admin.i.dialogCreate({
-							'title' : 'Edit Variation '+variationID+' for '+vars.pid,
+							'title' : 'Edit Variation '+variationID+' for '+pid,
 							'showLoading' : false,
-							'appendTo' : $btn.closest("[data-app-role='productVariations']") //appended to the variation editor so that the dialog can look up the tree to modify the variation editor itself.
+							'appendTo' : $ele.closest("[data-app-role='productVariations']") //appended to the variation editor so that the dialog can look up the tree to modify the variation editor itself.
 							});
-
-						$D.append(app.ext.admin_prodEdit.a.getVariationEditor('product',data,vars.pid));
+	
+						$D.append(app.ext.admin_prodEdit.a.getVariationEditor('product',data,pid));
+						$D.anydelegate({'trackEdits':true}); //add after $D is on the dom so anydlegate can look up the tree to see if events are already delegated.
 						$D.dialog('option','height',($(document.body).height() - 100));
 //a little css tuning to make this shared content look better in a modal.
 						$('hgroup',$D).hide();
 						$('section.ui-widget-content',$D).css('border-width',0);
 // There's a usability issue between the app and FireFox where after doing a ctrl+f and clicking within the variations/options box, the browser jumps to top of the scrolly div on click.
-//putting the variation options into their own scroller solved this, but made the interface more clumsy.
+//putting the variation options into their own scroller solved this, but made the interface feel more clumsy so it was removed.
 //						$("[data-app-role='storeVariationsOptionsContainer']",$D).wrap($("<div \/>").css({'padding':0,'overflow':'auto','height':($D.innerHeight() - 200)}));
-
 						$D.dialog('open');
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, btn mode ["+$btn.data('variationmode')+"] either not set or invalid (only 'store' and 'product' are valid).","gMessage":true});
+						$ele.closest('form').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, unable to ascertain pid.","gMessage":true});
 						}
-					});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, btn mode ["+$ele.data('variationmode')+"] either not set or invalid (only 'store' and 'product' are valid).","gMessage":true});
+					}
+
 				}, //variationUpdateShow
 
-			variationHandleTypeSelect : function($ele)	{
-				$ele.off('click.variationHandleTypeSelect').on('click.variationHandleTypeSelect',function(){
-					app.u.dump('click triggered');
-					var value = $ele.val();
-					var $form = $ele.closest('form');
-					if(value == 'select' || value == 'radio' || value == 'cb' || value == 'imggrid' || value == 'imgselect' )	{
-						$("[data-app-role='variationInventorySettings']",$form).show();
-						}
-					else	{
-						$("[name='INV']",$form).prop('checked','');
-						$("[data-app-role='variationInventorySettings']",$form).hide();
-						$("[data-app-role='variationInventorySupplementals']",$form).hide(); //safe to hide this
-						}
-					});
+			variationHandleTypeSelect : function($ele,p)	{
+				var value = $ele.val();
+				var $form = $ele.closest('form');
+				if(value == 'select' || value == 'radio' || value == 'cb' || value == 'imggrid' || value == 'imgselect' )	{
+					$("[data-app-role='variationInventorySettings']",$form).show();
+					}
+				else	{
+					$("[name='INV']",$form).prop('checked','');
+					$("[data-app-role='variationInventorySettings']",$form).hide();
+					$("[data-app-role='variationInventorySupplementals']",$form).hide(); //safe to hide this
+					}
 				}, //variationHandleTypeSelect
 
 			variationHandleInventoryChange : function($cb)	{
@@ -3694,218 +3582,189 @@ app.model.dispatchThis('mutable');
 					});
 				}, //variationHandleInventoryChange
 
-			variationsBackToProductExec : function($btn)	{
-				$btn.button();
-				if($btn.data('pid'))	{
-					$btn.off('click.variationsBackToProductExec').on('click.variationsBackToProductExec',function(){
-						app.ext.admin_prodEdit.a.showPanelsFor($btn.data('pid'));
+//used in product editor.  shows a DD which allows user to chooser product or store for scope.
+			variationCreateShowMenu : function($ele,p)	{
+				var $menu = $ele.next()
+				$menu.show().css({'position':'absolute','width':'200px','padding':'2px 0'}).position({
+					my: "left top",
+					at: "left bottom",
+					of: $ele
+					}).find('button').css({'width':'90%','margin':'2px auto'});
+//				### TODO -> test this w/out timeout 
+				 setTimeout(function(){
+					 $( document ).one( "click", function() {
+						$menu.hide();
 						});
+					 },1000);
+				}, //variationCreateShow
+
+			variationCreateShow : function($ele,p)	{
+				var mode = $ele.data('variationmode');
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Create a new '+jQuery.camelCase(mode)+' variation',
+					'templateID' : 'variationsManagerCreateTemplate',
+					'showLoading' : false
+					});
+				$D.data('variationmode',mode).anydelegate();
+				app.u.handleButtons($D);
+				if(mode == 'store')	{
+					//a store variation group can be edited from the product editor. need to set a PID when this happens.
+					if($ele.attr('data-ui-source') == 'productEditor')	{
+						$D.attr({'data-pid':$ele.closest('[data-pid]').data('pid')});
+						}
+					$D.dialog('open');
+					}
+				else if(mode == 'product')	{
+					$D.attr({'data-pid':$ele.closest('[data-pid]').data('pid')});
+					$D.dialog('open');
 					}
 				else	{
-					$btn.button('disable').attr('title','Unable to ascertain product ID.');
-					$btn.hide();
-					}
-				},
-
-//used in product editor.  shows a DD which allows user to chooser product or store for scope.
-			variationCreateShowMenu : function($btn)	{
-				$btn.button({text: true,icons: {secondary: "ui-icon-triangle-1-s"}});
-				$btn.off('click.variationCreateShowMenu').on('click.vavariationCreateShowMenuriationCreateShow',function(){
-					var $menu = $btn.next()
-					$menu.show().css({'position':'absolute','width':'200px','padding':'2px 0'}).position({
-						my: "left top",
-						at: "left bottom",
-						of: $btn
-						}).find('button').css({'width':'90%','margin':'2px auto'});
-					 setTimeout(function(){
-						 $( document ).one( "click", function() {
-							$menu.hide();
-							});
-						 },1000);
-					});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationCreateShow, invalid data-mode ["+mode+"] on trigger element. must be store or product.","gMessage":true});
+					} //invalid mode.
 				}, //variationCreateShow
 
-			variationCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.variationCreateShow').on('click.variationCreateShow',function(){
-					var mode = $btn.data('variationmode');
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Create a new '+jQuery.camelCase(mode)+' variation',
-						'templateID' : 'variationsManagerCreateTemplate',
-						'showLoading' : false
-						});
-					$D.data('variationmode',mode);
-					if(mode == 'store')	{
-						//container ID is used to refresh the list of global variations when adding a new global variation from within the product editor.
-						var $container = $btn.closest("[data-app-role='productVariationManager']");
-						if($container.attr('id'))	{}
-						else	{
-							$container.attr('id','pvm_'+app.u.guidGenerator());
-							}
-						$D.data({'containerid':$container.attr('id')});
-						$D.dialog('open');
-						}
-					else if(mode == 'product')	{
-						$D.attr({'data-pid':$btn.closest('[data-pid]').data('pid')});
-						$D.dialog('open');
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationCreateShow, invalid data-mode ["+mode+"] on trigger element. must be store or product.","gMessage":true});
-						} //invalid mode.
-					
-					
-					});
-				}, //variationCreateShow
 //used within product editor to allow for the list of global variations to be refreshed.
-			storeVariationsRefresh : function($btn)	{
-				$btn.button({text: false,icons: {secondary: "ui-icon-refresh"}});
-				$btn.off('click.variationsCreateExec').on('click.variationsCreateExec',function(event){
-					event.preventDefault();
-					var $tbody = $btn.closest("[data-app-role='productVariationManagerStoreContainer']").find("tbody[data-app-role='storeVariationsTbody']:first");
-					$tbody.empty().showLoading({'message':'Fetching store variations'});
-					app.model.addDispatchToQ({
-						'_cmd':'adminSOGComplete',
-						'_tag':	{
-							'datapointer' : 'adminSOGComplete',
-							'callback' : function(rd)	{
-								$tbody.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$tbody.closest('div').anymessage({'message':rd});
-									}
-								else	{
-									$tbody.anycontent(rd); 
-									app.u.handleAppEvents($tbody);
-									app.ext.admin_prodEdit.u.handleApply2ProdButton($btn.closest("[data-app-role='productVariationManagerContainer']"));
-									}
+			storeVariationsRefresh : function($ele,p)	{
+				var $tbody = $ele.closest("[data-app-role='productVariationManagerStoreContainer']").find("tbody[data-app-role='storeVariationsTbody']:first");
+				$tbody.empty().showLoading({'message':'Fetching store variations'});
+				app.model.addDispatchToQ({
+					'_cmd':'adminSOGComplete',
+					'_tag':	{
+						'datapointer' : 'adminSOGComplete',
+						'callback' : function(rd)	{
+							$tbody.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$tbody.closest('div').anymessage({'message':rd});
+								}
+							else	{
+								$tbody.anycontent(rd); 
+								app.u.handleButtons($tbody);
+								app.ext.admin_prodEdit.u.handleApply2ProdButton($ele.closest("[data-app-role='productVariationManagerContainer']"));
 								}
 							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-					});
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				},
 
-			variationCreateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.variationsCreateExec').on('click.variationsCreateExec',function(event){
-					event.preventDefault();
-					var 
-						mode = $btn.closest('.ui-dialog-content').data('variationmode'),
-						pid = $btn.closest("[data-pid]").data('pid'),
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON({'cb':true}),
-						containerid = $btn.closest('.ui-dialog-content').data('containerid'),
-						newSogID;
-						
-					app.u.dump(" -> mode: "+mode);
-					if(app.u.validateForm($form) && sfo.type)	{
-						$form.showLoading({'message':'Creating '+mode+' variation'});
-						sfo.autoid = 1; //tells API to give this option a variation ID (next in sequence) and to assign id's to the options.
-						if(mode == 'store')	{
-							sfo.v = '2'; //sog version.
-							app.model.addDispatchToQ({
-								'_cmd':'adminSOGCreate',
-								'%sog' : sfo,
-								'_tag':	{
-									'datapointer' : 'adminSOGCreate',
-									callback : function(rd){
-										if(app.model.responseHasErrors(rd)){
-											$form.anymessage({'message':rd});
-											}
-										else	{
-											$btn.closest('.ui-dialog-content').dialog('close');
-											newSogID = app.data[rd.datapointer].sogid;
-											app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
-											$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
-											}
-										}
-									}
-								},'mutable');
-							app.model.addDispatchToQ({
-								'_cmd':'adminSOGComplete',
-								'_tag':	{
-									'datapointer' : 'adminSOGComplete',
-									'callback' : function(rd)	{
-										app.u.dump(" -> INTO the callback for adminSOGComplete");
-										if(app.model.responseHasErrors(rd)){
-											$form.anymessage({'message':rd});
-											}
-										else	{
-
-if(containerid)	{
-	app.u.dump(" -> containerid is specified. reload the list of store variations");
-	var $container = $(app.u.jqSelector('#',containerid));
-	if($container.length)	{
-		var $tbody = $("tbody[data-app-role='storeVariationsTbody']:first",$container);
-	//update the list of sogs.
-		$tbody.empty().anycontent(rd); 
-		app.u.handleAppEvents($tbody);
-//apply the new sog to the list of product variations.
-		if(newSogID)	{
-			$("[data-id='"+newSogID+"']",$tbody).find("button[data-app-event='admin_prodEdit|variationAddToProduct']").trigger('click');
-			}
-		}
-	else	{
-		app.u.dump(" -> no matching element for containerid");
-		}
-	}
-											}
-										}
-									}
-								},'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						else if(mode == 'product' && pid){
-							
-							sfo.guid = app.u.guidGenerator();
-							app.data['adminProductDetail|'+pid]['@variations'].push(sfo); //add to variation object in memory.
-	
-							var $tbody = $("<tbody \/>").anycontent({
-								'templateID':'productVariationManagerProductRowTemplate',
-								'data':sfo,
-								'dataAttribs':sfo
-								})
-							app.u.handleAppEvents($tbody,{'pid':pid});
-							$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
-							$btn.closest('.ui-dialog-content').dialog('close');
-							}
-						else	{
-							//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.
-							$btn.closest('form').anymessage({"message":"In admin_prodEdit.e.variationCreateExec, either variationmode ["+mode+"] was unable to be determined or was an invalid value (only store and product are supported) or mode was set to product and PID ["+pid+"] was unable to be determined. ","gMessage":true});
-							}
-
-
-
-						}
-					else if(!sfo.type)	{
-						$form.anymessage({'message':'Please select a type'});
-						}
-					else	{} //validateForm handles error display.
-
-					});
-				}, //variationCreateExec
-
-
-			
-
-//a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
-			variationsOptionToggle : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});
-				$btn.off('click.variationsOptionToggle').on('click.variationsOptionToggle',function(event){
-					event.preventDefault();
-					app.u.dump("Click! $btn.closest([data-app-role='variationsOptionsTbody']).length: "+$btn.closest("[data-app-role='variationsOptionsTbody']").length);
+			variationCreateExec : function($ele,p)	{
+				var 
+					mode = $ele.closest('.ui-dialog-content').data('variationmode'),
+					pid = $ele.closest("[data-pid]").data('pid'),
+					$form = $ele.closest('form'),
+					sfo = $form.serializeJSON({'cb':true}),
+					newSogID;
 					
-					var $tr = $btn.closest('tr');
-					var $editor = $btn.closest("[data-app-role='variationOptionEditorContainer']"); //used for context.
-					if($btn.closest("[data-app-role='variationsOptionsTbody']").length)	{
-						$btn.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});
-						$("[data-app-role='storeVariationsOptionsTbody']",$editor).append($tr);
+//				app.u.dump(" -> mode: "+mode);
+				if(app.u.validateForm($form) && sfo.type)	{
+					$form.showLoading({'message':'Creating '+mode+' variation'});
+					sfo.autoid = 1; //tells API to give this option a variation ID (next in sequence) and to assign id's to the options.
+					if(mode == 'store')	{
+						sfo.v = '2'; //sog version.
+						app.model.addDispatchToQ({
+							'_cmd':'adminSOGCreate',
+							'%sog' : sfo,
+							'_tag':	{
+								'datapointer' : 'adminSOGCreate',
+								callback : function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$form.anymessage({'message':rd});
+										}
+									else	{
+										$ele.closest('.ui-dialog-content').dialog('close');
+										newSogID = app.data[rd.datapointer].sogid;
+										app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
+										$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
+										}
+									}
+								}
+							},'mutable');
+// SANITY -> mode can = store AND the user could be in the product editor (creating a store variation group)							
+						app.model.addDispatchToQ({
+							'_cmd':'adminSOGComplete',
+							'_tag':	{
+								'datapointer' : 'adminSOGComplete',
+								'callback' : function(rd)	{
+									app.u.dump(" -> INTO the callback for adminSOGComplete");
+									if(app.model.responseHasErrors(rd)){
+										$form.anymessage({'message':rd});
+										}
+									else	{
+										var $VM = $("[data-app-role='variationManager']",$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')))
+										if($VM.length)	{
+											//if VM has length, this is store variation manager, NOT adding a store variation from the product editor. refresh the list.
+											navigateTo("#!globalVariations");
+											}
+										else	{
+											$taskItem = $("li.isProductContainer[data-pid='"+pid+"']",'#productContent');
+											if($taskItem.length)	{
+												app.u.dump(" -> found a matching pid product container in the task list.");
+												var $tbody = $("tbody[data-app-role='storeVariationsTbody']:first",$taskItem);
+												//update the list of sogs.
+												$tbody.empty().anycontent(rd); 
+												app.u.handleButtons($tbody);
+//apply the new sog to the list of product variations.
+												if(newSogID)	{
+													$("[data-id='"+newSogID+"']",$tbody).find("button[data-app-click='admin_prodEdit|variationAddToProduct']").trigger('click');
+													}
+												
+												}
+											else	{
+												//product is not open. odd. not warning worthy. there may be a valid reason for this.
+												app.u.dump(" -> did NOT find a matching pid product container in the task list.");
+												}
+											}
+										}
+									}
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else if(mode == 'product' && pid){
+						
+						sfo.guid = app.u.guidGenerator();
+						app.data['adminProductDetail|'+pid]['@variations'].push(sfo); //add to variation object in memory.
+
+						var $tbody = $("<tbody \/>").anycontent({
+							'templateID':'productVariationManagerProductRowTemplate',
+							'data':sfo,
+							'dataAttribs':sfo
+							})
+						app.u.handleButtons($tbody);
+						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
+						$ele.closest('.ui-dialog-content').dialog('close');
 						}
 					else	{
-						$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: false});
-						$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
+						//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.
+						$ele.closest('form').anymessage({"message":"In admin_prodEdit.e.variationCreateExec, either variationmode ["+mode+"] was unable to be determined or was an invalid value (only store and product are supported) or mode was set to product and PID ["+pid+"] was unable to be determined. ","gMessage":true});
 						}
-					});
+
+
+
+					}
+				else if(!sfo.type)	{
+					$form.anymessage({'message':'Please select a type'});
+					}
+				else	{} //validateForm handles error display.
+
+
+				}, //variationCreateExec
+
+//a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
+			variationsOptionToggle : function($ele,p)	{
+				var $tr = $ele.closest('tr');
+				var $editor = $ele.closest("[data-app-role='variationOptionEditorContainer']"); //used for context.
+				if($ele.closest("[data-app-role='variationsOptionsTbody']").length)	{
+//					if($ele.is('button')){$ele.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});}
+					$("[data-app-role='storeVariationsOptionsTbody']",$editor).append($tr);
+					}
+				else	{
+//					if($ele.is('button')){$ele.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: false});}
+					$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
+					}
+				app.u.handleButtons($tr);
 				} //variationsOptionToggle
+
 			} //Events
 		
 		} //r object.

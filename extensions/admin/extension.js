@@ -63,11 +63,12 @@ var admin = function() {
 		
 		vars : {
 			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities','launchpad'],
+			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','utilities','launchpad'],
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
 			versionData : [
+				{'branch' : '201452','youtubeVideoID' : ''},
 				{'branch' : '201346','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201344','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
@@ -114,7 +115,6 @@ var admin = function() {
 				}
 			}, //adminAppTicketCreate
 
-
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
@@ -150,8 +150,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminConfigDetail
-
-
 
 		adminConfigMacro : {
 			init : function(macros,_tag,Q)	{
@@ -196,29 +194,6 @@ var admin = function() {
 				}
 			}, //adminCustomerDetail
 
-		adminCustomerRemove : {
-			init : function(CID,_tag,Q)	{
-				var r = 0;
-				if(CID)	{
-//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
-					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerRemove";
-					this.dispatch(CID,_tag);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerRemove, no CID specified.");
-					}
-				return r;
-				},
-			dispatch : function(CID,_tag)	{
-				var obj = {};
-				obj.CID = CID;
-				obj._cmd = "adminCustomerRemove";
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerDetail
-
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
 			init : function(obj,_tag,Q)	{
@@ -239,31 +214,7 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
-
-//email is required in macro
-		adminCustomerCreate : {
-			init : function(updates,_tag)	{
-				var r = 0;
-				if(updates)	{
-					this.dispatch(updates,_tag)
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerSet, macro not set or setObj was empty");
-					}
-				return r;
-				},
-			dispatch : function(updates,_tag)	{
-				var obj = {};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerCreate';
-				obj._cmd = "adminCustomerCreate";
-				obj.CID = 0; //create wants a zero customer id
-				obj['@updates'] = updates;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerSet
-			
+		
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -287,118 +238,7 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-
-
-
-		adminCustomerOrganizationSearch : {
-			init : function(obj,_tag,Q)	{
-//				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerSet, no variables passed. some sort of search query needed.",'gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationSearch';
-				obj._cmd = "adminCustomerOrganizationSearch";
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //adminCustomerOrganizationSearch
-		adminCustomerOrganizationCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationCreate, no variables passed."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationCreate';
-				obj._cmd = "adminCustomerOrganizationCreate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationCreate
-		adminCustomerOrganizationUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.ORGID)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationUpdate, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationUpdate';
-				obj._cmd = "adminCustomerOrganizationUpdate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationUpdate
-		adminCustomerOrganizationDetail : {
-			init : function(orgID,_tag,Q)	{
-				var r = 0;
-				if(orgID)	{
-					_tag = _tag || {};
-					_tag.datapointer = 'adminCustomerOrganizationDetail|'+orgID;
-					
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(orgID,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(orgID,_tag,Q)	{
-				var obj = {}
-				obj._tag = _tag || {};
-				
-				obj._cmd = "adminCustomerOrganizationDetail";
-				obj.ORGID = orgID
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationDetail
-		adminCustomerOrganizationRemove : {
-			init : function(ORGID,_tag,Q)	{
-				var r = 0;
-				if(ORGID)	{
-					this.dispatch(ORGID,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(ORGID,_tag,Q)	{
-				var obj = {};
-				obj.ORGID = ORGID;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
-				obj._cmd = "adminCustomerOrganizationRemove";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationRemove
-
+//used in reports
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -415,8 +255,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminDataQuery
-			
-//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)}
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{
@@ -436,7 +274,6 @@ var admin = function() {
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
 				}			
 			}, //adminDomainList
-
 
 //* 201324 -> though moving towards a non-defined call based approach, for calls that need/want local storage, we'll still declare them (like this one)
 		adminEBAYCategory :  {
@@ -512,7 +349,7 @@ var admin = function() {
 				obj._tag.datapointer = 'adminEmailSave';
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
-			}, //adminDataQuery
+			}, //adminEmailSave
 
 
 //obj requires title and uuid, priority and @GRAPHS are optional.
@@ -705,27 +542,6 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q || 'passive');
 				}
 			},
-
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminRSSRemove : {
-			init : function(listID,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSRemove"
-				if(listID)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(listID,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSRemove, listID not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(listID,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminRSSRemove","_tag":_tag,"ID":listID},Q || 'immutable');	
-				}
-			}, //adminRSSRemove
 
 		adminRSSUpdate : {
 			init : function(obj,_tag,Q)	{
@@ -1726,7 +1542,6 @@ if(!$.isEmptyObject(adminObj))	{
 	
 //create shortcuts. these are used in backward compatibility areas where brian loads the content.
 				window.navigateTo = app.ext.admin.a.navigateTo;
-				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
@@ -1935,19 +1750,19 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				document.location = 'admin_logout.html'
 				}
 			},
-//in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)
+//in cases where the content needs to be reloaded after making an API call, but when a navigateTo directly won't do (because of sequencing, perhaps)
 //For example, after new files are added to a ticket (comatability mode), this is executed on a ping to update the page behind the modal.
-		showUI : {
+		navigateTo : {
 			onSuccess : function(tagObj)	{
-				if(tagObj && tagObj.path){showUI(tagObj.path)
+				if(tagObj && tagObj.path){navigateTo(tagObj.path)
 					}
 				else {
-					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.showUI.onSuccess.");
-					app.u.dump("admin.callbacks.showUI.onSuccess tagObj (_rtag)");
+					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.navigateTo.onSuccess.");
+					app.u.dump("admin.callbacks.navigateTo.onSuccess tagObj (_rtag)");
 					app.u.dump(tagObj);
 					}
 				}
-			}, //showUI
+			}, //navigateTo
 		showDomainConfig : {
 			onSuccess : function(){
 				app.ext.admin.u.domainConfig();
@@ -2448,171 +2263,129 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-//tmp while in dev so pushes can occur without UI being impacted.
-//opts is options (options is a reserved JS name)
+//opts is options 
 // -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
 //    it's in opts to make debugging easier.
 
-			showUI : function(path,opts){
-//make sure path passed in conforms to standard naming conventions.
-//app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-//app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
+			navigateTo : function(path,opts){
+//				app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
-					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
-					
-					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
+					if(path.substr(0,5) == "/biz/" || path.substr(0,6) == "#/biz/") {
+						mode = 'legacy';
+						}
+//#: denotes to open a tab, but not refresh the content.
 					else if(path.substr(0,2) == "#:")	{
-//						app.u.dump(" -> is #:");
-						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
 						opts.tab = opts.tab || path.substring(2);
-						path = "/biz/"+path.substring(2)+"/index.cgi";
-//						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
-					else if (path.substr(0,2) == "#!") {mode = 'app'; }
+					else if (path.substr(0,2) == "#!") {
+						mode = 'app';
+						}
 					else	{}
-					
+
 					if(mode)	{
 
-//app.u.dump(" -> mode: "+mode);
-//app.u.dump(" -> path: "+path);
-//app.u.dump(" -> opts: "); app.u.dump(opts);
+						var $target = undefined; //jquery object of content destination
+						
+						opts = opts || {}; //opts may b empty. treat as object.
+						
+						_ignoreHashChange = true; //see handleHashChange for details on what this does.
+						document.location.hash = path; //update hash on URI.
+						
+						//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
+						if(opts.tab){} // if tab is specified, always use it. this covers mode = tabClick too.
+						else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
+						else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined. dialog is only used for legacy mode, currently.
+						else if(mode == 'legacy'){
+							opts.tab = app.ext.admin.u.getTabFromPath(path);
+							}
+						else	{
+							//hhmm. how did we get here?
+							$('#globalMessaging').anymessage({'message':'In admin.a.navigateTo, invalid mode ['+opts.mode+'] passed.','gMessage':true});
+							}
 
-
-var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
-var $target = undefined; //jquery object of content destination
-
-opts = opts || {}; //opts may b empty. treat as object.
-
-_ignoreHashChange = true; //see handleHashChange for details on what this does.
-document.location.hash = path; //update hash on URI.
-
-//app.u.dump(" -> opts: "); app.u.dump(opts);
-
-//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
-if(opts.tab){} // if tab is specified, always use it.
-else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
-else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
-
-//* 201220 -> tab is already set in the if(path) code at the top.
-//else if(mode == 'legacy' || (mode == 'tabClick' ){
-else if(mode == 'legacy'){
-	opts.tab = app.ext.admin.u.getTabFromPath(path);
-	} //#: denotes to open a tab, but not refresh the content.
-else	{
-	//hhmm. how did we get here?
-	}
-
-if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab in the header is in focus.
-else	{} //do nothing. perfectly normal to not change what tab is in focus.
-
-
-//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
 //this is JUST setting targetID. it isn't showing content or opening modals.
-if(opts.dialog){
-	opts.targetID = 'uiDialog';
-	$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
-	}
-//load content into whatever tab is specified.
-else if(opts.tab)	{
-	opts.targetID = opts.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
+						if(opts.dialog){
+							opts.targetID = 'uiDialog';
+							$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
+							}
+						else	{
+							opts.tab = opts.tab || app.ext.admin.vars.tab; //use tab in focus if none is specified by now. (opts.tab WILL be set if a tab was clicked)
+							app.ext.admin.u.bringTabIntoFocus(opts.tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
+							$target = $(app.u.jqSelector('#',opts.tab+"Content"));
+							app.ext.admin.u.bringTabContentIntoFocus($target); //brings the tabContent div (homeContent, productContent, etc) into focus.
+							opts.targetID = opts.tab+"Content"; //used in legacy compatability mode.
 
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
-$('#stickytabs').empty(); //clear all the sticky tabs.
-	
-	}
-//no tab was specified. use the open tab, if it's set.
-else if(app.ext.admin.vars.tab)	{
-	opts.targetID = app.ext.admin.vars.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
-	} //load into currently open tab. common for apps.
-else	{
-	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
-	}
+							$('#stickytabs').empty(); //clear all the sticky tabs.
 
+							}
+						
+						if($target instanceof jQuery)	{
+						
+							if(opts.dialog)	{
+								app.model.fetchAdminResource(path,opts);
+								}
+							else	{
 
-//app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
-
-if($target && $target.length)	{
-
-	if(opts.dialog)	{
-		app.ext.admin.u.handleShowSection(path,opts,$target); 
-		}
-	else	{
-
-		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
-		if(mode == 'app')	{
-//			app.u.dump(" -> showUI mode = app");
-			app.ext.admin.u.loadNativeApp(path,opts,$target);
-			}
-		else if(mode == 'legacy')	{
-//			app.u.dump(" -> showUI mode = legacy");
-			app.ext.admin.u.handleShowSection(path,opts,$target);
-			}
-		else if(mode == 'tabClick')	{
-//			app.u.dump(" -> showUI mode = tabClick");
-//determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
-			if(opts.tab == app.ext.admin.vars.tab)	{
-//				app.u.dump(" -> targeted tab and open tab match.");
-				reloadTab = 1; //tab clicked from a page within that tab. show new content.
-				}
-//			app.u.dump(" -> $target.children().length: "+$target.children().length);
-			if ($target.children().length === 0)	{
-//				app.u.dump(" -> no content presently in target. targetID = "+$target.attr('id')+" and $target.length: "+$target.length);
-				reloadTab = 1; //no content presently in target. load it.
-				} 
-			if(reloadTab)	{
-//* 201336 -> moved this code down. It nukes any data set by anycontent. It was being run much earlier but should only be run if new content is being added. it empties the tab contents.
-				if($target && $target.data('anycontent'))	{
-//					app.u.dump(" -> execute anycontent('destroy')");
-					$target.anycontent('destroy');
-					}
-				app.ext.admin.u.handleShowSection(path,opts,$target);
-				}
-			else	{
-				app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
-				//when RETURNING to the product page, build navtabs again (search).
-				if(opts.tab == 'product')	{
-					app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
-					}
-				} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
-			}
-		else	{}// should never get here. error case for mode not being set is already passed.
-		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
-		}
-	}
-else	{
-	app.u.throwGMessage("Warning! In in showUI, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
-	}
+								if(mode == 'app')	{
+						//			app.u.dump(" -> navigateTo mode = app");
+									$target.intervaledEmpty(); //clear all previous content. this does a 'remove', which clears events.
+//in general, we don't want the native app to add data or delegated events to the tabContent element itself, so a child is added and passed as target.
+//This means the native app can directly effect 'target' without having to drill down to it's first child or create a temporary container itself.
+//then, anytime a new app is loaded, the data and event delegation is automatically dropped.
+									app.ext.admin.u.loadNativeApp(path,opts,$("<div \/>").addClass('contentContainer').appendTo($target));
+									}
+//in tabclick mode, if the tab has not been opened, show the default content.
+//if the tab has been opened, show existing content.
+//if the tab has been opened AND is active/in focus, show the default content (effectively, double-click on tab shows default content)
+								else if(mode == 'tabClick')	{
+//either tab clicked from a page within that tab or that tab was opened and has no content. Load the content.
+									if(opts.tab == app.ext.admin.vars.tab || $target.children().length === 0)	{
+										app.ext.admin.u.showTabLandingPage(path,$target,opts); //pass in as #!tab so that loadNative doesn't have to check for both.
+										}
+//tab click show existing conten
+									else	{
+										app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
+										//when RETURNING to the product page, build navtabs again (search).
+//### TODO ### -> this code should not be here. it should be in the product editor. make it all selfcontained in showProductManager.
+										if(opts.tab == 'product')	{
+											app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+											}
+										} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
+									}
+								else if(mode == 'legacy')	{
+									app.model.fetchAdminResource(path,opts);
+									}
+								else	{}// should never get here. error case for mode not being set is already handled.
+								if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
+								}
+							}
+						else	{
+							app.u.throwGMessage("Warning! In in navigateTo, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
+							}
 						} //end 'if' for mode.
 					else	{	
-						app.ext.admin.a.showUI("#!dashboard");
-						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.showUI.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
+						app.ext.admin.a.navigateTo("#!dashboard");
+//						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.navigateTo.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
 
 						}
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
+					app.u.throwGMessage("Warning! path not set for admin.a.navigateTo");
 					}
-//app.u.dump(" -> END showUI. ");
+//app.u.dump(" -> END navigateTo. ");
 				return false;
-				}, //showUI
+				}, //navigateTo
 
-//this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can add extra functionality if needed.
-//the app itself should never use this function.
-			navigateTo : function(path,$t)	{
-				return this.showUI(path,$t ? $t : {});
-				},
-				
+			
 				
 //show YouTubeVideo in a dialog.
 			showYTVInDialog : function(videoID,vars){
@@ -2637,138 +2410,134 @@ else	{
 					$('#globalMessaging').anymessage({"message":"In admin.a.showYTVInDialog, no videoID passed.","gMessage":true});
 					}
 				},
-				
+
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data,selectors)	{
-var r = false;  //what is returned. either false of a jquery object.
-data = data || {};
-selectors = selectors || "";
-
-if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
-	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
-	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
-	$D.data('pickermode',data.mode);
-
-	if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
-	
-	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
-		heightStyle: "content",
-		activate : function(event,ui)	{
-//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
-//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
-//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
-			if(!ui.newPanel.data('contentloaded'))	{
-				ui.newPanel.showLoading({'message':'Fetching List'});
-				var _tag = {}
-				_tag.callback = function(rd)	{
-					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd})
+				var r = false;  //what is returned. either false of a jquery object.
+				data = data || {};
+				selectors = selectors || "";
+				
+				if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
+					var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
+					$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
+					$D.data('pickermode',data.mode);
+				
+					if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
+					
+					$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
+						heightStyle: "content",
+						activate : function(event,ui)	{
+				//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+				//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+				//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
+							if(!ui.newPanel.data('contentloaded'))	{
+								ui.newPanel.showLoading({'message':'Fetching List'});
+								var _tag = {}
+								_tag.callback = function(rd)	{
+									if(app.model.responseHasErrors(rd)){
+										$target.anymessage({'message':rd})
+										}
+									else	{
+										//applies the content to the panel.
+										ui.newPanel.anycontent(rd).data('contentloaded',true);
+				
+										if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+											$('label',ui.newPanel).each(function () {  
+												if($(this).data('value').charAt(0) != '.')	{
+													$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
+													}
+												});
+											}
+										
+										//selectors are values passed in that get 'checked' (turned on).
+										if(selectors)	{
+									//		app.u.dump("selectors are set: "+selectors);
+											var selArr = selectors.split('\n');
+											var L = selArr.length;
+									//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
+											for(var i = 0; i < L; i += 1)	{
+												if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+													//csv and 'all' are handled already.
+													}
+												else	{
+													//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+									//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+									//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+													$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+													}
+												}
+											}
+										}
+									}
+								if(ui.newHeader.data('pickmethod') == 'LIST')	{
+									app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+									app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
+									app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
+									_tag.datapointer = 'adminEBAYProfileList';
+									app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
+									_tag.datapointer = 'adminSupplierList';
+				//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
+									if(app.model.fetchData(_tag.datapointer) == false)	{
+										app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
+										}
+									else	{
+										app.u.handleCallback(_tag);
+										}
+									}
+								else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
+									app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+									}
+								else	{
+									//ERROR! unrecognized pick method. !!!
+									ui.newPanel.hideLoading();
+									ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+									}
+								app.model.dispatchThis('mutable');
+								}
+							else	{}
+							}
+						
+						});
+				
+					if(selectors)	{
+						if(selectors == 'all')	{
+							$("[name='SELECTALL']",$D).prop('checked','checked');
+							}
+						else	{
+							
+							var selArr = selectors.split('\n');
+							var L = selArr.length;
+							for(var i = 0; i < L; i += 1)	{
+								if(selArr[i].indexOf('csv') === 0)	{
+									$("[name='csv']",$D).val(selArr[i].substring(4));
+									}
+								else	{
+									//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+					//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
+									}
+								}
+							}
 						}
-					else	{
-						//applies the content to the panel.
-						ui.newPanel.anycontent(rd).data('contentloaded',true);
-
-if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-	$('label',ui.newPanel).each(function () {  
-		if($(this).data('value').charAt(0) != '.')	{
-			$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
-			}
-		});
-	}
-
-//selectors are values passed in that get 'checked' (turned on).
-	if(selectors)	{
-//		app.u.dump("selectors are set: "+selectors);
-		var selArr = selectors.split('\n');
-		var L = selArr.length;
-//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
-		for(var i = 0; i < L; i += 1)	{
-			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
-				//csv and 'all' are handled already.
-				}
-			else	{
-				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
-//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
-				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
-				}
-			}
-		}
-						}
-					}
-				if(ui.newHeader.data('pickmethod') == 'LIST')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
-					app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-					_tag.datapointer = 'adminEBAYProfileList'
-					app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-					_tag.datapointer = 'adminSupplierList'
-//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
-					app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+				
+				
+				
+					r = $D.children();
 					}
 				else	{
-					//ERROR! unrecognized pick method. !!!
-					ui.newPanel.hideLoading();
-					ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
 					}
-				app.model.dispatchThis('mutable');
-				}
-			else	{}
-			}
-		
-		});
-
-	if(selectors)	{
-		if(selectors == 'all')	{
-			$("[name='SELECTALL']",$D).prop('checked','checked');
-			}
-		else	{
-			
-			var selArr = selectors.split('\n');
-			var L = selArr.length;
-			for(var i = 0; i < L; i += 1)	{
-				if(selArr[i].indexOf('csv') === 0)	{
-					$("[name='csv']",$D).val(selArr[i].substring(4));
-					}
-				else	{
-					//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-	//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
-					}
-				}
-			}
-		}
-
-
-
-	r = $D.children();
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
-	}
 //use this to disable the accordion if 'select all' is checked.	
 //$( ".selector" ).accordion( "option", "disabled", true );
 				return r;
 				},
-				
-
-
-
 
 			showDownloads : function($target)	{
 				$target.anycontent({'templateID':'downloadsPageTemplate','showLoading':false});
@@ -2781,7 +2550,6 @@ else	{
 				app.u.handleCommonPlugins($target);
 				app.u.handleButtons($target);
 				},
-
 
 			showSitesTab : function($target)	{
 				$target.empty();
@@ -2817,119 +2585,54 @@ else	{
 
 				},
 
-
 			showMailTool : function(vars)	{
-vars = vars || {};
-
-
-
-if(vars.listType && vars.partition)	{
-//listType must match one of these. an array is used because there will be more types:
-//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
-	var types = ['ORDER','CUSTOMER']; 
-	if(types.indexOf(vars.listType) >= 0)	{
-
-		var $mailTool = $('#mailTool');
-		if($mailTool.length)	{
-			$mailTool.empty();
-			}
-		else	{
-			$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
-			$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
-			}
-
-		$mailTool.dialog('open');
-
-		$mailTool.showLoading({'message':'Fetching list of email messages/content'});
-		app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
-			$mailTool.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$mailTool.anymessage({'message':rd})
-				}
-			else	{
-				$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
-				app.u.handleAppEvents($mailTool,vars);
-				}
-			}},'mutable');
-		app.model.dispatchThis('mutable');
-		
-		}
-	else	{
-		$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
-		}
-
-//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
-//though not a modal, only one can be open at a time.
-/*			if(orderID && Number(prt) >= 0)	{
-	
-				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						if(rd._rtag && rd._rtag.selector)	{
-							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+				vars = vars || {};
+				
+				
+				
+				if(vars.listType && vars.partition)	{
+				//listType must match one of these. an array is used because there will be more types:
+				//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
+					var types = ['ORDER','CUSTOMER']; 
+					if(types.indexOf(vars.listType) >= 0)	{
+				
+						var $mailTool = $('#mailTool');
+						if($mailTool.length)	{
+							$mailTool.empty();
 							}
-						app.u.throwMessage(rd);
+						else	{
+							$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
+							$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
+							}
+				
+						$mailTool.dialog('open');
+				
+						$mailTool.showLoading({'message':'Fetching list of email messages/content'});
+						app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
+							$mailTool.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$mailTool.anymessage({'message':rd})
+								}
+							else	{
+								$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
+								app.u.handleAppEvents($mailTool,vars);
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						
 						}
 					else	{
-						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-						app.ext.admin.u.handleAppEvents($target);
+						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
 						}
-		
-					}},'mutable');
-				app.model.dispatchThis('mutable');
-				}
-			else	{
-				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
-				}
-*/
-	}
-else	{
-	$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
-	}
 				
-				
-				},
-
-
-/* loading content and adding a new 'page' */
-
-/*
-load page looks in app.ext.admin.pages to see if a 'page' exists.
-pages only exists for apps. the absense of a page in the page object will be treated as legacy compatibility.
-vars allows for overrides of default page variables. Out of the gate, tab will be supported. don't know about any others.
- -> tab being set determines whether breadcrumb and navtabs are reset. no tab, no reset. allows pages to be loaded inside another tab.
- -> set vars.tab to 'current' to open page in current tab/tabcontent.
-
-			loadPage : function(pageID,vars)	{
-				var pages = app.ext.admin.pages; //shortcut
-				if(pageID && pages[pageID])	{
-					
-					}
-				else if(pageID)	{
-					//pageID set, but does not exists in pages var. report error.
 					}
 				else	{
-					//no pageID passed. report error.
-					}
-				},
-
-			addPage : function(pageID,obj){
-				if(pageID && typeof obj === 'object' && typeof obj.exec === 'function'){
-					var pages = app.ext.admin.pages;
-					if(!pages[pageID])	{
-						//required vars present
-						pages[pageID] = obj;
-						}
-					else	{
-						//HHmmmmmm... do we allow pages to be overwritten?
-						}
-					}
-				else	{
-					//page ID and obj.exec as a function are required.
+					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
 					}
 				
+				
 				},
-*/
+
 
 /*
 HEADER CODE
@@ -3067,7 +2770,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
 //				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain);
-				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
+//				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
 				if(domain)	{
 //if no partition available, get it. if partition is null, number() returns 0.		
 					if(partition == 0 || Number(partition) > 0){
@@ -3092,18 +2795,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
-	
-	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-	//something here is causing session to not persist on reload.
-	/*					if(app.model.fetchData('authAdminLogin'))	{
-							var localVars = app.data['authAdminLogin'];
-							localVars.domain = domain;
-							localVars.partition = partition || null;
-							app.storageFunctions.writeLocal('authAdminLogin',localVars);
-							}
-	*/
-	//					app.u.dump(" -> path: "+path);
-						showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
+
+						navigateTo(app.ext.admin.u.whatPageToShow(path || '#!dashboard'));
 
 						}
 					else	{
@@ -3272,23 +2965,22 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 			showRSS : function($target)	{
-				
-				$target.intervaledEmpty();
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'RSS Feeds',
 					'className' : 'rssFeeds',
 					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight applyButton' data-app-click='admin|adminRSSCreateShow' data-icon-primary='ui-icon-plus'>New RSS Feed</button>"],
 					'thead' : ['ID','Title','Status','Profile','Schedule',''],
 					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminRSSList',
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
-							'datapointer':'adminRSSList'
+							'datapointer':'adminRSSList|'+app.vars.partition
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
 
@@ -3372,36 +3064,39 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
 // ** 201338 -> need the product task list ul generated as early as possible.
-app.ext.admin_prodEdit.a.showProductManager();
-
-
-
-//				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
-//immutable because that's wha the domain call uses. These will piggy-back.
-
-
-
-					
-
-app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
-app.u.handleEventDelegation($('#messagesContent'));
-app.model.addDispatchToQ({
-	'detail':'more',
-	'_cmd': 'adminNavTreeList',
-	'_tag' : {datapointer: 'adminNavTreeList'}
-	},'immutable');
-app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
-app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
+				app.ext.admin_prodEdit.a.showProductManager();
+				
+				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+				app.u.handleEventDelegation($('#messagesContent'));
+				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				
-//show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
-//if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
+//if no domain is set, check to see if the domain on the uri is a valid (merchant-owned) domain and, fi so, use it. if not, show domain chosoer.
 				if(!app.vars.domain) {
-					//the selection of a domain name will load the page content. (but we'll still need to nav)
-					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+					if(location.protocol == 'file:')	{
+						app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',document.domain);
+								if(domObj)	{
+									app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
+									}
+								else	{
+									//the selection of a domain name will load the page content. (but we'll still need to nav)
+									app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+									app.model.dispatchThis('mutable');
+									}
+								}
+							}},'immutable');
+						}
 					}
 				else {
-					
 					
 					app.ext.admin.calls.adminDomainList.init({},'immutable');
 					
@@ -3412,15 +3107,15 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					if(linkFrom)	{
 						app.u.dump("INCOMING! looks like we've just returned from a partner page");
 						if(linkFrom == 'amazon-token')	{
-							app.ext.admin.a.showUI('#!syndication');
+							app.ext.admin.a.navigateTo('#!syndication');
 							app.ext.admin.a.showAmzRegisterModal();
 							}
 						else	{
-							app.ext.admin.a.showUI('#!dashboard');
+							app.ext.admin.a.navigateTo('#!dashboard');
 							}
 						}
 					else	{
-						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+						app.ext.admin.a.navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
 
 						if(document.URL.indexOf("/future/") > 0)	{
 							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
@@ -3463,7 +3158,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
-					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
+					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz navigateTo wants #.
 					else	{
 						page = page.replace(/^#/, ''); //strip preceding # from hash.
 						}
@@ -3646,20 +3341,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 
-
-// ### time permittting, replace use of function below with getWhitlestedObject
-//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
-			getSanitizedKVPFromObject : function(obj)	{
-				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
-//				var whitelist = new Array('fee','weight','subtotal');
-				delete newObj.isTranslated;
-				delete newObj.sortableItem;
-				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
-				return $.param(newObj);
-				},
-
-
-
 //pass in an object (probably a Serialized Form Object) and any tag that starts with _tag/ will be returned as part of an object.
 			getTagObjFromSFO : function(sfo)	{
 				var r = {}; //what is returned.
@@ -3678,7 +3359,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 			loadNativeApp : function(path,opts,$target){
-//				app.u.dump("BEGIN loadNativeApp");
+				app.u.dump("BEGIN loadNativeApp");
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
@@ -3690,25 +3371,18 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!domainConfigPanel')	{
 // * 201332 -> new domain interface
 //					app.ext.admin.a.showDomainConfig();
-					app.ext.admin_config.a.showDomainManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showDomainManager($target);
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
-				else if(path == '#!launchpad')	{
+/*				else if(path == '#!launchpad')	{
 					app.ext.admin.vars.tab = 'launchpad';
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
 					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
 					}
-				else if(path == '#!organizationManager')	{
+*/				else if(path == '#!organizationManager')	{
 					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
-					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showOrganizationManager($target);
 					}
-				else if(path == '#!reports')	{
-					app.ext.admin.vars.tab = 'reports';
-					this.bringTabIntoFocus('reports');
-					this.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
-					}
-				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
 				else if(path == '#!batchManager')	{
 					app.ext.admin.vars.tab = 'utilities';
@@ -3716,22 +3390,16 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					this.bringTabContentIntoFocus($('#utilitiesContent'));
 					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
 					}
-				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));}
+				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
 				else if(path == '#!variationsManager')	{
 //					app.u.dump("$target: "); app.u.dump($target);
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $target);
 					}
 				else if(path == '#!help')	{
 					$('#supportContent').empty();
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
 					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
-					}
-				else if(path == '#!support')	{
-					$('#supportContent').empty();
-					this.bringTabIntoFocus('support');
-					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin_support.a.showTicketManager($('#supportContent'));
 					}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
@@ -3760,10 +3428,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				else if(path == '#!showEmailAuth')	{
 					app.ext.admin_config.a.showEmailAuth($target);
 					}
-					
-					
+				else if(path == '#!fileImport')	{
+					app.ext.admin_medialib.a.showFileImportPage($target);
+					}
 				else if(path == '#!giftcardManager')	{
-					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showGiftcardManager($target);
 					}
 				else if(path == '#!notifications')	{
 					app.ext.admin_config.a.showNotifications($target);
@@ -3772,130 +3441,103 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					app.ext.admin_trainer.a.showTrainer($target);
 					}
 				else if(path == '#!categoriesAndLists')	{
-					app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_navcats.a.showCategoriesAndLists($target);
 					}
 				else if(path == '#!billingHistory')	{
-					app.ext.admin_config.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showBillingHistory($target);
 					}
 				else if(path == '#!globalVariations')	{
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_prodEdit.a.showStoreVariationsManager($target);
 					}
 				else if(path == '#!publicFiles')	{
 					app.ext.admin_medialib.u.showPublicFiles(path,opts);
 					}
 
 				else if(path == '#!globalSettings')	{
-					app.ext.admin_config.a.showGlobalSettings($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showGlobalSettings($target);
 					}
 				else if(path == '#!billingHistory')	{
-					app.ext.admin_tools.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showBillingHistory($target);
 					}
 
 
 				else if(path == '#!showPlatformInfo')	{
-					app.ext.admin_support.a.showPlatformInfo($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_support.a.showPlatformInfo($target);
 					}
 
 				else if(path == '#!partitionManager')	{
-					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showPartitionManager($target);
 					}
 
 				else if(path == '#!privateFiles')	{
-					app.ext.admin_tools.a.showPrivateFiles($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showPrivateFiles($target);
 					}
 
 				else if(path == '#!manageFlexedit')	{
-					app.ext.admin_tools.a.showManageFlexedit($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showManageFlexedit($target);
 					}
 
 				else if(path == '#!pluginManager')	{
-					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showPluginManager($target);
 					}
 				else if(path == '#!campaignManager')	{
-					app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showCampaignManager($target);
 					}
 				else if(path == '#!ciEngineAgentManager')	{
-					app.ext.admin_tools.a.showciEngineAgentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showciEngineAgentManager($target);
 					}
 				else if(path == '#!couponManager')	{
-					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_config.a.showCouponManager($target);
 					}
 				else if(path == '#!priceSchedules')	{
-					app.ext.admin_wholesale.a.showPriceSchedules($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showPriceSchedules($target);
 					}
 				else if(path == '#!accountUtilities')	{
-					app.ext.admin_tools.a.showAccountUtilities($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showAccountUtilities($target);
 					}
 				else if(path == '#!productPowerTool')	{
-					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showPPT($target);
 					}
 				else if(path == '#!productExport')	{
-					app.ext.admin_tools.a.showProductExport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_tools.a.showProductExport($target);
 					}
 				else if(path == '#!warehouseManager')	{
-					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_wholesale.a.showWarehouseManager($target);
 					}
 				else if(path == '#!warehouseUtilities')	{
 					app.ext.admin_wholesale.a.showWarehouseUtilities($target);
 					}
 				else if(path == '#!reviewsManager')	{
-					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					app.ext.admin_customer.a.showReviewsManager($target);
 					}
 				else if (path == '#!appChooser')	{
 					app.ext.admin_templateEditor.a.showAppChooser();
 					}
 				else if (path == '#!projects')	{
-					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					app.ext.admin.a.showProjects($target);
 					}
 				else if (path == '#!rss')	{
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					app.ext.admin.a.showRSS($target);
 					}
 				else if (path == '#!paymentManager')	{
-					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					app.ext.admin_config.a.showPaymentManager($target);
 					}
 				else if (path == '#!shippingManager')	{
-					app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					app.ext.admin_config.a.showShippingManager($target);
 					}
 				else if (path == '#!contactInformation')	{
-					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
-					}
-				else if (path == '#!syndication')	{
-					app.ext.admin.vars.tab = 'syndication';
-					app.ext.admin.u.bringTabIntoFocus('syndication');
-					app.ext.admin.u.bringTabContentIntoFocus($("#syndicationContent"));
-					app.ext.admin_syndication.a.showSyndication($("#syndicationContent"));
-					}
-				else if(path == '#!sites')	{
-					app.ext.admin.vars.tab = 'sites';
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($("#sitesContent"));
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
+					app.ext.admin_config.a.showContactInformation($target);
 					}
 				else if(path == '#!taxConfig')	{
 					app.ext.admin_config.a.showTaxConfig($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 					}
-				else if(path == '#!orders')	{
-//					app.u.dump("into loadNativeApp -> #!orders");
-					app.ext.admin.vars.tab = 'orders';
-					app.ext.admin.u.bringTabIntoFocus('orders');
-					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
-					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
-//					app.u.dump("end of loadNativeApp  else statement -> #! orders");
-					}
-				else if(path == '#!product')	{
-//					app.u.dump("Go to product editor");
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
-					app.ext.admin.vars.tab = 'product';
-					app.ext.admin.u.bringTabIntoFocus('product');
-					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-					app.ext.admin_prodEdit.a.showProductManager(opts);
-					}
+
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager($target);
 					}
 				else	{
-					app.u.throwGMessage("WARNING! unrecognized path/app ["+path+"] passed into loadNativeApp.");
+					$('#globalMessaging').anymessage({"message":"In admin.u.loadNativeApp, unrecognized path/app ["+path+"] passed.","gMessage":true});
+					app.u.throwGMessage("WARNING! ");
 					}
 //				app.u.dump("END loadNativeApp");
 				},
@@ -3908,7 +3550,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
-//this will replace handleShowSection
 			bringTabContentIntoFocus : function($target){
 				
 				if($target instanceof jQuery)	{
@@ -3972,94 +3613,57 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				return $target;
 				},
 
-
-//executed from within showUI. probably never want to execute this function elsewhere.
-//this is for handling legacy paths.
-			handleShowSection : function(path,P,$target)	{
-				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
+			showTabLandingPage : function(path,$target,opts)	{
+				var r = true;
+				var tab = path.substring(2);
 				this.bringTabIntoFocus(tab);
-//				app.u.dump(" -> tab: "+tab);
-//				app.u.dump(" -> path: "+path);
-				if(tab == 'product' && !P.dialog)	{
-//					app.u.dump(" -> open product editor");
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.u.showProductEditor(path,P);
-					app.ext.admin_prodEdit.a.showProductManager(P);					
+				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+
+//anycontent(destroy) should only be run if new content is being added cuz it kills data(). it also empties the tab contents.
+				if($target && $target.data('anycontent'))	{
+					$target.anycontent('destroy');
 					}
-				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('kpi');
-					app.ext.admin.u.bringTabContentIntoFocus($('#kpiContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+
+				app.ext.admin.u.bringTabContentIntoFocus($target);
+
+				if(tab == 'product')	{
+					app.ext.admin_prodEdit.a.showProductManager(opts);					
+					}
+				else if(tab == 'kpi')	{
 					app.ext.admin_reports.a.showKPIInterface();
 					}
-				else if(tab == 'sites' || path == '/biz/sites/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($('#sitesContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
+				else if(tab == 'sites')	{
+					app.ext.admin.a.showSitesTab($target);
 					}
-				else if(tab == 'reports' || path == '/biz/reports/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('reports');
-					app.ext.admin.u.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
+				else if(tab == 'reports')	{
+					app.ext.admin_reports.a.showReportsPage($target);
 					}
-				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});  //navigateTo's hard coded on 2012/30
+				else if(tab == 'setup')	{
+					$target.anycontent({'templateID':'pageSetupTemplate','showLoading':false});
 					}
-				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_syndication.a.showSyndication($('#syndicationContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
+				else if(tab == 'support')	{
+					app.ext.admin_support.a.showTicketManager($target);
 					}
-				else if(tab == 'crm' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_customer.a.showCRMManager($('#crmContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
+				else if(tab == 'syndication')	{
+					app.ext.admin_syndication.a.showSyndication($target);
 					}
-				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.u.loadNativeApp('#!orders',P);
+				else if (tab == 'orders')	{
+					app.ext.admin_orders.a.initOrderManager(opts);
 					}
-				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#utilitiesContent').intervaledEmpty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'}); //navigateTo's hard coded on 2012/30
+				else if(tab == 'crm')	{
+					app.ext.admin_customer.a.showCRMManager($target);
 					}
-				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
-					app.u.dump(" -> open import editor");
-					app.ext.admin_medialib.u.showFileUploadPage(path,P);
+				else if(tab == 'utilities')	{
+					$target.anycontent({'templateID':'pageUtilitiesTemplate','showLoading':false});
 					}
-// * 201332 -> interface was replaced a version or two ago and this was overlooked.
-//				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
-//					app.u.dump(" -> open public files list");
-//					app.ext.admin_medialib.u.showPublicFiles(path,P);
-//					}
 				else	{
-//					app.u.dump(" -> open something wonderful .. "+path); app.u.dump(" -> P: "); app.u.dump(P);
-					$target.empty().append("<div class='loadingBG'></div>");
-//					alert(path);
-					app.model.fetchAdminResource(path,P);
-//					app.ext.admin.calls.adminUIExecuteCGI.init(path,{infoObj:P})
+					$('#globalMessaging').anymessage({"message":"In admin.u.showTabLandingPage, unrecognized tab ["+tab+"]","gMessage":true});
+					r = false;
 					}
-				}, //handleShowSection
-
-// !!! when the old showUI goes away, so can this function.
-			getId4UIContent : function(path){
-				return this.getTabFromPath(path)+"Content";
+				return r;
 				},
+
 
 			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
 			getTabFromPath : function(path)	{
@@ -4070,8 +3674,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				if (r == 'batch') { r = 'reports'} //symlinked
 				if (r == 'download') { r = 'reports'} //symlinked
 				if (r == 'todo') { r = 'reports'} //symlinked
-				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
-					// yay, we have a valid tab				
+				if($.inArray(r,app.ext.admin.vars.tabs) >= 0){ //is a supported tab.
+					// yay, we have a valid tab	
 					} 
 				else	{
 					// default tab
@@ -4190,7 +3794,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					for(var i = 0; i < L; i += 1)	{
 						if(i){$target.append(" &#187; ")}
 						if(bc[i]['link'])	{
-							$target.append("<a href='#' onClick='return showUI(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
+							$target.append("<a href='#' onClick='return navigateTo(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
 							}
 						else	{
 							$target.append(bc[i].name);
@@ -4223,7 +3827,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						else	{
 //the extra anonymous function here and above is for support passing in a var.
 //see http://stackoverflow.com/questions/5540280/
-							$a.click(function(j){return function(){showUI(j);}}(tabs[i]['link']));
+							$a.click(function(j){return function(){navigateTo(j);}}(tabs[i]['link']));
 							}
 						$target.append($a);
 						}
@@ -4287,7 +3891,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
-						return showUI(href);
+						return navigateTo(href);
 						});
 					}
 				}, //rewriteLink
@@ -4826,8 +4430,8 @@ When a page change occurs, the hash is updated.
 This hash change triggers a 'state' in the browser so that the back button will work.
 when the browser detects a hash change, it will execute this code.
 Of course, if we change the hash with JS, it will also trigger this code.
-so, in our js for changing pages (showUI), we start by setting the global var _ignoreHashChange to true.
-Then this function will know to NOT perform a showUI of it's own.
+so, in our js for changing pages (navigateTo), we start by setting the global var _ignoreHashChange to true.
+Then this function will know to NOT perform a navigateTo of it's own.
 because this feature should be on most of the time, ignorehashchange is turned off each 
 time a hash change occurs.
 I didn't have this function actually trigger the page handler instead of toggling ignore... on/off because
@@ -4840,7 +4444,7 @@ just lose the back button feature.
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 //				app.u.dump(" -> hash: "+hash);
 				if(hash.substr(0,5) == "/biz/" && !_ignoreHashChange)	{
-					showUI(hash);
+					navigateTo(hash);
 					}
 				else	{
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
@@ -5709,11 +5313,12 @@ not in use
 
 //used for delegated events and is triggered by app-event tagRowForRemove
 			tagRow4Remove : function($ele,p)	{
+				app.u.dump("tagRow4Remove click!");
 //if this class is already present, the button is set for delete already. unset the delete.
 //added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
 				if($ele.hasClass('ui-state-error'))	{
-// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
-					$ele.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+// the find("button[role='button']") is to refine to elmeents that have been through button(). avoids a JS error
+					$ele.removeClass('ui-state-error').closest('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('enable');
 						}); //enable the other buttons
 					$ele.button('enable');
@@ -5731,12 +5336,8 @@ not in use
 				},
 			
 //make sure button is withing the table. tfoot is good.
-			tagAllRowsForRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-closethick"},text: true});
-				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
-					event.preventDefault();
-					$btn.closest('table').find("button[data-app-event='admin|tagRowForRemove']").trigger('click');
-					});
+			toggleAllRows4Remove : function($ele,p)	{
+				$ele.closest('table').find("button[data-app-click='admin|tagRow4Remove']").trigger('click');
 				},
 
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
@@ -5932,210 +5533,139 @@ else	{
 					}
 				},
 
-			adminRSSRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.showEditRule').on('click.showEditRule',function(event){
 
-					event.preventDefault();
-					var data = $(this).closest('tr').data(),
-					$D = $("<div \/>").attr('title','Delete RSS Feed').append("Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.");
-
-					$D.dialog({
-resizable: false,
-modal: true,
-buttons: {
-	"Delete Feed": function() {
-		$D.showLoading({'message':'Deleting Feed'});
-		app.ext.admin.calls.adminRSSRemove.init(data.id,{'callback':function(rd){
-			$D.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$D.anymessage({'message':rd})
-				}
-			else	{
-				$D.empty();
-				app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-				}
-			}},'immutable');
-
-		app.model.addDispatchToQ({
-			"_cmd":"adminRSSList",
-			"_tag" : {
-				'datapointer' : 'adminRSSList|'+app.vars.partition
-				}
-			},'immutable');
-
-
-		app.model.dispatchThis('immutable');
-		},
-	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
-	}
-        });
-
+			adminRSSRemove : function($ele,p)	{
+				var data = $ele.closest('tr').data();
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.",
+					"removeButtonText" : "Remove Feed", //will default if blank
+					"title" : "Remove RSS Feed", //will default if blank
+					"removeFunction" : function(vars,$D){
+						$D.showLoading({"message":"Deleting RSS feed"});
+						app.model.addDispatchToQ({
+							'_cmd':'adminRSSRemove',
+							'CPG' : data.cpg,
+							'_tag':	{
+								'datapointer' : 'adminRSSRemove',
+								'callback' : function(rd)	{
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd});
+										}
+									else	{
+										$D.empty().anymessage({'message':'Your feed has been deleted.'});
+										$D.parent().find('.ui-dialog-buttonpane').hide(); //hide cancel and remove buttons.
+										$ele.closest("tr").hide();
+										}
+									}
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
+						}
 					});
 				}, //adminRSSRemove
 			
-			adminRSSUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSUpdateExec').on('click.adminRSSUpdateExec',function(){
+			adminRSSUpdateExec : function($ele,p)	{
+				var
+					$form = $ele.closest('form'),
+					sfo = $form.serializeJSON();
+				
+				if(app.u.validateForm($form))	{
+					$form.showLoading({'message':'Updating RSS Feed'});
+					app.ext.admin.calls.adminRSSUpdate.init(sfo,{
+						'callback': 'showMessaging',
+						'message' : "Your RSS feed has been updated",
+						'jqObj' : $form
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm handles error display
 
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Updating RSS Feed'});
-	app.ext.admin.calls.adminRSSUpdate.init(sfo,{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd})
-			}
-		else	{
-			$form.anymessage(app.u.successMsgObject('Thank you, your feed has been updated.'));
-			}
-		}},'immutable');
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
 				},
 
 		//to render the addUpdate template for rss, the following data sources are necessary:  schedules, domains, navcat 'lists' and the detail for the rss feed itself.			
-			adminRSSUpdateShow : function($btn){
+			adminRSSUpdateShow : function($ele,p){
 
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminRSSUpdateShow').on('click.adminRSSUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin.u.fetchRSSDataSources('mutable')
+				var data = $ele.closest('tr').data();
+				var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
+					'panelID' : 'rss'+data.cpg,
+					'header' : 'Edit Feed: '+data.cpg,
+					'handleAppEvents' : false, //handled later.
+					showLoading : false
+					});
+				$panel.showLoading({'message':'Fetching RSS detail'});
 
-					var data = $btn.closest('tr').data();
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
-						'panelID' : 'rss'+data.cpg,
-						'header' : 'Edit Feed: '+data.cpg,
-						'handleAppEvents' : false, //handled later.
-						showLoading : false
-						});
-					$panel.showLoading({'message':'Fetching RSS detail'})
+				app.ext.admin.u.fetchRSSDataSources('mutable');
 //files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
-					app.model.addDispatchToQ({
-						"_cmd":"adminRSSDetail",
-						"CPG":data.cpg,
-						"_tag": {
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
-									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-									$('.toolTip',$panel).tooltip();
-									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
+				app.model.addDispatchToQ({
+					"_cmd":"adminRSSDetail",
+					"CPG":data.cpg,
+					"_tag": {
+						'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								//success content goes here.
+								$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
+								$('.buttonbar',$panel).first().append($("<button \/>").addClass('applyButton').attr('data-app-click','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
 								
-								//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
-									if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
-										$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
-										$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].list)	{
-										$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
-										}
-									app.u.handleAppEvents($panel);
+								app.u.handleCommonPlugins($panel);
+								app.u.handleButtons($panel);
+								
+								$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
+							
+//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
+								if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
+									$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
 									}
-								},
-							'datapointer' : 'adminRSSDetail|'+data.cpg
-							}
+								
+								if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
+									$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
+									}
+								
+								if(app.data['adminRSSDetail|'+data.cpg].list)	{
+									$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
+									}
+								app.u.handleAppEvents($panel);
+								}
+							},
+						'datapointer' : 'adminRSSDetail|'+data.cpg
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				}, //adminRSSUpdateShow
+			
+			adminRSSCreateShow : function($ele,p)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New RSS Feed',
+					'templateID':'rssAddUpdateTemplate',
+					'showLoading':false
+					});
+				$D.dialog('open').anydelegate();
+				$("form",$D).append("<input type='hidden' name='_cmd' value='adminRSSCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				
+				$('.buttonbar:first',$D).append("<button data-app-click='admin|submitForm' class='applyButton'>Save Feed</button>");
+				
+				var numRequests = app.ext.admin.u.fetchRSSDataSources('mutable');
+				if(numRequests)	{
+					$D.showLoading({'message':'Fetching resources'});
+					app.calls.ping.init({
+						'callback':'anycontent',
+						'datapointer' : 'ping',
+						'jqObj' : $D,
+						'translateOnly' : true,
+						'extendByDatapointers' : ["appCategoryList|"+app.vars.partition+"|lists|.","adminDomainList","adminPriceScheduleList"]
 						},'mutable');
 					app.model.dispatchThis('mutable');
-					});
-
-				}, //adminRSSUpdateShow
-
-			adminRSSCreateExec : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateExec').on('click.adminRSSCreateExec',function(){
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Creating RSS Feed'});
-	
-	app.model.addDispatchToQ($.extend(true,{},sfo,{
-		"_cmd":"adminRSSCreate",
-		"_tag" : {
-			'callback':function(rd){
-				$form.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$form.anymessage({'message':rd})
 					}
 				else	{
-					vars['$dialog'].empty().anymessage(app.u.successMsgObject('Thank you, your feed has been created.'));
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					$D.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
 					}
-				}
-			}
-		}),'immutable');
-
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
 				},
-			adminRSSCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateShow').on('click.adminRSSCreateShow',function(){
 
 
-var	$D = $("<div \/>").attr('title',"Add a new project");
-$D.addClass('displayNone').appendTo('body'); 
-$D.dialog({
-	width : '70%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		}
-	});
-
-$D.dialog('open');
-$D.showLoading({'message':'Fetching Data for Feed Creation'});
-
-var
-	numRequests = app.ext.admin.u.fetchRSSDataSources('mutable')
-	callback = function(rd){
-		$D.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$target.anymessage({'message':rd})
-			}
-		else	{
-	
-			$D.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
-			$('.buttonbar',$D).first().append($("<button \/>").attr('data-app-event','admin|adminRSSCreateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-			$('.toolTip',$D).tooltip();
-			app.u.handleAppEvents($D,{'$dialog':$D});
-			$D.dialog('option', 'position', $D.dialog('option','position')); //reposition dialog in browser to accomodate new content.
-			}
-		}
-
-
-if(numRequests)	{
-	app.calls.ping.init({'callback':callback},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else	{
-	callback({});
-	}
-
-					});
-				},
-			
 			showYTVInDialog : function($ele)	{
 				app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
 				},

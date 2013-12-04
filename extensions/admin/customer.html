@@ -101,7 +101,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<div>
 	<fieldset>
 		<div class='label'>Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span></div>
-		<div class='label'>Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	</div>
+		<div class='label'>Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:epoch2mdy;"></span>	</div>
 		<label><span>Email:</span><input size='20' type="email" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
 		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
 		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
@@ -1098,7 +1098,7 @@ The checkbox below does not work.
 </table>
 
 
-<div id='caimpaignCreateTemplate' class='campaignEditor'>
+<div id='campaignCreateTemplate' class='campaignEditor'>
 
 <form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
 <input name='GUID' type='hidden' value='' data-bind="var: campaign(GUID); format:popVal;" />

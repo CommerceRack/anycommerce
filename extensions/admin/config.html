@@ -287,8 +287,10 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 
 <form  id='rulesInputsTemplate_shipping'>
-
-<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
+<!--
+SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
+keep all inputs within one fieldset for the save function.
+-->
 <fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 
 	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
@@ -475,8 +477,10 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 
 <form id='rulesInputsTemplate_coupons'>
-
-<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
+<!--
+SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
+keep all inputs within one fieldset for the save function.
+-->
 <fieldset class='labelsAsBreaks alignedLabels'>
 
 	<input type='hidden' name='guid' value='' data-bind='var: rule(guid); format:popVal;' />
@@ -1445,7 +1449,6 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<label><input type="checkbox" name="multibox" data-bind='var: shipmethod(multibox); format:popVal;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
 	<label><input type="checkbox" name="residential" data-bind='var: shipmethod(residential); format:popVal;' /> Treat all customers as residential (default is business).</label>
 	<label><input type="checkbox" name="validation" data-bind='var: shipmethod(validation); format:popVal;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
-	<label><input type="checkbox" name="use_rules" data-bind='var: shipmethod(use_rules); format:popVal;' /> Perform rule processing. (RECOMMENDED)</label>
 	
 	</fieldset>
 	
@@ -2093,32 +2096,32 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Gateways</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
-		<li data-tender='CC'>Credit Card</li>
-		<li data-tender='ECHECK'>eCheck</li>
+		<li data-tender='CC' data-app-click='admin_config|payMethodEditorShow'>Credit Card</li>
+		<li data-tender='ECHECK' data-app-click='admin_config|payMethodEditorShow'>eCheck</li>
 	</ul>
 </div>
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Wallets</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
-		<li data-tender='AMZCBA'>Amazon</li>
+		<li data-tender='AMZCBA' data-app-click='admin_config|payMethodEditorShow'>Amazon</li>
 <!--		<li data-tender='GOOGLE'>Google</li> -->
-		<li data-tender='PAYPALEC'>PayPal</li>
+		<li data-tender='PAYPALEC' data-app-click='admin_config|payMethodEditorShow'>PayPal</li>
 	</ul>
 </div>
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Offline</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
-		<li data-tender='CASH'>Cash (for P.O.S.)</li>
-		<li data-tender='MO'>Cashiers Check or Money Order by Mail</li>
-		<li data-tender='COD'>Cashiers Check or Money Order on Delivery</li>
-		<li data-tender='CHECK'>Check by Mail</li>
-		<li data-tender='CHKOD'>Check on Delivery</li>
-		<li data-tender='GIFTCARD'>Gift Cards</li>
-		<li data-tender='PICKUP'>Pay at Pickup</li>
-		<li data-tender='PO'>Purchase Orders</li>
-		<li data-tender='WIRE'>Wire Transfer</li>
+		<li data-tender='CASH' data-app-click='admin_config|payMethodEditorShow'>Cash (for P.O.S.)</li>
+		<li data-tender='MO' data-app-click='admin_config|payMethodEditorShow'>Cashiers Check or Money Order by Mail</li>
+		<li data-tender='COD' data-app-click='admin_config|payMethodEditorShow'>Cashiers Check or Money Order on Delivery</li>
+		<li data-tender='CHECK' data-app-click='admin_config|payMethodEditorShow'>Check by Mail</li>
+		<li data-tender='CHKOD' data-app-click='admin_config|payMethodEditorShow'>Check on Delivery</li>
+		<li data-tender='GIFTCARD' data-app-click='admin_config|payMethodEditorShow'>Gift Cards</li>
+		<li data-tender='PICKUP' data-app-click='admin_config|payMethodEditorShow'>Pay at Pickup</li>
+		<li data-tender='PO' data-app-click='admin_config|payMethodEditorShow'>Purchase Orders</li>
+		<li data-tender='WIRE' data-app-click='admin_config|payMethodEditorShow'>Wire Transfer</li>
 	</ul>
 </div>
 
@@ -2649,117 +2652,114 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 /////////////////////// TAXES INFO \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
 
-<div id='taxConfigTemplate'>
-
-<section class='ui-widget twoColumn labelsAsBreaks alignedLabels'>
+<div id='taxConfigTemplate' data-table-role='container' data-app-role='taxConfigContainer'>
+<!--
+SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
+-->
+<section class='ui-widget twoColumn labelsAsBreaks alignedLabels' >
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom'>
-	<form onsubmit="return false" data-app-role='taxTableInputForm'>
-	
+	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate="novalidate">
+
 	<input type='hidden' name='enable' value='1' />
 	<fieldset>
 		<label>
 		<span>Rule type</span>
-		<select name="type" required='required' data-app-event='admin|showSiblingFieldset'>
+		<select name="type" required='required' data-panel-selector=".taxTypeConfiguration" data-input-change='show-panel'>
 			<option selected='selected' disabled='disabled'>Please Choose</option>
-			<option value="state">State: US Two Digit Abbreviation.</option>
-			<option value="city">Local: US State+City</option>
-			<option value="zipspan">Local: US Zip Range</option>
-			<option value="zip4">Local: US Zip+4</option>
-			<option value="country">State: Country</option>
-			<option value="intprovince">Local: Country+Province</option>
-			<option value="intzip">Local: Country+Zip</option>
+			<option value="state" data-show-panel='taxTypeConfigurationState'>State: US Two Digit Abbreviation.</option>
+			<option value="city" data-show-panel='taxTypeConfigurationCity'>Local: US State+City</option>
+			<option value="zipspan" data-show-panel='taxTypeConfigurationZipSpan'>Local: US Zip Range</option>
+			<option value="zip4" data-show-panel='taxTypeConfigurationZip4'>Local: US Zip+4</option>
+			<option value="country" data-show-panel='taxTypeConfigurationCountry'>State: Country</option>
+			<option value="intprovince" data-show-panel='taxTypeConfigurationIntProvince'>Local: Country+Province</option>
+			<option value="intzip" data-show-panel='taxTypeConfigurationIntZip'>Local: Country+Zip</option>
 		</select>
 		</label>
 	</fieldset>
 
 
-<!-- fieldsets for rule type selection go here -->
-	<div data-app-role='connectorFieldsetContainer'>
+	<fieldset data-app-role='state' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationState'>
+		<label>
+		<span>US state </span>
+		<input type="text" value="" name="state" size="2" maxlength="2" />
+		</label>
+		<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
+	</fieldset>
 
-		<fieldset data-app-role='state'>
-			<label>
-			<span>US state </span>
-			<input type="text" value="" name="state" size="2" maxlength="2" />
-			</label>
-			<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
-		</fieldset>
+	<fieldset data-app-role='city' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationCity'>
+		<label>
+		<span>State</span>
+		<input type="text" value="" name="citys" size="2" maxlength="2" />
+		</label>
+		
+		<label>
+		<span>City</span>
+		<input type="text" value="" name="city" size="20" />
+		</label>
+		
+		<p class='hint'>For City, rules is an exact string match, you can also use wildcards. ex: <br />
+		"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
+		<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
+	</fieldset>
 
-		<fieldset data-app-role='city'>
-			<label>
-			<span>State</span>
-			<input type="text" value="" name="citys" size="2" maxlength="2" />
-			</label>
-			
-			<label>
-			<span>City</span>
-			<input type="text" value="" name="city" size="20" />
-			</label>
-			
-			<p class='hint'>For City, rules is an exact string match, you can also use wildcards. ex: <br />
-			"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
-			<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
-		</fieldset>
+	<fieldset data-app-role='zipspan' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationZipSpan'>
+		<label>
+		<span>Start Zip</span>
+		<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
+		</label>
+		
+		<label>
+		<span>End zip</span>
+		<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
+		</label>
+		
+		<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
 
-		<fieldset data-app-role='zipspan'>
-			<label>
-			<span>Start Zip</span>
-			<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
-			</label>
-			
-			<label>
-			<span>End zip</span>
-			<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
-			</label>
-			
-			<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
+	</fieldset>
 
-		</fieldset>
+	<fieldset data-app-role='zip4' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationZip4'>
+		<label>
+		<span>Zip +4</span>
+		<input type="text" value="" name="zip4" size="10" maxlength="10" />
+		</label>
+		<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
+		<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
+	</fieldset>
 
-		<fieldset data-app-role='zip4'>
-			<label>
-			<span>Zip +4</span>
-			<input type="text" value="" name="zip4" size="10" maxlength="10" />
-			</label>
-			<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
-			<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
-		</fieldset>
+	<fieldset data-app-role='country' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationCountry'>
+		<label>
+		<span>ISO code</span>
+		<input type="text" value="" name="country" size="2" maxlength="2" data-minlength='2' data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+	</fieldset>
 
-		<fieldset data-app-role='country'>
-			<label>
-			<span>ISO code</span>
-			<input type="text" value="" name="country" size="2" maxlength="2" data-minlength='2' data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-		</fieldset>
+	<fieldset data-app-role='intprovince' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationIntProvince'>
+		<label>
+		<span>ISO country code</span>
+		<input type="text" value="" name="ipcountry" size="2" maxlength="2" data-minlength='2'  data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+		<label>
+		<span>Country province</span>
+		<input type="text" value="" name="ipstate" size="20" maxlength="20" />
+		</label>
+		<p class='hint'>Enter a province code, or province name for matching.</p>
+	</fieldset>
 
-		<fieldset data-app-role='intprovince'>
-			<label>
-			<span>ISO country code</span>
-			<input type="text" value="" name="ipcountry" size="2" maxlength="2" data-minlength='2'  data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-			<label>
-			<span>Country province</span>
-			<input type="text" value="" name="ipstate" size="20" maxlength="20" />
-			</label>
-			<p class='hint'>Enter a province code, or province name for matching.</p>
-		</fieldset>
-
-		<fieldset data-app-role='intzip'>
-			<label>
-			<span>ISO country code</span>
-			<input type="text" value="" name="izcountry" size="2" maxlength="2"  data-minlength='2'  data-validation-rules="skipIfHidden" />
-			</label>
-			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
-			<label>
-			<span>Zip</span>
-			<input type="text" value="" name="izzip" size="20" maxlength="20">
-			</label>
-			<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
-		</fieldset>
-	
-	</div>
+	<fieldset data-app-role='intzip' class='taxTypeConfiguration'  data-panel-id='taxTypeConfigurationIntZip'>
+		<label>
+		<span>ISO country code</span>
+		<input type="text" value="" name="izcountry" size="2" maxlength="2"  data-minlength='2'  data-validation-rules="skipIfHidden" />
+		</label>
+		<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+		<label>
+		<span>Zip</span>
+		<input type="text" value="" name="izzip" size="20" maxlength="20">
+		</label>
+		<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
+	</fieldset>
 
 
 
@@ -2775,10 +2775,10 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<div class='label'>
 		Also applies to:
 			<div class='stdMargin'>
-<label class='clearfix'><input type="checkbox" name="SHIPPING" class='applyAnycb' /> Shipping</label>
-<label class='clearfix'><input type="checkbox" name="HANDLING" class='applyAnycb' /> Handling</label>
-<label class='clearfix'><input type="checkbox" name="INSURANCE" class='applyAnycb' /> Insurance</label>
-<label class='clearfix'><input type="checkbox" name="SPECIAL" class='applyAnycb' /> Speciality Fees</label>
+<label class='clearfix'><input type="checkbox" name="enable_shipping" class='applyAnycb' /> Shipping</label>
+<label class='clearfix'><input type="checkbox" name="enable_handling" class='applyAnycb' /> Handling</label>
+<label class='clearfix'><input type="checkbox" name="enable_insurance" class='applyAnycb' /> Insurance</label>
+<label class='clearfix'><input type="checkbox" name="enable_special" class='applyAnycb' /> Speciality Fees</label>
 			</div>
 		</div>
 	
@@ -2802,7 +2802,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</fieldset>
 
 	<div class='buttonset smallPadding alignRight'>
-	<button data-app-event="admin_config|dataTableAddExec">Add Rule to Tax Table</button>
+	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Rule to Tax Table</button>
 	</div>
 	
 	</form>
@@ -2827,10 +2827,10 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
+	<tbody  data-table-role='content' data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
 	</table>
 	<div class='buttonset smallPadding alignRight'>
-		<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
+		<button data-app-role='saveButton' disabled='disabled' class='applyButton' data-app-click="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</div>
@@ -3067,8 +3067,8 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin='auth_facebook' data-app-event="admin_config|pluginUpdateShow">Facebook</li>
-			<li data-plugin='auth_google' data-app-event="admin_config|pluginUpdateShow">Google</li>
+			<li data-plugin='auth_facebook' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Facebook</li>
+			<li data-plugin='auth_google' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3077,9 +3077,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin='esp_awsses' data-app-event="admin_config|pluginUpdateShow" title='Amazon Simple Email Services'>Amazon SES</li>
-			<li data-plugin='platform_android' data-app-event="admin_config|pluginUpdateShow">Android</li>
-			<li data-plugin='platform_appleios' data-app-event="admin_config|pluginUpdateShow">Apple/iOS</li>
+			<li data-plugin='esp_awsses' data-app-click="admin_config|pluginUpdateShow" title='Amazon Simple Email Services' class='lookLikeLink'>Amazon SES</li>
+			<li data-plugin='platform_android' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Android</li>
+			<li data-plugin='platform_appleios' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Apple/iOS</li>
 		</ul>
 <!--
 		<h4>Infrastructure</h4>
@@ -3106,7 +3106,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
 			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-event="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
 			<div data-app-role='slimLeftContent'>
@@ -3699,11 +3699,11 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 </fieldset>
 -->
-<fieldset class='labelsAsBreaks'>
+<fieldset class='labelsAsBreaks' data-table-role='container'>
 	<legend>Configured Billing Methods</legend>
 
 	<div class='twoColumn'>
-		<table data-app-role='dataTable' class='gridTable fullWidth'>
+		<table class='gridTable fullWidth'>
 		<thead>
 		<tr>
 			<th>Type</th>
@@ -3713,14 +3713,14 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-app-role='paymentMethodTbody' data-bind="var: shipping(@PAYMENT_METHODS); format:processList; loadsTemplate:billingPaymentsRowTemplate;">
+		<tbody data-table-role='content' data-app-role='paymentMethodTbody' data-bind="var: shipping(@PAYMENT_METHODS); format:processList; loadsTemplate:billingPaymentsRowTemplate;">
 		
 		</tbody>
 		</table>
 	</div>
 	
 	
-	<div class='twoColumn column2'>
+	<div class='twoColumn column2' data-table-role='inputs'>
 
 		<label>
 			<span>Type</span>

@@ -212,7 +212,7 @@ and override using classes or id's as needed.
 /* for variations */
 
 .variation	{margin-bottom:6px;} /* class applied to div containing a variation group */
-.pogType_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
+.variation_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
 
 
 
@@ -250,7 +250,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
 
-.pogType_attribs	{display:none;} /* don't show finder attributes */
+.variation_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
 

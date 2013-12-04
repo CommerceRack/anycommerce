@@ -304,7 +304,7 @@ SETUP PAGE TEMPLATE
 			<div class="helper marginBottom">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
 			
 			<a href="#" onClick="navigateTo('#!categoriesAndLists'); return false;">Categories &amp; Lists</a><br />
-			<div class="helper marginBottom">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
+			<div class="helper marginBottom">Create and assign product to categories.</div>
 		</div>
 	</div><!-- /manage -->
 
@@ -653,7 +653,7 @@ UTILITIES PAGE TEMPLATE
 
 			
 						
-			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;">CSV Import Utility</a><br />
+			<a href="#" onClick="navigateTo('#!fileImport'); return false;">CSV Import Utility</a><br />
 			<div class="helper marginBottom">Import data from a variety of formats</div>
 <!--
 			<a href="#" onClick="navigateTo('#!ciEngineAgentManager'); return false;">Agent Manager</a><br />
@@ -882,7 +882,7 @@ PRODUCT TAB
 		<li data-mktid="EBS">eBay Store</li>
 	</ul>
 	</li>
-	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
+	<li><a href='#' onClick="return navigateTo('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
 	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
@@ -1143,7 +1143,7 @@ ACHIEVEMENTS
 
 	<label>
 	<span>GitHub branch</span>
-	<input type="text" name="branch"maxlength="20" />
+	<input type="text" name="branch" maxlength="20" />
 	</label>
 	
 <!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
@@ -1177,9 +1177,8 @@ ACHIEVEMENTS
 	<td data-bind="var: projects(PROFILE); format:text;"></td>
 	<td data-bind="var: projects(SCHEDULE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin|adminRSSRemove">Delete Feed</button>
-<!--	<button >Clone Feed</button>-->
-	<button data-app-event="admin|adminRSSUpdateShow">Edit Feed</button>
+	<button data-app-click="admin|adminRSSRemove" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Feed</button>
+	<button data-app-click="admin|adminRSSUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Feed</button>
 	</td>
 </tr>
 </table>

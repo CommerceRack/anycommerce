@@ -154,7 +154,7 @@ var admin_config = function() {
 				},
 		
 			showPluginManager : function($target)	{
-				$target.empty().showLoading({'message':'Fetching Your Integration Data'});
+				$target.showLoading({'message':'Fetching Your Integration Data'});
 
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
@@ -166,7 +166,8 @@ var admin_config = function() {
 								}
 							else	{
 								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
-								app.u.handleAppEvents($target);
+								$target.anydelegate();
+								app.u.handleButtons($target);
 								$("[data-app-role='slimLeftNav']",$target).accordion();
 								}
 							},
@@ -183,7 +184,7 @@ var admin_config = function() {
 				if($target instanceof jQuery && vars.plugin)	{
 //					app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
 					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin)});
-					$('.applyAnycb',$target).anycb();
+					app.u.handleCommonPlugins($target);
 					$target.parent().find('.buttonset').show();
 //					app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
 					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
@@ -216,33 +217,15 @@ var admin_config = function() {
 				},
 			
 			showPaymentManager : function($target)	{
-				$target.showLoading({'message':'Fetching Your Active Payment Methods'});
+				$target.showLoading({'message':'Fetching your payment method settings'});
 				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
-				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition,callback : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						$target.hideLoading();
-						$target.anycontent({'templateID':'paymentManagerPageTemplate',data:{}});
-						app.u.handleAppEvents($target);
-						
-						var
-							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
-							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
-						
-						$leftColumn.find('li').each(function(){
-							var $li = $(this);
-							$li.addClass('ui-corner-none pointer').on('click',function(){
-								$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
-								$li.addClass('ui-state-focus');
-								$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$li.text());
-								app.u.handleAppEvents($contentColumn); //handles app events outside the content area.
-								app.ext.admin_config.a.showPaymentTypeEditorByTender($li.data('tender'),$contentColumn);
-								});
-							});
-						}
-					}},'mutable');
+				$target.anydelegate();
+				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
+					'callback' : 'anycontent',
+					'datapointer' : 'adminConfigDetail|payment|'+app.vars.partition,
+					'templateID' : 'paymentManagerPageTemplate',
+					jqObj : $target
+					},'mutable');
 				app.model.dispatchThis('mutable');
 				}, //showPaymentManager
 			
@@ -326,30 +309,28 @@ var admin_config = function() {
 
 
 			showTaxConfig : function($target)	{
-				$target.empty().showLoading({'message':'Fetching tax details'});
+				
+				$target.anycontent({
+					'templateID':'taxConfigTemplate',
+					'showLoadingMessage' : 'Fetching tax details'
+					}).anydelegate();
+
+				$("[name='expires']",$target).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					minDate: 0,
+					dateFormat : "yymmdd"
+					});
+
 				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
-
 				app.model.destroy(datapointer);
-				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{'datapointer' : datapointer, 'callback' : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						$target.hideLoading();
-						$target.append($("<div \/>").anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer}).anydelegate());
-						app.u.handleButtons($target);
-						app.u.handleCommonPlugins($target);
-						$("[name='expires']",$target).datepicker({
-							changeMonth: true,
-							changeYear: true,
-							minDate: 0,
-							dateFormat : "yymmdd"
-							});
-						
-						app.u.handleAppEvents($target,{'$form':$("[data-app-role='taxTableExecForm']",$target),'$container':$("[data-app-role='taxTableInputForm']",$target),'$dataTbody':$("[data-app-role='dataTableTbody']",$target)});
-						}
-
-					}},'mutable');
+				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{
+					'datapointer' : datapointer,
+					'callback' : 'anycontent',
+					'translateOnly' : true,
+					'skipAppEvents' : true,
+					'jqObj' : $target
+					},'mutable');
 				app.model.dispatchThis('mutable');
 				}, //showTaxConfig
 
@@ -1092,6 +1073,24 @@ when an event type is changed, all the event types are dropped, then re-added.
 		e : {
 			
 
+			payMethodEditorShow : function($ele,p)	{
+				if($ele.data('tender'))	{
+					var
+						$target = $ele.closest("[data-app-role='slimLeftContainer']"),
+						$leftColumn = $ele.closest("[data-app-role='slimLeftNav']"),
+						$contentColumn = $("[data-app-role='slimLeftContent']",$target);
+					
+					$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
+					$ele.addClass('ui-state-focus');
+					$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$ele.text());
+					$contentColumn.anydelegate();
+					app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_config.e.payMethodEditorShow, data-tender not set on trigger element.","gMessage":true});
+					}
+				},
+
 			shipMeterDetailInModal : function($btn)	{
 				$btn.button();
 				$btn.off('click.shipMeterDetailInModal').on('click.shipMeterDetailInModal',function(event){
@@ -1622,10 +1621,82 @@ when an event type is changed, all the event types are dropped, then re-added.
 					});
 				}, //paymentMethodUpdateExec
 
-//This is the event to use for delegated events (as oppsed to app events).  It is also executed by the app event code.
+//This is the event to use for delegated events (as oppsed to app events).
+//requires the data-table syntax. 
 			dataTableAddUpdate : function($ele,P)	{
-//					app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				var r = false; //what is returned. will be true if data-table passes muster.
+				app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				var
+					$DTC = $ele.closest("[data-table-role='container']");// Data Table Container. This element should encompass the inputs AND the table itself.
+					$inputContainer = $("[data-table-role='inputs']",$DTC), //likely a fieldset, but that's not a requirement.
+					$dataTbody = $("tbody[data-table-role='content']",$DTC);
 				
+				if($inputContainer.length && $dataTbody.length)	{
+					app.u.dump(" -> all necessary jquery objects found.");
+					if($dataTbody.data('bind'))	{
+						app.u.dump(" -> $dataTbody has data-bind.");
+	
+						if(app.u.validateForm($inputContainer))	{
+							app.u.dump(" -> form is validated.");
+							var 
+								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+								sfo = $inputContainer.serializeJSON({'cb':true}),
+								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+							
+							$tr.anycontent({data:sfo});
+							$tr.addClass('edited');
+							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+							app.u.handleButtons($tr);
+					
+	//if a row already exists with this guid, this is an UPDATE, not an ADD.
+	//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
+							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
+								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
+								}
+							else	{
+								$tr.appendTo($dataTbody);
+								}
+	// by default, the data table inputs are reset on save. This can be disabled as needed by setting data-form-skipreset on the apply button.
+							if($ele.data('form-skipreset'))	{
+								}
+							else	{
+								$(':input',$inputContainer).not(':radio').not(":checkbox").val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
+								$(':radio',$inputContainer).prop('checked',false);
+								$(':checkbox',$inputContainer).prop('checked',false);
+								}
+							app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
+							r = true;
+							}
+						else	{
+							app.u.dump("form did not validate");
+							//validateForm handles error display.
+							}
+						}
+					else	{
+						$inputContainer.anymessage({"message":"In admin_config.e.dataTableAddUpdate, data-table-role='contents' has no data-bind set.","gMessage":true});
+						}
+				//	$('input',$container).attr('required','').removeAttr('required');
+					
+					}
+				else	{
+					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddUpdate, either table-role='container' found ["+$DTC.length+"] or table-role='content' ["+$dataTbody.length+"] and/or  table-role='inputs' ["+$inputContainer.length+"] found and all three are required.","gMessage":true});
+					app.u.dump(" -> $DTC.length: "+$DTC.length);
+					app.u.dump(" -> $inputContainer.length: "+$inputContainer.length);
+					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+					}	
+				return r;
+				},
+
+//This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
+//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
+//the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
+// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes. that form is NOT validated or included in the serialized Form Object.
+// $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
+// $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
+			dataTableAddExec : function($btn,vars)	{
+				$btn.button();
+				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
+					event.preventDefault();
 				var
 					$container = P['$container'] ? P['$container'] : $ele.closest('fieldset'),
 				//tbody can be passed in thru P or, if not passed, it will look for one within the fieldset. rules engine uses P approach. shipping doesn't. same for form.
@@ -1689,19 +1760,6 @@ when an event type is changed, all the event types are dropped, then re-added.
 					app.u.dump(" -> $form.length: "+$form.length);
 					app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
 					}
-				},
-
-//This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
-//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
-//the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
-// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes. that form is NOT validated or included in the serialized Form Object.
-// $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
-// $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
-			dataTableAddExec : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
-					event.preventDefault();
-					app.ext.admin_config.e.dataTableAddUpdate($btn,vars);
 					return false;
 					});
 				}, //dataTableAddExec
@@ -1830,35 +1888,27 @@ else	{
 				}, //shipmethodAddUpdateExec
 
 
-			taxTableUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.taxTableUpdateExec').on('click.taxTableUpdateExec',function(){
+			taxTableUpdateExec : function($ele,p)	{
+//updating the tax table is a destructive update, meaning the entire table is emptied and then rebuilt.
+				var $container = $ele.closest("[data-app-role='taxConfigContainer']"), macros = new Array();
+				macros.push("TAXRULES/EMPTY");
 
-$('body').showLoading({'message':'Updating tax table'});
+//build an array of the form input names for a whitelist.
+//need a whitelist because the tr.data() may have a lot of extra kvp in it
+				var whitelist = new Array('type','enable','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
 
-var macros = new Array();
-macros.push("TAXRULES/EMPTY");
-$btn.closest('form').find('tbody tr').each(function(){ //tbody needs to be is selector so that tr in thead isn't included.
-	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
-	else	{
-//		app.u.dump($(this).data());
-		macros.push("TAXRULES/INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
-		}
-	});
-
-//app.u.dump(" -> macros: "); app.u.dump(macros);
-app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
-	$('body').hideLoading();	
-	if(app.model.responseHasErrors(rd)){
-		$('#globalMessaging').anymessage({'message':rd});
-		}
-	else	{
-		$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
-		navigateTo('#!taxConfig');
-		}
-	}},'immutable');
-app.model.dispatchThis('immutable');
+				$ele.closest('form').find('tbody tr').each(function(index){ //tbody needs to be in the selector so that tr in thead isn't included.
+					var $tr = $(this);
+					if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+					else	{
+						if(!$tr.data('guid'))	{$tr.data('guid',index)} //a newly added rule
+						macros.push("TAXRULES/INSERT?"+$.param(app.u.getWhitelistedObject($tr.data(),whitelist)));
+						}
 					});
+
+				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'jqObj':$container},'immutable');
+				app.model.dispatchThis('immutable');
+
 				},
 
 //executed on a manage rules button.  shows the rule builder.
@@ -1887,10 +1937,9 @@ app.model.dispatchThis('immutable');
 					else	{
 						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesMode is empty or invalid ['+rulesMode+'] OR no data-table ['+$btn.data('table')+'] set. data-rulesmode should be set as data-rulesmode on the button with the app-event and the value must be coupons or shipping. data-table should likewise be set on the button.','gMessage':true});
 						}
-
 					});
 // return false;				
-				}, //taxTableUpdateExec
+				}, //ruleBuilderShow
 
 //executed by the 'add new rule' button. opens a dialog and, on save, updates the tbody of the rule builder.
 //the rule is NOT actually saved until the 'save' button is pushed.
@@ -1961,7 +2010,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 			$('tr',$tbody).each(function(){
 				if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 				else	{
-					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
 					}
 				});
 			
@@ -1976,7 +2025,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rule
 					//these are being removed. since the entire table was emptied, just don't pass and they'll be nuked.
 					}
 				else	{
-					macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+					macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','hint','match','matchvalue','filter','exec','value'])));
 					}
 				});
 
@@ -2081,32 +2130,24 @@ else {
 					});
 				},
 
-			pluginUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.pluginUpdateExec').on('click.pluginUpdateExec',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					$form.showLoading({'message':'Saving Changes'});
-					app.model.addDispatchToQ({
-	'_cmd':'adminConfigMacro',
-	'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
-	'_tag':	{
-		'callback':'showMessaging',
-		'restoreInputsFromTrackingState' : true,
-		'message' : "Your changes have been saved.",
-		'jqObj' : $form
-		}
-	},'immutable');
-app.model.dispatchThis('immutable');
-					});
+			pluginUpdateExec : function($ele,p)	{
+				var $form = $ele.closest('form');
+				$form.showLoading({'message':'Saving Changes'});
+				app.model.addDispatchToQ({
+					'_cmd':'adminConfigMacro',
+					'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+					'_tag':	{
+						'callback':'showMessaging',
+						'restoreInputsFromTrackingState' : true,
+						'message' : "Your changes have been saved.",
+						'jqObj' : $form
+						}
+					},'immutable');
+				app.model.dispatchThis('immutable');
 				},
 
-			pluginUpdateShow : function($ele)	{
-				$ele.addClass('lookLikeLink');
-				$ele.off('click.pluginUpdateShow').on('click.pluginUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
-					})
+			pluginUpdateShow : function($ele,p)	{
+				app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
 				},
 
 //delegated events

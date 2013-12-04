@@ -8,7 +8,7 @@
 		<td class='hideInDetailMode' data-bind="var: user(fullname); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
 		<td><ul data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></ul></td>
-		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
+		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:epoch2mdy;"></td>
 		<td class='alignRight'>
 		<button data-app-click="admin_user|bossUserDeleteConfirm" class='marginLeft applyButton' data-text='false' data-icon-primary='ui-icon-trash'>delete</button>
 		<button data-app-click="admin_user|bossUserDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>edit</button>

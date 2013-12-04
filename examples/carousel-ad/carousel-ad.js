@@ -363,7 +363,7 @@ else	{
 
 qObj.type = 'product';
 //datapointer needs to be unique. in case multiple carousels are present. TS isn't the worlds best solution, but it'll work for now.
-var tagObj = {"callback":"handleElasticResults","extension":"myRIA","parentID":P.parentID,"datapointer":"elasticsearch|"+app.u.unixNow()};
+var tagObj = {"callback":"handleElasticResults","extension":"myRIA","parentID":P.parentID,"datapointer":"elasticsearch|"+app.u.epochNow()};
 tagObj.templateID = P.templateID ? P.templateID : 'productListTemplate';
 
 app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);

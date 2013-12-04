@@ -693,7 +693,7 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onClick="showUI('#!showPlatformInfo'); return false;">App/Server Details</button></td>
+			<td class='valignTop'><button onClick="navigateTo('#!showPlatformInfo'); return false;">App/Server Details</button></td>
 			<td>Some details about the server you are on, app version, etc.</td>
 		</tr>
 		<tr>
@@ -822,34 +822,44 @@ has to be within the fieldset to for data-table to work right.
 			</table>
 			
 			<div class='buttonset marginTop alignRight'>
-				<button data-app-event='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create'>Add Custom</button>
-				<button data-app-event='admin_tools|flexeditSaveExec'>Save Changes</button>
+				<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create' class='applyButton'>Add Custom</button>
+				<button data-app-click='admin_tools|flexeditSaveExec' class='applyButton'>Save Changes</button>
 			</div>
 
 <!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
-			<div class='labelsAsBreaks displayNone' data-app-role='flexeditAttributeAddUpdateContainer'>
+			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer'>
 				<label><span>Attribute ID </span><input name='id' value='' type='text' data-bind='var: flexedit(id); format:popVal;' /></label>
 				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
 				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
 				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
 				<label>
 					<span>Type</span>
-					<select name='type' data-bind='var: flexedit(type); format:popVal;'>
+					<select name='type' data-bind='var: flexedit(type); format:popVal;' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
 						<option value='checkbox'>Checkbox</option>
 						<option value='currency'>Currency</option>
 						<option value='image'>Image</option>
 						<option value='keyword'>Keyword</option>
 						<option value='number'>Number</option>
-						<option value='select'>Select</option>
+						<option value='select' data-show-panel='flexEditOptionsInput'>Select</option>
 						<option value='textbox'>Text (small block)</option>
 						<option value='textarea'>Text (big block)</option>
 						<option value='weight'>Weight</option>
 					</select>
 				</label>
+				
+				<!-- add this to your select list. make the class very specific. anything with this class will get toggled off onChange -->
+
+
+<!-- add this to each option that 'reveals' something. make the value very specific -->
+
+
+<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option -->
+				<div data-panel-id='flexEditOptionsInput' class='displayNone flexEditTypeInputs'>
 				<label>
 					<span>Options</span>
 					<textarea data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
 				</label>
+				</div>
 <!--				<button data-app-event="admin_tools|flexDataTableAddEditCancel">Cancel</button> -->
 				<button data-app-event="admin_config|dataTableAddExec">Apply Attribute</button>
 			</div>
@@ -861,7 +871,7 @@ has to be within the fieldset to for data-table to work right.
 	<section class='ui-widget twoColumn column2'>
 		<h3 class='stdPadding ui-widget-header ui-corner-top'>Popular Attributes</h3>
 		<div class='ui-widget-content ui-corner-bottom stdPadding flexeditMasterListContainer' data-app-role='flexeditMasterListContainer'>
-			<div class='buttonset alignRight'><button data-app-event="admin_tools|flexeditAttributesFullListShow">Full Attribute List</button></div>
+			<div class='buttonset alignRight'><button data-app-click="admin_tools|flexeditAttributesFullListShow" class='applyButton'>Full Attribute List</button></div>
 			<p>To enable a new attribute, simply drag it to the 'enabled' list on the left</p>
 			<table class='fullWidth gridTable'>
 				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" data-app-role='flexeditAttributeListTbody'>
@@ -889,9 +899,9 @@ has to be within the fieldset to for data-table to work right.
 		</div>
 	</td>
 	<td class='alignRight'>
-<!--		<button data-app-event="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList applyButton'>Add to Enabled List</button> -->
-		<button data-app-event="admin|tagRowForRemove" class='hideInMasterList'>Remove Field</button>
-		<button data-app-event='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList'>Update Attribute</button>
+		<span data-app-click="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList ui-icon ui-icon-circle-arrow-w pointer' title="Add to Enabled List"></span>
+		<button data-app-click="admin|tagRow4Remove" class='hideInMasterList applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Remove Field</button>
+		<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList applyButton' data-text='false' data-icon-primary="ui-icon-pencil">Update Attribute</button>
 	</td>
 </tr>
 
