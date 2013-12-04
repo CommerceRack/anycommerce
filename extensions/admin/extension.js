@@ -5555,17 +5555,22 @@ else	{
 					"title" : "Remove RSS Feed", //will default if blank
 					"removeFunction" : function(vars,$D){
 						$D.showLoading({"message":"Deleting RSS feed"});
-						$D.parent().find('.ui-dialog-buttonpane').hide(); //hide cancel and remove buttons.
 						app.model.addDispatchToQ({
 							'_cmd':'adminRSSRemove',
 							'ID' : data.id,
 							'_tag':	{
 								'datapointer' : 'adminRSSRemove',
-								'callback' :'showMessaging',
-								'jqObj' : $D,
-								'jqObjEmpty' : true,
-								'message' : 'The RSS feed has been deleted',
-								'updateDMIList' : $ele.closest("[data-app-role='dualModeContainer']").attr('id')
+								'callback' : function(rd)	{
+									$D.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd});
+										}
+									else	{
+										$D.empty().anymessage({'message':'Your feed has been deleted.'});
+										$D.parent().find('.ui-dialog-buttonpane').hide(); //hide cancel and remove buttons.
+										$ele.closest("tr").hide();
+										}
+									}
 								}
 							},'immutable');
 						app.model.dispatchThis('immutable');
@@ -5593,7 +5598,6 @@ else	{
 
 		//to render the addUpdate template for rss, the following data sources are necessary:  schedules, domains, navcat 'lists' and the detail for the rss feed itself.			
 			adminRSSUpdateShow : function($ele,p){
-				app.ext.admin.u.fetchRSSDataSources('mutable')
 
 				var data = $ele.closest('tr').data();
 				var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
@@ -5603,7 +5607,9 @@ else	{
 					'handleAppEvents' : false, //handled later.
 					showLoading : false
 					});
-				$panel.showLoading({'message':'Fetching RSS detail'})
+				$panel.showLoading({'message':'Fetching RSS detail'});
+
+				app.ext.admin.u.fetchRSSDataSources('mutable');
 //files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
 				app.model.addDispatchToQ({
 					"_cmd":"adminRSSDetail",
@@ -5616,11 +5622,14 @@ else	{
 							else	{
 								//success content goes here.
 								$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
-								$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-								$('.toolTip',$panel).tooltip();
+								$('.buttonbar',$panel).first().append($("<button \/>").addClass('applyButton').attr('data-app-click','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
+								
+								app.u.handleCommonPlugins($panel);
+								app.u.handleButtons($panel);
+								
 								$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
 							
-							//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
+//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
 								if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
 									$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
 									}
@@ -5647,14 +5656,14 @@ else	{
 					'templateID':'rssAddUpdateTemplate',
 					'showLoading':false
 					});
-				$D.dialog('open');
-				$("form",$D).append("<input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$D.dialog('open').anydelegate();
+				$("form",$D).append("<input type='hidden' name='_cmd' value='adminRSSCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				
-				$('.buttonset',$D).append("<button data-app-click='admin|submitForm'>Save Feed</button>");
+				$('.buttonbar:first',$D).append("<button data-app-click='admin|submitForm' class='applyButton'>Save Feed</button>");
 				
 				var numRequests = app.ext.admin.u.fetchRSSDataSources('mutable');
 				if(numRequests)	{
-//					$D.showLoading({'message':'Fetching resources'});
+					$D.showLoading({'message':'Fetching resources'});
 					app.calls.ping.init({
 						'callback':'anycontent',
 						'datapointer' : 'ping',

@@ -907,14 +907,14 @@ either templateID or (data or datapointer) are required.
 			},
 // when a template is translated, what is returned from this function is the data passed into transmogrify. allows for multiple data sets.
 		_getData : function()	{
-			app.u.dump(" _getData is running");
+//			app.u.dump(" _getData is running");
 			var
 				o = this.options,
 				eData = {}; //extended data. (didn't use data to avoid confusion w/ o.data)
 			
 			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
 			if(o.extendByDatapointers.length)	{
-				app.u.dump(" -> datapointers have been extended for anycontent");
+//				app.u.dump(" -> datapointers have been extended for anycontent");
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
 					if(app.data[o.extendByDatapointers[i]])	{
