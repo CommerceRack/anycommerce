@@ -2770,7 +2770,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
 //				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain);
-				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
+//				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
 				if(domain)	{
 //if no partition available, get it. if partition is null, number() returns 0.		
 					if(partition == 0 || Number(partition) > 0){
@@ -2795,17 +2795,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
-	
-	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-	//something here is causing session to not persist on reload.
-	/*					if(app.model.fetchData('authAdminLogin'))	{
-							var localVars = app.data['authAdminLogin'];
-							localVars.domain = domain;
-							localVars.partition = partition || null;
-							app.storageFunctions.writeLocal('authAdminLogin',localVars);
-							}
-	*/
-	//					app.u.dump(" -> path: "+path);
+
 						navigateTo(app.ext.admin.u.whatPageToShow(path || '#!dashboard'));
 
 						}
@@ -3074,37 +3064,39 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
 // ** 201338 -> need the product task list ul generated as early as possible.
-app.ext.admin_prodEdit.a.showProductManager();
-
-
-
-//				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
-//immutable because that's wha the domain call uses. These will piggy-back.
-
-
-
-					
-
-app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
-app.u.handleEventDelegation($('#messagesContent'));
-/*
-app.model.addDispatchToQ({
-	'detail':'more',
-	'_cmd': 'adminNavTreeList',
-	'_tag' : {datapointer: 'adminNavTreeList'}
-	},'immutable');
-*/
-app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
+				app.ext.admin_prodEdit.a.showProductManager();
+				
+				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+				app.u.handleEventDelegation($('#messagesContent'));
+				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				
-//show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
-//if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
+//if no domain is set, check to see if the domain on the uri is a valid (merchant-owned) domain and, fi so, use it. if not, show domain chosoer.
 				if(!app.vars.domain) {
-					//the selection of a domain name will load the page content. (but we'll still need to nav)
-					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+					if(location.protocol == 'file:')	{
+						app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',document.domain);
+								if(domObj)	{
+									app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
+									}
+								else	{
+									//the selection of a domain name will load the page content. (but we'll still need to nav)
+									app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
+									app.model.dispatchThis('mutable');
+									}
+								}
+							}},'immutable');
+						}
 					}
 				else {
-					
 					
 					app.ext.admin.calls.adminDomainList.init({},'immutable');
 					
