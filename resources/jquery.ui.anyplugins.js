@@ -907,12 +907,14 @@ either templateID or (data or datapointer) are required.
 			},
 // when a template is translated, what is returned from this function is the data passed into transmogrify. allows for multiple data sets.
 		_getData : function()	{
+			app.u.dump(" _getData is running");
 			var
 				o = this.options,
 				eData = {}; //extended data. (didn't use data to avoid confusion w/ o.data)
 			
 			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
-			if(!$.isEmptyObject(o.extendByDatapointers))	{
+			if(o.extendByDatapointers.length)	{
+				app.u.dump(" -> datapointers have been extended for anycontent");
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
 					if(app.data[o.extendByDatapointers[i]])	{
@@ -931,7 +933,6 @@ either templateID or (data or datapointer) are required.
 			},
 
 
-// *** 201332 -> there was an issue w/ anycontent being run over the same element and it double-populating the template instead of just translating on the second run. The 'istemplated' should fix that.
 		_anyContent : function()	{
 //			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
@@ -957,7 +958,7 @@ either templateID or (data or datapointer) are required.
 				this.element.data('isTemplated',true);
 //				app.u.dump(" -> data.isTranslated set to true.");
 				}
-//a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
+//a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation OR a placeholder has been added and translate will occur after the dispatch.
 			else if(o.templateID && !o.translateOnly)	{
 //				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
@@ -981,6 +982,8 @@ either templateID or (data or datapointer) are required.
 				this.element.data('isTranslated',true);
 				}
 			else	{
+				app.u.dump(" -> in anycontent, got to the 'else' that we never expected to get to. anycontent.options follow: ",'warn');
+				app.u.dump(o);
 				//should never get here. error handling handled in _init before this is called.
 				r = false;
 				}

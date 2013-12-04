@@ -543,27 +543,6 @@ var admin = function() {
 				}
 			},
 
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminRSSRemove : {
-			init : function(listID,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSRemove"
-				if(listID)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(listID,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSRemove, listID not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(listID,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminRSSRemove","_tag":_tag,"ID":listID},Q || 'immutable');	
-				}
-			}, //adminRSSRemove
-
 		adminRSSUpdate : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -3003,23 +2982,22 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 			showRSS : function($target)	{
-				
-				$target.intervaledEmpty();
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'RSS Feeds',
 					'className' : 'rssFeeds',
 					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight applyButton' data-app-click='admin|adminRSSCreateShow' data-icon-primary='ui-icon-plus'>New RSS Feed</button>"],
 					'thead' : ['ID','Title','Status','Profile','Schedule',''],
 					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminRSSList',
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
-							'datapointer':'adminRSSList'
+							'datapointer':'adminRSSList|'+app.vars.partition
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
 
@@ -5569,208 +5547,126 @@ else	{
 					}
 				},
 
-			adminRSSRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.showEditRule').on('click.showEditRule',function(event){
-
-					event.preventDefault();
-					var data = $(this).closest('tr').data(),
-					$D = $("<div \/>").attr('title','Delete RSS Feed').append("Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.");
-
-					$D.dialog({
-resizable: false,
-modal: true,
-buttons: {
-	"Delete Feed": function() {
-		$D.showLoading({'message':'Deleting Feed'});
-		app.ext.admin.calls.adminRSSRemove.init(data.id,{'callback':function(rd){
-			$D.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$D.anymessage({'message':rd})
-				}
-			else	{
-				$D.empty();
-				app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-				}
-			}},'immutable');
-
-		app.model.addDispatchToQ({
-			"_cmd":"adminRSSList",
-			"_tag" : {
-				'datapointer' : 'adminRSSList|'+app.vars.partition
-				}
-			},'immutable');
-
-
-		app.model.dispatchThis('immutable');
-		},
-	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
-	}
-        });
-
+			adminRSSRemove : function($ele,p)	{
+				var data = $ele.closest('tr').data();
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.",
+					"removeButtonText" : "Remove Feed", //will default if blank
+					"title" : "Remove RSS Feed", //will default if blank
+					"removeFunction" : function(vars,$D){
+						$D.showLoading({"message":"Deleting RSS feed"});
+						$D.parent().find('.ui-dialog-buttonpane').hide(); //hide cancel and remove buttons.
+						app.model.addDispatchToQ({
+							'_cmd':'adminRSSRemove',
+							'ID' : data.id,
+							'_tag':	{
+								'datapointer' : 'adminRSSRemove',
+								'callback' :'showMessaging',
+								'jqObj' : $D,
+								'jqObjEmpty' : true,
+								'message' : 'The RSS feed has been deleted',
+								'updateDMIList' : $ele.closest("[data-app-role='dualModeContainer']").attr('id')
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
+						}
 					});
 				}, //adminRSSRemove
 			
-			adminRSSUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSUpdateExec').on('click.adminRSSUpdateExec',function(){
+			adminRSSUpdateExec : function($ele,p)	{
+				var
+					$form = $ele.closest('form'),
+					sfo = $form.serializeJSON();
+				
+				if(app.u.validateForm($form))	{
+					$form.showLoading({'message':'Updating RSS Feed'});
+					app.ext.admin.calls.adminRSSUpdate.init(sfo,{
+						'callback': 'showMessaging',
+						'message' : "Your RSS feed has been updated",
+						'jqObj' : $form
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm handles error display
 
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Updating RSS Feed'});
-	app.ext.admin.calls.adminRSSUpdate.init(sfo,{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd})
-			}
-		else	{
-			$form.anymessage(app.u.successMsgObject('Thank you, your feed has been updated.'));
-			}
-		}},'immutable');
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
 				},
 
 		//to render the addUpdate template for rss, the following data sources are necessary:  schedules, domains, navcat 'lists' and the detail for the rss feed itself.			
-			adminRSSUpdateShow : function($btn){
+			adminRSSUpdateShow : function($ele,p){
+				app.ext.admin.u.fetchRSSDataSources('mutable')
 
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminRSSUpdateShow').on('click.adminRSSUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin.u.fetchRSSDataSources('mutable')
-
-					var data = $btn.closest('tr').data();
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
-						'panelID' : 'rss'+data.cpg,
-						'header' : 'Edit Feed: '+data.cpg,
-						'handleAppEvents' : false, //handled later.
-						showLoading : false
-						});
-					$panel.showLoading({'message':'Fetching RSS detail'})
+				var data = $ele.closest('tr').data();
+				var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
+					'panelID' : 'rss'+data.cpg,
+					'header' : 'Edit Feed: '+data.cpg,
+					'handleAppEvents' : false, //handled later.
+					showLoading : false
+					});
+				$panel.showLoading({'message':'Fetching RSS detail'})
 //files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
-					app.model.addDispatchToQ({
-						"_cmd":"adminRSSDetail",
-						"CPG":data.cpg,
-						"_tag": {
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
+				app.model.addDispatchToQ({
+					"_cmd":"adminRSSDetail",
+					"CPG":data.cpg,
+					"_tag": {
+						'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								//success content goes here.
+								$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
+								$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
+								$('.toolTip',$panel).tooltip();
+								$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
+							
+							//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
+								if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
+									$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
 									}
-								else	{
-									//success content goes here.
-									$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
-									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-									$('.toolTip',$panel).tooltip();
-									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
 								
-								//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
-									if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
-										$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
-										$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].list)	{
-										$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
-										}
-									app.u.handleAppEvents($panel);
+								if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
+									$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
 									}
-								},
-							'datapointer' : 'adminRSSDetail|'+data.cpg
-							}
+								
+								if(app.data['adminRSSDetail|'+data.cpg].list)	{
+									$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
+									}
+								app.u.handleAppEvents($panel);
+								}
+							},
+						'datapointer' : 'adminRSSDetail|'+data.cpg
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
+				}, //adminRSSUpdateShow
+			
+			adminRSSCreateShow : function($ele,p)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New RSS Feed',
+					'templateID':'rssAddUpdateTemplate',
+					'showLoading':false
+					});
+				$D.dialog('open');
+				$("form",$D).append("<input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				
+				$('.buttonset',$D).append("<button data-app-click='admin|submitForm'>Save Feed</button>");
+				
+				var numRequests = app.ext.admin.u.fetchRSSDataSources('mutable');
+				if(numRequests)	{
+//					$D.showLoading({'message':'Fetching resources'});
+					app.calls.ping.init({
+						'callback':'anycontent',
+						'datapointer' : 'ping',
+						'jqObj' : $D,
+						'translateOnly' : true,
+						'extendByDatapointers' : ["appCategoryList|"+app.vars.partition+"|lists|.","adminDomainList","adminPriceScheduleList"]
 						},'mutable');
 					app.model.dispatchThis('mutable');
-					});
-
-				}, //adminRSSUpdateShow
-
-			adminRSSCreateExec : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateExec').on('click.adminRSSCreateExec',function(){
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Creating RSS Feed'});
-	
-	app.model.addDispatchToQ($.extend(true,{},sfo,{
-		"_cmd":"adminRSSCreate",
-		"_tag" : {
-			'callback':function(rd){
-				$form.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$form.anymessage({'message':rd})
 					}
 				else	{
-					vars['$dialog'].empty().anymessage(app.u.successMsgObject('Thank you, your feed has been created.'));
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					$D.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
 					}
-				}
-			}
-		}),'immutable');
-
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
-				},
-			adminRSSCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateShow').on('click.adminRSSCreateShow',function(){
-
-
-var	$D = $("<div \/>").attr('title',"Add a new project");
-$D.addClass('displayNone').appendTo('body'); 
-$D.dialog({
-	width : '70%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		}
-	});
-
-$D.dialog('open');
-$D.showLoading({'message':'Fetching Data for Feed Creation'});
-
-var
-	numRequests = app.ext.admin.u.fetchRSSDataSources('mutable')
-	callback = function(rd){
-		$D.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$target.anymessage({'message':rd})
-			}
-		else	{
-	
-			$D.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
-			$('.buttonbar',$D).first().append($("<button \/>").attr('data-app-event','admin|adminRSSCreateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-			$('.toolTip',$D).tooltip();
-			app.u.handleAppEvents($D,{'$dialog':$D});
-			$D.dialog('option', 'position', $D.dialog('option','position')); //reposition dialog in browser to accomodate new content.
-			}
-		}
-
-
-if(numRequests)	{
-	app.calls.ping.init({'callback':callback},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else	{
-	callback({});
-	}
-
-					});
 				},
 			
 			showYTVInDialog : function($ele)	{
