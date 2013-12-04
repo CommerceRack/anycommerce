@@ -175,7 +175,6 @@ document.write = function(v){
 					}
 				else	{
 					app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'passive');
-					app.ext.store_cart.calls.cartShippingMethods.init({},'passive');
 					}
 
 				app.model.dispatchThis('passive');
@@ -2384,12 +2383,13 @@ elasticsearch.size = 50;
 //this is run from showContent.
 // when a cart update is run, the handleCart response also executes the handleTemplateFunctions
 			showCart : function(infoObj)	{
+				app.u.dump("BEGIN myRIA.u.showCart");
 				if(typeof infoObj != 'object'){var infoObj = {}}
-//				app.u.dump("BEGIN myRIA.u.showCart");
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
+				infoObj.show = 'inline'; // !!! here for testing.
 				if(infoObj.show == 'inline')	{
 //only create instance once.
 					var $cart = $('#mainContentArea_cart')
@@ -2421,12 +2421,52 @@ elasticsearch.size = 50;
 
 					}
 				else	{
-					app.ext.store_cart.u.showCartInModal(infoObj);
+					app.ext.myRIA.u.showCartInModal(infoObj);
 					}
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				}, //showCart
 
+/*
+This will open the cart in a modal. If an update is needed, that must be performed outside this function.
+assumes that cart is in memory before it's loaded.
+either templateID needs to be set OR showloading must be true. TemplateID will translate the template. showLoading will (you guessed it) show the loading class.
+ so you can execute showCartInModal with showLoading set to true, then dispatch a request for a cart and translate the parent ID in the callback.
+ can't think of a reason not to use the default parentID, but just in case, it can be set.
+*/
+			showCartInModal : function(P)	{
+//				app.u.dump("BEGIN store_cart.u.showCartInModal"); app.u.dump(P);
+				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
+					var $modal = $('#modalCart');
+//the modal opens as quick as possible so users know something is happening.
+//open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
+//the cart messaging is OUTSIDE the template. That way if the template is re-rendered, existing messaging is not lost.
+					if($modal.length)	{
+						$('#modalCartContents',$modal).empty(); //empty to remove any previous content.
+						$('.appMessaging',$modal).empty(); //errors are cleared because if the modal is closed before the default error animation occurs, errors become persistent.
+						$modal.dialog('open');
+						}
+					else	{
+						$modal = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
+						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+						}
+
+					if(P.showLoading === true)	{
+						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
+						}
+					else	{
+						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
+						}
+
+					}
+				else	{
+					app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");
+					app.u.dump(P);
+					}
+
+				
+				}, //showCartInModal
 
 
 //Customer pages differ from company pages. In this case, special logic is needed to determine whether or not content can be displayed based on authentication.
@@ -3274,6 +3314,44 @@ else	{
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
+
+			cartQTYUpdate : function($ele,p){
+
+/*
+the request for quantity change needs to go first so that the request for the cart reflects the changes.
+the dom update for the lineitem needs to happen last so that the cart changes are reflected, so a ping is used.
+*/
+				
+				if(app.ext.cco.u.updateCartQty($ele))	{
+					var cartCallback = {};
+					var $cart = $input.closest("[data-app-role='cartContainer']");
+					if($cart.length)	{
+						cartCallback.jqObj = $cart;
+						cartCallback.templateID = $cart.data('templateid');
+						cartCallback.callback = 'anycontent';
+						$cart.empty().showLoading({'message':'Updating your cart contents.'});
+						}
+					app.calls.refreshCart.init(cartCallback,'immutable');
+	
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					
+					}
+				},
+
+			cartZipUpdateExec : function($ele,p)	{
+				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},'immutable');
+				var $cart = $ele.closest("[data-app-role='cartContainer']");
+				$cart.intervaledEmpty().showLoading({'message':'Updating cart contents'});
+				app.calls.refreshCart.init({
+					'callback':'anycontent',
+					jqObj : $cart,
+					'templateID' : 'cartTemplate'
+					},'immutable');
+				app.model.dispatchThis('immutable');
+				},
+
 
 			execOrder2Cart : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-cart"},text: false});

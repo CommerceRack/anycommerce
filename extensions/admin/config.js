@@ -328,6 +328,7 @@ var admin_config = function() {
 					'datapointer' : datapointer,
 					'callback' : 'anycontent',
 					'translateOnly' : true,
+					'skipAppEvents' : true,
 					'jqObj' : $target
 					},'mutable');
 				app.model.dispatchThis('mutable');
@@ -1621,6 +1622,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				}, //paymentMethodUpdateExec
 
 //This is the event to use for delegated events (as oppsed to app events).
+//requires the data-table syntax. 
 			dataTableAddUpdate : function($ele,P)	{
 				var r = false; //what is returned. will be true if data-table passes muster.
 				app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
@@ -1944,10 +1946,9 @@ else	{
 					else	{
 						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesMode is empty or invalid ['+rulesMode+'] OR no data-table ['+$btn.data('table')+'] set. data-rulesmode should be set as data-rulesmode on the button with the app-event and the value must be coupons or shipping. data-table should likewise be set on the button.','gMessage':true});
 						}
-
 					});
 // return false;				
-				}, //taxTableUpdateExec
+				}, //ruleBuilderShow
 
 //executed by the 'add new rule' button. opens a dialog and, on save, updates the tbody of the rule builder.
 //the rule is NOT actually saved until the 'save' button is pushed.
