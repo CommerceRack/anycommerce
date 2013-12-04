@@ -2350,7 +2350,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 									if(opts.tab == app.ext.admin.vars.tab || $target.children().length === 0)	{
 										app.ext.admin.u.showTabLandingPage(path,$target,opts); //pass in as #!tab so that loadNative doesn't have to check for both.
 										}
-//tab click show existing conten
+//tab click show existing content
 									else	{
 										app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
 										//when RETURNING to the product page, build navtabs again (search).

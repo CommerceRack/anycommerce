@@ -237,7 +237,6 @@ if server validation passes, the callback handles what to do next (callback is m
 //this needs to be at the end so all the content above is manipulated BEFORE jumping to the id. otherwise, the up-jump still occurs.
 					app.u.jumpToAnchor('chkoutSummaryErrors');
 					}
-				
 				return 1;
 				},
 			dispatch : function(callback)	{

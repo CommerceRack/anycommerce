@@ -2935,94 +2935,94 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 //	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
-		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'));
-//		app.u.dump(" -> bindData.var: "+bindData['var']);
+		var bindRules = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'));
+//		app.u.dump(" -> bindRules.var: "+bindRules['var']);
 
 //in some cases, it's necessary to pass the entire data object into the renderFormat. admin_orders paymentActions renderFormat is a good example. Most likely this will be used frequently in admin, in conjunction with processList renderFormat.
-		if(bindData.useParentData)	{
+		if(bindRules.useParentData)	{
 			value = data; 
 			}
 		else	{
-			if(bindData['var'])	{
-				value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
+			if(bindRules['var'])	{
+				value = app.renderFunctions.getAttributeValue(bindRules['var'],data);  //set value to the actual value
 				}
 
-			if(!app.u.isSet(value) && bindData.defaultVar)	{
-				value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
+			if(!app.u.isSet(value) && bindRules.defaultVar)	{
+				value = app.renderFunctions.getAttributeValue(bindRules['defaultVar'],data);
 	//					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
 				}
-			if(!app.u.isSet(value) && bindData.defaultValue)	{
-				value = bindData['defaultValue']
-//				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
+			if(!app.u.isSet(value) && bindRules.defaultValue)	{
+				value = bindRules['defaultValue']
+//				app.u.dump(' -> used defaultValue ("'+bindRules.defaultValue+'") because var had no value.');
 				}
 			}
 		}
 
 
 
-	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
-	else	{bindData.hideZero = true}
+	if(bindRules.hideZero == 'false') {bindRules.hideZero = false} //passed as string. treat as boolean.
+	else	{bindRules.hideZero = true}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 //	app.u.dump(" -> value: "+value);
 
-	if(Number(value) == 0 && bindData.hideZero)	{
+	if(Number(value) == 0 && bindRules.hideZero)	{
 //do nothing. value is zero and zero should be skipped.
-//		app.u.dump(" -> value is 0 but was skipped: "+bindData['var']);
+//		app.u.dump(" -> value is 0 but was skipped: "+bindRules['var']);
 		}
 // ### NOTE - at some point, see if this code can be moved inot the render format itself so that no special handler needs to exist.
 //did a quick try on this that failed. Need to revisit this when time permits.
-	else if(bindData.loadsTemplate && bindData.format == 'loadsTemplate')	{
+	else if(bindRules.loadsTemplate && bindRules.format == 'loadsTemplate')	{
 //in some cases, especially in the UI, we load another template that's shared, such as fileImport in admin_medialib extension
 //in this case, the original data is passed through and no format translation is done on the element itself.
 // OR, if a var is specified, then only that object within the parent data is passed.
 //Examples:
 // -> admin_tasks uses loadsTemplate with NO var to recycle 'create' template for editing.
 // -> admin_orders uses a var to take advantage of 1 address template for billing and shipping. 
-		if(bindData['var'])	{
-			$focusTag.append(app.renderFunctions.transmogrify({},bindData.loadsTemplate,data[app.renderFunctions.parseDataVar(bindData['var'])]));
+		if(bindRules['var'])	{
+			$focusTag.append(app.renderFunctions.transmogrify({},bindRules.loadsTemplate,data[app.renderFunctions.parseDataVar(bindRules['var'])]));
 			}
 		else{
-			$focusTag.append(app.renderFunctions.transmogrify({},bindData.loadsTemplate,data));
+			$focusTag.append(app.renderFunctions.transmogrify({},bindRules.loadsTemplate,data));
 			}
 		
 		}
 // ** 201342 -> added forceRender. if true, will always execute the render format, regardless of whether a value is set on the attribute.
-	else if(value || (Number(value) == 0 && bindData.hideZero === false) || bindData.forceRender)	{
-		if(app.u.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
+	else if(value || (Number(value) == 0 && bindRules.hideZero === false) || bindRules.forceRender)	{
+		if(app.u.isSet(bindRules.className)){$focusTag.addClass(bindRules.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
 
-		if(app.u.isSet(bindData.format)){
+		if(app.u.isSet(bindRules.format)){
 //the renderFunction could be in 1 of 2 places, so it's saved to a local var so it can be used as a condition before executing itself.
 			var renderFunction; //saves a copy of the renderFunction to a local var.
-			if(bindData.extension && app.ext[bindData.extension] && typeof app.ext[bindData.extension].renderFormats == 'object' && typeof app.ext[bindData.extension].renderFormats[bindData.format] == 'function')	{
-				renderFunction = app.ext[bindData.extension].renderFormats[bindData.format];
+			if(bindRules.extension && app.ext[bindRules.extension] && typeof app.ext[bindRules.extension].renderFormats == 'object' && typeof app.ext[bindRules.extension].renderFormats[bindRules.format] == 'function')	{
+				renderFunction = app.ext[bindRules.extension].renderFormats[bindRules.format];
 				}
-			else if(typeof app.renderFormats[bindData.format] == 'function'){
-				renderFunction = app.renderFormats[bindData.format];
+			else if(typeof app.renderFormats[bindRules.format] == 'function'){
+				renderFunction = app.renderFormats[bindRules.format];
 				}
 			else	{
-				app.u.dump("WARNING! unrecognized render format: "+bindData.format);
+				app.u.dump("WARNING! unrecognized render format: "+bindRules.format);
 				}
 
 			if(typeof renderFunction == 'function')	{
-				renderFunction($focusTag,{"value":value,"bindData":bindData});
-				if(bindData.pretext)	{$focusTag.prepend(bindData.pretext)} //used for text
-				if(bindData.posttext) {$focusTag.append(bindData.posttext)}
-				if(bindData.before) {$focusTag.before(bindData.before)} //used for html
-				if(bindData.after) {$focusTag.after(bindData.after)}
-				if(bindData.wrap) {$focusTag.wrap(bindData.wrap)}
+				renderFunction($focusTag,{"value":value,"bindData":bindRules});
+				if(bindRules.pretext)	{$focusTag.prepend(bindRules.pretext)} //used for text
+				if(bindRules.posttext) {$focusTag.append(bindRules.posttext)}
+				if(bindRules.before) {$focusTag.before(bindRules.before)} //used for html
+				if(bindRules.after) {$focusTag.after(bindRules.after)}
+				if(bindRules.wrap) {$focusTag.wrap(bindRules.wrap)}
 				}
 			else	{
-				app.u.throwMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a function. (See console for more details.)");
-				app.u.dump(" -> "+bindData.format+" is not a function. extension = "+bindData.extension);
-//						app.u.dump(bindData);
+				app.u.throwMessage("Uh Oh! An error occured. error: "+bindRules.format+" is not a function. (See console for more details.)");
+				app.u.dump(" -> "+bindRules.format+" is not a function. extension = "+bindRules.extension);
+//						app.u.dump(bindRules);
 				}
-//					app.u.dump(' -> custom display function "'+bindData.format+'" is defined');
+//					app.u.dump(' -> custom display function "'+bindRules.format+'" is defined');
 			
 			}
 		}
 	else	{
 		// attribute has no value.
-//		app.u.dump(' -> data-bind is set, but it has no/invalid value: '+bindData['var']+" Number(value): "+Number(value)+" and bindData.hideZero: "+bindData.hideZero);
+//		app.u.dump(' -> data-bind is set, but it has no/invalid value: '+bindRules['var']+" Number(value): "+Number(value)+" and bindRules.hideZero: "+bindRules.hideZero);
 		if($focusTag.prop('tagName') == 'IMG'){$focusTag.remove()} //remove empty/blank images from dom. necessary for IE.
 
 		}
@@ -3080,8 +3080,6 @@ return $r;
 				value = false;
 				}
 			else	{
-//				app.u.dump(' -> attribute info and data are both set.');
-				
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
@@ -3091,9 +3089,7 @@ return $r;
 					value = app.u.getObjValFromString(attributeID,data,'.') || data[attributeID]; //attempt to set value based on most common paths
 					}
 				else if(namespace == 'cart' || namespace == 'order')	{
-//					app.u.dump(v);
 					value = app.u.getObjValFromString(attributeID,data,'/') || data[attributeID]; //attempt to set value based on most common paths
-//					if(v == 'order(ship)')	{app.u.dump(" !!!!!!!!!! v = "); app.u.dump(value);}
 					}
 				else	{
 					value = app.u.getObjValFromString(attributeID,data,'.') || data[attributeID]; //attempt to set value based on most common paths
@@ -3105,6 +3101,7 @@ return $r;
 //this parses the 'css-esque' format of the data-bind.  It's pretty simple (fast) but will not play well if a : or ; is in any of the values.
 //css can be used to add or remove those characters for now.
 //will convert key/value pairs into an object.
+// NOTE -> there is a server-side parseDataBind function. change this with caution.
 		parseDataBind : function(data)	{
 //			app.u.dump('BEGIN parseDataBind');
 			var rule = {};
@@ -3120,7 +3117,7 @@ return $r;
 					var value = declarations[i].substring(loc + 1);
 //						app.u.dump(' -> property['+i+']: '+property);
 //						app.u.dump(' -> value['+i+']: "'+value+'"');
-					if (property != "" && value != "")	{
+					if(property != "" && value != "")	{
 //						rule[property] = value;
 //need to trim whitespace from values except pre and post text. having whitespace in the value causes things to not load. However, it's needed in pre and post text.
 						rule[property] = (property != 'pretext' && property != 'posttext') ? jQuery.trim(value) : value; 
