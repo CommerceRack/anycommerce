@@ -5552,7 +5552,7 @@ else	{
 						$D.showLoading({"message":"Deleting RSS feed"});
 						app.model.addDispatchToQ({
 							'_cmd':'adminRSSRemove',
-							'ID' : data.id,
+							'CPG' : data.cpg,
 							'_tag':	{
 								'datapointer' : 'adminRSSRemove',
 								'callback' : function(rd)	{
