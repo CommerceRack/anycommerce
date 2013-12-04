@@ -1449,7 +1449,6 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<label><input type="checkbox" name="multibox" data-bind='var: shipmethod(multibox); format:popVal;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
 	<label><input type="checkbox" name="residential" data-bind='var: shipmethod(residential); format:popVal;' /> Treat all customers as residential (default is business).</label>
 	<label><input type="checkbox" name="validation" data-bind='var: shipmethod(validation); format:popVal;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
-	<label><input type="checkbox" name="use_rules" data-bind='var: shipmethod(use_rules); format:popVal;' /> Perform rule processing. (RECOMMENDED)</label>
 	
 	</fieldset>
 	
@@ -2831,7 +2830,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	<tbody  data-table-role='content' data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
 	</table>
 	<div class='buttonset smallPadding alignRight'>
-		<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
+		<button data-app-role='saveButton' disabled='disabled' class='applyButton' data-app-click="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</div>
