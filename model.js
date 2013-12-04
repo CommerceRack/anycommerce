@@ -685,7 +685,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			switch(cmd)	{
 				case 'appPageGet': //saved into category object earlier in process. redundant here.
 				case 'cartSet': //changes are reflected in cart object.
-				case 'ping':
+//				case 'ping': //ping may be necessary in memory for anycontent in conjunction w/ extending by datapointers. rss is a good example of this.
 				r = false
 				break;
 				}

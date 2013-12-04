@@ -1143,7 +1143,7 @@ ACHIEVEMENTS
 
 	<label>
 	<span>GitHub branch</span>
-	<input type="text" name="branch"maxlength="20" />
+	<input type="text" name="branch" maxlength="20" />
 	</label>
 	
 <!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
@@ -1177,8 +1177,8 @@ ACHIEVEMENTS
 	<td data-bind="var: projects(PROFILE); format:text;"></td>
 	<td data-bind="var: projects(SCHEDULE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin|adminRSSRemove" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Feed</button>
-	<button data-app-event="admin|adminRSSUpdateShow">Edit Feed</button>
+	<button data-app-click="admin|adminRSSRemove" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Feed</button>
+	<button data-app-click="admin|adminRSSUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Feed</button>
 	</td>
 </tr>
 </table>

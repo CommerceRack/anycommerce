@@ -1042,14 +1042,13 @@ app.u.throwMessage(responseData); is the default error handler.
 //jqObj is required and should be a jquery object.
 		anycontent : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN callbacks.anycontent");
+//				app.u.dump("BEGIN callbacks.anycontent"); app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
 					var $target = _rtag.jqObj; //shortcut
 					
 //anycontent will disable hideLoading and loadingBG classes.
-/*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
-// * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
+//to maintain flexibility, pass all anycontent params in thru _tag
 					$target.anycontent(_rtag);
 
 					app.u.handleCommonPlugins($target);
