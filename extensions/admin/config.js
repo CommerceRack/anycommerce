@@ -1906,16 +1906,7 @@ else	{
 						}
 					});
 
-				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
-					$container.hideLoading();	
-					if(app.model.responseHasErrors(rd)){
-						$container.anymessage({'message':rd});
-						}
-					else	{
-						$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
-						navigateTo('#!taxConfig');
-						}
-					}},'immutable');
+				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'jqObj':$container},'immutable');
 				app.model.dispatchThis('immutable');
 
 				},
