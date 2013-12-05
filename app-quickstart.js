@@ -106,7 +106,9 @@ var myRIA = function() {
 //			app.u.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			app.u.dump(" -> window.history.pushState: "+typeof window.history.pushState);
 
-				
+
+$(document.body).anydelegate(); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
+
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
@@ -2389,7 +2391,7 @@ elasticsearch.size = 50;
 				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				infoObj.show = 'inline'; // !!! here for testing.
+
 				if(infoObj.show == 'inline')	{
 //only create instance once.
 					var $cart = $('#mainContentArea_cart')
@@ -2399,26 +2401,14 @@ elasticsearch.size = 50;
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}
 					else	{
-						$cart = $("<div \/>",{'id':'mainContentArea_cart'});
+						$cart = app.ext.cco.a.getCartAsJqObj(infoObj);
+						$cart.attr({'id':infoObj.parentID});
 						$cart.appendTo("#mainContentArea");
 						}
-					$cart.showLoading({'message':'loading cart'});
 //This will load the cart from memory, if set. otherwise it will fetch it.
 //so if you need to update the cart, run a destroy prior to showCart.
-					app.calls.cartDetail.init({'callback':function(rd){
-						$cart.hideLoading();
-						if(app.model.responseHasErrors(rd)){
-							$cart.anymessage({'message':rd});
-							}
-						else	{
-//***201342 this will empty the cart before translating it, meaning it doesn't get duplicate content. -mc
-							$cart.intervaledEmpty();
-							$cart.anycontent({'templateID':infoObj.templateID,'datapointer':'cartDetail'});
-							}
-						}},'mutable');
-						app.model.dispatchThis();
-
-
+					$cart.trigger((app.data.cartDetail ? 'refresh' : 'fetch'),{'Q':'mutable'});
+					app.model.dispatchThis();
 					}
 				else	{
 					app.ext.myRIA.u.showCartInModal(infoObj);
@@ -2447,16 +2437,15 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						$modal.dialog('open');
 						}
 					else	{
-						$modal = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
-						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
-						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+						$modal = app.ext.cco.a.getCartAsJqObj(P).attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.dialog({modal: true,width:'80%'});  //browser doesn't like percentage for height
 						}
 
 					if(P.showLoading === true)	{
-						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
+						$modal.showLoading(); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
-						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
+						$modal.trigger('refresh');
 						}
 
 					}
@@ -3345,14 +3334,8 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				},
 
 			cartZipUpdateExec : function($ele,p)	{
-				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},'immutable');
-				var $cart = $ele.closest("[data-app-role='cartContainer']");
-				$cart.intervaledEmpty().showLoading({'message':'Updating cart contents'});
-				app.calls.refreshCart.init({
-					'callback':'anycontent',
-					jqObj : $cart,
-					'templateID' : 'cartTemplate'
-					},'immutable');
+				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},{},'immutable');
+				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				app.model.dispatchThis('immutable');
 				},
 

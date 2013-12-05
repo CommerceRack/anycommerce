@@ -990,7 +990,7 @@ onclicks are recursive, so only add it to the parent element.
 This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
 -->
 
-<div id='cartTemplate' data-template-role='cart'>
+<div id='cartTemplate' data-template-role='cart' class='clearfix'>
 
 <form action='#' onSubmit='return false'>
 
@@ -999,9 +999,9 @@ This is the template used both within a dialog and inline, unless implicitly ove
 </div>
 
 <div class='cartSummaryTotalsContainer'>
-	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
+	<div class='ui-widget ui-corner-all'>
 		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding'>Cart Totals</h2>
-		<div class='cartSummaryContainer stdPadding'>
+		<div class='cartSummaryContainer stdPadding ui-widget-content clearfix'>
 
 <section class='cartSummary marginBottom'>
 
@@ -1021,12 +1021,12 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 </section>
 
-<section data-app-role='cartTemplateShippingContainer' class='marginBottom'>
+<section data-app-role='cartTemplateShippingContainer' class='marginBottom cartTemplateShippingContainer'>
 	<h3>Shipping:</h3>
 
 	<div class='cartZipCodeContainer marginBottom'>
 		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' data-app-change='myRIA|cartZipUpdateExec' />
+		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' data-app-blur='myRIA|cartZipUpdateExec' />
 	</div>
 
 	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:orderCreate;'></ul>
@@ -1041,15 +1041,11 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		</div>
 		<div class='ui-state-default cartButtons stdPadding clearfix'>
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class='continueShoppingSpan'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
+			<span class='continueShoppingSpan thisButton'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
 	
-			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+			<span id='inStoreCheckoutButton thisButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
 	
-			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-	
-			<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
-	
-			<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+			<span id='paypalECButton' class='thisButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 	
 		</div>
 
@@ -1511,13 +1507,6 @@ The 'data-action' attribute is used to assign an onclick.
 </table>
 
 </div>
-
-
-<script type='text/javascript'>
-(function($) {
-	$(document.body).anydelegate(); console.error('HEY!!! turn on this anydelegate');
-	})(jQuery);
-</script>
 
 
 </body>
