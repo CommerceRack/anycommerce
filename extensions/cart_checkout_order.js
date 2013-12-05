@@ -317,9 +317,9 @@ left them be to provide guidance later.
 					$cart.attr('data-template-role','cart');
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
-					$cart.on('fetch.cart',function(P){
+					$cart.on('fetch.cart',function(event,P){
 						var $c = $(this);
-						$c.empty().showLoading({'message':'Updating cart contents'})
+						$c.empty().showLoading({'message':'Updating cart contents'});
 						app.calls.refreshCart.init({
 							'callback':'anycontent',
 							'onComplete' : P.onComplete,
@@ -328,13 +328,14 @@ left them be to provide guidance later.
 							},P.Q);
 						});
 //will update the cart based on what's in memory.
-					$cart.on('refresh.cart',function(P){
+					$cart.on('refresh.cart',function(event,P){
 						var $c = $(this);
 						$c.empty().anycontent({
 							'datapointer':'cartDetail',
 							'templateID' : $c.data('templateid')
 							})
 						});
+					r = $cart;
 					}
 				else	{
 					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, ','gMessage':true});
@@ -905,7 +906,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
-					$ele.closest("[data-template-role='cart']").trigger('refresh'); //will work if getCartAsJqObj was used to create the cart.
+					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -921,7 +922,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						'message' : 'Quantities updated for item '+stid,
 						'jqObj' : $ele.closest('form')
 						},'immutable');
-					$ele.closest("[data-template-role='cart']").trigger('refresh'); //will work if getCartAsJqObj was used to create the cart.
+					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
