@@ -26,6 +26,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 var admin_prodEdit = function() {
 	var theseTemplates = new Array(
 		'ProductCreateNewTemplate',
+		'variationsDSTInputsTemplate',
 		'mpControlSpec'
 		);
 
@@ -3602,6 +3603,7 @@ function type2class(type)	{
 				var mode = $ele.data('variationmode');
 				var $D = app.ext.admin.i.dialogCreate({
 					'title' : 'Create a new '+jQuery.camelCase(mode)+' variation',
+					'data' : {}, //this is here so that loadsTemplates renderformats still get executed. Won't be necessary after data-bind upgrade.
 					'templateID' : 'variationsManagerCreateTemplate',
 					'showLoading' : false
 					});
