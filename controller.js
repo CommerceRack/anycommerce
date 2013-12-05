@@ -2922,6 +2922,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				}
 			},
 
+
 //NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
 		handleTranslation : function($r,data)	{
 //app.u.dump("BEGIN app.renderFunctions.handleTranslation");
@@ -2940,7 +2941,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 
 //in some cases, it's necessary to pass the entire data object into the renderFormat. admin_orders paymentActions renderFormat is a good example. Most likely this will be used frequently in admin, in conjunction with processList renderFormat.
 		if(bindRules.useParentData)	{
-			value = data; 
+			value = data;
 			}
 		else	{
 			if(bindRules['var'])	{
@@ -3037,27 +3038,27 @@ return $r;
 //each template may have a unique set of required parameters.
 
 		translateTemplate : function(data,target)	{
-//		app.u.dump('BEGIN translateTemplate (target = '+target+')');
-		var safeTarget = app.u.makeSafeHTMLId(target); //jquery doesn't like special characters in the id's.
-		
-		var $divObj = $('#'+safeTarget); //jquery object of the target tag. template was already rendered to screen using createTemplate.
-		if($divObj.length > 0)	{
-			var templateID = $divObj.attr('data-templateid'); //always use all lowercase for data- attributes. browser compatibility.
-			var dataObj = $divObj.data();
-//yes, i wish I'd commented why this is here. jt. appears to be for preserving data() already set prior to re-rendering a template.
-			if(dataObj)	{dataObj.id = safeTarget}
-			else	{dataObj = safeTarget;}
-//believe the 'replace' to be causing a lot of issues. changed in 201239 build
-//			var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
-//			$('#'+safeTarget).replaceWith($tmp);
-			this.handleTranslation($('#'+safeTarget),data)
-			}
-		else	{
-			app.u.dump("WARNING! attempted to translate an element that isn't on the DOM. ["+safeTarget+"]");
-			}
-		
-//		app.u.dump('END translateTemplate');
-		}, //translateTemplate
+	//		app.u.dump('BEGIN translateTemplate (target = '+target+')');
+			var safeTarget = app.u.makeSafeHTMLId(target); //jquery doesn't like special characters in the id's.
+			
+			var $divObj = $('#'+safeTarget); //jquery object of the target tag. template was already rendered to screen using createTemplate.
+			if($divObj.length > 0)	{
+				var templateID = $divObj.attr('data-templateid'); //always use all lowercase for data- attributes. browser compatibility.
+				var dataObj = $divObj.data();
+	//yes, i wish I'd commented why this is here. jt. appears to be for preserving data() already set prior to re-rendering a template.
+				if(dataObj)	{dataObj.id = safeTarget}
+				else	{dataObj = safeTarget;}
+	//believe the 'replace' to be causing a lot of issues. changed in 201239 build
+	//			var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
+	//			$('#'+safeTarget).replaceWith($tmp);
+				this.handleTranslation($('#'+safeTarget),data)
+				}
+			else	{
+				app.u.dump("WARNING! attempted to translate an element that isn't on the DOM. ["+safeTarget+"]");
+				}
+			
+	//		app.u.dump('END translateTemplate');
+			}, //translateTemplate
 		
 //pass in product(zoovy:prod_name) zoovy:prod_name is returned.
 //used in template creation and also in some UI stuff, like product finder.
@@ -3098,6 +3099,23 @@ return $r;
 			return value;
 			},
 
+
+
+//will return an array of objects.
+		parseDataBindIntoRules : function(dataBind) {
+			var tokens = dataBind.split(';'), rules = new Array();
+			tokens.pop(); //strip the last item from the array, which will be blank.
+			for(var token in tokens)	{
+				var tmp = {};
+				tmp[$.trim(token.substring(0,token.indexOf(':')))] = token.substring(token.indexOf(':') + 1)
+				rules.push(tmp);
+				}
+			return rules;
+			},
+
+
+
+
 //this parses the 'css-esque' format of the data-bind.  It's pretty simple (fast) but will not play well if a : or ; is in any of the values.
 //css can be used to add or remove those characters for now.
 //will convert key/value pairs into an object.
@@ -3117,10 +3135,9 @@ return $r;
 					var value = declarations[i].substring(loc + 1);
 //						app.u.dump(' -> property['+i+']: '+property);
 //						app.u.dump(' -> value['+i+']: "'+value+'"');
-					if(property != "" && value != "")	{
-//						rule[property] = value;
+					if(property != "" && value != "" && !rule[property])	{ //only the first property wins. discard the rest. (var can't be set twice)
 //need to trim whitespace from values except pre and post text. having whitespace in the value causes things to not load. However, it's needed in pre and post text.
-						rule[property] = (property != 'pretext' && property != 'posttext') ? jQuery.trim(value) : value; 
+						rule[property] = (property.charAt(0) == '_') ? value : jQuery.trim(value); 
 						}
 					}
 				}
