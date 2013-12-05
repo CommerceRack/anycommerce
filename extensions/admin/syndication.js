@@ -395,10 +395,10 @@ app.model.dispatchThis('mutable');
 									$target.anymessage({'message':rd})
 									}
 								else	{
-									
+//									app.u.dump(" -> app.data["+rd.datapointer+"]: "); app.u.dump(app.data[rd.datapointer]);
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
-	
+
 									$("[data-panelname]",$profileContent).each(function(){
 										var $fieldset = $(this);
 //										app.u.dump(" -> $fieldset.data('panelname'): "+$fieldset.data('panelname'));
@@ -421,6 +421,7 @@ app.model.dispatchThis('mutable');
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showEBAYLaunchProfileEditor, either $target not a valid jquery object ["+($target instanceof jQuery)+"] or profile ["+profile+"] is blank.","gMessage":true});
