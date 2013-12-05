@@ -322,6 +322,7 @@ left them be to provide guidance later.
 						$c.empty().showLoading({'message':'Updating cart contents'})
 						app.calls.refreshCart.init({
 							'callback':'anycontent',
+							'onComplete' : P.onComplete,
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
 							},P.Q);

@@ -1071,7 +1071,9 @@ app.u.throwMessage(responseData); is the default error handler.
 					if(_rtag.handleFormConditionalDelegation)	{
 						app.ext.admin.u.handleFormConditionalDelegation($('form',$target)); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature)
 						}
-
+					if(typeof _rtag.onComplete == 'function')	{
+						_rtag.onComplete(_rtag);
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
