@@ -3225,16 +3225,12 @@ return $r;
 				$tag.hide(); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
+
 //EX:  data-bind='var: (@LIST);format:optionsFromList; text:pretty; value:safeid;'
 		optionsFromList : function($tag,data)	{
-//			app.u.dump("BEGIN renderFormats.optionsFromList.  data.value: "); app.u.dump(data.value);
-//			var L = data.value.length;
 			for(var index in data.value)	{
 				$("<option \/>").val((data.bindData.value) ? data.value[index][data.bindData.value] : data.value[index]).text((data.bindData.text) ? data.value[index][data.bindData.text] : data.value[index]).appendTo($tag);
 				}
-//			for(var i = 0; i < L; i += 1)	{
-//				$("<option \/>").val((data.bindData.value) ? data.value[i][data.bindData.value] : data.value[i]).text((data.bindData.text) ? data.value[i][data.bindData.text] : data.value[i]).appendTo($tag);
-//				}
 			},
 
 //for embedding. There is an action for showing a youtube video in an iframe in quickstart.
@@ -3371,7 +3367,7 @@ $tmp.empty().remove();
 			},
 		
 		truncText : function($tag,data){
-			var o = app.u.truncate(data.value,data.bindData.numCharacters)
+			var o = app.u.truncate(data.value,data.bindData.numCharacters);
 			$tag.text(o);
 			}, //truncText
 
