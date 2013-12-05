@@ -5205,30 +5205,29 @@ not in use
 				$btn.button({icons: {primary: "ui-icon-closethick"},text: false});
 				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
 					event.preventDefault();
-					app.ext.admin.e.tagRow4Remove($btn,vars)
+					app.ext.admin.e.tagRow4Remove($(this),$.extend(true,vars,event))
 					});
 				}, //tagRowForRemove
 
 //used for delegated events and is triggered by app-event tagRowForRemove
 			tagRow4Remove : function($ele,p)	{
 				app.u.dump("tagRow4Remove click!");
-//if this class is already present, the button is set for delete already. unset the delete.
-//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+				$ele.toggleClass('ui-state-error');
+//Toggle the class first. That clearly indiciates the erest of the way whether we're in delete or undelete mode.
+//edited class added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
 				if($ele.hasClass('ui-state-error'))	{
+//adding the 'edited' class does NOT change the row (due to odd/even class) , but does let the save changes button record the accurate # of updates.
+					$ele.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+						$(this).button('disable')
+						}); //disable the other buttons
+					$ele.button('enable');
+					}
+				else	{
+					app.u.dump(" -> untag removal");
 // the find("button[role='button']") is to refine to elmeents that have been through button(). avoids a JS error
 					$ele.removeClass('ui-state-error').closest('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('enable');
 						}); //enable the other buttons
-					$ele.button('enable');
-					}
-				else	{
-//adding the 'edited' class does NOT change the row (due to odd/even class) , but does let the save changes button record the accurate # of updates.
-					$ele.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-//							app.u.dump(" -> $(this).text(): "+$(this).text());
-						$(this).button('disable')
-						}); //disable the other buttons
-					$ele.button('enable');
-
 					}
 				app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));				
 				},
@@ -5421,6 +5420,33 @@ else	{
 				$btn.off('click.googleLogin').on('click.googleLogin',function(){
 					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
 					});
+				},
+
+			tableFilter : function($ele,p)	{
+				app.u.dump('got here');
+				var $tbody = $ele.closest('table').find('tbody');
+				if($('td.isSearchable',$tbody).length)	{
+					if($ele.val().length >= 2)	{
+			//only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
+						$('tr:visible',$tbody).hide().data('hidden4Search',true);
+						$('td.isSearchable',$tbody).each(function(){
+							if($(this).text().toLowerCase().indexOf($ele.val().toLowerCase()) >= 0)	{
+								$(this).closest('tr').show();
+								$(this).addClass('queryMatch');
+								}
+							})
+						}
+					else	{
+					//no query or short query. unhide any rows (query may have been removed).
+						$('tr',$tbody).each(function(){
+							if($(this).data('hidden4Search'))	{$(this).show();}
+							});
+						$('.queryMatch',$tbody).removeClass('queryMatch');
+						}
+					}
+				else	{
+					//there are no td's tagged as searchable. what to do here?
+					}
 				},
 
 			linkOffSite : function($ele,p)	{
