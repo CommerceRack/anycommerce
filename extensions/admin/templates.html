@@ -269,42 +269,109 @@ SETUP PAGE TEMPLATE
 <div id='pageSetupTemplate' class='page pageSetup'>
 
 
-<table class='noPadOrMargin fullWidth stdCellSpacing'>
-<tbody>
-<tr>
-
-	<td width="33%" valign="top">
-
-	<div id="manage" class='ui-widget marginBottom'>
+	<div id="manage" class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!domainConfigPanel'); return false;">Domain Hosting</a><br />
+			<a href="#" onClick="navigateTo('#!domainConfigPanel'); return false;">Domain Hosting</a>
 			<div class="helper marginBottom">Register and Link Domains.</div>
 			
-			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
+			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a>
 			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
 			<div class="helper marginBottom">
-			- <a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Upload New Image</a><br />
-			- <a href="#" onClick="navigateTo('#!publicFiles'); return false;">Public Files Library</a><br />
+			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode"> &#187; Upload New Image</a>
+			<a href="#" onClick="navigateTo('#!publicFiles'); return false;"> &#187; Public Files Library</a>
 			</div>
 			
 			
-			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds</a><br />
+			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds</a>
 			<div class="helper marginBottom">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
 			
-			<a href="#" onClick="navigateTo('#!categoriesAndLists'); return false;">Categories &amp; Lists</a><br />
+			<a href="#" onClick="navigateTo('#!categoriesAndLists'); return false;">Categories &amp; Lists</a>
 			<div class="helper marginBottom">Create and assign product to categories.</div>
 		</div>
 	</div><!-- /manage -->
 
 
-
-
+	<div id="properties" class='ui-widget floatPanel'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Store Properties</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!shippingManager'); return false;">Shipping</a>
+			<div class="helper marginBottom">Determine how shipping will be calculated for your products.</div>
+			
+			<a href="#" onClick="navigateTo('#!paymentManager'); return false;">Payment Methods</a>
+			<div class="helper marginBottom">Configure which payment methods you will accept from customers.</div>
+			
+			<a href="#" onClick="navigateTo('#!taxConfig'); return false;">Sales Tax</a>
+			<div class="helper marginBottom">Configure state and local tax collection amounts.</div>
+			
+			<a href="#" onClick="navigateTo('#!couponManager'); return false;">Coupons</a>
+			<div class="helper marginBottom">Create discounts for special purchases</div>
+			
+			<a href="#" onClick="navigateTo('#!pluginManager'); return false;">Plugins</a>
+			<div class="helper marginBottom">Provide third party username/passwords for app mashups.</div>
+			
+			<a href="#" onClick="navigateTo('#!globalVariations'); return false;">Global Variations</a>
+			<div class="helper marginBottom">Manage your global product variations</div>
+		</div>
+	</div><!-- /properties -->
 	
-	<div id="vstore" class='ui-widget marginBottom showForZoovyOnly'>
+
+	<div id="account" class='ui-widget floatPanel'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Account Settings</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information</a>
+			<div class="helper marginBottom">Change Administrative/Billing Information</div>
+			
+			<a href="#" onClick="navigateTo('#!billingHistory'); return false;">Billing History</a>
+			<div class="helper marginBottom">View your billing history, update payment information.</div>
+			
+			<a href="#" onClick="navigateTo('#!globalSettings'); return false;">Global Settings</a>
+			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
+			
+			<a href="#" onClick="navigateTo('#!notifications'); return false;">Notifications</a>
+			<div class="helper marginBottom">Configure notifications based on system events.</div>
+			
+			<a href="#" onClick="navigateTo('#!partitionManager'); return false;">Partitions</a>
+			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
+
+			<a href="#" onClick="navigateTo('#!userManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a>
+			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a>
+			<div class="helper marginBottom">You should change your password every 60 days.</div>
+
+		</div>
+	</div><!-- /account -->
+
+
+	<div id="developer" class='ui-widget floatPanel'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Developer Tools</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!privateFiles'); return false;">Private Files <!-- (beta) --></a>
+			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a>
+			<div class="helper marginBottom">Use this to easily custom integrations or apps</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a>
+			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
+		</div>
+	</div><!-- /developer -->
+
+
+	<div id="vstore" class='ui-widget floatPanel showForZoovyOnly'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>vStore</h3>
 		</div>
@@ -312,186 +379,54 @@ SETUP PAGE TEMPLATE
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 
 			
-			<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
-			<div class="helper">Put in Logo, Address, Policies, etc.</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a>
+			<div class="helper marginBottom">Put in Logo, Address, Policies, etc.</div>
 
-			<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi'); return false;" title="/biz/vstore/builder/index.cgi">Site Builder</a><br />
-			<div class="helper">Build the content for your storefront.  Select page layouts and add product to categories and lists.</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi'); return false;" title="/biz/vstore/builder/index.cgi">Site Builder</a>
+			<div class="helper marginBottom">Build the content for your storefront.  Select page layouts and add product to categories and lists.</div>
 				
-				- <a href="#" onClick="navigateTo('/biz/vstore/builder/themes/index.cgi?NS=DEFAULT'); return false;" title="/biz/vstore/builder/themes/index.cgi?NS=DEFAULT">Pick Site Theme</a><br />
+				<a href="#" onClick="navigateTo('/biz/vstore/builder/themes/index.cgi?NS=DEFAULT'); return false;" title="/biz/vstore/builder/themes/index.cgi?NS=DEFAULT"> &#187; Pick Site Theme</a>
 				<div class="helper">Select the graphics, buttons and navigation which will be used for this site.</div>
 				
-				- <a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=EDIT-WRAPPER'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=EDIT-WRAPPER">Customize Site Theme</a><br />
+				<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=EDIT-WRAPPER'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=EDIT-WRAPPER"> &#187; Customize Site Theme</a>
 				<div class="helper">Tune customizable features in the selected theme.</div>
 				
-				- <a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT">Customize Site Decals</a><br />
+				<a href="#" onClick="navigateTo('/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT"> &#187; Customize Site Decals</a>
 				<div class="helper">Enhance your site with 3rd party logos.</div>
 				
-				- <a href="#" onClick="navigateTo('/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E'); return false;" title="/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E">Select Email Theme</a><br />
+				<a href="#" onClick="navigateTo('/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E'); return false;" title="/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E"> &#187; Select Email Theme</a>
 				<div class="helper">Pick a style for a header and footer for an email.</div>
 				
-				- <a href="#" onClick="navigateTo('/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT">Edit Email Messages</a><br />
+				<a href="#" onClick="navigateTo('/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT"> &#187; Edit Email Messages</a>
 				<div class="helper">Customize the emails that are sent to customers.</div>
 
-
-			<!--			
-			<div >
-			<a href="#" onClick="navigateTo('/biz/vstore/navcats/index.cgi'); return false;" title="/biz/vstore/navcats/index.cgi">Categories &amp; Lists</a><br />
-			<div class="helper">Build your store category tree or add product lists.</div>
-			</div>
-			-->
 						
-			<div >
-			<a href="#" onClick="navigateTo('/biz/vstore/analytics/index.cgi'); return false;" title="/biz/vstore/analytics/index.cgi">Analytics &amp; Plugins</a><br />
-			<div class="helper">Integrate approved 3rd party applications with your site.</div>
-			</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/analytics/index.cgi'); return false;" title="/biz/vstore/analytics/index.cgi">Analytics &amp; Plugins</a>
+			<div class="helper marginBottom">Integrate approved 3rd party applications with your site.</div>
 
 
-			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
-			<div class="helper">Specify what info is optional/required during checkout.</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a>
+			<div class="helper marginBottom">Specify what info is optional/required during checkout.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
-			<div class="helper">Configure what options customers have when they login to their accounts on your store.</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a>
+			<div class="helper marginBottom">Configure what options customers have when they login to their accounts on your store.</div>
 			
-			<div >
-			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
-			<div class="helper">Customize System Messages used throughout the site</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a>
+			<div class="helper marginBottom">Customize System Messages used throughout the site</div>
 			
-			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
-			<div class="helper">Customize Checkout Messaging used during checkout.</div>
-			</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a>
+			<div class="helper marginBottom">Customize Checkout Messaging used during checkout.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
-			<div class="helper">Configure which languages and currencies are available.</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a>
+			<div class="helper marginBottom">Configure which languages and currencies are available.</div>
 
+			<a href="#" onClick="navigateTo('/biz/vstore/search/index.cgi'); return false;" title="/biz/vstore/search/index.cgi">Manage Search Catalogs</a>
+			<div class="helper marginBottom">Create custom searchable indexes of your product database.</div>
 
-			
-<!--
-* 201338 -> doesn't work w/ new inventory system. WHIM is new version.
-			<a href="#" onClick="navigateTo('/biz/vstore/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
-			<div class="helper marginBottom"></div>
--->			
-			<a href="#" onClick="navigateTo('/biz/vstore/search/index.cgi'); return false;" title="/biz/vstore/search/index.cgi">Manage Search Catalogs</a><br />
-			<div class="helper">Create custom searchable indexes of your product database.</div>
-
-			<!--
-			<div >
-			<a href="#" onClick="navigateTo('/biz/vstore/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
-			<div class="helper">Manage feature bundles installed on this account.</div>
-			</div>
-			-->
-			<div >
-			<a href="#" onClick="navigateTo('/biz/vstore/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/vstore/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
-			<div class="helper">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
-			
-			
-			
-			
-			
-			</div>
+			<a href="#" onClick="navigateTo('/biz/vstore/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/vstore/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a>
+			<div class="helper marginBottom">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
 		</div>
-	</div><!-- /utility -->
-
-
-
-	</td>
-
-
-	<td width="33%" valign="top">
-
-	<div id="properties" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Store Properties</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!shippingManager'); return false;">Shipping</a><br />
-			<div class="helper marginBottom">Determine how shipping will be calculated for your products.</div>
-			
-			<a href="#" onClick="navigateTo('#!paymentManager'); return false;">Payment Methods</a><br />
-			<div class="helper marginBottom">Configure which payment methods you will accept from customers.</div>
-			
-			<a href="#" onClick="navigateTo('#!taxConfig'); return false;">Sales Tax</a><br />
-			<div class="helper marginBottom">Configure state and local tax collection amounts.</div>
-			
-			<a href="#" onClick="navigateTo('#!couponManager'); return false;">Coupons</a><br />
-			<div class="helper marginBottom">Create discounts for special purchases</div>
-			
-			<a href="#" onClick="navigateTo('#!pluginManager'); return false;">Plugins</a><br />
-			<div class="helper marginBottom">Provide third party username/passwords for app mashups.</div>
-			
-			<a href="#" onClick="navigateTo('#!globalVariations'); return false;">Global Variations</a><br />
-			<div class="helper marginBottom">Manage your global product variations</div>
-			
-<!--
-			
-			<a href="#" onClick="navigateTo('/biz/crm/index.cgi?VERB=CONFIG'); return false;" title="/biz/crm/index.cgi?VERB=CONFIG">CRM Behaviors</a><br />
-			<div class="helper marginBottom">Configure preferences in the CRM area.</div>
--->		</div>
-	</div><!-- /properties -->
-	
-
-	</td>
-
-	<td width="33%" valign="top">
-	<div id="account" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Account Settings</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information</a><br />
-			<div class="helper marginBottom">Change Administrative/Billing Information</div>
-			
-			<a href="#" onClick="navigateTo('#!billingHistory'); return false;">Billing History</a><br />
-			<div class="helper marginBottom">View your billing history, update payment information.</div>
-			
-			<a href="#" onClick="navigateTo('#!globalSettings'); return false;">Global Settings</a><br />
-			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
-			
-			<a href="#" onClick="navigateTo('#!notifications'); return false;">Notifications</a><br />
-			<div class="helper marginBottom">Configure notifications based on system events.</div>
-			
-			<a href="#" onClick="navigateTo('#!partitionManager'); return false;">Partitions</a><br />
-			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
-
-			<a href="#" onClick="navigateTo('#!userManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a><br />
-			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a><br />
-			<div class="helper marginBottom">You should change your password every 60 days.</div>
-
-		</div>
-	</div><!-- /account -->
-
-
-
-
-	<div id="developer" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Developer Tools</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!privateFiles'); return false;">Private Files <!-- (beta) --></a><br />
-			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a><br />
-			<div class="helper marginBottom">Use this to easily custom integrations or apps</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a><br />
-			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
-
-
-			
-		</div>
-	</div><!-- /developer -->
-
-	</td>
-</tr>
-</tbody>
-</table>
-
+	</div><!-- /vstore -->
 
 </div>
 
@@ -516,21 +451,15 @@ UTILITIES PAGE TEMPLATE
 
 <div id='pageUtilitiesTemplate' class='page pageUtilities'>
 
-
-<table class='noPadOrMargin fullWidth stdCellSpacing'>
-<tbody>
-<tr>
-
-	<td width="33%" valign="top">
 	
-	<div class='ui-widget marginBottom'>
+	<div class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Customers</h3>
+		<h3 class='smallPadding'>Customers</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		
-		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager</a><br />
+		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager</a>
 		<div class="helper marginBottom">Find or create a customer record for your website</div>
 
 		<a href="#" onClick="navigateTo('#!priceSchedules'); return false;">Wholesale Pricing Schedules <!-- (beta) --></a>
@@ -541,80 +470,13 @@ UTILITIES PAGE TEMPLATE
 		
 		<a href="#" onClick="navigateTo('#!giftcardManager'); return false;">GiftCard Manager</a>
 		<div class="helper marginBottom">Create / Manage GiftCards</div>
-	
-
 		
 		</div>
 	</div>
 
-
-	<div id="tools" class='ui-widget marginBottom'>
+	<div class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Tools</h3>
-		</div>
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
-			<div class="helper marginBottom">A list of recently run batches, including reports and syndication published files</div>
-
-
-			
-						
-			<a href="#" onClick="navigateTo('#!fileImport'); return false;">CSV Import Utility</a><br />
-			<div class="helper marginBottom">Import data from a variety of formats</div>
-<!--
-			<a href="#" onClick="navigateTo('#!ciEngineAgentManager'); return false;">Agent Manager</a><br />
-			<div class="helper marginBottom">Manage repricing agents.</div>
--->		</div>
-	</div>
-
-
-	</td>
-	
-	<td width="33%" valign="top">
-	<div class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Inventory &amp; Supply Chain</h3>
-		</div>
-
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		
-		<a href="#" onClick="navigateTo('#!supplierManager'); return false;">Suppliers &amp; Third Party Logistics</a>
-<!--		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain</a> -->
-		<div class="helper marginBottom">Track inventory, pricing and orders with your suppliers or 3PL</div>
-		
-		<a href="#" onClick="navigateTo('#!warehouseManager'); return false;">Warehouse(s)</a>
-		<div class="helper marginBottom">Configure Warehouse geo locations and wms zones</div>
-
-		<a href="#" onClick="navigateTo('#!warehouseUtilities'); return false;">WHIM: <b>W</b>are<b>H</b>ouse <b>I</b>nventory <b>M</b>anagement</a><br />
-		<div class="helper marginBottom">Utility intended for day-to-day use by warehouse employees equipped with a 
-		barcode scanner attached to a tablet, or notebook pc</div>
-				
-		</div>
-	</div>		
-	<div class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Marketplace</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<!--
-		<a href="#" onClick="navigateTo('/biz/manage/powerlister/index.cgi'); return false;">Powerlister Manager</a>
-		<div class="helper marginBottom">Track, and update your eBay PowerLister Channels.</div>
-		-->
-		<!--
-		<a href="#" onClick="navigateTo('/biz/manage/repricing/index.cgi'); return false;">Dynamic Repricing <span class='new'>alpha</span></a>
-		<div class="helper marginBottom">Automatically raise/lower amazon prices based on competitors pricing.</div>
-		-->
-		<a href="#" onClick="navigateTo('#!eBayListingsReport'); return false;">Listing &amp; Event Reports</a>
-		<div class="helper marginBottom">Listing Events are created anytime a listing is created, modified, or implicitly ended</div>		
-		
-		</div>
-	</div>
-
-	<td width="33%" valign="top">
-	<div class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Social &amp; Communications</h3>
+		<h3 class='smallPadding'>Social &amp; Communications</h3>
 		</div>
 
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
@@ -630,51 +492,69 @@ UTILITIES PAGE TEMPLATE
 		
 		</div>
 	</div>	
-	
-	<div class='ui-widget marginBottom'>
+
+
+
+	<div class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Manage Apps/Website</h3>
+		<h3 class='smallPadding'>Inventory &amp; Supply Chain</h3>
+		</div>
+
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		
+		<a href="#" onClick="navigateTo('#!supplierManager'); return false;">Suppliers &amp; Third Party Logistics</a>
+		<div class="helper marginBottom">Track inventory, pricing and orders with your suppliers or 3PL</div>
+		
+		<a href="#" onClick="navigateTo('#!warehouseManager'); return false;">Warehouse(s)</a>
+		<div class="helper marginBottom">Configure Warehouse geo locations and wms zones</div>
+
+		<a href="#" onClick="navigateTo('#!warehouseUtilities'); return false;">WHIM: <b>W</b>are<b>H</b>ouse <b>I</b>nventory <b>M</b>anagement</a>
+		<div class="helper marginBottom">For warehouse employees equipped with a barcode scanner and a tablet or notebook</div>
+				
+		</div>
+	</div>
+
+	<div id="tools" class='ui-widget floatPanel'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Tools</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a>
+			<div class="helper marginBottom">A list of recently run batches, including reports and syndication published files</div>
+						
+			<a href="#" onClick="navigateTo('#!fileImport'); return false;">CSV Import Utility</a>
+			<div class="helper marginBottom">Import data from a variety of formats</div>
+<!--
+			<a href="#" onClick="navigateTo('#!ciEngineAgentManager'); return false;">Agent Manager</a>
+			<div class="helper marginBottom">Manage repricing agents.</div>
+-->		</div>
+	</div>	
+
+	<div class='ui-widget floatPanel'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-<!--
-yoink!
-		<a href="#" onClick="navigateTo('/biz/manage/snapshots/index.cgi'); return false;">Snapshots</a>
-		<div class="helper marginBottom">Create snapshots of your product database for backups, and faster performance</div>
--->
-
-<!--		<a href="#" onClick="navigateTo('/biz/manage/csvexport/index.cgi'); return false;">Product Export</a><br /> -->
-		<a href="#" onClick="navigateTo('#!productExport'); return false;">Product Export</a><br />
+		<a href="#" onClick="navigateTo('#!productExport'); return false;">Product Export</a>
 		<div class="helper marginBottom">Exports products into a CSV file</div>
 	
-		<a href="#" onClick="navigateTo('#!productPowerTool'); return false;">Product Power Tool</a><br />
+		<a href="#" onClick="navigateTo('#!productPowerTool'); return false;">Product Power Tool</a>
 		<div class="helper marginBottom">Modify multiple product attributes in mass</div>
-<!--
-broke.	
-		<a href="#" onClick="navigateTo('/biz/manage/archive/index.cgi'); return false;">Archive Orders</a><br />
-		<div class="helper marginBottom">Hide completed orders</div>
-
-		<a href="#" onClick="navigateTo('/biz/manage/diskspace/index.cgi'); return false;">Disk Space Manager</a><br />
-		<div class="helper marginBottom">Manage the amount of disk space in use by your account</div>	
 	
-		<a href="#" onClick="navigateTo('/biz/syndication/sitemap/index.cgi'); return false;">Static Google SiteMap</a><br />
-		<div class="helper marginBottom">Configure nightly generation of a static sitemap file</div>	
--->		
-		<a href="#" onClick="navigateTo('#!manageFlexedit'); return false;">Manage Flexedit Fields (beta)</a><br />
+		<a href="#" onClick="navigateTo('#!manageFlexedit'); return false;">Manage Flexedit Fields (beta)</a>
 		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor</div>
 	
-		<a href="#" onClick="navigateTo('#!accountUtilities'); return false;">Tech Support Utils <!-- (beta) --></a>
-		<div class="helper marginBottom"></div>
+		<a href="#" onClick="navigateTo('#!accountUtilities'); return false;">Tech Support Utils</a>
+		<div class="helper marginBottom">The jundland wastes are not to be traveled lightly.</div>
 
 		</div>
 	</div>
+
+
 	
-	</td>
 
-</tr>
-</tbody>
-
-</table>
+	
 </div>
 
 

@@ -271,7 +271,15 @@ Use this in a table where you want clear separation between rows and cells. This
 
 
 
+/* floating panels, used for the setup and utilities landing pages */
 
+.floatPanel	{
+	width:100%;
+	margin:0 0 1% 0;
+	}
+.floatPanel .helper	{display:none;} /* condense the panels down to decrease scrolling */
+.floatPanel a	{padding:5px 0; display:block;} /* add a little space around each link to accomodate a touch */
+.floatPanel .ui-widget-header h3	{font-size:.85em;}
 
 /*   product/customer picker */
 
@@ -405,14 +413,13 @@ STICKY TABS
 
 
 
-/* two column panel layout. used in reports too. */
+/* two column panel layout. will go to two column @ 768. */
 .twoColumn{  
-	width:48%;  
-	min-height:200px;  
-	float:left;  
+	width:100%;
+	clear:both;
 	}  
 
-.twoColumn.column2 {float:right;}
+.twoColumn.column2 {clear:both;}
 
 .twoColumn .placeholder{  
 	background: #ffffff;  
@@ -614,10 +621,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#990000', end
 #messagesContent .messageDetail	{float:right; width:60%; margin-right:3%;}
 
 
-@media screen and (max-width: 1000px) {
-/* changing to 7% keeps list from line-wrapping. */
-	.mhTabsContainer li	{width:7.5%;}
-	}
+
 
 
 .pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
@@ -1154,17 +1158,36 @@ NOTIFICATIONS
 .notificationDatatableInputs	{min-width:40%;}
 
 
-/*
-http://codepad.co/s/7cca38#select
-some pad (more or less)specific styles.
-*/
+/* this is a phone in landscape mode */
+@media screen and (min-width: 400px) {
+	.floatPanel .helper	{
+		display:block;
+		}
+	}
 
-@media screen and (max-width: 800px) {
+
+@media screen and (min-width: 760px) {
+	.floatPanel	{
+		width:31%;
+		margin:0 1% 1% 1%;
+		float:left;
+		box-sizing:border-box;
+		-moz-box-sizing:border-box;
+		webkit-box-sizing:border-box;		
+		}
+	.floatPanel .ui-widget-header h3	{font-size:1.0em;}
 	.twoColumn{  
-		width:100%;
-		clear:both;
+		width:48%;  
+		min-height:200px;  
+		float:left;  
 		}  
 	
-	.twoColumn.column2 {clear:both;}
+	.twoColumn.column2 {float:right;}
 
+	}
+
+
+@media screen and (max-width: 1024px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
 	}
