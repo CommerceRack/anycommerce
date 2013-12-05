@@ -48,9 +48,7 @@ var admin = function() {
 		
 		'mailToolTemplate',
 		
-		'pageTemplateSites',
-		'domainListTemplate'
-
+		'pageTemplateSites'
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
 //		'projectCreateTemplate',
@@ -1594,8 +1592,6 @@ if(app.vars.debug)	{
 	$('#jtSectionTab').show();
 	}
 
-
-//app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
@@ -2102,39 +2098,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					}
 				},
 				
-				//pass in HOSTTYPE as data.
-				appHostButtons : function($tag,data)	{
-					var $menu = $("<menu \/>").hide();
-					
-					if(data.value == 'SITEPTR')	{
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-						$menu.append("<li data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
-						}
-					
-					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
-						}
-					if($menu.children().length)	{
-						$menu.menu();
-						$tag.append($menu); //so menu appears where it should.
-						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
-						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
-						$button.on('click',function(){
-							$menu.show();
-							$( document ).one( "click", function() {
-								$menu.hide();
-								});
-							return false;
-							})
-						$tag.append($button);
-						}
-					else	{
-						//host/domain isn't app based.
-						}
-					},
+
 				
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {
@@ -2385,8 +2349,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				return false;
 				}, //navigateTo
 
-			
-				
 //show YouTubeVideo in a dialog.
 			showYTVInDialog : function(videoID,vars){
 				if(videoID)	{
@@ -2551,40 +2513,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.u.handleButtons($target);
 				},
 
-			showSitesTab : function($target)	{
-				$target.empty();
-				$target.showLoading({'message':'Fetching List of Domains'});
-//if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
-				app.model.addDispatchToQ({
-					'_cmd':'adminDomainList',
-					'hosts' : 1,
-					'_tag':	{
-						'datapointer' : 'adminDomainList',
-						'callback':function(rd)	{
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$target.hideLoading();
-								var domains = app.data[rd.datapointer]['@DOMAINS'];
-								app.data[rd.datapointer]['*favorites'] = new Array();
-								var L = domains.length;
-								for(var i = 0; i < L; i += 1)	{
-									if(domains[i].IS_FAVORITE == 1)	{
-										app.data[rd.datapointer]['*favorites'].push(domains[i]);
-										}
-									}
-								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
-								app.u.handleAppEvents($target);
-
-								}
-							}
-						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
-
-				},
-
 			showMailTool : function(vars)	{
 				vars = vars || {};
 				
@@ -2660,7 +2588,6 @@ HEADER CODE
 					}
 				return r;
 				},
-
 
 
 /*
@@ -3634,7 +3561,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_reports.a.showKPIInterface();
 					}
 				else if(tab == 'sites')	{
-					app.ext.admin.a.showSitesTab($target);
+					app.ext.admin_sites.a.showSitesTab($target);
 					}
 				else if(tab == 'reports')	{
 					app.ext.admin_reports.a.showReportsPage($target);
