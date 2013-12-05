@@ -625,20 +625,21 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 */
 
 			mpJumpToPage : function($pageTag)	{
-
-//				app.u.dump("BEGIN app.ext.store_prodlist.u.mpJumpToPage");
-				var targetList = $pageTag.closest('[data-targetlist]').attr('data-targetlist');
-				var plObj = $('#'+targetList).data('prodlist');
+				if($pageTag.attr('disabled') != 'disabled'){
+//					app.u.dump("BEGIN app.ext.store_prodlist.u.mpJumpToPage");
+					var targetList = $pageTag.closest('[data-targetlist]').attr('data-targetlist');
+					var plObj = $('#'+targetList).data('prodlist');
 
 //figure out what page to show next.
 //the multipage controls take care of enabling/disabling next/back buttons to ensure no 'next' appears/is clickable on last page.				
-				if($pageTag.attr('data-role') == 'next')	{plObj.page_in_focus += 1}
-				else if($pageTag.attr('data-role') == 'previous')	{plObj.page_in_focus -= 1}
-				else	{plObj.page_in_focus = $pageTag.attr('data-page')}
+					if($pageTag.attr('data-role') == 'next')	{plObj.page_in_focus += 1}
+					else if($pageTag.attr('data-role') == 'previous')	{plObj.page_in_focus -= 1}
+					else	{plObj.page_in_focus = $pageTag.attr('data-page')}
 
-				$('.mpControlContainer','#'+plObj.parentID+'_container').empty().remove(); //clear all summary/multipage for this prodlist.
-				$('#'+plObj.parentID).empty(); //empty prodlist so new page gets clean data.
-				this.buildProductList(plObj);
+					$('.mpControlContainer','#'+plObj.parentID+'_container').empty().remove(); //clear all summary/multipage for this prodlist.
+					$('#'+plObj.parentID).empty(); //empty prodlist so new page gets clean data.
+					this.buildProductList(plObj);
+					}
 				},
 			
 			showProdlistSummary : function(plObj,location){
