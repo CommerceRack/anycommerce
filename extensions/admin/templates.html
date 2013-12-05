@@ -275,9 +275,6 @@ SETUP PAGE TEMPLATE
 
 	<td width="33%" valign="top">
 
-			
-			
-
 	<div id="manage" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Manage Apps/Website</h3>
@@ -286,11 +283,6 @@ SETUP PAGE TEMPLATE
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('#!domainConfigPanel'); return false;">Domain Hosting</a><br />
 			<div class="helper marginBottom">Register and Link Domains.</div>
-			
-			<a href="#" onClick="navigateTo('#!projects'); return false;">App Hosting </a><br />
-			<div class="helper marginBottom">Manage Hosted Application Projects</div>
-
-
 			
 			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
 			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
@@ -977,97 +969,6 @@ ACHIEVEMENTS
 </form>
 </div>
 
-
-
-
-
-<!--
-//////////////////////////  PROJECTS \\\\\\\\\\\\\\\\\\\\\\\\\
--->
-
-
-
-
-
-
-<table>
-<tr id='projectsListTemplate'>
-	<td data-bind="var: projects(ID); format:text;"></td>
-	<td data-bind="var: projects(TITLE); format:text;"></td>
-	<td data-bind="var: projects(TYPE); format:text;"></td>
-	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
-	<td class='alignRight'>
-	<button data-app-event='admin|projectRemove'>Remove this Project</button>
-	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
-	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
-	<button data-app-event='admin|projectUpdateShow'>View Details</button><!-- this will eventually be 'edit' -->
-	</td>
-</tr>
-</table>
-
-
-<div id='projectDetailTemplate' class='labelsAsBreaks clearfix'>
-
-	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
-	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
-	<div class='label' data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
-	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
-	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
-	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
-	<div class='label' data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
-	<div class='label' data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
-	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
-	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
-	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
-
-</div>
-
-
-<div id='projectCreateTemplate'>
-
-<form onSubmit='return false'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
-	<label>
-	<span>Project title</span>
-	<input type="text" name="title" required='required' />
-	<span class='toolTip' title="ex: domain.com master">?</span>
-	</label>
-
-
-	<label>
-	<span>Project type</span>
-	<select name="type" >
-		<option value="APP">Shopping App (index.html)</option>
-<!--		<option value="VSTORE">Legacy vStore Project (beta)</option> -->
-		<option value="ADMIN">Hosted Admin App (beta)</option>
-		<option value="CHECKOUT">Checkout Intercept (beta)</option>
-		<option value="DSS">Decision Support System (beta)</option>
-	</select>
-	</label>
-
-
-	<label>
-	<span>GitHub repo</span>
-	<input type="url" name="repo" maxlength="128" required='required' />
-	</label>
-	<p class="hint">ex: http://github.com/yourname/project.git<br />
-	At this time only GITHUB hosted projects with public http urls are supported.
-	</p>
-
-	<label>
-	<span>GitHub branch</span>
-	<input type="text" name="branch" maxlength="20" />
-	</label>
-	
-<!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
-	<div class='buttonset'>
-		<button data-app-event="admin|projectCreateExec">Save</button>
-	</div>
-</fieldset>
-</form>
-
-</div>
 
 
 
