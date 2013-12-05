@@ -32,7 +32,7 @@
 	<tr>
 		<th>Title</th>
 		<th>Type</th>
-		<th></th>
+		<th data-anytable-nosort='true' class='alignRight'><input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" /></th>
 	</tr>
 	</thead>
 	</table>
@@ -100,8 +100,8 @@
 <table>
 <tbody id='projectsListTemplate'>
 <tr>
-	<td data-bind="var: projects(TITLE); format:text;"></td>
-	<td data-bind="var: projects(TYPE); format:text;"></td>
+	<td class='isSearchable' data-bind="var: projects(TITLE); format:text;"></td>
+	<td class='isSearchable' data-bind="var: projects(TYPE); format:text;"></td>
 	<td class='alignRight'>
 	<span data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
 	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button>
