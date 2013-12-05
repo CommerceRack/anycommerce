@@ -315,14 +315,24 @@ left them be to provide guidance later.
 				if(vars.templateID)	{
 					$cart = $(app.renderFunctions.createTemplateInstance(vars.templateID,vars));
 					$cart.attr('data-template-role','cart');
-					$cart.on('refresh.cart',function(){
+//will fetch an entirely new copy of the cart from the server.
+//still requires a dispatch be sent OUTSIDE this
+					$cart.on('fetch.cart',function(P){
 						var $c = $(this);
 						$c.empty().showLoading({'message':'Updating cart contents'})
 						app.calls.refreshCart.init({
 							'callback':'anycontent',
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
-							},Q);
+							},P.Q);
+						});
+//will update the cart based on what's in memory.
+					$cart.on('refresh.cart',function(P){
+						var $c = $(this);
+						$c.empty().anycontent({
+							'datapointer':'cartDetail',
+							'templateID' : $c.data('templateid')
+							})
 						});
 					}
 				else	{
