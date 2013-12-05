@@ -16,6 +16,7 @@ ADMIN
 	change - UPS option for 'perform rule processing' has been removed. If rules are present, they'll be applied.
 	bug - rss feeds can now be deleted.
 	bug - user roles now saving.
+	bug - coupon expirations now saving correctly on create.
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
