@@ -306,6 +306,34 @@ left them be to provide guidance later.
 			}, //validate
 
 
+		a : {
+			
+			
+			getCartAsJqObj : function(vars)	{
+				vars = vars || {};
+				var r; //what is returned.
+				if(vars.templateID)	{
+					$cart = $(app.renderFunctions.createTemplateInstance(vars.templateID,vars));
+					$cart.attr('data-template-role','cart');
+					$cart.on('refresh.cart',function(){
+						var $c = $(this);
+						$c.empty().showLoading({'message':'Updating cart contents'})
+						app.calls.refreshCart.init({
+							'callback':'anycontent',
+							'templateID' : $c.data('templateid'),
+							'jqObj' : $c
+							},Q);
+						});
+					}
+				else	{
+					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, ','gMessage':true});
+					}
+				
+				return r;
+				}
+			
+			},
+
 ////////////////////////////////////   						util [u]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -640,8 +668,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump($o);
 			},
 
-
-
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
@@ -751,15 +777,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				if(data.value.stid[0] == '%')	{$tag.remove()} //no remove button for coupons.
 				else if(data.value.asm_master)	{$tag.remove()} //no remove button for assembly 'children'
 				else	{
-if($tag.is('button')){$tag.button({icons: {primary: "ui-icon-closethick"},text: false})}
-$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
-
-//the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
-$tag.one('click',function(event){
-	event.preventDefault();
-	app.ext.cco.u.updateCartQty($tag);
-	app.model.dispatchThis('immutable');
-	});
+					if($tag.is('button')){$tag.button({icons: {primary: "ui-icon-closethick"},text: false})}
+//					$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
 					}
 				},
 
@@ -867,30 +886,37 @@ $tag.one('click',function(event){
 		
 		e : {
 			
-			cartItemQuantityUpdate : function($ele,p){
-
-				var stid = $ele.closest('[data-stid]')
+			cartItemRemove	: function($ele,p)	{
+				var stid = $ele.closest('[data-stid]').data('stid');
 				if(stid)	{
 					app.ext.cco.calls.cartItemUpdate.init(stid,$ele.val(),{
-						'callback' : function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$ele.closest('form').anymessage({'message':rd});
-								}
-							else	{
-								if($ele.val() == 0)	{
-									$ele.closest('[data-obj_index]').hide(); //objIndex added by processList on items template container;
-									}
-								$ele.closest('form').anymessage({'message':'Item '+stid+' removed from your shopping cart'})
-								}
-							}
-						});
+						'callback' : 'showMessaging',
+						'message' : 'Item '+stid+' removed from your cart',
+						'jqObj' : $ele.closest('form')
+						},'immutable');
+					$ele.closest("[data-template-role='cart']").trigger('refresh'); //will work if getCartAsJqObj was used to create the cart.
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
 					}
-
-				}
+				}, //cartItemRemove
 			
+			cartItemQuantityUpdate : function($ele,p){
+				var stid = $ele.closest('[data-stid]').data('stid');
+				if(stid)	{
+					app.ext.cco.calls.cartItemUpdate.init(stid,$ele.val(),{
+						'callback' : 'showMessaging',
+						'message' : 'Quantities updated for item '+stid,
+						'jqObj' : $ele.closest('form')
+						},'immutable');
+					$ele.closest("[data-template-role='cart']").trigger('refresh'); //will work if getCartAsJqObj was used to create the cart.
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
+					}
+				} //cartItemQuantityUpdate
 			}
 		
 		} // r

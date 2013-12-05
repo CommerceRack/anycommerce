@@ -50,7 +50,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-
+<script src="resources/jquery.ui.anyplugins.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -990,7 +990,7 @@ onclicks are recursive, so only add it to the parent element.
 This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
 -->
 
-<div id='cartTemplate' class='loadingBG' data-app-role='cartContainer'>
+<div id='cartTemplate' data-template-role='cart'>
 
 <form action='#' onSubmit='return false'>
 
@@ -1069,7 +1069,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' data-app-click='cco|cartItemRemove'>Remove Item From Cart</button>
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
@@ -1079,7 +1079,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput numberInput' data-app-change="myRIA|"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
+		qty: <input type='number' class='qtyInput numberInput' data-app-change="cco|cartItemQuantityUpdate"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1511,6 +1511,13 @@ The 'data-action' attribute is used to assign an onclick.
 </table>
 
 </div>
+
+
+<script type='text/javascript'>
+(function($) {
+	$(document.body).anydelegate(); console.error('HEY!!! turn on this anydelegate');
+	})(jQuery);
+</script>
 
 
 </body>
