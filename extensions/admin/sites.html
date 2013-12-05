@@ -3,7 +3,7 @@
 
 <div id='pageTemplateSites' class='ui-widget'>
 	
-	<div class='ui-widget-content ui-corner-all stdPadding domainListContainer'>
+	<div class='ui-widget-content ui-corner-all stdPadding domainListContainer' data-app-role='domainsAndHostsContainer'>
 	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
 	<thead>
 	<tr>
@@ -27,10 +27,10 @@
 	<td colspan='2'><h6 data-bind="var: domain(DOMAINNAME); format:text;"></h6></td>
 	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
 	<td class='alignRight width50'>
-		<button data-app-event='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</button>
-		<button data-app-event="admin|domainPutInFocus">Use Domain</button>
-		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</button>
-		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</button>
+		<button data-app-click='admin_batchJob|batchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</button>
+		<button class='applyButton' data-app-click="admin|domainPutInFocus" data-icon-primary='ui-icon-check' data-text='false'>Use Domain</button>
+		<button class='applyButton' data-app-click="admin_config|adminDomainToggleFavoriteExec" data-icon-primary='ui-icon-tag' data-text='false'>Tag as Favorite</button>
+		<button class='applyButton' data-app-click="admin_config|adminDomainDetailShow" data-mode='dialog' data-icon-primary='ui-icon-pencil' data-text='false'>Edit Domain Settings</button>
 	</td>
 </tr>
 </tbody>
@@ -45,9 +45,109 @@
 	</td>
 	<td></td>
 	<td class='alignRight width50'>
-	<button data-app-event="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
+	<button data-app-click="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;" class='positionRelative'></span>
 	</td>
 </tr>
 
 </table>
+
+
+
+
+
+
+
+
+
+
+
+<!--
+//////////////////////////  PROJECTS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+
+<table>
+<tr id='projectsListTemplate'>
+	<td data-bind="var: projects(ID); format:text;"></td>
+	<td data-bind="var: projects(TITLE); format:text;"></td>
+	<td data-bind="var: projects(TYPE); format:text;"></td>
+	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+	<button class='applyButton' data-app-click='admin_sites|projectRemove' data-icon-primary='ui-icon-trash' data-text='false'>Remove this Project</button>
+	<button class='applyButton' data-app-click='admin_sites|projectGitRepoOpen' data-icon-primary='ui-icon-pencil' data-text='false' data-bind="var:projects(GITHUB_REPO); format:showIfSet;" >Visit GitHub Repo</button>
+	<button class='applyButton displayNone' data-app-click='admin_sites|projectLinkOpen' data-icon-primary='ui-icon-refresh' data-text='false' data-bind="var:projects(LINK); format:showIfSet;">Update Project From Repo</button>
+	<button class='applyButton displayNone' data-app-click='admin_sites|projectUpdateShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button><!-- this will eventually be 'edit' -->
+	</td>
+</tr>
+</table>
+
+
+<div id='projectDetailTemplate' class='labelsAsBreaks clearfix'>
+
+	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
+	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
+	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
+	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
+	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
+	<div class='label' data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
+	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
+	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+
+</div>
+
+
+<div id='projectCreateTemplate'>
+
+<form onSubmit='return false'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+	<label>
+	<span>Project title</span>
+	<input type="text" name="title" required='required' />
+	<span class='toolTip' title="ex: domain.com master">?</span>
+	</label>
+
+
+	<label>
+	<span>Project type</span>
+	<select name="type" >
+		<option value="APP">Shopping App (index.html)</option>
+<!--		<option value="VSTORE">Legacy vStore Project (beta)</option> -->
+		<option value="ADMIN">Hosted Admin App (beta)</option>
+		<option value="CHECKOUT">Checkout Intercept (beta)</option>
+		<option value="DSS">Decision Support System (beta)</option>
+	</select>
+	</label>
+
+
+	<label>
+	<span>GitHub repo</span>
+	<input type="url" name="repo" maxlength="128" required='required' />
+	</label>
+	<p class="hint">ex: http://github.com/yourname/project.git<br />
+	At this time only GITHUB hosted projects with public http urls are supported.
+	</p>
+
+	<label>
+	<span>GitHub branch</span>
+	<input type="text" name="branch" maxlength="20" />
+	</label>
+	
+<!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
+	<div class='buttonset'>
+		<button data-app-click="admin|projectCreateExec">Save</button>
+	</div>
+</fieldset>
+</form>
+
+</div>
+
+
