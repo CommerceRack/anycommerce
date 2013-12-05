@@ -1482,6 +1482,10 @@ when an event type is changed, all the event types are dropped, then re-added.
 							$tr.addClass('edited');
 							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
 							app.u.handleButtons($tr);
+//here for backwards compatibility. enabled when dataTableAddUpdate is executed by the older dataTableAddExec
+							if(P.handleAppEvents)	{
+								app.u.handleAppEvents($tr);
+								}
 					
 	//if a row already exists with this guid, this is an UPDATE, not an ADD.
 	//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
@@ -1500,6 +1504,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								$(':checkbox',$inputContainer).prop('checked',false);
 								}
 							app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
+
 							r = true;
 							}
 						else	{
@@ -1530,71 +1535,22 @@ when an event type is changed, all the event types are dropped, then re-added.
 // $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
 			dataTableAddExec : function($btn,vars)	{
 				$btn.button();
+				var
+					$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
+				//tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
+					$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
+					$form = (vars['$form']) ? vars['$form'] : $container.closest('form');
+				
+//Bring the data-table up to delegated events standards. This is a program by contract model, where thre data-table-role's are specified.
+//this occurs outside the click so that it only happens once, at the time the app event is applied.
+				$container.attr("data-table-role","inputs");
+				$dataTbody.attr("data-table-role","content");
+				$form.attr("data-table-role","container");
+
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
 					event.preventDefault();
-				var
-					$container = P['$container'] ? P['$container'] : $ele.closest('fieldset'),
-				//tbody can be passed in thru P or, if not passed, it will look for one within the fieldset. rules engine uses P approach. shipping doesn't. same for form.
-					$dataTbody = (P['$dataTbody']) ? P['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
-					$form = (P['$form']) ? P['$form'] : $container.closest('form');
-				
-				
-				if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
-//						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
-				//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
-				//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
-				//	$('input',$container).attr('required','required'); 
-//				app.u.dump(" -> app.u.validateForm($container): "+app.u.validateForm($container));
-					if(app.u.validateForm($container))	{
-//							app.u.dump(" -> form is validated.");
-						var 
-							bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-							sfo = $container.serializeJSON({'cb':true}),
-							$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
-
-
-//							app.u.dump(" -> sfo: "); app.u.dump(sfo);
-						
-						$tr.anycontent({data:sfo});
-						$tr.addClass('edited');
-						$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-						app.u.handleButtons($tr);
-				
-//if a row already exists with this guid, this is an UPDATE, not an ADD.
-//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
-						if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
-							$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
-							}
-						else	{
-							$tr.appendTo($dataTbody);
-							}
-						app.u.handleAppEvents($tr,P); //P are passed through so that buttons in list can inheret. rules uses this.
-// * 201324 -> after add/save, clear the inputs for the next entry.
-// * 201330 -> turns out this behavior may not always be desired. caused issues in shipping. can now be disabled.
-						if($ele.data('form-skipreset'))	{
-							}
-						else	{
-							$('input, textarea',$container).not(':radio').val(""); //clear inputs. don't reset radios in this manner or they'll lose their value.
-							$(':radio').prop('checked',false);
-							$('select',$container).val();
-							$(':checkbox',$container).prop('checked',false);
-							}
-						app.ext.admin.u.handleSaveButtonByEditedClass($form);
-						}
-					else	{
-						app.u.dump("form did not validate");
-						//validateForm handles error display.
-						}
-				//	$('input',$container).attr('required','').removeAttr('required');
-					
-					}
-				else	{
-					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
-					app.u.dump(" -> $container.length: "+$container.length);
-					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
-					app.u.dump(" -> $form.length: "+$form.length);
-					app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
-					}
+					event.handleAppEvents = true;
+					app.ext.admin_config.e.dataTableAddUpdate($btn,event);
 					return false;
 					});
 				}, //dataTableAddExec
