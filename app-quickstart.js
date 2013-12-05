@@ -2866,6 +2866,10 @@ buyer to 'take with them' as they move between  pages.
 //app.u.dump("BEGIN myRIA.u.buildQueriesFromTemplate");
 //app.u.dump(tagObj);
 
+//***201352 The ping call below will overwrite the data in the datapointer, losing the navcatDetail.  Deleting this datapointer *shouldn't* have 
+//negative effects elsewhere due to the deep copy in fetchPageContent and the lack of use of datapointer in the showPageContent callback.  Hopefully. -mc
+delete tagObj.datapointer;
+
 var numRequests = 0; //will be incremented for # of requests needed. if zero, execute showPageContent directly instead of as part of ping. returned.
 var catSafeID = tagObj.navcat;
 
