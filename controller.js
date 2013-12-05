@@ -3499,7 +3499,7 @@ $tmp.empty().remove();
 			}, //text
 
 		loadsTemplate : function($tag,data)	{
-//			app.u.dump("BEGIN renderFormats.loadsTemplate");
+			app.u.dump("BEGIN renderFormats.loadsTemplate"); app.u.dump(data.bindData);
 			$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data));
 			},
 
@@ -3654,7 +3654,7 @@ $tmp.empty().remove();
 						}
 					catch(e)	{
 						r = false;
-						app.u.dump(' -> '+location+'Storage for '+key+' defined but not available (no space? no write permissions?)');
+						app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
 						app.u.dump(e.message);
 						}
 					

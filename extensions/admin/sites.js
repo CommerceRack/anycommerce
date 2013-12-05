@@ -66,12 +66,10 @@ var admin_sites = function() {
 					app.ext.admin.u.bringTabContentIntoFocus($target);
 					}
 				
-				$target.intervaledEmpty().anydelegate();
+				$target.intervaledEmpty().anycontent({'templateID':'pageTemplateSites','showLoading':false}).anydelegate();
 				
-				var $section = $("<section>").addClass("domainsAndHosts marginBottom").appendTo($target);
-				$section.anycontent({'templateID':'pageTemplateSites','showLoading':false});
-
-
+/*
+if we switch back to stacked instead of side-by-side, use this. otherwise delete it.
 				$projects = $("<section>");
 				app.ext.admin.i.DMICreate($projects,{
 					'header' : 'Hosted Applications',
@@ -89,7 +87,8 @@ var admin_sites = function() {
 						}
 					});
 				$projects.appendTo($target);
-				app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
+*/
+				app.ext.admin_sites.u.fetchSiteTabData('mutable');
 				
 				app.u.handleButtons($target);
 				app.model.dispatchThis('mutable');
@@ -104,10 +103,35 @@ var admin_sites = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 
+				projectButtons : function($tag,data)	{
+					var $menu = $("<menu \/>").addClass('projectMenu').hide();
+					$tag.css('position','relative');  //so menu appears where it should.
+					if(data.GITHUB_REPO)	{
+						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
+						}
+					if(data.LINK)	{
+						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.LINK+"'>Visit GitHub Repository<\/a><\/li>");
+						}
+					$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
+
+					$menu.menu();
+					$tag.append($menu);
+					$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
+					var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
+					$button.on('click',function(){
+						$menu.closest('table').find('menu.projectMenu').hide(); //close any open menus.
+						$menu.show();
+						$( document ).one( "click", function() {
+							$menu.hide();
+							});
+						return false;
+						})
+					$tag.append($button);
+					},
 				//pass in HOSTTYPE as data.
 				appHostButtons : function($tag,data)	{
-					var $menu = $("<menu \/>").hide();
-					
+					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
+					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value == 'SITEPTR')	{
 						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
 						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
@@ -123,8 +147,9 @@ var admin_sites = function() {
 						$menu.menu();
 						$tag.append($menu); //so menu appears where it should.
 						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
-						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
+						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
 						$button.on('click',function(){
+							$menu.closest('table').find('menu.appHostMenu').hide(); //close any open menus.
 							$menu.show();
 							$( document ).one( "click", function() {
 								$menu.hide();
@@ -144,7 +169,7 @@ var admin_sites = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			fetchSiteTabData : function($domain,$app,Q)	{
+			fetchSiteTabData : function(Q)	{
 				app.model.addDispatchToQ({
 					'_cmd':'adminDomainList',
 					'hosts' : true,
@@ -155,7 +180,15 @@ var admin_sites = function() {
 						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",'#sitesContent')
 						}
 					},Q);
-				
+				app.model.addDispatchToQ({
+					'_cmd':'adminProjectList',
+					'_tag':	{
+						'datapointer' : 'adminProjectList',
+						'callback':'anycontent',
+						'translateOnly' : true,
+						'jqObj' : $("[data-app-role='projectsContainer']:first",'#sitesContent')
+						}
+					},Q);
 				}
 			}, //u [utilities]
 
@@ -316,33 +349,33 @@ var admin_sites = function() {
 						}
 					});
 				}, //adminDomainCreateUpdateHostShow
-
-			projectLinkOpen : function($ele,p)	{
-				linkOffSite($ele.closest('tr').data('link'));
-				}, //projectLinkOpen
-				
-			projectUpdateShow : function($ele,p)	{
-				var	projectUUID = $ele.closest('tr').data('uuid');
-				
-				var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
-					'templateID' : 'projectDetailTemplate', //not currently editable. just more details.
-					'panelID' : 'project_'+projectUUID,
-					'header' : 'Edit Project: '+$ele.closest('tr').data('title') || projectUUID,
-					'handleAppEvents' : true,
-					showLoading : true
-					});
-//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
-				app.model.addDispatchToQ({
-					"_cmd":"adminProjectDetail",
-					"UUID":projectUUID,
-					"_tag": {
-						'callback':'anycontent',
-						'translateOnly' : true,
-						jqObj:$panel,
-						'datapointer' : 'adminProjectDetail|'+projectUUID
+			
+			projectDetailShow : function($ele,p)	{
+				var $detailRow = $ele.closest('tr').next('tr');
+				$detailRow.toggle();
+				if($detailRow.is(':visible'))	{
+					$detailRow.showLoading({'message':'Fetching project details'});
+					var	projectUUID = $ele.closest("[data-uuid]").attr('data-uuid');
+					if(projectUUID)	{
+	//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
+						app.model.addDispatchToQ({
+							"_cmd":"adminProjectDetail",
+							"UUID":projectUUID,
+							"_tag": {
+								'callback':'anycontent',
+								'translateOnly' : true,
+								jqObj:$detailRow,
+								'datapointer' : 'adminProjectDetail|'+projectUUID
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable'); 
 						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_sites.e.projectDetailShow, unable to ascertain project UUID.","gMessage":true});
+						}
+					
+					}
+				
 				}, //projectUpdateShow
 			
 			projectCreateShow : function($ele,p)	{
@@ -419,13 +452,8 @@ var admin_sites = function() {
 						app.model.dispatchThis('mutable');
 						}
 					});
-				}, //projectRemove
+				} //projectRemove
 			
-			projectGitRepoOpen : function($ele)	{
-				linkOffSite($ele.closest('tr').data('github_repo'));
-				} //projectGitRepoOpen
-
-
 
 			} //e [app Events]
 		} //r object.

@@ -5422,16 +5422,14 @@ else	{
 					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
 					});
 				},
-			linkOffSite : function($btn)	{
-				$btn.button();
-				$btn.off('click.linkOffSite').on('click.linkOffSite',function(){
-					if($btn.data('url'))	{
-						linkOffSite($btn.data('url'),'',true);
-						}
-					else	{
-						$btn.button('disable');
-						}
-					});
+
+			linkOffSite : function($ele,p)	{
+				if($btn.data('url'))	{
+					linkOffSite($btn.data('url'),'',true);
+					}
+				else	{
+					$btn.button('disable');
+					}
 				}
 			
 			} //e / appEvents

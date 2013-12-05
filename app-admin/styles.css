@@ -416,10 +416,7 @@ STICKY TABS
 /* two column panel layout. will go to two column @ 768. */
 .twoColumn{  
 	width:100%;
-	clear:both;
 	}  
-
-.twoColumn.column2 {clear:both;}
 
 .twoColumn .placeholder{  
 	background: #ffffff;  
@@ -1179,7 +1176,7 @@ NOTIFICATIONS
 	.twoColumn{  
 		width:48%;  
 		min-height:200px;  
-		float:left;  
+		float:left; 
 		}  
 	
 	.twoColumn.column2 {float:right;}

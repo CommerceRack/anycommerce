@@ -2,9 +2,14 @@
 
 
 <div id='pageTemplateSites' class='ui-widget'>
-	
-	<div class='ui-widget-content ui-corner-all stdPadding domainListContainer' data-app-role='domainsAndHostsContainer'>
-	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+
+
+	<section class='twoColumn' data-app-role='domainsAndHostsContainer'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<h2 class="smallPadding">Domains &amp; Hosts</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-all stdPadding'>
+	<table class='fullWidth gridTable marginTop applyAnytable' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
 	<thead>
 	<tr>
 		<th colspan='2'>Domain</th>
@@ -14,6 +19,27 @@
 	</thead>
 	</table>
 	</div>
+
+	</section>
+	
+	<section class='twoColumn column2' data-app-role='projectsContainer'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<h2 class="smallPadding">Projects</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-all stdPadding'>
+	<table class='fullWidth gridTable marginTop applyAnytable' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;">
+	<thead>
+	<tr>
+		<th>Title</th>
+		<th>Type</th>
+		<th></th>
+	</tr>
+	</thead>
+	</table>
+	</div>
+	
+	</section>
+
 	
 </div>
 
@@ -46,7 +72,7 @@
 	<td></td>
 	<td class='alignRight width50'>
 	<button data-app-click="admin|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
-	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;" class='positionRelative'></span>
+	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;"></span>
 	</td>
 </tr>
 
@@ -72,37 +98,36 @@
 
 
 <table>
-<tr id='projectsListTemplate'>
-	<td data-bind="var: projects(ID); format:text;"></td>
+<tbody id='projectsListTemplate'>
+<tr>
 	<td data-bind="var: projects(TITLE); format:text;"></td>
 	<td data-bind="var: projects(TYPE); format:text;"></td>
-	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-	<button class='applyButton' data-app-click='admin_sites|projectRemove' data-icon-primary='ui-icon-trash' data-text='false'>Remove this Project</button>
-	<button class='applyButton' data-app-click='admin_sites|projectGitRepoOpen' data-icon-primary='ui-icon-pencil' data-text='false' data-bind="var:projects(GITHUB_REPO); format:showIfSet;" >Visit GitHub Repo</button>
-	<button class='applyButton displayNone' data-app-click='admin_sites|projectLinkOpen' data-icon-primary='ui-icon-refresh' data-text='false' data-bind="var:projects(LINK); format:showIfSet;">Update Project From Repo</button>
-	<button class='applyButton displayNone' data-app-click='admin_sites|projectUpdateShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button><!-- this will eventually be 'edit' -->
+	<span data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
+	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button>
 	</td>
 </tr>
+<tr class='displayNone'>
+	<td colspan='3'>
+	<div class='marginLeft'>
+		<div  data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
+		<div  data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
+		<div  data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
+		<div  data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+		<div  data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
+		<div  data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
+		<div  data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
+		<div  data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
+		<div  data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
+		<div  data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
+		<div  data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+	</div>
+	</td>
+</tr>
+</tbody>
 </table>
 
 
-<div id='projectDetailTemplate' class='labelsAsBreaks clearfix'>
-
-	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
-	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
-	<div class='label' data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
-	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
-	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
-	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
-	<div class='label' data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
-	<div class='label' data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
-	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
-	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
-	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
-
-</div>
 
 
 <div id='projectCreateTemplate'>
