@@ -2000,18 +2000,17 @@ time.
 </fieldset>
 <p class='hint'>* is inventory-able</p>
 
-
 <fieldset data-app-role='variationInventorySettings' class='displayNone'>
 	<legend>Inventory</legend>
 	<label>
-		<input type='checkbox' name='inv' class='applyAnycb' data-app-change="admin_prodEdit|variationHandleInventoryChange" />
+		<input type='checkbox' name='inv' class='applyAnycb' data-app-click="admin_prodEdit|variationHandleInventoryChange" />
 		This option affects inventory.
 		<span class='toolTip' title="If you want to have price and/or weight modifiers or track inventory per variation, enable this.">?</span>
 	</label>
 
 </fieldset>
 
-<fieldset data-app-role='variationInventorySupplementals' class='displayNone' data-bind="format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate; useParentData:true;"></fieldset>
+<fieldset data-app-role='variationInventorySupplementals' class='displayNone' data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate; "></fieldset>
 
 <fieldset>
 	<legend>Variation Behavior</legend>
