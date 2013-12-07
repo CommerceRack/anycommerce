@@ -1,3 +1,16 @@
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('PT Sans'),local('PTSans-Regular'), url(fonts/ptsans.woff) format('woff');
+	}
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('PT Sans Bold'), local('PTSans-Bold'), url(fonts/ptsans_bold.woff) format('woff');
+	}
+
 @font-face	{
 	font-family: barcode3of9;
 	src: url('fonts/z3of9.ttf') /* will not work in IE9 w/out eot font file */
@@ -6,7 +19,7 @@
 body {line-height: 1;} /* helps to reduce some errant whitespace issues */
 
 body	{margin:0; padding:0; background:#f1f1f1; } 
-body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+body, html	{font-size:100%; font-family:PT Sans, Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
 
 img {border:0px;}
 
