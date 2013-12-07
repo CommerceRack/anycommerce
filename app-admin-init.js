@@ -63,7 +63,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
 
-app.rq.push(['script',0,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication and in various other places.
+app.rq.push(['script',0,app.vars.baseURL+'resources/crypto-md5-2.5.3.js']); //used for authentication and in various other places.
 
 //have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']);
