@@ -92,7 +92,7 @@ additionally, will apply some conditional form logic.
 				
 				for(var i = 0; i < supportedEvents.length; i += 1)	{
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
-						return self._executeEvent($(e.currentTarget),$.extend(p,e));;
+						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
 					
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
@@ -340,26 +340,13 @@ pass in an event name and a function and it will be added as an eventAction.
 				if($CT.data(index))	{this._formEventActions[index]($CT,this.element,ep);}
 				}
 			},
-// * 201346 -> support for $context added.
 //passing in a context allows this reset to impact just a portion of the delegated. useful in conjuction w/ trackSelector
 		resetTracking : function($context)	{
 			$context = $context || this.element;
 			$('.edited',$context).removeClass('edited');
 			this._updateSaveButtonInContext($context,"[data-app-role='saveButton']");
 			this._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']"); //intentionaly not using $context because master could be outside it. This way the master buttons count still updates.
-// * 201346 -> seems redundant. more efficient to use the saveButton function.
-/*			var $button = $("[data-app-role='saveButton'], [data-app-role='masterSaveButton']",$context);
-			$('.numChanges',$button).text("");
-			$button.removeClass('ui-state-highlight');
-			$button.each(function(){
-				if($(this).hasClass('ui-button'))	{
-					$(this).button("disable")
-					}
-				else	{
-					$(this).attr('disabled','disabled');
-					}
-				});
-*/			},
+			},
 
 		_handleAppEvents : function($CT,ep)	{
 //by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
