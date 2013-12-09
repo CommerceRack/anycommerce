@@ -277,25 +277,29 @@ app.model.dispatchThis('mutable');
 				},
 
 
+			adminBatchJobExec : function($ele,p)	{
+				var data = $ele.closest("[data-element]").data();
+				if(data && $ele.data('whitelist') && $ele.data('type'))	{
+					var whitelist = $ele.data('whitelist').split(',');
+					var vars = app.u.getWhitelistedObject(data,whitelist) || {};
+					vars.GUID = app.u.guidGenerator();
+					app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':vars});
+					}
+//allows for simple (no vars) batch jobs to be created.
+				else if($ele.data('type')){
+					app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':{'GUID':app.u.guidGenerator()}});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"in admin_batchJobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$ele.data('whitelist')+"] not set and/or data-type ["+$ele.data('type')+"] not set","gMessage":true});}
+				},
+
 			batchJobExec : function($btn)	{
 				if($btn.is('button'))	{
 					$btn.button({text: false,icons: {primary: $btn.attr('data-icon-primary') || "ui-icon-refresh"}})
 					}
 				$btn.off('click.batchJobExec').on('click.batchJobExec',function(event){
 					event.preventDefault();
-					var data = $btn.closest("[data-element]").data();
-					if(data && $btn.data('whitelist') && $btn.data('type'))	{
-						var whitelist = $btn.data('whitelist').split(',');
-						var vars = app.u.getWhitelistedObject(data,whitelist) || {};
-						vars.GUID = app.u.guidGenerator();
-						app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$btn.data('type'), '%vars':vars});
-						}
-//allows for simple (no vars) batch jobs to be created.
-					else if($btn.data('type')){
-						app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$btn.data('type'), '%vars':{'GUID':app.u.guidGenerator()}});
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"in admin_batchJobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$btn.data('whitelist')+"] not set and/or data-type ["+$btn.data('type')+"] not set","gMessage":true});}
+					app.ext.admin_batchJob.e.adminBatchJobExec($btn);
 					});
 				},
 	

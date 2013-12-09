@@ -4812,6 +4812,23 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 		e : {
+			
+			showMenu : function($ele,p)	{
+				p.preventDefault();
+				$ele.closest('td').css('position','relative');
+				var $menu = $ele.next('menu');
+				if($menu.hasClass('ui-menu'))	{} //already menuified.
+				else	{
+					$menu.menu();
+					$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200,'top':25,'right':0});
+					}
+				$menu.show();
+//				$( document ).one( "click", function() {
+//					$menu.hide();
+//					});
+				return false;
+				},
+			
 //add a class of allowBulkCheck to the checkboxes that you want toggled on event 
 			checkAllCheckboxesExec : function($ele,p)	{
 				if($ele.data('selected'))	{
@@ -5254,32 +5271,6 @@ not in use
 				}, //showConnectorFieldset
 
 
-
-			domainView : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
-				$btn.off('click.domainView').on('click.domainView',function(event){
-					event.preventDefault();
-					var domainname = $btn.closest("[data-domainname]").data('domainname');
-if(domainname)	{
-	if($btn.data('mode') == 'host')	{
-		var hostname = $btn.closest("[data-hostname]").data('hostname');
-		if(hostname)	{
-			linkOffSite("http://"+hostname+"."+domainname+"/",'',true);
-			}
-		else {
-			$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
-			}
-		}
-	else	{
-		linkOffSite("http://www."+domainname+"/",'',true);
-		}
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine domain.","gMessage":true});
-	}
-					
-					});
-				},
 
 			adminRSSRemove : function($ele,p)	{
 				var data = $ele.closest('tr').data();
