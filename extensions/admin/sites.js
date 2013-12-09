@@ -273,7 +273,7 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 										});
 									app.ext.admin.u.handleFormConditionalDelegation($panel); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature). applied to ALL forms in panel.
 //									app.u.handleAppEvents($panel);
-									handleCommonPlugins($panel);
+									app.u.handleCommonPlugins($panel);
 									$("select[name='PRT']",$panel).val(app.data[rd.datapointer].PRT);
 									}
 								}
@@ -405,24 +405,25 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 						}
 					
 					}
-				
+				return false;
 				}, //projectUpdateShow
 			
 			projectCreateShow : function($ele,p)	{
 				var $D = app.ext.admin.i.dialogCreate({
 					'title' : 'Create a New Project',
 					'templateID' : 'projectCreateTemplate',
-					showLoading : false,
-					appendTo : $ele.closest("[data-app-role='dualModeContainer']")
+					showLoading : false
 					});
 				$D.dialog('open');
+				$D.anydelegate();
+				app.u.handleButtons($D);
+				return false;
 				}, //projectCreateShow
 			
 			projectCreateExec  : function($ele,p)	{
 				var
 					$form = $ele.closest('form'),
-					sfo = $form.serializeJSON(),
-					$DMI = $form.closest("[data-app-role='dualModeContainer']");
+					sfo = $form.serializeJSON();
 				
 				if(app.u.validateForm($form))	{
 					$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
@@ -434,21 +435,11 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 							$form.anymessage({'message':rd});
 							}
 						else	{
-							
-							if($DMI.length)	{
-								$DMI.anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
-								$form.closest('.ui-dialog-content').dialog('close');
-								}
-							else	{
-								$form.empty().anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
-								}
+							$('#globalMessaging').anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
+							$ele.closest('.ui-dialog-content').dialog('close');
+							navigateTo("#:sites");
 							}
 						}},'immutable');
-					app.ext.admin.calls.adminProjectList.init({
-						'callback' :  'DMIUpdateResults',
-						'extension' : 'admin',
-						'jqObj' : $DMI
-						},'immutable');
 					app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles error display.
@@ -456,7 +447,7 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 				}, //projectCreateExec
 
 			projectRemove : function($ele,p)	{
-				app.ext.admin.i.dialogConfirmRemove({
+				var $D = app.ext.admin.i.dialogConfirmRemove({
 					"message" : "Are you sure you wish to remove this app/project? There is no undo for this action.",
 					"removeButtonText" : "Remove Project", //will default if blank
 					"title" : "Remove Project", //will default if blank
@@ -474,7 +465,7 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 									else	{
 										$D.dialog('close');
 										$('#globalMessaging').anymessage(app.u.successMsgObject('Your project has been removed'));
-										$ele.closest('tr').empty().remove();
+										navigateTo("#:sites");
 										}
 									}
 								}
@@ -482,6 +473,7 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 						app.model.dispatchThis('mutable');
 						}
 					});
+				return false;
 				} //projectRemove
 			
 

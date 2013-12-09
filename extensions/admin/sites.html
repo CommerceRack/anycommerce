@@ -1,7 +1,7 @@
 
 
 
-<div id='pageTemplateSites' class='ui-widget'>
+<div id='pageTemplateSites' class='ui-widget smallButton'>
 
 
 	<section class='twoColumn' data-app-role='domainsAndHostsContainer'>
@@ -20,7 +20,7 @@
 	</thead>
 	<tfoot>
 	<tr>
-		<td colspan='4'>
+		<td colspan='5'>
 		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
 		</td>
 	</tr>
@@ -32,6 +32,7 @@
 	
 	<section class='twoColumn column2' data-app-role='projectsContainer'>
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<button class='applyButton floatRight' data-icon-primary='ui-icon-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
 		<h2 class="smallPadding">Projects</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-all stdPadding'>
@@ -40,13 +41,12 @@
 	<tr>
 		<th>Title</th>
 		<th>Type</th>
-		<th></th>
-		<th data-anytable-nosort='true' class='alignRight'></th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tfoot>
 	<tr>
-		<td colspan='3'>
+		<td colspan='4'>
 		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
 		</td>
 	</tr>
@@ -71,9 +71,9 @@
 		<button class='applyButton' data-icon-primary='ui-icon-wrench' data-icon-secondary='ui-icon-triangle-1-s' data-text='false' data-app-click="admin|showMenu">Show Domain Menu</button>
 		<menu class='displayNone'>
 		<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</a></li>
-		<li><a href='#' data-app-click="admin|domainPutInFocus">Use This Domain</a></li>
-		<li><a href='#' data-app-click="admin_config|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
-		<li><a href='#' data-app-click="admin_config|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
+		<li><a href='#' data-app-click="admin_sites|domainPutInFocus">Use This Domain</a></li>
+		<li><a href='#' data-app-click="admin_sites|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
+		<li><a href='#' data-app-click="admin_sites|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
 		</menu>
 	</td>
 </tr>
@@ -83,10 +83,9 @@
 
 <tr id='domainListHostsRowTemplate'  data-element='host'>
 	<td class='width1'><span class="ui-icon ui-icon-arrow-1-e marginLeft"></span></td>
-	<td class='isSearchable' data-bind="var: host(HOSTNAME); format:text;"></span>
-	</td>
-	<td data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;" class='isSearchable'></td>
-	<td data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;" class='isSearchable'></td>
+	<td class='isSearchable' data-bind="var: host(HOSTNAME); format:text;"></td>
+	<td class='isSearchable' data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;"></td>
+	<td class='isSearchable' data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;"></td>
 	<td class='alignRight width50'>
 	<button class='applyButton' data-text='false' data-icon-primary='ui-icon-newwin' data-app-click="admin_sites|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;"></span>
@@ -134,7 +133,7 @@
 	<td class='alignRight'>
 	<button data-app-event="admin_sites|domainView" data-mode='host'>View Site</button>
 	<button data-app-event="admin|tagRowForRemove">Delete this Host</button>
-	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
+	<button data-app-event='admin_sites|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
 	</td>
 </tr>
 
@@ -490,6 +489,8 @@
 	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button>
 	</td>
 </tr>
+
+
 <tr class='displayNone'>
 	<td colspan='3'>
 	<div class='marginLeft'>
@@ -551,7 +552,7 @@
 	
 <!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
 	<div class='buttonset'>
-		<button data-app-click="admin|projectCreateExec">Save</button>
+		<button class='applyButton' data-app-click="admin_sites|projectCreateExec">Save</button>
 	</div>
 </fieldset>
 </form>
