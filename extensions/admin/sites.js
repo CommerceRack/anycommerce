@@ -102,7 +102,18 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
+				projectID2Pretty : function($tag,data)	{
+					var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
+					if(app.data.adminProjectList && app.data.adminProjectList['@PROJECTS'])	{
+						var index = app.ext.admin.u.getIndexInArrayByObjValue(app.data.adminProjectList['@PROJECTS'],'UUID',data.value);
+						if(index === 0 || index >= 1)	{
+							if(app.data.adminProjectList['@PROJECTS'][index].TITLE)	{
+								o = app.data.adminProjectList['@PROJECTS'][index].TITLE;
+								}
+							}
+						}
+					$tag.text(o);
+					},
 				projectButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('projectMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
@@ -275,7 +286,26 @@ if we switch back to stacked instead of side-by-side, use this. otherwise delete
 					}
 				}, //adminDomainDetailShow
 
-
+			domainView : function($ele,p)	{
+				var domainname = $ele.closest("[data-domainname]").data('domainname');
+				if(domainname)	{
+					if($ele.data('mode') == 'host')	{
+						var hostname = $ele.closest("[data-hostname]").data('hostname');
+						if(hostname)	{
+							linkOffSite("http://"+hostname+"."+domainname+"/",'',true);
+							}
+						else {
+							$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
+							}
+						}
+					else	{
+						linkOffSite("http://www."+domainname+"/",'',true);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine domain.","gMessage":true});
+					}
+				},
 
 			adminDomainCreateUpdateHostShow : function($btn)	{
 				if($btn.data('mode') == 'create')	{

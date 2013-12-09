@@ -53,7 +53,7 @@ class can also be applied to a 1 item per row list.
 
 .displayInlineBlock	{display:inline-block;}
 
-.alignRight	{text-align:right;}
+.alignRight, .gridTable th.alignRight	{text-align:right;}
 .alignLeft	{text-align:left;}
 .alignCenter	{text-align:center;}
 
