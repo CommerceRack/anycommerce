@@ -92,8 +92,7 @@ additionally, will apply some conditional form logic.
 				
 				for(var i = 0; i < supportedEvents.length; i += 1)	{
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
-						self._executeEvent($(e.currentTarget),$.extend(p,e));
-						return true;
+						return self._executeEvent($(e.currentTarget),$.extend(p,e));;
 						});
 					
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
@@ -137,20 +136,23 @@ additionally, will apply some conditional form logic.
 //ep = event + parameters (params may get added if the event is triggered programatically)
 		_executeEvent : function($CT,ep)	{
 			ep = ep || {};
+			var r = true; //what is returned.
 			ep.normalizedType = this._normalizeEventType(ep.type);
 			if($CT && $CT instanceof jQuery)	{
 				if($CT.attr('data-input-'+ep.normalizedType))	{
-					this._handleFormEvents($CT,ep);
+					r = this._handleFormEvents($CT,ep);
 					}
 				
 				if($CT.attr('data-app-'+ep.normalizedType))	{
-					this._handleAppEvents($CT,ep);
+					r = this._handleAppEvents($CT,ep);
 					}
 				
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
 				}
+			app.u.dump("_executeEvent r: "+r);
+			return r;
 			},
 
 		_formEventActions : {
@@ -362,12 +364,13 @@ pass in an event name and a function and it will be added as an eventAction.
 		_handleAppEvents : function($CT,ep)	{
 //by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
 			ep = ep || {};
+			var r;
 			var	AEF = $CT.data('app-'+ep.normalizedType).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
 
 			if(AEF[0] && AEF[1])	{
 				if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
 					//execute the app event.
-					app.ext[AEF[0]].e[AEF[1]]($CT,ep);
+					r = app.ext[AEF[0]].e[AEF[1]]($CT,ep);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
@@ -377,7 +380,7 @@ pass in an event name and a function and it will be added as an eventAction.
 				$('#globalMessaging').anymessage({'message':"In anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
 				}						
 
-
+			return r;
 			},
 
 
