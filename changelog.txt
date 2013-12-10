@@ -17,6 +17,8 @@ ADMIN
 	bug - rss feeds can now be deleted.
 	bug - user roles now saving.
 	bug - coupon expirations now saving correctly on create.
+	bug - reports > inventory > quick reports > recent changes button now works.
+	enhancement - batch job status dialog will now auto-refresh and is no longer a modal (can be shrunk and left on screen).
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)

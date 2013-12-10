@@ -1161,6 +1161,13 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 
 
 
+/* batch jobs and manager */
+
+.batchTimer:before	{content:"Auto update in: "}
+
+
+
+
 /*
 NOTIFICATIONS
 */
