@@ -198,9 +198,9 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 							'_tag':	{
 								'datapointer' : 'adminBatchJobParametersCreate',
 								'callback':'showMessaging',
-								'message' : 'Job saved as '+vars.title
+								'message' : 'Job saved as '+vars.TITLE
 								}
-							},'mutable');
+							},'immutable');
 						}
 					else	{
 						$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).anymessage({
