@@ -589,7 +589,7 @@
 		</div>
 		<h3>Custom Reports</h3>
 		<div class='stdMargin'>
-			<div class='marginBottom' data-app-role='inventoryReportsCustomContainer_sku'></div>
+			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchJob; batch_exec:REPORT/SKU;"></div>
 			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
 		</div>
 	</div>
@@ -637,7 +637,7 @@
 
 		<h3>Custom Reports</h3>
 		<div class='stdMargin'>
-			<div class='marginBottom' data-app-role='inventoryReportsCustomContainer_inventory'></div>
+			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchJob; batch_exec:REPORT/INVENTORY;"></div>
 			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='INVENTORY'>Add custom report</a>
 		</div>
 		
