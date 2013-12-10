@@ -151,7 +151,7 @@ additionally, will apply some conditional form logic.
 			else	{
 				$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
 				}
-			app.u.dump("_executeEvent r: "+r);
+//			app.u.dump("_executeEvent r: "+r);
 			return r;
 			},
 
@@ -233,7 +233,7 @@ additionally, will apply some conditional form logic.
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
-//			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
+			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
 				$(self.options.trackSelector,self.element).each(function(){
@@ -334,7 +334,7 @@ pass in an event name and a function and it will be added as an eventAction.
 			},
 		
 		_handleFormEvents : function($CT,ep)	{
-//			app.u.dump("BEGIN _handleFormEvents");
+			app.u.dump("BEGIN _handleFormEvents");
 			//for each event action, determine if the element should trigger it and, if so, trigger it.
 			for(index in this._formEventActions)	{
 				if($CT.data(index))	{this._formEventActions[index]($CT,this.element,ep);}

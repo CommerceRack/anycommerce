@@ -23,6 +23,11 @@ var admin_sites = function() {
 	var theseTemplates = new Array(
 		"domainListTemplate",
 		"domainListHostsRowTemplate"
+/*	
+used, but not pre-loaded.	
+	"domainAndAppConfigTemplate"
+
+*/
 		);
 	
 	var r = {
@@ -58,25 +63,6 @@ var admin_sites = function() {
 
 		a : {
 			
-			showDomainConfig : function($target)	{
-				$projects = $("<section>");
-				app.ext.admin.i.DMICreate($projects,{
-					'header' : 'Domain Configuration',
-					'className' : 'domainConfig',
-					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button data-app-click='admin_sites|adminDomainCreateShow'><\/button>"],
-					'thead' : ['Logo','Domain','Partition',''],
-					'tbodyDatabind' : "var: projects(@DOMAINS); format:processList; loadsTemplate:domainManagerRowTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'adminDomainList',
-						'limit' : '50', //not supported for every call yet.
-						'_tag' : {
-							'datapointer':'adminDomainList'
-							}
-						}
-					});
-				$projects.appendTo($target);
-				},
 			
 //The sites interface should always be opened in the sites tab.
 			showSitesTab : function()	{
@@ -87,7 +73,7 @@ var admin_sites = function() {
 					app.ext.admin.u.bringTabContentIntoFocus($target);
 					}
 				
-				$target.intervaledEmpty().anycontent({'templateID':'pageTemplateSites','showLoading':false}).anydelegate();
+				$target.intervaledEmpty().anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anydelegate();
 
 				app.ext.admin_sites.u.fetchSiteTabData('mutable');
 				
@@ -176,17 +162,159 @@ var admin_sites = function() {
 					}
 
 			}, //renderFormats
+
+
+		macrobuilders : {
+
+
+			//executed from within the 'create new domain' interface.
+			adminDomainMacroCreate : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminDomainMacro',
+					'_tag':sfo._tag,
+					'@updates':[]
+					};
+				if(sfo.domaintype == 'DOMAIN-DELEGATE')	{
+					newSfo.DOMAINNAME = sfo.DOMAINNAME;
+					newSfo['@updates'].push("DOMAIN-DELEGATE");
+					}
+				else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
+					newSfo['@updates'].push("DOMAIN-RESERVE")					
+					}
+				else	{
+					newSfo = false;
+					}
+				return newSfo;
+				},
+
+			//executed when save is pressed within the general panel of editing a domain.
+			adminDomainMacroGeneral : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminDomainMacro',
+					'DOMAINNAME':sfo.DOMAINNAME,
+					'_tag':sfo._tag,
+					'@updates': new Array()
+					};
+				
+				newSfo['@updates'].push("DOMAIN-SET-PRIMARY?IS="+sfo.IS_PRIMARY);
+				newSfo['@updates'].push("DOMAIN-SET-SYNDICATION?IS="+sfo.IS_SYNDICATION);
+			
+				if($("[data-app-role='emailConfigContainer'] .edited",$form).length)	{
+					newSfo['@updates'].push("EMAIL-SET?"+$.param(app.u.getWhitelistedObject($("[data-app-role='emailConfigContainer']").serializeJSON(),['MX1','MX2','TYPE'])));
+					}
+				
+				
+				if($("input[name='LOGO']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("DOMAIN-SET-LOGO?LOGO="+sfo.LOGO || ""); //set to value of LOGO. if not set, set to blank (so logo can be cleared).
+					}				
+				
+				if($("select[name='PRT']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("DOMAIN-SET-PRT?PRT="+sfo.PRT);
+					}
+				
+				$("[data-app-role='domainsHostsTbody'] tr",$form).each(function(){
+					if($(this).hasClass('rowTaggedForRemove'))	{
+						newSfo['@updates'].push("HOST-KILL?HOSTNAME="+$(this).data('hostname'));
+						}
+					else	{} //do nothing. new hosts are added in modal.
+					});
+//				app.u.dump(" -> new sfo for domain macro general: "); app.u.dump(newSfo);
+				return newSfo;
+				}
+
+			},
+
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+//mode is required and can be create or update.
+//form is pretty self-explanatory.
+//$domainEditor is the PARENT context of the original button clicked to open the host editor. ex: the anypanel. technically, this isn't required but will provide a better UX.
+			domainAddUpdateHost : function(mode,$form,$domainEditor)	{
+				if(mode == 'create' || mode == 'update' && $form instanceof jQuery)	{
+
+					var sfo = $form.serializeJSON({'cb':true});
+					$form.showLoading({"message":"Updating host..."});
+					var cmdObj = {
+						_cmd : 'adminDomainMacro',
+						_tag : {
+							jqObj : $form,
+							message : 'Your changes have been saved',
+							callback : 'showMessaging',
+							persistent : true
+							},
+						'DOMAINNAME' : sfo.DOMAINNAME,
+						'@updates' : new Array()
+						}
+
+					if(mode == 'create')	{
+						cmdObj['@updates'].push("HOST-ADD?HOSTNAME="+sfo.HOSTNAME);
+						}
+
+					var hostSet = "HOST-SET?"+$.param(app.u.getWhitelistedObject(sfo,['HOSTNAME','HOSTTYPE']));
+
+					if(sfo.HOSTTYPE == 'VSTORE')	{
+						$("[data-app-role='domainRewriteRulesTbody'] tr",$form).each(function(){
+							var $tr = $(this);
+							if($tr.hasClass('rowTaggedForRemove'))	{
+								cmdObj['@updates'].push("VSTORE-KILL-REWRITE?PATH="+$tr.data('path'));
+								}
+							else if($tr.hasClass('isNewRow'))	{
+								cmdObj['@updates'].push("VSTORE-ADD-REWRITE?PATH="+$tr.data('path')+"&TARGETURL="+$tr.data('targeturl'));
+								}
+							else	{} //unchanged row. this is a non-destructive process, so existing rules don't need to be re-added.
+							})
+						}
+					else if(sfo.HOSTTYPE == 'SITE')	{
+						hostSet += "&force_https="+sfo.force_https;
+						}
+					else if(sfo.HOSTTYPE == 'SITEPTR')	{
+						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https="+sfo.force_https;
+						}
+					else if(sfo.HOSTTYPE == 'REDIR')	{
+						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
+						}
+					else if(sfo.HOSTTYPE == 'CUSTOM')	{
+						//supported. no extra params needed.
+						}
+					else {
+						hostSet = false;
+						} //catch. some unsupported type.
+					
+					if(hostSet)	{
+						cmdObj['@updates'].push(hostSet);
+						}
+					else	{
+						$form.anymessage({'message':'The host type was not a recognized type. We are attempting to save the rest of your changes.'});
+						}
+					
+//					app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+					app.model.addDispatchToQ(cmdObj,'mutable');
+					app.model.dispatchThis('mutable');
+					
+					}
+				else if($form instanceof jQuery)	{
+					$form.anymessage({"message":"In admin_sites.u.domainAddUpdateHost, mode ["+mode+"] was invalid. must be create or update.","gMessage":true});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_sites.u.domainAddUpdateHost, $form was not passed or is not a valid jquery instance.","gMessage":true});
+					}
+				}, //domainAddUpdateHost
+
 			fetchSiteTabData : function(Q)	{
 				app.model.addDispatchToQ({
 					'_cmd':'adminDomainList',
 					'hosts' : true,
 					'_tag':	{
-						'datapointer' : 'adminDomainList|hosts',
+						'datapointer' : 'adminDomainList',
 						'callback':'anycontent',
 						'translateOnly' : true,
 						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",'#sitesContent')
@@ -206,6 +334,19 @@ var admin_sites = function() {
 
 
 		e : {
+
+
+			adminDomainCreateShow : function($ele,p)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Domain',
+					'templateID':'domainCreateTemplate',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
+					});
+				app.u.handleButtons($D);
+				$D.dialog('open');
+				$D.anydelegate();
+				}, //adminDomainCreateShow
+
 
 //if(domain == app.vars.domain)	{$ele.addClass('ui-state-highlight')}
 			domainPutInFocus : function($ele,p)	{
@@ -228,62 +369,52 @@ var admin_sites = function() {
 				app.model.dispatchThis('passive');
 				}, //adminDomainToggleFavoriteExec
 
-			adminDomainDetailShow : function($ele,p)	{
-				var domainname = $ele.closest("[data-domainname]").data('domainname');
-				
-				if(domainname && ($ele.data('mode') == 'panel' || $ele.data('mode') == 'dialog'))	{
-					var $panel;							
-					if($ele.data('mode') == 'panel')	{
-						$panel = app.ext.admin.i.DMIPanelOpen($ele,{
-							'templateID' : 'domainUpdateTemplate',
-							'panelID' : 'domain_'+domainname,
-							'header' : 'Edit Domain: '+domainname,
-							'handleAppEvents' : false
-							});								
-						}
-					else	{
-						$panel = app.ext.admin.i.dialogCreate({
-							'title':'Edit Domain: '+domainname,
-							'templateID':'domainUpdateTemplate',
-							'showLoading':false //will get passed into anycontent and disable showLoading.
-							});
-						$panel.dialog('open');
-						}
-
-					$panel.attr({'data-domainname':domainname,'data-domain':domainname}); //### start using domainname instead of domain as much as possible. format in reponse changed.
-					
-					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
-
-					app.model.addDispatchToQ({
-						'_cmd':'adminDomainDetail',
-						'DOMAINNAME':domainname,
-						'_tag':	{
-							'datapointer' : 'adminDomainDetail|'+domainname,
-							'extendByDatapointers' : ['adminConfigDetail|prts'],
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$panel.anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									rd.translateOnly = true;
-									$panel.anycontent(rd);
-									//in an each because passing in 'form',$panel selector 'joined' them so updating one form effected all the buttons..
-									$('form',$panel).each(function(){
-										app.ext.admin.u.applyEditTrackingToInputs($(this)); //applies 'edited' class when a field is updated. unlocks 'save' button.
-										});
-									app.ext.admin.u.handleFormConditionalDelegation($panel); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature). applied to ALL forms in panel.
-//									app.u.handleAppEvents($panel);
-									app.u.handleCommonPlugins($panel);
-									$("select[name='PRT']",$panel).val(app.data[rd.datapointer].PRT);
-									}
-								}
-							}
-						},'mutable');
+			adminDomainDiagnosticsShow : function($ele,p)	{
+				if($ele.data('domainname'))	{
+					app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':$ele.data('domainname'),'_tag':{'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),'callback':'anycontent','jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").intervaledEmpty().showLoading({'message':'Fetching domain diagnostics'})}},'mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'Unable to ascertain the domain OR data-mode not set.'})
+					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_sites.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
+					}
+				}, //adminDomainDiagnosticsShow
+
+
+			adminDomainDetailShow : function($ele,p)	{
+				
+				var $detail = $ele.closest('tr').next('tr').find("[data-app-role='domainDetailContainer']:first");
+				var wasVisible = $detail.is(':visible'); //used to track state prior to all detail panels being closed.
+				$("[data-app-role='domainDetailContainer']:visible",$ele.closest('table')).each(function(){$(this).slideUp('slow','',function(){
+					$(this).intervaledEmpty().anycontent('destroy');
+					});}); //close any open rows. interface gets VERY crowded if more than one editor is open.
+				app.u.dump(" -> wasVisible: "+wasVisible);
+				if(wasVisible)	{}//was open and has already been closed
+				else	{
+					$detail.slideDown('slow');
+					var domainname = $ele.closest("[data-domainname]").data('domainname');
+					if(domainname)	{
+						$detail.anycontent({'templateID':'domainUpdateTemplate','showLoadingMessage':'Fetching domain details'});
+						$detail.attr({'data-domainname':domainname,'data-domain':domainname});
+						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminDomainDetail',
+							'DOMAINNAME':domainname,
+							'_tag':	{
+								'datapointer' : 'adminDomainDetail|'+domainname,
+								'skipAppEvents' : true,
+								'extendByDatapointers' : ['adminConfigDetail|prts'],
+								'translateOnly' : true,
+								'jqObj' : $detail,
+								'callback' : 'anycontent',
+								onComplete : function(rd)	{
+									$('form',$detail).anydelegate({'trackEdits':true}); //enable form 'tracking' so save button counts number of changes
+									$("select[name='PRT']",$detail).val(app.data[rd.datapointer].PRT); //select the partition
+									}
+								}
+							},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{}
 					}
 				}, //adminDomainDetailShow
 
@@ -308,77 +439,58 @@ var admin_sites = function() {
 					}
 				},
 
-			adminDomainCreateUpdateHostShow : function($btn)	{
-				if($btn.data('mode') == 'create')	{
-					$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
-					}
-				else if($btn.data('mode') == 'update')	{
-					$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-					}
-				else	{
-					$btn.button();
-					$btn.button('disable').attr('title','Invalid mode set on button');
-					}
+			adminDomainCreateUpdateHostShow : function($ele,p)	{
+				var domain = $ele.closest('[data-domain]').data('domain');
 
-				$btn.off('click.adminDomainCreateUpdateHostShow').on('click.adminDomainCreateUpdateHostShow',function(event){
-					event.preventDefault();
-					var domain = $btn.closest('[data-domain]').data('domain');
-
-					if(domain)	{
-						var $D = app.ext.admin.i.dialogCreate({
-							'title': $btn.data('mode') + '  host',
-							'data' : (($btn.data('mode') == 'create') ? {'DOMAINNAME':domain} : $.extend({},app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')],{'DOMAINNAME':domain})), //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
-							'templateID':'domainAddUpdateHostTemplate',
-							'showLoading':false //will get passed into anycontent and disable showLoading.
-							});
+				if(domain)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title': $ele.data('mode') + '  host',
+						'data' : (($ele.data('mode') == 'create') ? {'DOMAINNAME':domain} : $.extend({},app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')],{'DOMAINNAME':domain})), //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
+						'templateID':'domainAddUpdateHostTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
-						var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anymessage({'message':rd});
-								}
-							else	{
-								//success content goes here.
-								$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
-								if($btn.data('mode') == 'update')	{
-//									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
-//									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT);
-									$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$btn.closest('tr').data('obj_index')].PROJECT)
-									}
-								}
-						
-							
-							}};
-						if(app.model.fetchData(_tag.datapointer) == false)	{
-							app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
-							app.model.dispatchThis();
+					var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anymessage({'message':rd});
 							}
 						else	{
-							app.u.handleCallback(_tag);
+							//success content goes here.
+							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
+							if($ele.data('mode') == 'update')	{
+//									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
+//									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT);
+								$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
+								}
 							}
-
-
-
-
-						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
-//hostname isn't editable once set.					
-						if($btn.data('mode') == 'update')	{
-							$("input[name='HOSTNAME']",$D).attr('disabled','disabled');
-							}
+					
 						
-						$("form",$D).append(
-							$("<button>Save<\/button>").button().on('click',function(event){
-								event.preventDefault();
-								app.ext.admin_config.u.domainAddUpdateHost($btn.data('mode'),$('form',$D),$btn.closest('.ui-widget-anypanel'));
-								})
-							)
-						
-						$D.dialog('option','width',($('body').width() < 500) ? '100%' : '50%');
-						$D.dialog('open');
+						}};
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
+						app.model.dispatchThis();
 						}
 					else	{
-						$btn.closest('.ui-widget-content').anymessage({'message':'In admin_config.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});
+						app.u.handleCallback(_tag);
 						}
-					});
+
+//hostname isn't editable once set.					
+					if($ele.data('mode') == 'update')	{
+						$("input[name='HOSTNAME']",$D).attr('disabled','disabled');
+						}
+					
+					$("form",$D).append(
+						$("<button>Save<\/button>").button().on('click',function(event){
+							event.preventDefault();
+							app.ext.admin_sites.u.domainAddUpdateHost($ele.data('mode'),$('form',$D),$ele.closest('.ui-widget-anypanel'));
+							})
+						)
+					$D.anydelegate();
+					$D.dialog('open');
+					}
+				else	{
+					$ele.closest('.ui-widget-content').anymessage({'message':'In admin_sites.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});
+					}
 				}, //adminDomainCreateUpdateHostShow
 			
 			projectDetailShow : function($ele,p)	{
