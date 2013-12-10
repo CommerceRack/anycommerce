@@ -3286,10 +3286,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
 				else if(path == '#!batchManager')	{
-					app.ext.admin.vars.tab = 'utilities';
-					this.bringTabIntoFocus('utilities');
-					this.bringTabContentIntoFocus($('#utilitiesContent'));
-					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
+					app.ext.admin_batchJob.a.showBatchJobManager($target);
 					}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
 				else if(path == '#!variationsManager')	{
