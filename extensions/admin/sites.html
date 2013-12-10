@@ -6,16 +6,16 @@
 
 	<section class='marginBottom' data-app-role='domainsAndHostsContainer'>
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<button class='applyButton floatRight' data-icon-primary='ui-icon-plus' data-app-click='admin_sites|adminDomainCreateUpdateHostShow' data-verb='create'>Add Project</button>
 		<h2 class="smallPadding">Domains &amp; Hosts</h2>
 	</div>
-	<div class='ui-widget-content ui-corner-all stdPadding'>
-	<table class='fullWidth gridTable marginTop applyAnytable' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
 	<thead>
 	<tr>
 		<th>Domain/Host</th>
-		<th>Type</th>
-		<th>Project</th>
-		<th data-anytable-nosort='true'></th>
+		<th></th>
+		<th></th>
 	</tr>
 	</thead>
 	<tfoot>
@@ -27,16 +27,15 @@
 	</tfoot>
 	</table>
 	</div>
-
 	</section>
-	
+
 	<section data-app-role='projectsContainer'>
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
 		<button class='applyButton floatRight' data-icon-primary='ui-icon-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
 		<h2 class="smallPadding">Projects</h2>
 	</div>
-	<div class='ui-widget-content ui-corner-all stdPadding'>
-	<table class='fullWidth gridTable marginTop applyAnytable' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;">
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth gridTable marginTop' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;">
 	<thead>
 	<tr>
 		<th>Title</th>
@@ -64,10 +63,12 @@
 
 <table>
 
-<tbody id='domainListTemplate' data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;" data-element='domain'>
+<tbody id='domainListTemplate' data-element='domain'>
 <tr>
-	<td colspan='3' class='isSearchable'><h6 class='displayInline' data-bind="var: domain(DOMAINNAME); format:text;"></h6></td>
+	<td colspan='2' class='isSearchable' data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td class='alignRight'>
+	<button onClick="$(this).closest('tr').next('tr').toggle();" class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Details</button>
+	<!--
 		<button class='applyButton' data-icon-primary='ui-icon-info' data-text='false' data-app-click="admin|showMenu">Show Domain Menu</button>
 		<menu class='displayNone'>
 		<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</a></li>
@@ -75,6 +76,33 @@
 		<li><a href='#' data-app-click="admin_sites|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
 		<li><a href='#' data-app-click="admin_sites|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
 		</menu>
+	-->
+	</td>
+</tr>
+<tr class='displayNone'>
+	<td>
+	<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='120' height='120' />
+	</td>
+	<td>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Host</th>
+		<th>Type</th>
+		<th>Project</th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;"></tbody>
+	</table>
+	</td>
+	<td>
+	<ul>
+		<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</a></li>
+		<li><a href='#' data-app-click="admin_sites|domainPutInFocus">Use This Domain</a></li>
+		<li><a href='#' data-app-click="admin_sites|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
+		<li><a href='#' data-app-click="admin_sites|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
+	</ul>
 	</td>
 </tr>
 </tbody>
@@ -82,9 +110,9 @@
 
 
 <tr id='domainListHostsRowTemplate'  data-element='host'>
-	<td class='isSearchable' data-bind="var: host(HOSTNAME); format:text;"></td>
-	<td class='isSearchable' data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;"></td>
-	<td class='isSearchable' data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;"></td>
+	<td data-bind="var: host(HOSTNAME); format:text;"></td>
+	<td data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;"></td>
+	<td data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;"></td>
 	<td class='alignRight width50'>
 	<button class='applyButton' data-text='false' data-icon-primary='ui-icon-newwin' data-app-click="admin_sites|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;"></span>
@@ -485,7 +513,7 @@
 	<td class='isSearchable' data-bind="var: projects(TYPE); format:text;"></td>
 	<td class='alignRight'>
 	<span data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
-	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-pencil' data-text='false'>View Details</button>
+	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-info' data-text='false'>View Details</button>
 	</td>
 </tr>
 

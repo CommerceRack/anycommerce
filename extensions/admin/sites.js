@@ -57,6 +57,27 @@ var admin_sites = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			showDomainConfig : function($target)	{
+				$projects = $("<section>");
+				app.ext.admin.i.DMICreate($projects,{
+					'header' : 'Domain Configuration',
+					'className' : 'domainConfig',
+					'controls' : "",
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button data-app-click='admin_sites|adminDomainCreateShow'><\/button>"],
+					'thead' : ['Logo','Domain','Partition',''],
+					'tbodyDatabind' : "var: projects(@DOMAINS); format:processList; loadsTemplate:domainManagerRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminDomainList',
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminDomainList'
+							}
+						}
+					});
+				$projects.appendTo($target);
+				},
+			
 //The sites interface should always be opened in the sites tab.
 			showSitesTab : function()	{
 				var $target = $("#sitesContent");
@@ -67,27 +88,7 @@ var admin_sites = function() {
 					}
 				
 				$target.intervaledEmpty().anycontent({'templateID':'pageTemplateSites','showLoading':false}).anydelegate();
-				
-/*
-if we switch back to stacked instead of side-by-side, use this. otherwise delete it.
-				$projects = $("<section>");
-				app.ext.admin.i.DMICreate($projects,{
-					'header' : 'Hosted Applications',
-					'className' : 'projects',
-					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='applyButton' data-app-click='admin_sites|projectCreateShow'>New Project</button>"],
-					'thead' : ['ID','Title','Type','Created','Updated',''],
-					'tbodyDatabind' : "var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'adminProjectList',
-						'limit' : '50', //not supported for every call yet.
-						'_tag' : {
-							'datapointer':'adminProjectList'
-							}
-						}
-					});
-				$projects.appendTo($target);
-*/
+
 				app.ext.admin_sites.u.fetchSiteTabData('mutable');
 				
 				app.u.handleButtons($target);
