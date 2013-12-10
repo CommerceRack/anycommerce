@@ -582,7 +582,7 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 				if(catSafeID == '.')	{
 					catsArray = this.getRootCats();
 					}
-				else if(app.data['appNavcatDetail|'+catSafeID])	{
+				else if(app.model.fetchData(app.data['appNavcatDetail|'+catSafeID]))	{
 					if(typeof app.data['appNavcatDetail|'+catSafeID]['@subcategories'] == 'object')	{
 						catsArray = app.data['appNavcatDetail|'+catSafeID]['@subcategories'];
 						}
