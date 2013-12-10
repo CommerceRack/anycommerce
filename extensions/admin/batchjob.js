@@ -255,7 +255,7 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 		u : {
 			//mode can be set to status (looks in dialog) or list (if list, vars.tab is required)
 			initBatchTimer : function(vars)	{
-				app.u.dump("BEGIN admin_batchJob.u.initBatchTimer");
+//				app.u.dump("BEGIN admin_batchJob.u.initBatchTimer");
 				vars = vars || {};
 				var error,$timer,$parent;
 				if(vars.mode == 'dialog')	{
@@ -279,30 +279,32 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 						}
 					
 					}
-				else if(mode == list && vars.tab)	{
-					$parent = $(app.u.jqSelector('#',vars.tab+'Content'));
-					}
+//list mode isn't supported yet. There's a refresh button right now. may add it later.
+//				else if(mode == list && vars.tab)	{
+//					$parent = $(app.u.jqSelector('#',vars.tab+'Content'));
+//					}
 				else	{
 					error = "In admin_batchJob.u.batchTimer, invalid mode ["+mode+"] passed."
 					}
 				
-				if(!error)	{
-					
+				if(error)	{
+					$parent.anymessage({'message':error})
 					}
-				else	{
-					
-					
-					}
-				
 				},
 			handleBatchTimerUpdate : function($timer,vars)	{
 //				app.u.dump(" -> timerUpdate jobID: "+$timer.closest("[data-jobid]").data('jobid'));
-				if($timer.text() == 0)	{
+				if($timer.text() == 0 && $timer.is(':visible'))	{
 					clearInterval(app.ext.admin_batchJob.vars.dialogInterval);
 					app.ext.admin_batchJob.vars.dialogInterval = ''; //reset to blank. value is used to determine whether or not showBatchJobStatus needs to clear it.
 					app.ext.admin_batchJob.a.showBatchJobStatus($timer.closest("[data-jobid]").data('jobid'));
 					}
+				else if(!$timer.is(':visible'))	{
+					//dialog has been closed or tabs have been switched.
+					app.ext.admin_batchJob.vars.dialogInterval = ''; //reset to blank. value is used to determine whether or not showBatchJobStatus needs to clear it.
+					clearInterval(app.ext.admin_batchJob.vars.dialogInterval);
+					}
 				else	{
+					
 					$timer.text(Number($timer.text()) - 1);
 					}
 				}
