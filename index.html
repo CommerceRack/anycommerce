@@ -1842,6 +1842,8 @@ this will likely become more flexible in the future. ###
 <!-- a template used for a quickview link off of a category page -->
 <div id='productTemplateQuickView' class="productPage quickviewPage">
 
+<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
@@ -1858,26 +1860,26 @@ this will likely become more flexible in the future. ###
 	
 	<canvas class="prodPreviewer displayNone" width="296" height="296" ></canvas>
 	
-	<a class="prodMainImage" data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a class="prodMainImage" data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='296' height='296' />
 	</a>
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 	
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='54' height='54' />
 	</a>
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image3; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image3; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='54' height='54' />
 	</a>
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='54' height='54' />
 	</a>
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image5; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image5; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='54' height='54' />
 	</a>
-	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image6; groupingPrefix:prodPage_; groupingAttr:pid; w:550;h:550;">
+	<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image6; groupingPrefix:prodPage_; groupingAttr:pid;">
 		<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='54' height='54' />
 	</a>
 <!--
@@ -1945,9 +1947,13 @@ this will likely become more flexible in the future. ###
 				<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 			</div>
 			
-			<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
-				Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
-				Call 888-428-2967 or <a>click here</a> to contact us - we will get in touch with you shortly.
+			<div>
+				<div class="ztxt displayNone"  data-bind="var:product(user:prod_phoneorder_only); format:showIfSet;">
+					Due to NFL restrictions, this item is <span class="zwarn">available by phone order only</span>. 
+					Call 888-428-2967 or 
+						<a href="#" onClick="app.ext.cubworld.a.showPhoneOrderForm($(this).attr('data-pid')); return false;" data-bind="var:product(pid); format:assignAttribute; attribute:data-pid;">click here</a> 
+					to contact us - we will get in touch with you shortly.
+				</div>
 			</div>
 		</div>
 		
@@ -1955,7 +1961,7 @@ this will likely become more flexible in the future. ###
 
 	</form>
 	<div class="prodUtils" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-		<img class="pointer" width="87" height="25" src="img/prodPage/sizing_chart-87x25.png" onClick="app.ext.cubworld.a.showSizeChart(); return false;" />
+		<img class="pointer displayNone" width="87" height="25" data-bind="var:product(zoovy:prod_enable_feature1); format:showIfSet; displayType: inline-block;" src="img/prodPage/sizing_chart-87x25.png" onClick="app.ext.cubworld.a.showSizeChart(); return false;" />
 		<!--
 		<img class="pointer" width="87" height="25" src="img/prodPage/tell_friend-87x25.png" onClick="app.ext.cubworld.a.showTellAFriendBox({'pid':$(this).parent().data('pid'),'templateID':'tellafriendFrmTemplate'}); return false;" />
 		-->
