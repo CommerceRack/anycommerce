@@ -797,81 +797,9 @@ $D.dialog('open');
 					$('#globalMessaging').anymessage({'message':'In admin_config.u.getShipMethodByProvider, no provider passed.','gMessage':true});
 					}
 				return r;
-				}, //getShipMethodByProvider
+				} //getShipMethodByProvider
 
-//mode is required and can be create or update.
-//form is pretty self-explanatory.
-//$domainEditor is the PARENT context of the original button clicked to open the host editor. ex: the anypanel. technically, this isn't required but will provide a better UX.
-			domainAddUpdateHost : function(mode,$form,$domainEditor)	{
-				if(mode == 'create' || mode == 'update' && $form instanceof jQuery)	{
 
-					var sfo = $form.serializeJSON({'cb':true});
-					$form.showLoading({"message":"Updating host..."});
-					var cmdObj = {
-						_cmd : 'adminDomainMacro',
-						_tag : {
-							jqObj : $form,
-							message : 'Your changes have been saved',
-							callback : 'showMessaging',
-							persistent : true
-							},
-						'DOMAINNAME' : sfo.DOMAINNAME,
-						'@updates' : new Array()
-						}
-
-					if(mode == 'create')	{
-						cmdObj['@updates'].push("HOST-ADD?HOSTNAME="+sfo.HOSTNAME);
-						}
-
-					var hostSet = "HOST-SET?"+$.param(app.u.getWhitelistedObject(sfo,['HOSTNAME','HOSTTYPE']));
-
-					if(sfo.HOSTTYPE == 'VSTORE')	{
-						$("[data-app-role='domainRewriteRulesTbody'] tr",$form).each(function(){
-							var $tr = $(this);
-							if($tr.hasClass('rowTaggedForRemove'))	{
-								cmdObj['@updates'].push("VSTORE-KILL-REWRITE?PATH="+$tr.data('path'));
-								}
-							else if($tr.hasClass('isNewRow'))	{
-								cmdObj['@updates'].push("VSTORE-ADD-REWRITE?PATH="+$tr.data('path')+"&TARGETURL="+$tr.data('targeturl'));
-								}
-							else	{} //unchanged row. this is a non-destructive process, so existing rules don't need to be re-added.
-							})
-						}
-					else if(sfo.HOSTTYPE == 'SITE')	{
-						hostSet += "&force_https="+sfo.force_https;
-						}
-					else if(sfo.HOSTTYPE == 'SITEPTR')	{
-						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https="+sfo.force_https;
-						}
-					else if(sfo.HOSTTYPE == 'REDIR')	{
-						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
-						}
-					else if(sfo.HOSTTYPE == 'CUSTOM')	{
-						//supported. no extra params needed.
-						}
-					else {
-						hostSet = false;
-						} //catch. some unsupported type.
-					
-					if(hostSet)	{
-						cmdObj['@updates'].push(hostSet);
-						}
-					else	{
-						$form.anymessage({'message':'The host type was not a recognized type. We are attempting to save the rest of your changes.'});
-						}
-					
-//					app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-					app.model.addDispatchToQ(cmdObj,'mutable');
-					app.model.dispatchThis('mutable');
-					
-					}
-				else if($form instanceof jQuery)	{
-					$form.anymessage({"message":"In admin_config.u.domainAddUpdateHost, mode ["+mode+"] was invalid. must be create or update.","gMessage":true});
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_config.u.domainAddUpdateHost, $form was not passed or is not a valid jquery instance.","gMessage":true});
-					}
-				} //domainAddUpdateHost
 			}, //u [utilities]
 
 //this is used in conjunction w/ admin.a.processForm.
@@ -990,80 +918,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					}
 //				app.u.dump(" -> billingPayments newSFO: "); app.u.dump(newSfo);
 				return newSfo;
-				},
-			
-			//executed from within the 'create new domain' interface.
-			adminDomainMacroCreate : function(sfo,$form)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminDomainMacro',
-					'_tag':sfo._tag,
-					'@updates':[]
-					};
-				if(sfo.domaintype == 'DOMAIN-DELEGATE')	{
-					newSfo.DOMAINNAME = sfo.DOMAINNAME;
-					newSfo['@updates'].push("DOMAIN-DELEGATE");
-					}
-				else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
-					newSfo['@updates'].push("DOMAIN-RESERVE")					
-					}
-				else	{
-					newSfo = false;
-					}
-				return newSfo;
-				},
-
-//executed when save is pressed in the email tab of the domain editor.
-			adminDomainMacroEmail : function(sfo,$form)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminDomainMacro',
-					'_tag':sfo._tag,
-					'DOMAINNAME':sfo.DOMAINNAME,
-					'@updates': new Array()
-					};
-				
-				newSfo['@updates'].push("EMAIL-SET?"+$.param(app.u.getWhitelistedObject(sfo,['MX1','MX2','TYPE'])));
-//				app.u.dump(" -> domainMacroEmail: "); app.u.dump(newSfo);
-				return newSfo;
-				},
-
-			//executed when save is pressed within the general panel of editing a domain.
-			adminDomainMacroGeneral : function(sfo,$form)	{
-				sfo = sfo || {};
-//a new object, which is sanitized and returned.
-				var newSfo = {
-					'_cmd':'adminDomainMacro',
-					'DOMAINNAME':sfo.DOMAINNAME,
-					'_tag':sfo._tag,
-					'@updates': new Array()
-					};
-				
-				newSfo['@updates'].push("DOMAIN-SET-PRIMARY?IS="+sfo.IS_PRIMARY);
-				newSfo['@updates'].push("DOMAIN-SET-SYNDICATION?IS="+sfo.IS_SYNDICATION);
-			
-				
-				
-				if($("input[name='LOGO']",$form).hasClass('edited'))	{
-					newSfo['@updates'].push("DOMAIN-SET-LOGO?LOGO="+sfo.LOGO || ""); //set to value of LOGO. if not set, set to blank (so logo can be cleared).
-					}				
-				
-				if($("select[name='PRT']",$form).hasClass('edited'))	{
-					newSfo['@updates'].push("DOMAIN-SET-PRT?PRT="+sfo.PRT);
-					}
-				
-				$("[data-app-role='domainsHostsTbody'] tr",$form).each(function(){
-					if($(this).hasClass('rowTaggedForRemove'))	{
-						newSfo['@updates'].push("HOST-KILL?HOSTNAME="+$(this).data('hostname'));
-						}
-					else	{} //do nothing. new hosts are added in modal.
-					});
-//				app.u.dump(" -> new sfo for domain macro general: "); app.u.dump(newSfo);
-				return newSfo;
 				}
-			
 			
 			},
 
@@ -1106,22 +961,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					});
 				}, //shipMeterDetailInModal
 
-			adminDomainCreateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
-				$btn.off('click.adminDomainCreateShow').on('click.adminDomainCreateShow',function(event){
 
-					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Domain',
-						'templateID':'domainCreateTemplate',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
-					$D.dialog('option','width','350');
-					$D.dialog('open');
-					});
-				}, //adminDomainCreateShow
 
 
 
@@ -1943,15 +1783,7 @@ else {
 
 //delegated events
 
-			adminDomainDiagnosticsShow : function($ele,p)	{
-				if($ele.data('domainname'))	{
-					app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':$ele.data('domainname'),'_tag':{'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),'callback':'anycontent','jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").showLoading({'message':'Fetching domain diagnostics'})}},'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				else	{
-					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_config.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
-					}
-				}, //adminDomainDiagnosticsShow
+
 //triggered on both the view and download buttons. based on data-mode, will either open a download dialog or show the invoice in a modal.
 			billingInvoiceViewDownload : function($ele,p)	{
 

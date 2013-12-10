@@ -46,9 +46,8 @@ var admin = function() {
 		'messageListTemplate',
 		'messageDetailTemplate',
 		
-		'mailToolTemplate',
+		'mailToolTemplate'
 		
-		'pageTemplateSites'
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
 //		'projectCreateTemplate',
@@ -5409,13 +5408,12 @@ not in use
 				},
 
 			tableFilter : function($ele,p)	{
-				app.u.dump('got here');
-				var $tbody = $ele.closest('table').find('tbody');
-				if($('td.isSearchable',$tbody).length)	{
+				var $table = $ele.closest("[data-tablefilter-role='container']").find("[data-tablefilter-role='table']");
+				if($('td.isSearchable',$table).length)	{
 					if($ele.val().length >= 2)	{
 			//only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
-						$('tr:visible',$tbody).hide().data('hidden4Search',true);
-						$('td.isSearchable',$tbody).each(function(){
+						$('tbody tr:visible',$table).hide().data('hidden4Search',true);
+						$('td.isSearchable',$table).each(function(){
 							if($(this).text().toLowerCase().indexOf($ele.val().toLowerCase()) >= 0)	{
 								$(this).closest('tr').show();
 								$(this).addClass('queryMatch');
@@ -5424,10 +5422,10 @@ not in use
 						}
 					else	{
 					//no query or short query. unhide any rows (query may have been removed).
-						$('tr',$tbody).each(function(){
+						$('tbody tr',$table).each(function(){
 							if($(this).data('hidden4Search'))	{$(this).show();}
 							});
-						$('.queryMatch',$tbody).removeClass('queryMatch');
+						$('.queryMatch',$table).removeClass('queryMatch');
 						}
 					}
 				else	{

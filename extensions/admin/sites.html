@@ -1,41 +1,44 @@
 
 
 
-<div id='pageTemplateSites' class='ui-widget smallButton'>
+<div id='domainAndAppConfigTemplate' class='ui-widget smallButton'>
 
 
-	<section class='marginBottom' data-app-role='domainsAndHostsContainer'>
+	<section class='marginBottom' data-app-role='domainsAndHostsContainer' data-tablefilter-role='container'>
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
-		<button class='applyButton floatRight' data-icon-primary='ui-icon-plus' data-app-click='admin_sites|adminDomainCreateUpdateHostShow' data-verb='create'>Add Project</button>
-		<h2 class="smallPadding">Domains &amp; Hosts</h2>
+		
+		<button class='applyButton floatRight ' data-app-click='admin_sites|adminDomainCreateShow' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Domain</button>
+		
+		<span class='marginRight floatRight'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
+		</span>
+		
+		<h2 class="smallPadding">Domain Configuration</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;" data-tablefilter-role='table'>
 	<thead>
 	<tr>
-		<th>Domain/Host</th>
+		<th>Domain</th>
+		<th>Partition</th>
 		<th></th>
-		<th></th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tfoot>
-	<tr>
-		<td colspan='5'>
-		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
-		</td>
-	</tr>
-	</tfoot>
 	</table>
 	</div>
 	</section>
 
-	<section data-app-role='projectsContainer'>
+	<section data-app-role='projectsContainer' data-tablefilter-role='container'>
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
-		<button class='applyButton floatRight' data-icon-primary='ui-icon-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
+		<button class='applyButton floatRight' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
+		<span class='marginRight floatRight'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
+		</span>
 		<h2 class="smallPadding">Projects</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth gridTable marginTop' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;">
+	<table class='fullWidth gridTable marginTop' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" data-tablefilter-role='table'>
 	<thead>
 	<tr>
 		<th>Title</th>
@@ -43,13 +46,6 @@
 		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tfoot>
-	<tr>
-		<td colspan='4'>
-		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" />
-		</td>
-	</tr>
-	</tfoot>
 	</table>
 	</div>
 	
@@ -61,67 +57,53 @@
 
 
 
+
+
+
+<!-- used in domain config for each domain in the list. -->
 <table>
 
 <tbody id='domainListTemplate' data-element='domain'>
 <tr>
-	<td colspan='2' class='isSearchable' data-bind="var: domain(DOMAINNAME); format:text;"></td>
+	<td class='isSearchable' data-bind="var: domain(DOMAINNAME); format:text;"></td>
+	<td class='isSearchable' data-bind="var: domain(PRT); hideZero:false; format:text;"></td>
+	<td></td>
 	<td class='alignRight'>
-	<button onClick="$(this).closest('tr').next('tr').toggle();" class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Details</button>
-	<!--
-		<button class='applyButton' data-icon-primary='ui-icon-info' data-text='false' data-app-click="admin|showMenu">Show Domain Menu</button>
-		<menu class='displayNone'>
-		<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</a></li>
-		<li><a href='#' data-app-click="admin_sites|domainPutInFocus">Use This Domain</a></li>
-		<li><a href='#' data-app-click="admin_sites|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
-		<li><a href='#' data-app-click="admin_sites|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
-		</menu>
-	-->
+	<button data-app-click='admin_sites|adminDomainDetailShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Details</button>
 	</td>
 </tr>
-<tr class='displayNone'>
-	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='120' height='120' />
-	</td>
-	<td>
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>Host</th>
-		<th>Type</th>
-		<th>Project</th>
-		<th data-anytable-nosort='true'></th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;"></tbody>
-	</table>
-	</td>
-	<td>
-	<ul>
-		<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='DOMAINNAME,PRT' data-type='UTILITY/SITEMAP'>Update Sitemap</a></li>
-		<li><a href='#' data-app-click="admin_sites|domainPutInFocus">Use This Domain</a></li>
-		<li><a href='#' data-app-click="admin_sites|adminDomainToggleFavoriteExec">Tag as Favorite</a></li>
-		<li><a href='#' data-app-click="admin_sites|adminDomainDetailShow" data-mode='dialog'>Edit Domain Settings</a></li>
-	</ul>
+<tr>
+	<td colspan='4' class='domainDetailRow'>
+	<div class='displayNone' data-app-role='domainDetailContainer'>
+
+	</div>
 	</td>
 </tr>
 </tbody>
 
 
 
+
+
+
+
+
+<!-- used in domain config for each host per domain (in hosts tab) -->
 <tr id='domainListHostsRowTemplate'  data-element='host'>
 	<td data-bind="var: host(HOSTNAME); format:text;"></td>
 	<td data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;"></td>
 	<td data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;"></td>
 	<td class='alignRight width50'>
-	<button class='applyButton' data-text='false' data-icon-primary='ui-icon-newwin' data-app-click="admin_sites|domainView" data-mode='host'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;"></span>
+	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this Host</button>
+	<button class='applyButton' data-app-click='admin_sites|adminDomainCreateUpdateHostShow' data-mode='update' data-icon-primary='ui-icon-pencil' data-text='false'>Edit Host</button>
+	<button class='applyButton' data-app-click="admin_sites|domainView" data-mode='host' data-text='false' data-icon-primary='ui-icon-newwin'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
 	</td>
 </tr>
 
 
 
-
+<!--
 <tr id='domainManagerRowTemplate'>
 	<td class='alignCenter width1' ><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='80' height='40' /></td>
 	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
@@ -132,8 +114,9 @@
 		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='panel'>Edit Domain</button>
 	</td>
 </tr>
+-->
 
-
+<!-- used in the events tab of domain config -->
 <tr id='domainManagerHistoryRowTemplate'>
 	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
 	<td data-bind="var: domain(TXT); format:text;"></td>
@@ -141,7 +124,7 @@
 	<td data-bind="var: domain(CREATED_GMT); format:epoch2pretty;"></td>
 </tr>
 
-
+<!-- used in host type VSTORE for rewrite rules -->
 <tr id='domainManagerRewriteRowTemplate'>
 	<td data-bind="var: domain(PATH); format:text;"></td>
 	<td data-bind="var: domain(TXT); format:text;"></td>
@@ -150,6 +133,7 @@
 	</td>
 </tr>
 
+<!--
 <tr id='domainManagerHostsRowTemplate'>
 	<td data-bind="var: domain(HOSTNAME); format:text;"></td>
 	<td data-bind="var: domain(HOSTTYPE); format:text;"></td>
@@ -158,11 +142,12 @@
 		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
 	</td>
 	<td class='alignRight'>
-	<button data-app-event="admin_sites|domainView" data-mode='host'>View Site</button>
-	<button data-app-event="admin|tagRowForRemove">Delete this Host</button>
-	<button data-app-event='admin_sites|adminDomainCreateUpdateHostShow' data-mode='update'>Edit Host</button>
+	<button data-app-click="admin_sites|domainView" data-mode='host'>View Site</button>
+
 	</td>
 </tr>
+-->
+
 
 <tr id='domainManagerDiagnosticsRowTemplate'>
 	<td data-bind="var: domain(_); format:text;"></td>
@@ -187,9 +172,10 @@
 <div id='domainCreateTemplate'>
 <form action='#' onSubmit='return false'>
 
-<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroCreate' />
+<input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroCreate' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
 <input type='hidden' name='_tag/jqObjEmpty' value='true' />
 <input type='hidden' name='_tag/message' value='The domain has been added.' />
 
@@ -321,104 +307,84 @@
 
 
 
+
+
+
 <div id='domainUpdateTemplate'>
 
-	<div data-app-role='tabContainer' class='applyAnytabs'>
-	<ul>
-		<li><a href='#domainGeneral'>General</a></li>
-		<li><a href='#domainEmail'>Email</a></li>
-		<li><a href='#domainEvents'>Events</a></li>
-		<li><a href='#domainDiagnostics' data-app-click="admin_config|adminDomainDiagnosticsShow" data-bind='var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domainname;'>Diagnostics</a></li>
-<!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
-	</ul>
-	
-	
-	<section data-anytab-content='domainGeneral' class='clearfix'>
 	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
-	<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroGeneral' />
+	<input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroGeneral' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+	<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
 	<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
 	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
 
 	<input type='hidden' name='LOGO' value='' data-bind="var:domain(LOGO); format:popVal;" />
 
+	<div class='domainDetailLogoContainer'>
+	
+		<fieldset class='marginBottom labelsAsBreaks'>
 
-	<div class='buttonset alignRight marginBottom'>
-	<button data-app-event='admin_config|adminDomainCreateUpdateHostShow' data-mode='create'>Add Host</button>
-	<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
+			<div class='pointer marginBottom'><div class='logoWhiteness'><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div></div>
+			
+			<label>
+				<input type='checkbox' class='applyAnycb' name='IS_PRIMARY'  data-bind="var: domain(IS_PRIMARY); format:popVal;" />
+				<span>Tag as primary</span>
+				<span class='toolTip' title="Only 1 primary domain per partition.">?</span>
+			</label>		
+	
+			<label>
+				<input type='checkbox' class='applyAnycb' name='IS_SYNDICATION'  data-bind="var: domain(IS_SYNDICATION); format:popVal;" />
+				<span>Syndication</span>
+			</label>
+			
+			<label>
+				<span>Partition</span>
+				<select name='PRT' data-bind="var: partitions(@PRTS); format: optionsFromList; value:id; text:id;"></select>
+			</label>
+			
+		</fieldset>
+	
 	</div>
 
-	<fieldset class='marginBottom'>
-		<legend>General</legend>
-		<div class='floatRight pointer ui-widget-content smallPadding ui-corner-all'><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='150' height='50' onClick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" /></div>
-		<h5 data-bind="var: domain(DOMAINNAME); format:text;"></h5>
-		
-		<label>
-			<input type='checkbox' class='applyAnycb' name='IS_PRIMARY'  data-bind="var: domain(IS_PRIMARY); format:popVal;" />
-			Tag as primary
-			<span class='toolTip' title="Only 1 primary domain per partition.">?</span>
-		</label>		
+	
 
-		<label>
-			<input type='checkbox' class='applyAnycb' name='IS_SYNDICATION'  data-bind="var: domain(IS_SYNDICATION); format:popVal;" />
-			Enable syndication
-		</label>
-		
-		
-		<label>
-			<span>Partition</span>
-			<select name='PRT' data-bind="var: partitions(@PRTS); format: optionsFromList; value:id; text:id;"></select>
-		</label>
-<!--		<div data-bind="var: domain(PRT); format:text; pretext:Partition: ; hideZero:false;"></div> -->
-		
-<!--		<div data-bind="var: domain(@READONLY.IS_PRT_PRIMARY); format:text; pretext:Is partition primary: ;"></div>
-		<div>Syndication: <span data-bind="var: domain(@READONLY.SYNDICATION_ENABLE); format:text; defaultValue:disabled;"></span></div> -->
-		<div data-bind="var: domain(@READONLY.REG_TYPE); format:text; pretext:Registrar: ;"></div>
-		<div data-bind="var: domain(@READONLY.REG_TYPE_TXT); format:text;" class='hint'></div>
-		
-	</fieldset>
+
+
+	<div data-app-role='tabContainer' class='applyAnytabs domainDetailTabsContainer'>
+	<button data-app-role='saveButton' data-app-click='admin|submitForm' class='floatRight applyButton'>Save <span class='numChanges'></span> Changes</button>
+	<ul>
+		<li><a href='#domainHosts'>Hosts</a></li>
+		<li><a href='#domainEmail'>Email</a></li>
+		<li><a href='#domainEvents'>Events</a></li>
+		<li><a href='#domainDiagnostics' data-app-click="admin_sites|adminDomainDiagnosticsShow" data-bind='var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domainname;'>Diagnostics</a></li>
+<!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
+	</ul>
 	
 	
-	<fieldset>
-		<legend>Hosts</legend>
+	<section data-anytab-content='domainHosts' class='clearfix'>
 		
-		<table class='fullWidth gridTable applyAnytable' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;">
+		<div class='buttonset alignRight marginBottom'>
+			<button class='applyButton' data-app-click='admin_sites|adminDomainCreateUpdateHostShow' data-mode='create' data-icon-primary='ui-icon-circle-plus' data-text='true'>Add New Host</button>
+		</div>
+		<table class='gridTable fullWidth applyAnytable'>
 		<thead>
 		<tr>
-			<td>Name</td>
-			<td>Type</td>
-			<td>More</td>
-			<td></td>
+			<th>Host</th>
+			<th>Type</th>
+			<th>Project</th>
+			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainManagerHostsRowTemplate;" data-app-role='domainsHostsTbody'></tbody>
-		</table>
-		
-	</fieldset>
-	
-
-
-	</form>
+		<tbody data-app-role='domainsHostsTbody' data-bind="var: domain(@HOSTS); format:processList; loadsTemplate:domainListHostsRowTemplate;"></tbody>
+		</table>	
 	</section>
 	
 	<section data-anytab-content='domainEmail' class='clearfix'>
 	
-		<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
-
-		<div class='buttonset alignRight marginBottom'>
-		<button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> Changes</button>
-		</div>
-
-		<input type='hidden' name='_macrobuilder' value='admin_config|adminDomainMacroEmail' />
-		<input type='hidden' name='_tag/callback' value='showMessaging' />
-		<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-		<input type='hidden' name='_tag/message' value='The domain has been successfully updated.' />
-		<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+		<fieldset data-app-role='emailConfigContainer'>
 		
-		<fieldset>
-			<legend>Email</legend>
-			
 			<label>
 				<span>Configuration</span>
 				<select name='TYPE' data-input-change="panel-selector" data-bind="var: plugin(%EMAIL.TYPE); format:popVal;" data-panel-selector=".domainEmailConfiguration">
@@ -441,7 +407,6 @@
 				</label>
 			</div>
 		</fieldset>
-		</form>
 	</section>
 
 
@@ -480,8 +445,7 @@
 	</section>
 
 	</div>
-
-
+	</form>
 
 </div>
 
