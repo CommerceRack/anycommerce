@@ -175,7 +175,8 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 				},
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.
-			adminBatchJobCreate : function(opts){
+			adminBatchJobCreate : function(opts,vars){
+				vars = vars || {};
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
 				app.model.addDispatchToQ($.extend(true,{
@@ -185,6 +186,28 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 					'parentID':app.ext.admin.vars.tab+"Content",
 					datapointer : opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate"}
 					},opts),'immutable');
+				if(vars.jobCreate)	{
+					if(vars.TITLE && vars.BATCH_EXEC && opts['%vars'])	{
+						app.model.addDispatchToQ({
+							'_cmd':'adminBatchJobParametersCreate',
+							'UUID' : app.u.guidGenerator(),
+							'TITLE' : vars.TITLE,
+							'BATCH_EXEC' : vars.BATCH_EXEC,
+							'PRIVATE' : vars.PRIVATE,
+							'%vars' : opts['%vars'],
+							'_tag':	{
+								'datapointer' : 'adminBatchJobParametersCreate',
+								'callback':'showMessaging',
+								'message' : 'Job saved as '+vars.title
+								}
+							},'mutable');
+						}
+					else	{
+						$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).anymessage({
+							'message':'In admin_batchJob.a.adminBatchJobCreate, vars.jobCreate was true, but either TITLE ['+vars.TITLE+'], BATCH_EXEC ['+vars.BATCH_EXEC+'] or %var ['+(typeof opts['%vars'])+'] was missing and all are required.'
+							});
+						}
+					}
 				app.model.dispatchThis('immutable');
 				},
 
@@ -245,7 +268,43 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 						$tag.show().removeClass('displayNone');
 						}
 					}
+				},
+			
+			batchJobParametersList : function($tag,data)	{
+				var exec = data.bindData.batch_exec;
+				if(exec)	{
+					app.model.addDispatchToQ({
+						'_cmd':'adminBatchJobParametersList',
+						'BATCH_EXEC' : exec,
+						'_tag':	{
+							'datapointer' : 'adminBatchJobParametersList|'+exec,
+							'callback' : function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									if(app.data[rd.datapointer]['@PARAMETERS'])	{
+										var data = app.data[rd.datapointer]['@PARAMETERS'];
+										if(data.length)	{
+											var $o = $("<div \/>"); //$o is output. list is saved here, then added to $tag. means DOM is only updated once.
+											for(var i = 0, L = data.length; i < L; i += 1)	{
+												var job = data[i];
+												$o.append("<p data-app-role='batchContainer'><a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a><br>(last run: "+job.LASTRUN_TS+")<br><a href='#' data-app-click='admin_batchJob|adminBatchJobParametersRemoveConfirm' data-uuid='"+job.UUID+"'>Remove<\/a><\/p>");
+												}
+											$tag.append($o.children());
+											}
+										}
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis();					
+					}
+				else	{
+					$tag.anymessage({'message':'In admin_batchJob.renderFormats.batchJobParametersList, data-bind contained no "batch_exec" key/value pair, which is required.'});
+					}
 				}
+			
 			}, //renderFormats
 
 
