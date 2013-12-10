@@ -17,8 +17,10 @@ ADMIN
 	bug - rss feeds can now be deleted.
 	bug - user roles now saving.
 	bug - coupon expirations now saving correctly on create.
-	bug - reports > inventory > quick reports > recent changes button now works.
+	bug - reports > inventory > quick reports > recent changes link now works.
 	enhancement - batch job status dialog will now auto-refresh and is no longer a modal (can be shrunk and left on screen).
+	enhancement - ability to save powertool jobs for easy re-execution later.
+	enhancement - Batch manager runs faster/lower memory consumption.
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
