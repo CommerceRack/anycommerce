@@ -53,7 +53,7 @@ var admin_tools = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showPPT : function($target)	{
-				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false});
+				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false,data:{}}); //empty data passed to ensure translate occurs (for includes et all)
 				$('.toolTip',$target).tooltip();
 				var $picker = $("[data-app-role='pickerContainer']:first",$target);
 				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
@@ -540,7 +540,17 @@ $target.append("<br \/>");
 //						console.clear();
 //						app.u.dump(" -> actions: "+obj['%vars'].actions);
 //						app.u.dump(" -> obj: "); app.u.dump(obj); 
-							app.ext.admin_batchJob.a.adminBatchJobCreate(obj);
+							var batchOptions = {};
+							if($("[name='jobtitle']",$form).val())	{
+								batchOptions = {
+									'jobCreate' : true,
+									'TITLE' : $("[name='jobtitle']",$form).val(),
+									'PRIVATE' : 0,
+									'BATCH_EXEC' : 'UTILITY/PRODUCT_POWERTOOL'
+									}
+								}
+
+							app.ext.admin_batchJob.a.adminBatchJobCreate(obj,batchOptions);
 							}
 						else	{
 							$form.anymessage({'message':'Please specify at least one attribute/action in step 2.'})
