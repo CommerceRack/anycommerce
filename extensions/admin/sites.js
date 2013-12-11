@@ -22,7 +22,8 @@ var admin_sites = function() {
 	
 	var theseTemplates = new Array(
 		"domainListTemplate",
-		"domainListHostsRowTemplate"
+		"domainListHostsRowTemplate",
+		"sitesDomainRowTemplate"
 /*	
 used, but not pre-loaded.	
 	"domainAndAppConfigTemplate"
@@ -66,21 +67,55 @@ used, but not pre-loaded.
 			
 //The sites interface should always be opened in the sites tab.
 			showSitesTab : function()	{
-				var $target = $("#sitesContent");
+				var $target = $("#sitesContent").intervaledEmpty().showLoading({'message':'Fetching List of Domains'}).anydelegate();
 				
 				if(app.ext.admin.vars.tab != 'sites')	{
 					app.ext.admin.u.bringTabIntoFocus('sites');
 					app.ext.admin.u.bringTabContentIntoFocus($target);
 					}
 				
-				$target.intervaledEmpty().anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anydelegate();
-
-				app.ext.admin_sites.u.fetchSiteTabData('mutable');
-				
-				app.u.handleButtons($target);
+//if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
+				app.model.addDispatchToQ({
+					'_cmd':'adminDomainList',
+					'hosts' : 1,
+					'_tag':	{
+						'datapointer' : 'adminDomainList',
+						'callback':function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$target.hideLoading();
+								var domains = app.data[rd.datapointer]['@DOMAINS'];
+								app.data[rd.datapointer]['*favorites'] = new Array();
+								var L = domains.length;
+								for(var i = 0; i < L; i += 1)	{
+									if(domains[i].IS_FAVORITE == 1)	{
+										app.data[rd.datapointer]['*favorites'].push(domains[i]);
+										}
+									}
+								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
+								app.u.handleButtons($target);
+								}
+							}
+						}
+					},'mutable');
 				app.model.dispatchThis('mutable');
 
+
+				},
+			
+			
+			showDomainConfig : function($target)	{
+				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anydelegate();
+
+				app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
+
+				app.u.handleButtons($target);
+				app.model.dispatchThis('mutable');
+				
 				}
+			
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -309,7 +344,7 @@ used, but not pre-loaded.
 					}
 				}, //domainAddUpdateHost
 
-			fetchSiteTabData : function(Q)	{
+			fetchSiteTabData : function($target,Q)	{
 				app.model.addDispatchToQ({
 					'_cmd':'adminDomainList',
 					'hosts' : true,
@@ -317,7 +352,7 @@ used, but not pre-loaded.
 						'datapointer' : 'adminDomainList',
 						'callback':'anycontent',
 						'translateOnly' : true,
-						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",'#sitesContent')
+						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",$target)
 						}
 					},Q);
 				app.model.addDispatchToQ({
@@ -326,7 +361,7 @@ used, but not pre-loaded.
 						'datapointer' : 'adminProjectList',
 						'callback':'anycontent',
 						'translateOnly' : true,
-						'jqObj' : $("[data-app-role='projectsContainer']:first",'#sitesContent')
+						'jqObj' : $("[data-app-role='projectsContainer']:first",$target)
 						}
 					},Q);
 				}

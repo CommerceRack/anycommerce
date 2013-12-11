@@ -488,30 +488,7 @@ var admin_config = function() {
 				
 				}, //showShipMethodEditorByProvider
 				
-				
-			showDomainManager : function($target)	{
-				
-				$target.empty();
-				
-				app.ext.admin.i.DMICreate($target,{
-					'header' : 'Domain Manager', //left off because the interface is in a tab.
-					'className' : 'domainManager',
-					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Domain List<\/button>",
-						"<button data-app-event='admin_config|adminDomainCreateShow'>Add Domain<\/button>"
-						],
-					'thead' : ['Logo','Domain','Partition',''],
-					'tbodyDatabind' : "var: users(@DOMAINS); format:processList; loadsTemplate:domainManagerRowTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'adminDomainList',
-						'_tag' : {'datapointer' : 'adminDomainList'}
-						}
-					});
-// * 201336 -> moved this so templates are not requested till template chooser is opened.
-//				app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{'datapointer' : 'adminSiteTemplateList'}},'mutable');
-				app.model.dispatchThis('mutable');
-
-				},//showCouponManager				
+			
 				
 			showCouponManager : function($target)	{
 				
