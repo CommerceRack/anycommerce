@@ -1,6 +1,71 @@
 
 
 
+<div id='pageTemplateSites' class='ui-widget'>
+
+	<div data-bind="var: domains(*favorites); format:showIfSet;">
+<!--		<h2>Favorite Domains</h2>-->
+		<ul data-bind="var: domains(*favorites); format:processList; loadsTemplate:domainListFavoriteTemplate;" class='marginTop listStyleNone ui-widget noPadOrMargin clearfix' data-app-role='domainListFavorites'></ul>
+	</div>
+	
+	
+	<div class='ui-widget-content ui-corner-all stdPadding'>
+	<table class='fullWidth gridTable marginTop' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:sitesDomainRowTemplate;">
+	<thead>
+	<tr>
+		<th colspan='2'>Domain</th>
+		<th>Partition</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody ></tbody>
+	</table>
+	</div>
+	
+</div>
+
+
+
+<ul>
+	
+	<li id='domainListFavoriteTemplate' class='ui-widget-content ui-corner-all domainPanel positionRelative smallButton'>
+		<div class='alignCenter'>
+		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='160' />
+		</div>
+		
+		<div class='positionAbsolute positionTop positionRight stdPadding' data-bind="var:domain(DOMAINNAME); format:assignAttribute; attribute:data-domain;"><!-- stdPadding aligns this button w/ host-buttons -->
+			<button data-app-click="admin_sites|domainPutInFocus" data-text='false' data-icon-primary='ui-icon-check' class='applyButton'>Use Domain</button>
+		</div>
+		
+		<h4 class='alignCenter smallPadding'>
+			<span data-bind="var: domain(DOMAINNAME); format:text;"></span>
+			<span data-bind="var: domain(PRT); format:text; pretext:(;posttext:);"></span>
+		</h4>
+	
+	</li>
+</ul>
+
+<table>
+<!-- used in 'sites' tab for list of all domains -->
+<tr id='sitesDomainRowTemplate'>
+	<td class='alignCenter width1' ><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='80' height='40' /></td>
+	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
+	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin_sites|domainPutInFocus" class='applyButton' data-text='false' data-icon-primary='ui-icon-check'>Use Domain</button>
+		<button data-app-event="admin_sites|adminDomainToggleFavoriteExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-tag'>Tag as Favorite</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+<!--
+////////////   FOR THE DOMAINS AND APP CONFIG PAGE
+-->
+
+
 <div id='domainAndAppConfigTemplate' class='ui-widget smallButton'>
 
 
@@ -103,18 +168,8 @@
 
 
 
-<!--
-<tr id='domainManagerRowTemplate'>
-	<td class='alignCenter width1' ><img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='80' height='40' /></td>
-	<td data-bind="var: domain(DOMAINNAME); format:text;"></td>
-	<td data-bind="var: domain(PRT); format:text; hideZero:false;"></td>
-	<td class='alignRight'>
-		<button data-app-event="admin_config|domainRemoveConfirm">Remove Domain</button>
-		<button data-app-event="admin_config|adminDomainToggleFavoriteExec">Flag as Favorite</button>
-		<button data-app-event="admin_config|adminDomainDetailShow" data-mode='panel'>Edit Domain</button>
-	</td>
-</tr>
--->
+
+
 
 <!-- used in the events tab of domain config -->
 <tr id='domainManagerHistoryRowTemplate'>

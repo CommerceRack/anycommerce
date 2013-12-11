@@ -1758,11 +1758,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					}
 				}
 			}, //navigateTo
-		showDomainConfig : {
-			onSuccess : function(){
-				app.ext.admin.u.domainConfig();
-				}
-			},
+
 
 		showElementEditorHTML : {
 			onSuccess : function(tagObj)	{
@@ -2682,15 +2678,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				return r;
 				}, //processForm
 
-
-
-			showDomainConfig : function(){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading({"message":"Requesting up to date list of domains."});
-				app.model.destroy('adminDomainList');
-				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
-				app.model.dispatchThis('immutable')
-				},
-			
+		
 
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
@@ -3269,9 +3257,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 					}
 				else if(path == '#!domainConfigPanel')	{
-// * 201332 -> new domain interface
-//					app.ext.admin.a.showDomainConfig();
-					app.ext.admin_config.a.showDomainManager($target);
+					app.ext.admin_sites.a.showDomainConfig($target);
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
 /*				else if(path == '#!launchpad')	{
