@@ -607,7 +607,7 @@
 						<option value='FIXED' data-show-panel='supplierShippingConnectorFixed,supplierShippingConnectorHandling'>Fixed</option>
 						<option value='ZONE' data-show-panel='supplierShippingConnectorZone,supplierShippingConnectorHandling'>Zone</option>
 						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
-					</select />
+					</select>
 				</label>
 
 				<div data-panel-id='supplierShippingConnectorNone' class='supplierShippingConnector'>Will use your store configuration</div>
@@ -675,7 +675,7 @@
 	<div class='twoColumn column2' data-app-column='2' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
 
 
-		<div class='panel labelsAsBreaks alignedLabels supplierOurFBAConfig displayNone' data-panel-id='supplierOurFBAConfig'>
+		<div class='panel labelsAsBreaks alignedLabels supplierShippingConnector displayNone' data-panel-id='supplierOurFBAConfig'>
 			<h2>FBA Configuration</h2>
 			<div class='clearfix'>
 			<p class='hint'>To use FBA your supplier code MUST be named "FBA"</p>

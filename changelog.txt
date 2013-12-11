@@ -21,6 +21,8 @@ ADMIN
 	enhancement - batch job status dialog will now auto-refresh and is no longer a modal (can be shrunk and left on screen).
 	enhancement - ability to save powertool jobs for easy re-execution later.
 	enhancement - Batch manager runs faster/lower memory consumption.
+	bug - suppliers can be edited again.
+	
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
