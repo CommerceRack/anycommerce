@@ -255,7 +255,7 @@ else	{
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
 				if($editorContainer instanceof jQuery && VENDORID)	{
-					$editorContainer.showLoading({"message":"Fetching supplier details"});
+					$editorContainer.showLoading({"message":"Fetching supplier details"}).anydelegate({'trackEdits' : true});
 					app.model.addDispatchToQ({
 						'_cmd':'adminSupplierDetail',
 						'VENDORID' : VENDORID,
@@ -302,10 +302,6 @@ else	{
 										});
 								//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
 								
-								//make inputs 'know' when they've been added and update the button.
-									app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
-
-
 								
 								//make panels draggable
 									var sortCols = $('.twoColumn').sortable({  
@@ -328,9 +324,6 @@ else	{
 											}
 										});
 
-									
-
-									app.ext.admin.u.handleFormConditionalDelegation($('form',$editorContainer));
 									}
 					
 								}
