@@ -564,9 +564,11 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 				else if(app.data.appCategoryList && catSafeID)	{
 					var L = app.data.appCategoryList['@paths'].length;
 					r = new Array();
-					for(var i = 0; i < L; i += 1)	{
-						if(app.data.appCategoryList['@paths'][i].indexOf(catSafeID) == 0)	{
-							r.push(app.data.appCategoryList['@paths'][i]);
+// *** 201352 now returns only direct subcats, instead of including nested also. -mc
+					for(var i = 0; i < L; i += 1) {
+						var path = app.data.appCategoryList['@paths'][i];
+						if(path != catSafeID && path.indexOf(catSafeID) == 0 && path.replace(catSafeID+'.', "").indexOf('.') < 0) {
+							r.push(path);
 							}
 						}
 					}
