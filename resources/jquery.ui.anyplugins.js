@@ -999,7 +999,7 @@ either templateID or (data or datapointer) are required.
 		_destroy : function(){
 //			app.u.dump(" -> anycontent.destroy EXECUTED");
 			this.element.intervaledEmpty();
-			this.element.removeData();
+			this.element.removeData('anycontent');
 //			app.u.dump(" --> this.element.data():"); app.u.dump(this.element.data());
 			}
 		}); // create the widget

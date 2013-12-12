@@ -260,30 +260,6 @@ document.write = function(v){
 				}
 			}, //showProd 
 
-/*
-*** 201346 -> content for these pages is no longer dynamic. It should be hard coded into the template OR allow to be set thru a wizard.
-		showCompany : 	{
-			onSuccess : function(tagObj)	{
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
-				app.ext.myRIA.u.bindNav('#companyNav a');
-				if(app.ext.myRIA.u.showArticle(tagObj.infoObj))	{
-					if(!tagObj.infoObj.templateID)	{
-						if(tagObj.infoObj.templateID){} //use existing value
-						else if(tagObj.templateID)	{tagObj.infoObj.templateID = 'companyTemplate'}
-						else	{tagObj.infoObj.templateID = 'companyTemplate'}
-						}
-					tagObj.infoObj.state = 'onCompletes';
-					app.ext.myRIA.u.handleTemplateFunctions(tagObj.infoObj);
-					}
-				else	{
-					//showArticle will handle the error display.
-					}
-				}
-			}, //showCompany 
-*/
-
-
-
 		handleBuyerAddressUpdate : 	{
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN myRIA.callbacks.handleBuyerAddressUpdate");
@@ -317,17 +293,8 @@ document.write = function(v){
 			onSuccess : function(tagObj)	{
 				var catSafeID = tagObj.datapointer.split('|')[1];
 				tagObj.navcat = catSafeID;
-/*
-*** 201318 -> passing in unsanitized tagObj caused an issue with showPageContent
-				app.ext.myRIA.u.buildQueriesFromTemplate(tagObj);
-*/
-/*
-				app.ext.myRIA.u.buildQueriesFromTemplate({
-					'templateID':tagObj.templateID,
-					'parentID':tagObj.parentID,
-					'navcat':tagObj.navcat,
-					'datapointer':tagObj.datapointer});
-*/
+
+// passing in unsanitized tagObj caused an issue with showPageContent
 				app.ext.myRIA.u.buildQueriesFromTemplate($.extend(true, {}, tagObj));
 				app.model.dispatchThis();
 				},
@@ -875,6 +842,7 @@ fallback is to just output the value.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 			showContent : function(pageType,infoObj)	{
 //				app.u.dump("BEGIN showContent ["+pageType+"]."); app.u.dump(infoObj);
+				infoObj = infoObj || {}; //could be empty for a cart or checkout
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -889,13 +857,11 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 				app.ext.myRIA.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
 
-				if(typeof infoObj != 'object')	{infoObj = {}} //could be empty for a cart or checkout
-
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
 				if(pageType){infoObj.pageType = pageType} //pageType
 				else if(pageType == '')	{pageType = infoObj.pageType}
 
-				app.ext.myRIA.u.handleSearchInput(pageType);
+				app.ext.myRIA.u.handleSearchInput(pageType); //will clear keyword searches when on a non-search page, to avoid confusion.
 
 //set some defaults.
 				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
@@ -1308,27 +1274,6 @@ setTimeout(function(){
 					}
 				}, //handleProdPreview
 
-
-
-/*
-required:
-P.stid
-P.listID (buyer list id)
-*/
-			removeItemFromBuyerList : function(P,tagObj)	{
-//				app.u.dump(P);
-				if(P.stid && P.listID)	{
-					app.calls.buyerProductListRemoveFrom.init(P.listID,P.stid,tagObj,'immutable');
-					app.calls.buyerProductListDetail.init(P.listID,{},'immutable'); //update list in memory
-					app.model.dispatchThis('immutable');
-					if(tagObj.parentID) {$('#'+tagObj.parentID).empty().remove();}
-					_gaq.push(['_trackEvent','Manage buyer list','User Event','item removed',P.stid]);
-					}
-				else	{
-					app.u.throwGMessage("ERROR! either stid ["+P.stid+"] or listID ["+P.listID+"] not passed into myRIA.a.removeItemFromBuyerList.",P.parentID)
-					}
-				},
-			
 //guts of this found here: http://www.dynamicdrive.com/dynamicindex9/addbook.htm
 			bookmarkThis : function()	{
 				var url = window.location;
@@ -1346,8 +1291,6 @@ P.listID (buyer list id)
 			
 				else if(document.all)// ie
 					window.external.AddFavorite(url, title);
-	
-				
 				},
 
 
@@ -1378,7 +1321,7 @@ P.listID (buyer list id)
 					app.u.throwMessage("Uh Oh! Something went wrong. Please try that again or contact the site administrator if error persists. err: required param for add2buyerList was missing. see console for details.");
 					app.u.dump("ERROR! params missing for add2BuyerList. listid and pid required. params: "); app.u.dump(P);
 					}
-				else if(authState && authState == 'none')	{
+				else if(authState && (authState == 'none' || authState == 'guest'))	{
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
 //this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
@@ -1450,8 +1393,6 @@ P.listID (buyer list id)
 //sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
 			handleAppInit : function(infoObj)	{
 //app.u.dump("BEGIN myRIA.u.handleAppInit");
-//!!! need to write/test this in IE7
-//				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
 				
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
@@ -1463,20 +1404,19 @@ P.listID (buyer list id)
 				infoObj = this.detectRelevantInfoToPage(window.location.href); 
 				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-infoObj.uriParams = {};
-var ps = window.location.href; //param string. find a regex for this to clean it up.
-if(ps.indexOf('?') >= 1)	{
-	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-//	app.u.dump(ps);
-	try {
-		infoObj.uriParams = app.u.kvp2Array(ps);
-	} catch(err){
-		//we lost the URI params to kvp2Array
-	}
-//	app.u.dump(uriParams);
-	}
-//app.u.dump("infoObj: "); app.u.dump(infoObj);
+				infoObj.uriParams = {};
+				var ps = window.location.href; //param string. find a regex for this to clean it up.
+				if(ps.indexOf('?') >= 1)	{
+					ps = ps.split('?')[1]; //ignore everything before the first questionmark.
+					if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
+
+					try {
+						infoObj.uriParams = app.u.kvp2Array(ps);
+						}
+					catch(err){
+//we lost the URI params to kvp2Array
+						}
+					}
 
 //				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
@@ -1503,14 +1443,6 @@ if(ps.indexOf('?') >= 1)	{
 					$('.username').text(app.u.getUsernameFromCart());
 					}
 				},
-			
-			
-			handleLogoutActions : function()  {
-				$('body').removeClass('buyerLoggedIn');
-				$('.username').empty();
-				app.u.logBuyerOut();
-				showContent('homepage',{});
-				},
 
 //will look at the thisPageIsPublic variable to see if the info/show in infoObj is a publicly viewable page.
 //used in B2B
@@ -1527,8 +1459,6 @@ if(ps.indexOf('?') >= 1)	{
 					if(infoObj.pageType && ns && pvo[infoObj.pageType] && pvo[infoObj.pageType].indexOf(infoObj[ns]) > -1)	{r = true}
 					}
 				else	{}
-				
-				
 				return r;
 				}, //thisPageIsViewable
 
@@ -1541,7 +1471,7 @@ if(ps.indexOf('?') >= 1)	{
 				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
 				},
-			
+
 			showtransition : function(infoObj,$old)	{
 				var r = true; //what is returned.
 //				app.u.dump(" -> $old.data('templateid'): "+$old.data('templateid'));
@@ -1550,14 +1480,15 @@ if(ps.indexOf('?') >= 1)	{
 //				app.u.dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; app.u.dump('fail 0');}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 1");}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 2");}
-				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("transition fail 3");}
-				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; app.u.dump("transition fail 4");}
-				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; app.u.dump("transition fail 5");}
-				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; app.u.dump("transition fail 6");}
+				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; app.u.dump('transition suppressed: showing modal cart.');}
+				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition suppressed: reloading same category.");}
+				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition suppressed: reloading homepage.");}
+				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("transition suppressed: reloading same product.");}
+				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; app.u.dump("transition suppressed: changing company articles.");}
+				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; app.u.dump("transition suppressed: changing customer articles.");}
+				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; app.u.dump("transition suppressed: new search from on search page.");}
 				else if(!app.u.determineAuthentication() && this.thisArticleRequiresLogin(infoObj))	{
+					app.u.dump("transition suppressed: on a page that requires auth and buyer not authorized.");
 					r = false; //if the login modal is displayed, don't animate or it may show up off screen.
 					}
 				else	{
@@ -2354,7 +2285,7 @@ elasticsearch.size = 50;
 //this is run from showContent.
 // when a cart update is run, the handleCart response also executes the handleTemplateFunctions
 			showCart : function(infoObj)	{
-				app.u.dump("BEGIN myRIA.u.showCart");
+//				app.u.dump("BEGIN myRIA.u.showCart"); app.u.dump(infoObj);
 				if(typeof infoObj != 'object'){var infoObj = {}}
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
@@ -2366,6 +2297,7 @@ elasticsearch.size = 50;
 					var $cart = $('#mainContentArea_cart')
 					if($cart.length)	{
 						//show cart
+						$cart.trigger('refresh');
 						infoObj.state = 'onCompletes';
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}
@@ -2422,8 +2354,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");
 					app.u.dump(P);
 					}
-
-				
 				}, //showCartInModal
 
 
@@ -2535,7 +2465,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									}},'mutable');
 								break;
 							case 'lists':
-	
 								app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
 								break;
 							case 'myaccount':
@@ -2571,8 +2500,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					}
 				return r;
 				},
-
-
 
 
 
@@ -3048,34 +2975,6 @@ else	{
 					}
 				}, //removeByValue
 
-
-
-//obj currently supports one param w/ two values:  action: modal|message
-//used for adding a single item to the cart, such as from a prodlist w/ an add to cart but no quantity inputs for bulk adding.
-			addItemToCart : function($form,obj)	{
-				app.u.dump("BEGIN myRIA.u.addItemToCart");
-				obj = obj || {'action':'modal'}
-				if($form && $form.length)	{
-					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
-					if(cartObj)	{
-						app.calls.cartItemAppend.init(cartObj,{},'immutable');
-						app.model.destroy('cartDetail');
-						app.calls.cartDetail.init({'callback':function(rd){
-							if(obj.action === "modal"){
-								showContent('cart',obj);
-								}
-							}},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{} //do nothing, the validation handles displaying the errors.
-					}
-				else	{
-					app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
-					}
-				}, //handleAddToCart
-
-
-
 				
 //app.ext.myRIA.u.handleMinicartUpdate();			
 			handleMinicartUpdate : function(tagObj)	{
@@ -3236,37 +3135,21 @@ else	{
 				else	{} //validateForm will handle the error display.
 				},
 
-			cartQTYUpdate : function($ele,p){
-
-/*
-the request for quantity change needs to go first so that the request for the cart reflects the changes.
-the dom update for the lineitem needs to happen last so that the cart changes are reflected, so a ping is used.
-*/
-				
-				if(app.ext.cco.u.updateCartQty($ele))	{
-					var cartCallback = {};
-					var $cart = $input.closest("[data-app-role='cartContainer']");
-					if($cart.length)	{
-						cartCallback.jqObj = $cart;
-						cartCallback.templateID = $cart.data('templateid');
-						cartCallback.callback = 'anycontent';
-						$cart.empty().showLoading({'message':'Updating your cart contents.'});
-						}
-					app.calls.refreshCart.init(cartCallback,'immutable');
-	
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					
-					}
+			buyerLogoutExec : function($ele,p)	{
+				$(document.body).removeClass('buyerLoggedIn');
+				$('.username').empty();
+				app.u.logBuyerOut();
+				showContent('homepage',{});
 				},
-
-			cartZipUpdateExec : function($ele,p)	{
-				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},{},'immutable');
-				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
-				app.model.dispatchThis('immutable');
-				}, //cartZipUpdateExec
-				
+			
+			dialogCloseExec : function($ele,p)	{
+				$ele.closest('.ui-dialog-content').dialog('close');
+				},
+			
+			faqDetailShow : function($ele,p)	{
+				app.ext.myRIA.a.showFAQbyTopic($ele.closest('[data-topicid]').data('topicid'));
+				},
+			
 			execOrder2Cart : function($ele,p)	{
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID)	{
@@ -3302,12 +3185,52 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					}
 				}, //execOrder2Cart
 
+			orderDetailShow : function($ele,p)	{
+				app.ext.myRIA.u.showOrderDetails($ele.closest("[data-app-role='orderLineitemContainer']"));
+				},
+
+			inlineProductPreviewShow : function($ele,p)	{
+				app.ext.myRIA.a.handleProdPreview($ele.closest("[data-pid]").data('pid'));
+				},
+
 			passwordChangeSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(app.u.validateForm($ele))	{
 					app.ext.store_crm.u.handleChangePassword($ele,{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$ele});
 					}
 				else	{}
+				},
+
+			productAdd2Cart : function($ele,p)	{
+				p.preventDefault();
+				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
+				if(cartObj)	{
+					app.calls.cartItemAppend.init(cartObj,{},'immutable');
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							showContent('cart',{'show':$ele.data('show')});
+							}
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //do nothing, the validation handles displaying the errors.
+				},
+			productAdd2List : function($ele,p)	{
+				var pid = $ele.closest("[data-pid]").data('pid');
+				if($ele.data('listid') && pid)	{
+					app.ext.myRIA.a.add2BuyerList({sku:pid,'listid':$ele.data('listid')});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_crm.e.productAdd2List, unable to ascertain pid ["+pid+"] or data-listid was not set on trigger element.","gMessage":true});
+					}
+				},
+				
+			productPicsInModalShow : function($ele,p){
+				app.ext.store_product.u.showPicsInModal({"pid":$ele.closest("[data-pid]").data('pid')});
 				},
 
 			subscribeSubmit : function($ele,p)	{

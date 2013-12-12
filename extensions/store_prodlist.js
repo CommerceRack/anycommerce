@@ -199,7 +199,7 @@ A special translate template for product so that reviews can be merged into the 
 				var $product =(tagObj.jqObj instanceof jQuery) ? tagObj.jqObj :  $(app.u.jqSelector('#',tagObj.parentID));
 				var $prodlist = $product.parent();
 				
-				$product.anycontent({'datapointer':tagObj.datapointer});
+				$product.anycontent({'datapointer':tagObj.datapointer}).attr('data-template-role','listitem');
 				
 				$prodlist.data('pageProductLoaded',($prodlist.data('pageProductLoaded') + 1)); //tracks if page is done.
 				$prodlist.data('totalProductLoaded',($prodlist.data('totalProductLoaded') + 1)); //tracks if entire list is done. handy for last page which may have fewer than an entire pages worth of data.
