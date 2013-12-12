@@ -31,6 +31,8 @@ CONTROLLER
 
 QUICKSTART (and store related updates)
 	Product lists now support an 'complete' event, triggered after all product have loaded.
+	Cart template is now responsive.
+	New method for creating carts for easy update. Uses delegated events (data-app-click).
 
 
 

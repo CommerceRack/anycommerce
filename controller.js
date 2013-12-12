@@ -636,7 +636,7 @@ see jquery/api webdoc for required/optional param
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'buyerPurchaseHistoryDetail requires orderid','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'buyerOrderGet requires orderid','gMessage':true});
 					}
 				return r;
 				},
@@ -1697,7 +1697,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				return {'errid':'#','errmsg':msg,'errtype':'statusupdate','iconClass':'app-icon-warn','containerClass':'ui-state-statusupdate'}
 				},
 			youErrObject : function(errmsg,errid)	{
-				return {'errid':errid,'errmsg':errmsg,'errtype':'youerr','iconClass':'ui-icon-youerr','containerClass':'ui-state-highlight'}
+				return {'errid':errid || 0,'errmsg':errmsg,'errtype':'youerr','iconClass':'ui-icon-youerr','containerClass':'ui-state-highlight'}
 				},
 
 
