@@ -1562,6 +1562,11 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					}
 				}, //printByElementID
 
+//pass in app.data.something.something and this will test to make sure the 
+			testNestedObj : function(s){
+				return app.u.getObjValFromString(s,window,'.') ? true : false;
+				},
+
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
 //ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
 //will be used in updates to translator.
@@ -1572,7 +1577,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				var o=obj, attrs=s.split(char);
 				while (attrs.length > 0) {
 					o = o[attrs.shift()];
-					//I don't think this is handling zero well. !!!
 					if (!o) {o= null; break;}
 					}
 				return o;
@@ -3155,6 +3159,14 @@ return $r;
 					////////////////////////////////////   renderFormats    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
+/*
+format and do should be used in the naming conventions of renderFormats.
+formats should ONLY modify the value.
+do's should modify $tag or apply the value.
+*/
+
+
+
 	renderFormats : {
 		imageURL2Href : function($tag,data)	{
 			data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
@@ -3408,7 +3420,6 @@ $tmp.empty().remove();
 
 //for use on inputs.
 //populates val() with the value
-// ** 201324 -> rather than having separate renderFormats for different input types, this can now be used for all.
 //				cb needs to use 'prop' not 'attr'. That is the right way to do it.
 		popVal : function($tag,data){
 			if($tag.is(':checkbox'))	{
@@ -3426,12 +3437,9 @@ $tmp.empty().remove();
 				if($tag.val() == data.value)	{$tag.prop('checked','checked')}
 				}
 			else if($tag.is('select') && $tag.attr('multiple') == 'multiple')	{
-//				app.u.dump("GOT HERE!!!!!!!!!!!!!!!!");
 				if(typeof data.value === 'object')	{
-//					app.u.dump(" -> value is an object.");
 					var L = data.value.length;
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> data.value[i]: "+data.value[i]);
 						$('option[value="' + data.value[i] + '"]',$tag).prop('selected','selected');
 						}
 					}
@@ -3443,7 +3451,6 @@ $tmp.empty().remove();
 					}
 				else	{
 					$tag.val(data.value);
-// *** 201344 -> added defaultVal prop.
 					$tag.prop('defaultValue',data.value); //allows for tracking the difference onblur.
 					}
 				}
@@ -3456,28 +3463,6 @@ $tmp.empty().remove();
 				}
 			
 			}, //text
-
-// * 201318 -> allows for data-bind on a radio input.
-// *** 201324 -> retired in favor of a more versatile popVal.
-/*		popRadio : function($tag,data)	{
-			if($tag.val() == data.value)	{$tag.attr('checked','checked')}
-			},
-*/
-//only use this on fields where the value is boolean
-//if setting checked=checked by default, be sure to pass hideZero as false.
-// *** 201324 -> retired in favor of a more versatile popVal.
-/*		popCheckbox : function($tag,data){
-			if(Number(data.value))	{$tag.attr('checked',true);}
-			else if(data.value === 'on')	{$tag.attr('checked',true);}
-			else if(data.value == true)	{$tag.attr('checked',true);}
-			else if(Number(data.value) === 0){ //treat as number in case API return "0"
-				$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
-				}
-			else{}
-			app.renderFormats.popVal($tag,data);
-
-			},
-*/
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
 //pretext and posttext are added later in the process, but this function needed to be able to put some text before the output
