@@ -94,7 +94,7 @@ additionally, will apply some conditional form logic.
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
-					
+
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
 //do this before edit tracking is added so the edited class is not added.
 					$("[data-input-"+supportedEvents[i]+"]",$t).each(function(){
@@ -113,6 +113,7 @@ additionally, will apply some conditional form logic.
 						
 						})
 					}
+			
 				
 				}
 //outside the app event delegation check for backwards compatiblity.
@@ -233,6 +234,7 @@ additionally, will apply some conditional form logic.
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
+			
 			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
@@ -938,7 +940,7 @@ either templateID or (data or datapointer) are required.
 				this.element.data('isTemplated',true);
 				}
 			else if(o.templateID && o.data && !o.translateOnly)	{
-//				app.u.dump(" -> template and data present. transmogrify.");
+				app.u.dump(" -> template and data present. transmogrify.");
 //				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 //				app.u.dump(" -> hideLoading has run.");
@@ -1710,10 +1712,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 		options : {
 			state : 'expand', //expand, collapse and persistent. are acceptable values. sets panel contents to opened or closed.
 			templateID : null, //what any commerce template to use to populate the panel.
-			data : {}, //what data to use to translate the panel.
+			data : null, //what data to use to translate the panel. do NOT default to an empty object or anycontent is run. if anycontent is needed and there's no data, pass data as {}
 			dataAttribs : {}, //optional set of params to set as data on content. currently, only used if content is generated from templateID.
-			call : null,
-			callParams : null,
 			_tag : {},
 			dispatch : null, // a dispatch that'll be added directly to the Q. _tag will be added to it.
 			showClose : true, //set to false to disable close (X) button.
@@ -1721,7 +1721,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 			content : null, //a jquery object of content to use.
 			wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
 			header : null, //if set, will create an h2 around this and NOT use firstchild.
-			q : 'mutable', //which q to use.
 			extension : '', //used in conjunction w/ persist.
 			name : '', //used in conjunction w/ persist.
 			persistent : false, //if set to true and name AND extension set, will save to localStorage
@@ -1764,15 +1763,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 				
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding ui-anypanel-content').css('borderTop','0'); //content area.
 
-				if(o.call && typeof app.ext.admin.calls[o.call] == 'object')	{
-					if(o.callParams)	{
-						app.ext.admin.calls[o.call].init(o.callParams,o._tag,o.Q);
-						}
-					else	{
-						app.ext.admin.calls[o.call].init(o._tag,o.Q);
-						}
-					if(o.showLoading){$t.showLoading();}
-					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
 				//and also so that in cases where the events are not desired, there's no problem (recycled templates, for example)
 				//they'll get executed as part of the callback if a call is specified.
@@ -1807,41 +1797,14 @@ Additional a settings button can be added which will contain a dropdown of selec
 			if(o.content)	{
 				$content = o.content;
 				}
-			else	{
+			else if(o.data || o.datapointer)	{
 				this.element.anycontent(this.options);
 				}
-			
-			
-// *** 201336 -> this will now use the anycontent plugin instead of a half-assed version of it.
-/*			var $content = false, //what is returned. will either be a jquery object of content or false
-			o = this.options;
-//			app.u.dump("anypanel._anyContent");
-			if(o.content)	{
-				
-				$content = o.content;
-				}
-//templateid and data are both specified, so add and translate.
-			else if(o.templateID && o.data)	{
-//				app.u.dump(" -> o.data: "); app.u.dump(o.data);
-				$content = app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data);
-				}
-			//templateid and call are specified, so create instance. dispatch occurs OUTSIDE this plugin.
-			else if(o.templateID && o.call)	{
-				$content = app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs);
-// !!! need a 'call' here with a translateSelector callback (admin extension)
-				}
-			//a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
-			else if(o.templateID)	{
-				$content = app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs);
-				}
-			else if(o.dispatch)	{
-				app.model.addDispatchToQ(o.dispatch,o.Q);
-				app.model.dispatchThis(o.Q);
-				}
 			else	{
 				
 				}
-			*/
+			
+			
 			return $content;
 
 			},
