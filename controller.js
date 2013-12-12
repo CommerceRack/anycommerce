@@ -2902,12 +2902,13 @@ most likely, this will be expanded to support setting other data- attributes. ##
 //			app.u.dump("BEGIN controller.renderFunctions.translateSelector");
 //			app.u.dump(" -> selector: "+selector);
 //			app.u.dump(data);
-			if(!$.isEmptyObject(data) && selector)	{
+//an empty object for data is still valid.
+			if(typeof data == 'object' && selector)	{
 //				app.u.dump(" -> executing handleTranslation. $(selector).length: "+$(selector).length);
 				this.handleTranslation(typeof selector == 'object' ? selector : $(selector),data); //selector can be a string or a jquery object.
 				}
 			else	{
-				app.u.dump("WARNING! - either selector ["+selector+"] or data [typeof: "+typeof data+"] was not set in translateSelector");
+				app.u.dump("WARNING! - either selector ["+typeof selector+"] or data [typeof: "+typeof data+"] was not set in translateSelector");
 				}
 			},
 
