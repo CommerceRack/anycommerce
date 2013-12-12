@@ -5212,19 +5212,22 @@ not in use
 				$ele.toggleClass('ui-state-error');
 //Toggle the class first. That clearly indiciates the erest of the way whether we're in delete or undelete mode.
 //edited class added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+				var $tr = $ele.closest('tr');
 				if($ele.hasClass('ui-state-error'))	{
 //adding the 'edited' class does NOT change the row (due to odd/even class) , but does let the save changes button record the accurate # of updates.
-					$ele.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+					$tr.addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('disable')
 						}); //disable the other buttons
 					$ele.button('enable');
 					}
 				else	{
-					app.u.dump(" -> untag removal");
 // the find("button[role='button']") is to refine to elmeents that have been through button(). avoids a JS error
-					$ele.removeClass('ui-state-error').closest('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+					$ele.removeClass('ui-state-error');
+					$tr.removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('enable');
 						}); //enable the other buttons
+					if($tr.data('isnew'))	{$(this).addClass('edited')}
+					else	{$tr.removeClass('edited')}
 					}
 				app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));				
 				},
