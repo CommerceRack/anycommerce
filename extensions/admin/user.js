@@ -94,16 +94,7 @@ var admin_user = function() {
 
 		u : {
 
-/*
-not necessary in users 2.0
-			resetUsersTable : function()	{
-				var $table = $("[data-app-role='dualModeListContents']","#userManagerContent")
-				$table.empty();
-				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data.bossUserList);
-				app.ext.admin.u.handleAppEvents($table);
-				app.ext.admin.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
-				},
-*/
+
 			getRoleCheckboxesAsArray : function($parent)	{
 				var roles = new Array();
 				if($parent && $parent.length)	{

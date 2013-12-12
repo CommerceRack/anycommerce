@@ -461,7 +461,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div class='leftCol'>
 	<h2>Transaction History</h2>
-	<table class='gridTable marginBottom'>
+	<table class='gridTable marginBottom applyAnytable'>
 	<thead>
 	<tr>
 		<th>Date</th>
@@ -472,7 +472,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th>Notes</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: order(@PAYMENTS); loadsTemplate: orderPaymentHistoryTemplate; format:processList; extension: admin;"></tbody>
+	<tbody data-bind="var: order(@PAYMENTS); loadsTemplate: orderPaymentHistoryTemplate; format:processList; extension: admin;" data-app-role='transactionHistoryContent'></tbody>
 	</table>
 	</div>
 	
@@ -482,7 +482,43 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div data-app-role='orderShippingInfo'>
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation clearfix' data-app-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;"></section>
+	<section class='trackingInformation clearfix' data-app-role='orderUpdateAddTrackingContainer'>
+
+	<div class='rightCol labelsAsBreaks'>
+		<h3>Add New Package</h3>
+
+		<form>
+		<fieldset>
+			<label><span>Carrier: </span> <select  name="carrier">
+				<option value="UPS">UPS</option>
+				<option value="USPS">USPS</option>
+				<option value="FEDX">FEDEX</option>
+				<option value="DHL">DHL</option>
+				<option value="OTHR">Other Carrier</option>
+			</select>
+			</label>
+			
+			<label><span>Tracking #: </span><input name="value" type="text" size='15' /></label>
+			
+			<label><span>Cost: </span> <input size="5" name="cost" type="number" step='0.01' min='0' /></label>
+			<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" /></label>
+			<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
+		
+			<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
+		
+		</fieldset>
+		</form>
+		
+		<div class='zhint'>HINT: When you use Zoovy's Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
+
+
+	</div>
+
+	<div class='leftCol' data-bind="loadsTemplate:orderTrackingHistoryContainerTemplate; format:loadsTemplate;">
+
+	</div>
+	
+	</section>
 	</div>
 
 	
@@ -499,47 +535,6 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 
-
-
-
-
-<div id='orderTrackingTemplate'>
-
-	<div class='rightCol labelsAsBreaks'>
-		<h3>Add New Package</h3>
-
-<form>
-<fieldset>
-	<label><span>Carrier: </span> <select  name="carrier">
-		<option value="UPS">UPS</option>
-		<option value="USPS">USPS</option>
-		<option value="FEDX">FEDEX</option>
-		<option value="DHL">DHL</option>
-		<option value="OTHR">Other Carrier</option>
-	</select>
-	</label>
-	
-	<label><span>Tracking #: </span><input name="value" type="text" size='15' /></label>
-	
-	<label><span>Cost: </span> <input size="5" name="cost" type="number" step='0.01' min='0' /></label>
-	<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" /></label>
-	<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
-
-	<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
-
-</fieldset>
-</form>
-
-<div class='zhint'>HINT: When you use Zoovy's Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
-
-
-	</div>
-
-	<div class='leftCol' data-bind="loadsTemplate:orderTrackingHistoryContainerTemplate; format:loadsTemplate;">
-
-	</div>
-
-</div>
 
 
 
@@ -678,7 +673,7 @@ The following templates are used both in the order editor AND in quickview.
 -->
 <div id='orderEventsHistoryContainerTemplate'>
 
-	<table class='gridTable'>
+	<table class='gridTable applyAnytable'>
 	<thead>
 	<tr>
 		<th>Date</th>
@@ -692,7 +687,7 @@ The following templates are used both in the order editor AND in quickview.
 </div>
 
 <div id='orderTrackingHistoryContainerTemplate'>
-	<table class='gridTable' data-app-role='trackingInformation'>
+	<table class='gridTable applyAnytable' data-app-role='trackingInformation'>
 	<thead>
 	<tr>
 		<th>Date</th>
