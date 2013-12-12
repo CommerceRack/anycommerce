@@ -3239,7 +3239,8 @@ function type2class(type)	{
 //when in store mode, this actually executes the save.
 //when in product mode, this does an 'apply', so the @variations object in memory is updated, but not saved yet.
 //button is executed in the 'edit variation' screen.
-			variationAdminProductMacroExec : function($ele)	{
+			variationAdminProductMacroExec : function($ele,p)	{
+				app.u.dump("BEGIN admin_product.e.variationAdminProductMacroExec");
 				var
 					$form = $ele.closest('form'),
 					variationData = $ele.closest('.variationEditorContainer').data(),
@@ -3248,13 +3249,12 @@ function type2class(type)	{
 				
 				if(variationData.variationmode == 'product')	{
 					sfo._cmd ='adminProductPOGUpdate';
-//						sfo.autoid = 1; //tells api to add id's to variations or options if none are set.
 					sfo.pid = variationData.pid;
 //for a product update, need to send up entire variation object, not just a given sog/pog.
 					sfo['%sog'] = app.data['adminProductDetail|'+sfo.pid]['@variations'];
 //if guid is present, use it.  That means this was a pog just added to the product.
 					var index = (variationData.variationguid) ? app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'guid',variationData.variationguid) : app.ext.admin.u.getIndexInArrayByObjValue(sfo['%sog'],'id',variationID);
-// * 201336 -> added validating to ensure index is set. also, 00 IS a valid sog id, so that needs to be supported.
+// validate to ensure index is set. also, 00 IS a valid sog id, so that needs to be supported.
 					if(index || Number(index) == 0)	{
 						$.extend(true,sfo['%sog'][index],$form.serializeJSON({'cb':true})); //update original w/ new values but preserve any values not in the form.
 						sfo['%sog'][index]['@options'] = new Array();  //clear existing. that way deleted doesn't carry over.
@@ -3297,15 +3297,23 @@ function type2class(type)	{
 
 // pog editor just applies changes in memory till master 'save' is done.
 				if(variationData.variationmode == 'product')	{
-					//update the variations manager so this variation is tagged as edited. 
-					$ele.closest("[data-app-role='productVariations']").find("tr[data-id='"+variationID+"']:first").addClass('edited');
+//update the variations manager so this variation is tagged as edited. 
+//if this is a new variation group, id won't be set but guid will.
+					if(variationData.variationguid)	{
+						$ele.closest("[data-app-role='productVariations']").find("tr[data-guid='"+variationData.variationguid+"']:first").addClass('edited');
+						}
+					else	{
+						$ele.closest("[data-app-role='productVariations']").find("tr[data-id='"+variationID+"']:first").addClass('edited');
+						}
+					app.u.dump(" -> tr w/ data-id of sog.length: "+ $ele.closest("[data-app-role='productVariations']").find("tr["+(variationData.variationguid ? "data-guid='"+variationData.variationguid+"'" : "data-id='"+variationID+"'")+"']:first").length);
+					//for a new sog/pog, a guid is present but no ID.
+					
 					var $EDParent = $ele.closest('.eventDelegation'); //find the parent before the modal is closed/destroyed (or it won't be found).
-					$ele.closest('.ui-dialog-content').dialog('close');
+					$ele.closest('.ui-dialog-content').dialog('close').empty();
 //update change counts AFTER dialog is destroyed or the changes to the variation itself will be in the count.
 //This may sound like a good idea, but it isn't because the dialog is destroyed and if another variation is edited, the count change could be misleading .
 //so ALL changes to one variation count as 1 edit.
 					$EDParent.anydelegate('updateChangeCounts');
-//						$("[data-app-role='saveButton']",'#productTabMainContent').addClass('ui-state-highlight');
 					}
 				else	{
 					$form.showLoading({"message":"Saving changes to variations"});
@@ -3492,7 +3500,7 @@ function type2class(type)	{
 							$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //just nuke the entire form.
 							app.ext.admin.u.handleSaveButtonByEditedClass($(this).closest('form'));
 							}))
-						.append($("<button>Add Option</button>").button().on('click.closeEditor',function(e){
+						.append($("<button>Apply Option</button>").button().on('click.closeEditor',function(e){
 							if(app.ext.admin_config.e.dataTableAddUpdate($(this),e)){
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //kill the form on update for usability purposes.
 								}
@@ -3511,6 +3519,9 @@ function type2class(type)	{
 				p = p || {};
 				if($ele.data('variationmode') == 'store')	{
 					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anydelegate({'trackEdits':true}));
+					$("[data-app-role='variationsHeaderContainer']:first","#"+app.ext.admin.vars.tab+'Content').addClass('smallButton').prepend($("<button \/>").addClass('floatRight').text('Global Variations').button({icons: {primary: "ui-icon-arrowthick-1-w"},text: true}).on('click',function(){
+						navigateTo("#!globalVariations");
+						}));
 					}
 				else if($ele.data('variationmode') == 'product')	{
 					var data, variationID = $ele.closest('tr').data('id'), pid = $ele.closest("[data-pid]").data('pid');
@@ -3650,6 +3661,7 @@ function type2class(type)	{
 				},
 
 			variationCreateExec : function($ele,p)	{
+				app.u.dump("BEGIN admin_prodEdit.e.variationCreateExec");
 				var 
 					mode = $ele.closest('.ui-dialog-content').data('variationmode'),
 					pid = $ele.closest("[data-pid]").data('pid'),
@@ -3733,8 +3745,9 @@ function type2class(type)	{
 							'dataAttribs':sfo
 							})
 						app.u.handleButtons($tbody);
-						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
-						$ele.closest('.ui-dialog-content').dialog('close');
+						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).addClass('edited').appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
+						$ele.closest('.ui-dialog-content').dialog('close').empty();
+						$tbody.closest('.eventDelegation').anydelegate('updateChangeCounts');
 						}
 					else	{
 						//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.
