@@ -4565,11 +4565,11 @@ vars:
 						var bindData = app.renderFunctions.parseDataBind(vars.tbodyDatabind);
 						var $tmp;
 						if(app.templates[bindData.loadsTemplate])	{
-							$tmp =  app.templates[bindData.loadsTemplate].clone(); //always clone to leave original unmolested.
+							$tmp =  app.templates[bindData.loadsTemplate].clone(true); //always clone to leave original unmolested.
 							}
 						else if($(app.u.jqSelector('#',bindData.loadsTemplate)).length)	{
 							app.model.makeTemplate($(app.u.jqSelector('#',bindData.loadsTemplate)),bindData.loadsTemplate);
-							$tmp =  app.templates[bindData.loadsTemplate].clone();
+							$tmp =  app.templates[bindData.loadsTemplate].clone(true);
 							}
 						else	{}//empty tmp means no check to add hide in detail mode class.
 
