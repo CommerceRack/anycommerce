@@ -732,23 +732,6 @@ see jquery/api webdoc for required/optional param
 				}
 			},//buyerProductListAppendTo
 
-//formerly removeFromCustomerList
-		buyerProductListRemoveFrom : {
-			init : function(listID,stid,_tag,Q)	{
-				var r = 0;
-				if(listID)	{
-					r = 1;
-					this.dispatch(listID,stid,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'buyerProductListRemoveFrom requires listID','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(listID,stid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerProductListRemoveFrom","listid":listID,"sku":stid,"_tag" : _tag},Q || 'immutable');	
-				}
-			},//buyerProductListRemoveFrom
 
 //a request for order history should always request latest list (as per B)
 //formerly getCustomerOrderList

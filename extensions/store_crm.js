@@ -175,7 +175,7 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 						for(var i = 0; i < L; i += 1)	{
 							topicID = app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
 							app.u.dump(" -> TOPIC ID = "+topicID);
-							$parent.append(app.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
+							$parent.append(app.renderFunctions.transmogrify({'id':topicID,'topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
 							}
 						}
 					else	{
@@ -604,14 +604,43 @@ This is used to get add an array of skus, most likely for a product list.
 		
 		e : {
 			
+			contactFormSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(app.u.validateForm($ele))	{
+					app.calls.appSendMessage.init($ele.serializeJSON(),{
+						'callback':'showMessaging',
+						'jqObj':$ele,
+						'message':'Thank you, your message has been sent'
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm handles error display.
+				},
 			
-			productAdd2List : function($ele,p)	{
-				var pid = $ele.closest("[data-pid]").data('pid');
-				if($ele.data('listid') && pid)	{
-					app.ext.myRIA.a.add2BuyerList({sku:pid,'listid':$ele.data('listid')});
+			productBuyerListRemoveExec : function($ele,p)	{
+				var pid = $ele.closest("[data-stid]").data('stid') || $ele.closest("[data-pid]").data('pid');
+				var listid = $ele.closest("[data-buyerlistid]").data('buyerlistid');
+				if(pid && listid)	{
+					app.u.dump(" -> templateRole.length: "+$ele.closest("[data-template-role='listitem']").length);
+					app.model.addDispatchToQ({
+						'_cmd':'buyerProductListRemoveFrom',
+						'listid' : listid,
+						'sku' : pid,
+						'_tag':	{
+							'callback':'showMessaging',
+							'message' : 'Item '+pid+' has been removed from list: '+listid,
+							'jqObjEmpty' : true,
+							'jqObj' : $ele.closest("[data-template-role='listitem']")
+							}
+						},'immutable');
+					app.model.destroy("buyerProductListDetail|"+listid); //destroy the list in memory so the next time we visit the list page, a new copy is fetched.
+					app.model.dispatchThis('immutable');
+					if(_gaq)	{
+						_gaq.push(['_trackEvent','Manage buyer list','User Event','item removed',pid]);
+						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_crm.e.productAdd2List, unable to ascertain pid ["+pid+"] or data-listid was not set on trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In store_crm.e.productByerListRemoveExec, either unable to ascertain pid ["+pid+"] and/or buyerlistid ["+listid+"].","gMessage":true});
 					}
 				},
 			
