@@ -270,7 +270,6 @@ document.write = function(v){
 				$('.edited',$parent).removeClass('edited'); //if the save button is clicked before 'exiting' the input, the edited class wasn't being removed.
 				$('.buttonMenu',$parent).find('.offMenu').show();
 				$('.buttonMenu',$parent).find('.onMenu').hide();
-				app.ext.myRIA.u.destroyEditable($parent);
 				},
 			onError : function(responseData,uuid)	{
 				var $parent = $('#'+tagObj.parentID);
@@ -1497,6 +1496,7 @@ setTimeout(function(){
 //				app.u.dump(" -> R: "+r);
 				return r;
 				},
+
 //when changing pages, make sure keywords resets to the default to avoid confusion.
 			handleSearchInput : function(pageType)	{
 				if(pageType != 'search' && pageType != 'cart')	{
@@ -1553,6 +1553,7 @@ setTimeout(function(){
 //				app.u.dump("BEGIN myRIA.u.changeCursor ["+style+"]");
 				$('html, body').css('cursor',style);
 				},
+
 
 //used in results page if the preview mode feature is enabled.
 			revertPageFromPreviewMode : function($parent)	{
@@ -1966,79 +1967,6 @@ setTimeout(function(){
 					}
 				return useAnchor;
 				},
-
-
-
-
-/*
-
-#########################################     FUNCTIONS FOR DEALING WITH EDITABLE
-
-*/
-
-
-			makeRegionEditable : function($parent){
-var r; //what is returned. # of editable elements.				
-//info on editable can be found here: https://github.com/tuupola/jquery_jeditable
-$parent.find('.editable').each(function(){
-	r += 1; //incremented for each editable element.
-	var $text = $(this)
-	if($text.attr('title'))	{
-		$text.before("<label><br />"+$text.attr('title')+": </label>"); //br is in label so on cancel when label is hidden, display returns to normal.
-		}
-	var defaultValue = $text.text(); //saved to data.defaultValue and used to compare the post-editing value to the original so that if no change occurs, .edited class not added. Also used for restoring default value
-//	app.u.dump(" -> defaultValue: "+defaultValue);
-	$text.addClass('editEnabled').data('defaultValue',defaultValue).editable(function(value,settings){
-//onSubmit code:
-		if(value == $(this).data('defaultValue'))	{
-			$(this).removeClass('editing');
-			app.u.dump("field edited. no change.")
-			}
-		else	{
-			$(this).addClass('edited').removeClass('editing');
-			app.u.dump("NOTE - this needs to update the change log");
-			}
-		return value;
-		}, {
-		  indicator : 'loading...', //can be img tag
-		  onblur : 'submit',
-		  type : 'text',
-		  style  : 'inherit'
-		  }); //editable
-	}); //each
-
-return r;
-				
-				
-				}, //makeRegionEditable
-
-
-
-//restore a series of elements from jeditable back to a normal html block.
-			destroyEditable : function($parent)	{
-				$('.edited',$parent).each(function(){
-					$(this).text($(this).data('defaultValue')).removeClass('edited'); //restore defaults
-					})
-				$('.editable',$parent).removeClass('editEnabled').editable('destroy');
-				$('label',$parent).empty().remove(); //removed so if edit is clicked again, duplicates aren't created.
-				}, //destroyEditable
-
-
-//This will get all the key value pairs from $parent, even if the value didn't change.
-//useful when all params in an update must be set, such as address update.
-			getAllDataFromEditable : function($parent)	{
-				var obj = {}; //what is returned. either an empty object or an assoc of key/value pairs where key = attribute and value = new value
-				$parent.find('[data-bind]').each(function(){
-					var bindData = app.renderFunctions.parseDataBind($(this).attr('data-bind'));
-					obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
-//in jeditable, if you edit then click 'save' directly, the .text() val hasn't been updated yet.
-//so this'll search for the input value. if additional (more than just text input) are supported later, this wil need to be updated.
-					if(!$(this).text())
-						obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).find('input').val()
-					});
-				return obj;	
-				},
-
 
 
 
