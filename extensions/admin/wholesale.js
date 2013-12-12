@@ -254,8 +254,11 @@ else	{
 				}, //showSupplierManager
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
+				app.u.dump("BEGIN admin_wholesale.a.showSupplierEditor");
 				if($editorContainer instanceof jQuery && VENDORID)	{
-					$editorContainer.showLoading({"message":"Fetching supplier details"}).anydelegate({'trackEdits' : true});
+					$editorContainer.anydelegate({'trackEdits':true});
+					$editorContainer.showLoading({"message":"Fetching supplier details"});
+
 					app.model.addDispatchToQ({
 						'_cmd':'adminSupplierDetail',
 						'VENDORID' : VENDORID,

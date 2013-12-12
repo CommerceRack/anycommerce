@@ -1076,7 +1076,6 @@ app.u.throwMessage(responseData); is the default error handler.
 
 		translateSelector : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump("BEGIN callbacks.translateSelector");
 				if(typeof jQuery().hideLoading == 'function'){$(_rtag.selector).hideLoading();}
 				app.renderFunctions.translateSelector(_rtag.selector,app.data[_rtag.datapointer]);
 				}
@@ -2841,9 +2840,7 @@ else if(typeof eleAttr == 'object')	{
 			}
 		$r.data(eleAttr);
 		}
-// * 201324 -> absence of eleAttr check caused JS error
-// ** 201324 -> attempting to get rid of this makeSafe function. jqSelector on the selector side should handle these.
-//	if(eleAttr && eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
+
 	if(eleAttr && eleAttr.id)	{$r.attr('id',eleAttr.id)} //override the id with a safe id, if set.
 	}
 //app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
@@ -2899,12 +2896,8 @@ most likely, this will be expanded to support setting other data- attributes. ##
 
 //allows translation by selector and does NOT require a templateID. This is very handy for translating after the fact.
 		translateSelector : function(selector,data)	{
-//			app.u.dump("BEGIN controller.renderFunctions.translateSelector");
-//			app.u.dump(" -> selector: "+selector);
-//			app.u.dump(data);
 //an empty object for data is still valid.
 			if(typeof data == 'object' && selector)	{
-//				app.u.dump(" -> executing handleTranslation. $(selector).length: "+$(selector).length);
 				this.handleTranslation(typeof selector == 'object' ? selector : $(selector),data); //selector can be a string or a jquery object.
 				}
 			else	{
