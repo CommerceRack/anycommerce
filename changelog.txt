@@ -29,6 +29,9 @@ CONTROLLER
 	unix2Pretty renamed to epoch2Pretty (utility)
 	unix2mdy renamed to epoch2mdy (render format)
 
+QUICKSTART (and store related updates)
+	Product lists now support an 'complete' event, triggered after all product have loaded.
+
 
 
 201346

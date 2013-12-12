@@ -2829,7 +2829,7 @@ Then we'll be in a better place to use data() instead of attr().
 //				app.u.dump(" -> transmogrify has everything it needs.");
 //we have everything we need. proceed.
 
-var $r = app.templates[templateID].clone(); //clone is always used so original is 'clean' each time it's used. This is what is returned.
+var $r = app.templates[templateID].clone(true); //clone is always used so original is 'clean' each time it's used. This is what is returned.
 //app.u.dump(" -> template cloned");
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
 if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
@@ -2892,7 +2892,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				}
 				
 			if(templateID && app.templates[templateID])	{
-				r = app.templates[templateID].clone();
+				r = app.templates[templateID].clone(true); //necessary to copy events from templates for completes, inits, etc.
 				if(typeof eleAttr == 'string')	{r.attr('id',app.u.makeSafeHTMLId(eleAttr))}
 				else if(typeof eleAttr == 'object')	{
 //an attibute will be set for each. {data-pid:PID} would output data-pid='PID'
