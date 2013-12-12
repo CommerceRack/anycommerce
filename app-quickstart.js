@@ -114,7 +114,7 @@ if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	$('.debugQuickLinks','.debug').menu().css({'width':'150px'});
 	$('button','.debug').button();
-	app.ext.myRIA.u.bindAppViewForms('.debug');
+
 	app.ext.myRIA.u.bindNav('.debug .bindByAnchor');
 	$('body').css('padding-bottom',$('.debug').last().height());
 	}
@@ -182,7 +182,7 @@ document.write = function(v){
 				app.model.dispatchThis('passive');
 
 //adds submit functionality to search form. keeps dom clean to do it here.
-				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
+
 				app.ext.myRIA.vars.mcSetInterval = setInterval(function(){app.ext.myRIA.u.handleMinicartUpdate({'datapointer':'cartDetail'})},4000); //make sure minicart stays up to date.
 				
 				window.showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
@@ -1511,37 +1511,6 @@ if(ps.indexOf('?') >= 1)	{
 				app.u.logBuyerOut();
 				showContent('homepage',{});
 				},
-
-/*
-
-			fetchTimeInTransit : function($context,products)	{
-				if(typeof products == 'object' && $context)	{
-					if(app.data.cartDetail && app.data.cartDetail.ship && app.data.cartDetail.ship.postal)	{
-						app.calls.appShippingTransitEstimate.init({'@products':products,'ship_postal':app.data.cartDetail.ship.postal,'ship_country':app.data.cartDetail.ship.countrycode || 'US'},{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$context.anymessage({'message':rd});
-								}
-							else if(app.data[rd.datapointer]['@services'])	{
-								//show time in transit.
-//								$("[data-app-role='timeInTransit']",$context).anyContent({'templateID':'timeInTransitTemplate',datapointer:rd.datapointer});
-								}
-							else	{
-								//call succeeded, but no transit times provided.
-								}
-							}},'passive');
-						app.model.dispatchThis('passive');
-						//data-app-role='timeInTransit'
-						}
-					else	{
-						$context.anymessage({'message':'A time in transit estimate requires that a zip code be set'});
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In myRIA.u.fetchTimeInTransite, either products ['+typeof products+'] blank/not an array and/or $context ['+typeof $context+'] not passed.','gMessage':true});
-					}
-				},
-
-*/
 
 //will look at the thisPageIsPublic variable to see if the info/show in infoObj is a publicly viewable page.
 //used in B2B
@@ -3080,32 +3049,6 @@ else	{
 				}, //removeByValue
 
 
-			
-//executed in checkout when 'next/submit' button is pushed for 'existing account' after adding an email/password. (preflight panel)
-//handles inline validation
-			loginFrmSubmit : function(email,password)	{
-				var errors = '';
-				var $errorDiv = $("#loginMessaging").empty(); //make sure error screen is empty. do not hide or callback errors won't show up.
-
-				if(app.u.isValidEmail(email) == false){
-					errors += "Please provide a valid email address<br \/>";
-					}
-				if(!password)	{
-					errors += "Please provide your password<br \/>";
-					}
-					
-				if(errors == ''){
-					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
-					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
-					
-					app.model.dispatchThis('immutable');
-					}
-				else {
-					$errorDiv.anymessage({'message':errors});
-					}
-				}, //loginFrmSubmit
-			
 
 //obj currently supports one param w/ two values:  action: modal|message
 //used for adding a single item to the cart, such as from a prodlist w/ an add to cart but no quantity inputs for bulk adding.
@@ -3223,45 +3166,6 @@ else	{
 				return r;
 				}, //handleTemplateFunctions 
 
-//htmlObj is 'this' if you add this directly to a form input.
-//this function is used in bindAppViewForms
-			handleFormField : function(htmlObj)	{
-//				app.u.dump("BEGIN myRIA.u.handleFormField.");
-				if (htmlObj.defaultValue == htmlObj.value)
-					htmlObj.value = "";
-				else if(htmlObj.value == '')
-					htmlObj.value = htmlObj.defaultValue;
-				}, //handleFormField
-
-//for now,classes are hard coded. later, we could support an object here that allows for id's and/or classes to be set
-//the selector parameter is optional. allows for the function to be run over  a specific section of html. on init, it's run over #appView
-			bindAppViewForms : function(selector)	{
-//				app.u.dump("BEGIN myRIA.u.bindAppViewForms");
-				selector = selector ? selector+' ' : ''; //default to blank, not undef, to avoid 'undefined' being part of jquery selectors below
-//				app.u.dump(" -> selector: '"+selector+"'");
-//				app.u.dump(" -> $(selector+' .handleDefault').length: "+$(selector+' .handleDefault').length);
-
-//for any form input in appView where there is default text that should be removed onFocus and re-inserted onBlur (if no text added), assign a class of .handleDefault
-				$(selector+'.handleDefault').bind('focus blur',function(event){app.ext.myRIA.u.handleFormField(this)});
-		
-//				app.u.dump(" -> $(selector+' .productSearchForm').length: "+$(selector+' .productSearchForm').length);
-
-				$(selector+'.productSearchForm').submit(function(event){
-					event.preventDefault(); //stops form from actually submitting.
-					var infoObj = {}
-					infoObj.pageType = 'search';
-					infoObj.KEYWORDS = $(this).find('.productSearchKeyword').val();
-					showContent('search',infoObj);
-					return false;
-					});
-
-				$(selector+ '.newsletterSubscriptionForm').submit(function(event){
-					event.preventDefault(); //stops form from actually submitting.
-					app.ext.store_crm.u.handleSubscribe(this.id);
-					return false;
-					});
-
-				}, //bindAppViewForms
 			
 			getDataFromInfoObj : function(infoObj){
 				//initialized to an empty object, so that we don't return a null pointer
@@ -3308,6 +3212,30 @@ else	{
 
 		e : {
 
+			accountLoginSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(app.u.validateForm($ele))	{
+					app.calls.appBuyerLogin.init($ele.serializeJSON(),{'callback':'authenticateBuyer','extension':'myRIA'});
+					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm will handle the error display.
+				},
+
+			accountPasswordRecoverSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(app.u.validateForm($ele))	{
+					$ele.showLoading({'message':'Sending request for password recovery.'});
+					app.calls.appBuyerPasswordRecover.init($("[name='login']",$ele).val(),{
+						'callback':'showMessaging',
+						'message':'Thank you, will receive an email shortly',
+						'jqObj':$ele
+						});
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm will handle the error display.
+				},
+
 			cartQTYUpdate : function($ele,p){
 
 /*
@@ -3337,72 +3265,91 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				app.model.dispatchThis('immutable');
-				},
-
-
-			execOrder2Cart : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-cart"},text: false});
-				$btn.off('click.execOrder2Cart').on('click.execOrder2Cart',function(event){
-					event.preventDefault();
-					var orderID = $btn.closest("[data-orderid]").data('orderid');
-					if(orderID)	{
-						app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								var orderList = app.data[rd.datapointer]['@ITEMS'],
-								L = orderList.length;
-								for(var i = 0; i < L; i += 1)	{
-									var obj = {'sku':orderList[i].product,'qty':orderList[i].qty}
-									if(!$.isEmptyObject(orderList[i]['%options']))	{
-										var variations = orderList[i]['%options'];
-										obj['%variations'] = {};
-										for(var index in variations)	{
-											obj['%variations'][variations[index].id] = variations[index].v
-											}
+				}, //cartZipUpdateExec
+				
+			execOrder2Cart : function($ele,p)	{
+				var orderID = $ele.closest("[data-orderid]").data('orderid');
+				if(orderID)	{
+					app.calls.buyerOrderGet.init({'orderid':orderID},{'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							var orderList = app.data[rd.datapointer].order['@ITEMS'],
+							L = orderList.length;
+							for(var i = 0; i < L; i += 1)	{
+								var obj = {'sku':orderList[i].product,'qty':orderList[i].qty}
+								if(!$.isEmptyObject(orderList[i]['%options']))	{
+									var variations = orderList[i]['%options'];
+									obj['%variations'] = {};
+									for(var index in variations)	{
+										obj['%variations'][variations[index].id] = variations[index].v
 										}
-									app.calls.cartItemAppend.init(obj,{},'immutable');
-									app.model.destroy('cartDetail');
-									app.calls.cartDetail.init({'callback':function(rd){
-										showContent('cart');
-										}},'immutable');
-									app.model.dispatchThis('immutable');
 									}
+								app.calls.cartItemAppend.init(obj,{},'immutable');
+								app.model.destroy('cartDetail');
+								app.calls.cartDetail.init({'callback':function(rd){
+									showContent('cart');
+									}},'immutable');
+								app.model.dispatchThis('immutable');
 								}
-							}},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':"In myRIA.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
-						}
-					});
+							}
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In myRIA.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
+					}
 				}, //execOrder2Cart
 
-			showBuyerAddressUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
-					app.ext.store_crm.u.showAddressEditModal({
-						'addressID' : $btn.closest("address").data('_id'),
-						'addressType' : $btn.closest("[data-app-addresstype]").data('app-addresstype')
-						},function(){
-						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-						showContent('customer',{'show':'myaccount'});
-						})
+			passwordChangeSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(app.u.validateForm($ele))	{
+					app.ext.store_crm.u.handleChangePassword($ele,{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$ele});
+					}
+				else	{}
+				},
+
+			subscribeSubmit : function($ele,p)	{
+				p.preventDefault();
+				app.ext.store_crm.u.handleSubscribe($ele.attr('id'));
+				},
+
+//add to form element. input name='KEYWORDS' is required for this simple search.
+			searchFormSubmit : function($ele,p)	{
+				p.preventDefault();
+				showContent('search',$ele.serializeJSON($ele));
+				},
+
+			showBuyerAddressUpdate : function($ele,p)	{
+				app.ext.store_crm.u.showAddressEditModal({
+					'addressID' : $ele.closest("address").data('_id'),
+					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+					},function(){
+					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+					showContent('customer',{'show':'myaccount'});
 					});
 				}, //showBuyerAddressUpdate
 
-			showBuyerAddressAdd : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: false});
-				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(){
-					app.ext.store_crm.u.showAddressAddModal({
-						'addressType' : $btn.closest("[data-app-addresstype]").data('app-addresstype')
-						},function(rd){
-						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-						showContent('customer',{'show':'myaccount'});
-						})
-					});
-				} //showBuyerAddressAdd
+			showBuyerAddressAdd : function($ele,p)	{
+				app.ext.store_crm.u.showAddressAddModal({
+					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+					},function(rd){
+					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+					showContent('customer',{'show':'myaccount'});
+					})
+				}, //showBuyerAddressAdd
+
+			quickviewShow : function($ele,p)	{
+				var PID = $ele.data('pid') || $ele.closest('[data-pid]').attr('data-pid');
+				var templateID = $ele.data('loadstemplate');
+				if(PID && templateID)	{
+					quickView('product',{'templateID':templateID,'pid':PID});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In myRIA.e.quickviewShow, unable to ascertain PID ["+PID+"] or no data-templateID set on trigger element.","gMessage":true});
+					}
+				}
 
 			} // e/events
 		

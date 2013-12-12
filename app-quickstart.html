@@ -258,7 +258,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 -->
 <li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 
-	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+	<button class='floatRight pointer quickView displayNone' data-app-click='myRIA|quickviewShow' data-loadstemplate='productTemplateQuickView'>Quickview</button>
 
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
@@ -416,7 +416,7 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate' class='productPage'>
 
-<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <table class='prodViewerContainer'>
 <tr>
@@ -487,9 +487,9 @@ this will likely become more flexible in the future. ###
 
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 
-	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	|
+	<a href='#' data-app-click="store_crm|productReviewShow">Write Review</a>	|
 
-	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+	<a href='#' data-app-click="store_crm|productAdd2List" data-listid='wishlist'>Add to Wishlist</a>
 
 	</menu>
 
@@ -835,7 +835,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
 	<div class='marginBottom'>
-		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<button class='floatRight' data-app-click='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
 		<h2>Billing Address(es)</h2>
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
@@ -843,7 +843,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
 	<div class='marginBottom'>
-		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<button class='floatRight' data-app-click='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
@@ -872,15 +872,16 @@ subscribeListsArticle is used for authenticated buyers
 			<h1>Change Password</h1>
 			<div id='changepasswordContainer'>
 
-<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword($(this),{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$(this).parent()}); return false">
-<fieldset class='borderNone'>
-<div class="messaging"></div>
-<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' size='35' /></div>
-<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' size='35' /></div>
-<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+				<form action='#' name='changePasswordForm' data-app-submit="myRIA|passwordChangeSubmit">
+				<fieldset class='borderNone'>
+				<div class="messaging"></div>
+				<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' size='35' required='required' /></div>
+				<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' required='required' size='35' /></div>
+				<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+				
+				</fieldset>
+				</form>
 
-</fieldset>
-</form>
 			</div>
 		</div>
 
@@ -1164,40 +1165,33 @@ used for store_crm.js
 
 <div id='reviewFrmTemplate'>
 
-<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
+<form name="reviewFrm" action="#" data-app-submit='store_crm|productReviewSubmit'>
 <input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
 
-<label for='reviewsCustomerName'>Your Name:</label>
-<input type="text" name="CUSTOMER_NAME" id='reviewsCustomerName' value="" MAXLENGTH="30" />
-<br>
 
-<label for='reviewsLocation'>Location:</label>
-<input type="text" MAXLENGTH="30" name="LOCATION" id='reviewsLocation' value="" />
-<br>
+<label>Your Name: <input type="text" name="CUSTOMER_NAME" value="" MAXLENGTH="30" required='required' /></label><br />
 
-<label for='reviewsSubject'>Subject:</label>
-<input type="text" MAXLENGTH="60" name="SUBJECT" id='reviewsSubject' />
-<br>
+<label>Location: <input type="text" MAXLENGTH="30" name="LOCATION" value="" /></label><br />
 
+<label>Subject: <input type="text" MAXLENGTH="60" name="SUBJECT" /></label><br />
 
-<label for='reviewsMessage'>Review:</label>
-<textarea name="MESSAGE" id='reviewsMessage'></textarea>
-<br>
+<label>Review: <textarea required='required' name="MESSAGE" ></textarea></label><br />
 
-<label for='reviewsRating'>Score:</label>
-<select name="RATING" id='reviewsRating'>
-	<option value="10">5</option>
-	<option value="9">4.5</option>
-	<option value="8">4</option>
-	<option value="7">3.5</option>
-	<option value="6">3</option>
-	<option value="5">2.5</option>
-	<option value="4">2</option>
-	<option value="3">1.5</option>
-	<option value="2">1</option>
-	<option value="1">.5</option>
-</select>
-<br>
+<label>
+	Score:
+	<select name="RATING" id='reviewsRating'>
+		<option value="10">5</option>
+		<option value="9">4.5</option>
+		<option value="8">4</option>
+		<option value="7">3.5</option>
+		<option value="6">3</option>
+		<option value="5">2.5</option>
+		<option value="4">2</option>
+		<option value="3">1.5</option>
+		<option value="2">1</option>
+		<option value="1">.5</option>
+	</select>
+</label>
 
 <input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
 
@@ -1209,7 +1203,7 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+<form action='#' name='subscribeFrm' data-app-submit='myRIA|subscribeSubmit'>
 
 <fieldset class='userInfo borderNone'>
 <div>
@@ -1328,8 +1322,8 @@ The 'data-action' attribute is used to assign an onclick.
 <tr>
 	<td colspan='2'>
 <div class='floatRight'>
-<button data-app-event="myRIA|execOrder2Cart">Re-order</button>
-<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
+<button data-app-click="myRIA|execOrder2Cart">Re-order</button>
+<button data-app-click="orderCreate|execInvoicePrint">Print Invoice</button>
 </div>
 
 <h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
@@ -1420,18 +1414,18 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
-<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("input[name=login]", $(this)).val(),$("input[name=password]", $(this)).val()); return false;'>
+<form action='#' data-app-submit='myRIA|accountLoginSubmit'>
 <input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 	<fieldset>
 
 	<div>
 	<label for='login'>Login/Email</label>
-	<input type='email' class='zform_textbox zform_email'  name='login' value='' size='25' />
+	<input type='email' class='zform_textbox zform_email' required='required'  name='login' value='' size='25' />
 	</div>
 
 	<div>
 	<label for='password'>Password</label>
-	<input type='password' class='zform_textbox zform_password'   name='password' value='' size='25' />
+	<input type='password' class='zform_textbox zform_password' required='required'  name='password' value='' size='25' />
 	</div>
 
 	<div>
@@ -1445,9 +1439,9 @@ The 'data-action' attribute is used to assign an onclick.
 
 <h3 class='marginBottom'>Recover Password</h3>
 <div id='recoverPasswordMessaging' class='appMessaging'></div>
-<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
+<form action='#' data-app-submit='myRIA|accountPasswordRecoverSubmit'>
 <fieldset>
-<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
+<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' size='25' /></div>
 
 <div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
 
@@ -1498,7 +1492,7 @@ The 'data-action' attribute is used to assign an onclick.
 </ul>
 	</td>
 	<td>
-<form name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
+<form name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get" data-app-submit='myRIA|searchFormSubmit'>
 	<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" />
 	<button>Search</button>
 </form>

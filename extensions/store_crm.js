@@ -248,14 +248,6 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 					return true;
 				else
 					return errors;
-				},
-
-			changePassword : function(obj)	{
-//				app.u.dump(obj);
-				var valid = true;
-				if(obj.password == ''){valid = false}
-				if(obj.password != obj.password2)	{valid = false}
-				return valid;
 				}
 
 			}, //validate
@@ -331,28 +323,6 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 
 
 
-			handleReviews : function(formID)	{
-				var
-					$form = $('#'+formID),
-					frmObj = $form.serializeJSON();
-
-				$('.zMessage',$form).empty().remove(); //clear any existing error messages.
-				var isValid = app.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
-				if(isValid === true)	{
-					app.calls.appReviewAdd.init(frmObj,{
-						"callback":"showMessaging",
-						"jqObj":$form,
-						"jqObjEmpty" : true,
-						"message":"Thank you for your review. Pending approval, it will be added to the store."},'immutable');
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					//report errors.
-					var errObj = app.u.youErrObject(isValid,'42');
-					errObj.parentID = formID
-					app.u.throwMessage(errObj);
-					}
-				},
 /*
 will output a newsletter form into 'parentid' using 'templateid'.
 */
@@ -388,26 +358,26 @@ will output a newsletter form into 'parentid' using 'templateid'.
 				},
 
 			getAllBuyerListsDetails : function(datapointer,tagObj)	{
-var data = app.data[datapointer]['@lists']; //shortcut
-var L = data.length;
-var numRequests = 0;
-for(var i = 0; i < L; i += 1)	{
-	numRequests += app.calls.buyerProductListDetail.init(data[i].id,tagObj)
-	}
-return numRequests;
+				var data = app.data[datapointer]['@lists']; //shortcut
+				var L = data.length;
+				var numRequests = 0;
+				for(var i = 0; i < L; i += 1)	{
+					numRequests += app.calls.buyerProductListDetail.init(data[i].id,tagObj)
+					}
+				return numRequests;
 				},
 
 			getBuyerListsAsUL : function(datapointer)	{
 
-var data = app.data[datapointer]['@lists']; //shortcut
-var L = data.length;
-var $r = $("<ul>");
-var $li; //recycled
-for(var i = 0; i < L; i += 1)	{
-	$li = $("<li\/>").data("buyerlistid",data[i].id).text(data[i].id+" ("+data[i].items+" items)");
-	$li.appendTo($r);
-	}
-return $r;
+				var data = app.data[datapointer]['@lists']; //shortcut
+				var L = data.length;
+				var $r = $("<ul>");
+				var $li; //recycled
+				for(var i = 0; i < L; i += 1)	{
+					$li = $("<li\/>").data("buyerlistid",data[i].id).text(data[i].id+" ("+data[i].items+" items)");
+					$li.appendTo($r);
+					}
+				return $r;
 				},
 
 /*
@@ -429,17 +399,14 @@ This is used to get add an array of skus, most likely for a product list.
 				}, //getSkusFromList
 
 			handleChangePassword : function($form,tagObj)	{
-				
-$('.messaging', $form).empty(); //clear any existing messaging
-var formObj = $form.serializeJSON();
-if(app.ext.store_crm.validate.changePassword(formObj)){
-	app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
-	app.model.dispatchThis('immutable');
-	}
-else{
-	var errObj = app.u.youErrObject("The two passwords do not match.",'42');
-	$(".messaging",$form).anymessage(errObj);
-	}
+				var formObj = $form.serializeJSON();
+				if(formObj.password && formObj.password == formObj.password2)	{
+					app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
+					app.model.dispatchThis('immutable');
+					}
+				else{
+					$form.anymessage(app.u.youErrObject("The two passwords do not match.",42));
+					}
 				
 				}, //handleChangePassword
 
@@ -637,18 +604,42 @@ else{
 		
 		e : {
 			
-			showWriteReview : function($btn)	{
-				$btn.button();
-				$btn.off('click.showWriteReview').on('click.showWriteReview',function(event){
-					event.preventDefault();
-					var pid = $btn.attr("data-pid") || $btn.closest("[data-stid]").data('stid');
-					if(pid)	{
-						app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In store_crm.e.showWriteReview, unable to determine pid/stid','gMessage':true});
-						}
-					})
+			
+			productAdd2List : function($ele,p)	{
+				var pid = $ele.closest("[data-pid]").data('pid');
+				if($ele.data('listid') && pid)	{
+					app.ext.myRIA.a.add2BuyerList({sku:pid,'listid':$ele.data('listid')});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_crm.e.productAdd2List, unable to ascertain pid ["+pid+"] or data-listid was not set on trigger element.","gMessage":true});
+					}
+				},
+			
+			//add this as submit action on the form.
+			productReviewSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(app.u.validateForm($ele))	{
+					var frmObj = $form.serializeJSON();
+					app.calls.appReviewAdd.init(frmObj,{
+						"callback":"showMessaging",
+						"jqObj":$form,
+						"jqObjEmpty" : true,
+						"message":"Thank you for your review. Pending approval, it will be added to the store."
+						},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm will handle error display.
+				},
+			
+			productReviewShow : function($ele,p)	{
+				p.preventDefault();
+				var pid = $ele.closest("data-stid").data('stid') || $ele.closest("[data-pid]").data('pid'); //used on product page
+				if(pid)	{
+					app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_crm.e.productReviewShow, unable to determine pid/stid','gMessage':true});
+					}
 				}
 
 			} //e/events
