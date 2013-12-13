@@ -1712,7 +1712,6 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN callbacks.translateSelector");
 //				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 //				app.u.dump(" -> selector: "+selector);

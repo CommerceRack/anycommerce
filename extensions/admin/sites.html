@@ -367,7 +367,7 @@
 
 <div id='domainUpdateTemplate'>
 
-	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels' data-cb_tf='true'>
 	<input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroGeneral' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
@@ -475,9 +475,9 @@
 		<td></td>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipping(@MSGS); format:processList; loadsTemplate:domainManagerDiagnosticsRowTemplate;"></tbody>
+	<tbody data-app-role='domainDiagnosticsTbody' data-bind="var: shipping(@MSGS); format:processList; loadsTemplate:domainManagerDiagnosticsRowTemplate;">
+	</tbody>
 	</table>
-	
 	</section>
 
 

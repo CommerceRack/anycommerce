@@ -416,10 +416,12 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 					var vars = app.u.getWhitelistedObject(data,whitelist) || {};
 					vars.GUID = app.u.guidGenerator();
 					app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':vars});
+					app.model.dispatchThis('immutable');
 					}
 //allows for simple (no vars) batch jobs to be created.
 				else if($ele.data('type')){
 					app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':{'GUID':app.u.guidGenerator()}});
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"in admin_batchJobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$ele.data('whitelist')+"] not set and/or data-type ["+$ele.data('type')+"] not set","gMessage":true});}
