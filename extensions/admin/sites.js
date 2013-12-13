@@ -136,6 +136,7 @@ used, but not pre-loaded.
 						}
 					$tag.text(o);
 					},
+
 				projectButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('projectMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
@@ -161,20 +162,21 @@ used, but not pre-loaded.
 						})
 					$tag.append($button);
 					},
+
 				//pass in HOSTTYPE as data.
 				appHostButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value == 'SITEPTR')	{
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-						$menu.append("<li data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_templateEditor|delTemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_templateEditor|delTemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-click='admin_templateEditor|delContainerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
 						}
 					
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
 						}
 					if($menu.children().length)	{
 						$menu.menu();
@@ -330,10 +332,32 @@ used, but not pre-loaded.
 					else	{
 						$form.anymessage({'message':'The host type was not a recognized type. We are attempting to save the rest of your changes.'});
 						}
+
+					app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
+
+//This will update the hosts tbody.
+					if($domainEditor instanceof jQuery)	{
+						var $tbody = $("tbody[data-app-role='domainsHostsTbody']",$domainEditor);
+						if($tbody.length)	{
+							$tbody.empty();
+							app.model.addDispatchToQ({
+								'_cmd':'adminDomainDetail',
+								'DOMAINNAME':sfo.DOMAINNAME,
+								'_tag':	{
+									'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
+									'skipAppEvents' : true,
+									'translateOnly' : true,
+									'jqObj' : $tbody,
+									'callback' : 'anycontent'
+									}
+								},'immutable');
+							}
+						else	{
+							app.u.dump("In admin_sites.u.domainAddUpdateHost, $domainEditor was specified [length: "+$domainEditor.length+"], but tbody[data-app-role='domainsHostsTbody'] has no length, so the view will not be updated.","warn");
+							}
+						}
 					
-//					app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-					app.model.addDispatchToQ(cmdObj,'mutable');
-					app.model.dispatchThis('mutable');
+					app.model.dispatchThis('immutable');
 					
 					}
 				else if($form instanceof jQuery)	{
@@ -406,14 +430,23 @@ used, but not pre-loaded.
 
 			adminDomainDiagnosticsShow : function($ele,p)	{
 				if($ele.data('domainname'))	{
-					app.model.addDispatchToQ({'_cmd':'adminDomainDiagnostics','DOMAINNAME':$ele.data('domainname'),'_tag':{'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),'callback':'anycontent','jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").intervaledEmpty().showLoading({'message':'Fetching domain diagnostics'})}},'mutable');
+					app.u.dump(" -> tabcontent.length: "+$ele.closest("[data-app-role='tabContainer']").find("tbody[data-app-role='domainDiagnosticsTbody']:first").length);
+					$ele.closest("[data-app-role='tabContainer']").find("tbody[data-anytab-content='domainDiagnosticsTbody']:first").intervaledEmpty();
+					app.model.addDispatchToQ({
+						'_cmd':'adminDomainDiagnostics',
+						'DOMAINNAME':$ele.data('domainname'),
+						'_tag':{
+							'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),
+							'callback':'anycontent',
+							'jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").showLoading({'message':'Fetching domain diagnostics'})
+							}
+						},'mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else	{
 					$ele.closest("[data-app-role='tabContainer']").anymessage({"message":"in admin_sites.e.adminDomainDiagnosticsShow, data-domainname not set on element.","gMessage":true});
 					}
 				}, //adminDomainDiagnosticsShow
-
 
 			adminDomainDetailShow : function($ele,p)	{
 				
@@ -430,6 +463,7 @@ used, but not pre-loaded.
 					if(domainname)	{
 						$detail.anycontent({'templateID':'domainUpdateTemplate','showLoadingMessage':'Fetching domain details'});
 						$detail.attr({'data-domainname':domainname,'data-domain':domainname});
+						$("[data-app-role='domainsHostsTbody']",$detail).attr({'data-domainname':domainname,'data-domain':domainname}).addClass('buttonset'); //here for templateEditor.
 						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
 						app.model.addDispatchToQ({
 							'_cmd':'adminDomainDetail',
@@ -482,6 +516,7 @@ used, but not pre-loaded.
 						'title': $ele.data('mode') + '  host',
 						'data' : (($ele.data('mode') == 'create') ? {'DOMAINNAME':domain} : $.extend({},app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')],{'DOMAINNAME':domain})), //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
 						'templateID':'domainAddUpdateHostTemplate',
+						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
@@ -517,7 +552,7 @@ used, but not pre-loaded.
 					$("form",$D).append(
 						$("<button>Save<\/button>").button().on('click',function(event){
 							event.preventDefault();
-							app.ext.admin_sites.u.domainAddUpdateHost($ele.data('mode'),$('form',$D),$ele.closest('.ui-widget-anypanel'));
+							app.ext.admin_sites.u.domainAddUpdateHost($ele.data('mode'),$('form',$D),$ele.closest("[data-app-role='domainDetailContainer']"));
 							})
 						)
 					$D.anydelegate();
@@ -527,7 +562,9 @@ used, but not pre-loaded.
 					$ele.closest('.ui-widget-content').anymessage({'message':'In admin_sites.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});
 					}
 				}, //adminDomainCreateUpdateHostShow
-			
+
+/////////////////// PROJECTS \\\\\\\\\\\\\\\\\\\\
+
 			projectDetailShow : function($ele,p)	{
 				var $detailRow = $ele.closest('tr').next('tr');
 				$detailRow.toggle();

@@ -1520,52 +1520,8 @@ var $input = $(app.u.jqSelector('#',ID));
 					if($btn.is('button'))	{
 						$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
 						}
-
-					if($btn.data('mode') == 'Site')	{
-						var domainname = $btn.closest("[data-domainname]").data('domainname');
-						if(app.data['adminDomainDetail|'+domainname])	{
-							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
-								//this domain has a project. open the editor. that occurs later as long as pass=true.
-								}
-							else	{
-								$btn.hide();
-								}
-							}
-						else 	{
-							$btn.hide();
-							}	
-						}
-
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
-						var mode = $btn.data('mode');
-						var data = $btn.closest('.buttonset').data();
-						
-						var $D = app.ext.admin.i.dialogCreate({
-							'title' : 'Template File Upload',
-							'templateID' : 'templateFileUploadTemplate',
-							data : {} //blank data because translation needs to occur (template calls another template)
-							});
-						$D.dialog('option','height','400');
-						$D.dialog('open');
-						
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
-							$('form',$D).append("<input type='hidden' name='mode' value='"+mode+"' \/>");
-							if(mode == 'EBAYProfile')	{
-								$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
-								}
-							else if(mode == 'Campaign')	{
-								$('form',$D).append("<input type='hidden' name='campaignid' value='"+data.campaignid+"' \/>");
-								}
-							else if(mode == 'Site')	{
-								$('form',$D).append("<input type='hidden' name='domain' value='"+data.domainname+"' \/>");
-								}
-							else	{}
-							
-							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminFileUpload');	
-							}
-						else	{
-							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)});
-							}
+						app.ext.admin_templateEditor.e.delContainerFileUploadShow($btn);
 						});
 					}, //containerFileUploadShow
 				
@@ -1761,6 +1717,92 @@ else	{
 						$iframe.parent().find('.device ,iframe').toggleClass('portrait landscape');
 						});
 					},
+/*
+The names for these delegated events are temporary. use the original names once all interfaces are updated
+*/
+
+				delTemplateChooserShow : function($ele,p)	{
+					if($ele.data('mode') == 'Campaign')	{
+						app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
+						}
+					else if ($ele.data('mode') == 'Site')	{
+						var domainname = $ele.closest("[data-domainname]").data('domainname');
+						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
+						if(hostname && domainname)	{
+							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+							}
+						}
+					else if ($ele.data('mode') == 'EBAYProfile')	{
+						app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$ele.closest("[data-profile]").data('profile')});
+						}
+					else	{
+						//invalid mode set.
+						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateChooserShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
+						}
+					}, //delTemplateChooserShow
+
+				delTemplateEditorShow : function($ele,p)	{
+					var pass = true;
+					if($ele.data('mode') == 'Campaign')	{
+						app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
+						}
+					else if ($ele.data('mode') == 'EBAYProfile')	{
+						app.ext.admin_templateEditor.a.showTemplateEditor('EBAYProfile',{"profile":$ele.closest("[data-profile]").data('profile')});
+						}
+					else if ($ele.data('mode') == 'Site')	{
+						
+						var domainname = $ele.closest("[data-domainname]").data('domainname');
+						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
+						
+						if(hostname && domainname)	{
+							app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+							}
+						}
+					else	{
+						//invalid mode set.
+						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateEditorShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
+						}
+					}, //delTemplateEditorShow
+					
+				delContainerFileUploadShow : function($ele,p)	{
+					var mode = $ele.data('mode');
+					var data = $ele.closest('.buttonset').data();
+					
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Template File Upload',
+						'templateID' : 'templateFileUploadTemplate',
+						data : {} //blank data because translation needs to occur (template calls another template)
+						});
+					$D.dialog('option','height','400');
+					$D.dialog('open');
+					
+					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
+						$('form',$D).append("<input type='hidden' name='mode' value='"+mode+"' \/>");
+						if(mode == 'EBAYProfile')	{
+							$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
+							}
+						else if(mode == 'Campaign')	{
+							$('form',$D).append("<input type='hidden' name='campaignid' value='"+data.campaignid+"' \/>");
+							}
+						else if(mode == 'Site')	{
+							$('form',$D).append("<input type='hidden' name='domain' value='"+data.domainname+"' \/>");
+							}
+						else	{}
+						
+						app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminFileUpload');	
+						}
+					else	{
+						$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)});
+						}
+					}, //delContainerFileUploadShow
+
+
 
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{
@@ -1768,27 +1810,7 @@ else	{
 						$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
 						}
 					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
-
-						if($btn.data('mode') == 'Campaign')	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
-							}
-						else if ($btn.data('mode') == 'Site')	{
-							var domainname = $btn.closest("[data-domainname]").data('domainname');
-							var hostname = $btn.closest("[data-hostname]").attr('data-hostname');
-							if(hostname && domainname)	{
-								app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
-								}
-							else	{
-								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
-								}
-							}
-						else if ($btn.data('mode') == 'EBAYProfile')	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$btn.closest("[data-profile]").data('profile')});
-							}
-						else	{
-							//invalid mode set.
-							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateChooserShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
-							}
+						app.ext.admin_templateEditor.e.delTemplateChooserShow($btn);
 						});
 					}, //templateChooserShow
 
@@ -1799,31 +1821,10 @@ else	{
 						}
 				
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
-						var pass = true;
-						if($btn.data('mode') == 'Campaign')	{
-							app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$btn.closest("[data-campaignid]").data('campaignid')});
-							}
-						else if ($btn.data('mode') == 'EBAYProfile')	{
-							app.ext.admin_templateEditor.a.showTemplateEditor('EBAYProfile',{"profile":$btn.closest("[data-profile]").data('profile')});
-							}
-						else if ($btn.data('mode') == 'Site')	{
-							
-							var domainname = $btn.closest("[data-domainname]").data('domainname');
-							var hostname = $btn.closest("[data-hostname]").attr('data-hostname');
-							
-							if(hostname && domainname)	{
-								app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
-								}
-							else	{
-								$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
-								}
-							}
-						else	{
-							//invalid mode set.
-							$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateEditorShow, invalid mode ["+$btn.data('mode')+"] set on button.","gMessage":true});
-							}
+						app.ext.admin_templateEditor.e.delTemplateEditorShow($btn);
 						});
 					}, //templateEditorShow
+
 
 				startWizardExec : function($btn)	{
 					$btn.button();
