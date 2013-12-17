@@ -353,6 +353,48 @@ else	{
 				$modal.dialog('open');
 				},
 
+/*
+obj is required. must contain CID.
+obj.type is also required. currently supports bill or ship.
+obj.mode is required. should be set to 'create' or 'update'
+obj.show is required. currently, only 'dialog' is supported. however, more may be at some point, so it's required.
+
+address is optional. if _id is passed, that input will get locked. pass 'id' to set a default but allow it to be changed.
+
+$D is returned.
+The save button runs 'submitForm', so if you want a custom callback, set it within the form using a hidden input name='_tag/callback' and name='_tag/extension'
+ -> $form is returned and will be passed into the callback as jqObj.  add any necessary params onto form as data or as additional _tag hidden inputs.
+*/
+			createUpdateAddressShow : function(obj,address)	{
+				obj = obj || {};
+				address = address || {};
+				if((obj.type == 'bill' || obj.type == 'ship') && obj.mode && obj.CID && obj.show)	{
+					//add CID and mode to address object so that translator adds them to hidden inputs.
+					address.CID = obj.CID;
+					address.mode = obj.mode;
+					
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : obj.mode+' address ('+mode.type+')',
+						'templateID' : 'customerAddressAddUpdateTemplate',
+						'data' : address,
+						});
+					
+					
+					if(obj.mode == 'update' || address._id)	{
+						$("input[name='SHORTCUT']",$D).prop('disabled','disabled');
+						}
+					if(obj.type == 'ship')	{
+						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
+						}
+					$D.anydelegate({'trackEdits' : (obj.mode == 'update' ? true : false)});
+					$D.dialog('open');
+					return $D;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_customer.a.createUpdateAddressShow, a required param was left blank [obj.type: "+obj.type+" (must be bill or ship), obj.mode = "+obj.mode+" && obj.CID = "+obj.CID+" and obj.show = "+obj.show+"].","gMessage":true});
+					}
+				},
+
 //obj required params are cid, type (bill or ship)
 			showAddAddressModal : function(obj,$customerEditor){
 				var $modal = $('#customerUpdateModal').empty();
@@ -456,7 +498,18 @@ else	{
 ////////////////////////////////////   MACROBUILDERS   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		macrobuilders : {
-
+			'createUpdateAddress' : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminCustomerMacro',
+					'CID':sfo.CID,
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					};
+				app.u.dump('newSfo');
+				die();
+				},
 			'adminGiftcardMacro' : function(sfo,$form)	{
 				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-create");
 				sfo = sfo || {};

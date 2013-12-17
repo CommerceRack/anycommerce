@@ -1945,6 +1945,7 @@ VALIDATION
 
 */
 //used for validating strings only. checks to see if value is defined, not null, no false etc.
+//zero will b treated as true.
 //returns value (s), if it has a value .
 		isSet : function(s)	{
 			var r;

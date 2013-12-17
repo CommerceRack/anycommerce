@@ -357,10 +357,10 @@ left them be to provide guidance later.
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
 			buildPaymentQ : function($form)	{
-				app.u.dump("BEGIN cco.u.buildPaymentQ");
+//				app.u.dump("BEGIN cco.u.buildPaymentQ");
 				var sfo = $form.serializeJSON() || {},
 				payby = sfo["want/payby"];
-				app.u.dump(" -> payby: "+payby);
+//				app.u.dump(" -> payby: "+payby);
 				if(payby)	{
 					if(payby.indexOf('WALLET') == 0)	{
 						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
@@ -416,10 +416,9 @@ left them be to provide guidance later.
 //A simple check to make sure that all the required inputs are populated for a given address.  
 //returns boolean
 //this is used in checkout for pre-existing addresses, to make sure they're complete.
-			verifyAddressIsComplete : function(addressType,addressID)	{
+			verifyAddressIsComplete : function(addrObj,addressType)	{
 				var r = true;
-				if(addressType && addressID)	{
-					var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID);
+				if(typeof addrObj === 'object')	{
 					if(!addrObj[addressType+'/address1'])	{r = false}
 					else if(!addrObj[addressType+'/city'])	{r = false}
 					else if(!addrObj[addressType+'/countrycode'])	{r = false}
@@ -433,7 +432,7 @@ left them be to provide guidance later.
 					}
 				else	{
 					r = false;
-					$('#globalMessaging').anymessage({'message':'In cco.u.verifyAddressIsComplete, either addressType ['+addressType+'] or addressID ['+addressID+'] not set','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In cco.u.verifyAddressIsComplete, addrObj is not an object [typeof: '+(typeof addrObj)+']','gMessage':true});
 					}
 				return r;
 				},
@@ -530,6 +529,27 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					}
 //				app.u.dump(" -> num tender matches: "+r);
 				return returned;
+				},
+			
+//used in admin. adminBuyerGet formats address w/ ship_ or bill_ instead of ship/ or bill/
+// addrArr is is the customerGet (for either @ship or @bill). ID is the ID/Shortcut of the method selected/desired.
+			getAndRegularizeAddrObjByID : function(addrArr,ID,type)	{
+				var r = false; //what is returned.
+				if(typeof addrArr == 'object' && ID && type)	{
+					var address = addrArr[app.ext.admin.u.getIndexInArrayByObjValue(addrArr,'_id',ID)];
+					for(var index in address)	{
+						if(index.indexOf(type+'_') >= 0)	{
+							address[index.replace(type+'_',type+'/')] = address[index];
+							delete address[index];
+							}
+						}
+					r = address;
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In cco.u.getAndRegularizeAddrObjByID, id ["+ID+"] and/or type ["+type+"] not passed or addrArr not an object ["+(typeof addrArr)+"].",'gMessage':true});
+					}
+				return r;
+				
 				},
 			
 			getAddrObjByID : function(type,id)	{

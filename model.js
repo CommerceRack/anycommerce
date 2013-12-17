@@ -938,10 +938,6 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 //it is also executed if appAdminAuthenticate returns exists=1 (yes, you can).
 //formerly newSession
 		handleResponse_appCartCreate : function(responseData)	{
-//			app.u.dump(" --> appCartCreate Response executed. ("+responseData['_uuid']+")");
-//			app.u.dump("RESPONSE DATA:");
-//			app.u.dump(responseData);
-
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
 //save session id locally to maintain session id throughout user experience.	
 			app.storageFunctions.writeLocal('cartID',responseData['_cartid']);

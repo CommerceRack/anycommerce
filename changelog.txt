@@ -22,7 +22,9 @@ ADMIN
 	enhancement - ability to save powertool jobs for easy re-execution later.
 	enhancement - Batch manager runs faster/lower memory consumption.
 	bug - suppliers can be edited again.
-	
+	deprecate - setup > projects
+	enhancements - domain config is now domain and app config. includes projects (these are all related right now).
+
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
