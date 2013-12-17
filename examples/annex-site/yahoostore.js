@@ -36,7 +36,7 @@ var myRIA = function() {
 					return 1;
 					},
 				dispatch : function(obj,tagObj)	{
-					obj["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
+					obj["_cmd"] = "cartItemsAdd"; //cartItemsAdd
 					obj["_zjsid"] = app.vars.cartID; 
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,'immutable');

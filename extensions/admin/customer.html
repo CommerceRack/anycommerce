@@ -408,9 +408,18 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 
 
 
-<address id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
+<div id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
 <form action='#'>
-<input type='hidden' name='TYPE' value='' /><!-- val populated w/ js -->
+<input type='hidden' name='_macrobuilder' value='admin_customer|createUpdateAddress' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='The address has been saved.' />
+
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+
+
+<input type='hidden' name='TYPE'  data-bind="var:address(TYPE); format:popVal;"  value='' />
+<input type='hidden' name='CID'  data-bind="var:address(CID); format:popVal;"  value='' />
+
 <fieldset>
 	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' required='required' data-minlength='3' maxlength="8" size='6' data-bind="var:address(_id); format:popVal;" /></label>
 	<label><span>First name</span><input type='text' name='firstname' value='' required='required'  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
@@ -426,8 +435,8 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<label><span>Email</span><input type='email' name='email' value=''  data-bind="var:address(bill_email); format:popVal;" /></label>
 	<label><span>Phone</span><input type='phone' name='phone' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>
 </fieldset>
-</form><!-- no button. added via JS. helps to make it painfully obvious this form is recycled :) -->
-</address>
+</form>
+</div>
 
 
 

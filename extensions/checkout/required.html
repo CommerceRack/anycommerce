@@ -265,6 +265,7 @@ do NOT change any div id's or messaging will not work properly.
 		</div>
 		
 		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Your Stored Payments</h2>
+		<!-- The # of children in the storedPaymentContents triggers wallet display. Do not add any children to this div. -->
 		<div data-app-role='storedPaymentsContent' class='displayNone' data-bind="var: buyerWalletList(@wallets); format:processList; loadsTemplate: chkoutBuyerWalletListItem;"></div>
 
 
@@ -357,7 +358,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 
-
+<!-- there is display logic looking for the number of address elements in addressExists. do not change element try w/out updating display logic. -->
 <address id='chkoutBuyerAddressTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<div data-bind="var:address(bill/address1); defaultVar: address(ship/address1); format:text;"></div>
 	<div data-bind="var:address(bill/postal); defaultVar: address(ship/postal); format:text;"></div>

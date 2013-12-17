@@ -3288,16 +3288,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
 
 				else if(path == '#!orderCreate2')	{
-					app.calls.appCartCreate.init({'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							//appCartCreate will automatically set app.vars.cartid
-							app.ext.orderCreate.a.startCheckout($target);
-							}
-						}},'immutable');
-						app.model.dispatchThis('immutable');
+					app.ext.orderCreate.a.appCartCreate($target);
 					}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 
@@ -4473,9 +4464,7 @@ else	{
 			
 			var r = false;  //what is returned. the variation index if a match is found.
 			if(array && objkey && objvalue)	{
-//				app.u.dump(" -> all required params are present.");
-				var L = array.length;
-				for(var i = 0; i < L; i+=1)	{
+				for(var i = 0, L = array.length; i < L; i+=1)	{
 					if(array[i][objkey] == objvalue)	{
 						r = i;
 						break; //exit early once a match is found.

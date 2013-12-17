@@ -19,11 +19,12 @@ app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
 
 
-//app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
-//app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
+app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
+app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
 
-app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
+
+//app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
 
 
 app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']); 
