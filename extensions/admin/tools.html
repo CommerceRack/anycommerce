@@ -603,10 +603,11 @@ has to be within the fieldset to for data-table to work right.
 	<p class="hint marginTop marginBottom clearfix">Please make sure all users are logged out of your account, and all sync processes are disabled while using utilities in this area. They are *very* resource intensive and can cause outages if concurrent use is attempted.</p>
 
 	
-	<section class='floatRight marginBottom marginLeft' data-app-role='accountUtilityLogContainer'>
+	<section class='floatRight marginBottom marginLeft' data-app-role='accountUtilityLogContainer' data-tablefilter-role='container'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' data-app-keyup="admin|tableFilter" class='floatRight' />
 		<h2>Logs</h2>
 	
-		<table class='gridTable applyAnytable marginTop'>
+		<table class='gridTable applyAnytable marginTop' data-tablefilter-role='table'>
 		<thead>
 		<tr>
 			<th>Filename</th>
@@ -804,7 +805,7 @@ has to be within the fieldset to for data-table to work right.
 
 <table>
 <tr id='accountUtilityLogRowTemplate'>
-	<td data-bind="var: log(TITLE); format:text;"></td>
+	<td data-bind="var: log(TITLE); format:text;" class='isSearchable'></td>
 	<td><button data-app-event='admin_tools|adminPlatformLogDownloadExec'>download</button></td>
 </tr>
 </table>
