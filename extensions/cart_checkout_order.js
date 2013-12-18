@@ -245,6 +245,29 @@ left them be to provide guidance later.
 				}
 			}, //init
 
+//display the '%changes', but make no adjustments to the cart.
+//can be used in store, but was built for admin UI where a merchant may want to oversell.
+//the checkout extension has a callback for adjusting the inventory based on availability.
+		adminInventoryDiscrepencyDisplay : {
+			onSuccess : function(_rtag)	{
+				_rtag.jqObj = _rtag.jqObj || $('#globalMessaging');
+				if(!$.isEmptyObject(app.data[_rtag.datapointer]['%changes']))	{
+					var msgObj = {}
+					msgObj.message = "Inventory not available (manual corrections may be needed):<ul>";
+					for(var key in app.data[_rtag.datapointer]['%changes']) {
+						msgObj.message += "<li>sku: "+key+" shows only "+app.data[rd.datapointer]['%changes'][key]+" available<\/li>";
+						}
+					msgObj.message += "<\/ul>";
+					msgObj.persistent = true;
+					msgObj.errtype = 'halt';
+					_rtag.jqObj.anymessage(msgObj);
+					}
+				else	{
+					//there were no 'changes'.
+					}
+				}
+			},
+
 		proceedToGoogleCheckout : {
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN cco.callbacks.proceedToGoogleCheckout.onSuccess');
@@ -533,14 +556,16 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			
 //used in admin. adminBuyerGet formats address w/ ship_ or bill_ instead of ship/ or bill/
 // addrArr is is the customerGet (for either @ship or @bill). ID is the ID/Shortcut of the method selected/desired.
-			getAndRegularizeAddrObjByID : function(addrArr,ID,type)	{
+			getAndRegularizeAddrObjByID : function(addrArr,ID,type,regularize)	{
 				var r = false; //what is returned.
 				if(typeof addrArr == 'object' && ID && type)	{
 					var address = addrArr[app.ext.admin.u.getIndexInArrayByObjValue(addrArr,'_id',ID)];
-					for(var index in address)	{
-						if(index.indexOf(type+'_') >= 0)	{
-							address[index.replace(type+'_',type+'/')] = address[index];
-							delete address[index];
+					if(regularize)	{
+						for(var index in address)	{
+							if(index.indexOf(type+'_') >= 0)	{
+								address[index.replace(type+'_',type+'/')] = address[index];
+								delete address[index];
+								}
 							}
 						}
 					r = address;
@@ -766,9 +791,44 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
-				} //sanitizeAndUpdateCart
+				}, //sanitizeAndUpdateCart
 
-
+//accepts an object (probable a serialized form object) which needs sku and qty.  In an admin session, also accepts price.
+//Will validate required fields and provide any necessary formatting.
+//used in orderCreate in the admin UI for adding a line item and a re-order for previous orders.
+			buildCartItemAppendObj : function(sfo)	{
+				var r = false; //what is returned. either an object or false
+				if(sfo.sku && sfo.qty)	{
+					if(sfo.price)	{}
+					else	{delete sfo.price} //don't pass an empty price, will set price to zero. if a price is passed when not in an admin session, it'll be ignored.
+					sfo.uuid = app.u.guidGenerator();
+					r = sfo;
+					}
+				else	{
+					app.u.dump("In cco.u.buildCartItemAppendObj, both a sku ["+sfo.sku+"] and a qty ["+sfo.qty+"] are required and one was not set.",'warn')
+					r = false; //sku and qty are required.
+					}
+				return r;
+				},
+//used in order create for adding a lineitem from a previous order, so test any changes there (admin UI) after making changes.
+			buildCartItemAppendSKU : function($container)	{
+				app.u.dump("BEGIN cco.u.buildCartItemAppendSKU");
+				var r = false; //what is returned. will be true if dispatch is created.
+				if($container instanceof jQuery)	{
+					var sfo = this.buildCartItemAppendObj($container.serializeJSON());
+					if(sfo)	{
+						app.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
+						r = sfo;
+						}
+					else	{
+						$container.anymessage({"message":"In orderCreate.e.cartItemAddStid, buildCartItemAppendObj was unsuccessful. see console for details.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In orderCreate.e.cartItemAddStid, no data-app-role='cartItemContainer' specified around trigger element.","gMessage":true});
+					}
+				return r;
+				}
 
 			}, //util
 
