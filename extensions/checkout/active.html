@@ -357,8 +357,8 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind="var:address(bill/address1); defaultVar: address(ship/address1); format:text;"></div>
 	<div data-bind="var:address(bill/postal); defaultVar: address(ship/postal); format:text;"></div>
 	<div class='clearfix'>
-		<button class='floatRight applyButton' data-app-click='orderCreate|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
-		<button class='floatRight marginRight applyButton' data-app-click="orderCreate|showBuyerAddressUpdate" data-icon='false' data-icon-primary='ui-icon-pencil'>Edit This Address</button>
+		<button class='floatRight applyButton'  data-app-click='orderCreate|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
+		<button class='floatRight marginRight applyButton' data-app-role='addressEditButton' data-app-click="orderCreate|showBuyerAddressUpdate" data-icon='false' data-icon-primary='ui-icon-pencil'>Edit This Address</button>
 	</div>
 </address>
 

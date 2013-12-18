@@ -940,7 +940,7 @@ either templateID or (data or datapointer) are required.
 				this.element.data('isTemplated',true);
 				}
 			else if(o.templateID && o.data && !o.translateOnly)	{
-				app.u.dump(" -> template and data present. transmogrify.");
+//				app.u.dump(" -> template and data present. transmogrify.");
 //				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 //				app.u.dump(" -> hideLoading has run.");
@@ -1611,7 +1611,9 @@ and it'll turn the cb into an ios-esque on/off switch.
 			else	{}
 			
 		
-			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			if($label.data('anycb') === true)	{
+//				app.u.dump(" -> already anycb-ified"); //do nothing, already anycb-ified
+				}
 			else if(navigator.userAgent.toLowerCase().indexOf('msie') >= 0)	{} //ie not supported. didn't link binding.
 			else if($label.length)	{
 //				app.u.dump(" -> anycbifying. is label: "+$label.is('label'));

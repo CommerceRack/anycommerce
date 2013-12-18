@@ -3246,7 +3246,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 			loadNativeApp : function(path,opts,$target){
-				app.u.dump("BEGIN loadNativeApp");
+//				app.u.dump("BEGIN loadNativeApp");
 				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
