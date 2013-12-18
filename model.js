@@ -1492,7 +1492,7 @@ extensions are like plugins. They are self-contained* objects that may include c
 the extension object passed in looks like so:
 
 [
-{"namespace":"convertSessionToOrder","extension":"checkout_fast.js","callback":"init"},
+{"namespace":"orderCreate","extension":"checkout/extension.js","callback":"init"},
 {"namespace":"name","extension":"filename","callback":"optional"}
 ]
 
@@ -1503,7 +1503,7 @@ namespace - the extension is saved to app.ext.namespace and would be 'called' us
 extension - the filename. full path.
 callback - a function to be executed once the extension is done loading.
 
-the 'convertSessionToOrder' namespace is reserved for checkout. only 1 checkout extension can be loaded at a time.
+the 'orderCreate' namespace is reserved for checkout. only 1 checkout extension can be loaded at a time.
 use a unique naming convention for any custom extensions, such as username_someusefulhint (ex: cubworld_jerseybuilder)
 
 The ajax request itself (fetchExtension) was originally in the addExtension function in the loop.  This caused issues.

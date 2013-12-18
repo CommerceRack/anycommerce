@@ -793,6 +793,54 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					}
 				}, //sanitizeAndUpdateCart
 
+
+//run when a payment method is selected. updates memory and adds a class to the radio/label.
+//will also display additional information based on the payment type (ex: purchase order will display PO# prompt and input)
+// ### TODO -> updatePayDetails is used in orders.js.  See if it can be replaced w/ cco.showSupplementalInputs
+			updatePayDetails : function($container)	{
+//				app.u.dump("BEGIN order_create.u.updatePayDetails.");
+				var paymentID = $("[name='want/payby']:checked",$container).val();
+
+				var o = '';
+				$('.ui-state-active',$container).removeClass('ui-state-active ui-corner-top ui-corner-all ui-corner-bottom');
+ //in Admin, some of the supplemental inputs are shared between payment types (flag as paid)
+//so to ensure the checkbox isn't on by accident, remove all supplemental material when switching between.
+				$('.paybySupplemental', $container).empty().remove();
+				var $radio = $("[name='want/payby']:checked",$container);
+				
+				
+//				app.u.dump(" -> $radio.length: "+$radio.length);
+				var $supplementalContainer = $("[data-ui-supplemental='"+paymentID+"']",$container);
+//only add the 'subcontents' once. if it has already been added, just display it (otherwise, toggling between payments will duplicate all the contents)
+				if($supplementalContainer.length == 0)	{
+					app.u.dump(" -> supplemental is empty. add if needed.");
+					var supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs(paymentID,{},true); //this will either return false if no supplemental fields are required, or a jquery UL of the fields.
+//					app.u.dump("typeof supplementalOutput: "+typeof supplementalOutput);
+					if(typeof supplementalOutput == 'object')	{
+						$radio.parent().addClass('ui-state-active ui-corner-top'); //supplemental content will have bottom corners
+//						app.u.dump(" -> getSupplementalPaymentInputs returned an object");
+						supplementalOutput.addClass('ui-widget-content ui-corner-bottom');
+//save values of inputs into memory so that when panel is reloaded, values can be populated.
+						$('input[type=text], select',supplementalOutput).change(function(){
+							app.ext.cco.vars[$(this).attr('name')] = $(this).val(); //use name (which coforms to cart var, not id, which is websafe and slightly different 
+							})
+
+						$radio.parent().after(supplementalOutput);
+						}
+					else	{
+						//no supplemental material.
+						$radio.parent().addClass('ui-state-active ui-corner-all');
+						}
+					}
+				else	{
+//supplemental material present and already generated once (switched back to it from another method)
+					$radio.parent().addClass('ui-state-active ui-corner-top'); //supplemental content will have bottom corners
+					$supplementalContainer.show();
+					} //supllemental content has already been added.
+
+				}, //updatePayDetails
+
+
 //accepts an object (probable a serialized form object) which needs sku and qty.  In an admin session, also accepts price.
 //Will validate required fields and provide any necessary formatting.
 //used in orderCreate in the admin UI for adding a line item and a re-order for previous orders.
@@ -974,8 +1022,22 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 			walletName2Icon : function($tag,data)	{
 				$tag.addClass('paycon_'+data.value.substring(0,4).toLowerCase());
+				},
+			paymentStatus : function($tag,data)        {
+				if(Number(data.value[0]) === 0)        {$tag.append("Paid");}
+				else{$tag.append("Unpaid")}
+				},
+			marketPlaceOrderID : function($tag,data)        {
+				var order = app.data['adminOrderDetail|'+data.value];
+				var output = "";
+				if(order.flow.payment_method == 'AMAZON')        {output = order.mkt.amazon_orderid}
+				else if(order.flow.payment_method == 'EBAY')        {output = order.mkt.erefid.split('-')[0]}//splitting at dash shows just the ebay item #
+				else if(order.flow.payment_method == 'NEWEGG')        {output = order.mkt.erefid}
+				else if(order.flow.payment_method == 'BUY')        {output = order.mkt.erefid}
+				else if(order.flow.payment_method == 'SEARS')        {output = order.mkt.sears_orderid}
+				else{}
+				$tag.append(output);
 				}
-
 			}, //renderFormats
 		
 		e : {

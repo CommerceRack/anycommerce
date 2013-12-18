@@ -3284,13 +3284,12 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
 					}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
-				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
+				else if(path == '#!orderPrint')	{app.ext.cco.a.printOrder(opts.data.oid,opts);}
 				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
 
-				else if(path == '#!orderCreate2')	{
+				else if(path == '#!orderCreate')	{
 					app.ext.orderCreate.a.appCartCreate($target);
 					}
-				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 
 				else if(path == '#!downloads')	{
 					$('#homeContent').empty();

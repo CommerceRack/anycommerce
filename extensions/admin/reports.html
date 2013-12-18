@@ -6,7 +6,7 @@
 
 
 <div id='ebayListingsReportPageTemplate' class='ebayListingsReportPage'>
-<form action='#'>
+<form action='#' data-app-submit="admin_reports|ebayReportViewSubmit">
 
 <fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird'>
 	<legend>eBay Listings CSV Export</legend>
@@ -33,7 +33,7 @@
 <div class='clearfix'></div>
 <fieldset class='marginTop ui-widget ui-widget-content ui-corner-all'>
 
-<div class='floatRight'><button data-app-event="admin_reports|ebayReportView">View</button></div>
+<div class='floatRight'><button  class='applyButton'>View</button></div>
 
 <label>Time Period/since: <input type='number' class='datepicker' name='since_gmt' /></label>
 
@@ -492,24 +492,22 @@
 					</label>
 		
 					<label><input type="checkbox" name="include_deleted" /> Gross Sales: Include Cancelled Orders</label>
-					
+
 					<label>
 						<span>Dates</span>
-						<select name='PERIOD' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
+						<select name='PERIOD' data-panel-selector=".formPeriodRange" data-input-change='show-panel' required='required'>
 							<option value=''>please choose</option>
 							<option value="today">Today Only</option><!-- lowercase is rel -->
 							<option value="thismonth">Month to Date</option>
 							<option value="4week">Last 4 Weeks</option>
 							<option value="all">All Orders</option>
-							<option value='BYMONTH'>by month</option><!-- uppercase is range -->
-							<option value='BYINVOICE'>invoice range</option>
-							<option value='BYTIMESTAMP'>Date range</option>
+							<option value='BYMONTH' data-show-panel='formPeriodRange-BYMONTH'>by month</option><!-- uppercase is range -->
+							<option value='BYINVOICE' data-show-panel='formPeriodRange-BYINVOICE'>invoice range</option>
+							<option value='BYTIMESTAMP' data-show-panel='formPeriodRange-BYTIMESTAMP'>Date range</option>
 						</select>
 					</label>
 					
-		
-		
-		<div class='formPeriodRange formPeriodRange-BYMONTH displayNone'>
+		<div class='formPeriodRange displayNone' data-panel-id='formPeriodRange-BYMONTH'>
 		<select name="month">
 			<option value="1">January</option>
 			<option value="2">February</option>
@@ -534,14 +532,13 @@
 			<option selected="selected" value="2013">2013</option>
 		</select>
 		</div>
-		
-		<div class='formPeriodRange formPeriodRange-BYTIMESTAMP displayNone'>
+
+		<div class='formPeriodRange  displayNone'  data-panel-id='formPeriodRange-BYTIMESTAMP'>
 			<label>Begins <input type="text" name="begints" size="20" class='datepicker' ></label>
 			<label>Ends <input type="text" name="endts" size="20" class='datepicker' ></label>
 		</div>
-		
-		
-		<div class='formPeriodRange formPeriodRange-BYINVOICE displayNone'>
+
+		<div class='formPeriodRange  displayNone' data-panel-id='formPeriodRange-BYINVOICE'>
 			<label>First Invoice: <input type="text" name="startinv" maxlength="15" size="15"> ####-##-####</label>
 			<label>Last Invoice: <input type="text" name="endinv" maxlength="15" size="15"> ####-##-####</label>
 		</div>
@@ -553,7 +550,7 @@
 		
 			</div>
 		
-			<div class='buttonset'><button data-app-event="admin_reports|execAdminReportCreate">Build Report</button></div>
+			<div class='buttonset'><button data-app-click="admin_reports|execAdminReportCreate" class='applyButton'>Build Report</button></div>
 		
 			</form>		
 		</section>
@@ -590,7 +587,7 @@
 		<h3>Custom Reports</h3>
 		<div class='stdMargin'>
 			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchJob; batch_exec:REPORT/SKU;"></div>
-			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
+			<a href='#' data-app-click="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
 		</div>
 	</div>
 </div>
@@ -638,7 +635,7 @@
 		<h3>Custom Reports</h3>
 		<div class='stdMargin'>
 			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchJob; batch_exec:REPORT/INVENTORY;"></div>
-			<a href='#' data-app-event="admin_reports|showReportBuilderDialog" data-batchexec='INVENTORY'>Add custom report</a>
+			<a href='#' data-app-click="admin_reports|showReportBuilderDialog" data-batchexec='INVENTORY'>Add custom report</a>
 		</div>
 		
 	</div>

@@ -557,7 +557,7 @@ else	{
 										$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
 				//generates the bulk of the inputs. shared with store. these are admin only inputs.
 				//eventually, these should be moved into updatePayDetails and an admin param should be supported.
-											app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset')); 
+											app.ext.cco.u.updatePayDetails($(this).closest('fieldset')); 
 											});
 										});
 									}
@@ -1927,9 +1927,57 @@ $('.editable',$container).each(function(){
 
 
 
+			orderPrint : function($ele,p)	{
+				var orderID = $ele.closest("[data-orderid]").data('orderid');
+				if(orderID && $ele.data('loadstemplate'))	{
+// SANITY -> browsers didn't like it when the popup was triggered after an ajax request. so instead, we open the popup right away, then populate the content later, followed by the print cmd.
+					var popup = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
+					if(popup)	{
+						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
+						var sdomain, $pop = $(popup.document);
+						if(app.data['adminOrderDetail|'+orderID])	{
+							sdomain = app.data['adminOrderDetail|'+orderID].our.sdomain;
+							}
+						else if(sdomain = $ele.closest("[data-sdomain]").data('sdomain'))	{}
+						else	{} //hhhmm.. no sdomain available. that means no branding.
+						
+						if(sdomain)	{
+							app.calls.appProfileInfo.init({'domain':sdomain},{},'mutable'); //have this handy for any orders with no sdomain.
+							}
+						app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+						app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('body',$pop).html("").anymessage({'message':rd});
+								}
+							else	{
+								var tmpData = {};
+								if(sdomain)        {
+									tmpData = $.extend(true,{},app.data[rd.datapointer],app.data['appProfileInfo|'+sdomain]);
+									}
+								else        {
+									tmpData = app.data[rd.datapointer];
+									}
+								$('body',$pop).html(app.renderFunctions.transmogrify({},$ele.data('loadstemplate'),tmpData));
+								popup.focus();
+								popup.print();
+								popup.close();
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						
+						}
+					else	{
+						//unable to open a popup.
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-loadstemplate ["+$ele.data('loadstemplate')+"] not set on trigger element.","gMessage":true});
+					}
+				},
 /*
 //////////////////   END delegated events \\\\\\\\\\\\\\\\\\
 */
+
 
 
 			"orderCustomerEdit" : function($btn)	{
@@ -1939,10 +1987,6 @@ $('.editable',$container).each(function(){
 						$parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent');
 
-// ** 201320 -> upgraded to use new customer editor. Also added better error checking.
-//					if(orderID)	{
-//						navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+app.data['adminOrderDetail|'+orderID].customer.cid,{'dialog':true});
-//						}
 					if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].customer && app.data['adminOrderDetail|'+orderID].customer.cid)	{
 						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer: '+app.data['adminOrderDetail|'+orderID].customer.cid});
 						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':app.data['adminOrderDetail|'+orderID].customer.cid});
@@ -1954,7 +1998,6 @@ $('.editable',$container).each(function(){
 					});
 				}, //orderCustomerEdit
 				
-
 			"orderItemUpdate" : function($btn)	{
 				var $row = $btn.closest('tr');
 				if($row.data('stid') && $row.data('stid').charAt(0) == '%')	{$btn.hide()} //coupons can't be removed this way.
@@ -2082,8 +2125,6 @@ $('.editable',$container).each(function(){
 					});
 				}, //orderItemAddStructured
 
-
-
 			"orderItemAddBasic" : function($btn)	{
 				$btn.button();
 				$btn.off('click.orderItemAddBasic').on('click.orderItemAddBasic',function(event){
@@ -2113,7 +2154,6 @@ $('.editable',$container).each(function(){
 					});
 				}, //orderItemAddBasic
 
-
 			"orderUpdateCancel" : function($btn)	{
 				$btn.button({text:true, icons: {primary: "ui-icon-circle-arrow-w"}});
 				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(){
@@ -2126,22 +2166,12 @@ $('.editable',$container).each(function(){
 						}
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
-				
-
-
 
 			"orderPrintInvoice" : function($btn){
 				$btn.button();
 				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
 					event.preventDefault();
-					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-					if(orderID)	{
-//in some cases, 'our' contains a profile, but no domain and vice-versa. so both are passed.
-						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'invoice','profile':app.data['adminOrderDetail|'+orderID].our.profile,'domain':app.data['adminOrderDetail|'+orderID].our.sdomain}});
-						}
-					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.orderPrintInvoice, unable to print because order id could not be determined.");
-						}
+					app.ext.admin_orders.e.orderPrint($btn,event);
 					});
 				}, //orderPrintInvoice
 
@@ -2150,13 +2180,7 @@ $('.editable',$container).each(function(){
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
 //					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
-					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-					if(orderID)	{
-						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'packslip','profile':app.data['adminOrderDetail|'+orderID].our.profile,'domain':app.data['adminOrderDetail|'+orderID].our.sdomain}});
-						}
-					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.orderPrintPackSlip, unable to print because order id could not be determined.");
-						}
+					app.ext.admin_orders.e.orderPrint($btn,event);
 					});
 				}, //orderPrintPackSlip
 
@@ -2461,7 +2485,7 @@ else	{
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-app-role='orderUpdatePaymentMethodsContainer']"),
 						CMD, //the command for the cart update macro. set later.
-						errors = (typeof app.ext.store_checkout.validate[formJSON.tender] === 'function') ? app.ext.store_checkout.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
+						errors = (typeof app.ext.cco.validate[formJSON.tender] === 'function') ? app.ext.cco.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
 						app.u.dump('errors'); app.u.dump(errors);
 						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
