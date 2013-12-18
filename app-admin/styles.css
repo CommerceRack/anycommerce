@@ -559,11 +559,11 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 .mhTabsContainer .animator {left: 0px; width: 92px; height: 55px; position: absolute; z-index: 10;}
 
 .mhTabsContainer .setupTab .animIcon	{bottom:0; right:0; height:55px; width:55px;} 
-.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 0px; right: 6px;}
+.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 5px; right: 6px;}
 .mhTabsContainer .productTab .animIcon	{width:45px; height:39px; bottom: 0px; right: 5px;}
 .mhTabsContainer .ordersTab .animIcon	{width:61px; height:42px; bottom: 6px; right: 0px;}
 .mhTabsContainer .crmTab .animIcon	{width:62px; height:36px; bottom: 10px; right: 0px;}
-.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 8px; right: 0px;}
+.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 3px; right: 0px;}
 .mhTabsContainer .reportsTab .animIcon	{width:33px; height:39px; bottom: 10px; right: 6px;}
 .mhTabsContainer .kpiTab .animIcon	{width:41px; height:42px; bottom: 6px; right: 6px;}
 .mhTabsContainer .utilitiesTab .animIcon	{width:53px; height:53px; bottom: 1px; right: 1px;}

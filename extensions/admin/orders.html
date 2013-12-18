@@ -309,7 +309,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div data-bind="var:order(cart/ip_address);format:text; pretext: IP Address: ;"></div>
 		<div data-bind="var:order(our/order_ts); format:epoch2mdy; showtime:1;"></div>
 		<div data-bind='var: order(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
-		<div><b data-bind='var: order(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+		<div><b data-bind='var: order(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
 		<h6 data-bind='var: order(want/po_number); format:text; pretext:PO #: ;'></h6>
 	</hgroup>
 
@@ -330,8 +330,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice">Print Invoice</button>
-	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip">Packing Slip</button>
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice" data-loadstemplate='invoiceTemplate'>Print Invoice</button>
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip" data-loadstemplate='packslipTemplate'>Packing Slip</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderCustomerEdit">Edit Customer</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_customer|appAdminTicketCreateShow" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Create CRM Ticket</button>
 	<div class='floatLeft hide4Native'>
@@ -389,7 +389,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 					<span data-bind='var: cart(sum/bnd_total); format:money; hideZero:true; currencySign: $;'></span>
 				</div>
 				
-				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
 			</fieldset>
 
 			<table class='orderContentsTable' data-app-role='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
@@ -450,7 +450,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <form>
 	<fieldset>
 		<legend>Add Payment</legend>
-		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
+		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
 		<div><label>Amount: <input type='number' size='5' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
 		<div><label>Note: <input type='text' name='note' /></label></div>
 		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
@@ -772,3 +772,264 @@ used in legacy compat mode (and probably full app mode as well)
 
 </form>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+//////////////   FOR PRINTING \\\\\\\\\\\\\\\
+-->
+
+
+<table id='invoiceTemplate' class='orderContentsTable'>
+<tr>
+	<td valign='top' width='50%'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL; b:ffffff;' width='300' height='100' />
+	</td>
+
+	<td valign='top' width='50%' style='text-align:right'>
+<h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
+<h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
+<h4 data-bind='var:order(flow/payment_status); format:paymentStatus; extension:cco;'></h4>
+<h4>
+	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
+	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:cco;"></span>
+</h4>
+<div data-bind='var: order(our/order_ts); format:epoch2mdy; pretext:Created on: ;'></div>
+<div data-bind='var: order(flow/paid_ts); format:epoch2mdy; pretext:Paid on: ; hideZero:true;'></div>
+	</td>
+</tr>
+<tr>
+
+
+	<td valign='top'>
+	<h3>Bill To</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname);format:text;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(bill/company);format:text;'></h5>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+<div data-bind='var:order(bill/email);format:text;'></div>
+<div data-bind='var:order(bill/phone);format:text;'></div>
+</address>
+	</td>
+
+
+	<td valign='top'>
+	<h3>Destination</h3>
+<address>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(ship/company);format:text;'></h5>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+<div data-bind='var:order(ship/email);format:text;'></div>
+<div data-bind='var:order(ship/phone);format:text;'></div>
+</address>
+
+	</td>
+
+
+
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
+	<br />
+	<h2>Order Contents</h2>
+	<table id='cartStuffList' class='listStyleNone lineItemProdlist' width='100%'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Description</th>
+		<th>Qty</th>
+		<th>Price</th>
+		<th align='right'>Ext</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;">
+	</tbody>
+	</table>
+	<br />
+	</td>
+</tr>
+<tr>
+	<td colspan='2' style='text-align:right'>
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+	<div class='orderShipping'>
+	<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+	<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+	</div>
+	
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+	
+	<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+<br />
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+	<div data-bind="var:order(want/order_notes); format:text; before:<h2>Notes</h2>; after:<br>;"></div>
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+<h2 data-bind="var: profile(zoovy:company_name); format:text;"></h2>
+<div data-bind="var: profile(zoovy:address1); format:text;"></div>
+<div data-bind="var: profile(zoovy:address2); format:text;"></div>
+<div>
+	<span data-bind="var: profile(zoovy:city); format:text;"></span> 
+	<span data-bind="var: profile(zoovy:state); format:text; posttext:. ;"></span> 
+	<span data-bind="var: profile(zoovy:zip); format:text;"></span>
+</div>
+<div data-bind="var: profile(zoovy:website_url); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_phone); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_email); format:text;"></div>
+
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+<!--
+Used in 'print invoice' area of management.
+some legacy html tags to make this print friendly.
+-->
+<table>
+	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
+		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+</td>
+		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	</tr>
+</table>
+
+
+
+
+
+<!--
+
+NOTE
+This should get moved to orders when order is taken over 
+
+-->
+
+<table id='packslipTemplate' class='orderContentsTable' width='650'>
+<tr>
+	<td width='50%' valign='top'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;  b:ffffff;' width='200' height='85' />
+	</td>
+	<td width='50%' valign='middle'>
+	<h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2>
+	<div data-bind='var: order(our/orderid); format:text; pretext:Order: ;' class='barcode'></div>
+	</td>
+</tr>
+<tr>
+	<td valign='top'>
+
+<h3>Billing Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname); format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(bill/company);format:text;'></h5>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+</address>
+
+	</td>
+	<td valign='top'>
+
+<h3>Shipping Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(ship/company);format:text;'></h5>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+</address>
+
+	</td>
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
+	<br /><h3>Contents</h3>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
+	</table>
+	
+	</td>
+</tr>
+</table>
+
+
+
+<table>
+<tr id='productListTemplatePackslip' class='padMargBorderBottom'>
+	
+	<td width='1%' nowrap="nowrap" valign='top'><div class='ztable_row_small stid' data-bind='var: product(sku); format:text;'></div></td>
+	
+	<td valign='top'>
+	<div data-bind='var: product(prod_name); format:text; '></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+	</td>
+
+	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
+
+</tr>
+
+</table>

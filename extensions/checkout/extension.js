@@ -923,7 +923,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				else	{$fieldset.hide()}
 				} //chkoutNotes
 
-			}, //panelContent
+			}, //panelDisplayLogic
 	
 //push onto this (orderCreate.checkoutCompletes.push(function(P){});
 //after checkout, these will be iterated thru and executed.
@@ -1971,7 +1971,6 @@ app.model.dispatchThis('passive');
 		renderFormats : {
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
 				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
 				var L = data.value.length;

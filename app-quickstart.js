@@ -1083,7 +1083,6 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //each item in the cart has a UUID. The UUID is used (not the stid) to modify the cart
 			moveItemFromCartToWishlist : function(obj)	{
 				if(obj && obj.uuid && obj.stid)	{
-//					var sku = app.ext.store_cart.u.getSkuByUUID(obj.uuid);
 					//adds item to wishlist. cart removal ONLY occurs if this is successful.
 					$('#modalCartContents').showLoading({'message':'Moving item '+obj.stid+' from your cart to your wishlist'});
 					app.calls.buyerProductListAppendTo.init({sku:obj.stid,'listid':'wishlist'},{'callback':function(rd){
@@ -2254,7 +2253,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
  can't think of a reason not to use the default parentID, but just in case, it can be set.
 */
 			showCartInModal : function(P)	{
-//				app.u.dump("BEGIN store_cart.u.showCartInModal"); app.u.dump(P);
+
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
 					var $modal = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.

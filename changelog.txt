@@ -9,6 +9,7 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 GLOBAL
 	The default storage for data was changed from 'local' to 'session'. This means a refresh will clear most data from storage.
+	store_cart and store_checkout removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
 
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption.
@@ -24,6 +25,9 @@ ADMIN
 	bug - suppliers can be edited again.
 	deprecate - setup > projects
 	enhancements - domain config is now domain and app config. includes projects (these are all related right now).
+	enhancement - updated order create interface.
+	-> uses most recent 1PC extension
+	-> better support for existing customers, including re-order.
 
 
 CONTROLLER

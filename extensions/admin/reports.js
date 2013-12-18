@@ -93,9 +93,8 @@ var admin_reports = function() {
 		
 			showReportsPage : function($target)	{
 				$target.empty();
-				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
-				app.u.handleAppEvents($target);
-				
+				$target.anycontent({'templateID':'reportsPageTemplate',data:{}}).anydelegate();
+				app.u.handleButtons($target);				
 				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
 				$('.toolTip',$target).tooltip();
 				$('.datepicker',$target).datepicker({
@@ -1252,38 +1251,37 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 
 				}, //execAdminKPIDBCollectionUpdate
 			
-			ebayReportView : function($btn)	{
-				$btn.button();
-				$btn.off('ebayReportCreate').on('click.ebayReportCreate',function(event){
-					event.preventDefault();
-					frmObj = $btn.parents('form').serializeJSON(),
-					$content = $('#utilitiesContent')
-					if(frmObj.batchid)	{}
-					else	{delete frmObj.batchid}
-					$content.showLoading();
-					app.ext.admin.calls.adminDataQuery.init(frmObj,{callback: function(rd){
-						$content.hideLoading();
-						if(app.model.responseHasErrors(rd)){
-							app.u.throwMessage(rd);
+			ebayReportViewSubmit : function($ele,p)	{
+				p.preventDefault();
+				var frmObj = $ele.serializeJSON(), $content = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+				
+				if(frmObj.batchid)	{}
+				else	{delete frmObj.batchid}
+				
+				$content.showLoading();
+
+				app.ext.admin.calls.adminDataQuery.init(frmObj,{callback: function(rd){
+					$content.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						app.u.throwMessage(rd);
+						}
+					else	{
+						if(app.data[rd.datapointer]['@ROWS'].length)	{
+							$content.empty();
+							$content.prepend($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all marginBottom alignRight buttonbar').append($("<button \/>")
+								.text('Export to CSV')
+								.click(function(){
+									$('table',$content).toCSV();
+								}).button()));
+							$content.append($("<div \/>",{'id':'ebayListingsReportContainer'}));
+							app.ext.admin_reports.u.drawTable('ebayListingsReportContainer',app.data[rd.datapointer]['@HEADER'],app.data[rd.datapointer]['@ROWS']);
 							}
 						else	{
-							if(app.data[rd.datapointer]['@ROWS'].length)	{
-								$content.empty();
-								$content.prepend($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all marginBottom alignRight buttonbar').append($("<button \/>")
-									.text('Export to CSV')
-									.click(function(){
-										$('table',$content).toCSV();
-									}).button()));
-								$content.append($("<div \/>",{'id':'ebayListingsReportContainer'}));
-								app.ext.admin_reports.u.drawTable('ebayListingsReportContainer',app.data[rd.datapointer]['@HEADER'],app.data[rd.datapointer]['@ROWS']);
-								}
-							else	{
-								app.u.throwMessage("There were no results for your query.");
-								}
+							app.u.throwMessage("There were no results for your query.");
 							}
-						}},'mutable');
-					app.model.dispatchThis('mutable');
-					});
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
 				}, //ebayReportView
 			
 			handleCollectionMenu : function($btn)	{
@@ -1344,33 +1342,19 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 				
 				}, //handleCollectionMenu
 			
-			showSalesReportPeriodInputs : function($ele)	{
-				$ele.off('change.showSalesReportPeriodInputs').on('change.showSalesReportPeriodInputs',function(){
-//hide any visible 'period' input containers. make sure no period-specific inputs are required (so validation can pass)
-					$ele.closest('fieldset').find('.formPeriodRange').hide().find('input, select').each(function(){$(this).attr('required','').removeAttr('required')}); 
-//show the input container desired. make all inputs within required.
-					$ele.closest('fieldset').find('.formPeriodRange-'+$(this).val()).show().effect('highlight',{},1500).find('input,select').each(function(){$(this).attr('required','required')});
-					});
-				},
 
-
-			execAdminReportCreate : function($btn)	{
-				$btn.button();
-				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						var sfo = {'%vars':$form.serializeJSON()}
-						sfo.type = 'REPORT/'+sfo['%vars'].REPORT;
-						sfo.guid = app.u.guidGenerator();
-						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
-							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
-							sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
-							}
-						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+			execAdminReportCreate : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					var sfo = {'%vars':$form.serializeJSON()}
+					sfo.type = 'REPORT/'+sfo['%vars'].REPORT;
+					sfo.guid = app.u.guidGenerator();
+					if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
+						sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
+						sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
 						}
-					else	{} //validateForm handles error display.
-					});
+					app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+					}
 				},
 
 
@@ -1387,6 +1371,11 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 							cmdObj = {
 								'_cmd':'adminBatchJobParametersCreate',
 								'UUID' : app.u.guidGenerator(),
+								'_tag' : {
+									'callback' : 'showMessaging',
+									'jqObj' : $form,
+									'message' : 'Report has been saved. You can create another report or close the dialog to exit.'
+									},
 								'TITLE' : sfo.TITLE,
 								'BATCH_EXEC' : sfo.BATCH_EXEC,
 								'PRIVATE' : sfo.PRIVATE,
@@ -1425,50 +1414,46 @@ app.model.dispatchThis('immutable');
 					});
 				},
 
-			showReportBuilderDialog : function($ele)	{
+			showReportBuilderDialog : function($ele,p)	{
 
-				$ele.off('click.showReportBuilderDialog').on('click.showReportBuilderDialog',function(event){
-					event.preventDefault();
-				
-					if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'INVENTORY')	{
-						var $D = app.ext.admin.i.dialogCreate({
-							'title' : $ele.data('batchexec')+' Report Builder',
-							'templateID' : 'reportBuilderTemplate',
-							'data' : {
-								'BATCH_EXEC':"REPORT/"+$ele.data('batchexec'),
-								SKU : $ele.data('batchexec') == 'SKU' ? 1 : 0, //used to toggle on/off fields that are related just to the sku report type.
-								DETAIL : $ele.data('batchexec') == 'INVENTORY' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
-								}
-							});
+				if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'INVENTORY')	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : $ele.data('batchexec')+' Report Builder',
+						'templateID' : 'reportBuilderTemplate',
+						'data' : {
+							'BATCH_EXEC':"REPORT/"+$ele.data('batchexec'),
+							SKU : $ele.data('batchexec') == 'SKU' ? 1 : 0, //used to toggle on/off fields that are related just to the sku report type.
+							DETAIL : $ele.data('batchexec') == 'INVENTORY' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
+							}
+						});
 
-						app.u.handleButtons($D);
-						app.u.handleCommonPlugins($D);
-						app.u.handleEventDelegation($D);
-						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+					app.u.handleButtons($D);
+					app.u.handleCommonPlugins($D);
+					app.u.handleEventDelegation($D);
+					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 
-						$('.datepicker',$D).datepicker({
-							changeMonth: true,
-							changeYear: true,
-							dateFormat : "@"
-							});
+					$('.datepicker',$D).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						dateFormat : "@"
+						});
 
-						$D.dialog('open');
-		
-						var $picker = $("[data-app-role='pickerContainer']:first",$D);
-						$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
-						$('.applyDatepicker',$picker).datepicker({
-							changeMonth: true,
-							changeYear: true,
-							maxDate : 0,
-							dateFormat : 'yymmdd'
-							});
+					$D.dialog('open');
+	
+					var $picker = $("[data-app-role='pickerContainer']:first",$D);
+					$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+					$('.applyDatepicker',$picker).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						maxDate : 0,
+						dateFormat : 'yymmdd'
+						});
 
-						}
-					else	{
-						// )
-						$('#globalMessaging').anymessage({"message":"In admin_reports.e.showReportBuilderDialog, data-batchexec not set or invalid ["+$ele.data('batchexec')+"] on trigger element.","gMessage":true});
-						}
-					});
+					}
+				else	{
+					// )
+					$('#globalMessaging').anymessage({"message":"In admin_reports.e.showReportBuilderDialog, data-batchexec not set or invalid ["+$ele.data('batchexec')+"] on trigger element.","gMessage":true});
+					}
 				},
 			
 			
