@@ -3534,7 +3534,10 @@ $tmp.empty().remove();
 
 		readLocal : function(key,location)	{
 			location = location || 'local';
-		//	app.u.dump("GETLOCAL: key = "+key);
+			if(location == 'local')	{
+				app.u.dump("get "+location+" data for "+key);
+				}
+
 			if(typeof window[location+'Storage'] == 'undefined')	{
 				return app.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
 				}

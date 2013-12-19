@@ -289,7 +289,7 @@ $target.append("<br \/>");
 //				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
-				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
 				if(Number(sfo.SELECTALL) === 1)	{
 					r = 'all'
 					}
