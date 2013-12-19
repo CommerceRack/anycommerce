@@ -19,9 +19,11 @@
 
 /**** Homepage CSS****/
 .randomList {height:2030px;}
+#sideBarRight {height:0px; overflow:hidden;}
 
 /**** Content Area CSS****/
-#contentArea{width:270px;}
+#contentArea.sideBarRightShow{width:270px;}
+#contentArea.sideBarRightHide{width:270px;}
 .productList {width:180px;}
 .productList > li {height: 240px;margin: 0 15px 15px;}
 }
