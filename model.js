@@ -1065,7 +1065,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				uuid = app.vars.uuid; //have to, at some point, assume app integrity. if the uuid is set in the control, trust it.
 				}
 //in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal so readLocal doesn't have to be executed twice.
-			else if(L = app.storageFunctions.readLocal("uuid"))	{
+			else if(L = app.storageFunctions.readLocal("uuid",'local'))	{
 				L = Math.ceil(L * 1); //round it up (was occassionally get fractions for some odd reason) and treat as number.
 	//			app.u.dump(' -> isSet in local ('+L+' and typof = '+typeof L+')');
 				if($.isEmptyObject(app.q.mutable[L+1]) && $.isEmptyObject(app.q.immutable[L+1]) && $.isEmptyObject(app.q.passive[L+1])){
@@ -1183,7 +1183,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		fetchCartID : function(callback)	{
 //			app.u.dump('BEGIN: model.fetchCartID');
 			var s = false;
-			if(s = app.storageFunctions.readLocal('cartID'))	{
+			if(s = app.storageFunctions.readLocal('cartID','local'))	{
 //				app.u.dump(' -> cartID is set in local from previous ajax session');										 
 				}
 			return s;
@@ -1208,67 +1208,42 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 //				app.u.dump(' -> data already in memory.');
 				r = true;
 				}
-//then check local storage and, if present, update the control object
-			else if (local = app.storageFunctions.readLocal(datapointer))	{
-//				app.u.dump(' -> data in localStorage');
-	//			app.u.dump(local);
-				if(local.ts)	{
-					if((app.u.epochNow() - local.ts) > expires)	{
-						r = false; // data is more than 24 hours old.
+
+
+			if(!r)	{
+				local = app.storageFunctions.readLocal(datapointer,'session');
+				if(!local)	{
+			//		app.u.dump(" -> data not found in local. check session");
+					local = app.storageFunctions.readLocal(datapointer,'local')
+					}
+				if(local)	{
+			//		app.u.dump(" -> data was found in either session or local");		
+					if(local.ts)	{
+						if((app.u.epochNow() - local.ts) > expires)	{
+							//app.u.dump(" -> data is old. do not use it");
+							r = false; // data is more than 24 hours old.
+							}
+						else	{
+							app.data[datapointer] = local;
+							r = true;
+							}
 						}
 					else	{
-						app.data[datapointer] = local;
-						r = true;
+			//hhhmmm... data is in local, but no ts is set. better get new data.
+						r = false;
 						}
 					}
 				else	{
-//					app.u.dump(' -> data is local, but old.');
-	//hhhmmm... data is in local, but no ts is set. better get new data.
-					r = false;
+			//				app.u.dump(' -> data not in memory or local storage.');
 					}
 				}
-			else	{
-				r = false;
-//				app.u.dump(' -> data not in memory or local storage.');
-				}
-
-//set app.globalAjax.checkForLocalJSON to true and the app will look for local copies (not local storage) of the json
-//Not in use at this time. left here for future use though.
-/*			if(r === false && app.globalAjax.checkForLocalJSON)	{
-				if(app.globalAjax.localJSONFolder)	{
-//				app.u.dump(" -> Data not in memory or local.");
-					if(datapointer.indexOf("appProductGet") > -1)	{
-						pid = datapointer.split("|")[1]
-						var result = $.ajax({
-							type: "GET",
-							url: app.globalAjax.localJSONFolder+"/pid="+pid+".json",
-							async: false,
-							dataType:"json"
-							})
-						result.success(function(d){
-							r = true;
-							app.data[datapointer] = d;
-						app.u.dump(" -> d: ");
-						app.u.dump(d);
-							});
-						result.error(function(){
-							r = false;
-							});
-	
-						}
-					}
-				else	{
-					app.u.dump("WARNING! checkForLocalJSON enabled but localJSONFolder not set.");
-					}
-				}
-*/				
 //			app.u.dump("END fetchData for "+datapointer+". r = "+r);
 			return r;
 			}, //fetchData
 	
 	
 	
-	/* functions for extending the controller (adding extensions and templates) */
+/* functions for extending the controller (adding extensions and templates) */
 	
 	
 	
@@ -1759,7 +1734,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
 //				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
-				var r = false, obj = app.storageFunctions.readLocal('session');
+				var r = false, obj = app.storageFunctions.readLocal('session','local');
 //				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
 				if(obj == undefined)	{
 //					app.u.dump(" ^^ Entire 'session' object is empty.");
@@ -1785,7 +1760,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
-					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
+					var sessionData = app.storageFunctions.readLocal('session','local'); //readLocal returns false if no data local.
 //					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
 					sessionData = sessionData || {};
 					if(typeof sessionData[ext] === 'object'){

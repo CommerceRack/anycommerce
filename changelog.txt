@@ -13,7 +13,7 @@ GLOBAL
 	fewer remotely loaded files (more friendly w/ some ff security plugins)
 
 ADMIN
-	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including but not limited to:
+	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
 	- reports
 	- tax config
 	- batch manager
