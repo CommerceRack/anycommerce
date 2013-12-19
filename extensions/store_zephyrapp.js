@@ -89,7 +89,8 @@ var store_zephyrapp = function() {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
-					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
+					$('#contentArea').removeClass('sideBarRightShow');
+					$('#contentArea').addClass('sideBarRightHide');
 				}]);
 				
 				
@@ -97,42 +98,48 @@ var store_zephyrapp = function() {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
-					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
+					$('#contentArea').removeClass('sideBarRightShow');
+					$('#contentArea').addClass('sideBarRightHide');
 				}]);
 				
 				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
+					$('#contentArea').removeClass('sideBarRightHide');
+					$('#contentArea').addClass('sideBarRightShow');
 				}]);	
 				
 				app.rq.push(['templateFunction', 'categoryTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
+					$('#contentArea').removeClass('sideBarRightHide');
+					$('#contentArea').addClass('sideBarRightShow');
 				}]);
 				
 				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
+					$('#contentArea').removeClass('sideBarRightHide');
+					$('#contentArea').addClass('sideBarRightShow');
 				}]);
 				
 				app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
+					$('#contentArea').removeClass('sideBarRightHide');
+					$('#contentArea').addClass('sideBarRightShow');
 				}]);	
 				
 				app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
+					$('#contentArea').removeClass('sideBarRightHide');
+					$('#contentArea').addClass('sideBarRightShow');
 				}]);
 
 				r = true;

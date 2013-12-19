@@ -258,6 +258,14 @@ body {
 #sideBarRight .marginBottom{
 	margin-bottom: 9px;
 }
+#contentArea.sideBarRightShow {
+	width:600px;
+	padding:5px;
+}
+#contentArea.sideBarRightHide {
+	width:790px;
+	padding:5px 0px 5px 5px;
+}
 .productListRecentlyViewed {
 	padding:2px;
 	border:1px solid #CCCCCC;
