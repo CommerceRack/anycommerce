@@ -130,7 +130,7 @@ obj.PATH = .cat.safe.id
 
 		appNavcatDetail : {
 			init : function(path,tagObj,Q)	{
-				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
 				Q = Q || 'mutable';
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -584,7 +584,7 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 				if(catSafeID == '.')	{
 					catsArray = this.getRootCats();
 					}
-				else if(app.model.fetchData(app.data['appNavcatDetail|'+catSafeID]))	{
+				else if(app.model.fetchData('appNavcatDetail|'+catSafeID))	{
 					if(typeof app.data['appNavcatDetail|'+catSafeID]['@subcategories'] == 'object')	{
 						catsArray = app.data['appNavcatDetail|'+catSafeID]['@subcategories'];
 						}
