@@ -102,9 +102,32 @@ var myRIA = function() {
 
 		startMyProgram : {
 			onSuccess : function()	{
-//			app.u.dump("BEGIN myRIA.callback.startMyProgram");
+			app.u.dump("BEGIN myRIA.callback.startMyProgram");
 //			app.u.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			app.u.dump(" -> window.history.pushState: "+typeof window.history.pushState);
+
+//handle the cart. It could be passed in via app.vars.cartID, as a URI param, localStorage or may not exist yet.
+				var cartID;
+				if(app.vars.cartID)	{
+					app.u.dump(" -> cartID was passed in via app.vars.cartID");
+					cartID = app.vars.cartID;
+					delete app.vars.cartID; //leaving this here will just add confusion.
+					}
+				else if(cartID = app.u.getParameterByName('cartID'))	{
+					app.u.dump(' -> cart id was specified on the URI');
+					}
+				else	{}
+
+				if(cartID)	{
+					app.model.addCart2Session(cartID); //this function updates app.vars.carts
+					}
+				else if(cartID = app.model.fetchCartID())	{
+					app.u.dump(" -> cartID obtained from fetchCartID. cartid: "+cartID);
+					}
+				else	{
+					app.u.dump(" -> no cart found. create a new one");
+					app.calls.appCartCreate.init({},'mutable');
+					}
 
 
 $(document.body).anydelegate(); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
@@ -165,25 +188,19 @@ document.write = function(v){
 							});
 						}
 					}},'mutable');
-				app.model.dispatchThis(); //this dispatch needs to occur prior to handleAppInit being executed.
 
 				var page = app.ext.myRIA.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
-
-//get some info to have handy for when needed (cart, profile, etc)
-				
 
 				if(page.pageType == 'cart' || page.pageType == 'checkout')	{
 //if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
 					}
-				else	{
-					app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'passive');
+				else if(cartID)	{
+					app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'mutable');
 					}
+				else	{} //no cart to go get. cartCreate already been added to Q by now.
 
-				app.model.dispatchThis('passive');
 
-//adds submit functionality to search form. keeps dom clean to do it here.
-
-				app.ext.myRIA.vars.mcSetInterval = setInterval(function(){app.ext.myRIA.u.handleMinicartUpdate({'datapointer':'cartDetail'})},4000); //make sure minicart stays up to date.
+				app.model.dispatchThis('mutable');
 				
 				window.showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
 				window.quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
@@ -926,7 +943,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
 // * changed from 'empty' to showLoading because empty could be a heavy operation if mainContentArea has a lot of content.
 							$('body').showLoading({'message':'Transferring to secure login'});							
-							var SSLlocation = app.vars.secureURL+"?cartID="+app.vars.cartID;
+							var SSLlocation = app.vars.secureURL+"?cartID="+app.model.fetchCartID();
 							SSLlocation += "#customer?show="+infoObj.show
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation; //redir to secure url
@@ -948,7 +965,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 // * use showloading instead of .html (which could be heavy)
 //							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
-							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"&_session="+app.vars._session+"#checkout?show=checkout";
+							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+app.model.fetchCartID()+"&_session="+app.vars._session+"#checkout?show=checkout";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
@@ -959,7 +976,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 								$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
 								$('#mainContentArea').append($checkoutContainer );
 								}
-							app.ext.orderCreate.a.startCheckout($checkoutContainer);
+							app.ext.orderCreate.a.startCheckout($checkoutContainer,app.model.fetchCartID());
 							}
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
@@ -1065,8 +1082,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								app.calls.cartItemAppend.init(obj,{});
 								}
 							});
-						app.model.destroy('cartDetail',_tag);
-						app.calls.cartDetail.init({},'immutable');
+						app.calls.refreshCart.init({},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -1092,7 +1108,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 							}
 						else	{
 							//by now, item has been added to wishlist. So remove it from the cart.
-							app.model.destroy('cartDetail');
+							
 							app.calls.cartItemUpdate.init(obj.stid,0,{callback:function(rd){
 								$('#modalCartContents').hideLoading();
 								if(app.model.responseHasErrors(rd)){
@@ -1103,7 +1119,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 									$('#cartMessaging').anymessage({'message':'Thank you. '+obj.stid+' has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
 									}
 								}});
-							app.calls.cartDetail.init({'callback':'handleCart','templateID':'cartTemplate','extension':'myRIA','parentID':'modalCartContents'},'immutable');
+							app.calls.refreshCart.init({'callback':'handleCart','templateID':'cartTemplate','extension':'myRIA','parentID':'modalCartContents'},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						}},'immutable'); 
@@ -1147,8 +1163,8 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //use this when linking from one store to another when you want to share the cart.
 			linkToStore : function(url,type){
 
-				if(type == 'vstore') {window.open(url+'c='+app.vars.cartID+'/');}
-				else if(type == 'app') {window.open(url+'?cartID='+app.vars.cartID+'&_session='+app.vars._session);}
+				if(type == 'vstore') {window.open(url+'c='+app.model.fetchCartID()+'/');}
+				else if(type == 'app') {window.open(url+'?cartID='+app.model.fetchCartID()+'&_session='+app.vars._session);}
 				else {
 					$('#globalMessage').anymessage({'message':'unknown type passed into myRIA.a.linkToStore.','gMessage':true});
 					}
@@ -3086,9 +3102,9 @@ else	{
 							}
 						else	{
 							var orderList = app.data[rd.datapointer].order['@ITEMS'],
-							L = orderList.length;
+							L = orderList.length, cartID = app.model.fetchCartID()
 							for(var i = 0; i < L; i += 1)	{
-								var obj = {'sku':orderList[i].product,'qty':orderList[i].qty}
+								var obj = {'sku':orderList[i].product,'qty':orderList[i].qty,'_cartid':cartID}
 								if(!$.isEmptyObject(orderList[i]['%options']))	{
 									var variations = orderList[i]['%options'];
 									obj['%variations'] = {};
@@ -3097,8 +3113,7 @@ else	{
 										}
 									}
 								app.calls.cartItemAppend.init(obj,{},'immutable');
-								app.model.destroy('cartDetail');
-								app.calls.cartDetail.init({'callback':function(rd){
+								app.calls.refreshCart.init({'callback':function(rd){
 									showContent('cart');
 									}},'immutable');
 								app.model.dispatchThis('immutable');
@@ -3133,8 +3148,7 @@ else	{
 				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
 				if(cartObj)	{
 					app.calls.cartItemAppend.init(cartObj,{},'immutable');
-					app.model.destroy('cartDetail');
-					app.calls.cartDetail.init({'callback':function(rd){
+					app.calls.refreshCart.init({'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}

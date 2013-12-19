@@ -282,10 +282,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 //used as the uuid on the 'parent' request (the one containing the pipelines).
 //set this early so that it can be added to each request in the Q as pipeUUID for error handling.
 //also used for ajax.requests[QID][UUID] which stores the ajax request itself (and is used for aborting later, if need be).
-			var pipeUUID = app.model.fetchUUID(); 			
-			
-//			app.u.dump(' -> Focus Q = '+QID);
-//			app.u.dump(app.q[QID]);
+			var pipeUUID = app.model.fetchUUID();
 
 //by doing our filter first, we can see if there is even anything to BE dispatched before checking for conflicts.
 //this decreases the likelyhood well set a timeout when not needed.
@@ -341,7 +338,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 		contentType : "text/json",
 		dataType:"json",
 //ok to pass admin vars on non-admin session. They'll be ignored.
-		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cartid": app.vars.cartID,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
+		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cartid": app.model.fetchCartID(),"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
@@ -574,7 +571,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //this will remove data from both local storage, session storage AND memory.
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
 		destroy : function(key)	{
-//			app.u.dump(" -> destroying "+key);
+			app.u.dump(" -> destroying "+key);
 			if(app.data[key])	{
 				delete app.data[key];
 				}
@@ -724,8 +721,6 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					}
 				else	{
 					this.writeToMemoryAndLocal(responseData);
-//					app.data[datapointer] = responseData;
-//					app.storageFunctions.writeLocal(datapointer,responseData); //save to local storage, if feature is available.
 					}
 				}
 			else	{
@@ -893,10 +888,8 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 //formerly newSession
 		handleResponse_appCartCreate : function(responseData)	{
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
-//save session id locally to maintain session id throughout user experience.	
-			app.storageFunctions.writeLocal('cartID',responseData['_cartid']);
-//			app.storageFunctions.writeLocal(app.vars['username']+"-cartid",responseData['_cartid']);  
-			app.vars.cartID = responseData['_cartid']; //saved to object as well for easy access.
+//save session id locally to maintain session id throughout user experience.
+			this.addCart2Session(responseData['_cartid']);
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			app.u.dump("cartID = "+responseData['_cartid']);
 			return responseData['_cartid'];
@@ -916,7 +909,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			if(responseData['_rtag'] && responseData['_rtag'].forceError == 1)	{
 				r = true;
 				responseData.errid = "MVC-M-000";
-				responseData.errtype = "intendedErr";
+				responseData.errtype = "debug";
 				responseData.errmsg = "forceError is set to 1 on _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
 //			app.u.dump(responseData);
 				}
@@ -931,8 +924,16 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find product "+responseData.pid+". Product may no longer exist. ";
 							} //db:id will not be set if invalid sku was passed.
 						break;
+//most of the time, a successful response w/out errors is taken as a success. however, due to the nature of appCartCreate, we verify we have what we need.
+					case 'appCartCreate':
+						if(!responseData._cartid)	{
+							r = true;
+							responseData['errid'] = "MVC-M-150";
+							responseData['errtype'] = "apperr"; 
+							responseData['errmsg'] = "appCartCreate response did not contain a _cartid.";
+							}
+						break;
 					case 'adminEBAYProfileDetail':
-//					app.u.dump("GOT HERE!@!!!!!!!!!!!!!!!"); app.u.dump(responseData);
 						if(!responseData['%PROFILE'] || !responseData['%PROFILE'].PROFILE)	{
 							r = true;
 							responseData['errid'] = "MVC-M-300";
@@ -1016,7 +1017,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			
 			if(app.vars.uuid)	{
 	//			app.u.dump(' -> isSet in app. use it.');
-				uuid = app.vars.uuid; //have to, at some point, assume app integrity. if the uuid is set in the control, trust it.
+				uuid = app.vars.uuid; //if the uuid is set in the control, trust it.
 				}
 //in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal so readLocal doesn't have to be executed twice.
 			else if(L = app.storageFunctions.readLocal("uuid",'local'))	{
@@ -1035,41 +1036,27 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 					uuid = 999;
 					}
 				else	{
-
-	//				uuid = math.max(model.getLastIndex(app.q.mutable),model.getLastIndex(app.q.immutable))  // 'math' not univerally supported.
 //get last request in both q's and determine the larger uuid for use.
-//  #### improve this.
-					var lastImutableUUID = app.model.getLastIndex(app.q.immutable);
-					var lastMutableUUID = app.model.getLastIndex(app.q.mutable);
-					var lastPassiveUUID = app.model.getLastIndex(app.q.passive);
-					uuid = lastMutableUUID >lastImutableUUID ? lastMutableUUID : lastImutableUUID;
-					uuid = uuid > lastPassiveUUID ? uuid : lastPassiveUUID;
+					uuid = Math.max(app.model.getLastIndex(app.q.immutable),app.model.getLastIndex(app.q.mutable),app.model.getLastIndex(app.q.passive));
 					}
 				}
 	
 			uuid += 1;
 			app.vars.uuid = uuid;
 			app.storageFunctions.writeLocal('uuid',uuid); //save it locally.
-	//		app.u.dump('//END fetchUUID. uuid = '+uuid);
+//			app.u.dump('//END fetchUUID. uuid = '+uuid);
 			return uuid;
 			}, //fetchUUID
 	
-//currently, only three q's are present.  if more q's are added, this will need to be expanded. ###
-// ### loop through app.q and get value that way.
+// pretty straightforward. pass in a uuid and this will return the QID.
 		whichQAmIFrom : function(uuid)	{
-			var r;
-			if(typeof app.q.mutable[uuid] !== 'undefined')
-				r = 'mutable'
-			else if(typeof app.q.immutable[uuid] !== 'undefined')
-				r = 'immutable'
-			else if(typeof app.q.passive[uuid] !== 'undefined')
-				r = 'passive'
-			else	{
-//not found in a matching q.  odd.
-				r = false;
+			var r = false;
+			for(var index in app.q)	{
+				if(app.q[index][uuid])	{
+					r = index;
+					break;
+					}
 				}
-
-//			app.u.dump('whichQAmIFrom = '+r+' and uuid = '+uuid );
 			return r;
 			}, //whichQAmIFrom
 
@@ -1087,7 +1074,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		checkForPipeUUIDInQID : function(QID,pipeUUID)	{
 			var r = false;
 			for(var index in app.q[QID])	{
-				if(app.q[QID][index].tag &&app.q[QID][index].tag['pipeUUID'] == pipeUUID)	{
+				if(app.q[QID][index].tag && app.q[QID][index].tag['pipeUUID'] == pipeUUID)	{
 					r = true;
 					break; //end once we have a match. pipeuuid is specific to one Q
 					}
@@ -1098,11 +1085,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		getQIDFromPipeUUID : function(pipeUUID){
 			app.u.dump("BEGIN model.getQIDFromPipeUUID ["+pipeUUID+"]");
 			var r = false; //what is returned.
-			if(this.checkForPipeUUIDInQID('immutable',pipeUUID))	{r = 'immutable'}
-			else if(this.checkForPipeUUIDInQID('mutable',pipeUUID))	{r = 'mutable'}
-			else if(this.checkForPipeUUIDInQID('passive',pipeUUID))	{r = 'passive'}
-			else	{
-				//pipeUUID is not in any known Q
+			for(var index in app.q)	{
+				if(this.checkForPipeUUIDInQID(index,pipeUUID))	{
+					r = index;
+					break; //exit early once a match is found.
+					}
 				}
 			app.u.dump(" -> pipeUUID: "+pipeUUID+" and qid: "+r);
 			return r;
@@ -1110,7 +1097,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 
 
 //will get the _tag object from this request in it's original q. allows for _tag to NOT be pased in request, making for smaller requests.
-//this will (eventually) allow for the callback itself to be an anonymous function.
 		getRequestTag : function(uuid,qid){
 			var r = false; //what is retured. Either false (unable to get tag) or the tag object itself.
 			if(uuid)	{
@@ -1132,14 +1118,38 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return r;
 			},
 	
-	//gets session id. The session id is used a ton.  It is saved to app.vars.cartID as well as a cookie and, if supported, localStorage.
-	//Check to see if it's already set. If not, request a new session via ajax.
-		fetchCartID : function(callback)	{
+// ### TODO -> check to see if the cartID is already in carts. if so, remove old and add new id to top.
+// do we want a 'bringCartIntoFocus', which would move a cart id to the top? wait and see if it's necessary.
+		addCart2Session : function(cartID)	{
+			var carts = app.vars.carts || this.dpsGet('app','carts') || [];
+//each cart id should only be in carts once. if the cart id is already present, remove it.
+			var index = $.inArray(cartID,carts);
+			if(index >= 0)	{
+				carts.splice(index,1);
+				}
+			carts.unshift(cartID); //new carts get put on top. that way [0] is always the latest cart.
+			app.vars.carts = carts;
+			this.dpsSet('app','carts',carts); //update localStorage.
+			},
+
+//always use this to remove a cart from a session. That way all the storage containers are empty
+		removeCartFromSession : function(cartID)	{
+			var carts = app.vars.carts || this.dpsGet('app','carts') || [];
+			carts.splice( $.inArray(cartID, carts), 1 );
+			app.model.destroy('cartDetail|'+cartID);
+			this.dpsSet('app','carts',carts); //update localStorage.
+			},
+
+//gets the cart id.  carts are stored as an array.  the latest cart is always put on top of the array, which is what this returns.
+//Check to see if it's already set. If not, request a new session via ajax.
+		fetchCartID : function()	{
 //			app.u.dump('BEGIN: model.fetchCartID');
 			var s = false;
-			if(s = app.storageFunctions.readLocal('cartID','local'))	{
-//				app.u.dump(' -> cartID is set in local from previous ajax session');										 
+			var carts = app.vars.carts || this.dpsGet('app','carts') || []; //will return an array.
+			if(carts.length)	{
+				s = carts[0]; //most recent carts are always added to the top of the stack.
 				}
+			else	{}
 			return s;
 			}, //fetchCartID
 	
@@ -1167,11 +1177,11 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			if(!r)	{
 				local = app.storageFunctions.readLocal(datapointer,'session');
 				if(!local)	{
-			//		app.u.dump(" -> data not found in local. check session");
+//					app.u.dump(" -> data not found in local. check session");
 					local = app.storageFunctions.readLocal(datapointer,'local')
 					}
 				if(local)	{
-			//		app.u.dump(" -> data was found in either session or local");		
+//					app.u.dump(" -> data was found in either session or local");		
 					if(local.ts)	{
 						if((app.u.epochNow() - local.ts) > expires)	{
 							//app.u.dump(" -> data is old. do not use it");

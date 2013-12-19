@@ -54,13 +54,19 @@ jQuery.extend(zController.prototype, {
 		app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
+		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
 
 		app.handleSession(); //get existing session or create a new one.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
-			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
-			localStorage.clear();
+			if($.support.localStorage)	{
+				app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE.");
+				window.localStorage.clear();
+				}
+			else	{
+				app.u.dump("URI param flush is true but localStorage not supported.");
+				}
 			}
 		
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
@@ -107,8 +113,8 @@ app.templates holds a copy of each of the templates declared in an extension but
 		if(app.vars.thisSessionIsAdmin)	{
 			app.handleAdminVars(); //needs to be late because it'll use some vars set above.
 			}
-		app.onReady();
-
+		app.model.addExtensions(app.vars.extensions);
+		app.u.handleThirdPartyInits();
 		}, //initialize
 
 //will load _session from localStorage or create a new one.
@@ -164,47 +170,7 @@ app.templates holds a copy of each of the templates declared in an extension but
 		
 		}, //handleAdminVars
 
-	onReady : function()	{
-		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
-		if(app.vars.thisSessionIsAdmin)	{
-			app.model.addExtensions(app.vars.extensions);
-			}
-		else if(app.vars.cartID)	{
-//			app.u.dump(" -> app.vars.cartID set. verify.");
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
-			app.model.dispatchThis('immutable');
-			}
-//if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
-		else if(app.u.isSet(app.u.getParameterByName('cartID')))	{
-//			app.u.dump(" -> cartID from URI used.");
-			app.vars.cartID = app.u.getParameterByName('cartID');
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
-			app.model.dispatchThis('immutable');
-			}
-//check localStorage
-		else if(app.model.fetchCartID())	{
-//			app.u.dump(" -> session retrieved from localstorage..");
-			app.vars.cartID = app.model.fetchCartID();
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
-			app.model.dispatchThis('immutable');
-			}
-		else	{
-//			app.u.dump(" -> go get a new cart id.");
-			app.calls.appCartCreate.init({'callback':'handleNewSession'},'immutable');
-			app.model.dispatchThis('immutable');
-			}
-//		this.u.dump(" -> finished onready except thirdPartyInits");
-//if third party inits are not done before extensions, the extensions can't use any vars loaded by third parties. yuck. would rather load our code first.
-// -> EX: username from FB and OPC.
-		app.u.handleThirdPartyInits();
-//		this.u.dump(" -> finished thirdPartyInits");
-		}, //onReady
+
 					// //////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\		
 
 
@@ -273,12 +239,12 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 			},//appBuyerPasswordRecover
 
 		appCartCreate : {
-			init : function(_tag)	{
-				this.dispatch(_tag); 
+			init : function(_tag,Q)	{
+				this.dispatch(_tag,Q); 
 				return 1;
 				},
-			dispatch : function(_tag)	{
-				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},'immutable');
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},Q || 'immutable');
 				}
 			},//appCartCreate
 
@@ -514,7 +480,7 @@ see jquery/api webdoc for required/optional param
 				},
 			dispatch : function(partner,_tag,Q)	{
 //note - was using FB['_session'].access_token pre v-1202. don't know how long it wasn't working, but now using _authRepsonse.accessToken
-				app.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':partner,'appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':app.vars.cartID,"_tag":_tag},Q || 'immutable');
+				app.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':partner,'appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':app.model.fetchCartID(),"_tag":_tag},Q || 'immutable');
 				}
 			}, //facebook			
 			
@@ -749,7 +715,7 @@ see jquery/api webdoc for required/optional param
 				app.model.destroy('buyerAddressList');
 				app.model.destroy('appPaymentMethods');
 				app.model.destroy('whoAmI');
-				app.model.destroy('cartDetail');
+				app.model.destroy('cartDetail|'+app.model.fetchCartID());
 				this.dispatch(_tag);
 				return 1;
 				},
@@ -791,36 +757,47 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //canIUse
 
-//used to get a clean copy of the cart. ignores local/memory. used for logout.
+//WILL look in local
 		cartDetail : {
-			init : function(_tag,Q)	{
+			init : function(cartID,_tag,Q)	{
+				app.u.dump('BEGIN calls.cartDetail.init');
 				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "cartDetail";
-				if(app.model.fetchData(_tag.datapointer))	{
-					app.u.handleCallback(_tag);
+				if(cartID)	{
+					app.u.dump(' -> cartID is present');
+					_tag = _tag || {};
+					_tag.datapointer = "cartDetail|"+cartID;
+					app.u.dump(" -> app.model.fetchData(_tag.datapointer): "+app.model.fetchData(_tag.datapointer));
+					if(app.model.fetchData(_tag.datapointer))	{
+						app.u.dump(' -> cart is available locally');
+						app.u.handleCallback(_tag);
+						}
+					else	{
+						r = 1;
+						this.dispatch(cartID,_tag,Q);
+						}
 					}
 				else	{
-					r = 1;
-					this.dispatch(_tag,Q);
+					$('#globalMessaging').anymessage({"message":"In calls.cartDetail, no cartID specified.","gMessage":true});
 					}
 				return r;
 				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": _tag},Q || 'mutable');
+			dispatch : function(cartID,_tag,Q)	{
+				app.u.dump(' -> into dispatch() code');
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_cart":cartID,"_tag": _tag},Q || 'mutable');
 				} 
 			}, // refreshCart removed comma from here line 383
 
 		cartItemAppend : {
 			init : function(obj,_tag)	{
 				var r = 0;
-				if(obj && obj.sku && obj.qty)	{
+				if(obj && obj.sku && obj.qty && obj._cartid)	{
 					obj.uuid = app.u.guidGenerator();
 					this.dispatch(obj,_tag);
 					r = 1;
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'Qty or SKU left blank in cartItemAppend'});
+					$('#globalMessaging').anymessage({'message':'Qty ['+obj.qty+'] or SKU ['+obj.sku+'] or _cartid ['+obj._cartid+'] left blank in cartItemAppend.'});
+					app.u.dump(" -> cartItemAppend obj param follows:"); app.u.dump(obj);
 					}
 				
 				return r;
@@ -904,12 +881,15 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //ping
 
-//used to get a clean copy of the cart. ignores local/memory. used for logout.
+//used to get a clean copy of the cart. ignores local/memory. used in various places, like checkout. intended to work specifically with the 'active' cart.
 //this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. ### search and destroy when convenient.
 		refreshCart : {
 			init : function(_tag,Q)	{
-				app.model.destroy('cartDetail');
-				app.calls.cartDetail.init(_tag,Q);
+				var cartID = app.model.fetchCartID();
+				if(cartID)	{
+					app.model.destroy('cartDetail|'+cartID);
+					app.calls.cartDetail.init(cartID,_tag,Q);
+					}
 				}
 			}, // refreshCart
 
@@ -994,21 +974,6 @@ app.u.throwMessage(responseData); is the default error handler.
 					}
 				}
 			},
-
-
-		handleNewSession : {
-//app.vars.cartID is set in the method. no need to set it here.
-//use app.vars.cartID if you need it in the onSuccess.
-//having a callback does allow for behavioral changes (update new session with old cart contents which may still be available.
-			onSuccess : function(_rtag)	{
-//				app.u.dump('BEGIN app.callbacks.handleNewSession.onSuccess');
-// if there are any  extensions(and most likely there will be) add then to the controller.
-// This is done here because a valid cart id is required.
-				app.model.addExtensions(app.vars.extensions);
-				}
-			},//handleNewSession
-
-
 
 
 	
@@ -1724,10 +1689,10 @@ AUTHENTICATION/USER
 			logBuyerOut : function()	{
 	//kill all the memory and localStorage vars used in determineAuthentication
 				app.model.destroy('appBuyerLogin'); //nuke this so app doesn't fetch it to re-authenticate session.
-				app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
+				app.model.destroy('cartDetail|'+app.model.fetchCartID()); //need the cart object to update again w/out customer details.
 				app.model.destroy('whoAmI'); //need this nuked too.
 				app.vars.cid = null; //used in soft-auth.
-				localStorage.clear(); //clear everything from localStorage.
+				window.localStorage.clear(); //clear everything from localStorage.
 				
 				app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 				app.calls.refreshCart.init({},'immutable');
@@ -1755,7 +1720,7 @@ AUTHENTICATION/USER
 //this could easily become smarter to take into account the timestamp of when the session was authenticated.
 			
 			determineAuthentication : function(){
-				var r = 'none';
+				var r = 'none', cartID = app.model.fetchCartID();
 				if(this.thisIsAnAdminSession())	{r = 'admin'}
 				else if(app.u.buyerIsAuthenticated())	{r = 'authenticated'}
 	//need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
@@ -1764,7 +1729,7 @@ AUTHENTICATION/USER
 					r = 'thirdPartyGuest';
 	//					app.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
+				else if(app.model.fetchData('cartDetail|'+cartID) && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].bill && app.data['cartDetail|'+cartID].bill.email)	{
 					r = 'guest';
 					}
 				else	{
@@ -1824,13 +1789,13 @@ AUTHENTICATION/USER
 //later, this could be expanded to include a facebook id.
 			getUsernameFromCart : function()	{
 	//			app.u.dump('BEGIN u.getUsernameFromCart');
-				var r = false;
-				if(app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
-					r = app.data.cartDetail.customer.login;
+				var r = false, cartID = app.model.fetchCartID();
+				if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].customer && app.u.isSet(app.data['cartDetail|'+cartID].customer.login))	{
+					r = app.data['cartDetail|'+cartID].customer.login;
 	//				app.u.dump(' -> login was set. email = '+r);
 					}
-				else if(app.data.cartDetail && app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
-					r = app.data.cartDetail.bill.email;
+				else if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].bill && app.u.isSet(app.data['cartDetail|'+cartID].bill.email)){
+					r = app.data['cartDetail|'+cartID].bill.email;
 	//				app.u.dump(' -> bill/email was set. email = '+r);
 					}
 				else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
@@ -2599,19 +2564,19 @@ later, it will handle other third party plugins as well.
 //will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
 //currently, there is only a google field for disabling their checkout, but this is likely to change.
-		which3PCAreAvailable :	function(){
+		which3PCAreAvailable :	function(cartID){
 //				app.u.dump("BEGIN control.u.which3PCAreAvailable");
-			var obj = {};
-			obj.paypalec = true;
-			obj.amazonpayment = true;
-			obj.googlecheckout = true;
-			
-			var L = app.data.cartDetail['@ITEMS'].length;
-			for(var i = 0; i < L; i += 1)	{
-				if(app.data.cartDetail['@ITEMS'][i]['%attribs'] && app.data.cartDetail['@ITEMS'][i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
-				if(app.data.cartDetail['@ITEMS'][i]['%attribs'] && app.data.cartDetail['@ITEMS'][i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
-				}
+			var obj = {
+				paypalec : true,
+				amazonpayment : true,
+				googlecheckout : true
+				};
 
+			var items = app.data['cartDetail|'+cartID]['@ITEMS'], L = items.length;
+			for(var i = 0; i < L; i += 1)	{
+				if(items[i]['%attribs'] && items[i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
+				if(items[i]['%attribs'] && items[i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
+				}
 			return obj;
 			},
 
@@ -3480,7 +3445,9 @@ $tmp.empty().remove();
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
-//			app.u.dump("WRITELOCAL: Key = "+key+" and location: "+location);
+//			if(location == 'local')	{
+//				app.u.dump(" -> write ["+location+"] data for "+key); app.u.dump(key);
+//				}
 			var r = false;
 
 			if($.support[location+'Storage'])	{
@@ -3512,6 +3479,7 @@ $tmp.empty().remove();
 			}, //writeLocal
 
 		nukeLocal : function(key,location)	{
+			app.u.dump("BEGIN nukeLocal for "+key);
 			if($.support[location+'Storage'])	{
 				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
 					try	{
@@ -3526,9 +3494,9 @@ $tmp.empty().remove();
 
 		readLocal : function(key,location)	{
 			location = location || 'local';
-			if(location == 'local')	{
-				app.u.dump(" -> get ["+location+"] data for "+key); app.u.dump(key);
-				}
+//			if(location == 'local')	{
+//				app.u.dump(" -> get ["+location+"] data for "+key); app.u.dump(key);
+//				}
 
 			if(typeof window[location+'Storage'] == 'undefined')	{
 				return app.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
