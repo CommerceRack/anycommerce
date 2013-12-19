@@ -162,6 +162,7 @@ var admin_user = function() {
 
 					var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'userManagerUserCreateUpdateTemplate',
+						'showLoading' : false,
 						'panelID' : 'user_'+userID,
 						'header' : 'Edit User: '+luser
 						});

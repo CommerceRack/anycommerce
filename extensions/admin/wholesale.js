@@ -571,7 +571,7 @@ else	{
 								panelObj.templateID = 'warehouseAddUpdateTemplate';
 								panelObj.header = 'Edit Warehouse: '+data.geo;
 								}
-							
+							panelObj.showLoading = false;
 							var $panel = app.ext.admin.i.DMIPanelOpen($btn,panelObj);
 	
 							if(data._object == 'GEO')	{

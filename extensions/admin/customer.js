@@ -923,7 +923,7 @@ else	{
 						'templateID' : 'crmManagerTicketDetailTemplate',
 						'panelID' : 'crmDetail_'+tktCode,
 						'header' : 'Edit Ticket: '+tktCode,
-						'showLoading':true
+						'showLoading':false
 						}).attr('data-tktcode',tktCode);
 					app.u.handleButtons($panel);
 					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktCode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+tktCode,'translateOnly':true}},'mutable');						
