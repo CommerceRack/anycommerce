@@ -349,7 +349,20 @@ body {
 	float:left;
 	padding:5px;
 }
-
+h2 {
+    color: #FF7F00;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    margin: 0;
+}
+h3 {
+    color: #3D1F00;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 9pt;
+    font-weight: bold;
+    margin: 0;
+}
 /***** Main Content Area CSS End *****/
 
 
@@ -551,6 +564,22 @@ body {
     font-size: 10px;
     text-align: center;
 	padding: 2px;
+}
+.txt_border_box {
+    border: 1px double #BBBBBB;
+    font-size: 0.9em;
+    margin-bottom: 6px;
+    padding: 3px;
+    text-align: justify;
+    width: auto;
+}
+.ztxt {
+    color: #000000;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 9pt;
+}
+.ztxt p {
+	margin:0px;
 }
 /***** Category Page CSS End *****/
 
