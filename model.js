@@ -162,15 +162,14 @@ function zoovyModel() {
 				app.u.dump("QID: "); app.u.dump(QID);
 				}
 			else	{
-//** 201324 -> 	there was an issue w/ a serialized form object being added directly to the Q (as opposed to going through a .call) and then the form being re-submitted after a correction
-//				but the original dispatch was getting resent instead of the updated command. extend creates a duplicate w/ no pointers. solved the issue.
+// there was an issue w/ a serialized form object being added directly to the Q (as opposed to going through a .call) and then the form being re-submitted after a correction
+// but the original dispatch was getting resent instead of the updated command. extend creates a duplicate w/ no pointers. solved the issue.
 // full explanation here: https://github.com/zoovy/AnyCommerce-Development/commit/41396eb5546621c0b31e3273ecc314e686daf4bc
 				var tmp = $.extend(true,{},dispatch); 
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				tmp["_uuid"] = uuid;
 				tmp._tag = tmp._tag || {}; //the following line will error if tag is not an object. define as such if not already defined.
 				tmp['_tag']["status"] = 'queued';
-//				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = tmp;
 				r = uuid;
 //				app.storageFunctions.writeLocal("response_"+uuid, JSON.stringify(tmp),'session'); //save a copy of each dispatch to sessionStorage for entymologist
@@ -668,6 +667,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					app.data[datapointer] = obj4Save;
 					}				
 				if(this.thisGetsSaved2Local(responseData['_rcmd'])){
+					app.u.dump(" -> passed check for save local: "+responseData['_rcmd']);
 					app.storageFunctions.writeLocal(datapointer,obj4Save,'local'); //save to localStorage, if feature is available.
 					}
 				if(this.thisGetsSaved2Session(responseData['_rcmd']))	{
@@ -1677,48 +1677,7 @@ cmdObj = {
 if(!$.isEmptyObject(data)) {cmdObj['%vars'] = data} //only pass vars if present. would be a form post.
 app.model.addDispatchToQ(cmdObj,'mutable');
 app.model.dispatchThis('mutable');
-
-/*
-			app.ext.admin.vars.uiRequest = $.ajax({
-				"url":URL,
-				"data":data,
-				"type":"POST", //changing to POST causes the URL params to get dropped, which means we may not get the right page (verb). so take that into account if changing.
-				"dataType": 'json',
-				error : function(a,b){
-					if(a.statusText == "abort")	{
-						app.u.dump("UI request aborted. It would destroy such life in favor of its new matrix."); //most likely, this abort happened intentionally because another action was requested (a link was clicked)
-						}
-					else	{
-						$('#'+app.ext.admin.u.getTabFromPath(pathParts[0])+'Content').empty(); ///empty out loading div and any template placeholder.
-
-//make sure a callback is defined.
-				var msgDetails = "A request failure occured. Please try again or if the error persists, please report the following information: <ul>";
-				msgDetails += "<li>issue: API request failure (likely an ISE)<\/li>";
-				msgDetails += "<li>uri: "+document.location+"<\/li>";
-				msgDetails += "<li>domain: "+app.vars.domain+"<\/li>";
-				msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
-				msgDetails += "<\/ul>";
-				
-				app.u.throwMessage({'errid':'ISE','errmsg':msgDetails,'errtype':'ISE','uiIcon':'alert','uiClass':'error'});
-
-
-						if(typeof viewObj.error == 'function'){viewObj.error()}
-						}
-					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
-					},
-				success : function(data){
-					app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
-
-					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
-					
-					//here because builder > edit outputs a bunch of JS in the html returned. this is to compensate. may be able to remove later. ###
-//					window.loadElement = app.ext.admin.a.loadElement; -> commented out 20121114 20:07
-					
-				},
-				beforeSend: app.model.setHeader //uses headers to pass authentication info to keep them  off the uri.
-				});
-//			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
-	*/		},
+		},
 
 
 /*

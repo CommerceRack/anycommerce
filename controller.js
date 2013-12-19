@@ -47,6 +47,7 @@ jQuery.extend(zController.prototype, {
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nested functions are preserved. If duplicates, 'this' will override P.
 		app.model = zoovyModel(); // will return model as object. so references are app.model.dispatchThis et all.
+		app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
 
 		app.vars = app.vars || {};
 		app.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
@@ -55,7 +56,6 @@ jQuery.extend(zController.prototype, {
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
 		app.handleSession(); //get existing session or create a new one.
-		app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
@@ -67,33 +67,25 @@ jQuery.extend(zController.prototype, {
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
 			app.u.dump(" -> zGlobals are an object")
-			app.vars.profile = zGlobals.appSettings.profile.toUpperCase();
-			app.vars.username = zGlobals.appSettings.username.toLowerCase();
+			app.vars.username = zGlobals.appSettings.username.toLowerCase(); //used w/ image URL's.
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			app.vars.secureURL = zGlobals.appSettings.https_app_url;
-			app.vars.domain = zGlobals.appSettings.sdomain;
-// *** -> as of 201342, the path /jsonapi/ can/should be used for all ajax calls in a store
+			app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 			app.vars.jqurl = (document.location.protocol === 'file:') ? app.vars.testURL+'jsonapi/' : '/jsonapi/';
-//			if('https:' == app.vars.protocol)	{app.vars.jqurl = zGlobals.appSettings.https_api_url;}
-//			else	{app.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
 		
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
 // default to blank, not 'null', or += below will start with 'undefined'.
 //vars should be passed as key:value;  _v will start with zmvc:version.release.
-		app.vars.passInDispatchV = '';  
-		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
+		app.vars.passInDispatchV = app.vars.passInDispatchV || '';
+		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';compatMode:'+document.compatMode;
 
-// += is used so that this is appended to anything passed in P.
-		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';compatMode:'+document.compatMode; //passed in model as part of dispatch Version. can be app specific.
+		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
+		
 		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
 /*
-app.templates holds a copy of each of the templates declared in an extension but defined in the view.
-copying the template into memory was done for two reasons:
-1. faster reference when template is needed.
-2. solve any duplicate 'id' issues within the spec itself when original spec and cloned template are present.
-   -> this solution was selected over adding a var for subbing in the templates because the interpolation was thought to be too heavy.
+app.templates holds a copy of each of the templates declared in an extension but defined in the view. The template is stored in memory for speed.
 */
 		app.templates = {};
 
@@ -127,7 +119,7 @@ copying the template into memory was done for two reasons:
 			app.u.dump(" -> session found on URI: "+app.vars._session);
 			}
 		else	{
-			app.vars._session = app.storageFunctions.readLocal('_session');
+			app.vars._session = app.storageFunctions.readLocal('_session','local');
 			if(app.vars._session)	{
 				app.u.dump(" -> session found in localStorage: "+app.vars._session);
 				//use the local session id.
@@ -3535,7 +3527,7 @@ $tmp.empty().remove();
 		readLocal : function(key,location)	{
 			location = location || 'local';
 			if(location == 'local')	{
-				app.u.dump("get "+location+" data for "+key);
+				app.u.dump(" -> get ["+location+"] data for "+key); app.u.dump(key);
 				}
 
 			if(typeof window[location+'Storage'] == 'undefined')	{
