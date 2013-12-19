@@ -92,13 +92,6 @@ var store_zephyrapp = function() {
 					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
 				}]);
 				
-				app.rq.push(['templateFunction', 'productTemplate','onDeparts',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
-					
-					$('#sideBarRight').show();
-					$('#contentArea').css({"width":"600px","padding":"5px"});
-				}]);	
-				
 				
 				app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
@@ -107,7 +100,35 @@ var store_zephyrapp = function() {
 					$('#contentArea').css({"width":"790px","padding":"5px 0px 5px 5px"});
 				}]);
 				
-				app.rq.push(['templateFunction', 'checkoutTemplate','onDeparts',function(P) {
+				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);	
+				
+				app.rq.push(['templateFunction', 'categoryTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);
+				
+				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);
+				
+				app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('#sideBarRight').show();
+					$('#contentArea').css({"width":"600px","padding":"5px"});
+				}]);	
+				
+				app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
