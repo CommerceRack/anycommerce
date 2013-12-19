@@ -144,16 +144,13 @@ function zoovyModel() {
 		addDispatchToQ : function(dispatch,QID) {
 //			app.u.dump('BEGIN: addDispatchToQ');
 //			app.u.dump(" -> QID: "+typeof QID);
-//** 201318 -> QID default needs to be before the string check (because a blank value typeof != string.
+// QID default needs to be before the string check (because a blank value typeof != string.
 			QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			var r; // return value.
-// ** 201330 -> if _cmd wasn't set, this would cause a js error.
-//			if(dispatch['_cmd'] == 'undefined')	{
 			if(dispatch && !dispatch['_cmd'])	{
 				r = false;
-	//			zSTdErr(' -> _cmd not set. return false');
 				}
-/** 201318 -> if QID was not a string, a catastropic JS error occured. could (and did) happen if call has bug in it. */				
+// if QID was not a string, a catastropic JS error occured. could (and did) happen if call has bug in it.
 			else if(typeof QID != 'string') {
 				r = false;
 				app.u.dump("Unable to add dispatch to Queue. QID passed was not a string. dispatch and QID follow:","error");
@@ -172,6 +169,7 @@ function zoovyModel() {
 				tmp['_tag']["status"] = 'queued';
 				app.q[QID][uuid] = tmp;
 				r = uuid;
+// this breaks stuff.
 //				app.storageFunctions.writeLocal("response_"+uuid, JSON.stringify(tmp),'session'); //save a copy of each dispatch to sessionStorage for entymologist
 				}
 			return r;
@@ -264,39 +262,7 @@ function zoovyModel() {
 				app.u.throwGMessage("In model.abortRequest, either QID ["+QID+"] or UUID ["+UUID+"] blank or app.globalAjax.requests[QID][UUID] does not exist (request may have already completed)");
 				}
 			},
-
-
-//if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid(s) in question.
-//function is also run when model.abortQ is executed.
-//don't need a QID because only the general dispatchQ gets muted... for now. ### add support for multiple qids
-// *** 201320 -> no longer used.
-/*		handleDualRequests : function()	{
-			var inc = 0;
-//			app.u.dump('BEGIN model.handleDualRequests');		
-			for(var index in app.q.mutable) {
-				if(app.q.mutable[index].status == 'requesting')	{
-					app.model.changeDispatchStatusInQ('mutable',index,"muted"); //the task was dominated by another request
-					inc += 1;
-					}
-				}
-			return inc;
-	//		app.u.dump('END model.handleDualRequests. '+inc+' requests set to overriden');
-			},
-*/
-//when an immutable request is in process, this is called which handles the re-attempts.
-		handleReDispatch : function(QID)	{
-			if(app.globalAjax.overrideAttempts < 30)	{
-				setTimeout("app.model.dispatchThis('"+QID+"')",500); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
-				}
-			else if(app.globalAjax.overrideAttempts < 75)	{
-// slow down a bit. try every second for a bit and see if the last response has completed.
-				setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. if the first attempt is still in progress, this code block will get re-executed till it succeeds or until
-				}
-			else	{
-				app.u.dump(' -> stopped trying to override because many attempts were already made.'); //!!! this needs to display an error message to the user saying connection seems to be lost or something.
-				}			
-			},
-			
+		
 		
 /*
 	
@@ -326,7 +292,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 			var Q = app.model.filterQ(QID,pipeUUID); //filters out all non-queued dispatches. may set a limit to the # of dispatches too. 
 			
 			
-			var immutableRequestInProgress = $.isEmptyObject(app.globalAjax.requests.immutable) ? false : true; //if empty, no request is in progress.
+//			var immutableRequestInProgress = $.isEmptyObject(app.globalAjax.requests.immutable) ? false : true; //if empty, no request is in progress.
 			var L = Q.length; //size of Q.
 //			app.u.dump(" -> Q.length = "+Q.length); app.u.dump(Q);
 //			app.u.dump("QID = "+QID+" and L = "+L+" and aRequestIsInProgress = "+aRequestIsInProgress);
@@ -335,16 +301,6 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 //				app.u.dump(" -> dispatch attempted, but q referenced has no 'queued' dispatches. Do nothing.");
 				r = false; //nothing to dispatch.
 				}
-			else if(immutableRequestInProgress)	{
-//				app.u.dump(" -> immutable dispatch in process. do NOT override. try again soon.");
-
-				app.globalAjax.overrideAttempts += 1; //tracks how many times the request in progress has been attempted to be usurped.
-				this.handleReQ(Q,QID);//changes status back to 'queued'  q.uuid.attempts not incremented (only increment only for requests that failed)
-
-				this.handleReDispatch(QID); //does the set timeout to relaunch, if needed.
-				r = false; //not moving forward with a dispatch because the one in process has priority.
-				}
-
 			else	{
 //				app.u.dump(" -> DQ has queued dispatches. no request in process. Move along... Move along...");
 				}
@@ -422,24 +378,6 @@ can't be added to a 'complete' because the complete callback gets executed after
 	//		app.u.dump('//END dispatchThis');
 		}, //dispatchThis
 	
-	
-	
-	/*
-when an immutable request is in progress and another request comes in, the secondary requests are reset to queued.
- 
-the Q passed in is sometimes the 'already filtered' Q, not the entire dispatch Q. Makes for a smaller loop and only impacts these dispatches.
-also, when dispatchThis is run again, any newly added dispatches WILL get dispatched (if in the same Q).
-handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.uuid.attempts) so that you max out after three (such as when a server error is returned in the response) and sometimes you don't want to adjust (such as when the q is adjusted because a priority dispatch was in progress).
-set adjustAttempts to true to increment by 1.
-*/
-		handleReQ : function(Q,QID,adjustAttempts)	{
-			app.u.dump("BEGIN handleReQ");
-			var uuid;
-			for(var index in Q) {
-				uuid = Q[index]['_uuid'];
-				app.model.changeDispatchStatusInQ(QID,uuid,'queued');
-				}
-			},
 
 //run when a request fails, most likely due to an ISE
 
@@ -645,7 +583,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			},
 
 
-//this will write the respose both to localStorage and into app.data
+//this will write the respose both to local and/or session storage and into app.data
 		writeToMemoryAndLocal : function(responseData)	{
 
 			var datapointer = false;
@@ -655,14 +593,11 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //however, there is (ping) already, and could be more, cases where datapointers are set, but we don't want the data locally or in memory.
 //so we have simple functions to check by command.
 			if(datapointer && !app.model.responseHasErrors(responseData))	{
-//				if(this.thisGetsSaved2Memory(responseData['_rcmd']))	{
-//					app.data[datapointer] = responseData;
-//					}
-
 //this is the data that will be saved into local or session.
 				var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 				obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
-// *** 201401 -> BIG change. The data stored in memory no longer contains the _rtag. left original code above in case this comes back to haunt.
+// *** 201401 -> The data stored in memory no longer contains the _rtag.
+// the _tag data can be found w/ the original dispatch in app.q[QID][uuid]
 				if(this.thisGetsSaved2Memory(responseData['_rcmd']))	{
 					app.data[datapointer] = obj4Save;
 					}				
@@ -680,14 +615,30 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				}
 			}, //writeToMemoryAndLocal
 
+		cmdIsAnAdminUpdate : function(cmd)	{
+			var r = false;
+			if(cmd.indexOf('admin') === 0)	{
+//admin updates don't need to be saved to memory.
+				if(cmd.indexOf('Update', cmd.length - 6) >= 0)	{r = true;}
+				else if(cmd.indexOf('Macro', cmd.length - 5) >= 0)	{r = true;}
+				}
+			return r;
+			},
+
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
-			switch(cmd)	{
-				case 'appPageGet': //saved into category object earlier in process. redundant here.
-				case 'cartSet': //changes are reflected in cart object.
-//				case 'ping': //ping may be necessary in memory for anycontent in conjunction w/ extending by datapointers. rss is a good example of this.
-				r = false
-				break;
+
+			if(this.cmdIsAnAdminUpdate(cmd))	{
+				r = false;
+				}
+			else	{
+				switch(cmd)	{
+					case 'appPageGet': //saved into category object earlier in process. redundant here.
+					case 'cartSet': //changes are reflected in cart object.
+//					case 'ping': //ping may be necessary in memory for anycontent in conjunction w/ extending by datapointers. rss is a good example of this.
+					r = false
+					break;
+					}				
 				}
 			return r;
 			},
@@ -706,21 +657,24 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //Session is a safe place to store most data, as it'll be gone once the browser is closed. Still, keep CC data out of there.
 		thisGetsSaved2Session : function(cmd)	{
 			var r = true; //what is returned. is set to false if the cmd should not get saved to local storage.
-			switch(cmd)	{
-				case 'adminCustomerUpdate': //may contain cc
-				case 'adminCustomerWalletPeek': //contains cc #
-				case 'adminOrderCreate': //may contain cc
-				case 'adminOrderDetail': //may contain cc
-				case 'adminOrderPaymentAction': //may contain cc
-				case 'adminOrderMacro': //may contain cc
-				case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
-				case 'buyerWalletList': //conains some cc info.
-				case 'cartOrderCreate': //may contain cc
-				case 'cartPaymentQ': //may contain cc
-				case 'cartSet': //changes are reflected in cart object.
-				case 'ping':
-				r = false
-				break;
+			if(this.cmdIsAnAdminUpdate(cmd))	{
+				r = false;
+				}
+			else	{
+				switch(cmd)	{
+					case 'adminCustomerWalletPeek': //contains cc #
+					case 'adminOrderCreate': //may contain cc
+					case 'adminOrderDetail': //may contain cc
+					case 'adminOrderPaymentAction': //may contain cc
+					case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
+					case 'buyerWalletList': //conains some cc info.
+					case 'cartOrderCreate': //may contain cc
+					case 'cartPaymentQ': //may contain cc
+					case 'cartSet': //changes are reflected in cart object.
+					case 'ping':
+					r = false
+					break;
+					}
 				}
 			return r;
 			},
