@@ -641,6 +641,7 @@ $target.append("<br \/>");
 					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'CIE_DSA_AddUpdateTemplate',
 						'panelID' : 'agent_'+data.agentid,
+						'showLoading' : false,
 						'header' : 'Edit agent: '+data.agentid,
 						'handleAppEvents' : true
 						});

@@ -523,6 +523,7 @@ app.model.dispatchThis('mutable');
 					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'supportTicketDetailTemplate',
 						'panelID' : 'ticket_'+ticketID,
+						'showLoading' : false,
 						'header' : 'Edit Ticket: '+ticketID
 						});
 
