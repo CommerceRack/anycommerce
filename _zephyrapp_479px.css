@@ -1,0 +1,29 @@
+/* Mobile view */
+@media only screen and (max-width: 479px) {
+.displayBlockMobile {display:block;}
+.displayInlineMobile {display:inline;}
+.displayNoneMobile {display: none;}
+
+#appView{width:290px;}
+
+/**** Header CSS****/
+#header {height:100px;}
+#logo {left: 5px;top: 5px;}
+#headerBar { top:35px; height:65px;}
+.topNavRight {width:290px;}
+.productSearchForm{width:270px; padding:3px 10px;}
+.searchBar {width:215px;}
+
+/**** Footer CSS****/
+.zephyrHelpBox {width:280px;}
+
+/**** Homepage CSS****/
+.randomList {height:2030px;}
+
+/**** Content Area CSS****/
+#contentArea{width:270px;}
+.productList {width:180px;}
+.productList > li {height: 240px;margin: 0 15px 15px;}
+}
+
+/***** Responsiv Css Close *****/
