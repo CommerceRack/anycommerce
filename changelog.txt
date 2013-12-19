@@ -10,9 +10,15 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 GLOBAL
 	The default storage for data was changed from 'local' to 'session'. This means a refresh will clear most data from storage.
 	store_cart and store_checkout removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
+	fewer remotely loaded files (more friendly w/ some ff security plugins)
 
 ADMIN
-	enhancement - several pages moved to a delegated events model, improving performance/memory consumption.
+	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including but not limited to:
+	- reports
+	- tax config
+	- batch manager
+	- rss
+	- flexedit manager
 	bug - store variations > search by variation ID fixed.
 	change - UPS option for 'perform rule processing' has been removed. If rules are present, they'll be applied.
 	bug - rss feeds can now be deleted.
@@ -21,13 +27,16 @@ ADMIN
 	bug - reports > inventory > quick reports > recent changes link now works.
 	enhancement - batch job status dialog will now auto-refresh and is no longer a modal (can be shrunk and left on screen).
 	enhancement - ability to save powertool jobs for easy re-execution later.
-	enhancement - Batch manager runs faster/lower memory consumption.
 	bug - suppliers can be edited again.
 	deprecate - setup > projects
 	enhancements - domain config is now domain and app config. includes projects (these are all related right now).
 	enhancement - updated order create interface.
 	-> uses most recent 1PC extension
 	-> better support for existing customers, including re-order.
+	enhancement - utilities > support utilities > logs now supports 'filtering'.
+	enhancement - utitilies and setup pages are now responsive.
+	enhancement - new ui 'theme'.
+	new - product editor now has 'competition' tab.
 
 
 CONTROLLER
