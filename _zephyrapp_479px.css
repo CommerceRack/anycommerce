@@ -4,7 +4,8 @@
 .displayInlineMobile {display:inline;}
 .displayNoneMobile {display: none;}
 
-#appView{width:290px;}
+/**** appPreView CSS****/
+#appPreView{width:280px;}
 
 /**** Header CSS****/
 #header {height:100px;}
@@ -22,6 +23,7 @@
 #sideBarRight {height:0px; overflow:hidden;}
 
 /**** Content Area CSS****/
+#appView{width:290px;}
 #contentArea.sideBarRightShow{width:270px;}
 #contentArea.sideBarRightHide{width:270px;}
 .productList {width:180px;}

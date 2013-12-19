@@ -22,7 +22,7 @@ body {
     padding: 8px;
     width: 400px;
 }
-#appPreViewLogo {
+.appPreViewLogo {
 	margin: 0 auto;
 	display:block;
 }
