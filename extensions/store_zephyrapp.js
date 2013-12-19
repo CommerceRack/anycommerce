@@ -167,7 +167,15 @@ var store_zephyrapp = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
+			prodChildOption: function($tag, data){
+				$tag.val(data.value.pid);
+				if(data.value['%attribs']['amz:grp_varvalue']){
+					$tag.text(data.value['%attribs']['amz:grp_varvalue']);
+					}
+				else{
+					$tag.text(data.value['%attribs']['zoovy:prod_name']);
+					}
+				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -182,7 +190,28 @@ var store_zephyrapp = function() {
 				var d = new Date().getTime();
 				app.storageFunctions.writeLocal('recentlyViewedItems', app.ext.myRIA.vars.session.recentlyViewedItems);
 				app.storageFunctions.writeLocal('timeStamp',d);// Add timestamp
-			}
+				},
+			addItemToCart : function($form,obj){
+				var $childSelect = $('.prodChildren.active select', $form);
+				if($childSelect.length > 0){
+					if($childSelect.val()){
+						app.calls.cartItemAppend.init({"sku":$childSelect.val(), "qty":$('input[name=qty]',$form).val()},{},'immutable');
+						app.model.destroy('cartDetail');
+						app.calls.cartDetail.init({'callback':function(rd){
+							if(obj.action === "modal"){
+								showContent('cart',obj);
+								}
+							}},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else {
+						$form.anymessage(app.u.errMsgObject("You must select an option"));
+						}
+					}
+				else {
+					app.ext.myRIA.u.addItemToCart($form, obj);
+					}
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"

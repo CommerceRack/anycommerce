@@ -353,7 +353,7 @@ addToCart : function (pid,$form){
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
 				var $input = $("<input \/>",{'name':'qty'});
-				if(app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
+				if(app.ext.store_product.u.productIsPurchaseable(data.value.pid) || data.value['%attribs']['zoovy:grp_children'])	{
 					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
 					$input.on('keyup.classChange',function(){
 						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
