@@ -1792,6 +1792,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				}
 			},
 		_anyContent : function()	{
+			app.u.dump("BEGIN _anycontent");
 			var 
 				o = this.options,
 				$content;
@@ -1800,6 +1801,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 				$content = o.content;
 				}
 			else if(o.data || o.datapointer)	{
+				this.element.anycontent(this.options);
+				}
+			else if(o.templateID)	{
 				this.element.anycontent(this.options);
 				}
 			else	{

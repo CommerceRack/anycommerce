@@ -76,14 +76,21 @@ calls should always return the number of dispatches needed. allows for cancellin
 
 //can be used to verify the items in the cart have inventory available.
 		cartItemsInventoryVerify : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
+			init : function(cartID,_tag,Q)	{
+				var r = 0;
+				if(cartID)	{
+					this.dispatch(cartID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In calls.cartItemsInventoryVerify, no cartID passed.','gMessage':true});
+					}
+				return r;
 				},
-			dispatch : function(_tag,Q)	{
+			dispatch : function(cartID,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = "cartItemsInventoryVerify";
-				app.model.addDispatchToQ({"_cmd":"cartItemsInventoryVerify","_tag": _tag},Q || 'immutable');
+				_tag.datapointer = "cartItemsInventoryVerify|"+cartID;
+				app.model.addDispatchToQ({"_cmd":"cartItemsInventoryVerify","_cartid":cartID,"_tag": _tag},Q || 'immutable');
 				}
 			}, //cartItemsInventoryVerify	
 
@@ -165,8 +172,8 @@ calls should always return the number of dispatches needed. allows for cancellin
 				var extras = "";
 				if(window.debug1pc)	{extras = "&sender=jcheckout&fl=checkout-"+app.model.version+debug1pc} //set debug1pc to a,p or r in console to force this versions 1pc layout on return from paypal
 				obj._cmd = "cartPaypalSetExpressCheckout";
-				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
-				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout";
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.model.fetchCartID()+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.model.fetchCartID()+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.model.fetchCartID()+"#checkout?show=checkout";
 				
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
 				
@@ -196,8 +203,8 @@ left them be to provide guidance later.
 				app.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
-					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID,
+					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.model.fetchCartID()+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.model.fetchCartID()+"#cart?show=cart",
+					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.model.fetchCartID()+"/" : zGlobals.appSettings.https_app_url+"?cartID="+app.model.fetchCartID(),
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'cco','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -214,7 +221,7 @@ left them be to provide guidance later.
 				app.model.addDispatchToQ({
 "_cmd":"cartAmazonPaymentURL",
 "shipping":1,
-"CancelUrl":zGlobals.appSettings.https_app_url+"cart.cgis?cartID="+app.vars.cartID,
+"CancelUrl":zGlobals.appSettings.https_app_url+"cart.cgis?cartID="+app.model.fetchCartID(),
 "ReturnUrl":zGlobals.appSettings.https_app_url,
 "YourAccountUrl": zGlobals.appSettings.https_app_url+"customer/orders/",
 '_tag':tagObj},'immutable');
@@ -356,14 +363,14 @@ left them be to provide guidance later.
 						$c.intervaledEmpty();
 						if($c.data('anycontent'))	{$c.anycontent('destroy')}
 						$c.anycontent({
-							'datapointer':'cartDetail',
+							'datapointer':'cartDetail|'+app.model.fetchCartID(),
 							'templateID' : $c.data('templateid')
 							})
 						});
 					r = $cart;
 					}
 				else	{
-					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, ','gMessage':true});
+					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, vars.templateID not specified.','gMessage':true});
 					}
 				
 				return r;
@@ -476,7 +483,7 @@ left them be to provide guidance later.
 //				app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
-				var L = app.model.countProperties(app.data.cartDetail['@ITEMS']);
+				var L = app.model.countProperties(app.data[datapointer]['@ITEMS']);
 //				app.u.dump(' -> # items in cart: '+L);
 				for(var i = 0; i < L; i += 1)	{
 //skip coupons.
@@ -526,18 +533,18 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
 				r = new Array(), //what is returned if someFunction returns anything.
 				returned; //what is returned by this function.
-				
-				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
-					if(app.data.cartDetail['@PAYMENTQ'].length)	{
+				var cartID = app.model.fetchCartID();
+				if(tender && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID]['@PAYMENTQ'])	{
+					if(app.data['cartDetail|'+cartID]['@PAYMENTQ'].length)	{
 	//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
-						var L = app.data.cartDetail['@PAYMENTQ'].length;
+						var L = app.data['cartDetail|'+cartID]['@PAYMENTQ'].length;
 	//					app.u.dump(" -> paymentQ.length: "+L);
 						for(var i = 0; i < L; i += 1)	{
 	//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
-							if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
+							if(app.data['cartDetail|'+cartID]['@PAYMENTQ'][i].TN == tender)	{
 								inc += 1;
 								if(typeof someFunction == 'function')	{
-									r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
+									r.push(someFunction(app.data['cartDetail|'+cartID]['@PAYMENTQ'][i]))
 									}
 								}
 							}
@@ -844,12 +851,15 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //accepts an object (probable a serialized form object) which needs sku and qty.  In an admin session, also accepts price.
 //Will validate required fields and provide any necessary formatting.
 //used in orderCreate in the admin UI for adding a line item and a re-order for previous orders.
-			buildCartItemAppendObj : function(sfo)	{
+// ### TODO -> store_product has a duplicate of this. compare and eliminate one if possible
+			buildCartItemAppendObj : function(sfo,_cartid)	{
 				var r = false; //what is returned. either an object or false
 				if(sfo.sku && sfo.qty)	{
 					if(sfo.price)	{}
 					else	{delete sfo.price} //don't pass an empty price, will set price to zero. if a price is passed when not in an admin session, it'll be ignored.
 					sfo.uuid = app.u.guidGenerator();
+					if(_cartid)	{sfo._cartid = _cartid;}
+					else	{sfo._cartid = app.model.fetchCartID();}
 					r = sfo;
 					}
 				else	{
@@ -859,11 +869,13 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return r;
 				},
 //used in order create for adding a lineitem from a previous order, so test any changes there (admin UI) after making changes.
+// ### TODO -> check out the execOrder2Cart in myRIA. may be better than this one. merge the two.
 			buildCartItemAppendSKU : function($container)	{
 				app.u.dump("BEGIN cco.u.buildCartItemAppendSKU");
 				var r = false; //what is returned. will be true if dispatch is created.
+				
 				if($container instanceof jQuery)	{
-					var sfo = this.buildCartItemAppendObj($container.serializeJSON());
+					var sfo = this.buildCartItemAppendObj($container.serializeJSON(),$container.closest("[data-app-role='checkout']").data('cartid'));
 					if(sfo)	{
 						app.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
 						r = sfo;
@@ -975,7 +987,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
+				var cartID = app.model.fetchCartID(), shipMethods = app.data['cartDetail|'+cartID]['@SHIPMETHODS'],
 				L = shipMethods.length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
@@ -996,7 +1008,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump('BEGIN app.ext.cco.formats.shipMethodsAsOptions');
 				var o = '';
 				var L = data.value.length;
-
+				var cart = app.data['cartDetail|'+app.model.fetchCartID()] || {};
 				var id,isSelectedMethod,safeid,shipName;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.
 				for(var i = 0; i < L; i += 1)	{
 					isSelectedMethod = false;
@@ -1004,11 +1016,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					id = data.value[i].id;
 
 //whether or not this iteration is for the selected method should only be determined once, but is used on a couple occasions, so save to a var.
-					if(id == app.data.cartDetail['want/shipping_id'])	{
+					if(id == cart['want/shipping_id'])	{
 						isSelectedMethod = true;
 						}
-
-//app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartDetail['want/shipping_id']);
 					
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					
