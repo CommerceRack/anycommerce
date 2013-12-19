@@ -141,6 +141,45 @@ body {
 }
 /***** Top Bar CSS End *****/
 
+/***** Responsive ddMenu CSS Start *****/
+#responsiveDropdown{
+    background:#FFFFFF;
+}
+.ddMenu {
+    padding: 5px 0 0;
+	position: relative;
+    width: 260px;
+    margin: 0 auto;
+}
+.ddMenuBtn {
+    background: #D7D9DB;
+    border: 1px solid #939598;
+    border-radius: 4px;
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 45px;
+    text-align: center;
+}
+.dropdown { 
+	background: #D7D9DB; 
+	position: absolute; 
+	z-index:999; 
+	top:50px; 
+	left: 0px; 
+	height: 0px; 
+	border: 1px solid #939598; 
+	border-top: none; 
+	border-radius: 0px 0px 7px 7px;
+}
+.dropdown > div { 
+	border-top: 1px solid #939598; 
+	font-size: 15px; 
+	line-height: 30px; 
+	text-align: center;
+}
+/***** Responsive ddMenu CSS End *****/
+
 
 /***** Footer CSS Start *****/
 #footer {
