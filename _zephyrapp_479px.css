@@ -43,4 +43,7 @@
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}
 .similarItemsSectionTD {float:left; width:260px; padding:3px;}
 .similarProductList {width:260px;}
+#review-modal.ui-dialog-content.ui-widget-content{padding:5px;}
+#reviewFrm label {	text-align:left;}
+#reviewsMessage {height:125px; width:240px;}
 /***** Responsiv Css Close *****/
