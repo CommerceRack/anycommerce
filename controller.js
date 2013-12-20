@@ -60,12 +60,13 @@ jQuery.extend(zController.prototype, {
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
-			if($.support.localStorage)	{
-				app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE.");
-				window.localStorage.clear();
+			if($.support.sessionStorage)	{
+				app.u.dump("URI param flush is true. Clear SESSION storage.");
+				window.sessionStorage.clear();
 				}
-			else	{
-				app.u.dump("URI param flush is true but localStorage not supported.");
+			if($.support.localStorage)	{
+				app.u.dump("URI param flush is true. Clear LOCAL storage.");
+				window.localStorage.clear();
 				}
 			}
 		
@@ -760,15 +761,11 @@ see jquery/api webdoc for required/optional param
 //WILL look in local
 		cartDetail : {
 			init : function(cartID,_tag,Q)	{
-				app.u.dump('BEGIN calls.cartDetail.init');
 				var r = 0;
 				if(cartID)	{
-					app.u.dump(' -> cartID is present');
 					_tag = _tag || {};
 					_tag.datapointer = "cartDetail|"+cartID;
-					app.u.dump(" -> app.model.fetchData(_tag.datapointer): "+app.model.fetchData(_tag.datapointer));
 					if(app.model.fetchData(_tag.datapointer))	{
-						app.u.dump(' -> cart is available locally');
 						app.u.handleCallback(_tag);
 						}
 					else	{
@@ -782,7 +779,6 @@ see jquery/api webdoc for required/optional param
 				return r;
 				},
 			dispatch : function(cartID,_tag,Q)	{
-				app.u.dump(' -> into dispatch() code');
 				app.model.addDispatchToQ({"_cmd":"cartDetail","_cart":cartID,"_tag": _tag},Q || 'mutable');
 				} 
 			}, // refreshCart removed comma from here line 383
@@ -3479,14 +3475,17 @@ $tmp.empty().remove();
 			}, //writeLocal
 
 		nukeLocal : function(key,location)	{
-			app.u.dump("BEGIN nukeLocal for "+key);
+//			app.u.dump("BEGIN nukeLocal for "+key+" in "+location+"Storage");
 			if($.support[location+'Storage'])	{
 				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
 					try	{
-						window[location+'Storage'].removeItem(k);
+						window[location+'Storage'].removeItem(key);
 						}
-					catch(e)	{}
-					}				}
+					catch(e)	{
+						app.u.dump("The attempt to run window."+location+"Storage.removeItem("+key+") failed. This occured after the $.support for that storage method. The catch error follows:"); app.u.dump(e);
+						}
+					}
+				}
 			else	{
 				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
@@ -3494,11 +3493,7 @@ $tmp.empty().remove();
 
 		readLocal : function(key,location)	{
 			location = location || 'local';
-//			if(location == 'local')	{
-//				app.u.dump(" -> get ["+location+"] data for "+key); app.u.dump(key);
-//				}
-
-			if(typeof window[location+'Storage'] == 'undefined')	{
+			if(!$.support[location+'Storage'])	{
 				return app.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
 				}
 			else	{

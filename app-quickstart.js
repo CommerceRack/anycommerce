@@ -129,6 +129,10 @@ var myRIA = function() {
 					app.calls.appCartCreate.init({},'mutable');
 					}
 
+//technically, a session lasts until the browser is closed. if fresh data is desired on refresh, uncomment the following few lines.
+//if($.support.sessionStorage)	{
+//	window.sessionStorage.clear();
+//	}
 
 $(document.body).anydelegate(); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
 
