@@ -987,8 +987,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var cartID = app.model.fetchCartID(), shipMethods = app.data['cartDetail|'+cartID]['@SHIPMETHODS'],
-				L = shipMethods.length;
+				var cartID = app.model.fetchCartID(), shipMethods = [];
+				if(cartID && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID]['@SHIPMETHODS'])	{
+					shipMethods = app.data['cartDetail|'+cartID]['@SHIPMETHODS'];
+					}
+				var L = shipMethods.length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
 					if(shipMethods[i].id == data.value)	{
