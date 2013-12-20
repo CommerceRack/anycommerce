@@ -571,7 +571,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //this will remove data from both local storage, session storage AND memory.
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
 		destroy : function(key)	{
-			app.u.dump(" -> destroying "+key);
+//			app.u.dump(" -> destroying ["+key+"]");
 			if(app.data[key])	{
 				delete app.data[key];
 				}
@@ -624,7 +624,6 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
-
 			if(this.cmdIsAnAdminUpdate(cmd))	{
 				r = false;
 				}
@@ -805,39 +804,6 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			}, //handleResponse_cartOrderCreate
 	
 /*
-** 201334 --> removed.  path is now returned on the root level.
-//no special error handling or anything like that.  this is just here to get the category safe id into the response for easy reference.	
-		handleResponse_appNavcatDetail : function(responseData)	{
-//			app.u.dump("BEGIN model.handleResponse_appNavcatDetail");
-//save detail into response to make it easier to see what level of data has been requested during a fetch or call
-			if(responseData['_rtag'] && responseData['_rtag'].detail){
-				responseData.detail = responseData['_rtag'].detail;
-				}
-			if(responseData['@products'] && !$.isEmptyObject(responseData['@products']))	{
-				responseData['@products'] = $.grep(responseData['@products'],function(n){return(n);}); //strip blanks
-				}
-			if(responseData['_rtag'] && responseData['_rtag'].datapointer)
-				responseData.id = responseData['_rtag'].datapointer.split('|')[1]; //safe id into data for easy reference.
-			app.model.handleResponse_defaultAction(responseData);
-			return responseData.id;
-			}, //handleResponse_categoryDetail
-		
-		handleResponse_appNavcatDetail : function(responseData)	{
-//			app.u.dump("BEGIN model.handleResponse_appNavcatDetail");
-//save detail into response to make it easier to see what level of data has been requested during a fetch or call
-			if(responseData['_rtag'] && responseData['_rtag'].detail){
-				responseData.detail = responseData['_rtag'].detail;
-				}
-			if(responseData['@products'] && !$.isEmptyObject(responseData['@products']))	{
-				responseData['@products'] = $.grep(responseData['@products'],function(n){return(n);}); //strip blanks
-				}
-			if(responseData['_rtag'] && responseData['_rtag'].datapointer)
-				responseData.id = responseData['_rtag'].datapointer.split('|')[1]; //safe id into data for easy reference.
-			app.model.handleResponse_defaultAction(responseData);
-			return responseData.id;
-			}, //handleResponse_appNavcatDetail
-*/
-/*
 It is possible that multiple requests for page content could come in for the same page at different times.
 so to ensure saving to appPageGet|.safe doesn't save over previously requested data, we extend it the ['%page'] object.
 */
@@ -851,7 +817,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				else	{
 					app.data[datapointer] = responseData;
 					}
-				app.storageFunctions.writeLocal(datapointer,app.data[datapointer]); //save to local storage, if feature is available.
+				app.storageFunctions.writeLocal(datapointer,app.data[datapointer],'session'); //save to session storage, if feature is available.
 				}
 			app.model.handleResponse_defaultAction(responseData);
 			}, //handleResponse_appPageGet
@@ -873,16 +839,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				}
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
-/*
-		handleResponse_adminUIExecuteCGI : function(responseData)	{
-			app.u.dump(" -> responseData: "); app.u.dump(responseData);
-			if(responseData.html)	{
-				app.ext.admin.u.uiHandleContentUpdate(responseData.uri,responseData,viewObj || {});
-				//app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
-				}
 
-			},
-*/
 //this function gets executed upon a successful request for a new session id.
 //it is also executed if appAdminAuthenticate returns exists=1 (yes, you can).
 //formerly newSession
@@ -950,10 +907,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						break;
 		
 					case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
-//call deprecated in 201311
-//					case 'cartItemsAdd':
-//						if(responseData['_msgs'] > 0)	{r = true};
-//						break;
 		
 					case 'cartOrderCreate':
 		//				app.u.dump(' -> case = createOrder');
@@ -1169,7 +1122,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			var expires = datapointer == 'authAdminLogin' ? (60*60*24*15) : (60*60*24); //how old the data can be before we fetch new.
 //checks to see if the request is already in app.data. IMPORTANT to check if object is empty in case empty objects are put up for extending defaults (checkout)
 			if(app.data && !$.isEmptyObject(app.data[datapointer]))	{
-//				app.u.dump(' -> data already in memory.');
+				app.u.dump(' -> data ['+datapointer+'] already in memory.');
 				r = true;
 				}
 
