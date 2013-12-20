@@ -248,7 +248,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},Q || 'immutable');
 				}
 			},//appCartCreate
-
+// ### TODO -> requested that detail be returned as part of response. verify or update this code (or add it back on in model).
 		appNavcatDetail : {
 			init : function(obj,_tag,Q)	{
 				if(obj && obj.path)	{
