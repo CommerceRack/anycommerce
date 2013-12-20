@@ -101,32 +101,6 @@ obj.PATH = .cat.safe.id
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPageGet
-//formerly categoryDetail
-		appNavcatDetail : {
-			init : function(catSafeID,tagObj,Q)	{
-				Q = Q || 'mutable';
-//			app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+catSafeID+')');
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-//whether max, more or just detail, always save to same loc.
-//add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
-				tagObj.datapointer = 'appNavcatDetail|'+catSafeID;
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					r += 1;
-					this.dispatch(catSafeID,tagObj,Q);
-					}
-				else 	{
-//					app.u.dump(' -> using local');
-					app.u.handleCallback(tagObj)
-					}
-				return r;
-				},
-			dispatch : function(catSafeID,tagObj,Q)	{
-//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.dispatch');
-				var catSafeID;
-				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","safe":catSafeID,"detail":"fast","_tag" : tagObj},Q);	
-				}
-			},//appNavcatDetail
 
 		appNavcatDetail : {
 			init : function(path,tagObj,Q)	{
@@ -187,39 +161,6 @@ obj.PATH = .cat.safe.id
 				}
 			},//appNavcatDetailMore
 
-		appNavcatDetailMore : {
-			init : function(catSafeID,tagObj,Q)	{
-				Q = Q || 'mutable';
-//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetailMore.init');
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-				tagObj.datapointer = 'appNavcatDetail|'+catSafeID;
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-//nothing is local. go get it.
-					this.dispatch(catSafeID,tagObj,Q);
-					r += 1;
-					}
-				else	{
-//something is in local. if max or more, use it.
-					if(app.data[tagObj.datapointer].detail == 'max'  || app.data[tagObj.datapointer].detail == 'more')	{
-						app.u.handleCallback(tagObj)
-						}
-					else 	{
-//local is probably from a 'fast' request. go get more.
-						this.dispatch(catSafeID,tagObj,Q);
-						r += 1;
-						}
-					}
-				return r;
-				},
-			dispatch : function(catSafeID,tagObj,Q)	{
-				var catSafeID;
-				tagObj.datapointer = 'appNavcatDetail|'+catSafeID; //whether max, more or just detail, always save to same loc.
-				tagObj.detail = 'more'; //if detail is in tabObj, model will add it to data object.
-				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":catSafeID,"detail":"more","_tag" : tagObj},Q);	
-				}
-			},//appNavcatDetailMore
-
 		appNavcatDetailMax : {
 			init : function(catSafeID,tagObj,Q)	{
 				Q = Q || 'mutable';
@@ -253,44 +194,7 @@ obj.PATH = .cat.safe.id
 				tagObj.detail = 'max';
 				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","safe":catSafeID,"detail":"max","_tag" : tagObj},Q);	
 				}
-			},//appNavcatDetailMax
-
-		appNavcatDetailMax : {
-			init : function(catSafeID,tagObj,Q)	{
-				Q = Q || 'mutable';
-//				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetailMax.init');
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-//whether max, more or just detail, always save to same loc.
-//add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
-				tagObj.datapointer = 'appNavcatDetail|'+catSafeID;
-//				app.u.dump(' -> datapointer = '+tagObj.datapointer);
-				
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-//					app.u.dump(' -> data is not local. go get it.');
-					r += 1;
-					this.dispatch(catSafeID,tagObj,Q);
-					}
-				else	{
-					if(app.data[tagObj.datapointer].detail == 'max')	{
-						app.u.handleCallback(tagObj);
-						}
-					else 	{
-						r += 1;
-						this.dispatch(catSafeID,tagObj,Q);
-						}
-					}
-				return r;
-				},
-			dispatch : function(catSafeID,tagObj,Q)	{
-//				app.u.dump(' -> safeid = '+catSafeID);
-//				app.u.dump(' -> executing dispatch.');
-				tagObj.detail = 'max';
-				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":catSafeID,"detail":"max","_tag" : tagObj},Q);	
-				}
 			}//appNavcatDetailMax
-
-
 
 		}, //calls
 
