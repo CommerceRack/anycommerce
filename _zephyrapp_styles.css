@@ -776,6 +776,7 @@ h3 {
 	min-height:50px;
 	margin: 2px 0px 0px;
 	border-bottom:1px dashed #D7D7D7;
+	padding-bottom:3px;
 }
 .similarItemList .prodThumb {
 	float:left;
