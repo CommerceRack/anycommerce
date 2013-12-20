@@ -1160,10 +1160,11 @@ this will likely become more flexible in the future. ###
 			</div>
 			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm marginTop clearfix' action='#' onSubmit="app.ext.store_zephyrapp.u.addItemToCart($(this), {'action':'modal'}); return false;">
 				<div class="prodChildren displayNone" data-bind="var: product(zoovy:grp_children); format:showIfSet; className:active;">
-					<select data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildrenOption; withInventory:1; withVariations:1;">
+					<select class="childDropdown" data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildrenOption; withInventory:1; withVariations:1;">
 						<option value="">Choose Option...</option>
 					</select>
 				</div>
+				<div class="inventoryContainer" data-bind="useParentData:true; format:inventoryAvailQty; extension:store_zephyrapp;"></div>
 				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 				<div data-bind="var: product(zoovy:grp_children); format:hideIfSet;">

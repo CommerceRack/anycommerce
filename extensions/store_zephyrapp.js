@@ -147,6 +147,36 @@ var store_zephyrapp = function() {
 					event.stopPropagation();
 					});	
 					
+				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('.childDropdown',$context).children().each(function(){
+						var pid=$(this).val();
+						if(pid){
+							var $opt=$(this);
+							
+							var tagObj = {
+								"callback":function(rd){
+									if(app.ext.store_product.u.productIsPurchaseable(pid)){
+										// do nothing muy bueno
+										}
+									else{
+										$opt.attr('disabled','disabled');
+										}
+									}
+								}
+							
+							app.ext.store_product.calls.appProductGet.init(pid,tagObj,"immutable");
+							app.model.dispatchThis("immutable");
+							}
+						});
+					
+					$('.childDropdown',$context).on('change',function(event){
+						var pid = $(this).val();
+						$('.inventoryContainer',$context).empty().anycontent({"datapointer":"appProductGet|"+pid})
+						});
+					}]);
+					
 				r = true;
 				
 				return r;
@@ -248,7 +278,23 @@ var store_zephyrapp = function() {
 				else{
 					$tag.text(data.value['%attribs']['zoovy:prod_name']);
 					}
+				},
+			inventoryAvailQty : function($tag,data){
+				if(data.value['%attribs']['zoovy:grp_type'] == 'PARENT'){
+					// do nothing
+					}
+				else {
+					var inv = app.ext.store_product.u.getProductInventory(data.value.pid);
+					if(inv > 0){
+						$tag.append('In Stock Now (Qty avail: '+inv+')');
+						}
+					else{
+					//	Taking out for time being since we already have an out of stock msg
+					//	$tag.append('This product is currently out of stock');
+						}
+					}
 				}
+			
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
