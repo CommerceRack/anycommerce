@@ -16,7 +16,7 @@ Where I left off:
 
 -->
 <div id='checkoutTemplate' class='checkoutFormContainer' data-app-role='checkout'>
-	<form action='#' data-skipvalidation='1'><!-- skipvalidation is checked for on the quick add to cart. -->
+	<form action='#' data-skipvalidation='1' novalidate="novalidate" onsubmit="return false;"><!-- skipvalidation is checked for on the quick add to cart. -->
 	<table class='fullWidth'>
 	<tr>
 		<td class='valignTop twoColumn'>
@@ -322,7 +322,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='clearfix marginBottom'>
 		<h4 class='floatLeft'>Add Item to Order : </h4>
 		<button class='applyButton floatLeft marginLeft' data-app-click="orderCreate|cartItemAddWithChooser">Chooser</button> 
-		<span data-show-selector=".cartItemAddDirectShow" data-input-click='show-selector' class='applyButton floatLeft marginLeft'>Direct Add</span>
+		<button data-show-selector=".cartItemAddDirectShow" data-input-click='show-selector' class='applyButton floatLeft marginLeft'>Direct Add</button>
 	</div>
 	
 	

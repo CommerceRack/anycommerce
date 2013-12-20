@@ -1924,6 +1924,42 @@ $('.editable',$container).each(function(){
 					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderQuickviewExec, data-verb ["+verb+"] not set on trigger element OR unable to ascertain order ID ["+orderID+"].","gMessage":true});
 					}
 				},
+			
+			inProgressOrderEditExec : function($ele,p)	{
+				p.preventDefault();
+				app.ext.orderCreate.a.startCheckout($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$ele.data('cartid'));
+				},
+//This was intentionally set up to generate the carts each time the dropdown was clicked so that if the orders tab is open, then elsewhere in the ui a new cart is created, it will seamlessly show up here.
+//the cartDetail call WILL use a session/local copy of the cart if it's available.
+			inProgressOrderEditShowList : function($ele,p)	{
+				p.preventDefault();
+				var $menu = $ele.parent().find("[data-app-role='inProgressOrderList']:first");
+				$menu.empty();
+				for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
+					var $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em'}); //font weight set cuz this is inside the header, which is bold.
+					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+app.vars.carts[i]+"'>"+app.vars.carts[i]+"<\/a>");
+					$li.append("<div><span data-bind='var: cart(bill/firstname); defaultVar: cart(bill_firstname); format:popVal;'><\/span><span data-bind='var: cart(bill/lastname); defaultVar: cart(bill_lastname); format:popVal;'><\/span><\/div>");
+					$menu.append($li);
+					app.calls.cartDetail.init(app.vars.carts[i],{'callback':'anycontent','jqObj':$li,'translateOnly':true},'mutable');
+					}
+				if($menu.children().length)	{}
+				else	{$menu.append("<li>no in progress orders exist<\/li>")}
+				app.model.dispatchThis('mutable');
+				$menu.menu().css({
+					'position':'absolute',
+					'z-index':100,
+					'width':230,
+					'top':$ele.height(),
+					'right':0
+					}).show();
+				//close menu on any click.
+				setTimeout(function(){
+					$(document.body).one('click',function(){
+						$menu.hide();
+						});
+					},500);
+				return false;
+				},
 
 
 
