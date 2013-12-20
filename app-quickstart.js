@@ -226,7 +226,7 @@ document.write = function(v){
 //we always get the tier 1 cats so they're handy, but we only do something with them out of the get if necessary (tier1categories is defined)
 				if($('#tier1categories').length)	{
 //					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
-					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appNavcatDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'max');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 					app.model.dispatchThis();
 					}
 				}
@@ -2498,7 +2498,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					var P = app.ext.myRIA.u.parseAnchor($this.attr('href'));
 					if(P.pageType == 'category' && P.navcat && P.navcat != '.'){
 //for bindnavs, get info to have handy. add to passive Q and It'll get dispatched by a setInterval.
-app.ext.store_navcats.calls.appNavcatDetailMax.init(P.navcat,{},'passive');
+app.calls.appNavcatDetail.init({'path':P.navcat,'detail':'max'},{},'passive');
 						}
 					$this.click(function(event){
 //						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
@@ -2680,7 +2680,7 @@ buyer to 'take with them' as they move between  pages.
 							$('#mainContentArea').append($content);
 							}
 						$.extend(infoObj,{'callback':'fetchPageContent','extension':'myRIA','parentID':parentID});
-						app.ext.store_navcats.calls.appNavcatDetailMax.init(catSafeID,infoObj);
+						app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
 						app.model.dispatchThis();
 						}
 
@@ -2813,7 +2813,7 @@ app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 				var listPath = attribute.split('.')[0]
 				tagObj.lists.push(listPath); //attribute formatted as $listname.@products
 //** 201318 -> numRequests could have been getting set to zero, causing no dispatch to go
-				numRequests += app.ext.store_navcats.calls.appNavcatDetail.init(listPath);
+				numRequests += app.ext.calls.appNavcatDetail.init({'path':listPath,'detail':'fast'});
 				}
 			else if(namespace == 'list')	{
 				// no src is set.
@@ -2825,7 +2825,7 @@ app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 //check for the presence of subcats. if none are present, do nothing.
 //if detail isn't set on the subcat, fetching subcats isn't necessary anyway.
 				if(bindData.detail && typeof app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail']))	{
-					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'appNavcatDetailMax');
+					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'max');
 					}
 				}
 			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{

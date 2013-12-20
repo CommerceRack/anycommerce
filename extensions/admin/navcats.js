@@ -169,7 +169,7 @@ var admin_navcats = function() {
 								},'mutable');
 							}
 							
-//						app.calls.appNavcatDetail.init({'safe':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
+//						app.calls.appNavcatDetail.init({'path':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
 						}
 					app.model.dispatchThis('mutable');
 					}

@@ -251,32 +251,38 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 
 		appNavcatDetail : {
 			init : function(obj,_tag,Q)	{
-				if(obj && obj.safe)	{
+				if(obj && obj.path)	{
 					var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 					_tag = _tag || {};
-					_tag.datapointer = 'appNavcatDetail|'+obj.safe;
-					
-//the model will add the value of _tag.detail into the response so it is stored in the data and can be referenced for future comparison.
-					if(obj.detail)	{_tag.detail = obj.detail} else {}
-					
-//if no detail or detail = fast, but anything is in memory, use it.
-					if(app.model.fetchData(_tag.datapointer) && (!obj.detail || obj.detail=='fast'))	{
-						app.u.handleCallback(_tag)
+					_tag.datapointer = 'appNavcatDetail|'+obj.path;
+				
+					if(app.model.fetchData(_tag.datapointer))	{
+//data is now in memory. based on the detail param, see if the category record available is enough.
+						var catData = app.data[_tag.datapointer];
+//if max is already available, just use it.
+						if(catData.detail == 'max')	{
+							app.u.handleCallback(_tag);
+							}
+						else if(obj.detail == 'more' && catData.detail == 'more')	{
+							app.u.handleCallback(_tag);
+							}
+						else if(!obj.detail || obj.detail == 'fast')	{
+//if no detail is specified or it's set to 'fast', whatever we have in memory is enough or more than enough.
+							app.u.handleCallback(_tag);
+							}
+						else	{
+							r += 1;
+							this.dispatch(obj,_tag,Q);
+							}
 						}
-//max is the highest level, so if we have that already, just use it.
-					else if(app.data[_tag.datapointer] && app.data[_tag.datapointer].detail == 'max')	{
-						app.u.handleCallback(_tag);
-						}
-					else if (obj.detail == 'more' && (app.data[_tag.datapointer] && (!app.data[_tag.datapointer].detail == 'more' || app.data[_tag.datapointer].detail == 'max')))	{
-						app.u.handleCallback(_tag);
-						}
-					else 	{
+					else	{
+//no data in memory/local. go get it.
 						r += 1;
 						this.dispatch(obj,_tag,Q);
 						}
 					}
 				else	{
-					app.u.throwGMessage("In calls.appNavcatDetail, obj.safe not passed.");
+					app.u.throwGMessage("In calls.appNavcatDetail, obj.path not passed.");
 					app.u.dump(obj);
 					}
 				return r;
