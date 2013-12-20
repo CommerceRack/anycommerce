@@ -2775,7 +2775,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(vars.findertype == 'NAVCAT')	{
 //Too many f'ing issues with using a local copy of the cat data.
 					app.model.destroy('appNavcatDetail|'+vars.path);
-					app.calls.appNavcatDetail.init({'safe':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					app.calls.appNavcatDetail.init({'path':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
 				else if(vars.findertype == 'CHOOSER')	{
 					app.ext.admin.u.addFinder(targetID,vars);
@@ -3862,7 +3862,7 @@ for a category, each sku added or removed is a separate request.
 						}
 					});
 					app.model.destroy('appNavcatDetail|'+path);
-					app.calls.appNavcatDetail.init({'safe':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					app.calls.appNavcatDetail.init({'path':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				else if (findertype == 'PAGE') {
 					app.u.dump("SAVING findertype PAGE");

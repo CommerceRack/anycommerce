@@ -88,7 +88,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 
 			showRootCategories : {
 				onSuccess : function(tagObj)	{
-					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'categoryTree','callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appNavcatDetailMore');  //generate left nav.
+					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'categoryTree','callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'more');  //generate left nav.
 					app.model.dispatchThis();
 					},
 				onError : function(responseData,uuid)	{
@@ -173,7 +173,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 //				app.u.dump(" -> size() = "+$('#'+parentID+' li').size());
 //once the parentID has children, the subcats have already been loaded. don't load them twice.
 				if($('#'+parentID+' li').size() == 0)	{ 
-					app.ext.store_navcats.u.getChildDataOf(path,{'parentID':parentID,'callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appNavcatDetailMore');
+					app.ext.store_navcats.u.getChildDataOf(path,{'parentID':parentID,'callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'more');
 					app.model.dispatchThis();
 					}
 				}, //showSubcats
