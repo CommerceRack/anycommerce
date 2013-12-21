@@ -22,6 +22,10 @@
 .randomList {height:2030px;}
 #sideBarRight {height:0px; overflow:hidden;}
 
+/**** Homepage CSS****/
+.cartSummaryTotalsContainer h2 {font-size:16px; padding:4px 10px;}
+.cartButtons span {display:block; margin-bottom: 0.5em;}
+
 /**** Content Area CSS****/
 #appView{width:290px;}
 #contentArea.sideBarRightShow{width:270px; padding:5px;}

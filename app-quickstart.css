@@ -438,16 +438,31 @@ CART
 
 
 ***************************************************/
+.cartStuffContainer {
+    margin: 0 0 1em;
+    width: 100%;
+}
+#cartStuffList {
+    font-size: 12px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+#cartStuffList li {
+    display: block;
+    margin: 0 0 1em;
+}
+.cartButtons {
+    text-align: center;
+}
 
-.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
-.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
-.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
-
-.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
-.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
-
-.checkoutButtonsContainer > span	{display:block; float:left; margin:0 12px 12px 0;}
-
+.cartSummaryTotalsContainer h2 {
+    font-size: 14px;
+}
+@media only screen and (max-width: 400px) {
+.cartQuantityInput {
+    clear: both;
+}
 .cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
 
 .cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
