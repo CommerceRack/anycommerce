@@ -30,9 +30,12 @@
 #appView{width:290px;}
 #contentArea.sideBarRightShow{width:270px; padding:5px;}
 #contentArea.sideBarRightHide{width:270px; padding:5px;}
-.productList {width:180px;}
-.productList > li {height: 240px;margin: 0 15px 15px;}
-}
+
+/**** ProdList CSS****/
+.productList {width:210px;}
+.productList > li {height: 240px; width:190px; margin: 0 10px 15px;}
+.prodThumb {display:block; margin:0 auto;}
+.productList .prodViewerAddToCartForm {left:27%;}
 
 /**** Product Page CSS****/
 .prodPageNameContainer{padding:0px; background:none; border:0px;}
@@ -50,4 +53,7 @@
 #review-modal.ui-dialog-content.ui-widget-content{padding:5px;}
 #reviewFrm label {	text-align:left;}
 #reviewsMessage {height:125px; width:240px;}
+
+
+}
 /***** Responsiv Css Close *****/
