@@ -846,7 +846,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
 	</div>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; withInventory: 1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+	<ul data-bind="var: category(@products);  format: infiniteProductList; extension:prodlist_infinite; editor: finder; loadsTemplate: productListTemplate; withReviews:1; withInventory: 1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 
 	<div class="displayNone" data-bind="var: category(%page.description); format:showIfSet;">
 		<p class="txt_border_box" style="margin-top:5px;" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
