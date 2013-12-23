@@ -32,26 +32,42 @@ calls should always return the number of dispatches needed. allows for cancellin
 
 //formerly getCheckoutDestinations
 		appCheckoutDestinations : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
+			init : function(cartID,_tag,Q)	{
+				var r = 0;
+				if(cartID)	{
+					this.dispatch(cartID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In cco.calls.appCheckoutDestinations, cartID not passed and is required.","gMessage":true});
+					}
+				return r;
 				},
-			dispatch : function(_tag,Q)	{
+			dispatch : function(cartID,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = 'appCheckoutDestinations';
-				app.model.addDispatchToQ({"_cmd":"appCheckoutDestinations","_tag": _tag},Q || 'immutable');
+				_tag.datapointer = 'appCheckoutDestinations|'+cartID;
+				app.model.addDispatchToQ({"_cmd":"appCheckoutDestinations","_tag": _tag,"_cartid":cartID},Q || 'immutable');
 				}
 			}, //appCheckoutDestinations
 
 		appPaymentMethods : {
 			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q); //obj could contain country (as countrycode) and order total.
-				return 1;
+				var r = 0;
+				if(obj._cartid)	{
+				app.u.dump(" -> appPaymentMethods cartID: "+obj._cartid);
+					this.dispatch(obj,_tag,Q); //obj could contain country (as countrycode) and order total.
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In cco.calls.appPaymentMethods, obj._cartid was not passed and is required.","gMessage":true});
+					}
+				
+				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = "appPaymentMethods";
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'appPaymentMethods';
+				obj._tag.datapointer = 'appPaymentMethods|'+obj._cartid;
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //appPaymentMethods
@@ -148,14 +164,21 @@ calls should always return the number of dispatches needed. allows for cancellin
 //uses the cart ID, which is passed on the parent/headers.
 //always immutable.
 		cartOrderCreate : {
-			init : function(_tag)	{
-				this.dispatch(_tag);
-				return 1;
+			init : function(cartID,_tag)	{
+				var r = 0;
+				if(cartID)	{
+					r = 1;
+					this.dispatch(cartID,_tag);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In cco.calls.cartOrderCreate, no cart ID passed.","gMessage":true});
+					}
+				return r;
 				},
-			dispatch : function(_tag)	{
+			dispatch : function(cartID,_tag)	{
 				_tag = _tag || {};
 				_tag.datapointer = "cartOrderCreate";
-				app.model.addDispatchToQ({'_cmd':'cartOrderCreate','_tag':_tag,'iama':app.vars.passInDispatchV},'immutable');
+				app.model.addDispatchToQ({'_cartid':cartID,'_cmd':'cartOrderCreate','_tag':_tag,'iama':app.vars.passInDispatchV},'immutable');
 				}
 			},//cartOrderCreate
 
@@ -533,7 +556,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
 				r = new Array(), //what is returned if someFunction returns anything.
 				returned; //what is returned by this function.
-				var cartID = app.model.fetchCartID();
+				var cartID = app.model.fetchCartID(); // ### TODO -> this can't use fetchCartID. MUST use cart in focus.
 				if(tender && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID]['@PAYMENTQ'])	{
 					if(app.data['cartDetail|'+cartID]['@PAYMENTQ'].length)	{
 	//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
@@ -629,6 +652,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
+				data = data || {}
 				if(paymentID)	{
 					var $o = $("<div />").addClass("paybySupplemental").attr('data-app-role','supplementalPaymentInputsContainer'), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
 					tmp = '', //tmp var used to put together string of html to append to $o
@@ -719,7 +743,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					if($o)	{
 						$o.append(tmp);
 	//set events to save values to memory. this will ensure data repopulates as panels get reloaded in 1PC.
-						$('input, select',$o).each(function(){
+						$(':input',$o).each(function(){
 							$(this).off('change.save').on('change.save',function(){
 								data[$(this).attr('name')] = $(this).val();
 								});
@@ -908,20 +932,23 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		renderFormats : {
 //value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
 //so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
+// ### TODO -> this will need fixing.
 			countriesAsOptions : function($tag,data)	{
-//				app.u.dump("BEGIN app.ext.cco.renderFormats.countriesAsOptions");
-//				app.u.dump(" -> Country: "+data.value);
 				var r = '';
-				var L = app.data.appCheckoutDestinations['@destinations'].length;
-//				app.u.dump(" -> number of countries = "+L);
-				for(var i = 0; i < L; i += 1)	{
-					r += "<option value='"+app.data.appCheckoutDestinations['@destinations'][i].ISO+"' ";
-					if(data.value == app.data.appCheckoutDestinations['@destinations'][i].ISO)	{
-						r += " selected='selected' ";
+				if(app.data['appCheckoutDestinations|'+data.value] && app.data['cartDetail|'+data.value] && data.bindData.shiptype)	{
+					var destinations = app.data.appCheckoutDestinations['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+data.value];
+					for(var i = 0; i < L; i += 1)	{
+						r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
 						}
-					r += ">"+app.data.appCheckoutDestinations['@destinations'][i].Z+"</option>";
+					var selected = 'US'; //default
+					if(data.bindData.shiptype && cartData[data.bindData.shiptype] && cartData[data.bindData.shiptype][data.bindData.shiptype+'/countrycode'])	{
+						selected = cartData[data.bindData.shiptype][data.bindData.shiptype+'/countrycode']
+						}
+					$("select[name='"+data.bindData.shiptype+"/countrycode']").val(selected);
 					}
-				
+				else	{
+					r = $("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+data.value+'] is not available in memory.','gMessage':true});
+					}
 				$tag.html(r);
 				},
 
@@ -985,53 +1012,27 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //is used in cart summary total during checkout.
 			shipInfoById : function($tag,data)	{
 				var o = '';
-//				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
-//				app.u.dump(data);
-				var cartID = app.model.fetchCartID(), shipMethods = [];
-				if(cartID && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID]['@SHIPMETHODS'])	{
-					shipMethods = app.data['cartDetail|'+cartID]['@SHIPMETHODS'];
-					}
-				var L = shipMethods.length;
-				for(var i = 0; i < L; i += 1)	{
-//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(shipMethods[i].id == data.value)	{
-						var pretty = app.u.isSet(shipMethods[i]['pretty']) ? shipMethods[i]['pretty'] : shipMethods[i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
-						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
-//only show amount if not blank.
-						if(shipMethods[i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
+				var cartData = app.data['cartDetail'+data.value];
+				if(cartData)	{
+					var shipMethods = cartData['@SHIPMETHODS'], L = shipMethods.length;
+					for(var i = 0; i < L; i += 1)	{
+	//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
+						if(shipMethods[i].id == cartData.want.shipping_id)	{
+							//sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+							o = "<span class='orderShipMethod'>"+(shipMethods[i]['pretty'] ? shipMethods[i]['pretty'] : shipMethods[i]['name'])+": <\/span>";
+	//only show amount if not blank.
+							if(shipMethods[i].amount)	{
+								o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
+								}
+							break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 							}
-						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
+					}
+				else	{
+					o = $("<div \/>").anymessage({persistent:true,'message':'In cco.renderFormats.shipInfoByID, cartDetail|'+data.value+' is not set.','gMessage':true});
 					}
 				$tag.html(o);
 				}, //shipInfoById
-
-			shipMethodsAsOptions : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.cco.formats.shipMethodsAsOptions');
-				var o = '';
-				var L = data.value.length;
-				var cart = app.data['cartDetail|'+app.model.fetchCartID()] || {};
-				var id,isSelectedMethod,safeid,shipName;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.
-				for(var i = 0; i < L; i += 1)	{
-					isSelectedMethod = false;
-					safeid = app.u.makeSafeHTMLId(data.value[i].id);
-					id = data.value[i].id;
-
-//whether or not this iteration is for the selected method should only be determined once, but is used on a couple occasions, so save to a var.
-					if(id == cart['want/shipping_id'])	{
-						isSelectedMethod = true;
-						}
-					
-					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
-					
-					o += "<option "
-					if(isSelectedMethod)
-						o+= " selected='selected' ";
-					o += " value = '"+id+"' >"+shipName+" - "+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/option>";
-					}
-				$tag.html(o);
-				},
 
 			walletName2Icon : function($tag,data)	{
 				$tag.addClass('paycon_'+data.value.substring(0,4).toLowerCase());
@@ -1088,7 +1089,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				}, //cartItemQuantityUpdate
 
 			cartZipUpdateExec : function($ele,p)	{
-				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':''},{},'immutable');
+				
+				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("form").find("input[name='_cartid']").val()},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				app.model.dispatchThis('immutable');
 				}, //cartZipUpdateExec

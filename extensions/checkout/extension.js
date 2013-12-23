@@ -37,7 +37,6 @@ var orderCreate = function() {
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true, //1pc loads it's templates locally to avoid XSS issue.
-		payment : {}, //used in checkout to store payment info that doesn't get added to cart till orderCreate (paymentQ)
 //though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
 		templates : theseTemplates
 		},
@@ -665,7 +664,8 @@ an existing user gets a list of previous addresses they've used and an option to
 			chkoutAddressBill : function(formObj,$fieldset)	{
 //				app.u.dump("BEGIN displayLogic.chkoutAddressBill");
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
-				isAuthenticated = app.u.buyerIsAuthenticated();
+				isAuthenticated = app.u.buyerIsAuthenticated(),
+				cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
@@ -697,7 +697,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
-					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
+					if(app.data['appCheckoutDestinations|'+cartID] && app.data['appCheckoutDestinations|'+cartID]['@destinations'] && app.data['appCheckoutDestinations|'+cartID]['@destinations'].length < 2)	{
 						$("[data-app-role='billCountry']",$fieldset).hide();
 						}
 					}
@@ -706,7 +706,8 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
-				isAuthenticated = app.u.buyerIsAuthenticated();
+				isAuthenticated = app.u.buyerIsAuthenticated(),
+				cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 
 //determine if panel should be visible or not.
 				if(formObj['want/bill_to_ship'] == 'on' && !app.ext.cco.u.thisSessionIsPayPal())	{$fieldset.hide()}
@@ -739,7 +740,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
-					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
+					if(app.data['appCheckoutDestinations|'+cartID] && app.data['appCheckoutDestinations|'+cartID]['@destinations'] && app.data['appCheckoutDestinations|'+cartID]['@destinations'].length < 2)	{
 						$("[data-app-role='shipCountry']",$fieldset).hide();
 						}
 					}
@@ -867,7 +868,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 
 //if the user is logged in and has giftcards, show a message about partial GC payments.
-					if(app.u.buyerIsAuthenticated() && app.ext.cco.u.paymentMethodsIncludesGiftcard('appPaymentMethods')){
+					if(app.u.buyerIsAuthenticated() && app.ext.cco.u.paymentMethodsIncludesGiftcard('appPaymentMethods|'+$fieldset.closest("[data-app-role='checkout']").data('cartid'))){
 						$("[data-app-role='giftcardHint']",$fieldset).show();
 						}
 					else {} //user is not logged in.
@@ -961,6 +962,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length && cartID)	{
+					app.u.dump(" -> startCheckout cartid: "+cartID);
 					$chkContainer.empty();
 					$chkContainer.anydelegate();
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.
@@ -978,9 +980,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
 						}
 
+					app.ext.orderCreate.vars[cartID] = app.ext.orderCreate.vars[cartID] || {'payment':{}};
+
 					app.ext.orderCreate.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
 					app.ext.cco.calls.appPaymentMethods.init({_cartid:cartID},{},'immutable');
-					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
+					app.ext.cco.calls.appCheckoutDestinations.init(cartID,{},'immutable');
 					
 					app.model.destroy('cartDetail|'+cartID);
 					
@@ -1070,7 +1074,7 @@ else	{
 										"@updates" : ["LINK-CUSTOMER-ID?CID="+CID]
 										},'immutable');
 									app.model.destroy('cartDetail|'+$context.data('cartid'));
-									app.model.destroy('appPaymentMethods');
+									app.model.destroy('appPaymentMethods|'+$context.data('cartid'));
 									app.calls.cartDetail.init($context.data('cartid'),{},'immutable');
 									app.ext.cco.calls.appPaymentMethods.init({_cartid:$context.data('cartid')},{},'immutable'); //update pay and ship anytime either address changes.
 									app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$context},'immutable');
@@ -1222,10 +1226,10 @@ else	{
 
 
 			cartItemAddFromForm : function($ele,p)	{
-				var $chkoutForm	= $ele.closest('form'), $checkout = $ele.closest("[data-app-role='checkout']");
+				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
 				app.ext.store_product.u.handleAddToCart($ele.closest('form'));
 				app.model.destroy('cartDetail|'+$checkout.data('cartid'));
-				app.model.destroy('appPaymentMethods');
+				app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
 				app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
 				app.calls.cartDetail.init($checkout.data('cartid'),{
 					'callback':function(rd){
@@ -1263,8 +1267,8 @@ else	{
 						if(app.ext.store_product.validate.addToCart(pid,$form))	{
 							app.u.dump(" -> passed validation");
 							app.ext.store_product.u.handleAddToCart($form);
-							app.model.destroy('cartDetail');
-							app.model.destroy('appPaymentMethods');
+							app.model.destroy('cartDetail|'+$checkout.data('cartid'));
+							app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
 							app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
 							app.calls.cartDetail.init($checkout.data('cartid'),{
 								'callback':function(rd){
@@ -1313,8 +1317,10 @@ else	{
 				}, //addTriggerPayMethodUpdate
 			
 			shipOrPayMethodSelectExec : function($ele,p)	{
+				app.u.dump("BEGIN orderCreate.e.shipOrPayMethodSelectExec");
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
+				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.calls.cartSet.init(obj);
 //destroys cart and updates big three panels (shipping, payment and summary)
 				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
@@ -1330,6 +1336,7 @@ else	{
 				if($ele.closest('form').find("input[name='want/bill_to_ship']").is(':checked') && $ele.attr('name').indexOf('bill/') >= 0)	{
 					obj[$ele.attr('name').replace('bill/','ship/')] = $ele.val();
 					}
+				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.calls.cartSet.init(obj); //update the cart
 				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
 				app.model.dispatchThis('immutable');
@@ -1354,6 +1361,7 @@ else	{
 					$("[name='"+addressType+"/shortcut']",$form).val(addressID);
 					var cartUpdate = {};
 					cartUpdate[addressType+"/shortcut"] = addressID;
+					cartUpdate._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 					
 					var addrObj = app.vars.thisSessionIsAdmin ? app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+app.data['cartDetail|'+$checkout.data('cartid')].customer.cid]['@'+addressType.toUpperCase()],addressID,addressType,true) : app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
 
@@ -1456,6 +1464,11 @@ else	{
 					}
 				}, //execBuyerLogin
 
+			cartOrderSave : function($ele,p)	{
+				var $form = $ele.closest('form');
+				app.ext.cco.u.sanitizeAndUpdateCart($form);
+				},
+
 			execCartOrderCreate : function($ele,p)	{
 				var $form = $ele.closest('form');
 				
@@ -1505,6 +1518,7 @@ else	{
 			execCartSet : function($ele,p)	{
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
+				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.calls.cartSet.init(obj);
 				app.model.dispatchThis('immutable');
 				}, //execCartSet
@@ -1530,6 +1544,7 @@ else	{
 					}
 				
 				obj[$ele.attr('name')] = $ele.val();
+				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.calls.cartSet.init(obj); //update the cart w/ the country.
 				app.ext.orderCreate.u.handleCommonPanels($form);
 				app.model.dispatchThis('immutable');
@@ -1657,7 +1672,7 @@ else	{
 
 			tagAsBillToShip : function($ele,p)	{
 				var $form = $ele.closest('form');
-				app.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
+				app.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0,_cartid : $ele.closest("[data-app-role='checkout']").data('cartid')},{},'immutable'); //adds dispatches.
 //when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
 // re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
 // originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
@@ -1693,18 +1708,18 @@ else	{
 							//change this so object stores the data how buyerAddressList and buyerWalletList would.
 							obj = app.data['adminCustomerDetail|'+app.data['cartDetail|'+cartID].customer.cid];
 							}
-						$.extend(true,obj,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data['cartDetail|'+cartID]);
+						$.extend(true,obj,app.data['appPaymentMethods|'+cartID],app.data['appCheckoutDestinations|'+cartID],app.data['cartDetail|'+cartID]);
 						}
 					else	{
 						if(app.u.buyerIsAuthenticated())	{
 		//					app.u.dump(" -> buyer is authenticated");
-							$.extend(true,obj,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data['cartDetail|'+cartID]);
+							$.extend(true,obj,app.data['appPaymentMethods|'+cartID],app.data['appCheckoutDestinations|'+cartID],app.data.buyerAddressList,app.data.buyerWalletList,app.data['cartDetail|'+cartID]);
 							}
 						else	{
 		//					app.u.dump(" -> buyer is not authenticated.");
-							$.extend(true,obj,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data['cartDetail|'+cartID]);
+							$.extend(true,obj,app.data['appPaymentMethods|'+cartID],app.data['appCheckoutDestinations|'+cartID],app.data['cartDetail|'+cartID]);
 							}
-	
+
 //when a buyer returns from paypal, the shipping is populated, but the billing is not always.
 //this will put the ship info into the bill fields if they're blank.
 						if(app.ext.cco.u.thisSessionIsPayPal())	{
@@ -1800,6 +1815,7 @@ else	{
 //does NOT dispatch. That way, other requests can be piggy-backed.
 			handleCommonPanels : function($context)	{
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
+				app.u.dump(" -> handleCommonPanels cartID: "+cartID);
 				if(cartid)	{
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
@@ -1878,13 +1894,14 @@ else	{
 					var
 						$label = $input.closest('label'),
 						$fieldset = $input.closest('fieldset'),
-						$pmc = $input.closest("[data-app-role='paymentMethodContainer']"); //payment method container. an li or div or row. who knows.
+						$pmc = $input.closest("[data-app-role='paymentMethodContainer']"), //payment method container. an li or div or row. who knows.
+						cartID = $input.closest("[data-app-role='checkout']").data('cartid');
 	
 	//handle the previously selected payment method.
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
 					$("[data-app-role='supplementalPaymentInputsContainer']",$fieldset).empty().remove(); //must be removed so form inputs are not present.
 					
-					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars.payment);
+					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars[cartID].payment);
 					if($supplementalOutput)	{
 						$label.addClass("ui-state-active ui-corner-top");
 						$supplementalOutput.addClass('ui-corner-bottom ui-widget ui-widget-content').appendTo($pmc);
@@ -1976,70 +1993,65 @@ app.model.dispatchThis('passive');
 
 
 		renderFormats : {
-
+//pass the cart(cart/cartid); in for the databind var. Multiple pieces of data are required for this render format (want/shipping_id and @SHIPMETHODS).
 			shipMethodsAsRadioButtons : function($tag,data)	{
-				var o = '', isSelectedMethod, shippingID, L = data.value.length, cartID = $tag.closest("[data-app-role='checkout']").data('cartid');
+				var o = '', cartData,sMethods,L;
 				
-				if(cartID && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].want && app.dataapp.data['cartDetail|'+cartID].want.shipping_id)	{
-					shippingID = app.dataapp.data['cartDetail|'+cartID].want.shipping_id;
+				if(app.data['cartDetail|'+data.value])	{
+					cartData = app.data['cartDetail|'+data.value];
+					sMethods = app.data['cartDetail|'+data.value]['@SHIPMETHODS'];
+					L = sMethods.length;
+					for(var i = 0; i < L; i += 1)	{
+						o += "<li class='headerPadding'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+sMethods[i].id+"' ";
+						o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+						}
 					}
-				
-				for(var i = 0; i < L; i += 1)	{
-					var id = data.value[i].id, safeid, shipName; // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
-					if(shippingID == id)	{isSelectedMethod =  true;}
-					else	{isSelectedMethod =  false;}
-
-					safeid = app.u.makeSafeHTMLId(data.value[i].id);
-					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
-					o += "<li class='headerPadding "
-					if(isSelectedMethod)
-						o+= ' selected ';
-					o += "shipcon_"+safeid; 
-					o += "'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+id+"' "; // note to self -> if a different app event is required for admin, pass it in data-bind
-					if(isSelectedMethod)
-						o += " checked='checked' "
-					o += "/>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+				else	{
+					o = $("<div \/>").anymessage({'message':'In orderCreate.renderFormats.shipMethodsAsRadioButtons, cartDetail|'+data.value+' not found in memory.','gMessage':true});
 					}
 				$tag.html(o);
+				app.u.dump(" -> cartData.want.shipping_id: "+cartData.want.shipping_id);
+				if(cartData.want.shipping_id)	{
+					$("input[value='"+cartData.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active')
+					}
+
 				}, //shipMethodsAsRadioButtons
 
 			payMethodsAsRadioButtons : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.orderCreate.renderFormats.payOptionsAsRadioButtons');
 //				app.u.dump(data);
-
-				var L = data.value.length,
-				o = "", //the output appended to $tag
-				id = ''; //recycled.
-
+				var o = '', cartData,pMethods,L;
+				if(app.data['cartDetail|'+data.value] &&  app.data['appPaymentMethods|'+data.value])	{
+					cartData = app.data['cartDetail|'+data.value];
+					pMethods = app.data['appPaymentMethods|'+data.value]['@methods'];
+					L = pMethods.length;
 //ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
-				if(data.value[0].id == 'ZERO')	{
-					$tag.hide(); //hide payment options.
-					$tag.append("<div ><input type='radio' name='want/payby'  value='ZERO' checked='checked' \/>"+data.value[i].pretty+"<\/div>");
-					}
-				else if(L > 0)	{
-					
-					var cartID = $tag.closest("[data-app-role='checkout']").data('cartid');
-					
-					for(var i = 0; i < L; i += 1)	{
-						id = data.value[i].id;
-
-//onClick event is added through an app-event. allows for app-specific events.
-						o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/payby' value='"+id+"' ";
-						o += " />"+data.value[i].pretty+"<\/label></div>";
+					if(pMethods[0].id == 'ZERO')	{
+						$tag.hide(); //hide payment options.
+						o += "<div ><input type='radio' name='want/payby'  value='ZERO' checked='checked' \/>"+pMethods[i].pretty+"<\/div>";
 						}
-					$tag.html(o);
-					if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].want && app.data['cartDetail|'+cartID].want.payby)	{
-						$("input[value='"+app.data.cartDetail.want.payby+"']",$tag).attr('checked','checked');
+					else if(L > 0)	{
+						for(var i = 0; i < L; i += 1)	{
+	//onClick event is added through an app-event. allows for app-specific events.
+							o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/payby' value='"+pMethods[i].id+"' />"+pMethods[i].pretty+"<\/label></div>";
+							}
 						}
+					else	{
+						app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
+						
+						o += "It appears no payment options are currently available.";
+						if(document.location.protocol != "https:")	{
+							o += "This session is <b>not secure</b>, so credit card payment is not available.";
+							}
+						}
+					if(cartData.want.shipping_id)	{
+						$("input[value='"+cartData.want.shipping_id+"']",$tag).prop('checked','checked').closest('label').addClass('selected ui-state-active')
+						}						
 					}
 				else	{
-					app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
-					
-					$tag.append("It appears no payment options are currently available.");
-					if(document.location.protocol != "https:")	{
-						$tag.append("This session is <b>not secure</b>, so credit card payment is not available.");
-						}
+					o = $("<div \/>").anymessage({'persistent':true,'message':'In orderCreate.renderFormats.shipMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
 					}
+				$tag.html(o);
 				} //payMethodsAsRadioButtons
 			
 

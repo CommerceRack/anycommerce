@@ -75,7 +75,8 @@ additionally, will apply some conditional form logic.
 //			app.u.dump("BEGIN anydelegate");
 			var
 				self = this,
-				$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+				$t = self.element, //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+				supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
 			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
@@ -83,7 +84,7 @@ additionally, will apply some conditional form logic.
 				}
 			else	{
 				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
-				var supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
+				
 
 //make sure there are no children w/ delegated events.
 				$('.eventDelegation',$t).each(function(){
@@ -92,30 +93,36 @@ additionally, will apply some conditional form logic.
 				
 				for(var i = 0; i < supportedEvents.length; i += 1)	{
 					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
+						app.u.dump(" -> delegated click triggered");
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
+					}
+				}
+
+var inputEventSelectors = "[data-input-"+supportedEvents.join("], [data-input-")+"]";
+app.u.dump(" -> inputEventSelectors: "+inputEventSelectors);
 
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
 //do this before edit tracking is added so the edited class is not added.
-					$("[data-input-"+supportedEvents[i]+"]",$t).each(function(){
-						var $i = $(this)
-						if($i.is('select'))	{
-							$('option:selected',$i).trigger(supportedEvents[i]+'.app');
-							}
-						else if($i.is(':checkbox'))	{
+//this block is executed outside the  if/else above so that if anydelegate has already been added to a parent, new content still gets default actions.
+				$(inputEventSelectors,$t).each(function(index){
+					app.u.dump(index+") woot.");
+					var $i = $(this)
+					if($i.is('select'))	{
+						$('option:selected',$i).trigger(supportedEvents[i]+'.app');
+						}
+					else if($i.is(':checkbox'))	{
+						$i.trigger(supportedEvents[i]+'.app');
+						}
+					else if($i.is(':radio'))	{
+						if($i.is(':checked'))	{
 							$i.trigger(supportedEvents[i]+'.app');
 							}
-						else if($i.is(':radio'))	{
-							if($i.is(':checked'))	{
-								$i.trigger(supportedEvents[i]+'.app');
-								}
-							}
-						
-						})
-					}
-			
-				
-				}
+						}
+					});
+
+
+
 //outside the app event delegation check for backwards compatiblity.
 //the track edit delegation is removed and added in case it's run more than once, so that each edit isn't double-counted.
 			if(self.options.trackEdits)	{
@@ -136,6 +143,7 @@ additionally, will apply some conditional form logic.
 //$CT = $(e.currentTarget)
 //ep = event + parameters (params may get added if the event is triggered programatically)
 		_executeEvent : function($CT,ep)	{
+			app.u.dump(" -> ui.anydelegate._executeEvent being run");
 			ep = ep || {};
 			var r = true; //what is returned.
 			ep.normalizedType = this._normalizeEventType(ep.type);
@@ -195,6 +203,7 @@ additionally, will apply some conditional form logic.
 
 //will show the matching selectors. (show-selector='.bob' will show all class='bob' elements.
 			"show-selector" : function($CT,$t)	{
+//				app.u.dump(' ->>>>>>>>>>>>> GOT HERE');
 				if($($CT.attr('data-show-selector'),$t).is(':visible'))	{}
 				else	{
 					$($CT.attr('data-show-selector'),$t).slideDown();
@@ -234,7 +243,6 @@ additionally, will apply some conditional form logic.
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
-			
 			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
