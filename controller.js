@@ -765,6 +765,7 @@ see jquery/api webdoc for required/optional param
 			}, //canIUse
 
 //WILL look in local
+// ### TODO -> this call needs to support a 'create'. should default to zero. if one (would be used on a storefront probably), if no cart exists, it will be created.
 		cartDetail : {
 			init : function(cartID,_tag,Q)	{
 				var r = 0;
@@ -785,7 +786,7 @@ see jquery/api webdoc for required/optional param
 				return r;
 				},
 			dispatch : function(cartID,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_cart":cartID,"_tag": _tag},Q || 'mutable');
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_cartid":cartID,"_tag": _tag,"create":0},Q || 'mutable');
 				} 
 			}, // refreshCart removed comma from here line 383
 

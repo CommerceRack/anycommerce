@@ -1467,6 +1467,7 @@ else	{
 			cartOrderSave : function($ele,p)	{
 				var $form = $ele.closest('form');
 				app.ext.cco.u.sanitizeAndUpdateCart($form);
+				app.model.dispatchThis('immutable');
 				},
 
 			execCartOrderCreate : function($ele,p)	{
@@ -1815,7 +1816,7 @@ else	{
 //does NOT dispatch. That way, other requests can be piggy-backed.
 			handleCommonPanels : function($context)	{
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
-				app.u.dump(" -> handleCommonPanels cartID: "+cartID);
+				app.u.dump(" -> handleCommonPanels cartID: "+cartid);
 				if(cartid)	{
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
@@ -2000,10 +2001,15 @@ app.model.dispatchThis('passive');
 				if(app.data['cartDetail|'+data.value])	{
 					cartData = app.data['cartDetail|'+data.value];
 					sMethods = app.data['cartDetail|'+data.value]['@SHIPMETHODS'];
-					L = sMethods.length;
-					for(var i = 0; i < L; i += 1)	{
-						o += "<li class='headerPadding'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+sMethods[i].id+"' ";
-						o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+					if(sMethods && sMethods.length)	{
+						L = sMethods.length;
+						for(var i = 0; i < L; i += 1)	{
+							o += "<li class='headerPadding'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+sMethods[i].id+"' ";
+							o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+							}
+						}
+					else	{
+						//### TOD -> handle this.
 						}
 					}
 				else	{
