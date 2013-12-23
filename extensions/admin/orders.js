@@ -1936,11 +1936,22 @@ $('.editable',$container).each(function(){
 				var $menu = $ele.parent().find("[data-app-role='inProgressOrderList']:first");
 				$menu.empty();
 				for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
-					var $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em'}); //font weight set cuz this is inside the header, which is bold.
+					var $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em','border-bottom':'1px dashed #cccccc;'}); //font weight set cuz this is inside the header, which is bold.
 					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+app.vars.carts[i]+"'>"+app.vars.carts[i]+"<\/a>");
-					$li.append("<div><span data-bind='var: cart(bill/firstname); defaultVar: cart(bill_firstname); format:popVal;'><\/span><span data-bind='var: cart(bill/lastname); defaultVar: cart(bill_lastname); format:popVal;'><\/span><\/div>");
 					$menu.append($li);
-					app.calls.cartDetail.init(app.vars.carts[i],{'callback':'anycontent','jqObj':$li,'translateOnly':true},'mutable');
+					app.calls.cartDetail.init(app.vars.carts[i],{'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else if(app.model.responseIsMissing(rd)){
+							// ### TODO -> what to do here? the cart no longer exists.  1. remove from carts. 2. remove from this list. let user know?
+							}
+						else	{
+							if(app.data[rd.datapointer].bill)	{
+								$li.append("<div> &#187; "+app.data[rd.datapointer].bill['firstname']+" "+app.data[rd.datapointer].bill['lastname']+"<\/div>");
+								}
+							}
+						}},'mutable');
 					}
 				if($menu.children().length)	{}
 				else	{$menu.append("<li>no in progress orders exist<\/li>")}

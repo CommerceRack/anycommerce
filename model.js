@@ -338,7 +338,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 		contentType : "text/json",
 		dataType:"json",
 //ok to pass admin vars on non-admin session. They'll be ignored.
-		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cartid": app.model.fetchCartID(),"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
+		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
@@ -853,6 +853,22 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			}, //handleResponse_appCartCreate
 
 
+		responseIsMissing : function(responseData)	{
+			var r = false; //what is returned.
+			if(responseData['_rtag'] && responseData['_rtag'].forceMissing)	{
+				r = true;
+				responseData.errid = "MVC-MISSING-000";
+				responseData.errtype = "missing";
+				responseData.errmsg = "forceMissing is true for _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
+//			app.u.dump(responseData);
+				}
+			else if(responseData['errtype'] == 'missing')	{
+				r = true;
+				}
+			else	{}
+			return r;
+			},
+
 /*
 in most cases, the errors are handled well by the API and returned either as a single message (errmsg)
 or as a series of messages (_msg_X_id) where X is incremented depending on the number of errors.
@@ -863,11 +879,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //at the time of this version, some requests don't have especially good warning/error in the response.
 //as response error handling is improved, this function may no longer be necessary.
 			var r = false; //defaults to no errors found.
-			if(responseData['_rtag'] && responseData['_rtag'].forceError == 1)	{
+			if(responseData['_rtag'] && responseData['_rtag'].forceError)	{
 				r = true;
-				responseData.errid = "MVC-M-000";
+				responseData.errid = "MVC-ERROR-000";
 				responseData.errtype = "debug";
-				responseData.errmsg = "forceError is set to 1 on _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
+				responseData.errmsg = "forceError is true for _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
 //			app.u.dump(responseData);
 				}
 			else	{

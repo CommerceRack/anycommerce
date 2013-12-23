@@ -3794,6 +3794,12 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.calls.adminUIBuilderPanelExecute.init(obj,tagObj);
 				},			
 			
+
+
+/*
+///////////////     FINDER \\\\\\\\\\\\\\\\\\\
+*/
+
 			
 			
 			saveFinderChanges : function()	{
