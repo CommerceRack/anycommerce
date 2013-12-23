@@ -12,6 +12,7 @@ item list and summary are separate just to give more control over location.
 	<form action='#'>
 	<input type='hidden' name='bill/shortcut' data-bind="var: cart(bill/shortcut); format:popVal;" />
 	<input type='hidden' name='ship/shortcut' data-bind="var: cart(ship/shortcut); format:popVal;" />
+	<input type='hidden' name='_cartid' data-bind="var: cart(cart/cartid); format:popVal;" />
 
 <!-- define panel order -->
 	<fieldset data-app-role='chkoutPreflight' class='marginBottom'>
@@ -151,7 +152,7 @@ This template is also used in the myAccount page, which is why a default using _
 	<!-- postal not required for international. don't add it. -->
 	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10'  data-app-blur='orderCreate|execAddressUpdate' /></div>
 
-	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='var: cart(bill/countrycode); defaultVar: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;forceRender:1;' required='required' data-app-change="orderCreate|execCountryUpdate" ></select></div>
+	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='var: cart(cart.cartid); format:countriesAsOptions; extension: cco; shiptype:bill;' required='required' data-app-change="orderCreate|execCountryUpdate" ></select></div>
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
@@ -184,7 +185,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 	
 	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship/postal); format:popVal;' maxlength='10' data-app-blur='orderCreate|execAddressUpdate'/></div>
 
-	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;forceRender:1;'  data-app-change="orderCreate|execCountryUpdate" ></select></div>
+	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='var: cart(cart.cartid); format:countriesAsOptions; extension: cco; shiptype:ship;'  data-app-change="orderCreate|execCountryUpdate" ></select></div>
 
 </section>
 
@@ -216,7 +217,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 -->
 
 <div id='chkoutMethodsShipTemplate'>
-	<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: orderCreate;' ></ul>
+	<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(cart/cartid); format:shipMethodsAsRadioButtons; extension: orderCreate;' ></ul>
 </div>
 
 
@@ -255,7 +256,7 @@ do NOT change any div id's or messaging will not work properly.
 		
 		<h2 data-app-role='nonStoredPaymentsHeader' class='displayNone'>More Payment Choices</h2>
 		<div data-app-role='nonStoredPaymentsContent'>
-			<div data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
+			<div data-bind='var: cart(cart/cartid); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
 		</div>
 		
 		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Your Stored Payments</h2>
@@ -317,7 +318,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
+	<div data-bind='var: cart(cart/cartid); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
 	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
