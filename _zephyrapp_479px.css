@@ -54,6 +54,11 @@
 #reviewFrm label {	text-align:left;}
 #reviewsMessage {height:125px; width:240px;}
 
+/**** Company Pages CSS****/
+.sideline {width:23%; border: 1px solid #939598; padding:6px;}
+.mainColumn {width:70%;}
+
+
 
 }
 /***** Responsiv Css Close *****/
