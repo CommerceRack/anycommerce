@@ -16,7 +16,9 @@
 .searchBar {width:215px;}
 
 /**** Footer CSS****/
-.zephyrHelpBox {width:280px;}
+.zephyrHelpBox {width:280px; height:auto;}
+.zephyrHelpBox ul { margin: 0; padding: 8px; width: 124px;}
+.zephyrHelpBox li {list-style: none;}
 
 /**** Homepage CSS****/
 .randomList {height:2030px;}
