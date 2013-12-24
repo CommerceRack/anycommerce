@@ -436,6 +436,15 @@ $target.append("<br \/>");
 						}
 //					app.u.dump(" -> jsonParse(myJSON): "); app.u.dump(validJSON);
 					if(typeof validJSON === 'object')	{
+						// ### TODO -> this should set a callback of showMessaging and pass a message of 'success' and put it into the parent form but ONLY if no callback is set. got interupted.
+						validJSON._tag = validJSON._tag || {};
+						if(validJSON._tag.callback)	{}
+						else	{
+							validJSON._tag.callback = 'showMessaging';
+							validJSON._tag.message = "API request was successful.";
+							validJSON._tag.jqObj = $btn.closest('form');
+							}
+	
 						if(app.model.addDispatchToQ(validJSON,'mutable'))	{
 							app.model.dispatchThis('mutable');
 							}

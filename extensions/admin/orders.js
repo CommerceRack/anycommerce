@@ -1936,19 +1936,23 @@ $('.editable',$container).each(function(){
 				var $menu = $ele.parent().find("[data-app-role='inProgressOrderList']:first");
 				$menu.empty();
 				for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
-					var $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em','border-bottom':'1px dashed #cccccc;'}); //font weight set cuz this is inside the header, which is bold.
-					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+app.vars.carts[i]+"'>"+app.vars.carts[i]+"<\/a>");
+					
+					var cartID = app.vars.carts[i], $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em','line-height':'16px'}); //font weight set cuz this is inside the header, which is bold.
+					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+cartID+"'><span class='wait marginRight'><\/span>"+cartID+"<\/a>");
 					$menu.append($li);
-					app.calls.cartDetail.init(app.vars.carts[i],{'callback':function(rd){
+					app.calls.cartDetail.init(cartID,{'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else if(app.model.responseIsMissing(rd)){
-							// ### TODO -> what to do here? the cart no longer exists.  1. remove from carts. 2. remove from this list. let user know?
+							//this point would be reached if the cart had expired. It's a 'success' in that the API call worked, but the a special case in the handling. how it's handled would be app-specific.
+							$li.hide();
+							app.model.removeCartFromSession(cartID);
 							}
 						else	{
+							$('.wait',$li).hide();
 							if(app.data[rd.datapointer].bill)	{
-								$li.append("<div> &#187; "+app.data[rd.datapointer].bill['firstname']+" "+app.data[rd.datapointer].bill['lastname']+"<\/div>");
+								$('a',$li).text(app.data[rd.datapointer].bill['firstname']+" "+app.data[rd.datapointer].bill['lastname']);
 								}
 							}
 						}},'mutable');
