@@ -159,7 +159,12 @@ var admin_reports = function() {
 				
 				var $KPI = $('#kpiContent').empty();
 				$KPI.anycontent({'templateID':'KPIManagerPageTemplate','showLoadingMessage':'Fetching list of collections'});
-				app.ext.admin.calls.adminKPIDBUserDataSetsList.init({},'mutable');
+				
+				if(app.model.fetchData('adminKPIDBUserDataSetsList'))	{}
+				else	{
+					app.model.addDispatchToQ({'_cmd':'adminKPIDBUserDataSetsList','_tag':	{'datapointer' : 'adminKPIDBUserDataSetsList'}},'mutable');
+					}
+				
 				app.ext.admin.calls.adminKPIDBCollectionList.init({'callback':function(rd){
 					$KPI.hideLoading();
 					if(app.model.responseHasErrors(rd)){
@@ -448,7 +453,9 @@ var admin_reports = function() {
 							{text: 'Cancel', click: function(){$D.dialog('close')}},
 							{text: "Delete Collection", click: function() {
 	$D.parent().showLoading({'message':'Removing collection...'});
-	app.ext.admin.calls.adminKPIDBCollectionRemove.init(collection,{},'immutable');
+
+	app.model.addDispatchToQ({'uuid':collection,'_cmd':'adminKPIDBCollectionRemove','_tag':{'callback':'showMessaging','message':collection+' has been removed','jqObj':$context}},'mutable');
+
 	app.model.destroy('adminKPIDBCollectionDetail|'+collection);
 	app.model.destroy('adminKPIDBCollectionList');
 	app.ext.admin.calls.adminKPIDBCollectionList.init({callback : function(rd){
@@ -577,7 +584,9 @@ var admin_reports = function() {
 					if(!app.ext.admin_reports.u.graphVarsIsMissingData(graphVars))	{
 						$target.showLoading({'message':'Fetching graph data'});
 //everything we need is accounted for. Move along... move along...
-						app.ext.admin.calls.adminKPIDBDataQuery.init(graphVars,{callback:function(rd){
+
+						graphVars._tag = graphVars._tag || {};
+						graphVars.callback = function(rd){
 							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
@@ -585,7 +594,8 @@ var admin_reports = function() {
 							else	{
 								app.ext.admin_reports.u.addGraph($target,graphVars,app.data[rd.datapointer])
 								}
-							}},'mutable');
+							}
+						app.model.addDispatchToQ(graphVars,'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					else	{
@@ -1008,17 +1018,23 @@ else	{
 								if(val)	{
 									$D.parent().showLoading({'message':'Adding collection...'});
 									app.model.destroy('adminKPIDBCollectionList');
-									app.ext.admin.calls.adminKPIDBCollectionCreate.init({'uuid':app.u.guidGenerator(),'title':val},{callback : function(rd){
-										$D.parent().hideLoading();
-										if(app.model.responseHasErrors(rd)){
-											$('.appMessaging').anymessage({'message':rd,'gMessage':true});
+									app.model.addDispatchToQ({
+										'_cmd':'adminKPIDBCollectionCreate',
+										'_tag':	{
+											'datapointer' : 'adminKPIDBCollectionCreate',
+											'callback':function(rd){
+												$D.parent().hideLoading();
+												if(app.model.responseHasErrors(rd)){
+													$('.appMessaging').anymessage({'message':rd,'gMessage':true});
+													}
+												else	{
+													$D.anymessage(app.u.successMsgObject('Your collection has been created.'));
+													$('#newCollectionName').val('');
+													app.ext.admin_reports.u.updateKPICollections($btn.closest("[data-app-role='slimLeftContainer']"));
+													}
+												}
 											}
-										else	{
-											$D.anymessage(app.u.successMsgObject('Your collection has been created.'));
-											$('#newCollectionName').val('');
-											app.ext.admin_reports.u.updateKPICollections($btn.closest("[data-app-role='slimLeftContainer']"));
-											}
-										}},'immutable');
+										},'immutable');
 									app.ext.admin.calls.adminKPIDBCollectionList.init({},'immutable')
 									app.model.dispatchThis('immutable');
 									}
