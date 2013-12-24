@@ -349,28 +349,6 @@ var admin = function() {
 			}, //adminEmailSave
 
 
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminKPIDBCollectionCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionCreate"
-				obj = obj || {};
-				if(obj.title && obj.uuid)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionCreate, uuid or title not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminKPIDBCollectionCreate'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
 		adminKPIDBCollectionDetail : {
 			init : function(uuid,_tag,Q)	{
 				var r = 0;
@@ -393,7 +371,7 @@ var admin = function() {
 			dispatch : function(uuid,_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionDetail","uuid":uuid,"_tag" : _tag},Q || 'mutable');	
 				}
-			}, //adminKPIDBCollectionList
+			}, //adminKPIDBCollectionDetail
 		adminKPIDBCollectionList : {
 			init : function(_tag,Q)	{
 				var r = 0;
@@ -411,25 +389,8 @@ var admin = function() {
 			dispatch : function(_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionList","_tag" : _tag},Q || 'mutable');	
 				}
-			}, //adminKPIDBCollectionList		
-		adminKPIDBCollectionRemove : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionRemove"
-				if(uuid)	{
-					r = 1;
-					this.dispatch(uuid,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionRemove, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionRemove","uuid":uuid,"_tag" : _tag},Q || 'immutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
+			}, //adminKPIDBCollectionList	
+	
 //obj requires uuid, title, priority and @GRAPHS are optional.
 		adminKPIDBCollectionUpdate : {
 			init : function(obj,_tag,Q)	{
@@ -453,66 +414,7 @@ var admin = function() {
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
-			}, //adminKPIDBUserDataSetsList
-/*
-<input id="@datasets"></input>
-<input id="grpby">day|dow|quarter|month|week|none</input>
-<input id="column">gms|distinct|total</input>
-<input id="period">a formula ex: months.1, weeks.1</period>
-<input id="startyyyymmdd">(not needed if period is passed)</input>
-<input id="stopyyyymmdd">(not needed if period is passed)</input>
-*/
-// obj required dataset, grupby, column, detail. period or starty/stop date range are needed.
-		adminKPIDBDataQuery : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$.isEmptyObject(obj))	{
-					if(obj['@datasets'] && obj.grpby && obj.column && obj['function'])	{
-						if(obj.period || (obj.startyyyymmdd && obj.stopyyyymmdd))	{
-							r = 1;
-							this.dispatch(obj,_tag,Q);
-							}
-						else	{
-							$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, either period ["+obj.period+"] or start/stop ["+["+obj.startyyyymmdd+"]+"/"+obj.stopyyyymmdd+"] date range required.","gMessage":true})
-							}
-						}
-					else	{
-						$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; @datasets ["+typeof obj['@datasets']+"], grpby ["+obj.grpby+"], and column ["+obj.column+"] and function ["+obj['function']+"] are required","gMessage":true})
-						}
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, no object passed","gMessage":true})
-					}
-
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminKPIDBDataQuery";
-				obj._tag = _tag || {}; 
-				obj._tag.datapointer = "adminKPIDBDataQuery"
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminKPIDBDataQuery
-		adminKPIDBUserDataSetsList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBUserDataSetsList"
-				if(app.model.fetchData('adminKPIDBUserDataSetsList') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBUserDataSetsList","_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
-
+			}, //adminKPIDBCollectionUpdate
 
 
 
