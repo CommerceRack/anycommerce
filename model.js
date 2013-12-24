@@ -416,7 +416,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 //callback is defined in extension or controller as object (with onSuccess and maybe onError)
 					else if(typeof callback == 'string')	{
 						callback = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
-						if(typeof callback.onError == 'function'){
+						if(callback && typeof callback.onError == 'function'){
 							callback.onError(responseData,UUID);
 							}
 						else{
