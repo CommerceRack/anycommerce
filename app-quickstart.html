@@ -136,12 +136,36 @@ ANIMATION TESTING
 
 
 
-<div id='cartMessagingDialog' class='displayNone'>
-	<section data-app-role='messageHistory'></section>
-	<section data-app-role='messageCommands'>
-	a button or two to 'do things', such as "let helper know what page I'm on".
-	</section>
+
+<!--
+*************************************************************************************************************
+**
+**
+**										C A R T   M E S S A G E   U I      S T A R T S      H E R E
+**
+** A mechanism where buyers and merchants can communicate in real time.
+**
+*************************************************************************************************************
+-->
+
+
+
+<div id='cartMessageUI' class='displayNone' data-app-role='helpContainer'>
+	<form>
+		<section data-app-role='messageHistory' class='messageHistory'></section>
+		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer'>
+			<textarea name='message' required='required' placeholder='send a message'></textarea>
+			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
+		</fieldset>
+		<section data-app-role='messageCommands' class='messageCommandsContainer'>
+		<button>Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+		<button>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
+		</section>
+	</form>
 </div>
+
+
+
 
 
 
@@ -1489,6 +1513,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>
+	<li><a href='#' onClick="app.ext.cart_message.a.showBuyerCMUI();">Messaging UI</a>
 	<li>Some JS test links
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>

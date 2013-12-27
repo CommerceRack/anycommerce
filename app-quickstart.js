@@ -181,8 +181,13 @@ document.write = function(v){
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
-
-				app.model.addDispatchToQ({'_cmd':'cartMessageList','_cartid':app.model.fetchCartID(),'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'myRIA'}},'mutable'); //polling takes place on passive after initial call.  starts on mutable just to piggy-back w/ rest of init calls.
+				var messagesDPS = app.model.dpsGet('cart','messages') || [];
+				app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((messagesDPS.length) ? (messagesDPS.length - 1) : 0),'_cartid':app.model.fetchCartID(),'_tag':	{
+					'datapointer' : 'cartMessageList',
+					'callback':'handleCartMessageListPolling',
+					'extension' : 'cart_message',
+					'jqObj' : $('#cartMessageUI')
+					}},'mutable'); //polling takes place on passive after initial call.  starts on mutable just to piggy-back w/ rest of init calls.
 
 				app.calls.appProfileInfo.init({'domain':zGlobals.appSettings.domain_only},{callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
@@ -240,47 +245,7 @@ document.write = function(v){
 			}, //showRootCategories
 
 
-		handleCartMessageListPolling : {
-			onSuccess : function(tagObj)	{
-/*
-if no message, increment frequency by 3 seconds and trigger timeout but never greater than 1 minute.
-if messages 
-	-> update localStorage copy of messageList. store as array. push new messages onto the end of that array.
-	-> update DOM.
-	-> trigger another timout at frequency - 2 seconds BUT frequency never less than 3 seconds.
-*/
-				var	messages = app.data[tagObj.datapointer]['@MSGS'], L = messages.length;
-				
-				if(L)	{
-					((app.ext.myRIA.vars.polling.frequency - 6000) < 3000) ? 3000 : app.ext.myRIA.vars.polling.frequency-=6000; //frequency is never less than 3000;
-					var $history = $("[data-app-role='messageHistory']","#cartMessagingDialog");
-					var messagesDPS = app.model.dpsGet('cart','messages') || [];
-					for(var i = 0; i < L; i += 1)	{
-						messagesDPS.push(messages[i]);
-						$history.append(messages[i].WHAT); //This will need to get run through some kind of processing function.
-						}
-					app.model.dpsSet('cart','messages',messagesDPS);
-					}
-				else	{
-					(app.ext.myRIA.vars.polling.frequency >= 60000) ? 60000 : app.ext.myRIA.vars.polling.frequency += 3000; //frequency is never much more than a minute.
-					}
-//now queue up the next request.
-				app.u.dump(" -> queued up the next cartMessages cmd");
-				app.ext.myRIA.vars.polling.timeout = setTimeout(function(){
-					app.model.addDispatchToQ({'_cmd':'cartMessageList','_cartid':app.model.fetchCartID(),'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'myRIA'}},'passive');
-					app.model.dispatchThis('passive');
-					},app.ext.myRIA.vars.polling.frequency);
 
-				},
-			onError : function(_rtag)	{
-				app.ext.myRIA.vars.polling.frequency = 10000;
-				app.ext.myRIA.vars.polling.timeout = setTimeout(function(){
-					app.model.addDispatchToQ({'_cmd':'cartMessageList','_cartid':app.model.fetchCartID(),'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'myRIA'}},'passive');
-					app.model.dispatchThis('passive');
-					},app.ext.myRIA.vars.polling.frequency);
-				}
-			
-			},
 
 
 //used for callback on showCartInModal function
@@ -2123,6 +2088,8 @@ effects the display of the nav buttons only. should be run just after the handle
 					step($(this),-1);
 					});
 				},
+
+
 
 
 //rather than having all the params in the dom, just call this function. makes updating easier too.
