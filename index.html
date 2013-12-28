@@ -696,7 +696,6 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 				<li><a href="#" onClick="return showContent('company',{'show':'payment'});">Payment Policy</a></li>
 				<li><a href="#" onClick="return showContent('company',{'show':'return'});">Return Policy</a></li>
 				<li><a href="#" onClick="return showContent('company',{'show':'shipping'});">Shipping Information</a></li>
-				<li><a href="#" onClick="return showContent('customer',{'show':'newsletter'});">Newsletter</a></li>
 			</ul>
 		</div>
 	</div>
@@ -1418,7 +1417,6 @@ if you change these, you should move them above this comment so that when you (o
 <ul class='listStyleNone noPadOrMargin'>
 	<li><a href='#company?show=about'>About Us</a></li>
 	<li><a href='#company?show=contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'>FAQ</a></li>
 	<li><a href='#company?show=payment'>Payment Policy</a></li>
 	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
 	<li><a href='#company?show=return'>Return Policy</a></li>
@@ -1430,14 +1428,18 @@ if you change these, you should move them above this comment so that when you (o
 	<div class='mainColumn'>
 <!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
 		<div id='aboutArticle' class='textContentArea article'>
-			<h1>About Us</h1>
-			<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
+			<h1 class="marginBottom">About Us</h1>
+			<p>ZephyrPaintball.com delivers Paintball and Airsoft Gear at affordable prices on Paintball Guns, Paintball Goggles, Gun Upgrades, Air Systems, Airsoft Equipment and much more gear. Zephyr Sports was founded in 2003 as an internet retailer focusing on the sport of Paintball. We carry a complete line of paintball equipment with only the finest products made from top quality manufacturers. Through ZephyrAirsoft.com you will find many types of Airsoft Rifles, Pistols, Ammo, Gas, Holsters, Protective Gear and many other products to meet your airsoft needs. Whether it is related to Paintball, Airsoft, Camelbaks, or Sunglasses, we want all options available for our customers.</p>
+			<p>We understand the importance of individuality. All players have different needs, some want to be as compact as possible for speed ball types of fields. Which means smaller tank, lighter jersey/pants, low profile loader. Some players take a different view on the game and don't have the same concern as being compact but rather need to blend in with their environment for tactical game play. Some may want to play in the woods or a jungle type field that get the best use out of baggy camo pants, realistic paintball guns & tactical vest to hold extra ammo and parts. There are many options with Paintball and that's why Zephyr is here to get you placed where you are most comfortable.</p>
+			<p>Paintball has grown so much in the last decade and there is no doubt that there is much more you can do to customize your appearance, your gun, your comfort, and your overall paintball experience. At Zephyr we make sure all Paintball related items are available for our customers. Paintball products are constantly being released and we take it upon ourselves to make sure our site has the newest and greatest on hand. Our user-friendly website makes it easier than ever to navigate your way through this wonderful experience. If you don't see something you are looking for it might still be there but in a category that was looked over, so remember you can always email us and/or call us with any questions or concerns to help your online experience be quick and simple.</p>
+			<p>At Zephyr, we welcome all feedback to help us stay strong and grow as a company. Our customers are most important to us, so never hesitate to let us know how you feel. All comments are important and needed so we as your supplier have an honest, open relationship for your internet experience. You can send us an email at sales@zephyrsports.com or give us a ring at 877-814-4297.</p>
 		</div>
 
 
 		<div id='contactArticle' class='displayNone textContentArea'>
-			<h1>Contact Information</h1>
+			<h1 class="marginBottom">Contact Information</h1>
 			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
+			<p>We can be reached Mon - Fri 10-6 Pacific at sales@zephyrpaintball.com or 805-275-2040</p>
 			<fieldset>
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>
@@ -1462,13 +1464,33 @@ if you change these, you should move them above this comment so that when you (o
 
 
 		<div class='displayNone textContentArea' id='paymentArticle'>
-			<h1>Payment Policy</h1>
-			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
+			<h1 class="marginBottom">Payment Policy</h1>
+			<p><b>What are My Payment Choices?</b> You have several payment options to choose from when shopping at Zephyr. We accept all major credit cards which include; Visa, MasterCard, American Express and Discover. You may also choose Google Checkout, PayPal, and Amazon Payments. We do <b>NOT</b> accept <b>checks</b> or <b>international credit cards.</b></p>
+
+			<p><b>When Will My Credit Card be Charged?</b> As of at this time your card will be charged as soon as the order is placed.</p>
+
+			<p><b>When Will My Credit Appear on My Account?</b> Credit will typically appear back on the card within 5-7 business days of cancellation. If you are returning and item then it will take 5-7 business days from when we receive and process your return.</p>
+ 
+			<p><b>I Have Questions About My Charges.</b> If you have a question about any charges or credits on your account, you may want to contact your financial institution first. If you have any other questions at that point, please give us a call at 877-814-4297.</p>
+
+			<p><b>Do I Have to Pay Sales Tax?</b> You do not have to pay sales tax unless you live in California. The current sales tax in California is 8.25%.</p>
+
+			<p><b>Low Price Guarantee</b>We will provide store credit when we drop a price on an exact item within <b>30 days</b> of an online order. This must be on the <b>exact size and color</b> of the item ordered! If we no longer have the specific size or color in stock, then we will <b>not</b> provide the credit. The store credit will be equal to the difference in price.</p>
+
+			<p><b>The buySAFE Bond Guarantee.</b>For added peace of mind, you can guarantee all transactions with a buySAFE Bond for a nominal fee.</p>
+			<p>Backed by buySAFE and its surety partners: Liberty Mutual, Travelers and ACE USA - the bond guarantees that you will receive full reimbursement (up to $25,000 per item) in the unlikely event that this buySAFE Merchant does not honor its terms and conditions. The bond ensures that:</p>
+			<ul>
+				<li>Your item will be packaged and shipped via the promised shipping method</li>
+				<li>Your item will ship in the timeframe promised</li>
+				<li>You will receive what you ordered as described online</li>
+				<li>All payment methods indicated will be accepted</li>
+				<li>All return and refund policies will be honored</li>
+			</ul>
 		</div>
 
 
 		<div class='displayNone textContentArea' id='privacyArticle'>
-			<h1>Privacy Statement</h1>
+			<h1 class="marginBottom">Privacy Statement</h1>
 	<h4>About this Privacy Policy:</h4>
 	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
 
@@ -1513,14 +1535,82 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class='displayNone textContentArea' id='returnArticle'>
 			<h1>Return Policy</h1>
-			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
+			<p><b>What is the Zephyr Return Policy?</b> Zephyr Sports will accept most returns on unopened items for up to 30 days after the invoice date. Returns are for products that you do not wish to keep and <b>must have zero appearance of being opened or used.</b> If we have sent you an incorrect product or size, we will happily help you to return the product.</p>
+
+			<p>We <b>do not accept defective merchandise</b> for return. Please contact the manufacturer of any product in question that did not work. We will be glad to help you contact any manufacturer in question.</p>
+
+			<p>A <b>15% restocking fee</b> will be charged on all returns requesting a refund. However, this fee will be waived if store credit is chosen. The restocking fee will not be waived if we did indeed send you the correct product you ordered.</p>
+
+			<p>Most guns cannot be returned after they have been opened. The manufacturer will handle all warranty issues, including issues directly out of the box. The manufacturer will typically be able to talk you through any issues you are having over the phone without having to send the item in for repair. In the event that you do have to send the marker in for repair, Zephyr Sports will issue store credit to cover your shipping costs to warranty an item, if the issue is out of the box. To request this, fax or e-mail a copy of your shipping receipt and include your order # to 805-293-8717 or sales@zephyrsports.com. We will process a store credit to cover the shipping cost.</p>
+
+			<p>If you would like to exchange a product for a different size, color, or product all together, all that we require is that the product be returned to us in exactly the same condition it was sent. It must be unused and contain the original packaging intact. The customer assumes any shipping cost both to our warehouse and back to the customer.</p>
+
+			<p>Our Returns & Exchanges section is specially designed to speed up the process of filing and following up on any return or exchange request. By taking the time to read through our policies and follow the information provided, we will be better able to serve you and quickly resolve any issue that may arise.</p>
+
+			<p>Returns & Exchanges are reserved for customers whom received the incorrect product or who received the correct product ordered but wish to return for refund, return for store credit, or exchange.</p>
+
+			<p>Any return or exchange will be processed at the time we receive the item(s) in question. We are obligated to verify that any claim for return or exchange is valid before moving forward with any kind of refund, credit, or exchange. Please allow 5-7 business days for any refund or credit to show on your credit statement or account.</p>
+
+			<p>Note: If we receive your item and confirm that it is the correct product ordered by you, up to a 15% restocking fee will be assessed before any refund or exchange is given. It is the responsibility of you (the customer) to verify that you order a product you truly want. If you ever have any question about a product before you order, please give us a call at 877-814-4297.</p>
+
+
+			<p><b>I received the Wrong Product.</b> If you have received the wrong product please call us at 877-814-4297. We will be glad to help you straighten this out. Do not attempt to use or open the product as any claim for return will be void. We allow claims to be filed up to 30 calendar days after the delivery date; any claim made after 30 calendar days is considered void. </p>
+
+			<p>To streamline the process and make sure you receive the correct product as fast as possible, we advise you to call our customer service department. Please have your invoice readily available as our representatives will need to verify information listed on your order invoice.</p>
+
+			<p>Once our customer service representatives verify your claim that the incorrect product was shipped to you, we will promptly email a FedEx shipping label to cover any shipping cost. Our reps will also be glad to help you locate your local FedEx drop-off/pick-up location. Once we receive the product and confirm that it was shipped incorrectly, we will then ship the correct product to you via a similar means as the original order. Our reps should give you a RMA number to clearly print on the outside of the box; be sure to follow these instructions or your package may be refused.</p>
+
+			<p>If you are unable to receive a FedEx shipping label, please include a copy of any recite detailing shipping costs. Once received and confirmed, we will then reimburse your shipping cost via store credit to your account. Reimbursements will only be authorized for standard ground shipping. If you decide to ship by any other means, we will only reimburse up to a maximum of the determined FedEx ground cost.</p>
+
+			<p>Note: If we receive your item and confirm that it is the correct product ordered by you and no mistake was made, we will then require you to pay for shipping back to you. If you would like to exchange the product, please read the above return/exchange policy.</p>
+
+			<p><b>I Received Someone Else's Order.</b> If you have received someone Else's order please give us a call at 877-814-4297.</p>
+
+			<p>We appreciate the honesty and integrity of our customer base. It is because of you that our business has continuously been able to offer the lowest prices anywhere.</p>
+
+			<p><b>My Order is Missing an Item(s).</b> If your order is missing an item or you received an incorrect quantity, please immediately contact our customer service department at 877-814-4297. We allow claims to be filed up to 30 calendar days after the delivery date; any claim made after 30 calendar days is considered void.</p>
+
+			<p>To streamline the process and make sure you receive any product in question as quickly as possible, we advise you to call our customer service department. Please have your invoice readily available as our representatives will need to verify information listed on your order invoice.</p>
+
+			<p>Once your claim is filed, our representatives will then research the claim by verifying the weight received by FedEx as well as confirm items pulled & packed for your order. If indeed we failed to ship any product in question, we will promptly send out your item(s) via a similar shipping method as the original order at no additional charges to you.</p>
+
+			<p>In the event that we did in fact pull, pack, and ship all items ordered, it is likely that your package was tampered with while in transit. In this case we will handle your claim on a case by case basis to help resolve any issues. Be aware that it is our policy to file a claim with FedEx for packages that may have been tampered with during transit.</p>
 		</div>
 
 
 
 		<div class='displayNone textContentArea' id='shippingArticle'>
 			<h1>Shipping Information</h1>
-			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
+			<p><b>Does My Shipping and Billing Addresses Have to Match?</b> For fraud protection purposes, we require that all address information must match what is on file with the credit card company. If you are shipping to an address other than your billing address, the shipping address must also be listed with your financial institution as an alternate shipping address. This can easily be done by calling the number on your statement or the back of your credit card. It only takes a few minutes and does not affect your billing information at all. If both addresses are on file with the credit card company, you still may be contacted to verify your address. </p>
+			<p>If this is the case, please give us a call at 877-814-4297 so that we can manually verify your addresses with the credit card company. If your financial institution cannot verify your address with us, you will be contacted via email or phone call. If we are unable to verify your address within 10 days, your order will be cancelled.</p>
+
+			<p><b>How Much is Shipping?</b> After you place your items in your shopping cart, all you need to do is enter you zip code in the shipping calculator on the shopping cart page to receive shipping quotes.</p>
+
+			<p><b>International Shipping</b>After you place your items in your shopping cart, international customers will have to enter their entire address in order to receive a shipping quote. </p> 
+
+
+			<p><b>Does My Package Require a Signature?</b> Orders over $250 will require an adult to be present to sign for the package. If your order is less than $250 and there is a safe place to leave your package, the carrier may leave the package if no one is available at time of delivery. This decision is made by your local carrier and Zephyr Sports cannot be responsible for packages lost in transit. We will assist in filing a lost package claim with the carrier.</p>
+
+			<p>When you shop with Zephyr, you get great service and fast shipping. We know how anxious you are after you place an order and we will get your order out as soon possible. Orders placed by <b>2 p.m. pst</b> are typically shipped out the same day. (Orders placed over the weekend will ship the next business day) On rare occasions, weekend orders may not ship until Tuesday due to the large volume of orders. If you need to have your order on a certain day, please choose the method that will have it arrive one day early. In the event that one or more of the items from your order is out of stock, you will be notified via telephone or email. You have <b>3 days</b> from that point to contact us, or we will refund and remove the out of stock items, and ship the rest of the order.</p>
+
+			<p><b>Free Zephyr Shipping</b> Zephyr Sports offers Free shipping to the United States in certain cases. Items shipped using economy shipping will be shipped via Fedex or USPS at our choice. Additional shipping charges might apply when shipping to an APO/FPO address. Shipping times will vary from 1-day in southern California, to 6 days on the east coast. Please not that weekends are not counted as shipping days. Please upgrade to Fedex shipping if you require faster shipping. USPS order will receive a delivery confirmation number. This will only give you delivery confirmation and will not allow you to track your package along the way. USPS shipping does not include any insurance. We recommend you upgrade to Fedex shipping whenever possible. If you choose Economy shipping, you cannot choose the shipping method.</p>
+
+			<p><b>FedEx Shipping</b> Our preferred method of shipping is Fedex. Fedex delivers Monday through Friday and does not pickup or deliver on the weekends. We ship Fedex Home Delivery, 3-day air, 2-day air and standard next day. Fedex will attempt to deliver three times. If you miss all three of these attempts, then Fedex will hold your package for seven days and also send you a postcard to inform you of its arrival. If you fail to collect this package within the set period then it will get returned to us. Zephyr Sports will hold your package for fifteen days. Please note that if this happens we will charge you for re-shipping. If you fail to collect your package within fifteen days, we will refund your account and withhold all shipping fees as well as a <b>15%</b> restocking fee.</p>
+
+			<p><b>Insurance</b> If no insurance is selected, Zephyr Sports will not be responsible for any damaged, lost or stolen merchandise (etc). If no insurance is selected FedEx packages will be shipped with only USD 100.00 insured.</p>
+
+			<p><b>Can I Pick Up My Order?</b> This option is no longer available. If you live close by or are in the area feel free to stop by our storefront and do some shopping: 2978 Seaborg Ave Ventura, CA., 93003</p>
+
+			<p><b>Can I Track My Package?</b> Yes you can. As long as you entered a valid e-mail address during checkout, you will receive an e-mail with tracking information. Please be sure to check your spam filter as these e-mails tend to get caught in these filters.</p> 
+
+			<p><b>Free Zephyr Shipping.</b> When you place an order <b>over $100</b>(excluding taxes and handling) you can receive <b>Free Zephyr Shipping</b> or get <b>Home Delivery</b> for <b>ONLY $6.5!</b> No rebates, No hassles! Just place the items you wish to order in your shopping cart and type in your zip code and the shipping rates will pop up. Free Zephyr Shipping and Home Delivery should be one of the options to choose from. Fedex Home Delivery only delivers to the United States and only delivers Tuesday through Saturday.</p>
+			<ul>
+				<li>Applies only to the contiguous 48 states</li>
+				<li>Applies only to internet orders (Phone orders ship free for orders over $350)</li>
+				<li>Applies only to orders placed directly through www.zephyrpaintball.com (excludes ebay and amazon orders)</li>
+				<li>Excludes P.O. Boxes</li>
+				<li>All orders over $100 will be charged a $4.50 handling fee</li>
+			</ul>
 		</div>
 
 	</div>
