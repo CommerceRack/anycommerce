@@ -39,7 +39,6 @@ app.rq.push(['css',1,app.vars.baseURL+'resources/anyplugins.css']);
 
 
 
-
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {

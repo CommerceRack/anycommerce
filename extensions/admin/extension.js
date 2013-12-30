@@ -3192,6 +3192,9 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(path == '#!orderCreate')	{
 					app.ext.orderCreate.a.appCartCreate($target);
 					}
+				else if(path == '#!cartEdit')	{
+					app.ext.orderCreate.a.startCheckout($target,opts.cartid);
+					}
 
 				else if(path == '#!downloads')	{
 					$('#homeContent').empty();

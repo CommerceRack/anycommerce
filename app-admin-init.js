@@ -20,6 +20,7 @@ app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
+app.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 
 app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',0,'admin_tools','extensions/admin/tools.js']); 
