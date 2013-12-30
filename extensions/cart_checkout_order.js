@@ -1012,24 +1012,18 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //is used in cart summary total during checkout.
 			shipInfoById : function($tag,data)	{
 				var o = '';
-				var cartData = app.data['cartDetail'+data.value];
-				if(cartData)	{
-					var shipMethods = cartData['@SHIPMETHODS'], L = shipMethods.length;
-					for(var i = 0; i < L; i += 1)	{
-	//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-						if(shipMethods[i].id == cartData.want.shipping_id)	{
-							//sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
-							o = "<span class='orderShipMethod'>"+(shipMethods[i]['pretty'] ? shipMethods[i]['pretty'] : shipMethods[i]['name'])+": <\/span>";
-	//only show amount if not blank.
-							if(shipMethods[i].amount)	{
-								o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
-								}
-							break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
+				var shipMethods = data.value['@SHIPMETHODS'], L = shipMethods.length;
+				for(var i = 0; i < L; i += 1)	{
+//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
+					if(shipMethods[i].id == data.value.want.shipping_id)	{
+						//sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+						o = "<span class='orderShipMethod'>"+(shipMethods[i]['pretty'] ? shipMethods[i]['pretty'] : shipMethods[i]['name'])+": <\/span>";
+//only show amount if not blank.
+						if(shipMethods[i].amount)	{
+							o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
 							}
+						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
-					}
-				else	{
-					o = $("<div \/>").anymessage({persistent:true,'message':'In cco.renderFormats.shipInfoByID, cartDetail|'+data.value+' is not set.','gMessage':true});
 					}
 				$tag.html(o);
 				}, //shipInfoById

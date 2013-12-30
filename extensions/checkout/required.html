@@ -324,7 +324,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	<div data-bind='var: cart(cart/cartid); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
+	<div class='orderShipping' data-bind='useParentData:true; format:shipInfoById; extension:cco;'></div>
 	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
