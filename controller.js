@@ -2986,13 +2986,6 @@ do's should modify $tag or apply the value.
 
 
 	renderFormats : {
-		imageURL2Href : function($tag,data)	{
-			data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
-			data.bindData.w = $tag.attr('width');
-			data.bindData.h = $tag.attr('height');
-			data.bindData.tag = 0;
-			$tag.attr('href',app.u.makeImage(data.bindData)); //passing in bindData allows for using
-			},
 
 		imageURL : function($tag,data){
 //			app.u.dump('got into displayFunctions.image: "'+data.value+'"');
