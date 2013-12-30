@@ -2563,25 +2563,7 @@ later, it will handle other third party plugins as well.
 
 //executed inside handleTHirdPartyInits as well as after a facebook login.
 
-//cart must already be in memory when this is run.
-//will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
-// just checks to see if the cart contents would even allow it.
-//currently, there is only a google field for disabling their checkout, but this is likely to change.
-		which3PCAreAvailable :	function(cartID){
-//				app.u.dump("BEGIN control.u.which3PCAreAvailable");
-			var obj = {
-				paypalec : true,
-				amazonpayment : true,
-				googlecheckout : true
-				};
 
-			var items = app.data['cartDetail|'+cartID]['@ITEMS'], L = items.length;
-			for(var i = 0; i < L; i += 1)	{
-				if(items[i]['%attribs'] && items[i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
-				if(items[i]['%attribs'] && items[i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
-				}
-			return obj;
-			},
 
 		
 		updatejQuerySupport : function()	{
@@ -3093,64 +3075,7 @@ do's should modify $tag or apply the value.
 			$tag.append(r);
 			},
 
-		paypalECButton : function($tag,data)	{
 
-if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-	var payObj = app.u.which3PCAreAvailable();
-	if(payObj.paypalec)	{
-		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
-			app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
-				$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
-				if(app.model.responseHasErrors(rd)){
-					$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');
-					$('#globalMessaging').anymessage({'message':rd});
-					}
-				else	{
-					if(app.data[rd.datapointer] && app.data[rd.datapointer].URL)	{
-						$('.ui-loading-message','#loading-indicator-paypalShowLoading').text("Transferring you to PayPal to authorize payment. See you soon!");
-						document.location = app.data[rd.datapointer].URL;
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"In paypalECButton render format, dispatch to obtain paypal URL was successful, but no URL in the response.","gMessage":true});
-						}
-					}
-				}});
-			$(this).addClass('disabled').attr('disabled','disabled');
-			app.model.dispatchThis('immutable');
-			});
-		}
-	else	{
-		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('disabled').attr('disabled','disabled');
-		}
-	}
-else	{
-	$tag.addClass('displayNone');
-	}
-			}, //paypalECButton
-
-		googleCheckoutButton : function($tag,data)	{
-
-if(zGlobals.checkoutSettings.googleCheckoutMerchantId && (window._gat && window._gat._getTracker))	{
-	var payObj = app.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
-	if(payObj.googlecheckout)	{
-	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
-		app.ext.cco.calls.cartGoogleCheckoutURL.init();
-		$(this).addClass('disabled').attr('disabled','disabled');
-		app.model.dispatchThis('immutable');
-		});
-		}
-	else	{
-		$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=disable&loc=en_US' \/>")			
-		}
-	}
-else if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
-	app.u.dump("zGlobals.checkoutSettings.googleCheckoutMerchantId is set, but _gaq is not defined (google analytics not loaded but required)",'warn');
-	}
-else	{
-	$tag.addClass('displayNone');
-	}
-	
-			}, //googleCheckoutButton
 
 		
 //set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
