@@ -164,7 +164,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 					r = "<p>It appears that some inventory adjustments needed to be made:<ul>";
 					for(var key in app.data[_rtag.datapointer]['%changes']) {
 						r += "<li>sku: "+key+" was set to "+app.data[_rtag.datapointer]['%changes'][key]+" due to availability<\/li>";
-						app.calls.cartItemUpdate.init(key,app.data[_rtag.datapointer]['%changes'][key]);
+						app.ext.cco.calls.cartItemUpdate.init(key,app.data[_rtag.datapointer]['%changes'][key]);
 						}
 					app.u.dump(" -> SANITY: an extra cartDetail call is occuring because inventory availability required some cartUpdates to occur.");
 					app.model.destroy('cartDetail|'+cartid);
@@ -773,8 +773,11 @@ an existing user gets a list of previous addresses they've used and an option to
 				else	{
 					$fieldset.show();
 					}
-
-
+//add the click event so that a change updates the cart/panels as needed.
+//not in the render format itself so that it can be recycled.
+				$(":radio",$fieldset).each(function(){
+					$(this).attr('data-app-change','orderCreate|shipOrPayMethodSelectExec');
+					})
 
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
@@ -1301,12 +1304,10 @@ else	{
 				},
 
 //ele is likely a div or section. the element around all the inputs.
-// ### TODO -> upgrade this to delegated events.
 			addTriggerPayMethodUpdate : function($ele,p)	{
 				var $fieldset = $ele.closest('fieldset');
 				$("input[type='radio']",$ele).each(function(){
 					var $input = $(this);
-					
 					$input.off("change.addTriggerPayMethodUpdate").on("change.addTriggerPayMethodUpdate", function(){
 						app.ext.cco.calls.cartSet.init({'want/payby':$input.val()});
 						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
@@ -1320,6 +1321,10 @@ else	{
 				app.u.dump("BEGIN orderCreate.e.shipOrPayMethodSelectExec");
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
+				if($ele.data('updatemode') == 'cart')	{
+					obj._cartid = $ele.closest("[data-template-role='cart']").data('cartid');
+					}
+				else	{}
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.calls.cartSet.init(obj);
 //destroys cart and updates big three panels (shipping, payment and summary)
@@ -1996,31 +2001,22 @@ app.model.dispatchThis('passive');
 		renderFormats : {
 //pass the cart(cart/cartid); in for the databind var. Multiple pieces of data are required for this render format (want/shipping_id and @SHIPMETHODS).
 			shipMethodsAsRadioButtons : function($tag,data)	{
-				var o = '', cartData,sMethods,L;
-				
-				if(app.data['cartDetail|'+data.value])	{
-					cartData = app.data['cartDetail|'+data.value];
-					sMethods = app.data['cartDetail|'+data.value]['@SHIPMETHODS'];
-					if(sMethods && sMethods.length)	{
-						L = sMethods.length;
-						for(var i = 0; i < L; i += 1)	{
-							o += "<li class='headerPadding'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/shipping_id' value='"+sMethods[i].id+"' ";
-							o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
-							}
-						}
-					else	{
-						//### TOD -> handle this.
+				var o = '',sMethods,L;
+				sMethods = data.value['@SHIPMETHODS'];
+				if(sMethods && sMethods.length)	{
+					L = sMethods.length;
+					for(var i = 0; i < L; i += 1)	{
+						o += "<li class='headerPadding'><label><input type='radio'  name='want/shipping_id' value='"+sMethods[i].id+"' ";
+						o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
 						}
 					}
 				else	{
-					o = $("<div \/>").anymessage({'message':'In orderCreate.renderFormats.shipMethodsAsRadioButtons, cartDetail|'+data.value+' not found in memory.','gMessage':true});
+					//Currently, checkout handles this on it's own. if something is added here, test checkout to make sure warnings are not appearing twice.
 					}
 				$tag.html(o);
-				app.u.dump(" -> cartData.want.shipping_id: "+cartData.want.shipping_id);
-				if(cartData.want.shipping_id)	{
-					$("input[value='"+cartData.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active')
+				if(data.value.want.shipping_id)	{
+					$("input[value='"+data.value.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active')
 					}
-
 				}, //shipMethodsAsRadioButtons
 
 			payMethodsAsRadioButtons : function($tag,data)	{
@@ -2055,7 +2051,7 @@ app.model.dispatchThis('passive');
 						}						
 					}
 				else	{
-					o = $("<div \/>").anymessage({'persistent':true,'message':'In orderCreate.renderFormats.shipMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
+					o = $("<div \/>").anymessage({'persistent':true,'message':'In orderCreate.renderFormats.payMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
 					}
 				$tag.html(o);
 				} //payMethodsAsRadioButtons
