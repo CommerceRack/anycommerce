@@ -25,7 +25,7 @@ var app = {vars:{
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.sporks.zoovy.com/" //used ONLY if protocol is file: (for testing)
-	},u:{},rq:[]};
+	},u:{},rq:[],cmr:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
@@ -47,10 +47,11 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
 
 
-<!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
+<!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script src="resources/jquery.ui.anyplugins.js"></script>
+<script type="text/javascript" src="includes.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -150,16 +151,16 @@ ANIMATION TESTING
 
 
 
-<div id='cartMessageUI' class='displayNone' data-app-role='helpContainer'>
+<div id='cartMessenger' class='displayNone' data-app-role='cartMessenger' title="help">
 	<form>
 		<section data-app-role='messageHistory' class='messageHistory'></section>
-		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer'>
+		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
 			<textarea name='message' required='required' placeholder='send a message'></textarea>
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
-		<button>Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
-		<button>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
+		<button data-app-click="cart_message|chatInitExec" class='applyButton'>Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton'>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
 		</section>
 	</form>
 </div>
@@ -535,7 +536,7 @@ this will likely become more flexible in the future. ###
 	or the tab clicked won't open the right content.
 	It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
 	-->
-	<div class='prodTabs tabbedProductContent' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+	<div class='prodTabs tabbedProductContent applyAnytabs' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 	
 		<ul class='tabs'>
 			<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
@@ -1043,7 +1044,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
+	<div class='orderShipping' data-bind='useParentData:true; format:shipInfoById; extension:cco;'></div>
 
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 
@@ -1063,7 +1064,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' data-app-blur='cco|cartZipUpdateExec' />
 	</div>
 
-	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:orderCreate;'></ul>
+	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipMethodsAsRadioButtons; extension: orderCreate;' ></ul>
 </section>
 
 <section class='marginBottom'>
@@ -1079,7 +1080,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	
 			<span id='inStoreCheckoutButton thisButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
 	
-			<span id='paypalECButton' class='thisButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+			<span id='paypalECButton' class='thisButton' data-bind='var: cart(cart/cartid); format:paypalECButton; extension:cco;'></span>
 	
 		</div>
 
