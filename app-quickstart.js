@@ -1123,7 +1123,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						else	{
 							//by now, item has been added to wishlist. So remove it from the cart.
 							
-							app.ext.cco.calls.cartItemUpdate.init(obj.stid,0,{callback:function(rd){
+							app.ext.cco.calls.cartItemUpdate.init({'stid':obj.stid,'quantity':0},{callback:function(rd){
 								$('#modalCartContents').hideLoading();
 								if(app.model.responseHasErrors(rd)){
 									$('#cartMessaging').anymessage({'message':rd});
@@ -2109,6 +2109,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					if(!$product.length){
 						$product = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'}); // ### TODO -> see what app-pagetype is used for. see about removing or using data-template-role
 						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
+						app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
 
 //need to obtain the breadcrumb info pretty early in the process as well.

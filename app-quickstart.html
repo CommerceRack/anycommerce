@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"http://www.sporks.zoovy.com/" //used ONLY if protocol is file: (for testing)
+	"testURL":"http://www.sporktacular.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[],cmr:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -450,7 +450,7 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate' class='productPage' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
-	<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
 	<table class='prodViewerContainer'>
 	<tr>

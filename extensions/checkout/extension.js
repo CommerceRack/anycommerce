@@ -164,7 +164,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 					r = "<p>It appears that some inventory adjustments needed to be made:<ul>";
 					for(var key in app.data[_rtag.datapointer]['%changes']) {
 						r += "<li>sku: "+key+" was set to "+app.data[_rtag.datapointer]['%changes'][key]+" due to availability<\/li>";
-						app.ext.cco.calls.cartItemUpdate.init(key,app.data[_rtag.datapointer]['%changes'][key]);
+						app.ext.cco.calls.cartItemUpdate.init({'stid':key,'quantity':app.data[_rtag.datapointer]['%changes'][key]});
 						}
 					app.u.dump(" -> SANITY: an extra cartDetail call is occuring because inventory availability required some cartUpdates to occur.");
 					app.model.destroy('cartDetail|'+cartid);

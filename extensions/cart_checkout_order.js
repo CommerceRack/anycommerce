@@ -112,21 +112,24 @@ calls should always return the number of dispatches needed. allows for cancellin
 
 // REMOVE from controller when this extension deploys !!!
 		cartItemUpdate : {
-			init : function(stid,qty,_tag)	{
+			init : function(vars,_tag)	{
 //				app.u.dump('BEGIN app.calls.cartItemUpdate.');
 				var r = 0;
-				if(stid && Number(qty) >= 0)	{
+				vars = vars || {};
+				if(vars.stid && Number(vars.quantity) >= 0)	{
 					r = 1;
-					this.dispatch(stid,qty,_tag);
+					this.dispatch(vars,_tag);
 					}
 				else	{
-					app.u.throwGMessage("In cco.calls.cartItemUpdate, either stid ["+stid+"] or qty ["+qty+"] not passed.");
+					app.u.throwGMessage("In cco.calls.cartItemUpdate, either stid ["+vars.stid+"] or qty ["+vars.quantity+"] not passed.");
 					}
 				return r;
 				},
-			dispatch : function(stid,qty,_tag)	{
+			dispatch : function(vars,_tag)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": _tag},'immutable');
+				vars._cmd = "cartItemUpdate";
+				vars._tag = _tag;
+				app.model.addDispatchToQ(vars,'immutable');
 				app.ext.cco.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
 				}
 			 }, //cartItemUpdate
@@ -1142,31 +1145,32 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		e : {
 			
 			cartItemRemove	: function($ele,p)	{
-				var stid = $ele.closest('[data-stid]').data('stid');
-				if(stid)	{
-					app.ext.cco.calls.cartItemUpdate.init(stid,0,{
+				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
+				if(stid && cartid)	{
+					app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':0,'_cartid':cartid},{
 						'callback' : 'showMessaging',
-						'_cartid' : $ele.closest("[data-template-role='cart']").data('cartid'),
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
+					$ele.closest('[data-stid]').intervaledEmpty();
 					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID ['+stid+'] and/or the cart id ['+cartid+'].','gMessage':true})
 					}
 				}, //cartItemRemove
 			
 			cartShipmethodSelect : function($ele,p)	{
 				p.preventDefault();
-				alert('woot!');
+				alert('woot!'); // ### TODO -> wrap this up once template on completes are ready.
 				},
 			
 			cartItemQuantityUpdate : function($ele,p){
-				var stid = $ele.closest('[data-stid]').data('stid');
-				if(stid)	{
-					app.ext.cco.calls.cartItemUpdate.init(stid,$ele.val(),{
+				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
+				
+				if(stid && cartid)	{
+					app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':$ele.val(),'_cartid':cartid},{
 						'callback' : 'showMessaging',
 						'message' : 'Quantities updated for item '+stid,
 						'jqObj' : $ele.closest('form')
@@ -1175,7 +1179,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID ['+stid+'] and/or cartid ['+cartid+'].','gMessage':true})
 					}
 				}, //cartItemQuantityUpdate
 
