@@ -400,7 +400,7 @@ document.write = function(v){
 					}
 				tagObj.state = 'onCompletes'; //needed for handleTemplateEvents.
 
-				app.ext.myRIA.u.handleTemplateEvents((tagObj.jqObj || $(app.u.jqSelector('#',tagObj.parentID))),tagObj);
+				app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(app.u.jqSelector('#',tagObj.parentID))),tagObj);
 
 				},
 			onError : function(responseData,uuid)	{
@@ -908,7 +908,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //if there's history (all pages loads after first, execute the onDeparts functions.
 //must be run before handleSandHOTW or history[0] will be this infoObj, not the last one.
 				if(!$.isEmptyObject(app.ext.myRIA.vars.hotw[0]))	{
-					app.ext.myRIA.u.handleTemplateEvents($old,$.extend(app.ext.myRIA.vars.hotw[0],{"state":"depart"}))
+					app.renderFunctions.handleTemplateEvents($old,$.extend(app.ext.myRIA.vars.hotw[0],{"state":"depart"}))
 					}
 					
 				app.ext.myRIA.u.handleSandHOTW(infoObj);
@@ -977,7 +977,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.templateID = 'checkoutTemplate'
 						infoObj.state = 'init'; //needed for handleTemplateEvents.
 						var $checkoutContainer = $("#checkoutContainer");
-						app.ext.myRIA.u.handleTemplateEvents($checkoutContainer,infoObj);
+						app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
 
 //for local, don't jump to secure. ### this may have to change for a native app. what's the protocol? is there one?
 						if('http:' == document.location.protocol)	{
@@ -999,7 +999,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.ext.orderCreate.a.startCheckout($checkoutContainer,app.model.fetchCartID());
 							}
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						app.ext.myRIA.u.handleTemplateEvents($checkoutContainer,infoObj);
+						app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
 
 						break;
 	
@@ -1020,10 +1020,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.templateID = 'pageNotFoundTemplate'
 						infoObj.state = 'init'; //needed for handleTemplateEvents.
 						var $fourOhFour = app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj);
-						app.ext.myRIA.u.handleTemplateEvents($fourOhFour,infoObj);
+						app.renderFunctions.handleTemplateEvents($fourOhFour,infoObj);
 						$('#mainContentArea').append($fourOhFour);
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						app.ext.myRIA.u.handleTemplateEvents($fourOhFour,infoObj);
+						app.renderFunctions.handleTemplateEvents($fourOhFour,infoObj);
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
@@ -2103,7 +2103,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					
 					var $product = $(app.u.jqSelector('#',parentID));
 					
-					app.ext.myRIA.u.handleTemplateEvents($product,infoObj);
+					app.renderFunctions.handleTemplateEvents($product,infoObj);
 	
 //no need to render template again.
 					if(!$product.length){
@@ -2130,7 +2130,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						infoObj.datapointer = 'appProductGet|'+infoObj.pid; //here so datapoitner is available in renderFunctions.
 //typically, the onCompletes get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						app.ext.myRIA.u.handleTemplateEvents($product,infoObj);
+						app.renderFunctions.handleTemplateEvents($product,infoObj);
 						}
 
 
@@ -2169,9 +2169,9 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 
 				if(app.ext.myRIA.u.showArticle(infoObj))	{
-					app.ext.myRIA.u.handleTemplateEvents($mcac,infoObj);
+					app.renderFunctions.handleTemplateEvents($mcac,infoObj);
 					infoObj.state = 'complete';
-					app.ext.myRIA.u.handleTemplateEvents($mcac,infoObj);
+					app.renderFunctions.handleTemplateEvents($mcac,infoObj);
 					}
 				else	{} //showArticle will handle displaying the error messaging.
 
@@ -2188,7 +2188,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				var $page = $('#'+infoObj.parentID),
 				elasticsearch = {};
 
-				app.ext.myRIA.u.handleTemplateEvents($page,infoObj);
+				app.renderFunctions.handleTemplateEvents($page,infoObj);
 
 //only create instance once.
 				if($page.length)	{
@@ -2241,7 +2241,7 @@ elasticsearch.size = 50;
 				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')}));
 				app.model.dispatchThis();
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				app.ext.myRIA.u.handleTemplateEvents($page,infoObj);
+				app.renderFunctions.handleTemplateEvents($page,infoObj);
 
 
 				}, //showSearch
@@ -2262,7 +2262,7 @@ elasticsearch.size = 50;
 				
 				var $cart = $('#'+infoObj.parentID);
 				
-				app.ext.myRIA.u.handleTemplateEvents($cart,infoObj);
+				app.renderFunctions.handleTemplateEvents($cart,infoObj);
 
 				if(infoObj.show == 'inline')	{
 //only create instance once.
@@ -2271,7 +2271,7 @@ elasticsearch.size = 50;
 						//show cart
 						$cart.trigger('refresh');
 						infoObj.state = 'complete';
-						app.ext.myRIA.u.handleTemplateEvents($cart,infoObj);
+						app.renderFunctions.handleTemplateEvents($cart,infoObj);
 						}
 					else	{
 						infoObj.cartid = app.model.fetchCartID();
@@ -2288,7 +2288,7 @@ elasticsearch.size = 50;
 					app.ext.myRIA.u.showCartInModal(infoObj);
 					}
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				app.ext.myRIA.u.handleTemplateEvents($cart,infoObj);
+				app.renderFunctions.handleTemplateEvents($cart,infoObj);
 				}, //showCart
 
 /*
@@ -2353,7 +2353,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				
 				infoObj.templateID = 'customerTemplate';
 				infoObj.state = 'init';
-				app.ext.myRIA.u.handleTemplateEvents($customer,infoObj);
+				app.renderFunctions.handleTemplateEvents($customer,infoObj);
 
 				
 				
@@ -2450,7 +2450,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						}
 					}
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				app.ext.myRIA.u.handleTemplateEvents($customer,infoObj);
+				app.renderFunctions.handleTemplateEvents($customer,infoObj);
 				return r;
 				},  //showCustomer
 				
@@ -2684,14 +2684,14 @@ buyer to 'take with them' as they move between  pages.
 					var parentID = infoObj.parentID || infoObj.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
 					var $parent = $(app.u.jqSelector('#',parentID));
 					infoObj.parentID = parentID;
-					app.ext.myRIA.u.handleTemplateEvents($parent,infoObj);
+					app.renderFunctions.handleTemplateEvents($parent,infoObj);
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($parent.length > 0){
 //set datapointer OR it won't be present on an oncomplete for a page already rendered.
 						infoObj.datapointer = infoObj.datapointer || "appNavcatDetail|"+catSafeID; 
 //						app.u.dump(" -> "+parentID+" already exists. Use it");
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						app.ext.myRIA.u.handleTemplateEvents($parent,infoObj);
+						app.renderFunctions.handleTemplateEvents($parent,infoObj);
 						}
 					else	{
 						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
@@ -2959,41 +2959,7 @@ else	{
 				},
 
 		
-//infoObj.state = onCompletes or onInits. later, more states may be supported.
-			handleTemplateEvents : function($ele,infoObj)	{
-				infoObj = infoObj || {};
-				if($ele instanceof jQuery && infoObj.state)	{
-					if($.inArray(infoObj.state,['init','complete','depart']))	{
-						if($ele.attr('data-app-'+infoObj.state))	{
-							//the following code is also in anydelegate. It was copied (tsk, tsk. i know) because the plugin should be as independant as possible.
-							var AEF = $ele.attr('data-app-'+infoObj.state).split('|');
-							if(AEF[0] && AEF[1])	{
-								if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
-									//execute the app event.
-									app.ext[AEF[0]].e[AEF[1]]($ele,infoObj);
-									}
-								else	{
-									$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-									}
-								}
-							else	{
-								$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, data-app-"+infoObj.state+" ["+$CT.attr('data-app-'+infoObj.state)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
-								}						
 
-							}
-						$ele.trigger(infoObj.state,infoObj);
-						}
-					else	{
-						$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and leave are acceptable values.','gMessage':true});
-						}
-					}
-				else if($ele instanceof jQuery)	{
-					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state not set.','gMessage':true});
-					}
-				else	{
-					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
-					}
-				}, //handleTemplateEvents 
 
 			
 			getDataFromInfoObj : function(infoObj){

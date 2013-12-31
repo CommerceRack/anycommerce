@@ -1224,7 +1224,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //opted to force this into a modal to reduce the likely of a bunch of unused blobs remaining on the DOM.
 //the dialog will empty/remove itself when closed.
 		fileDownloadInModal : function(vars)	{
-			app.u.dump("BEGIN app.u.fileDownloadInModal");
+//			app.u.dump("BEGIN app.u.fileDownloadInModal");
 			vars = vars || {};
 
 			function modal()	{
@@ -1236,7 +1236,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					'height' : 200,
 					close: function(event, ui)	{
 						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-			//						app.u.dump('got into dialog.close - destroy.');
 //						$(this).dialog('destroy');
 						$(this).closest('.ui-dialog').intervaledEmpty(1000);
 						} //will remove from dom on close
@@ -1257,17 +1256,11 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 				var $D = modal();
 
-// this worked, but not an ideal solution. we like blob better.
-//			var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(vars.body);
-//			var $a = $('<a>',{'download':filename || 'file',"href":uri}).text('download me data style').appendTo($D);
-//			$("<br \/>").appendTo($D);
-
 //if atob causes issues later, explore 	b64toBlob	 (found here: http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript); //201324		
 //content returned on an API call will be base 64 encoded. app-generated content (report csv's) will not.
 //app.u.dump("vars.skipdecode: "+vars.skipDecode);
 
 				var	file = (vars.skipDecode) ? vars.body : atob(vars.body);
-//					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
 					// Use typed arrays to convert the binary data to a Blob
 					//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
 				var arraybuffer = new ArrayBuffer(file.length);
@@ -1277,10 +1270,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					view[i] = file.charCodeAt(i) & 0xff;
 					}
 				var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
-//						}
-//					else	{
-//						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});
-//						}
 				
 				var $a = $('<a>',{'download':filename,"href":window.URL.createObjectURL(bb)});
 
@@ -2956,8 +2945,46 @@ return $r;
 
 //			app.u.dump('END parseDataBind');
 			return rule;
-			}
-	
+			},
+
+
+//infoObj.state = onCompletes or onInits. later, more states may be supported.
+			handleTemplateEvents : function($ele,infoObj)	{
+				infoObj = infoObj || {};
+				if($ele instanceof jQuery && infoObj.state)	{
+					if($.inArray(infoObj.state,['init','complete','depart']))	{
+						if($ele.attr('data-app-'+infoObj.state))	{
+							//the following code is also in anydelegate. It was copied (tsk, tsk. i know) because the plugin should be as independant as possible.
+							var AEF = $ele.attr('data-app-'+infoObj.state).split('|');
+							if(AEF[0] && AEF[1])	{
+								if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
+									//execute the app event.
+									app.ext[AEF[0]].e[AEF[1]]($ele,infoObj);
+									}
+								else	{
+									$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+									}
+								}
+							else	{
+								$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, data-app-"+infoObj.state+" ["+$CT.attr('data-app-'+infoObj.state)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+								}						
+
+							}
+						$ele.trigger(infoObj.state,infoObj);
+						}
+					else	{
+						$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and leave are acceptable values.','gMessage':true});
+						}
+					}
+				else if($ele instanceof jQuery)	{
+					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state not set.','gMessage':true});
+					}
+				else	{
+					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
+					}
+				} //handleTemplateEvents 
+
+
 		}, //renderFunctions
 
 
