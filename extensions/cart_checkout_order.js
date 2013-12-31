@@ -120,7 +120,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 					this.dispatch(stid,qty,_tag);
 					}
 				else	{
-					app.u.throwGMessage("In calls.cartItemUpdate, either stid ["+stid+"] or qty ["+qty+"] not passed.");
+					app.u.throwGMessage("In cco.calls.cartItemUpdate, either stid ["+stid+"] or qty ["+qty+"] not passed.");
 					}
 				return r;
 				},
@@ -361,11 +361,10 @@ left them be to provide guidance later.
 
 		a : {
 			
-			
 			getCartAsJqObj : function(vars)	{
 				vars = vars || {};
 				var r; //what is returned.
-				if(vars.templateID)	{
+				if(vars.templateID && vars.cartid)	{
 					$cart = $(app.renderFunctions.createTemplateInstance(vars.templateID,vars));
 					$cart.attr('data-template-role','cart');
 //will fetch an entirely new copy of the cart from the server.
@@ -373,7 +372,8 @@ left them be to provide guidance later.
 					$cart.on('fetch.cart',function(event,P){
 						var $c = $(this);
 						$c.empty().showLoading({'message':'Updating cart contents'});
-						app.calls.refreshCart.init({
+						app.model.destroy('cartDetail|'+$c.data('cartid'));
+						app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'anycontent',
 							'onComplete' : P.onComplete,
 							'templateID' : $c.data('templateid'),
@@ -386,14 +386,14 @@ left them be to provide guidance later.
 						$c.intervaledEmpty();
 						if($c.data('anycontent'))	{$c.anycontent('destroy')}
 						$c.anycontent({
-							'datapointer':'cartDetail|'+app.model.fetchCartID(),
+							'datapointer':'cartDetail|'+$c.data('cartid'),
 							'templateID' : $c.data('templateid')
 							})
 						});
 					r = $cart;
 					}
 				else	{
-					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, vars.templateID not specified.','gMessage':true});
+					r = $("<div>").anymessage({'message':'In cco.a.getCartAsJqObj, vars.templateID ['+vars.templateID+'] and/or vars.cartid ['+vars.cartid+'] not specified. Both are required.','gMessage':true});
 					}
 				
 				return r;
@@ -918,32 +918,32 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
 //currently, there is only a google field for disabling their checkout, but this is likely to change.
-		which3PCAreAvailable :	function(cartID){
-//				app.u.dump("BEGIN control.u.which3PCAreAvailable");
-				var obj = {};
-				if(app.data['cartDetail|'+cartID])	{
-	//by default, everything is available
-					obj = {
-						paypalec : true,
-						amazonpayment : true,
-						googlecheckout : true
+			which3PCAreAvailable :	function(cartID){
+	//				app.u.dump("BEGIN control.u.which3PCAreAvailable");
+					var obj = {};
+					if(app.data['cartDetail|'+cartID])	{
+		//by default, everything is available
+						obj = {
+							paypalec : true,
+							amazonpayment : true,
+							googlecheckout : true
+							}
+						var items = app.data['cartDetail|'+cartID]['@ITEMS'], L = items.length;
+						for(var i = 0; i < L; i += 1)	{
+							if(items[i]['%attribs'] && items[i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
+							if(items[i]['%attribs'] && items[i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
+							}
 						}
-					var items = app.data['cartDetail|'+cartID]['@ITEMS'], L = items.length;
-					for(var i = 0; i < L; i += 1)	{
-						if(items[i]['%attribs'] && items[i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
-						if(items[i]['%attribs'] && items[i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
+		// cart not in memory. turn off third party checkout.
+					else	{
+						obj.paypalec = false;
+						obj.amazonpayment = false;
+						obj.googlecheckout = false;
 						}
-					}
-	// cart not in memory. turn off third party checkout.
-				else	{
-					obj.paypalec = false;
-					obj.amazonpayment = false;
-					obj.googlecheckout = false;
-					}
-				return obj;
-				} //which3PCAreAvailable
-
-			}, //util
+					return obj;
+					} //which3PCAreAvailable
+	
+				}, //util
 
 
 
@@ -1007,7 +1007,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			paypalECButton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-					var payObj = app.u.which3PCAreAvailable();
+					var payObj = app.ext.cco.u.which3PCAreAvailable();
 					if(payObj.paypalec)	{
 						$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
 							app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
@@ -1042,7 +1042,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			googleCheckoutButton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.googleCheckoutMerchantId && (window._gat && window._gat._getTracker))	{
-					var payObj = app.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
+					var payObj = app.ext.cco.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
 					if(payObj.googlecheckout)	{
 					$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
 						app.ext.cco.calls.cartGoogleCheckoutURL.init();
@@ -1144,8 +1144,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			cartItemRemove	: function($ele,p)	{
 				var stid = $ele.closest('[data-stid]').data('stid');
 				if(stid)	{
-					app.ext.cco.calls.cartItemUpdate.init(stid,$ele.val(),{
+					app.ext.cco.calls.cartItemUpdate.init(stid,0,{
 						'callback' : 'showMessaging',
+						'_cartid' : $ele.closest("[data-template-role='cart']").data('cartid'),
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
@@ -1156,6 +1157,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID.','gMessage':true})
 					}
 				}, //cartItemRemove
+			
+			cartShipmethodSelect : function($ele,p)	{
+				p.preventDefault();
+				alert('woot!');
+				},
 			
 			cartItemQuantityUpdate : function($ele,p){
 				var stid = $ele.closest('[data-stid]').data('stid');
