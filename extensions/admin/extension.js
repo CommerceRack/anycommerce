@@ -687,7 +687,7 @@ if giftcard is on there, no paypal will appear.
 			dispatch : function(obj,_tag,Q){
 				obj._cmd = 'adminOrderPaymentMethods';
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminOrderPaymentMethods';
+				obj._tag.datapointer = 'adminOrderPaymentMethods|'+obj.orderid;
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			
@@ -2414,11 +2414,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				
 				
 				
-				if(vars.listType && vars.partition)	{
+				if(vars.listType && Number(vars.partition) >= 0)	{
 				//listType must match one of these. an array is used because there will be more types:
 				//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
 					var types = ['ORDER','CUSTOMER']; 
-					if(types.indexOf(vars.listType) >= 0)	{
+					if($.inArray(vars.listType,types) >= 0)	{
 				
 						var $mailTool = $('#mailTool');
 						if($mailTool.length)	{
@@ -2451,7 +2451,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				
 					}
 				else	{
-					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
+					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, listType ['+vars.listType+'] or partition ['+vars.partition+'] not specified.'})
 					}
 				
 				

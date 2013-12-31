@@ -534,37 +534,6 @@ else	{
 						var
 							orderData = app.data[rd.datapointer];
 							orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
-		
-						
-						
-//cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
-						app.ext.admin.calls.adminOrderPaymentMethods.init({
-							'orderid':orderID,
-							'customerid':CID,
-							'ordertotal':orderData.sum.order_total,
-							'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
-							},{
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									app.u.throwGMessage("In admin_orders.u.showOrderView, the request for payment details has failed.");
-									}
-								else {
-				//						app.u.dump("rd: "); app.u.dump(rd);
-				//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
-				//					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",app.data[rd.datapointer]);
-									$("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']").anycontent({'translateOnly':true,'datapointer':rd.datapointer})
-									$('input:radio',$order).each(function(){
-										$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
-				//generates the bulk of the inputs. shared with store. these are admin only inputs.
-				//eventually, these should be moved into updatePayDetails and an admin param should be supported.
-											app.ext.cco.u.updatePayDetails($(this).closest('fieldset')); 
-											});
-										});
-									}
-								}
-							},'immutable');
-						app.model.dispatchThis('immutable');
-
 
 //trigger the editable regions
 						app.ext.admin_orders.u.makeEditable($("[data-app-role='orderUpdateNotesContainer']",$order),{'inputType':'textarea'});
@@ -836,17 +805,41 @@ else	{
 				}
 			},
 
+		fetchAndDisplayPayMethods : function($tag,data)	{
+			$tag.showLoading({'message':'Fetching payment methods for order'});
+//cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
+			app.ext.admin.calls.adminOrderPaymentMethods.init({
+				'orderid':data.value.our.orderid,
+				'customerid':data.value.customer.cid,
+				'ordertotal':data.value.sum.order_total,
+				'countrycode':data.value.ship.countrycode || orderData.bill.countrycode
+				},{
+				'callback':function(rd){
+					$tag.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$tag.anymessage({"message":"In admin_orders.renderFormats.fetchAndDisplayPayMethods, the request for payment methods has failed.",'gMessage':true});
+						}
+					else {
+	//						app.u.dump("rd: "); app.u.dump(rd);
+	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
+	//					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",app.data[rd.datapointer]);
+						$tag.append(app.ext.orderCreate.u.buildPaymentOptionsAsRadios(app.data[rd.datapointer]['@methods']));
+						$(':radio',$tag).each(function(){
+							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
+	//generates the bulk of the inputs. shared with store. these are admin only inputs.
+	//eventually, these should be moved into updatePayDetails and an admin param should be supported.
+								app.ext.cco.u.updatePayDetails($(this).closest('fieldset')); 
+								});
+							});
+						}
+					}
+				},'immutable');
+			app.model.dispatchThis('immutable');
 
-//used for adding email message types to a select menu.
-//designed for use with the vars object returned by a adminEmailList _cmd
-//* 201318 -> moved to admin extension as part of global email tool
-/*		emailMessagesListOptions : function($tag,data)	{
-			var L = data.value.length;
-			for(var i = 0; i < L; i += 1)	{
-				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
-				}
+
+
 			},
-*/			
+
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
 			return true;

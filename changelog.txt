@@ -47,11 +47,12 @@ CONTROLLER
 	unix2mdy renamed to epoch2mdy (render format)
 
 QUICKSTART (and store related updates)
-	Product lists now support an 'complete' event, triggered after all product have loaded.
+	Product lists now support a 'complete' event, triggered after all product have loaded.
 	Cart template is now responsive.
 	New method for creating carts for easy update. Uses delegated events (data-app-click).
 	fixed bug in add to buyer list.
 	fixed bug in remove from buyer list.
+	init,complete and depart events now handled through data-app-EVENTTYPE and/or on('complete').
 
 
 

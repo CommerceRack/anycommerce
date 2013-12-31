@@ -235,26 +235,29 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
-				
 				app.model.removeCartFromSession(oldCartID);
+				
+				if(app.vars.thisSessionIsAdmin)	{} //no need to get a new cart id for an admin session.
+				else	{
 //cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
 //			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
-				app.calls.appCartCreate.init({
-					"callback" : function(rd){
-						if(!app.model.responseHasErrors(rd)){
-							app.calls.cartDetail.init(rd._cartid,{},'immutable');
-							app.model.dispatchThis('immutable');
+					app.calls.appCartCreate.init({
+						"callback" : function(rd){
+							if(app.model.responseHasErrors(rd)){
+								app.u.throwMessage(rd);
+								}
+							else {
+								app.calls.cartDetail.init(rd._cartid,{},'immutable');
+								app.model.dispatchThis('immutable');
+								}
 							}
-						else {
-							app.u.throwMessage(rd);
-							}
-						}
-					}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
+						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
+					app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
+					}
 
-_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+				_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
+				_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
 
 				if(app.ext.orderCreate.checkoutCompletes)	{
 					var L = app.ext.orderCreate.checkoutCompletes.length;
@@ -263,13 +266,11 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 						}
 					}
 
-	app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
+				app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
 
-if(app.vars._clientid == '1pc')	{
+				if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
-	
-	
 
 // *** -> new method for handling third party checkout scripts.
 /*	setTimeout(function(){
@@ -278,45 +279,45 @@ if(app.vars._clientid == '1pc')	{
 		},1000); 
 */
 
-//GTS for apps is handled in google extension
-	if(typeof window.GoogleTrustedStore)	{
-		delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
-//running this will reload the script. the 'span' will be added as part of html:roi
-//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-		(function() {
-		var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-		var gts = document.createElement("script");
-		gts.type = "text/javascript";
-		gts.async = true;
-		gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-		var s = document.getElementsByTagName("script")[0];
-		s.parentNode.insertBefore(gts, s);
-		})();
-		}
-
-
-
-	}
-else	{
-	app.u.dump("Not 1PC.");
-	app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
-	//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
-	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
-		event.preventDefault();
-		});
-	$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
-		event.preventDefault();
-		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-		showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
-		});
-	}
+				//GTS for apps is handled in google extension
+					if(typeof window.GoogleTrustedStore)	{
+						delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+				//running this will reload the script. the 'span' will be added as part of html:roi
+				//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
+						(function() {
+						var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+						var gts = document.createElement("script");
+						gts.type = "text/javascript";
+						gts.async = true;
+						gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+						var s = document.getElementsByTagName("script")[0];
+						s.parentNode.insertBefore(gts, s);
+						})();
+						}
+				
+				
+				
+					}
+				else	{
+					app.u.dump("Not 1PC.");
+					app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+					//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
+					$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
+						event.preventDefault();
+						});
+					$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
+						event.preventDefault();
+						//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
+						showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
+						});
+					}
 
 				},
 			onError : function(rd)	{
 				$('body').hideLoading();
 				$('#globalMessaging').anymessage({'message':rd});
 
-_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
+				_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
 				}
 			} //cart2OrderIsComplete
@@ -1986,6 +1987,36 @@ app.model.addDispatchToQ({
 		}
 	},'passive');
 app.model.dispatchThis('passive');
+				},
+			
+			buildPaymentOptionsAsRadios : function(pMethods,payby)	{
+				var
+					$r = $("<p>"), //the children of R are returned (the P is not).
+					L = pMethods.length;
+
+//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
+					if(pMethods[0].id == 'ZERO')	{
+						$tag.hide(); //hide payment options.
+						$r.append("<div ><input type='radio' name='want/payby' value='ZERO' checked='checked' \/>"+pMethods[i].pretty+"<\/div>");
+						}
+					else if(L > 0)	{
+						for(var i = 0; i < L; i += 1)	{
+	//onClick event is added through an app-event. allows for app-specific events.
+							$r.append("<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' name='want/payby' value='"+pMethods[i].id+"' />"+pMethods[i].pretty+"<\/label></div>");
+							}
+						}
+					else	{
+						app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
+						
+						$r.append("<p>It appears no payment options are currently available.<\/p>");
+						if(document.location.protocol != "https:")	{
+							$r.append("This session is <b>not secure</b>, so credit card payment is not available.");
+							}
+						}
+					if(payby)	{
+						$("input[value='"+payby+"']",$r).prop('checked','checked').closest('label').addClass('selected ui-state-active')
+						}	
+				return $r.children();
 				}
 
 
@@ -2022,33 +2053,14 @@ app.model.dispatchThis('passive');
 			payMethodsAsRadioButtons : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.orderCreate.renderFormats.payOptionsAsRadioButtons');
 //				app.u.dump(data);
-				var o = '', cartData,pMethods,L;
-				if(app.data['cartDetail|'+data.value] &&  app.data['appPaymentMethods|'+data.value])	{
+				var o = '', cartData,pMethods;
+				if(app.data['cartDetail|'+data.value] && app.data['appPaymentMethods|'+data.value])	{
 					cartData = app.data['cartDetail|'+data.value];
 					pMethods = app.data['appPaymentMethods|'+data.value]['@methods'];
-					L = pMethods.length;
-//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
-					if(pMethods[0].id == 'ZERO')	{
-						$tag.hide(); //hide payment options.
-						o += "<div ><input type='radio' name='want/payby'  value='ZERO' checked='checked' \/>"+pMethods[i].pretty+"<\/div>";
-						}
-					else if(L > 0)	{
-						for(var i = 0; i < L; i += 1)	{
-	//onClick event is added through an app-event. allows for app-specific events.
-							o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' data-app-change='orderCreate|shipOrPayMethodSelectExec' name='want/payby' value='"+pMethods[i].id+"' />"+pMethods[i].pretty+"<\/label></div>";
-							}
-						}
-					else	{
-						app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
-						
-						o += "It appears no payment options are currently available.";
-						if(document.location.protocol != "https:")	{
-							o += "This session is <b>not secure</b>, so credit card payment is not available.";
-							}
-						}
-					if(cartData.want.shipping_id)	{
-						$("input[value='"+cartData.want.shipping_id+"']",$tag).prop('checked','checked').closest('label').addClass('selected ui-state-active')
-						}						
+					o = app.ext.orderCreate.u.buildPaymentOptionsAsRadios(pMethods,cartData.want.payby);
+					$(":radio",o).each(function(){
+						$(this).attr('data-app-change','orderCreate|shipOrPayMethodSelectExec');
+						});
 					}
 				else	{
 					o = $("<div \/>").anymessage({'persistent':true,'message':'In orderCreate.renderFormats.payMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});

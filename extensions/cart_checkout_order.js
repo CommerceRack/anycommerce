@@ -968,7 +968,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			countriesAsOptions : function($tag,data)	{
 				var r = '';
 				if(app.data['appCheckoutDestinations|'+data.value] && app.data['cartDetail|'+data.value] && data.bindData.shiptype)	{
-					var destinations = app.data.appCheckoutDestinations['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+data.value];
+					var destinations = app.data['appCheckoutDestinations|'+data.value]['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+data.value];
 					for(var i = 0; i < L; i += 1)	{
 						r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
 						}
@@ -977,11 +977,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						selected = cartData[data.bindData.shiptype][data.bindData.shiptype+'/countrycode']
 						}
 					$("select[name='"+data.bindData.shiptype+"/countrycode']").val(selected);
+					$tag.html(r);
 					}
 				else	{
-					r = $("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+data.value+'] is not available in memory.','gMessage':true});
+					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+data.value+'] is not available in memory.','gMessage':true}));
 					}
-				$tag.html(r);
 				},
 
 //data.value should be the item object from the cart.

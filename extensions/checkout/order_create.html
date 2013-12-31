@@ -166,7 +166,7 @@ This template is also used in the myAccount page, which is why a default using _
 	<!-- postal not required for international. don't add it. -->
 	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); defaultVar: cart(bill_postal); format:popVal;' maxlength='10'  data-app-blur='orderCreate|execAddressUpdate' /></div>
 
-	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='var: cart(cart.cartid); format:countriesAsOptions; extension: cco; shiptype:bill;' required='required' data-app-change="orderCreate|execCountryUpdate" ></select></div>
+	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='var: cart(cart/cartid); format:countriesAsOptions; extension: cco; shiptype:bill;' required='required' data-app-change="orderCreate|execCountryUpdate" ></select></div>
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill_phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
