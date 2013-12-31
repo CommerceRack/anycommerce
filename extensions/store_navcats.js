@@ -232,7 +232,6 @@ templateID - the template id used (from app.templates)
 // in some cases, the breadcrumb may be outside the page content (in the master header, for example), so empty it first.
 // if/when data-binds get more command-centric, get rid of this.
 				$tag.empty(); //reset each time
-				var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
 				if(app.u.isSet(data.value))	{
 					var pathArray = data.value.split('.');
 					var L = pathArray.length;
@@ -407,7 +406,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 						
 			addQueries4BreadcrumbToQ : function(path)	{
 //				app.u.dump("BEGIN myRIA.u.getBreadcrumbData");
-				var numRequests = 0;
+				var datapointers = new Array(); //what's returned. the length can be used to update numRequests (if necessary). the array itself can be used for extending by datapointers, if necessary.
 				var pathArray = path.split('.');
 				var len = pathArray.length
 				var s= '.'; //used to contatonate safe id.
@@ -415,12 +414,12 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 				for (var i=1; i < len; i += 1) {
 					s += pathArray[i]; //pathArray[0] will be blank, so s (.) plus nothing is just .
 //					app.u.dump(" -> path for breadcrumb: "+s);
-					numRequests += app.calls.appNavcatDetail.init({'path':s,'detail':'fast'});
+					datapointers.push("appNavcatDetail|"+s);
+					app.calls.appNavcatDetail.init({'path':s,'detail':'fast'});
 				//after each loop, the . is added so when the next cat id is appended, they're concatonated with a . between. won't matter on the last loop cuz we're done.
 					s += "."; //put a period between each id. do this first so homepage data gets retrieved.
-					
 					}
-				return numRequests;
+				return datapointers;
 				}			
 			
 			
