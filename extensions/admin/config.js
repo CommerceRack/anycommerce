@@ -547,8 +547,6 @@ var admin_config = function() {
 
 				if(vars.table && ((vars.rulesmode == 'shipping' && vars.provider) || (vars.rulesmode == 'coupons' && vars.couponCode)))	{
 
-
-
 					var $D = app.ext.admin.i.dialogCreate({
 						'title' : 'Rules Builder',
 						});
@@ -566,14 +564,17 @@ var admin_config = function() {
 					//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
 					var DMIVars = {
 						'header' : 'Rules Editor',
-						'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
+						'handleAppEvents' : false,
+						'anytable' : false, //do NOT apply sorting to these tables. The rows order is important to rule processing.
+						'buttons' : [
+							"<button data-app-click='admin_config|ruleBuilderAddShow_DE' data-rulesmode='"+vars.rulesmode+"' class='applyButton'>Add Rule<\/button>",
+							"<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
 						}; 
 //					app.u.dump(" -> vars.TABLE: "+vars.table);
 					//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 					if(vars.rulesmode == 'shipping')	{
 						DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
 						DMIVars.tbodyDatabind = 'var: rules(@'+vars.table+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
-						DMIVars.handleAppEvents = false;
 						DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
 						$D.attr('data-provider',vars.provider);
 						}
@@ -584,12 +585,17 @@ var admin_config = function() {
 						}
 					else	{}
 					var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
+					app.u.handleAppEvents($D); //for toggle and save button.  ### TODO -> get rid of this once save/toggle are updated.
 					$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode});
 					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
 						ui.item.addClass('edited');
 						app.ext.admin.u.handleSaveButtonByEditedClass($D);
 						});
 				
+//add data-table attributes.
+					$D.attr('data-table-role','container');
+					$("tbody[data-app-role='dualModeListTbody']:first",$D).attr('data-table-role','content');
+					
 					
 					if(vars.rulesmode == 'shipping')	{
 					//need pricing schedules. This is for shipping.
@@ -604,10 +610,8 @@ var admin_config = function() {
 								$D.anymessage({'message':rd});
 								}
 							else	{
-					//			app.u.dump("Exec showRulesBuilderInModal callback for new shipmethods.");
-					//			app.u.dump(" -> app.ext.admin_config.u.getShipMethodByProvider(vars.provider): "); app.u.dump(app.ext.admin_config.u.getShipMethodByProvider(vars.provider));
 								$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
-								app.u.handleAppEvents($D,vars); //needs to happen after request, because that's when the row contents are populated.
+								app.u.handleButtons($D);
 								}
 							}},'mutable');
 						app.model.dispatchThis('mutable');
@@ -616,7 +620,7 @@ var admin_config = function() {
 						var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
 						if(data)	{
 							$D.anycontent({'data': data});
-							app.u.handleAppEvents($D,vars);
+							app.u.handleButtons($D);
 							}
 						else	{} //getValueByKeyFromArray (used to set the data) will return false and display an error message.
 						}
@@ -935,42 +939,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					});
 				}, //shipMeterDetailInModal
-
-
-
-
-
-
-
-			domainRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.domainRemoveConfirm').on('click.domainRemoveConfirm',function(event){
-					event.preventDefault();
-					var $tr = $btn.closest('tr');
-
-					app.ext.admin.i.dialogConfirmRemove({
-						'removeFunction':function(vars,$D){
-							$D.showLoading({"message":"Deleting Domain"});
-							app.model.addDispatchToQ({'_cmd':'adminDomainMacro','DOMAINNAME':$tr.data('DOMAINNAME'),'@updates':["DOMAIN-REMOVE"],'_tag':{'callback':function(rd){
-								$D.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$D.anymessage({'message':rd});
-									}
-								else	{
-									$D.dialog('close');
-									$('#globalMessaging').anymessage(app.u.successMsgObject('The domain has been removed.'));
-									$tr.empty().remove(); //removes row for list.
-									}
-								}
-							}
-						},'immutable');
-						app.model.dispatchThis('immutable');
-						}});
-					})
-				}, //domainRemoveConfirm
-
-
-			
+		
 			couponDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				var couponCode = $btn.closest('tr').data('coupon');
@@ -1272,19 +1241,20 @@ when an event type is changed, all the event types are dropped, then re-added.
 				}, //paymentMethodUpdateExec
 
 //This is the event to use for delegated events (as oppsed to app events).
-//requires the data-table syntax. 
+//requires the data-table-role syntax. 
 			dataTableAddUpdate : function($ele,P)	{
 				var r = false; //what is returned. will be true if data-table passes muster.
 				app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
 				var
 					$DTC = $ele.closest("[data-table-role='container']");// Data Table Container. This element should encompass the inputs AND the table itself.
-					$inputContainer = $("[data-table-role='inputs']",$DTC), //likely a fieldset, but that's not a requirement.
+// SANITY -> 201352 changed this from $("[data-table-role='inputs']",$DTC) to closest. that requires that $ele is INSIDE the inputs. If this causes issues (required from shipping/coupons rules), then add a data attribute on $ele to allow for $ele to be outside and use $("[data-table-role='inputs']",$DTC).
+					$inputContainer = $ele.closest("[data-table-role='inputs']"), //likely a fieldset, but that's not a requirement. //$("[data-table-role='inputs']",$DTC)
 					$dataTbody = $("tbody[data-table-role='content']",$DTC);
 				
 				if($inputContainer.length && $dataTbody.length)	{
-					app.u.dump(" -> all necessary jquery objects found.");
+//					app.u.dump(" -> all necessary jquery objects found.");
 					if($dataTbody.data('bind'))	{
-						app.u.dump(" -> $dataTbody has data-bind.");
+//						app.u.dump(" -> $dataTbody has data-bind.");
 	
 						if(app.u.validateForm($inputContainer))	{
 							app.u.dump(" -> form is validated.");
@@ -1517,6 +1487,9 @@ else	{
 
 				},
 
+
+
+
 //executed on a manage rules button.  shows the rule builder.
 			ruleBuilderShow : function($btn)	{
 				$btn.button();
@@ -1547,8 +1520,22 @@ else	{
 // return false;				
 				}, //ruleBuilderShow
 
+
+			ruleBuilderAddShow_DE : function($ele,p)	{
+				var rulesmode = $ele.data('rulesmode'), $DMI = $ele.closest("[data-app-role='dualModeContainer']"), guid = app.u.guidGenerator();
+				$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'rulesInputsTemplate_'+rulesmode,
+					'panelID' : 'newrule_'+guid,
+					'header' : 'New rule',
+					'data' : ((rulesmode == 'shipping') ? $.extend(true,{'guid':guid},app.data['adminPriceScheduleList']) : {'guid':guid}),
+					'showLoading':false
+					});
+				},
+
+
 //executed by the 'add new rule' button. opens a dialog and, on save, updates the tbody of the rule builder.
 //the rule is NOT actually saved until the 'save' button is pushed.
+//this is deprecated in favor of ruleBuilderAddShow_DE. once that event is fully implemented, delete this one and rename _DE
 			ruleBuilderAddShow : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 				$btn.off('click.ruleBuilderAddShow').on('click.ruleBuilderAddShow',function(){
@@ -1675,65 +1662,30 @@ else	{
 					});
 				},
 
-
-
-
 //opens an editor for an individual rule. uses anypanel/dualmode
-			showRuleEditorAsPanel : function($btn,vars)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showRuleEditorAsPanel').on('click.showRuleEditorAsPanel',function(){
+			showRuleEditorAsPanel : function($ele,p)	{
+				var rulesmode = $ele.data('rulesmode'), $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+				if(rulesmode == 'shipping' || rulesmode == 'coupons')	{
+					var header, ruleData = $ele.closest('tr').data();
+//					if(rulesmode == 'shipping')	{
+//						var provider = $ele.closest("[data-provider]").data('provider');
+//						}
+					
+					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'rulesInputsTemplate_'+rulesmode,
+						'panelID' : 'ruleBuilder_'+ruleData.guid,
+						'header' : ((rulesmode == 'shipping') ? 'Edit: '+ruleData.name : 'Edit: '+ruleData.hint),
+						'data' : ((rulesmode == 'shipping') ? $.extend(true,{},app.data['adminPriceScheduleList'],ruleData) : ruleData),
+						'showLoading':false
+						});
+					if(ruleData.schedule)	{
+						$("[name='SCHEDULE']",$panel).val();
+						}
 
-//app.u.dump("BEGIN admin_config.e.showRuleEditorAsPanel click event");
-
-var
-	$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
-	data = {},
-	$target = $("[data-app-role='dualModeDetail']",$DMI),
-	header = '', //heading for rules editor.
-	templateID = '',
-	panelID = '',
-	showRules = true; //a boolean used after some error checking.
-
-if(vars.rulesmode)	{
-	if(vars.rulesmode == 'shipping')	{
-		data = $.extend(true,{},app.data['adminPriceScheduleList'],$btn.closest('tr').data());
-		var provider = $btn.closest("[data-provider]").data('provider');
-		panelID = 'ruleBuilder_'+data.provider;
-		header = 'Edit: '+data.name;
-		templateID = 'rulesInputsTemplate_shipping';
-		}
-	else if(vars.rulesmode == 'coupons')	{
-		data = $btn.closest('tr').data();
-		header = 'Edit: '+data.hint;
-		panelID = 'ruleBuilder_'+data.guid;
-		templateID = 'rulesInputsTemplate_coupons';
-		}
-	else	{
-		showRules = false;
-		}
-	
-	if(showRules)	{
-		var $panel = $("<div\/>").hide().anypanel({
-			'header':header,
-			data : data, //app.ext.admin_config.u.getShipMethodByProvider(provider)['@RULES'][$btn.closest('tr').attr('data-obj_index')]
-			'templateID':templateID
-			}).prependTo($target);
-		app.ext.admin.u.toggleDualMode($DMI,'detail');
-		$panel.slideDown('fast');
-		//the schedule render format doesn't have a good mechanism for pre-checking a value.
-		if(data.schedule)	{
-			$("[name='SCHEDULE']",$panel).val();
-			}
-		app.u.handleAppEvents($panel,{'$dataTbody':$btn.closest('tbody'),'$form':$DMI});			
-		}
-	
-	
-	}
-else {
-	$('#globalMessaging').anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, unable to ascertain rulemode. Should be passed into handleAppEvents as param 2 (vars).','gMesage':true})
-	}
-
-					});
+					}
+				else	{
+					$DMI.anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, rulesmode ['+$ele.data('rulesmode')+'] on trigger element is either missing or invalid. Only coupons and shipping are acceptable values.','gMessage':true});
+					}
 				},
 
 			pluginUpdateExec : function($ele,p)	{
