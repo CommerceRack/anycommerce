@@ -812,27 +812,6 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //cartItemAppend
 
-// formerly updateCartQty
-		cartItemUpdate : {
-			init : function(stid,qty,_tag)	{
-//				app.u.dump('BEGIN app.calls.cartItemUpdate.');
-				var r = 0;
-				if(stid && Number(qty) >= 0)	{
-					r = 1;
-					this.dispatch(stid,qty,_tag);
-					}
-				else	{
-					app.u.throwGMessage("In calls.cartItemUpdate, either stid ["+stid+"] or qty ["+qty+"] not passed.");
-					}
-				return r;
-				},
-			dispatch : function(stid,qty,_tag)	{
-//				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": _tag},'immutable');
-				app.ext.cco.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
-				}
-			 },
-
 //default immutable Q
 //formerly setSessionVars
 		cartSet : {
@@ -1197,9 +1176,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					app.model.fetchExtension(tmpObj); 
 					});
 				app.model.executeCallbacksWhenExtensionsAreReady([tmpObj]); //function wants an array of objects.
-				}
-			else if(arr[0] == 'templateFunction')	{
-				app.ext.myRIA.template[arr[1]][arr[2]].push(arr[3]);
 				}
 			else if(arr[0] == 'css')	{
 				app.u.loadCSSFile(arr[2],arr[3] || null);
