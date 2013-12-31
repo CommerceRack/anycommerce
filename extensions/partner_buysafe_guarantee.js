@@ -57,8 +57,8 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 
 app.u.dump("BEGIN buysafe_guarantee.startExtension.onSuccess.");
 
-//make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
-					if(app.ext.myRIA && app.ext.myRIA.template && app.ext.myRIA.template.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
+//make sure the templates have been loaded. all the myRIA templates are loaded at the same time.
+					if(app.templates && app.templates.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
 
 //http://developer.buysafe.com/bsg_overview.php
 //http://www.buysafe.com/web/general/kickerpreview.aspx
@@ -68,18 +68,18 @@ if(buySAFE.Hash.length > 0)	{
 	//the showContent function may have already executed prior to startExtension getting executed.
 	WriteBuySafeKickers();
 
-	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {
+	app.templates.productTemplate.on('complete.buysafe',function($ele,P) {
 //		app.u.dump("Execute WriteBuySafeKicker");
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
-	app.ext.myRIA.template.cartTemplate.onCompletes.push(function(P) {
+	app.templates.cartTemplate.on('complete.buysafe',function($ele,P) {
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
 	
 								
-	app.ext.orderCreate.checkoutCompletes.push(function(P){
+	app.templates.checkoutTemplate.on('complete.buysafe',function($ele,P){
 		
 		app.u.dump("BEGIN buysafe_guarantee code pushed on orderCreate.checkoutCompletes");
 		var order = app.data['order|'+P.orderID].cart;

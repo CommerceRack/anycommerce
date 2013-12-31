@@ -42,9 +42,8 @@ var google_adwords = function() {
 			
 			startExtension : {
 				onSuccess : function (){
-					if(app.ext.myRIA && app.ext.myRIA.template){
-						app.ext.orderCreate.checkoutCompletes.push(function(P){
-							app.u.dump("BEGIN google_adwords code pushed on orderCreate.checkoutCompletes");
+					if(app.templates && app.templates.checkoutTemplate){
+						app.templates.checkoutTemplate.on('complete.googleadwords',function($ele,P){
 							var order = app.data['order|'+P.orderID];
 							google_conversion_value = order.sum.items_total;
 							app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');

@@ -216,7 +216,7 @@ A special translate template for product so that reviews can be merged into the 
 				responseData.persistent = true; //throwMessage will NOT hide error. better for these to be pervasive to keep merchant fixing broken things.
 				var pid = responseData.pid;
 
-				var $product =(tagObj.jqObj instanceof jQuery) ? tagObj.jqObj :  $(app.u.jqSelector('#',tagObj.parentID));
+				var $product =(responseData.jqObj instanceof jQuery) ? responseData.jqObj :  $(app.u.jqSelector('#',responseData.parentID));
 				$product.empty().removeClass('loadingBG');
 				$product.anymessage(responseData,uuid);
 //even if the product errors out, productLoaded gets incremented so the oncomplete runs.
