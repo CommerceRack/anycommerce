@@ -100,13 +100,13 @@ additionally, will apply some conditional form logic.
 				}
 
 var inputEventSelectors = "[data-input-"+supportedEvents.join("], [data-input-")+"]";
-app.u.dump(" -> inputEventSelectors: "+inputEventSelectors);
+//app.u.dump(" -> inputEventSelectors: "+inputEventSelectors);
 
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
 //do this before edit tracking is added so the edited class is not added.
 //this block is executed outside the  if/else above so that if anydelegate has already been added to a parent, new content still gets default actions.
 				$(inputEventSelectors,$t).each(function(index){
-					app.u.dump(index+") woot.");
+//					app.u.dump(index+") woot.");
 					var $i = $(this)
 					if($i.is('select'))	{
 						$('option:selected',$i).trigger(supportedEvents[i]+'.app');
@@ -243,7 +243,7 @@ app.u.dump(" -> inputEventSelectors: "+inputEventSelectors);
 
 //a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
 		updateChangeCounts : function()	{
-			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
+//			app.u.dump(" -> anydelegate('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
 				$(self.options.trackSelector,self.element).each(function(){
@@ -892,14 +892,11 @@ either templateID or (data or datapointer) are required.
 					gMessage : true,
 					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in app.data "});
 				}
-// ** 201324 -> for the admin UI, need to make sure data is getting set.
-//always add the dataAttribs as 'data()'. that way they're available even if a failure occurs later.
-//applying theme as data() insteat of attr('data-** means case is preserved.
-			if(o.dataAttribs)	{
-//				app.u.dump(" -> this.element.id: "+this.element.attr('id'));
-				this.element.data(o.dataAttribs);
+// the template code in the controller will apply dataAttribs as data-attributes. Here, we add them as actual 'data' to preserve case and support nested values.
+			if(!$.isEmptyObject(o.dataAttribs))	{
+				$t.data(o.dataAttribs);
 				}
-			this.element.data('anycontent',true); //tag as anycontent. allows $(this).data('anycontent') to be used before applying anycontent('option','destroy');
+			$t.data('anycontent',true); //tag as anycontent. allows $(this).data('anycontent') to be used before applying anycontent('option','destroy');
 			}, //_init
 
 		_setOption : function(option,value)	{

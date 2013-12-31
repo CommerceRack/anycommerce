@@ -303,19 +303,21 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<td class='alignRight'><span data-bind='var: product(qty); format:text;'></span></td>
 	<td class='alignRight'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
 	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td><button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' data-app-click='cco|cartItemRemove'>Remove Item From Cart</button></td>
 </tr>
 </table>
 
 
-<section id='chkoutCartContentsTemplate'>
-	<div class='marginBottom' data-bind='var: cart(cart/cartid); format:text; _pretext:Cart ID: ;'></div>
-	<table class='fullWidth gridTable applyAnytable marginBottom'>
+<section id='chkoutCartContentsTemplate' data-template-role='cart' data-bind='var:cart(cart/cartid);format:assignAttribute; attribute:data-cartid;' >
+	<div class='marginBottom' data-bind='var: cart(cart/cartid); format:text; pretext:Cart ID: ;'></div>
+	<table class='fullWidth gridTable marginBottom'>
 	<thead>
 	<tr>
 		<th colspan='2' class='alignLeft'>product information</th>
 		<th class='alignRight'>qty</th>
 		<th class='alignRight'>price</th>
 		<th class='alignRight'>item total</th>
+		<th></th>
 	</tr>
 	</thead>
 	<tbody data-bind='var: cart(@ITEMS); format:processList; loadsTemplate:chkoutCartItemTemplate;'></tbody>
