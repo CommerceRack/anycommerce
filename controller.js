@@ -1226,11 +1226,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 		fileDownloadInModal : function(vars)	{
 			app.u.dump("BEGIN app.u.fileDownloadInModal");
 			vars = vars || {};
-			if(vars.mime_type && vars.body)	{
-				app.u.dump(" -> mime type and body are set");
-				var filename = vars.filename || 'file';
-				var MIME_TYPE = vars.mime_type;
 
+			function modal()	{
 				var $D = $("<div \/>",{'title':'File Ready for Download'}).html("Your file is ready for download: <br />").appendTo(document.body);
 				$D.dialog({
 					'modal' : true,
@@ -1239,11 +1236,26 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					'height' : 200,
 					close: function(event, ui)	{
 						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-//						app.u.dump('got into dialog.close - destroy.');
-						$(this).dialog('destroy');
-						$(this).intervaledEmpty(1000,1);
+			//						app.u.dump('got into dialog.close - destroy.');
+//						$(this).dialog('destroy');
+						$(this).closest('.ui-dialog').intervaledEmpty(1000);
 						} //will remove from dom on close
 					});
+				return $D;
+				}
+
+			if(vars.data_url === true)	{
+				var $D = modal();
+				var output = vars.body.join('\n');
+				var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
+				$("<a>").attr({'href':uri,'download':vars.filename}).text(vars.filename).appendTo($D);
+				}
+			else if(vars.mime_type && vars.body)	{
+				app.u.dump(" -> mime type and body are set");
+				var filename = vars.filename || 'file';
+				var MIME_TYPE = vars.mime_type;
+
+				var $D = modal();
 
 // this worked, but not an ideal solution. we like blob better.
 //			var uri = 'data:'+MIME_TYPE+',' + encodeURIComponent(vars.body);
@@ -1258,13 +1270,13 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //					if(MIME_TYPE.toLowerCase().indexOf('image') >= 0)	{
 					// Use typed arrays to convert the binary data to a Blob
 					//http://stackoverflow.com/questions/10473932/browser-html-force-download-of-image-from-src-dataimage-jpegbase64
-					var arraybuffer = new ArrayBuffer(file.length);
-					var L = file.length;
-					var view = new Uint8Array(arraybuffer);
-					for (var i=0; i < L; i++) {
-						view[i] = file.charCodeAt(i) & 0xff;
-						}
-					var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
+				var arraybuffer = new ArrayBuffer(file.length);
+				var L = file.length;
+				var view = new Uint8Array(arraybuffer);
+				for (var i=0; i < L; i++) {
+					view[i] = file.charCodeAt(i) & 0xff;
+					}
+				var bb = new Blob([arraybuffer], {type: 'application/octet-stream'});
 //						}
 //					else	{
 //						var bb = new Blob(new Array(file), {type: vars.MIME_TYPE});

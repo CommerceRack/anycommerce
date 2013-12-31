@@ -3088,7 +3088,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 // .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
 //ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
 			handleSaveButtonByEditedClass : function($context)	{
-				app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
+//				app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
 //*** 201344 -> code moved into anydelegate.
 				if($context.hasClass('eventDelegation'))	{
 					$context.anydelegate('updateChangeCounts');
@@ -4438,6 +4438,7 @@ vars:
 				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
 				vars = vars || {};
 				if($target instanceof jQuery && vars.tbodyDatabind)	{
+					
 //set up the defaults.
 					vars.showLoading = (vars.showLoading === false) ? false  : true; //to be consistent, default this to on.
 					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
@@ -4445,8 +4446,8 @@ vars:
 					vars.handleAppEvents = (vars.handleAppEvents === false) ? false  : true;
 
 					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
-
 					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
+
 					var
 						$DMI = $("[data-app-role='dualModeContainer']",$DM),
 						$tbody = $("[data-app-role='dualModeListTbody']:first",$DM),
@@ -4456,7 +4457,7 @@ vars:
 					if(vars.anytable)	{
 						$table.addClass('applyAnytable');
 						}
-					
+
 //if set, build thead.
 					if(vars.thead && typeof vars.thead == 'object')	{
 //find and get a copy of the template used in the loadsTemplate. use it to determine which headers should be hidden in midetail mode.
@@ -4476,9 +4477,11 @@ vars:
 							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
 
 						for(var i = 0; i < L; i += 1)	{
+//							app.u.dump(i+") "+vars.thead[i]);
 //looks at corresponding td in loadsTemplate (if set) and applies hide class (
 							$('<th \/>').addClass(($tmp && $("td:nth-child("+i+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
 							}
+
 						}// thead loop
 					else if(vars.thead)	{
 						app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
@@ -4726,6 +4729,51 @@ dataAttribs -> an object that will be set as data- on the panel.
 			restoreHeightOnBlur : function($ele,p)	{
 				$ele.css('height','');
 				},
+//this can be used on data formatted as an array of hashes. productReviewList is an example.
+// data-pointer must be set. ex: adminProductReviewList
+// data-listpointer must also be set. ex: @REVIEWS
+// data-filename needs to be set as well and should include the extension.
+			dataCSVExportExec : function($ele,p)	{
+				if($ele.data('pointer') && $ele.data('listpointer') && $ele.data('filename')){
+					if(app.data[$ele.data('pointer')] && app.data[$ele.data('pointer')][$ele.data('listpointer')] && app.data[$ele.data('pointer')][$ele.data('listpointer')].length)	{
+						var csvData = [], head = [], list = app.data[$ele.data('pointer')][$ele.data('listpointer')]; //shortcut
+
+						var keys = Object.keys(list[0]); //an array of each row's 'headers'. used in the .map (can't use head cuz of formatting)
+
+						//build headers in a csv-friendly manner.
+						for(var index in list[0])	{
+							head.push('"' + index + '"');
+							}
+						csvData.push(head);
+						//build body.
+						for(var i = 0, L = list.length; i < L; i += 1)	{
+							var tmpArr = [];
+							keys.map(function(v) {
+								var value = list[i][v];
+								if(value && value.match(/^-{0,1}\d*\.{0,1}\d+$/)) {
+									tmpArr.push(parseFloat(value));
+									}
+								else {
+									tmpArr.push('"' + ( value ? value.replace(/"/g, '""') : '' ) + '"');
+									}
+								});
+							csvData.push(tmpArr);
+							}
+						app.u.fileDownloadInModal({
+							'data_url' : true,
+							'body' : csvData,
+							'filename' : 'product_reviews.csv'
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_customer.e.reviewExportExec, data not in memory or has no length.","gMessage":true});
+						}					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.e.dataExportExec, data-pointer ["+$ele.data('pointer')+"], data-listpointer ["+$ele.data('listpointer')+"] and/or data-filename ["+$ele.data('filename')+"] left blank on trigger element and all are required.","gMessage":true});
+					}
+				},
+
 
 //used for loading a simple dialog w/ no data translation.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
