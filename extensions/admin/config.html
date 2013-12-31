@@ -261,14 +261,14 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
 	<td data-bind="var: rule(code); format:text;"></td>
 	<td data-bind="var: rule(name); format:text;"></td>
-	<td data-bind="var: rule(created); format:text;"></td>
+	<td data-bind="var: rule(created); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: rule(exec); format:text;"></td>
-	<td data-bind="var: rule(match); format:text;"></td>
-	<td data-bind="var: rule(schedule); format:text;"></td>
-	<td data-bind="var: rule(value); format:text;"></td>
+	<td data-bind="var: rule(match); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(schedule); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(value); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
-		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>
+		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
+		<button data-app-click="admin_config|showRuleEditorAsPanel" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-rulesmode="shipping">Edit Rule</button>
 	</td>
 </tr>
 
@@ -286,7 +286,7 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 
 
-<form  id='rulesInputsTemplate_shipping'>
+<form  id='rulesInputsTemplate_shipping' action='#' onsubmit="return false;"  data-table-role='inputs'>
 <!--
 SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
 keep all inputs within one fieldset for the save function.
@@ -344,7 +344,7 @@ keep all inputs within one fieldset for the save function.
 		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
 		<option value="SANDBOX/NO">User is on LIVE version</option>
 	</select>
-	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>
+<!--	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>-->
 </label>
 
 <label>
@@ -379,7 +379,7 @@ keep all inputs within one fieldset for the save function.
 			<option value=''>none</option>
 		</select>
 	</label>
-<button data-app-event='admin_config|dataTableAddExec' data-form-skipreset='true'>Add/Update</button><!-- needs to be within fieldset for taxTableUpdateExec -->
+<button data-app-click='admin_config|dataTableAddUpdate' data-form-skipreset='true' class='applyButton' data-text='true'>Apply</button>
 
 </fieldset>
 </form>
@@ -476,7 +476,7 @@ keep all inputs within one fieldset for the save function.
 
 
 
-<form id='rulesInputsTemplate_coupons'>
+<form id='rulesInputsTemplate_coupons' action='#' onsubmit="return false;"  data-table-role='inputs'>
 <!--
 SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
 keep all inputs within one fieldset for the save function.
@@ -496,12 +496,32 @@ keep all inputs within one fieldset for the save function.
 
 <label>
 	<span>Use Rule if:</span>
-	<select name="match"  class='smallTxt' data-bind='var: rule(match); format:popVal;'>
-	<option value="IGNORE">Ignore (for testing)</option><option selected="" value="SOME_IN_FILTER">ANY product in cart matches filter</option><option value="NOTHING_IN_FILTER">NOTHING in cart matches the filter</option><option value="STATE_MATCH">STATE matches</option><option value="COUNTRY_MATCH">Country Name matches</option><option value="COUNTRYCODE_MATCH">Country ISOX matches</option><option value="HAS_CLAIM">Incomplete Item in Cart</option><option value="SUBTOTAL/GT">cart total price is GREATER than MATCH VALUE</option><option value="SUBTOTAL/LT">cart total price is LESS than MATCH VALUE</option><option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option><option value="POGMATCH">STID contains POG in filter criteria (examples: ":A0", ":A001", "/A001")</option><option value="STIDMATCH/GT">More than MATCH VALUE items are found in the filter</option><option value="STIDMATCH/LT">Less than MATCH VALUE items match the filter</option><option value="STIDTOTAL/GT">sum of filter matching items is GREATER than MATCH VALUE</option><option value="STIDTOTAL/LT">sum of filter matching items is LESS than MATCH VALUE</option><option value="FILTER_IS_SUBSTRING">Filter appears as substring in ANY items description</option><option value="TRUE">Always True</option><option value="COUPON/ANY">Coupon(s) Present</option><option value="SANDBOX/YES">User is on Sandbox/Test Site</option><option value="SANDBOX/NO">User is on LIVE version</option>	
+	<select name="match"  class='smallTxt' data-bind='var: rule(match); format:popVal;' data-panel-selector=".couponUseRuleIfSelect" data-input-change='show-panel'>
+		<option value="IGNORE">Ignore (for testing)</option>
+		<option selected="" value="SOME_IN_FILTER">ANY product in cart matches filter</option>
+		<option value="NOTHING_IN_FILTER">NOTHING in cart matches the filter</option>
+		<option value="STATE_MATCH">STATE matches</option>
+		<option value="COUNTRY_MATCH">Country Name matches</option>
+		<option value="COUNTRYCODE_MATCH">Country ISOX matches</option>
+		<option value="HAS_CLAIM">Incomplete Item in Cart</option>
+		<option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option>
+		<optgroup label="Match Value">
+			<option value="SUBTOTAL/GT" data-show-panel='couponUseRuleMatchValue'>cart total price is GREATER than MATCH VALUE</option>
+			<option value="SUBTOTAL/LT" data-show-panel='couponUseRuleMatchValue'>cart total price is LESS than MATCH VALUE</option>
+			<option value="STIDMATCH/GT" data-show-panel='couponUseRuleMatchValue'>More than MATCH VALUE items are found in the filter</option>
+			<option value="STIDMATCH/LT" data-show-panel='couponUseRuleMatchValue'>Less than MATCH VALUE items match the filter</option>
+			<option value="STIDTOTAL/GT" data-show-panel='couponUseRuleMatchValue'>sum of filter matching items is GREATER than MATCH VALUE</option>
+			<option value="STIDTOTAL/LT" data-show-panel='couponUseRuleMatchValue'>sum of filter matching items is LESS than MATCH VALUE</option>
+		</optgroup>
+		<option value="POGMATCH">STID contains POG in filter criteria</option>
+		<option value="FILTER_IS_SUBSTRING">Filter appears as substring in ANY items description</option>
+		<option value="TRUE">Always True</option><option value="COUPON/ANY">Coupon(s) Present</option>
+		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
+		<option value="SANDBOX/NO">User is on LIVE version</option>	
 	</select>
 </label>
 
-<label>
+<label class='couponUseRuleIfSelect displayNone' data-panel-id='couponUseRuleMatchValue'>
 	<span>Match Value</span>
 	<input type="text" name="matchvalue" value="" data-bind='var: rule(matchvalue); format:popVal;' />
 	<span class="hint">Only necessary for rules which say 'MATCH VALUE'</span>
@@ -519,7 +539,28 @@ keep all inputs within one fieldset for the save function.
 	<span>Action if Match:</span>
 
 	<select name="exec"  class='smallTxt' data-bind='var: rule(exec); format:popVal;'>	
-	<option value="GOGO">GoGo - Continue to Next Rule (if true, stop if not)</option><option value="STOP">Completely STOP Rule Processing</option><option value="MATCHADD*B3GO">ADD to Discount (B3GO: Buy-Three-Get-One Matching Items)</option><option value="MATCHADD*B2GO">ADD to Discount (B2GO: Buy-Two-Get-One Matching Items)</option><option value="MATCHADD*BOGO">ADD to Discount (BOGO: Buy-One-Get-One Matching Items)</option><option value="MATCHADD*MINUS0">ADD to Discount (SubTotal=Match Items) (% modify only)</option><option value="MATCHADD*MINUS1">ADD to Discount (SubTotal=Match Items - Single Most Expensive Match) (% modify only)</option><option value="MATCHADD*MINUS2">ADD to Discount (Subtotal=Match Items - Two Most Expensive Matches) (% modify only)</option><option value="MATCHADD*MINUS3">ADD to Discount (SubTotal=Match Items - Three Most Expensive Matches) (% modify only)</option><option value="MATCHADD*ONLY1">ADD to Discount (SubTotal=Single Most Expensive Match Item)</option><option value="DISABLE">DISABLE (Remove coupon and stop processing)</option><option selected="" value="SET">SET Discount to modify value ($ or %)</option><option value="ADD*ONE">ADD modify value to Discount Amount</option><option value="ADD*MATCHITEMS">ADD modify value to Discount Amount FOR EVERY MATCHING ITEM QTY, set quantity=1</option><option value="ADD*MATCHLINES">ADD modify value to Discount Amount FOR EACH MATCHING UNIQUE SKU/LINE, set quantity=1</option><option value="ADD*ALLSKU">ADD modify value to Discount Amount FOR EVERY UNIQUE SKU/LINE REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*ALLITEMS">ADD modify value to Discount Amount FOR EVERY ITEM QTY REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*EFFECTIVESUBTOTAL">Apply modify value to effective subtotal (even if previous coupons have been applied)</option>		
+		<option value="GOGO">GoGo - Continue to Next Rule (if true, stop if not)</option>
+		<option value="STOP">Completely STOP Rule Processing</option>
+		<optgroup label='ADD to Discount'>
+			<option value="MATCHADD*B3GO">B3GO: Buy-Three-Get-One Matching Items</option>
+			<option value="MATCHADD*B2GO">B2GO: Buy-Two-Get-One Matching Items</option>
+			<option value="MATCHADD*BOGO">BOGO: Buy-One-Get-One Matching Items</option>
+			<option value="MATCHADD*MINUS0">SubTotal=Match Items (% modify only)</option>
+			<option value="MATCHADD*MINUS1">SubTotal=Match Items - Single Most Expensive Match (% modify only)</option>
+			<option value="MATCHADD*MINUS2">Subtotal=Match Items - Two Most Expensive Matches (% modify only)</option>
+			<option value="MATCHADD*MINUS3">SubTotal=Match Items - Three Most Expensive Matches (% modify only)</option>
+			<option value="MATCHADD*ONLY1">SubTotal=Single Most Expensive Match Item</option>
+		</optgroup>
+		<option value="DISABLE">DISABLE (Remove coupon and stop processing)</option>
+		<option selected="" value="SET">SET Discount to modify value ($ or %)</option>
+		<optgroup label='ADD modify value'>
+			<option value="ADD*ONE">to Discount Amount</option>
+			<option value="ADD*MATCHITEMS">to Discount Amount for every MATCHING ITEM QTY, set quantity=1</option>
+			<option value="ADD*MATCHLINES">to Discount Amount for each MATCHING UNIQUE SKU/LINE, set quantity=1</option>
+			<option value="ADD*ALLSKU">to Discount Amount for every UNIQUE SKU/LINE REGARDLESS OF MATCH, set quantity=1</option>
+			<option value="ADD*ALLITEMS">to Discount Amount for every ITEM QTY REGARDLESS OF MATCH, set quantity=1</option>
+		<option value="ADD*EFFECTIVESUBTOTAL">to effective subtotal (even if previous coupons have been applied)</option>
+		</optgroup>
 	</select>
 </label>
 <p class="hint marginBottom">
@@ -536,7 +577,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<input type="text" step='.01' name="value" value="" size='8' data-bind='var: rule(value); format:popVal;' /> <span class='hint'>(remember to use negative numbers to subtract)</span>
 </label>
 
-<button data-app-event='admin_config|dataTableAddExec' data-form-skipreset='true'>Add/Update</button><!-- needs to be within the fieldset for taxTableUpdateExec -->
+<button data-app-click='admin_config|dataTableAddUpdate' data-form-skipreset='true' class='applyButton'>Apply</button><!-- needs to be within the fieldset for taxTableUpdateExec -->
 </fieldset>
 
 
@@ -580,8 +621,8 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<td data-bind="var: rule(matchvalue); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: rule(value); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
-		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>
+		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
+		<button data-app-click="admin_config|showRuleEditorAsPanel" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-rulesmode='coupons'>Edit Rule</button>
 	</td>
 </tr>
 
