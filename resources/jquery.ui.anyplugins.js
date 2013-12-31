@@ -2159,7 +2159,8 @@ jQuery.fn.toCSV = function() {
 	data.find("tr").each(function() {
 	  if($(this).find("th").length) {
 		  $(this).find("th").each(function() {
-			tmpStr = $(this).text().replace(/"/g, '""');
+			tmpStr = ($(this).data('csvhead')) ? $(this).data('csvhead') : $(this).text(); //allow for a csv specific header to be set. if not, default to text
+			tmpStr = tmpStr.replace(/"/g, '""');
 			tmpArr.push('"' + tmpStr + '"');
 		  });
 		  csvData.push(tmpArr);
