@@ -568,11 +568,12 @@ var admin_config = function() {
 						'header' : 'Rules Editor',
 						'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
 						}; 
-					app.u.dump(" -> vars.TABLE: "+vars.table);
+//					app.u.dump(" -> vars.TABLE: "+vars.table);
 					//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 					if(vars.rulesmode == 'shipping')	{
 						DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
 						DMIVars.tbodyDatabind = 'var: rules(@'+vars.table+'); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
+						DMIVars.handleAppEvents = false;
 						DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
 						$D.attr('data-provider',vars.provider);
 						}
@@ -582,16 +583,13 @@ var admin_config = function() {
 						DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
 						}
 					else	{}
-					
 					var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
-					$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode})
-					
+					$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode});
 					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
 						ui.item.addClass('edited');
 						app.ext.admin.u.handleSaveButtonByEditedClass($D);
 						});
-					
-					
+				
 					
 					if(vars.rulesmode == 'shipping')	{
 					//need pricing schedules. This is for shipping.
@@ -1336,7 +1334,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					
 					}
 				else	{
-					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddUpdate, either table-role='container' found ["+$DTC.length+"] or table-role='content' ["+$dataTbody.length+"] and/or  table-role='inputs' ["+$inputContainer.length+"] found and all three are required.","gMessage":true});
+					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddUpdate, either table-role='container' ["+$DTC.length+"] or table-role='content' ["+$dataTbody.length+"] and/or  table-role='inputs' ["+$inputContainer.length+"] not found and all three are required.","gMessage":true});
 					app.u.dump(" -> $DTC.length: "+$DTC.length);
 					app.u.dump(" -> $inputContainer.length: "+$inputContainer.length);
 					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
@@ -1574,9 +1572,9 @@ else	{
 					
 //					app.u.dump(" -> DVars:"); app.u.dump(DVars);
 					
-					var
-						$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
-						$D = app.ext.admin.i.dialogCreate(DVars);
+					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
+					DVars.appendTo = $DMI;
+					var $D = app.ext.admin.i.dialogCreate(DVars);
 
 					$D.dialog('open');
 //					app.u.dump(" -> $D.length: "+$D.length);

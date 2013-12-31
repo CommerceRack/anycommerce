@@ -15,6 +15,7 @@ GLOBAL
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
 	- reports
+	- review manager
 	- tax config
 	- batch manager
 	- rss
@@ -37,6 +38,7 @@ ADMIN
 	enhancement - utitilies and setup pages are now responsive.
 	enhancement - new ui 'theme'.
 	new - product editor now has 'competition' tab.
+	enhancement - utilities > reviews manager.  Export now available.
 
 
 CONTROLLER

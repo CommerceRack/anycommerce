@@ -207,7 +207,11 @@ var admin_customer = function() {
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Reviews List<\/button><button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
+					'buttons' : [
+						"<button data-app-event='admin|refreshDMI'>Refresh Reviews List<\/button>",
+						"<button data-app-click='admin|dataCSVExportExec' data-pointer='adminProductReviewList' data-listpointer='@REVIEWS' data-filename='product_reviews.csv' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>Export<\/button>",
+						"<button data-app-click='admin_customer|reviewApproveExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-check'>Approve<\/button>",
+						"<button data-app-click='admin_customer|reviewCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Add<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;",
 					'cmdVars' : {
@@ -218,6 +222,8 @@ var admin_customer = function() {
 							}
 						}
 					});
+				$target.anydelegate();
+				app.u.handleButtons($target);
 				app.model.dispatchThis('mutable');
 				}, //showReviewsManager
 
@@ -1099,16 +1105,6 @@ else	{
 /*/////////////////////////////				PRODUCT REVIEWS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
-// * 201336 -> needed a version of this code for delegated events. Rather than copy/paste a big chunk of code, the core of this was moved into adminProductReviewUpdateShowDE, which is executed on click.
-// The delegated events model was necessary for the new product editor.
-			adminProductReviewUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminProductReviewUpdateShow').on('click.adminProductReviewUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin_customer.e.adminProductReviewUpdateShow_DE($btn,{});
-					});
-				}, //adminProductReviewUpdateShow
-
 			reviewRemoveConfirm_DE : function($ele,p)	{
 				var 
 					$tr = $ele.closest('tr'),
@@ -1132,22 +1128,9 @@ else	{
 					}});
 				}, //reviewRemoveConfirm
 
-// * 201336 -> needed a version of this code for delegated events. Rather than copy/paste a big chunk of code, the core of this was moved into reviewRemoveConfirm_DE, which is executed on click.
-// The delegated events model was necessary for the new product editor.
-			reviewRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.reviewRemoveConfirm').on('click.reviewRemoveConfirm',function(event){
-					event.preventDefault();
-					app.ext.admin_customer.e.reviewRemoveConfirm_DE($btn,{})
-					})
-				}, //reviewRemoveConfirm
 			
-			reviewCreateShow : function($btn)	{
-
-				$btn.button();
-				$btn.off('click.reviewCreateShow').on('click.reviewCreateShow',function(event){
-
-					event.preventDefault();
+			reviewCreateShow : function($ele,p)	{
+					p.preventDefault();
 					var $D = app.ext.admin.i.dialogCreate({
 						'title':'Add New Review',
 						'templateID':'reviewAddUpdateTemplate',
@@ -1155,44 +1138,41 @@ else	{
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminProductReviewCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminProductReviewCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
 						changeYear: true,
 						dateFormat : 'yymmdd'
 						});
-					});
+
 				}, //reviewCreateShow
-			
-			reviewApproveExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.reviewApproveExec').on('click.reviewApproveExec',function(){
-					var
-						$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
-						$tbody = $("[data-app-role='dualModeListTbody']",$DMI),
-						i = 0;
-						
-					$tbody.find('tr').each(function(){
-						var $tr = $(this);
-						if($(':checkbox:first',$tr).is(':checked'))	{
-							i += 1;
-							app.model.addDispatchToQ({'RID':$tr.data('id'),'PID':$tr.data('pid'),'_cmd':'adminProductReviewApprove'},'immutable');
-							}
-						}); // ends tr loop.
+
+
+			reviewApproveExec : function($ele,p)	{
+				var
+					$DMI = $ele.closest("[data-app-role='dualModeContainer']"),
+					$tbody = $("[data-app-role='dualModeListTbody']",$DMI),
+					i = 0;
 					
-					
-					if(i)	{
-						$tbody.showLoading({'message':'Setting review status to approved for '+i+' review(s)'})
+				$tbody.find('tr').each(function(){
+					var $tr = $(this);
+					if($(':checkbox:first',$tr).is(':checked'))	{
+						i += 1;
+						app.model.addDispatchToQ({'RID':$tr.data('id'),'PID':$tr.data('pid'),'_cmd':'adminProductReviewApprove'},'immutable');
+						}
+					}); // ends tr loop.
+				
+				
+				if(i)	{
+					$tbody.showLoading({'message':'Setting review status to approved for '+i+' review(s)'})
 //reload the reviews manager.
 app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults','extension':'admin'}},'immutable');
 app.model.dispatchThis('immutable');
-					
-						}
-					else	{
-						$('.dualModeListMessaging',$DMI).anymessage({'message':'Please check at least one checkbox below to approve the reviews.'})
-						}
-					
-					});
+				
+					}
+				else	{
+					$('.dualModeListMessaging',$DMI).anymessage({'message':'Please check at least one checkbox below to approve the reviews.'})
+					}
 				}, //reviewApproveExec
 
 
