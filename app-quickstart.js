@@ -876,6 +876,7 @@ fallback is to just output the value.
 // and a page info: catSafeID, sku, customer admin page (ex: newsletter) or 'returns' (respectively to the line above.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
+// infoObj.back can be set to 0 to skip a URI update (will skip both hash state and popstate.) 
 			showContent : function(pageType,infoObj)	{
 //				app.u.dump("BEGIN showContent ["+pageType+"]."); app.u.dump(infoObj);
 				infoObj = infoObj || {}; //could be empty for a cart or checkout
@@ -915,7 +916,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				app.ext.myRIA.u.handleAppNavData(infoObj);
 				app.ext.myRIA.u.handleAppNavDisplay(infoObj);
 
-//				app.u.dump("showContent.infoObj: "); app.u.dump(infoObj);
 				switch(pageType)	{
 
 					case 'product':
@@ -992,7 +992,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						else	{
 // * checkout was emptying mainContentArea and that was heavy. This solution is faster and doesn't nuke templates already rendered.
-							
 							if(!$checkoutContainer.length)	{
 								$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
 								$('#mainContentArea').append($checkoutContainer );
@@ -1010,10 +1009,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'cart':
-//						infoObj.mode = 'modal';
-						infoObj.back = 0; //no popstate or hash change since it's opening in a modal.
 						infoObj.performJumpToTop = false; //dont jump to top.
-//						app.ext.myRIA.u.showPage('.'); //commented out.
 						app.ext.myRIA.u.showCart(infoObj);
 						break;
 
@@ -1032,8 +1028,13 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 
-//				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
-				r = app.ext.myRIA.u.addPushState(infoObj);
+//if back is set to zero, no push state or hash state change is desired.  This is used in cases where a dialog is displaying the data.
+				if(infoObj.back === 0)	{
+					r = false;
+					}
+				else	{
+					r = app.ext.myRIA.u.addPushState(infoObj);
+					}
 				
 //r will = true if pushState isn't working (IE or local). so the hash is updated instead.
 //				app.u.dump(" -> R: "+r+" and infoObj.back: "+infoObj.back);
@@ -1066,12 +1067,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					
 					}
 				else if(infoObj.parentID && typeof app.ext.myRIA.pageTransition == 'function')	{
-
-app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
-//					
-//					$("#mainContentArea :visible:first").slideUp(2000,function(){
-//						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
-//						}); //hide currently visible content area.
+					app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 					}
 				else if(infoObj.parentID)	{
 //no page transition specified. hide old content, show new. fancy schmancy.
@@ -1343,7 +1339,7 @@ setTimeout(function(){
 				return false;
 				},
 
-//P.listid and p.sku are required.
+//P.listid and P.sku are required.
 //optional params include: qty, priority, note, and replace. see API docs for explanation.
 			add2BuyerList : function(P){
 				app.u.dump("BEGIN myria.a.add2BuyerList: "+P.listid);
@@ -2260,6 +2256,7 @@ elasticsearch.size = 50;
 				if(typeof infoObj != 'object'){var infoObj = {}}
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
+				infoObj.back = (infoObj.show == 'inline') ? -1 : 0;
 				infoObj.state = 'init'; //needed for handleTemplateEvents.
 				
 				var $cart = $('#'+infoObj.parentID);
