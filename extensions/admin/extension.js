@@ -4695,18 +4695,19 @@ dataAttribs -> an object that will be set as data- on the panel.
 		e : {
 			
 			showMenu : function($ele,p)	{
+				app.u.dump("admin.e.showMenu (Click!)");
 //If you open a menu, then immediately open another with no click anywhere between, the first menu doesn't get closed. the hide() below resolves that.
 				$('menu.adminMenu:visible').hide();
 				var $menu = $ele.next('menu');
 				if($menu.hasClass('ui-menu'))	{} //already menuified.
 				else	{
-					$menu.menu().addClass('adminMenu').css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200,'top':25,'right':0});
-					$menu.wrap("<span class='positionRelative'>"); //relative position container so menu appears where it should.
+					$menu.menu().addClass('adminMenu');
+					$ele.parent().css('position','relative');
 					}
 				$( document ).one( "click", function() {
 					$menu.hide();
 					});
-				$menu.show();
+				$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200,'top':25,'right':0}).show();
 				return false;
 				},
 			
