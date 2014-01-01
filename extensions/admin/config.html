@@ -203,15 +203,15 @@
 	<p class="hint">NOTE: mapping the partition to a domain is highly recommended.</p>
 -->	
 	<label>
-		<input type="checkbox" name="p_navcats"> Use independent Navigation categories and pages
+		<input type="checkbox" class='applyAnycb' name="p_navcats"> Use independent Navigation categories and pages
 	</label>
 	
 	<label>
-		<input type="checkbox" name="p_customers"> Use independent customer database.
+		<input type="checkbox" class='applyAnycb' name="p_customers"> Use independent customer database.
 	</label>
 	
 	<label>
-		<input type="checkbox" checked='checked' disabled="disabled"> Use independent checkout, shipping, payment and tax settings
+		<input type="checkbox" class='applyAnycb' checked='checked' disabled="disabled"> Use independent checkout, shipping, payment and tax settings
 	</label>
 		
 	
@@ -243,146 +243,6 @@
 </div>
 
 
-
-
-
-
-
-
-<!--
-/////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\
-
-The main portion of the rule builder interface is built w/  app.ext.admin.i.DMICreate
--->
-
-
-<table>
-<tr id='ruleBuilderRowTemplate_shipping'>
-	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
-	<td data-bind="var: rule(code); format:text;"></td>
-	<td data-bind="var: rule(name); format:text;"></td>
-	<td data-bind="var: rule(created); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: rule(exec); format:text;"></td>
-	<td data-bind="var: rule(match); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: rule(schedule); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: rule(value); format:text;" class='hideInDetailMode'></td>
-	<td class='alignRight'>
-		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
-		<button data-app-click="admin_config|showRuleEditorAsPanel" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-rulesmode="shipping">Edit Rule</button>
-	</td>
-</tr>
-
-
-
-</table>
-
-
-
-
-
-
-
-
-
-
-
-<form  id='rulesInputsTemplate_shipping' action='#' onsubmit="return false;"  data-table-role='inputs'>
-<!--
-SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
-keep all inputs within one fieldset for the save function.
--->
-<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
-
-	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
-	<input type='hidden' name="created" data-bind="var: rule(created); format:popVal;" />
-	
-<label>
-	<span>Rule name</span>
-	<input type="text" maxlength="60" size="60" placeholder="new rule" name="name" required='required' data-bind="var: rule(name); format:popVal;" />
-	<span class='toolTip' title="The name should remind you 'why does this rule exist?'">?</span>
-</label>
-
-<label>
-	<span>Use rule if</span>
-	<select name="match" data-bind="var: rule(match); format:popVal;" class='smallTxt'>
-		<option value="IGNORE">Disabled (will be skipped)</option>
-		<option value="IS_TRUE">Is True (Always run this rule)</option>
-		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
-		<option value="ALL_IN_FILTER">*  [All Must Match]</option>
-		<option value="ALL_NOT_PRESENT">!* [All Don't Match]</option>
-		<option value="TWO_IN_FILTER">2+ [Two or More Must Match]</option>
-		<option value="NOTHING_IN_FILTER">x [No Matches Found]</option>
-		<option value="CRAZY_FILTER">! [Filter Match]</option>
-		<option value="THREE_IN_FILTER">! [Three+ must Match]</option>
-		<option value="STATE_MATCH">STATE matches filter criteria</option>
-		<option value="COUNTRY_MATCH">Country Name matches filter criteria</option>
-		<option value="COUNTRYCODE_MATCH">Country ISOX matches filter criteria</option>
-		<option value="IPADDR_MATCH">IP Address matches</option>
-		<option value="IS_POBOX">Address appears to be a PO Box</option>
-		<option value="HAS_DOM_ADDRESS">Cart has Domestic Zip Code/Address specified</option>
-		<option value="DATE/LT">Date is in past</option>
-		<option value="DATE/GT">Date is in future</option>
-		<option value="DAY_OF_WEEK">Day of Week (1=Mon, 3=Wed, 7=Sun)</option>
-		<option value="TIME_PAST">Time is past HH:MM (always computed in PST)</option>
-		<option value="HAS_CLAIM">Incomplete Item present</option>
-		<option value="SUBSTRING_MATCH">Substring in product title</option>
-		<option value="WEIGHT/GT">Weight greater than</option>
-		<option value="WEIGHT/LT">Weight less than</option>
-		<option value="SUBTOTAL/GT">Subtotal before Promotions greater than</option>
-		<option value="SUBTOTAL/LT">Subtotal before Promotions less than</option>
-		<option value="TRUE_SUBTOTAL/GT">Subtotal including Promotions greater than</option>
-		<option value="TRUE_SUBTOTAL/LT">Subtotal including Promotions less than</option>
-		<option value="SHIPPING/GT">Shipping price greater than</option>
-		<option value="SHIPPING/LT">Shipping price less than</option>
-		<option value="META/EXACT">Meta Exactly matches Match Value</option>
-		<option value="META/FUZZY">Meta Fuzzy matches Filter</option>
-		<option value="MULTIVARSITE/A">Visitor is on Site-A</option>
-		<option value="MULTIVARSITE/B">Visitor is on Site-B</option>
-		<option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option>
-		<option value="POGMATCH">POG Matches</option>
-		<option value="COUPON/ANY">Coupon(s) Present</option>
-		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
-		<option value="SANDBOX/NO">User is on LIVE version</option>
-	</select>
-<!--	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>-->
-</label>
-
-<label>
-	<span>Filter criteria</span>
-	<textarea rows="3" name="filter" data-bind="var: rule(filter); format:popVal;"></textarea>
-</label>
-<label>
-	<span>Action if match</span>
-	<select name="exec" data-bind="var: rule(exec); format:popVal;"  class='smallTxt'>
-		<option value="STOP">Stop Processing</option>
-		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
-		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
-		<option value="SHIP/ADD-VALUE">Add [value] to Shipping Price</option>
-		<option value="SHIP/SET-VALUE">Set Shipping Price to [value]</option>
-		<option value="SHIP/DISABLE">Disallow Shipping Type</option>
-		<option value="SHIP/ADD-VALUE-MATCH-ITEM">Add [value] for each matching item</option>
-		<option value="SHIP/ADD-VALUE-MATCH-SKU">Add [value] for each matching sku</option>
-		<option value="SHIP/ADD-VALUE-COUNT-ITEM">Add [value] for every item in cart</option>
-		<option value="SHIP/ADD-VALUE-COUNT-ITEM-MINUS-ONE">Add [value] for each matching item, minus one</option>
-	</select>
-</label>
-
-<label>
-	<span>Value</span>
-	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal; hideZero:false;">
-</label>
-<p class='hint'>Values must be written as -%5 or +$5 to be valid.</p>
-
-	<label data-app-role='pricingScheduleContainer'>
-		<span>Pricing Schedule:</span>
-		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
-			<option value=''>none</option>
-		</select>
-	</label>
-<button data-app-click='admin_config|dataTableAddUpdate' data-form-skipreset='true' class='applyButton' data-text='true'>Apply</button>
-
-</fieldset>
-</form>
 
 
 
@@ -444,21 +304,21 @@ keep all inputs within one fieldset for the save function.
 
 
 <label>
-	<input type="checkbox" name="auto" data-bind='var:coupon(auto); format:popVal;' /> Automatic
+	<input type="checkbox" class='applyAnycb' name="auto" data-bind='var:coupon(auto); format:popVal;' /> Automatic
 	<span class='toolTip' title="If enabled, will automatically add this coupon to the cart (customer does NOT have to enter a coupon code to get the discount)">?</span>
 </label>
 
 <label>
-	<input type="checkbox" name="stackable" data-bind='var:coupon(stackable); format:popVal;' /> Allow Coupon Stacking/Combinations.
+	<input type="checkbox" class='applyAnycb' name="stackable" data-bind='var:coupon(stackable); format:popVal;' /> Allow Coupon Stacking/Combinations.
 	<span class='toolTip' title="How this works: Coupons codes are added to the cart in alphanumeric order based on coupon code.  Each non-stackable coupon will remove all other coupons (which may have been added before it). When stacking is enabled, any non-combinable codes will need to be explicitly removed using rules. If you're not sure what to do here, leave this disabled.">?</span>
 </label>
 
 <label>
-	<input type="checkbox" name="taxable" data-bind='var:coupon(taxable); format:popVal;' /> Coupon value should be applied/deducted from tax.
+	<input type="checkbox" class='applyAnycb' name="taxable" data-bind='var:coupon(taxable); format:popVal;' /> Coupon value should be applied/deducted from tax.
 </label>
 
 <label>
-	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Require Security Digest (Newsletter/Limited Use)
+	<input type="checkbox" class='applyAnycb' name="limiteduse" data-bind='var:coupon(limiteduse); format:popVal;' /> Require Security Digest (Newsletter/Limited Use)
 	<span class='toolTip' title="When enabled this coupon may only be added to the cart using a limited use link. Limited use links are automatically generated when a newsletter is sent out, but could also be generated programatically by custom applications. If this is enabled the coupon MAY NOT be added directly to the cart from 'Coupon Code' box.">?</span>
 </label>
 
@@ -586,14 +446,6 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 
 
-
-
-
-
-
-
-
-<!-- ['','Enabled','Code','Title','Created','Begins','Expires',''] -->
 <table>
 
 <!-- used for each coupon in the coupons 'list'. -->
@@ -635,6 +487,123 @@ ITEM Matching rules: extended total (qty * price) <br>
 -->
 
 
+<table>
+<tr id='ruleBuilderRowTemplate_shipping'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
+	<td data-bind="var: rule(code); format:text;"></td>
+	<td data-bind="var: rule(name); format:text;"></td>
+	<td data-bind="var: rule(created); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(exec); format:text;"></td>
+	<td data-bind="var: rule(match); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(schedule); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: rule(value); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
+		<button data-app-click="admin_config|showRuleEditorAsPanel" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-rulesmode="shipping">Edit Rule</button>
+	</td>
+</tr>
+</table>
+
+
+<form id='rulesInputsTemplate_shipping' action='#' onsubmit="return false;"  data-table-role='inputs'>
+<!--
+SANITY: this uses data tables, which means the inputs are whitelisted. if a new input is added, update admin_config|ruleBuilderAddShow
+keep all inputs within one fieldset for the save function.
+-->
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+
+	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
+	<input type='hidden' name="created" data-bind="var: rule(created); format:popVal;" />
+	
+<label>
+	<span>Rule name</span>
+	<input type="text" maxlength="60" size="60" placeholder="new rule" name="name" required='required' data-bind="var: rule(name); format:popVal;" />
+	<span class='toolTip' title="The name should remind you 'why does this rule exist?'">?</span>
+</label>
+
+<label>
+	<span>Use rule if</span>
+	<select name="match" data-bind="var: rule(match); format:popVal;" class='smallTxt'>
+		<option value="IGNORE">Disabled (will be skipped)</option>
+		<option value="IS_TRUE">Is True (Always run this rule)</option>
+		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
+		<option value="ALL_IN_FILTER">*  [All Must Match]</option>
+		<option value="ALL_NOT_PRESENT">!* [All Don't Match]</option>
+		<option value="TWO_IN_FILTER">2+ [Two or More Must Match]</option>
+		<option value="NOTHING_IN_FILTER">x [No Matches Found]</option>
+		<option value="CRAZY_FILTER">! [Filter Match]</option>
+		<option value="THREE_IN_FILTER">! [Three+ must Match]</option>
+		<option value="STATE_MATCH">STATE matches filter criteria</option>
+		<option value="COUNTRY_MATCH">Country Name matches filter criteria</option>
+		<option value="COUNTRYCODE_MATCH">Country ISOX matches filter criteria</option>
+		<option value="IPADDR_MATCH">IP Address matches</option>
+		<option value="IS_POBOX">Address appears to be a PO Box</option>
+		<option value="HAS_DOM_ADDRESS">Cart has Domestic Zip Code/Address specified</option>
+		<option value="DATE/LT">Date is in past</option>
+		<option value="DATE/GT">Date is in future</option>
+		<option value="DAY_OF_WEEK">Day of Week (1=Mon, 3=Wed, 7=Sun)</option>
+		<option value="TIME_PAST">Time is past HH:MM (always computed in PST)</option>
+		<option value="HAS_CLAIM">Incomplete Item present</option>
+		<option value="SUBSTRING_MATCH">Substring in product title</option>
+		<option value="WEIGHT/GT">Weight greater than</option>
+		<option value="WEIGHT/LT">Weight less than</option>
+		<option value="SUBTOTAL/GT">Subtotal before Promotions greater than</option>
+		<option value="SUBTOTAL/LT">Subtotal before Promotions less than</option>
+		<option value="TRUE_SUBTOTAL/GT">Subtotal including Promotions greater than</option>
+		<option value="TRUE_SUBTOTAL/LT">Subtotal including Promotions less than</option>
+		<option value="SHIPPING/GT">Shipping price greater than</option>
+		<option value="SHIPPING/LT">Shipping price less than</option>
+		<option value="META/EXACT">Meta Exactly matches Match Value</option>
+		<option value="META/FUZZY">Meta Fuzzy matches Filter</option>
+		<option value="MULTIVARSITE/A">Visitor is on Site-A</option>
+		<option value="MULTIVARSITE/B">Visitor is on Site-B</option>
+		<option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option>
+		<option value="POGMATCH">POG Matches</option>
+		<option value="COUPON/ANY">Coupon(s) Present</option>
+		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
+		<option value="SANDBOX/NO">User is on LIVE version</option>
+	</select>
+<!--	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>-->
+</label>
+
+<label>
+	<span>Filter criteria</span>
+	<textarea rows="3" name="filter" data-bind="var: rule(filter); format:popVal;"></textarea>
+</label>
+<label>
+	<span>Action if match</span>
+	<select name="exec" data-bind="var: rule(exec); format:popVal;"  class='smallTxt'>
+		<option value="STOP">Stop Processing</option>
+		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
+		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
+		<option value="SHIP/ADD-VALUE">Add [value] to Shipping Price</option>
+		<option value="SHIP/SET-VALUE">Set Shipping Price to [value]</option>
+		<option value="SHIP/DISABLE">Disallow Shipping Type</option>
+		<option value="SHIP/ADD-VALUE-MATCH-ITEM">Add [value] for each matching item</option>
+		<option value="SHIP/ADD-VALUE-MATCH-SKU">Add [value] for each matching sku</option>
+		<option value="SHIP/ADD-VALUE-COUNT-ITEM">Add [value] for every item in cart</option>
+		<option value="SHIP/ADD-VALUE-COUNT-ITEM-MINUS-ONE">Add [value] for each matching item, minus one</option>
+	</select>
+</label>
+
+<label>
+	<span>Value</span>
+	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal; hideZero:false;">
+</label>
+<p class='hint'>Values must be written as -%5 or +$5 to be valid.</p>
+
+	<label data-app-role='pricingScheduleContainer'>
+		<span>Pricing Schedule:</span>
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+			<option value=''>none</option>
+		</select>
+	</label>
+<button data-app-click='admin_config|dataTableAddUpdate' data-form-skipreset='true' class='applyButton' data-text='true'>Apply</button>
+
+</fieldset>
+</form>
+
+
 
 <div id='shippingManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
 	
@@ -661,20 +630,19 @@ ITEM Matching rules: extended total (qty * price) <br>
 <div class='ui-widget marginBottom clearfix marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Flex Methods</h4>
 	<div class='ui-widget-content ui-corner-bottom '>
-		<ul class='listStyleNone paddedList noPadOrMargin ' data-app-role='shipMethodsByFlex' >
-		</ul>
-		<div class='buttonset clearfix stdMargin alignCenter' data-app-event="admin_config|handleAddShipment">
-			<button >Add Flex Method</button>
-			<button >Choose Method</button>
+		<div class='buttonset clearfix stdMargin buttonset'>
+			<button data-text='true' data-icon-secondary='ui-icon-triangle-1-s' class='applyButton fullWidth' data-app-click="admin|showMenu">Add Flex Method</button>
+			<menu class='adminMenu displayNone'>
+				<li><a href='#' data-shipmethod='FREE' data-app-click="admin_config|shippingProviderCreateShow">Free</a></li>
+				<li><a href='#' data-shipmethod='FIXED' data-app-click="admin_config|shippingProviderCreateShow">Fixed</a></li>
+				<li><a href='#' data-shipmethod='PRICE' data-app-click="admin_config|shippingProviderCreateShow">Price</a></li>
+				<li><a href='#' data-shipmethod='WEIGHT' data-app-click="admin_config|shippingProviderCreateShow">Weight</a></li>
+				<li><a href='#' data-shipmethod='SIMPLE' data-app-click="admin_config|shippingProviderCreateShow">Simple</a></li>
+				<li><a href='#' data-shipmethod='LOCAL' data-app-click="admin_config|shippingProviderCreateShow">Local Pickup/Delivery</a></li>
+				<li><a href='#' data-shipmethod='LOCAL_CANADA' data-app-click="admin_config|shippingProviderCreateShow">Canada Local Pickup/Delivery</a></li>
+			</menu>
 		</div>
-		<ul>
-			<li><a href='#' data-shipmethod='FREE'>Free</a></li>
-			<li><a href='#' data-shipmethod='FIXED'>Fixed</a></li>
-			<li><a href='#' data-shipmethod='PRICE'>Price</a></li>
-			<li><a href='#' data-shipmethod='WEIGHT'>Weight</a></li>
-			<li><a href='#' data-shipmethod='SIMPLE'>Simple</a></li>
-			<li><a href='#' data-shipmethod='LOCAL'>Local Pickup/Delivery</a></li>
-			<li><a href='#' data-shipmethod='LOCAL_CANADA'>Canada Local Pickup/Delivery</a></li>
+		<ul class='listStyleNone paddedList noPadOrMargin ' data-app-role='shipMethodsByFlex' >
 		</ul>
 	</div>
 </div>
@@ -689,14 +657,12 @@ ITEM Matching rules: extended total (qty * price) <br>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
 			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-event="admin_config|shipmethodRemoveExec">Delete Method</button>
-				<button data-app-event="admin_config|shipmethodAddUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+				<button data-app-click="admin_config|shipMethodRemoveConfirm" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash'>Delete Method</button>
+				<button data-app-click="admin_config|shipmethodAddUpdateExec" class='applyButton' data-text='true' disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
 			<div data-app-role='slimLeftContent'>
-			
-			
-			
+			<!-- content will be added here -->
 			</div>
 		
 		</div>
@@ -720,7 +686,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<form action='#' onsubmit="return false;">
 	
 	<div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
-		<button disabled='disabled' data-app-role='saveButton' data-app-event="admin_config|shippingGeneralUpdateExec">Save <span class='numChanges'></span> Changes</button>
+		<button disabled='disabled' data-app-role='saveButton' data-app-click="admin_config|shippingGeneralUpdateExec" class='applyButton' >Save <span class='numChanges'></span> Changes</button>
 	</div>
 	
 	<fieldset>
@@ -763,10 +729,10 @@ ITEM Matching rules: extended total (qty * price) <br>
 	</fieldset>
 	
 	
-	<fieldset class='floatLeft'>
+	<fieldset class='floatLeft' data-table-role='container'>
 		<legend>Blacklisted Countries</legend>
 	
-	<div class='marginBottom'>
+	<div class='marginBottom' data-table-role='inputs'>
 		<label>
 			<span>Country</span>
 			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
@@ -774,17 +740,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 			</select>
 		</label>
 		
-		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+		<div class='buttonset'><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></div>
 	</div>
 	<div data-app-role='blacklistContainer'>
-	<table data-app-role='dataTable'>
+	<table>
 	<thead>
 	<tr>
 		<th>Country</th>
 		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipping(%SHIPPING.@BLACKLIST); format:blacklistedCountries; extension:admin_config; loadsTemplate:shippingBlacklistTemplate;">
+	<tbody data-table-role='content' data-bind="var: shipping(%SHIPPING.@BLACKLIST); format:blacklistedCountries; extension:admin_config; loadsTemplate:shippingBlacklistTemplate;">
 	</tbody>
 	</table>
 	</div>
@@ -792,11 +758,11 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	</fieldset>
 	
-	<fieldset class='floatRight'>
+	<fieldset class='floatRight' data-table-role='container'>
 		<legend>Banned List</legend>
 	
 	
-	<div>
+	<div data-table-role='inputs'>
 		<label>
 			<span>Type</span>
 			<select name="type" class='skipTrack'>
@@ -813,7 +779,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 		</label>
 		<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
 		
-		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+		<div class='buttonset'><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></div>
 	</div>
 	
 	<div data-app-role='bannedlistContainer'>
@@ -825,7 +791,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 		<th>Created</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
+	<tbody data-table-role='content' data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
 	</tbody>
 	</table>
 	</div>
@@ -851,14 +817,14 @@ ITEM Matching rules: extended total (qty * price) <br>
 <table>
 <tr id='shippingBlacklistTemplate'>
 	<td data-bind="var:banned(country); format:text;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 
 <tr id='shippingBannedTemplate'>
 	<td data-bind="var:banned(type); format:text;"></td>
 	<td data-bind="var:banned(match); format:text;"></td>
 	<td data-bind="var:banned(created); format:epoch2pretty;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 
 </table>
@@ -890,7 +856,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 		<label><input type="radio" value="0" name="optional" data-bind="var: shipmethod(optional); format: popVal; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 	</div>
 	
-	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	<label><input type="checkbox" name="flat" class='applyAnycb' data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 	
 	<table>
 	<thead>
@@ -933,7 +899,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
 	
 	
 	
@@ -942,33 +908,33 @@ ITEM Matching rules: extended total (qty * price) <br>
 	-->
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>Domestic</legend>
-		<table data-app-role='dataTable' data-table='WEIGHT_US'>
+		<table data-table='WEIGHT_US'>
 		<thead>
 		<tr>
 			<th>Weight</th>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
 	</fieldset>
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>Canada</legend>
 		<table data-app-role='dataTable' data-table='WEIGHT_CA'>
 		<thead>
@@ -977,17 +943,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
@@ -996,7 +962,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>International</legend>
 		<table data-app-role='dataTable' data-table='WEIGHT_INT'>
 		<thead>
@@ -1005,17 +971,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
@@ -1025,14 +991,14 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 	
-	<label><input type="checkbox" name="enable_price_table"  data-bind="var: shipmethod(enable_price_table); format: popVal;" /> Enable</label>
+	<label><input type="checkbox" class='applyAnycb' name="enable_price_table"  data-bind="var: shipmethod(enable_price_table); format: popVal;" /> Enable</label>
 	
 	
 	
 	
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>Domestic</legend>
 		<table data-app-role='dataTable' data-table='PRICE_US'>
 		<thead>
@@ -1041,24 +1007,24 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
 	</fieldset>
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>Canada</legend>
 		<table data-app-role='dataTable' data-table='PRICE_CA'>
 		<thead>
@@ -1067,17 +1033,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
@@ -1086,7 +1052,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	
 	
-	<fieldset class='floatLeft marginRight'>
+	<fieldset class='floatLeft marginRight' data-table-role='container'>
 		<legend>International</legend>
 		<table data-app-role='dataTable' data-table='PRICE_INT'>
 		<thead>
@@ -1095,17 +1061,17 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
 		
 		</tbody>
 		</table>
 	
-		<table>
+		<table data-table-role='inputs'>
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
 			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
 		</table>
@@ -1117,9 +1083,9 @@ ITEM Matching rules: extended total (qty * price) <br>
 	
 	
 	<p>
-		<h5>Special Handling Rules:</h5>
-		Use shipping rules to handle the "special cases" that come up from time to time.<br />
-		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
+		<h5>Special Insurance Rules:</h5>
+		Use rules to handle the "special cases" that come up from time to time.<br />
+		<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 	</p>
 
 </div>
@@ -1148,7 +1114,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 </div>
 
 
-<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+<label><input type="checkbox" class='applyAnycb' name="flat"  data-bind="var: shipmethod(flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
 
 
 <table>
@@ -1189,12 +1155,12 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
 lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
+<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
 
 
 
 
-<fieldset class='floatLeft marginRight'>
+<fieldset class='floatLeft marginRight'  data-table-role='container'>
 	<legend>Domestic</legend>
 	<table data-app-role='dataTable' data-table='WEIGHT_US'>
 	<thead>
@@ -1203,24 +1169,24 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<th>Fee</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 	
 	</tbody>
 	</table>
 
-	<table>
+	<table data-table-role='inputs'>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
 	</table>
 </fieldset>
 
 
-<fieldset class='floatLeft marginRight'>
+<fieldset class='floatLeft marginRight' data-table-role='container'>
 	<legend>Canada</legend>
 	<table data-app-role='dataTable' data-table='WEIGHT_CA'>
 	<thead>
@@ -1229,17 +1195,17 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<th>Fee</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 	
 	</tbody>
 	</table>
 
-	<table>
+	<table data-table-role='inputs'>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
 	</table>
@@ -1248,7 +1214,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 
-<fieldset class='floatLeft marginRight'>
+<fieldset class='floatLeft marginRight' data-table-role='container'>
 	<legend>International</legend>
 	<table data-app-role='dataTable' data-table='WEIGHT_INT'>
 	<thead>
@@ -1257,17 +1223,17 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<th>Fee</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 	
 	</tbody>
 	</table>
 
-	<table>
+	<table data-table-role='inputs'>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
 		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
 	</table>
@@ -1280,7 +1246,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 <p>
 	<h5>Special Handling Rules:</h5>
 	Use shipping rules to handle the "special cases" that come up from time to time.<br />
-	<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
+	<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 </p>
 
 
@@ -1298,23 +1264,23 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<td data-bind="var: shipmethod(zip1); format:text;"></td>
 	<td data-bind="var: shipmethod(zip2); format:text;"></td>
 	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 <tr id='shippingWeightRowTemplate'>
 	<td data-bind="var: shipmethod(weight); hideZero:false; format:text;"></td>
 	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 <tr id='shippingPriceRowTemplate'>
 	<td data-bind="var: shipmethod(subtotal); hideZero:false; format:money;"></td>
 	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 <tr id='shippingLocalCanadaRowTemplate'>
 	<td data-bind="var: shipmethod(postal); format:text;"></td>
 	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
 	<td data-bind="var: shipmethod(txt); format:text;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 </table>
 
@@ -1356,48 +1322,48 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<legend>FedEx Domestic Settings</legend>
 		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM' class='floatRight'>Manage General Rules</button>
 		<label>
-			<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable FedEx Domestic Shipping Support
+			<input type="checkbox" class='applyAnycb' name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable FedEx Domestic Shipping Support
 		</label>
 	
 	
 	<table class='gridTable fullWidth marginBottom'>
 	   <tr>
-		  <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popVal;' /></td>
 		  <td>FedEx First Overnight&reg; (8:30am next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTEARLY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popVal;' /></td>
 		  <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTNOON'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popVal;' /></td>
 		  <td>FedEx Standard Overnight&reg; (3pm next day)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTDAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popVal;' /></td>
 		  <td>FedEx 2Day&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popVal;' /></td>
 		  <td>FedEx Express Saver&reg; (3 Days)</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popVal;' /></td>
 		  <td>FedEx&reg; Ground</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GROUND'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb'  name="dom_home" data-bind='var: shipmethod(dom_home); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery**</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_HOME'>Manage Rules</button></td>
 	   </tr>
 	 <tr>
-		  <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb'  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_EVENING'>Manage Rules</button></td>
 	   </tr>
@@ -1410,28 +1376,28 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	
 		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT' class='floatRight'>Manage General Rules</button>
 		<label>
-			<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable FedEx International Shipping Support
+			<input type="checkbox" class='applyAnycb' name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable FedEx International Shipping Support
 		</label>
 	
 	<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
 	<table class='gridTable fullWidth'>
 	   <tr>
-		  <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popVal;' /></td>
 		  <td>FedEx International First&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTEARLY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popVal;' /></td>
 		  <td>FedEx International Priority&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTNOON'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
-		  <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="int_2day" data-bind='var: shipmethod(int_2day); format:popVal;' /></td>
 		  <td>FedEx International Economy&reg;*</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_2DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
-		  <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popVal;' /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="int_ground" data-bind='var: shipmethod(int_ground); format:popVal;' /></td>
 		  <td>FedEx International Ground&reg;</td>
 		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_GROUND'>Manage Rules</button></td>
 	   </tr>
@@ -1487,9 +1453,9 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	</label>
 	
 	
-	<label><input type="checkbox" name="multibox" data-bind='var: shipmethod(multibox); format:popVal;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
-	<label><input type="checkbox" name="residential" data-bind='var: shipmethod(residential); format:popVal;' /> Treat all customers as residential (default is business).</label>
-	<label><input type="checkbox" name="validation" data-bind='var: shipmethod(validation); format:popVal;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
+	<label><input type="checkbox" class='applyAnycb' name="multibox" data-bind='var: shipmethod(multibox); format:popVal;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
+	<label><input type="checkbox" class='applyAnycb' name="residential" data-bind='var: shipmethod(residential); format:popVal;' /> Treat all customers as residential (default is business).</label>
+	<label><input type="checkbox" class='applyAnycb' name="validation" data-bind='var: shipmethod(validation); format:popVal;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
 	
 	</fieldset>
 	
@@ -1499,7 +1465,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		
 		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage General Rules</button></div>
 		
-		<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable UPS Domestic Shipping Support </label>
+		<label><input type="checkbox" class='applyAnycb' value="on" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable UPS Domestic Shipping Support </label>
 		<label><span>Quote Domestic Packaging As:</span>
 		<select name="dom_packaging" data-bind='var: shipmethod(dom_packaging); format:popVal;'>
 			<option value="00" >Your Packaging</option>
@@ -1520,37 +1486,37 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<table class='fullWidth gridTable'>
 	<tbody>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popVal;' /></td>
 		<td>UPS Ground</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GND'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popVal;' /></td>
 		<td>UPS 3 Day Select&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DS'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popVal;' /></td>
 		<td>UPS 2nd Day Air A.M.&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DM'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popVal;' /></td>
 		<td>UPS 2nd Day Air&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popVal;' /></td>
 		<td>UPS Next Day Air Saver&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DP'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popVal;' /></td>
+		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
 		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DM'>Manage Rules</button></td>
 	</tr>
@@ -1563,7 +1529,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<fieldset>
 	<legend>UPS International Settings</legend>
 		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></div>
-		<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable UPS International Shipping Support</label>
+		<label><input type="checkbox" class='applyAnycb' value="on" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable UPS International Shipping Support</label>
 		
 		<label>
 			<span>Quote International Packaging As:</span>
@@ -1586,27 +1552,27 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<table class='fullWidth gridTable'>
 		<tbody>
 		<tr >
-			<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popVal;' /></td>
+			<td><input type="checkbox" class='applyAnycb' value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to Canada</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_STD'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popVal;' /></td>
+			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XSV'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popVal;' /></td>
+			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPR'>Manage Rules</button></td>
 		</tr>
 		<tr >
-			<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popVal;' /></td>
+			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XDM'>Manage Rules</button></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popVal;' /></td>
+			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
 			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPD'>Manage Rules</button></td>
 		</tr>
@@ -1635,43 +1601,43 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	</thead>
 	   <tr >
 		  <td>Enable</td>
-		  <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popVal;" /></td>
-		  <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popVal;" /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popVal;" /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="usps_int" data-bind="var: shipmethod(usps_int); format: popVal;" /></td>
 	   </tr>
 	   <tr>
 		  <td>First Class</td>
 		  <td>Not available <span class='toolTip' title="The USPS does NOT provide a rating system for first class domestic mail because it is not zone based. Use a weight based or fixed price method instead.">?</span></td>
-		  <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popVal;" /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popVal;" /></td>
 	   </tr>
 	   <tr>
 		  <td>Parcel Post</td>
-		  <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popVal;" /></td>
+		  <td><input type="checkbox"class='applyAnycb'  name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popVal;" /></td>
 		  <td></td>
 	   </tr>
 	   <tr>
 		  <td>Priority Mail (6-10 days)</td>
 		  <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popVal;" /> Flat Box.<br />
-			 <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popVal;" /> Flat Env.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popVal;" /> Flat Box.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popVal;" /> Flat Env.<br />
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Express Mail (3-5 days)</td>
-		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom_express); format: popVal;" /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="usps_dom_express" data-bind="var: shipmethod(usps_dom_express); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.<br />
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Global Express Guaranteed (1-3 days)</td>
 		  <td></td>
 		  <td>
-			 <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popVal;" /> Rectangular.<br />
-			 <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popVal;" /> Non-Rectangular.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popVal;" /> Other Pkg.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popVal;" /> Rectangular.<br />
+			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popVal;" /> Non-Rectangular.<br />
 		  </td>
 	   </tr>
 	   <tr>
@@ -1697,7 +1663,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 <fieldset>
 	<legend>General Settings</legend>
 	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popVal;" /> Enable method</label>
+	<label><input type="checkbox" class='applyAnycb' name="enable" data-bind="var:shipmethod(enable); format:popVal;" /> Enable method</label>
 	<label>
 		<span>Region</span>
 		<select name="region"  data-bind="var:shipmethod(region); format:popVal;" >
@@ -1720,7 +1686,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
-	<label><input type="checkbox" name="rules"  data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
+	<label><input type="checkbox" name="rules" class='applyAnycb' data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
 	<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 </fieldset>
 
