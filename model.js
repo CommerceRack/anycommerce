@@ -788,21 +788,23 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			app.model.handleResponse_authAdminLogin(responseData); //this will have the same response as a login if successful.
 			},
 
-	//this function gets executed upon a successful request for a create order.
-	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
+//this function gets executed upon a successful request for a create order.
+//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
+/*
+* 201352 -> previously, only one cart was saved in memory.  Now that multiple carts can be stored, this code is no longer necessary. ### TODO -> delete after testing.
 		handleResponse_cartOrderCreate : function(responseData)	{
 	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
 //			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
 			var datapointer = "order|"+responseData.orderid;
-			app.storageFunctions.writeLocal(datapointer,app.data['cartDetail|'+responseData.cart.cartid]);  //save order locally to make it available for upselling et all.
-			app.data[datapointer] = app.data['cartDetail|'+responseData.cart.cartid]; //saved to object as well for easy access.
+			app.storageFunctions.writeLocal(datapointer,app.data['cartDetail|'+responseData.order.cart]);  //save order locally to make it available for upselling et all.
+			app.data[datapointer] = app.data['cartDetail|'+responseData.order.cart]; //saved to object as well for easy access.
 	//nuke cc fields, if present.		
 			app.data[datapointer].cart['payment/cc'] = null;
 			app.data[datapointer].cart['payment/cv'] = null;
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			return responseData.orderid;
 			}, //handleResponse_cartOrderCreate
-	
+*/	
 /*
 It is possible that multiple requests for page content could come in for the same page at different times.
 so to ensure saving to appPageGet|.safe doesn't save over previously requested data, we extend it the ['%page'] object.
