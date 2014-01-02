@@ -461,7 +461,55 @@ The save button runs 'submitForm', so if you want a custom callback, set it with
 					$modal.anymessage({'message':'In admin_customer.a.showAddAddressInModal, either CID ['+obj.CID+'] or type ['+obj.type+'] is not set.','gMessage':true});
 					}
 				
-				} //showAddAddressModal
+				}, //showAddAddressModal
+//data should be an object that optionally includes 'scope' and 'searchfor' params.
+//if both are set, those criteria will automatically be entered into the form and a search performed.
+//if only one or the other is set, they'll be the default values selected.
+						customerSearch : function(data,callback)	{
+
+var $D = app.ext.admin.i.dialogCreate({
+	'title' : 'Find Customer',
+	'templateID' : 'customerSearchTemplate',
+	'data' : data || {},
+	});
+app.u.handleButtons($D);
+app.u.handleCommonPlugins($D);
+$D.dialog('open');
+
+
+$("form[data-app-role='customerSearch']:first",$D).on('submit',function(){
+	var sfo = $(this).serializeJSON();
+	$D.showLoading({"message":"Searching "+sfo.scope+" for "+sfo.searchfor});
+	app.ext.admin.calls.adminCustomerSearch.init({'scope':sfo.scope,'searchfor':sfo.searchfor},{'callback':function(rd){
+		$D.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$D.anymessage({'message':rd});
+			}
+		else	{
+			//success content goes here.
+			var customers = app.data[rd.datapointer]['@CUSTOMERS'];
+			if(!customers || customers.length == 0)	{
+				$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
+				}
+			else if(app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
+				callback(app.data[rd.datapointer]['@CUSTOMERS'][0]);
+				$D.dialog('close');
+				}
+			else	{
+				$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){
+					callback($(this).data());
+					$D.dialog('close').empty().remove();
+					}).parent().css({'max-height':200,'overflow':'auto',});
+				}
+			}
+		}},'mutable');
+	app.model.dispatchThis('mutable');
+	});
+if(data.scope && data.searchfor)	{
+	$("form[data-app-role='customerSearch']:first",$D).trigger('submit');
+	}
+
+				} //customerSearch
 			
 			}, //Actions
 
