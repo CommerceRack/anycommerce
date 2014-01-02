@@ -556,6 +556,18 @@ else	{
 						app.ext.admin.u.handleAppEvents($order);
 
 //now is the time on sprockets when we enhance.
+
+						if(Number(orderData.customer.cid) > 0)	{
+							//customer record assigned. allow customer record to be edited.
+							$("[data-app-role='orderEditorCustomerEditButton']").show();
+							$("[data-app-role='orderEditorCustomerAssignButton']").hide();
+							}
+						else	{
+							//no customer record. allow one to be assigned.
+							$("[data-app-role='orderEditorCustomerEditButton']").hide();
+							$("[data-app-role='orderEditorCustomerAssignButton']").show();
+							}
+
 //go through lineitems and make item-specific changes. locking inputs. color changes, etc.
 //INVDETAIL 'may' be blank.
 						if(orderData['@ITEMS'] && orderData['%INVDETAIL'])	{
@@ -1693,13 +1705,14 @@ $('.editable',$container).each(function(){
 					$mainCol.anymessage({'message':'In admin_orders.u.changeOMMode, invalid mode ['+mode+'] set. must be order or item.','gMessage':true});
 					}
 				}
+			
+
 
 
 			}, //u
 //e is 'Events'. these are assigned to buttons/links via appEvents.
 		e : {
 			
-		
 /* 
 //////////////////   BEGIN delegated events \\\\\\\\\\\\\\\\\\
 */
@@ -2023,10 +2036,38 @@ $('.editable',$container).each(function(){
 */
 
 
+			"orderCustomerAssign" : function($btn)	{
+				$btn.button();
+				$btn.off('click.orderCustomerAssign').on('click.orderCustomerAssign',function(){
+					var
+						$parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent');
+					
+					if(orderID && app.data['adminOrderDetail|'+orderID])	{
+						app.ext.admin_customer.a.customerSearch({'searchfor':app.data['adminOrderDetail|'+orderID].bill.email,'scope':'EMAIL'},function(customer){
+							// ### TODO -> This does NOT work yet. link-customer-id not supported in order macro at this time.
+							app.ext.admin.calls.adminOrderMacro.init(orderID,["LINK-CUSTOMER-ID?CID="+customer.CID],{'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									app.ext.admin_orders.a.showOrderView(orderID,customer.CID,'#ordersContent','immutable'); 
+									}
+								}});
+							app.model.dispatchThis('immutable');
+							
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_orders.e.orderCustomerAssign, unable to ascertain order id ['+orderID+'] or order not in memory.','gMessage':true});
+						}
+					});				
+				},
+
 
 			"orderCustomerEdit" : function($btn)	{
 				$btn.button();
-				$btn.off('click.orderCreate').on('click.orderCreate',function(){
+				$btn.off('click.orderCustomerEdit').on('click.orderCustomerEdit',function(){
 					var
 						$parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent');

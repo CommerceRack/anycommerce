@@ -14,12 +14,12 @@ GLOBAL
 
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
-	- reports
-	- review manager
-	- tax config
-	- batch manager
-	- rss
-	- flexedit manager
+		- reports
+		- review manager
+		- tax config
+		- batch manager
+		- rss
+		- flexedit manager
 	bug - store variations > search by variation ID fixed.
 	change - UPS option for 'perform rule processing' has been removed. If rules are present, they'll be applied.
 	bug - rss feeds can now be deleted.
@@ -32,8 +32,10 @@ ADMIN
 	deprecate - setup > projects
 	enhancements - domain config is now domain and app config. includes projects (these are all related right now).
 	enhancement - updated order create interface.
-	-> uses most recent 1PC extension
-	-> better support for existing customers, including re-order.
+		- uses most recent 1PC extension
+		- better support for existing customers, including re-order.
+		- an order can be started, abandoned, and returned to later (from same computer)
+	
 	enhancement - utilities > support utilities > logs now supports 'filtering'.
 	enhancement - utitilies and setup pages are now responsive.
 	enhancement - new ui 'theme'.

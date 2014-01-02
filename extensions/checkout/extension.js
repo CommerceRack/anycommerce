@@ -1020,19 +1020,24 @@ note - the order object is available at app.data['order|'+P.orderID]
 									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
 									});
 //								app.u.dump(" -> handlePanel has been run over all fieldsets.");
-
-if(document.compatMode == 'CSS1Compat')	{}
-else	{
-	app.u.dump(" -> Quirks mode detected. Re-render the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
-	setTimeout(function(){
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
-		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
-		},1000);
-	}
+								if(app.vars.thisSessionIsAdmin && app.data[rd.datapointer].customer.cid)	{
+									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
+									$chkContainer.showLoading({'message':'Fetching customer record'});
+									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$chkContainer},'mutable');
+									app.model.dispatchThis('mutable');
+									}
+								else if(document.compatMode == 'CSS1Compat')	{}
+								else	{
+									app.u.dump(" -> Quirks mode detected. Re-render the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
+									setTimeout(function(){
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
+										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+										},1000);
+									}
 								}
 							else	{
 								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
@@ -1058,44 +1063,29 @@ else	{
 				p.preventDefault();
 				var
 					$context = $ele.closest("[data-app-role='checkout']"),
-					email = $ele.closest('fieldset').find("[name='bill/email']").val(); //save to var before handleing panel or val is gone.
+					email = $ele.closest('fieldset').find("[name='bill/email']").val(), //save to var before handleing panel or val is gone.
+					cartid = $context.data('cartid');
 				if(email)	{
-					app.ext.orderCreate.u.handlePanel($context,'chkoutPreflight',['empty','showLoading']);
-					app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','showLoading']);
-					app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','showLoading']);
-					
-					app.ext.admin.calls.adminCustomerSearch.init({'scope':'EMAIL','searchfor':email},{'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'])	{
-								if(app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
-									var CID = app.data[rd.datapointer]['@CUSTOMERS'][0].CID;
-									app.model.addDispatchToQ({
-										'_cmd':'adminCartMacro',
-										'cartid' : $context.cartid,
-										"@updates" : ["LINK-CUSTOMER-ID?CID="+CID]
-										},'immutable');
-									app.model.destroy('cartDetail|'+$context.data('cartid'));
-									app.model.destroy('appPaymentMethods|'+$context.data('cartid'));
-									app.calls.cartDetail.init($context.data('cartid'),{},'immutable');
-									app.ext.cco.calls.appPaymentMethods.init({_cartid:$context.data('cartid')},{},'immutable'); //update pay and ship anytime either address changes.
-									app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$context},'immutable');
-									
-									app.model.dispatchThis('immutable');	
-									}
-								else	{
-									// ### TODO. handle multiple customers in search.
-									}
-	
-								}
-							else	{
-								$('#globalMessaging').anymessage({'message':'No matching customer record found.'});
-								}
-							}
-						}},'mutable');
-					app.model.dispatchThis('mutable');
+					app.ext.admin_customer.a.customerSearch({'searchfor':email,'scope':'EMAIL'},function(customer){
+						app.ext.orderCreate.u.handlePanel($context,'chkoutPreflight',['empty','showLoading']);
+						app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','showLoading']);
+						app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','showLoading']);
+						
+						app.ext.cco.calls.cartSet.init({'_cartid':cartid,'bill/email':customer.EMAIL});
+						app.model.addDispatchToQ({
+							'_cmd':'adminCartMacro',
+							'_cartid' : cartid,
+							"@updates" : ["LINK-CUSTOMER-ID?CID="+customer.CID]
+							},'immutable');
+						app.model.destroy('cartDetail|'+cartid);
+						app.model.destroy('appPaymentMethods|'+cartid);
+//get a clean copy of the customer record for 2 reason. 1 to make sure it's up to date. 2 because cartDetail just got nuked from memory so callback on customerDetail would load a blank cart.
+						app.model.destroy('adminCustomerDetail|'+customer.CID); 
+						app.calls.cartDetail.init(cartid,{},'immutable');
+						app.ext.cco.calls.appPaymentMethods.init({_cartid:cartid},{},'immutable'); //update pay and ship anytime either address changes.
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':customer.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$context},'immutable');
+						app.model.dispatchThis('immutable');
+						});
 					}
 				else	{
 					app.u.validateForm($ele.closest('fieldset')); //this will handle the error display.
@@ -1499,14 +1489,15 @@ else	{
 					if(app.ext.orderCreate.validate.checkout($form))	{
 						$('body').showLoading({'message':'Creating order...'});
 						app.ext.cco.u.sanitizeAndUpdateCart($form);
+						var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 //paypal payments are added to the q as soon as the user returns from paypal.
 //This will solve the double-add to the payment Q
 //payment method validation ensures a valid tender is present.
 						if(app.ext.cco.u.thisSessionIsPayPal())	{}
 						else	{
-							app.ext.cco.u.buildPaymentQ($form);
+							app.ext.cco.u.buildPaymentQ($form,cartid);
 							}
-						app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
+						app.ext.cco.calls.cartOrderCreate.init(cartid,{'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
 						app.model.dispatchThis('immutable');						
 						
 						}
@@ -1868,7 +1859,8 @@ else	{
 						app.u.dump("It appears we've just returned from PayPal.");
 						app.ext.orderCreate.vars['payment-pt'] = token;
 						app.ext.orderCreate.vars['payment-pi'] = payerid;
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
+						
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':$context.closest("[data-app-role='checkout']").data('cartid')},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
@@ -2045,8 +2037,8 @@ app.model.dispatchThis('passive');
 					//Currently, checkout handles this on it's own. if something is added here, test checkout to make sure warnings are not appearing twice.
 					}
 				$tag.html(o);
-				if(data.value.want.shipping_id)	{
-					$("input[value='"+data.value.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active')
+				if(data.value.want && data.value.want.shipping_id)	{
+					$("input[value='"+data.value.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active');
 					}
 				}, //shipMethodsAsRadioButtons
 

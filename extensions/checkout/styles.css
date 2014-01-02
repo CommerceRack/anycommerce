@@ -11,3 +11,6 @@
 
 /* a fix for IE < 10 that will impact 1PC only. */
 #zContent .ui-button	{position:relative; } /* the inline-block is causing the buttons to not appear correctly in IE */
+
+.checkoutFormContainer fieldset	{padding:1em;}
+.checkoutFormContainer legend.smallPadding	{margin:0; padding:.2em .6em} /* the fieldset padding sets the left margin on the legend */
