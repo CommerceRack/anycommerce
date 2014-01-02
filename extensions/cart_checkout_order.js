@@ -412,40 +412,48 @@ left them be to provide guidance later.
 //NOTE TO SELF:
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
-			buildPaymentQ : function($form)	{
+			buildPaymentQ : function($form,cartid)	{
 //				app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var sfo = $form.serializeJSON() || {},
-				payby = sfo["want/payby"];
+				var r = false;
 //				app.u.dump(" -> payby: "+payby);
-				if(payby)	{
-					if(payby.indexOf('WALLET') == 0)	{
-						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
-						}
-					else if(payby == 'CREDIT')	{
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
-						}				
-					else if(payby == 'PO')	{
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":sfo['payment/PO']});
-						}				
-					else if(payby == 'ECHECK')	{
-						app.ext.cco.calls.cartPaymentQ.init({
-							"cmd":"insert",
-							"TN":"ECHECK",
-							"EA":sfo['payment/EA'],
-							"ER":sfo['payment/ER'],
-							"EN":sfo['payment/EN'],
-							"EB":sfo['payment/EB'],
-							"ES":sfo['payment/ES'],
-							"EI":sfo['payment/EI']
-							});
+				if($form instanceof jQuery && cartid)	{
+					var sfo = $form.serializeJSON() || {}, payby = sfo["want/payby"];
+					if(payby)	{
+						if(payby.indexOf('WALLET') == 0)	{
+							app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},app.ext.cco.u.getWalletByID(payby)));
+							}
+						else if(payby == 'CREDIT')	{
+							app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
+							}				
+						else if(payby == 'PO')	{
+							app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"PO","PO":sfo['payment/PO']});
+							}				
+						else if(payby == 'ECHECK')	{
+							app.ext.cco.calls.cartPaymentQ.init({
+								"cmd":"insert",
+								'_cartid':cartid,
+								"TN":"ECHECK",
+								"EA":sfo['payment/EA'],
+								"ER":sfo['payment/ER'],
+								"EN":sfo['payment/EN'],
+								"EB":sfo['payment/EB'],
+								"ES":sfo['payment/ES'],
+								"EI":sfo['payment/EI']
+								});
+							}
+						else	{
+							app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":payby });
+							}
+						r = true;
 						}
 					else	{
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
+						$form.anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
+					$("#globalMessaging").anymessage({'message':'In cco.u.buildPaymentQ, either form was not a valid jquery instance ['+($form instanceof jQuery)+'] or no cart id ['+cartid+'] was passed.','gMessage':true});
 					}
+				return r;
 				},
 
 
@@ -1006,7 +1014,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					}
 				},
 
-
 			paypalECButton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
@@ -1106,18 +1113,24 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //is used in cart summary total during checkout.
 			shipInfoById : function($tag,data)	{
 				var o = '';
-				var shipMethods = data.value['@SHIPMETHODS'], L = shipMethods.length;
-				for(var i = 0; i < L; i += 1)	{
-//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(shipMethods[i].id == data.value.want.shipping_id)	{
-						//sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
-						o = "<span class='orderShipMethod'>"+(shipMethods[i]['pretty'] ? shipMethods[i]['pretty'] : shipMethods[i]['name'])+": <\/span>";
-//only show amount if not blank.
-						if(shipMethods[i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
+				var shipMethods = data.value['@SHIPMETHODS'];
+				if(shipMethods)	{
+					var L = shipMethods.length;
+					for(var i = 0; i < L; i += 1)	{
+	//					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
+						if(shipMethods[i].id == data.value.want.shipping_id)	{
+							//sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+							o = "<span class='orderShipMethod'>"+(shipMethods[i]['pretty'] ? shipMethods[i]['pretty'] : shipMethods[i]['name'])+": <\/span>";
+	//only show amount if not blank.
+							if(shipMethods[i].amount)	{
+								o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
+								}
+							break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 							}
-						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
+					}
+				else	{
+					//shipMethods is empty. this may be perfectly normal (admin UI -> new order -> no product in cart yet. store -> no zip or state.)
 					}
 				$tag.html(o);
 				}, //shipInfoById

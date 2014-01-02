@@ -336,7 +336,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice" data-loadstemplate='invoiceTemplate'>Print Invoice</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip" data-loadstemplate='packslipTemplate'>Packing Slip</button>
-	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderCustomerEdit">Edit Customer</button>
+
+	<!-- the appearance of the following customer buttons will be shown/hidden based on whether or not a valid customer record is already assigned to the order -->
+	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerEdit' data-app-role='orderEditorCustomerEditButton'>Edit Customer</button>
+	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerAssign' data-app-role='orderEditorCustomerAssignButton'>Assign Customer</button>
+	
 	<button class='floatLeft hide4Native' data-app-event="admin_customer|appAdminTicketCreateShow" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Create CRM Ticket</button>
 	<div class='floatLeft hide4Native'>
 	<button data-app-event="admin_orders|orderEmailSend">Send Email</button>
