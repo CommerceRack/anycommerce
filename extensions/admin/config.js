@@ -1198,8 +1198,9 @@ when an event type is changed, all the event types are dropped, then re-added.
 //saves the changes for a shipmethod/provider.
 //also used for a new flex shipping method. In that case, add a data-mode='insert' to the button to trigger the additional macro.
 			shipmethodAddUpdateExec : function($ele,p)	{
+				p.preventDefault();
 				var
-					$form = $btn.closest('form'),
+					$form = $ele.closest('form'),
 					sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
 					$dataTableTbody = $("tbody[data-table-role='content']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
 					macros = new Array(),
@@ -1209,8 +1210,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 					
 					if($ele.data('mode') == 'insert')	{
 						callback = function(rd){
-							app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$btn.closest("[data-app-role='slimLeftContent']"))
-							}; //
+							app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$ele.closest("[data-app-role='slimLeftContent']"))
+							}; //when a new method is added, the callback gets changed slightly to refect the update to the list of flex methods.
 						macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider+"&handler="+$ele.data('handler'));
 						}
 					
