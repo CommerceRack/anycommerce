@@ -154,7 +154,7 @@ var admin_reports = function() {
 				$('.datepicker',$content).datepicker({'dateFormat':'@'});
 				$('.datepicker',$content).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
 
-				app.ext.admin.u.handleAppEvents($content);
+				app.u.handleAppEvents($content);
 				},
 
 			showKPIInterface : function()	{
@@ -229,7 +229,7 @@ var admin_reports = function() {
 							$("[name='collection']",$D).val(vars.collection).parent().hide(); //can't use data-bind because options are added after the select
 							}
 
-						app.ext.admin.u.handleAppEvents($D);
+						app.u.handleAppEvents($D);
 						
 						if(mode == 'update')	{
 							app.u.dump(" -> in graph update mode.");

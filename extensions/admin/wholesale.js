@@ -271,7 +271,7 @@ else	{
 									}
 								else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
-									app.ext.admin.u.handleAppEvents($editorContainer);
+									app.u.handleAppEvents($editorContainer);
 									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
 
 //for FBA, most panel inputs get 'locked'

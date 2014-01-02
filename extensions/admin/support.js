@@ -154,7 +154,7 @@ var admin_support = function() {
 					} //already an instance of help open in this target. leave as is.
 				else	{
 					$target.anycontent({'templateID':'helpPageTemplate','showLoading':false}); //clear contents and add help interface
-					app.ext.admin.u.handleAppEvents($target);
+					app.u.handleAppEvents($target);
 					$('.gridTable',$target).anytable();
 					}
 				},

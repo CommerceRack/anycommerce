@@ -135,7 +135,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						$list.append(app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
 						if(app.ext.admin)	{
 							$list.hideLoading();
-							app.ext.admin.u.handleAppEvents($parent);
+							app.u.handleAppEvents($parent);
 							}
 	
 						var EQ = $list.data('elastic-query'); //Elastic Query
