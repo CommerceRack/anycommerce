@@ -218,8 +218,8 @@ using these shared margins will help make the UI more consistent.
 
 .stdMargin	{margin:12px;}
 .stdPadding, .ui-widget .stdPadding	{padding:12px;}
-.smallPadding, .ui-widget .smallPadding	{padding:4px !important;}
-.ui-widget-header-padding	{padding:3px 6px !important;}
+.smallPadding, .ui-widget .smallPadding	{padding:4px;}
+.ui-widget-header-padding	{padding:3px 6px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 .ui-corner-none	{
@@ -279,7 +279,7 @@ Use this in a table where you want clear separation between rows and cells. This
 .gridTable tr:nth-child(odd)	{background:#ffffff;}
 .gridTable tr:nth-child(even)	{background:#f0f0f0;}
 
-.gridTable tr.ui-state-highlight	{background: inherit !important;}
+.gridTable tr.ui-state-highlight	{background: inherit !important;} /* the important here is important. it overrides some odd/even and other classes. it's used conservatively */
 .gridTable tr.ui-state-highlight	{background: inherit !important;}
 
 .gridTable th, .gridTable .tf	{background:#efefef; text-align:left;}
