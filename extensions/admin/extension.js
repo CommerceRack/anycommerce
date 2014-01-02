@@ -4604,7 +4604,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars = vars || {};
 				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
 				vars.anycontent = vars.anycontent || true; //default to runing anycontent. if no templateID specified, won't run.
-				vars.handleAppEvents = vars.handleAppEvents || true; //default to runing anycontent. if no templateID specified, won't run.
+				vars.handleAppEvents = (vars.handleAppEvents == false) ? false : true; //default to runing anycontent. if no templateID specified, won't run.
 
 				var $D = $("<div \/>").attr('title',vars.title);
 				if(vars.anycontent && vars.templateID)	{
@@ -5103,15 +5103,16 @@ not in use
 					})
 				}, //orderEmailCustomChangeSource
 
-
+			
 			"toggleDualMode" : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
 				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
 				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
 					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
+					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"));
 					});
 				}, //toggleDualMode
+
 
 
 //use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
