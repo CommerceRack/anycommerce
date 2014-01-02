@@ -2070,10 +2070,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //put this on a select element.  Will generate the 'options'. var should be the value of the schedule already selected.
 		wholesaleScheduleSelect : function($tag,data)	{
-//			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect");
+			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect. data.value: "+data.value);
 			app.ext.admin.calls.adminPriceScheduleList.init({
 				'callback' : function(rd){
-//					app.u.dump(" -> in to callback");
+					app.u.dump(" -> in to callback");
 					if(app.model.responseHasErrors(rd)){
 						$tag.parent().anymessage({'message':rd})
 						}
@@ -2090,7 +2090,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //							app.u.dump(" -> $select:"); app.u.dump($select);
 							$tag.append($select.children());
 							if(data.value)	{
-								$select.val(data.value);
+								app.u.dump(" ->>>>>>>>>> data.value: "+data.value);
+								$tag.val(data.value);
 								}
 							}
 						else	{
