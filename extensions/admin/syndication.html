@@ -1931,14 +1931,14 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 <section class='twoColumn column2'>
 
 
-	<!-- the shipping tables are formatted a little differently, with the fieldset around the data-table feature, because data-table wants it's own fieldset. -->
+	<!-- the shipping tables are formatted a little differently, with the fieldset around the data-table feature, because, at the time, data-table wanted it's own fieldset. -->
 	<div  data-panelname='eBayDomShipping'>
 		<h2>Domestic Shipping and Insurance</h2>
 		<div class='clearfix'>
 			<h4>Shipping</h4>
 		
 		
-			<fieldset>
+			<fieldset data-table-role='container'>
 		
 			<table data-app-role='dataTable' class='gridTable fullWidth marginTop'>
 			<thead>
@@ -1949,13 +1949,13 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 				<th></th>
 			</tr>
 			</thead>
-				<tbody data-app-role='ebayShippingTbody_dom' data-bind="var: profile(%PROFILE.@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+				<tbody data-table-role='content' data-app-role='ebayShippingTbody_dom' data-bind="var: profile(%PROFILE.@ship_domservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
 			</tbody>
 			</table>
 			
 			<p class='hint marginBottom'>eBay supports a max of 4. Any more than three get dropped at save</p>
 			
-			<div data-app-role='addServiceInputs' class='displayNone'>
+			<div data-app-role='addServiceInputs' class='displayNone' data-table-role='inputs'>
 		
 				<label>
 					<span>Service</span>
@@ -1970,35 +1970,35 @@ http://developer.ebay.com/DevZone/xml/docs/Reference/ebay/types/BuyerPaymentMeth
 					<select name="service" class='skipTrack' data-app-event='admin_syndication|EBAYShipServiceChange'>
 					
 						<optgroup label="UPS">
-							<option data-ebay-carrier="UPS" value="UPSGround"> UPS Ground</option>
-							<option data-ebay-carrier="UPS" value="UPS3rdDay"> UPS 3 Day Select</option>
-							<option data-ebay-carrier="UPS" value="UPS2ndDay"> UPS 2nd Day Air</option>
-							<option data-ebay-carrier="UPS" value="UPSNextDay"> UPS Next Day Air Saver</option>
-							<option data-ebay-carrier="UPS" value="UPSNextDayAir"> UPS Next Day Air</option>
+							<option data-ebay-carrier="UPS" value="UPSGround">Ground</option>
+							<option data-ebay-carrier="UPS" value="UPS3rdDay">3 Day Select</option>
+							<option data-ebay-carrier="UPS" value="UPS2ndDay">2nd Day Air</option>
+							<option data-ebay-carrier="UPS" value="UPSNextDay">Next Day Air Saver</option>
+							<option data-ebay-carrier="UPS" value="UPSNextDayAir">Next Day Air</option>
 						</optgroup>
 
 						<optgroup label="FedEx">
-							<option data-ebay-carrier="FEDEX" value="FedExHomeDelivery"> FedEx Ground or FedEx Home Delivery</option>
-							<option data-ebay-carrier="FEDEX" value="FedExExpressSaver"> FedEx Express Saver</option>
-							<option data-ebay-carrier="FEDEX" value="FedEx2Day"> FedEx 2Day</option>
-							<option data-ebay-carrier="FEDEX" value="FedExPriorityOvernight"> FedEx Priority Overnight</option>
-							<option data-ebay-carrier="FEDEX" value="FedExStandardOvernight"> FedEx Standard Overnight</option>
+							<option data-ebay-carrier="FEDEX" value="FedExHomeDelivery">Ground orHome Delivery</option>
+							<option data-ebay-carrier="FEDEX" value="FedExExpressSaver">Express Saver</option>
+							<option data-ebay-carrier="FEDEX" value="FedEx2Day">2Day</option>
+							<option data-ebay-carrier="FEDEX" value="FedExPriorityOvernight">Priority Overnight</option>
+							<option data-ebay-carrier="FEDEX" value="FedExStandardOvernight">Standard Overnight</option>
 						</optgroup>
 
 						<optgroup label="USPS">
-							<option data-ebay-carrier="USPS" value="USPSPriority"> USPS Priority Mail</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateEnvelope"> USPS Priority Mail Flat Rate Envelope</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityMailSmallFlatRateBox"> USPS Priority Mail Small Flat Rate Box</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateBox"> USPS Priority Mail Medium Flat Rate Box</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityMailLargeFlatRateBox"> USPS Priority Mail Large Flat Rate Box</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityMailPaddedFlatRateEnvelope"> USPS Priority Mail Padded Flat Rate Envelope</option>
-							<option data-ebay-carrier="USPS" value="USPSPriorityMailLegalFlatRateEnvelope"> USPS Priority Mail Legal Flat Rate Envelope</option>
-							<option data-ebay-carrier="USPS" value="USPSFirstClass"> USPS First Class Package</option>
-							<option data-ebay-carrier="USPS" value="USPSParcel"> USPS Parcel Select</option>
-							<option data-ebay-carrier="USPS" value="USPSMedia"> USPS Media Mail</option>
-							<option data-ebay-carrier="USPS" value="USPSExpressMail"> USPS Express Mail</option>
-							<option data-ebay-carrier="USPS" value="USPSExpressFlatRateEnvelope"> USPS Express Mail Flat Rate Envelope</option>
-							<option data-ebay-carrier="USPS" value="USPSExpressMailLegalFlatRateEnvelope"> USPS Express Mail Legal Flat Rate Envelope</option>
+							<option data-ebay-carrier="USPS" value="USPSPriority">Priority Mail</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateEnvelope">Priority Mail Flat Rate Envelope</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityMailSmallFlatRateBox">Priority Mail Small Flat Rate Box</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityFlatRateBox">Priority Mail Medium Flat Rate Box</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityMailLargeFlatRateBox">Priority Mail Large Flat Rate Box</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityMailPaddedFlatRateEnvelope">Priority Mail Padded Flat Rate Envelope</option>
+							<option data-ebay-carrier="USPS" value="USPSPriorityMailLegalFlatRateEnvelope">Priority Mail Legal Flat Rate Envelope</option>
+							<option data-ebay-carrier="USPS" value="USPSFirstClass">First Class Package</option>
+							<option data-ebay-carrier="USPS" value="USPSParcel">Parcel Select</option>
+							<option data-ebay-carrier="USPS" value="USPSMedia">Media Mail</option>
+							<option data-ebay-carrier="USPS" value="USPSExpressMail">Express Mail</option>
+							<option data-ebay-carrier="USPS" value="USPSExpressFlatRateEnvelope">Express Mail Flat Rate Envelope</option>
+							<option data-ebay-carrier="USPS" value="USPSExpressMailLegalFlatRateEnvelope">Express Mail Legal Flat Rate Envelope</option>
 						</optgroup>
 
 						<optgroup label="Carrier Neutral">
@@ -2061,7 +2061,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<label>
 					<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 				</label>
-				<div class='buttonset alignRight'><button data-app-event="admin_config|dataTableAddExec">Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
+				<div class='buttonset alignRight'><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
 			</div>
 
 			<div class='buttonset alignRight'><button data-app-event="admin_syndication|ebayServiceAddShow">Add Service</button></div>
@@ -2135,7 +2135,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<span class='toolTip' title="An international location or region to which the seller is willing to ship, regardless of shipping service.">?</span>
 			</label>
 						
-			<fieldset class="eBayIntShippingToggle">
+			<fieldset class="eBayIntShippingToggle" data-table-role='container'>
 			<table data-app-role='dataTable' class='gridTable fullWidth'>
 			<thead>
 			<tr>
@@ -2145,37 +2145,45 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<th></th>
 			</tr>
 			</thead>
-				<tbody data-app-role='ebayShippingTbody_int' data-bind="var: profile(%PROFILE.@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
+				<tbody data-table-role='content' data-app-role='ebayShippingTbody_int' data-bind="var: profile(%PROFILE.@ship_intservices); format:processList; loadsTemplate:ebayShippingRowTemplate;">
 			</tbody>
 			</table>
 			<p class='hint marginBottom'>eBay supports a max of 3. Any more than three get dropped at save</p>
-			<div data-app-role='addServiceInputs' class='displayNone'>
+			<div data-app-role='addServiceInputs' class='displayNone'  data-table-role='inputs'>
 				<label>
 					<span>Service</span>
 					<select name="service" class='skipTrack' data-app-event='admin_syndication|EBAYShipServiceChange' >
-						<option data-ebay-carrier="USPS" value="USPSFirstClassMailInternational">USPS First Class Mail Intl / First Class Package Intl Service</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternational">USPS Priority Mail International</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateEnvelope">USPS Priority Mail International Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalSmallFlatRateBox">USPS Priority Mail International Small Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateBox">USPS Priority Mail International Medium Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLargeFlatRateBox">USPS Priority Mail International Large Flat Rate Box</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">USPS Priority Mail International Padded Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLegalFlatRateEnvelope">USPS Priority Mail International Legal Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSExpressMailInternational">USPS Express Mail International</option>
-						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalFlatRateEnvelope">USPS Express Mail International Flat Rate Envelope</option>
-						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalLegalFlatRateEnvelope">USPS Express Mail International Legal Flat Rate Envelope</option>
-						<option data-ebay-carrier="UPS" value="UPSWorldWideExpressPlus">UPS Worldwide Express Plus</option>
-						<option data-ebay-carrier="UPS" value="UPSWorldWideExpress">UPS Worldwide Express</option>
-						<option data-ebay-carrier="UPS" value="UPSWorldWideExpedited">UPS Worldwide Expedited</option>
-						<option data-ebay-carrier="UPS" value="UPSWorldwideSaver">UPS Worldwide Saver</option>
-						<option data-ebay-carrier="UPS" value="UPSStandardToCanada">UPS Standard To Canada</option>
-						<option data-ebay-carrier="FEDEX" value="FedExInternationalEconomy">FedEx International Economy</option>
-						<option data-ebay-carrier="FEDEX" value="FedExInternationalPriority">FedEx International Priority</option>
-						<option data-ebay-carrier="FEDEX" value="FedExGroundInternationalToCanada">FedEx Ground International for Canada</option>
+					<optgroup label='USPS'>
+						<option data-ebay-carrier="USPS" value="USPSFirstClassMailInternational">First Class Mail Intl / First Class Package Intl Service</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternational">Priority Mail International</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateEnvelope">Priority Mail International Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalSmallFlatRateBox">Priority Mail International Small Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalFlatRateBox">Priority Mail International Medium Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLargeFlatRateBox">Priority Mail International Large Flat Rate Box</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalPaddedFlatRateEnvelope">Priority Mail International Padded Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSPriorityMailInternationalLegalFlatRateEnvelope">Priority Mail International Legal Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternational">Express Mail International</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalFlatRateEnvelope">Express Mail International Flat Rate Envelope</option>
+						<option data-ebay-carrier="USPS" value="USPSExpressMailInternationalLegalFlatRateEnvelope">Express Mail International Legal Flat Rate Envelope</option>
+					</optgroup>
+					<optgroup label='UPS'>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpressPlus">Worldwide Express Plus</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpress">Worldwide Express</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldWideExpedited">Worldwide Expedited</option>
+						<option data-ebay-carrier="UPS" value="UPSWorldwideSaver">Worldwide Saver</option>
+						<option data-ebay-carrier="UPS" value="UPSStandardToCanada">Standard To Canada</option>
+					</optgroup>
+					<optgroup label='FedEx'>
+						<option data-ebay-carrier="FEDEX" value="FedExInternationalEconomy">International Economy</option>
+						<option data-ebay-carrier="FEDEX" value="FedExInternationalPriority">International Priority</option>
+						<option data-ebay-carrier="FEDEX" value="FedExGroundInternationalToCanada">Ground International for Canada</option>
+					</optgroup>
+					<optgroup label='Carrier Neutral'>
 						<option value="StandardInternational">Standard Int'l Shipping</option>
 						<option value="ExpeditedInternational">Expedited Int'l Shipping</option>
 						<option value="OtherInternational">Economy Int'l Shipping</option>
 						<option value="FreightShippingInternational">Freight Shipping</option>
+					</optgroup>
 					</select>
 				</label>
 
@@ -2208,7 +2216,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<label>
 					<input type='checkbox' class='applyAnycb skipTrack' name='free' />Free. This method can be selected at no cost to the buyer
 				</label>
-				<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
+				<div class='buttonset'><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
 			</div>
 			<div class='buttonset alignRight'><button data-app-event="admin_syndication|ebayServiceAddShow">Add Service</button></div>
 			
@@ -2851,7 +2859,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<span data-bind="var: ebay(addcost); format:text; pretext: addl: ;"></span>
 	<span data-bind="var: ebay(farcost); format:text; pretext: AK+HI: ;"></span>
 	</td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-event="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 
 </table>

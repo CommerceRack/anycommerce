@@ -412,6 +412,7 @@ app.model.dispatchThis('mutable');
 										$fieldset.addClass('marginBottom');
 										})
 									app.u.handleAppEvents($profileContent);
+									app.u.handleButtons($profileContent);
 									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
 									$('.applyAnycb',$profileContent).anycb();
 									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
