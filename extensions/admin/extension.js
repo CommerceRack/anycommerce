@@ -2131,6 +2131,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			navigateTo : function(path,opts){
 //				app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 				opts = opts || {}; //default to object so setting params within does not cause error.
+				opts.back = (opts.back === 0) ? 0 : -1;
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
@@ -2153,8 +2154,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						
 						opts = opts || {}; //opts may b empty. treat as object.
 						
-						_ignoreHashChange = true; //see handleHashChange for details on what this does.
-						document.location.hash = path; //update hash on URI.
+						if(opts.back < 0 || opts.dialog)	{
+							_ignoreHashChange = true; //see handleHashChange for details on what this does.
+							document.location.hash = path; //update hash on URI.
+							}
 						
 						//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
 						if(opts.tab){} // if tab is specified, always use it. this covers mode = tabClick too.
@@ -2172,7 +2175,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
 //this is JUST setting targetID. it isn't showing content or opening modals.
-						if(opts.dialog){
+						if(opts.dialog && mode == 'app')	{
+							//an app in dialog mode will handle creating it's own dialog. however, a valid jquery instance is desired so create one.
+							}
+						else if(opts.dialog){
 							opts.targetID = 'uiDialog';
 							$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
 							}
@@ -2187,9 +2193,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							$('#stickytabs').empty(); //clear all the sticky tabs.
 
 							}
+						if(opts.dialog && mode == 'app')	{
+							app.ext.admin.u.loadNativeApp(path,opts);
+							}
+						else if($target instanceof jQuery)	{
 						
-						if($target instanceof jQuery)	{
-						
+							
 							if(opts.dialog)	{
 								app.model.fetchAdminResource(path,opts);
 								}

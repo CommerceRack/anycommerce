@@ -219,6 +219,7 @@ using these shared margins will help make the UI more consistent.
 .stdMargin	{margin:12px;}
 .stdPadding, .ui-widget .stdPadding	{padding:12px;}
 .smallPadding, .ui-widget .smallPadding	{padding:4px;}
+.ui-widget-header	{margin-bottom:0;} /* this mostly butts up next to a ui-widget-content and no bottom margin is wanted/necessary. it's applied to a header occassionally */
 .ui-widget-header-padding	{padding:3px 6px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
@@ -297,8 +298,8 @@ Use this in a table where you want clear separation between rows and cells. This
 	}
 .floatPanel .helper	{display:none;} /* condense the panels down to decrease scrolling */
 .floatPanel a	{padding:5px 0; display:block;} /* add a little space around each link to accomodate a touch */
-.floatPanel .ui-widget-header h3	{font-size:.85em;}
-
+.floatPanel .ui-widget-header h3	{margin:0; }
+.floatPanel .ui-widget-header	{border-bottom:0;}
 /*   product/customer picker */
 
 /* apply a max height for picker accordion content, but only when it's in a dialog. no constraints needed in the body (in general). */
