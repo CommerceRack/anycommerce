@@ -1427,7 +1427,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			handleAppEvents : function($target,obj)	{
 	//				app.u.dump("BEGIN app.u.handleAppEvents");
 					obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
-					if($target && $target.length && typeof($target) == 'object')	{
+					if($target instanceof jQuery)	{
 	//					app.u.dump(" -> target exists"); app.u.dump($target);
 	//don't auto-pass context. will be harder for event delegation
 						$("[data-app-event]",$target).each(function(){
@@ -1446,7 +1446,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						}
 					else	{
 						//don't throw error to user. target 'could' be in memory.
-						app.u.dump("In admin.u.handleAppEvents, target was either not specified/an object ["+($target instanceof jQuery)+"] or does not exist on DOM.",'warn');
+						app.u.dump("In app.u.handleAppEvents, target was either not specified/an object ["+($target instanceof jQuery)+"] or does not exist on DOM.",'warn');
+						
 						}
 					
 					}, //handleAppEvents

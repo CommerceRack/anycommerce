@@ -90,7 +90,7 @@ var admin_customer = function() {
 				vars = vars || {};
 				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
-				app.ext.admin.u.handleAppEvents($target);
+				app.u.handleAppEvents($target);
 				if(vars.scope && vars.searchfor)	{
 					$("[name='scope']",$target).val(vars.scope);
 					$("[name='searchfor']",$target).val(vars.searchfor);
@@ -320,7 +320,7 @@ else	{
 
 		});
 
-	app.ext.admin.u.handleAppEvents($custEditorTarget);
+	app.u.handleAppEvents($custEditorTarget);
 	$("table.gridTable thead",$custEditorTarget).parent().anytable();
 	$("[type='checkbox']",$custEditorTarget).parent().anycb();
 	app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj);
@@ -355,7 +355,7 @@ else	{
 				var $modal = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
 				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false});
-				app.ext.admin.u.handleAppEvents($modal);
+				app.u.handleAppEvents($modal);
 				$modal.dialog('open');
 				},
 
@@ -449,7 +449,7 @@ The save button runs 'submitForm', so if you want a custom callback, set it with
 								$panel.anycontent({'data' : app.data[rd.datapointer]['%CUSTOMER']}); //translate panel, which add all addresses.
 								app.data['adminCustomerDetail|'+obj.CID] = app.data[rd.datapointer]['%CUSTOMER'];
 								delete app.data[rd.datapointer]; //get rid of this so pointer between customerDetail and customerUpdate is dropped.
-								app.ext.admin.u.handleAppEvents($panel);
+								app.u.handleAppEvents($panel);
 								}
 							});
 						});
@@ -1665,7 +1665,7 @@ setTimeout(function(){
 								$("tbody",$panel).empty(); //clear all existing notes.
 								$("input",$panel).val(''); //empty notes input(s).
 								$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
-								app.ext.admin.u.handleAppEvents($panel);
+								app.u.handleAppEvents($panel);
 								}
 							
 							}},'immutable');
@@ -1712,7 +1712,7 @@ setTimeout(function(){
 									app.u.dump(" -> $panel IS set");
 									$("tbody",$panel).empty(); //clear wallets
 									$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
-									app.ext.admin.u.handleAppEvents($panel);
+									app.u.handleAppEvents($panel);
 									}
 								else	{
 									app.u.dump(" -> $panel is NOT set");
@@ -1814,7 +1814,7 @@ setTimeout(function(){
 									//clear existing addresses and re-render.
 									$("tbody",$addrPanel).empty();
 									$addrPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
-									app.ext.admin.u.handleAppEvents($addrPanel);
+									app.u.handleAppEvents($addrPanel);
 									
 									}
 								});

@@ -445,9 +445,6 @@ else	{
 				app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
-//assigns all the button click events.
-//				app.u.handleAppEvents($target);
-// *** -> 201338 moved to delegated events model.
 				app.u.handleEventDelegation($target);
 				app.u.handleButtons($target);
 				}
@@ -481,7 +478,7 @@ else	{
 						}
 					else	{
 						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-						app.ext.admin.u.handleAppEvents($target);
+						app.u.handleAppEvents($target);
 						}
 		
 					}},'mutable');
@@ -553,7 +550,7 @@ else	{
 
 
 						app.u.handleCommonPlugins($order);
-						app.ext.admin.u.handleAppEvents($order);
+						app.u.handleAppEvents($order);
 
 //now is the time on sprockets when we enhance.
 
@@ -2050,7 +2047,8 @@ $('.editable',$container).each(function(){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									app.ext.admin_orders.a.showOrderView(orderID,customer.CID,'#ordersContent','immutable'); 
+									app.ext.admin_orders.a.showOrderView(orderID,customer.CID,'#ordersContent','mutable');
+									app.model.dispatchThis('mutable');
 									}
 								}});
 							app.model.dispatchThis('immutable');

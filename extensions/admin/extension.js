@@ -1512,14 +1512,14 @@ if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
 	}
 else if(uriParams.show == 'acreate')	{
-	app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+	app.u.handleAppEvents($('#createAccountContainer'));
 	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 		$("#appPreView").hide();
 		$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 		});
 	}
 else	{
-	app.ext.admin.u.handleAppEvents($('#appLogin'));
+	app.u.handleAppEvents($('#appLogin'));
 	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 		$("#appPreView").hide();
 		$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
@@ -1627,7 +1627,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					$.extend(data,app.data[tagObj.merge]);
 					}
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
-				app.ext.admin.u.handleAppEvents($target);
+				app.u.handleAppEvents($target);
 				}
 			}, //translateSelector
 
@@ -2755,7 +2755,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 			showAchievementList : function($target)	{
 				if($target && $target.length)	{
 					$target.show().append(app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
-					app.ext.admin.u.handleAppEvents($target);
+					app.u.handleAppEvents($target);
 					}
 				else	{
 					app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
@@ -4245,43 +4245,6 @@ just lose the back button feature.
 
 
 
-//a UI Action should have a databind of data-app-event (this replaces data-btn-action).
-//value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
-//good naming convention on the action would be the object you are dealing with followed by the action being performed OR
-// if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
-//obj is some optional data. obj.$content would be a common use.
-// !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
-			handleAppEvents : function($target,obj)	{
-//				app.u.dump("BEGIN admin.u.handleAppEvents");
-				if($target && $target.length && typeof($target) == 'object')	{
-//					app.u.dump(" -> target exists"); app.u.dump($target);
-					$("[data-app-event]",$target).each(function(){
-						var $ele = $(this),
-						obj = obj || {},
-						extension = $ele.data('app-event').split("|")[0],
-						action = $ele.data('app-event').split("|")[1];
-//						app.u.dump(" -> action: "+action);
-						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
-//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
-//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].e[action]($ele,obj);
-							} //no action specified. do nothing. element may have it's own event actions specified inline.
-						else	{
-							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
-							}
-						});
-					}
-				else if(!$target)	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified.");
-					}
-				else	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target is not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
-					}
-				
-				}, //handleAppEvents
-
-
-
 //as more listTypes are added, make sure the call uses immutable.
 //vars should contain listType, partition and then depending on the list type, CID or OrderID.
 			sendEmail : function($form,vars)	{
@@ -5044,7 +5007,7 @@ not in use
 				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
 					event.preventDefault();
 					localStorage.clear();
-					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+					app.u.handleAppEvents($('#createAccountContainer'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
 						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
@@ -5056,7 +5019,7 @@ not in use
 				$btn.button();
 				$btn.off('click.showPasswordRecover').on('click.showPasswordRecover',function(event){
 					event.preventDefault();
-					app.ext.admin.u.handleAppEvents($('#appPasswordRecover'));
+					app.u.handleAppEvents($('#appPasswordRecover'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
 						$('#appPasswordRecover').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
