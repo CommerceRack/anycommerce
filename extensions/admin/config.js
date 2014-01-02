@@ -107,9 +107,9 @@ var admin_config = function() {
 
 			showNotifications : function($target)	{
 				$target.intervaledEmpty();
-				$target.append($("<div \/>").anycontent({
+				$target.anycontent({
 					'templateID' : 'notificationPageTemplate'
-					}).anydelegate({'trackEdits':true}));
+					}).anydelegate({'trackEdits':true});
 				app.u.handleButtons($target);
 				app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
@@ -118,7 +118,7 @@ var admin_config = function() {
 						'datapointer' : 'adminConfigDetail|notifications',
 						'callback':'anycontent',
 						'translateOnly' : true,
-						'jqObj' : $target.find("div:first")
+						'jqObj' : $target
 						}
 					},'mutable');
 				app.model.dispatchThis('mutable');
@@ -402,7 +402,9 @@ var admin_config = function() {
 					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{'provider':"FLEX:"+shipmethod+"_"+Math.round(+new Date()/1000)}}).appendTo($target);
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
 					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
-					$target.append("<button data-app-event='admin_config|shipmethodAddUpdateExec' data-mode='insert' data-handler='"+shipmethod+"'>Save<\/button>");
+					$target.append("<button data-app-click='admin_config|shipmethodAddUpdateExec' data-mode='insert' data-handler='"+shipmethod+"' class='applyButton'>Save<\/button>");
+					app.u.handleButtons($target);
+					app.u.handleCommonPlugins($target);
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod not passed.','gMessage':true});

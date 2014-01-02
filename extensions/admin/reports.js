@@ -127,11 +127,13 @@ var admin_reports = function() {
 									if(reports.length >= 10)	{break} //only need ten.
 									}
 								
-		//						app.u.dump("$reportsList.length: "+$reportsList.length);
 								if(reports.length)	{
 									$reportsList.anycontent({data:{'@JOBS': reports}});
 									app.u.handleAppEvents($reportsList);
 									$('table',$reportsList).anytable();
+									}
+								else	{
+									$reportsList.hide(); //no 'reports' in the list of batches. most likely this means the last X batch jobs didn't contain any reports.
 									}
 								}
 							}
