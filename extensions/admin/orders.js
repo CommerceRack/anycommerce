@@ -2035,14 +2035,13 @@ $('.editable',$container).each(function(){
 //////////////////   END delegated events \\\\\\\\\\\\\\\\\\
 */
 
-
 			"orderCustomerAssign" : function($btn)	{
 				$btn.button();
 				$btn.off('click.orderCustomerAssign').on('click.orderCustomerAssign',function(){
 					var
 						$parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent');
-					
+
 					if(orderID && app.data['adminOrderDetail|'+orderID])	{
 						app.ext.admin_customer.a.customerSearch({'searchfor':app.data['adminOrderDetail|'+orderID].bill.email,'scope':'EMAIL'},function(customer){
 							// ### TODO -> This does NOT work yet. link-customer-id not supported in order macro at this time.
