@@ -1731,13 +1731,13 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 </fieldset>
 
-<fieldset class='clearfix'>
+<fieldset class='clearfix' data-table-role='container'>
 	<legend>Weight Based Shipping Table</legend>
 	
-	<div class='floatRight'>
+	<div class='floatRight' data-table-role='inputs'>
 	<label><span>Max weight</span><input size='6' type='text' name='weight' class='skipTrack' /></label>
 	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack'  step='0.01' min='0' /></label>
-	<button data-app-event="admin_config|dataTableAddExec">Add</button>
+	<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 	</div>
 	
 		<table class='floatLeft gridTable' data-app-role='dataTable'>
@@ -1745,9 +1745,10 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<tr>
 			<th>Weight</th>
 			<th>Fee</th>
+			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		<tbody  data-table-role='content' data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 		</tbody>
 		</table>
 
@@ -1767,13 +1768,13 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 </fieldset>
 
-<fieldset class='clearfix'>
+<fieldset class='clearfix' data-table-role='container'>
 	<legend>Price Based Shipping Table</legend>
 	
-	<div class='floatRight'>
+	<div class='floatRight' data-table-role='inputs'>
 	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' class='skipTrack' /></label>
 	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
-	<button data-app-event="admin_config|dataTableAddExec">Add</button>
+	<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 	</div>
 	
@@ -1782,9 +1783,10 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<tr>
 		<th>Subtotal</th>
 		<th>Fee</th>
+		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	<tbody  data-table-role='content' data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingPriceRowTemplate;">
 	</tbody>
 	</table>
 
@@ -1818,15 +1820,15 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 <div id='shippingFlex_local'>
-<fieldset class='clearfix'>
+<fieldset class='clearfix' data-table-role='container'>
 	<legend>Local Pickup Configuration</legend>
 
 	<div class='clearfix'>
-		<div class='floatRight'>
+		<div class='floatRight' data-table-role='inputs'>
 		<label><span>Start zip</span><input size='6' type='text' name='zip1' class='skipTrack' /></label>
 		<label><span>End zip</span><input size='6' type='text' name='zip2' class='skipTrack' /></label>
 		<label><span>Ship price</span><input size='6' type='number' name='fee' step='0.01' min='0' class='skipTrack' /></label>
-		<button data-app-event="admin_config|dataTableAddExec">Add</button>
+		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 		<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 		</div>
 
@@ -1839,7 +1841,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalRowTemplate;">
+		<tbody data-table-role='content' data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalRowTemplate;">
 		</tbody>
 		</table>
 	</div>
@@ -2960,7 +2962,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</div>
 
 
-	<fieldset>
+	<fieldset class='borderNone'>
 		<section class='floatLeft marginRight'>
 		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
 		<thead>

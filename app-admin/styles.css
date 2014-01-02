@@ -127,7 +127,7 @@ h5,h6	{font-size: 1em; margin: .3em 0px; font-weight: bold; padding:0;}
 /* if you want to display a hint or tip, give it the hint class */
 
 
-fieldset	{margin:0; padding:0; margin-bottom:1em;}
+fieldset	{margin:0; padding:0; margin-bottom:1em; border:0;}
 
 .hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
 .small	{font-size:.85em;}
@@ -198,6 +198,7 @@ If less is needed, use increments of 4
 
 .noPadOrMargin	{padding:0; margin:0;}
 .paddingNone {padding:0;}
+.borderNone {border:0;}
 
 
 /*
