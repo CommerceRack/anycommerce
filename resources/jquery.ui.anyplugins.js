@@ -70,13 +70,12 @@ additionally, will apply some conditional form logic.
 			trackSelector : null, //allows for delegation to occur on an element encompasing several forms, but for tracking to be applied to each individual form.
 			masterSaveSelector : "[data-app-role='masterSaveButton']" //if applying track edits to a subset, this can be used to update a master button (X total changes within all forms).
 			},
-
+		_supportedEvents : ["click","change","focus","blur","submit","keyup"], //a function so they're easily 
 		_init : function(){
 //			app.u.dump("BEGIN anydelegate");
 			var
 				self = this,
-				$t = self.element, //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-				supportedEvents = new Array("click","change","focus","blur","submit","keyup"); //if you add a new event, don't forget to remove it in _destroy.
+				$t = self.element; //this is the targeted element (ex: $('#bob').anydelegate() then $t is bob)
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
 			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
@@ -91,35 +90,19 @@ additionally, will apply some conditional form logic.
 					$(this).anydelegate('destroy');
 					});
 				
-				for(var i = 0; i < supportedEvents.length; i += 1)	{
-					$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"], [data-input-"+supportedEvents[i]+"]",function(e,p){
+				for(var i = 0; i < self._supportedEvents.length; i += 1)	{
+					$t.on(self._supportedEvents[i]+".app","[data-app-"+self._supportedEvents[i]+"], [data-input-"+self._supportedEvents[i]+"]",function(e,p){
 						app.u.dump(" -> delegated click triggered");
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
 					}
 				}
 
-var inputEventSelectors = "[data-input-"+supportedEvents.join("], [data-input-")+"]";
-//app.u.dump(" -> inputEventSelectors: "+inputEventSelectors);
 
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
 //do this before edit tracking is added so the edited class is not added.
 //this block is executed outside the  if/else above so that if anydelegate has already been added to a parent, new content still gets default actions.
-				$(inputEventSelectors,$t).each(function(index){
-//					app.u.dump(index+") woot.");
-					var $i = $(this)
-					if($i.is('select'))	{
-						$('option:selected',$i).trigger(supportedEvents[i]+'.app');
-						}
-					else if($i.is(':checkbox'))	{
-						$i.trigger(supportedEvents[i]+'.app');
-						}
-					else if($i.is(':radio'))	{
-						if($i.is(':checked'))	{
-							$i.trigger(supportedEvents[i]+'.app');
-							}
-						}
-					});
+				self.triggerFormEvents();
 
 
 
@@ -223,6 +206,7 @@ var inputEventSelectors = "[data-input-"+supportedEvents.join("], [data-input-")
 //allows for a specific panel (or sets of panels) to be turned on/off based on selection. commonly used on a select list, but not limited to that.
 //provides more control that trying to accomplish the same thing with the show/hide-selectors.
 			"panel-selector" : function($CT)	{
+				app.u.dump(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				$($CT.data('panel-selector'),$CT.closest('form')).hide(); //hide all panels w/ matching selector.
 				
 				if($CT.is(':checkbox') && !$CT.is(':checked'))	{} //this is an unchecked checkbox. do nothing.
@@ -238,6 +222,32 @@ var inputEventSelectors = "[data-input-"+supportedEvents.join("], [data-input-")
 						}
 					else	{} //no panel was defined. this is an acceptable case.
 					}
+				}
+			},
+
+//useful if the DOM is updated w/ a new template/content and the defaults for form events need to be triggered.
+		triggerFormEvents : function()	{
+			var self = this, $t = self.element, L = self._supportedEvents.length;
+			for(var i = 0; i < L; i += 1)	{
+				$("[data-input-"+self._supportedEvents[i]+"]",$t).each(function(index){
+					app.u.dump(index+") for form events.");
+					var $i = $(this);
+					if($i.is('select'))	{
+						$('option:selected',$i).trigger(self._supportedEvents[i]+'.app');
+						}
+					else if($i.is(':checkbox'))	{
+						$i.trigger(self._supportedEvents[i]+'.app');
+						}
+					else if($i.is(':radio'))	{
+						if($i.is(':checked'))	{
+							$i.trigger(self._supportedEvents[i]+'.app');
+							}
+						else	{} //is a radio but isn't selected.
+						}
+					else	{
+						$i.trigger(self._supportedEvents[i]+'.app');
+						}
+					});
 				}
 			},
 
