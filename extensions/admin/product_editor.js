@@ -388,14 +388,14 @@ $target.anydelegate();
 						$r.data('pid',PID); //used in save function.
 						} 
 					//build the generic editor.
-					$r.anycontent({'templateID':'variationEditorTemplate','data':varObj});
+					$r.anycontent({'templateID':'variationEditorTemplate','data':varObj}); 
 					
 					//add the editor specific to the variation type.
 					$("[data-app-role='variationsTypeSpecificsContainer']",$r).anycontent({'templateID':'variationsEditor_'+varObj.type.toLowerCase(),'data':varObj})
 					
 					if(mode == 'product')	{
 //when editing a sog, the save button actually makes an api call. when editing 'product', the changes update the product in memory until the save button is pushed.
-						$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until save changes in variation manager is pushed.');
+						$("[data-app-role='saveButton']",$r).text('Apply Changes').attr('title','Apply changes to variation - will not be saved until product is saved.');
 						}
 	
 					
@@ -444,6 +444,7 @@ $target.anydelegate();
 					if(mode == 'product' && !varObj.ispog)	{
 						$("[data-app-role='variationSettingsContainer']",$r).hide(); //
 						$('.variationEditorSplitter',$r).hide();
+						$("[data-app-role='addNewOptionButton']",$r).button('disable');
 						}
 	
 					if(varObj.inv == 0)	{
