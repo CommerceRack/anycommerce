@@ -1320,7 +1320,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	
 	<fieldset>
 		<legend>FedEx Domestic Settings</legend>
-		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM' class='floatRight'>Manage General Rules</button>
+		<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM' class='floatRight'>Manage General Rules</button>
 		<label>
 			<input type="checkbox" class='applyAnycb' name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable FedEx Domestic Shipping Support
 		</label>
@@ -1330,42 +1330,42 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb' name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popVal;' /></td>
 		  <td>FedEx First Overnight&reg; (8:30am next day)</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTEARLY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTEARLY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
 		  <td><input type="checkbox" class='applyAnycb' name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popVal;' /></td>
 		  <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTNOON'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTNOON'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb' name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popVal;' /></td>
 		  <td>FedEx Standard Overnight&reg; (3pm next day)</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTDAY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_NEXTDAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
 		  <td><input type="checkbox" class='applyAnycb' name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popVal;' /></td>
 		  <td>FedEx 2Day&reg;</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DAY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb' name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popVal;' /></td>
 		  <td>FedEx Express Saver&reg; (3 Days)</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DAY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
 		  <td><input type="checkbox" class='applyAnycb' name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popVal;' /></td>
 		  <td>FedEx&reg; Ground</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GROUND'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GROUND'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb'  name="dom_home" data-bind='var: shipmethod(dom_home); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery**</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_HOME'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_HOME'>Manage Rules</button></td>
 	   </tr>
 	 <tr>
 		  <td><input type="checkbox" class='applyAnycb'  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popVal;' /></td>
 		  <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_EVENING'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_EVENING'>Manage Rules</button></td>
 	   </tr>
 	</table>
 	</fieldset>
@@ -1374,7 +1374,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<fieldset>
 		<legend>FedEx International Settings</legend>
 	
-		<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT' class='floatRight'>Manage General Rules</button>
+		<button data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT' class='floatRight applyButton'>Manage General Rules</button>
 		<label>
 			<input type="checkbox" class='applyAnycb' name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable FedEx International Shipping Support
 		</label>
@@ -1384,22 +1384,22 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb' name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popVal;' /></td>
 		  <td>FedEx International First&reg;</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTEARLY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTEARLY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
 		  <td><input type="checkbox" class='applyAnycb' name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popVal;' /></td>
 		  <td>FedEx International Priority&reg;</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTNOON'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_NEXTNOON'>Manage Rules</button></td>
 	   </tr>
 	   <tr>
 		  <td><input type="checkbox" class='applyAnycb' name="int_2day" data-bind='var: shipmethod(int_2day); format:popVal;' /></td>
 		  <td>FedEx International Economy&reg;*</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_2DAY'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_2DAY'>Manage Rules</button></td>
 	   </tr>
 	   <tr >
 		  <td><input type="checkbox" class='applyAnycb' name="int_ground" data-bind='var: shipmethod(int_ground); format:popVal;' /></td>
 		  <td>FedEx International Ground&reg;</td>
-		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_GROUND'>Manage Rules</button></td>
+		  <td class='alignRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_GROUND'>Manage Rules</button></td>
 	   </tr>
 	</table>
 	</fieldset>
@@ -1463,7 +1463,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<fieldset>
 		<legend>UPS Domestic Settings</legend>
 		
-		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage General Rules</button></div>
+		<div class='floatRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage General Rules</button></div>
 		
 		<label><input type="checkbox" class='applyAnycb' value="on" name="dom" data-bind='var: shipmethod(dom); format:popVal;' /> Enable UPS Domestic Shipping Support </label>
 		<label><span>Quote Domestic Packaging As:</span>
@@ -1488,37 +1488,37 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<tr >
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popVal;' /></td>
 		<td>UPS Ground</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GND'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_GND'>Manage Rules</button></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popVal;' /></td>
 		<td>UPS 3 Day Select&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DS'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_3DS'>Manage Rules</button></td>
 	</tr>
 	<tr >
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popVal;' /></td>
 		<td>UPS 2nd Day Air A.M.&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DM'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DM'>Manage Rules</button></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popVal;' /></td>
 		<td>UPS 2nd Day Air&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DA'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_2DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popVal;' /></td>
 		<td>UPS Next Day Air Saver&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DP'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DP'>Manage Rules</button></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DA'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DA'>Manage Rules</button></td>
 	</tr>
 	<tr >
 		<td><input type="checkbox" class='applyAnycb' value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popVal;' /></td>
 		<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DM'>Manage Rules</button></td>
+		<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM_1DM'>Manage Rules</button></td>
 	</tr>
 	</tbody>
 	</table>
@@ -1528,7 +1528,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	
 	<fieldset>
 	<legend>UPS International Settings</legend>
-		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></div>
+		<div class='floatRight'><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></div>
 		<label><input type="checkbox" class='applyAnycb' value="on" name="int" data-bind='var: shipmethod(int); format:popVal;' /> Enable UPS International Shipping Support</label>
 		
 		<label>
@@ -1554,27 +1554,27 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<tr >
 			<td><input type="checkbox" class='applyAnycb' value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to Canada</a></td>
-			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_STD'>Manage Rules</button></td>
+			<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_STD'>Manage Rules</button></td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
-			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XSV'>Manage Rules</button></td>
+			<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XSV'>Manage Rules</button></td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
-			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPR'>Manage Rules</button></td>
+			<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPR'>Manage Rules</button></td>
 		</tr>
 		<tr >
 			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
-			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XDM'>Manage Rules</button></td>
+			<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XDM'>Manage Rules</button></td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" class='applyAnycb' value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popVal;' /></td>
 			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
-			<td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPD'>Manage Rules</button></td>
+			<td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT_XPD'>Manage Rules</button></td>
 		</tr>
 		</tbody>
 		</table>
@@ -1642,8 +1642,8 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	   </tr>
 	   <tr>
 		  <td>Rules</td>
-		  <td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage Domestic Rules</button></td>
-		  <td><button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></td>
+		  <td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='DOM'>Manage Domestic Rules</button></td>
+		  <td><button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='INT'>Manage International Rules</button></td>
 	   </tr>
 	
 	</table>
@@ -1687,7 +1687,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 <fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
 	<label><input type="checkbox" name="rules" class='applyAnycb' data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
-	<button data-app-event="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
+	<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 </fieldset>
 
 
