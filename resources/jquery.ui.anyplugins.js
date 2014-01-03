@@ -92,7 +92,7 @@ additionally, will apply some conditional form logic.
 				
 				for(var i = 0; i < self._supportedEvents.length; i += 1)	{
 					$t.on(self._supportedEvents[i]+".app","[data-app-"+self._supportedEvents[i]+"], [data-input-"+self._supportedEvents[i]+"]",function(e,p){
-						app.u.dump(" -> delegated click triggered");
+//						app.u.dump(" -> delegated click triggered");
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
 					}
@@ -126,7 +126,7 @@ additionally, will apply some conditional form logic.
 //$CT = $(e.currentTarget)
 //ep = event + parameters (params may get added if the event is triggered programatically)
 		_executeEvent : function($CT,ep)	{
-			app.u.dump(" -> ui.anydelegate._executeEvent being run");
+//			app.u.dump(" -> ui.anydelegate._executeEvent being run");
 			ep = ep || {};
 			var r = true; //what is returned.
 			ep.normalizedType = this._normalizeEventType(ep.type);
@@ -2015,7 +2015,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 	
 				this.sticky = $sticky; //global reference to container for easy access.
 				if(o.handleEventDelegation)	{
-					app.u.handleEventDelegation($sticky);
+					$sticky.anydelegate();
 					}
 //* 202324  -> tabid wasn't getting applied to tab.
 				$sticky.attr({'id':(o.tabID) ? o.tabID : 'stickytab_'+guid});

@@ -320,10 +320,10 @@ else	{
 	a : {
 
 		
-		initOrderManager : function(P)	{
+		initOrderManager : function($target,P)	{
 			P = P || {};
 			app.u.dump("BEGIN admin_orders.a.initOrderManager.");
-			var $target = $('#ordersContent');
+//			var $target = $('#ordersContent');
 			
 			
 //			app.u.dump(P);
@@ -404,8 +404,8 @@ else	{
 			}
 		});
 
-	$("table[data-app-role='orderListTable']:first",$target).anytable(); //make table headers sortable.
-	$("table[data-app-role='itemListTable']:first",$target).anytable(); //make table headers sortable.
+				$("table[data-app-role='orderListTable']:first",$target).anytable(); //make table headers sortable.
+				$("table[data-app-role='itemListTable']:first",$target).anytable(); //make table headers sortable.
 				
 
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
@@ -445,7 +445,7 @@ else	{
 				app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
-				app.u.handleEventDelegation($target);
+				$target.anydelegate();
 				app.u.handleButtons($target);
 				}
 			else	{
@@ -2767,7 +2767,7 @@ else	{
 							});
 						$D.append("<table data-orderid='"+orderID+"'><tbody data-bind='var: routes(@ROUTES); format:macros2Buttons; extension:admin; _cmd:adminOrderMacro;'></tbody></table>");
 						$D.dialog('open');
-						app.u.handleEventDelegation($D);
+						$D.anydelegate();
 						app.model.addDispatchToQ({
 							'_cmd':'adminOrderRouteList',
 							'orderid' : orderID,

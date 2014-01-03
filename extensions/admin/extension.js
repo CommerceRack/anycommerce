@@ -3433,7 +3433,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_syndication.a.showSyndication($target);
 					}
 				else if (tab == 'orders')	{
-					app.ext.admin_orders.a.initOrderManager(opts);
+					app.ext.admin_orders.a.initOrderManager($target,opts);
 					}
 				else if(tab == 'crm')	{
 					app.ext.admin_customer.a.showCRMManager($target);
