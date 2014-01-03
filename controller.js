@@ -1357,6 +1357,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //p in event = optional params. can be added when 'trigger' is executed. these are then passed into the app event and can be used to change behavior, if necessary.
 //a class is added when event delegation is added. The class is checked for when the function is run to prevent double-delegation.
 //a class is used instead of a data-attrib to be more efficient. Since we're adding/removing the class, it's 'safe' to use a class for this.
+// ### TODO -> get rid of this. test changes.
 			handleEventDelegation : function($container)	{
 //				app.u.dump("BEGIN app.u.handleEventDelegation");
 //				app.u.dump(" -> $container.data('hasdelegatedevents'): "+$container.data('hasdelegatedevents'));
