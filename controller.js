@@ -53,10 +53,6 @@ jQuery.extend(zController.prototype, {
 		app.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
 		app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		app.vars.fbUser = {};
-		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
-		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
-
-		app.handleSession(); //get existing session or create a new one.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
@@ -69,6 +65,11 @@ jQuery.extend(zController.prototype, {
 				window.localStorage.clear();
 				}
 			}
+		//needs to be after the 'flush' above, or there's no way to flush the cart/session.
+		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
+		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
+
+		app.handleSession(); //get existing session or create a new one.
 		
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
