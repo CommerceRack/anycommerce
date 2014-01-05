@@ -117,6 +117,7 @@ var myRIA = function() {
 				else	{}
 
 				if(cartID)	{
+					app.u.dump(" -> cartID is set, init messenger");
 					app.model.addCart2Session(cartID); //this function updates app.vars.carts
 					app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 					}
@@ -133,7 +134,7 @@ var myRIA = function() {
 							}
 						else	{
 							//appCartCreate automatically updates session/vars.carts
-							app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+							app.ext.cart_message.u.initCartMessenger(app.model.fetchCartID(),$('#cartMessenger')); //starts the cart message polling
 							}
 						}},'mutable');
 					}
