@@ -817,6 +817,11 @@ see jquery/api webdoc for required/optional param
 //formerly setSessionVars
 		cartSet : {
 			init : function(obj,_tag,Q)	{
+				var cartid = obj._cartid || app.model.fetchCartID();
+				//if a cart messenger is open, log the cart update.
+				if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
+					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':cartID},'immutable');
+					}
 				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
@@ -1487,7 +1492,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				}, //printByElementID
 
 //pass in app.data.something.something and this will test to make sure the 
-			testNestedObj : function(s){
+			thisNestedExists : function(s){
 				return app.u.getObjValFromString(s,window,'.') ? true : false;
 				},
 
