@@ -4,7 +4,10 @@
 
 <div id='adminCartMessageTemplate' data-app-role='cartMessenger'>
 	<form action='#' onsubmit="return false;">
-		<section data-app-role='messageHistory' class='messageHistory'></section>
+		<!-- size is set on this element, but messages are appended to the child.  allows messageHIstory height to be computed for scolltop -->
+		<div class='messageHistoryContainer' data-app-role='messageHistoryContainer'>
+			<section data-app-role='messageHistory'></section>
+		</div>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
 			<textarea name='message' required='required' placeholder='send a message'></textarea>
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>

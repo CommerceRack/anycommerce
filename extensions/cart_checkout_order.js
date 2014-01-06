@@ -73,44 +73,37 @@ calls should always return the number of dispatches needed. allows for cancellin
 			}, //appPaymentMethods
 
 		cartCouponAdd : {
-			init : function(coupon,_tag,Q)	{
-				this.dispatch(coupon,_tag,Q);
-				},
-			dispatch : function(coupon,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"cartCouponAdd","coupon":coupon,"_tag" : _tag},Q || 'immutable');	
+			init : function(coupon,cartid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"cartCouponAdd","_cartid":cartid,"coupon":coupon,"_tag" : _tag},Q || 'immutable');	
 				}			
 			}, //cartCouponAdd
 
 		cartGiftcardAdd : {
 			init : function(giftcard,_tag,Q)	{
-				this.dispatch(giftcard,_tag,Q);
-				},
-			dispatch : function(giftcard,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"cartGiftcardAdd","giftcard":giftcard,"_tag" : _tag},Q || 'immutable');	
+				app.model.addDispatchToQ({"_cmd":"cartGiftcardAdd","_cartid":cartid,"giftcard":giftcard,"_tag" : _tag},Q || 'immutable');
 				}			
 			}, //cartGiftcardAdd
 
 //can be used to verify the items in the cart have inventory available.
 		cartItemsInventoryVerify : {
-			init : function(cartID,_tag,Q)	{
+			init : function(cartid,_tag,Q)	{
 				var r = 0;
-				if(cartID)	{
-					this.dispatch(cartID,_tag,Q);
+				if(cartid)	{
+					this.dispatch(cartid,_tag,Q);
 					r = 1;
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In calls.cartItemsInventoryVerify, no cartID passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In calls.cartItemsInventoryVerify, no cartid passed.','gMessage':true});
 					}
 				return r;
 				},
-			dispatch : function(cartID,_tag,Q)	{
+			dispatch : function(cartid,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = "cartItemsInventoryVerify|"+cartID;
-				app.model.addDispatchToQ({"_cmd":"cartItemsInventoryVerify","_cartid":cartID,"_tag": _tag},Q || 'immutable');
+				_tag.datapointer = "cartItemsInventoryVerify|"+cartid;
+				app.model.addDispatchToQ({"_cmd":"cartItemsInventoryVerify","_cartid":cartid,"_tag": _tag},Q || 'immutable');
 				}
 			}, //cartItemsInventoryVerify	
 
-// REMOVE from controller when this extension deploys !!!
 		cartItemUpdate : {
 			init : function(vars,_tag)	{
 //				app.u.dump('BEGIN app.calls.cartItemUpdate.');

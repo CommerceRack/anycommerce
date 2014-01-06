@@ -971,7 +971,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						infoObj.parentID = 'mainContentArea_customer';
 						break;
-	
+
 					case 'checkout':
 //						app.u.dump("PROTOCOL: "+document.location.protocol);
 						infoObj.parentID = 'checkoutContainer'; //parent gets created within checkout. that id is hard coded in the checkout extensions.
@@ -1100,6 +1100,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 					$ui.dialog({
 						'auto-open':'false'
 						});
+					// SANITY -> do not run a destroyCartMessenger on dialog close.  It will kill the polling.
 					app.u.handleButtons($ui);
 					app.u.handleCommonPlugins($ui);
 					$ui.anydelegate();
@@ -3060,6 +3061,12 @@ else	{
 				$('.username').empty();
 				app.u.logBuyerOut();
 				showContent('homepage',{});
+				},
+			
+			cartMessagePageSend : function($ele,p)	{
+				var sotw = app.ext.myRIA.vars.sotw; //shortcut.
+				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+sotw.pageType,'vars':sotw,'_cartid':cartID},'passive');
+				app.model.dispatchThis('passive');
 				},
 			
 			dialogCloseExec : function($ele,p)	{
