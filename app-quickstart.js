@@ -1120,7 +1120,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 						$inputs.each(function(){
 							var obj = app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
 							if(obj)	{
-								app.calls.cartItemAppend.init(obj,{});
+								app.ext.coo.calls.cartItemAppend.init(obj,{});
 								}
 							});
 						app.calls.refreshCart.init({},'immutable');
@@ -1473,11 +1473,11 @@ setTimeout(function(){
 
 //				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
-					app.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
+					app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
 					}
 
 				if(infoObj.uriParams.meta_src)	{
-					app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
+					app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
 				if(app.u.buyerIsAuthenticated())  {
@@ -3031,11 +3031,13 @@ else	{
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
-
+//add this as a data-app-submit to the login form.
 			accountLoginSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(app.u.validateForm($ele))	{
-					app.calls.appBuyerLogin.init($ele.serializeJSON(),{'callback':'authenticateBuyer','extension':'myRIA'});
+					var sfo = $ele.serializeJSON();
+					app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
+					app.calls.appBuyerLogin.init(sfo,{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 					app.model.dispatchThis('immutable');
 					}
@@ -3065,7 +3067,8 @@ else	{
 			
 			cartMessagePageSend : function($ele,p)	{
 				var sotw = app.ext.myRIA.vars.sotw; //shortcut.
-				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+sotw.pageType,'vars':sotw,'_cartid':cartID},'passive');
+				var cartid = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
+				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+sotw.pageType,'vars':sotw,'_cartid':cartid},'passive');
 				app.model.dispatchThis('passive');
 				},
 			
@@ -3096,7 +3099,7 @@ else	{
 										obj['%variations'][variations[index].id] = variations[index].v
 										}
 									}
-								app.calls.cartItemAppend.init(obj,{},'immutable');
+								app.ext.coo.calls.cartItemAppend.init(obj,{},'immutable');
 								app.calls.refreshCart.init({'callback':function(rd){
 									showContent('cart');
 									}},'immutable');
@@ -3131,7 +3134,7 @@ else	{
 				p.preventDefault();
 				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
 				if(cartObj)	{
-					app.calls.cartItemAppend.init(cartObj,{},'immutable');
+					app.ext.coo.calls.cartItemAppend.init(cartObj,{},'immutable');
 					app.calls.refreshCart.init({'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});

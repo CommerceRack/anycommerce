@@ -104,6 +104,28 @@ calls should always return the number of dispatches needed. allows for cancellin
 				}
 			}, //cartItemsInventoryVerify	
 
+		cartItemAppend : {
+			init : function(obj,_tag)	{
+				var r = 0;
+				if(obj && obj.sku && obj.qty && obj._cartid)	{
+					obj.uuid = app.u.guidGenerator();
+					this.dispatch(obj,_tag);
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'Qty ['+obj.qty+'] or SKU ['+obj.sku+'] or _cartid ['+obj._cartid+'] left blank in cartItemAppend.'});
+					app.u.dump(" -> cartItemAppend obj param follows:"); app.u.dump(obj);
+					}
+				
+				return r;
+				},
+			dispatch : function(obj,_tag){
+				obj._tag = _tag;
+				obj._cmd = "cartItemAppend";
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //cartItemAppend
+
 		cartItemUpdate : {
 			init : function(vars,_tag)	{
 //				app.u.dump('BEGIN app.calls.cartItemUpdate.');
@@ -146,13 +168,13 @@ calls should always return the number of dispatches needed. allows for cancellin
 // REMOVE from controller when this extension deploys !!!
 		cartSet : {
 			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
+				if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
+					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':cartID},'immutable');
+					}
 				obj["_cmd"] = "cartSet";
 				obj._tag = _tag || {};
 				app.model.addDispatchToQ(obj,Q || 'immutable');
+				return 1;
 				}
 			}, //cartSet
 
@@ -824,7 +846,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					delete formObj['want/bill_to_ship_cb'];
 					delete formObj['coupon'];	
 
-					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
+					app.ext.cco.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
 				}, //sanitizeAndUpdateCart
 
@@ -905,7 +927,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				if($container instanceof jQuery)	{
 					var sfo = this.buildCartItemAppendObj($container.serializeJSON(),$container.closest("[data-app-role='checkout']").data('cartid'));
 					if(sfo)	{
-						app.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
+						app.ext.coo.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
 						r = sfo;
 						}
 					else	{
@@ -1191,7 +1213,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 			cartZipUpdateExec : function($ele,p)	{
 				
-				app.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("form").find("input[name='_cartid']").val()},{},'immutable');
+				app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("form").find("input[name='_cartid']").val()},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				app.model.dispatchThis('immutable');
 				}, //cartZipUpdateExec

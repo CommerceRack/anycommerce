@@ -200,8 +200,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				var r = 0;
 				if(obj && obj.login && obj.password)	{
 					r = 1;
-//email should be validated prior to call.  allows for more custom error handling based on use case (login form vs checkout login)
-					app.calls.cartSet.init({"bill/email":obj.login}) //whether the login succeeds or not, set bill/email in /session
 					this.dispatch(obj,_tag);
 					}
 				else	{$('#globalMessaging').anymessage({'message':'In app.calls.appBuyerLogin, login or password not specified.','gMessage':true});}
@@ -790,70 +788,6 @@ see jquery/api webdoc for required/optional param
 				app.model.addDispatchToQ({"_cmd":"cartDetail","_cartid":cartID,"_tag": _tag,"create":0},Q || 'mutable');
 				} 
 			}, // refreshCart removed comma from here line 383
-
-		cartItemAppend : {
-			init : function(obj,_tag)	{
-				var r = 0;
-				if(obj && obj.sku && obj.qty && obj._cartid)	{
-					obj.uuid = app.u.guidGenerator();
-					this.dispatch(obj,_tag);
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'Qty ['+obj.qty+'] or SKU ['+obj.sku+'] or _cartid ['+obj._cartid+'] left blank in cartItemAppend.'});
-					app.u.dump(" -> cartItemAppend obj param follows:"); app.u.dump(obj);
-					}
-				
-				return r;
-				},
-			dispatch : function(obj,_tag){
-				obj._tag = _tag;
-				obj._cmd = "cartItemAppend";
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //cartItemAppend
-
-//default immutable Q
-//formerly setSessionVars
-		cartSet : {
-			init : function(obj,_tag,Q)	{
-				var cartid = obj._cartid || app.model.fetchCartID();
-				//if a cart messenger is open, log the cart update.
-				if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
-					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':cartID},'immutable');
-					}
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj["_cmd"] = "cartSet";
-				obj["_tag"] = _tag || {};
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //cartSet
-
-
-
-		cartShippingMethods : {
-			init : function(_tag,Q)	{
-				var r = 0
-				_tag = _tag || {}; //makesure _tag is an object so that datapointer can be added w/o causing a JS error
-				_tag.datapointer = "cartShippingMethods";
-				
-				if(app.model.fetchData('cartShippingMethods') == false)	{
-					r = 1;
-					Q = Q ? Q : 'immutable'; //allow for muted request, but default to immutable. it's a priority request.
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"cartShippingMethods","_tag": _tag},Q);
-				}
-			}, //cartShippingMethods
 
 
 
@@ -3524,7 +3458,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 							if(user != null) {
 //								app.u.dump(" -> FB.user is defined.");
 								app.vars.fbUser = user;
-								app.calls.cartSet.init({"bill/email":user.email});
+								app.ext.cco.calls.cartSet.init({"bill/email":user.email,"_cartid":app.model.fetchCartID()});
 
 //								app.u.dump(" -> user.gender = "+user.gender);
 
