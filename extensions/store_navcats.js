@@ -410,7 +410,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 				var pathArray = path.split('.');
 				var len = pathArray.length
 				var s= '.'; //used to contatonate safe id.
-				numRequests += app.calls.appNavcatDetail.init({'path':'.','detail':'fast'}); //homepage data. outside of loop so I can keep loop more efficient
+				app.calls.appNavcatDetail.init({'path':'.','detail':'fast'}); //homepage data. outside of loop so I can keep loop more efficient
 				for (var i=1; i < len; i += 1) {
 					s += pathArray[i]; //pathArray[0] will be blank, so s (.) plus nothing is just .
 //					app.u.dump(" -> path for breadcrumb: "+s);
