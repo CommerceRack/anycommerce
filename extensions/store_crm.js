@@ -467,23 +467,28 @@ This is used to get add an array of skus, most likely for a product list.
 									var $form = $('form',$(this)).first();
 									
 									if(app.u.validateForm($form))	{
-										$('body').showLoading('Updating Address');
+										$form.showLoading('Updating Address');
 										var serializedForm = $form.serializeJSON();
 //save and then refresh the page to show updated info.
-										app.calls.buyerAddressAddUpdate.init(serializedForm,{'callback':function(rd){
-											$('body').hideLoading(); //always hide loading, regardless of errors.
-											if(app.model.responseHasErrors(rd)){
-												$form.anymessage({'message':rd});
+										app.model.addDispatchToQ({
+											'_cmd':'buyerAddressAddUpdate',
+											'_tag':	{
+												'callback':function(rd){
+													$form.hideLoading(); //always hide loading, regardless of errors.
+													if(app.model.responseHasErrors(rd)){
+														$form.anymessage({'message':rd});
+														}
+													else if(typeof onSuccessCallback === 'function')	{
+														onSuccessCallback(rd,serializedForm);
+														$editor.dialog('close');
+														}
+													else	{
+														//no callback defined 
+														$editor.dialog('close');
+														}
+													}
 												}
-											else if(typeof onSuccessCallback === 'function')	{
-												onSuccessCallback(rd,serializedForm);
-												$editor.dialog('close');
-												}
-											else	{
-												//no callback defined 
-												$editor.dialog('close');
-												}
-											}},'immutable');
+											},'immutable');
 //dump data in memory and local storage. get new copy up updated address list for display.
 										app.model.destroy('buyerAddressList');
 										app.calls.buyerAddressList.init({},'immutable');
@@ -563,23 +568,29 @@ This is used to get add an array of skus, most likely for a product list.
 								var $form = $('form',$(this)).first();
 								
 								if(app.u.validateForm($form))	{
-									$('body').showLoading('Adding Address');
+									$form.showLoading('Adding Address');
 									var serializedForm = $form.serializeJSON();
 //save and then refresh the page to show updated info.
-									app.calls.buyerAddressAddUpdate.init(serializedForm,{'callback':function(rd){
-										$('body').hideLoading(); //always hide loading, regardless of errors.
-										if(app.model.responseHasErrors(rd)){
-											$form.anymessage({'message':rd});
+									app.model.addDispatchToQ({
+										'_cmd':'buyerAddressAddUpdate',
+										'_tag':	{
+											'callback':function(rd){
+												$form.hideLoading(); //always hide loading, regardless of errors.
+												if(app.model.responseHasErrors(rd)){
+													$form.anymessage({'message':rd});
+													}
+												else if(typeof onSuccessCallback === 'function')	{
+													onSuccessCallback(rd,serializedForm);
+													$editor.dialog('close');
+													}
+												else	{
+													//no callback defined or an error occured and has been reported.
+													$editor.dialog('close');
+													}
+												}
 											}
-										else if(typeof onSuccessCallback === 'function')	{
-											onSuccessCallback(rd,serializedForm);
-											$editor.dialog('close');
-											}
-										else	{
-											//no callback defined or an error occured and has been reported.
-											$editor.dialog('close');
-											}
-										}},'immutable');
+										},'mutable');
+									app.model.dispatchThis('mutable');
 //dump data in memory and local storage. get new copy up updated address list for display.
 									app.model.destroy('buyerAddressList');
 									app.calls.buyerAddressList.init({},'immutable');
