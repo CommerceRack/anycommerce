@@ -153,13 +153,15 @@ ANIMATION TESTING
 
 <div id='cartMessenger' class='displayNone' data-app-role='cartMessenger' title="help">
 	<form>
-		<section data-app-role='messageHistory' class='messageHistory'></section>
+		<div class='messageHistoryContainer'>
+			<section data-app-role='messageHistory'></section>
+		</div>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
-			<textarea name='message' required='required' placeholder='send a message'></textarea>
+			<textarea name='message' required='required' class='fullWidth' rows='5' placeholder='send a message'></textarea>
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
-		<button data-app-click="cart_message|chatInitExec" class='applyButton'>Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+		<button class='applyButton' data-app-click="myRIA|cartMessagePageSend" title='Show the associate what page I am on.'>Send Page</button>
 		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton'>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
 		</section>
 	</form>

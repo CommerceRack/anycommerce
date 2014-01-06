@@ -3,7 +3,7 @@ For the buyer side...
 */
 
 #cartMessenger	{font-weight:normal;}
-.messageHistory	{max-height:120px; overflow:auto; font-size:.8em; margin-bottom: .8em;}
+.messageHistoryContainer	{max-height:120px; overflow:auto; font-size:.8em; margin-bottom: .8em;}
 .messageInputContainer	{padding:0; margin:0; margin-bottom:.8em; border:0;}
 .messageInputContainer textarea	{
 	height:60px;

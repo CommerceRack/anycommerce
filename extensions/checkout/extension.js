@@ -210,12 +210,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				if(!oldCartID)	{
 					app.u.dump("Yo! $checkout.data(cartid) did NOT have the cart set. that's no good.",'error'); //### TODO -> make sure we don't hit this error at checkout.
 					}
-// SLIDE UP to top of checkout here.
-
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
 				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData});
-				app.u.handleAppEvents($checkout);
+//				app.u.handleAppEvents($checkout);
 
 				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID));
 				
@@ -236,6 +234,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
 				app.model.removeCartFromSession(oldCartID);
+//if a cart messenger is open, log the cart update.
+				if(app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+oldCartID))	{
+					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':cartid},'immutable');
+					}
 				
 				if(app.vars.thisSessionIsAdmin)	{} //no need to get a new cart id for an admin session.
 				else	{
@@ -253,8 +255,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 								}
 							}
 						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-					app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
 					}
+				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
+				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
 
 				_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
 				_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
@@ -267,7 +270,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 
 				app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
-
+// ### TODO -> move this out of here. move it into the appropriate app init.
 				if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
@@ -285,14 +288,14 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				//running this will reload the script. the 'span' will be added as part of html:roi
 				//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
 						(function() {
-						var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-						var gts = document.createElement("script");
-						gts.type = "text/javascript";
-						gts.async = true;
-						gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-						var s = document.getElementsByTagName("script")[0];
-						s.parentNode.insertBefore(gts, s);
-						})();
+							var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+							var gts = document.createElement("script");
+							gts.type = "text/javascript";
+							gts.async = true;
+							gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+							var s = document.getElementsByTagName("script")[0];
+							s.parentNode.insertBefore(gts, s);
+							})();
 						}
 				
 				
@@ -1551,12 +1554,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 			execCouponAdd : function($ele,p)	{
 				var $fieldset = $ele.closest('fieldset'),
 				$form = $ele.closest('form'),
+				cartid = $ele.closest("[data-app-role='checkout']").data('cartid'),
 				$input = $("[name='coupon']",$fieldset);
 				
 				if($ele.is('button')){$ele.button('disable');}
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
-				app.ext.cco.calls.cartCouponAdd.init($input.val(),{"callback":function(rd){
+				app.ext.cco.calls.cartCouponAdd.init($input.val(),cartid,{"callback":function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$fieldset.anymessage({'message':rd});
 						}
@@ -1564,6 +1568,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$input.val(''); //reset input only on success.  allows for a typo to be corrected.
 						$fieldset.anymessage(app.u.successMsgObject('Your coupon has been added.'));
 						app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+//if a cart messenger is open, log the cart update.
+						if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
+							app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
+							app.model.dispatchThis('passive');
+							}
 						_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added']);
 						}
 					}});
@@ -1574,17 +1583,23 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			execGiftcardAdd : function($ele,p)	{
 				var $fieldset = $ele.closest('fieldset'),
+				cartid = $ele.closest("[data-app-role='checkout']").data('cartid'),
 				$input = $("[name='giftcard']",$fieldset);
 				
 				if($ele.is('button')){$ele.button('disable');}
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
-				app.ext.cco.calls.cartGiftcardAdd.init($input.val(),{"callback":function(rd){
+				app.ext.cco.calls.cartGiftcardAdd.init($input.val(),cartid,{"callback":function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$fieldset.anymessage({'message':rd});
 						}
 					else	{
 						$input.val(''); //reset input
 						$fieldset.anymessage(app.u.successMsgObject('Your giftcard has been added.'));
+//if a cart messenger is open, log the cart update.
+						if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
+							app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Giftcard added','_cartid':cartid},'passive');
+							app.model.dispatchThis('passive');
+							}
 						_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added']);
 						}
 					}});

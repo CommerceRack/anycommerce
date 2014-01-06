@@ -82,21 +82,27 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 					if(_rtag && _rtag.jqObj && _rtag.jqObj.data('cartid'))	{
 						var
 							messages = app.data[_rtag.datapointer]['@MSGS'], 
-							L = messages.length, 
-							cartID = _rtag.jqObj.data('cartid')
-							messagesDPS = app.model.dpsGet('cartMessages',cartID) || [];
+							cartID = _rtag.jqObj.data('cartid'), //shortcut.
+							L = messages.length
 						
-						if(L)	{
-							((app.ext.cart_message.vars.carts[cartID].frequency - 6000) < 3000) ? app.ext.cart_message.vars.carts[cartID].frequency=3000 : app.ext.cart_message.vars.carts[cartID].frequency-=6000; //frequency is never less than 3000;
+						if(L > 0)	{
+							var messagesDPS = app.model.dpsGet('cartMessages',cartID) || [];
+//							((app.ext.cart_message.vars.carts[cartID].frequency - 6000) < 3000) ? app.ext.cart_message.vars.carts[cartID].frequency=3000 : app.ext.cart_message.vars.carts[cartID].frequency-=6000; //frequency is never less than 3000;
+							app.ext.cart_message.vars.carts[cartID].frequency = 3000; //if a message is present, increase frequency because chat is 'active'.
 		
 							for(var i = 0; i < L; i += 1)	{
+								messages[i].init = _rtag.init || false; // will be set to true if this is executed as part of the init.
 								messagesDPS.push(messages[i]);
 								if(typeof app.ext.cart_message.cmResponse[messages[i].what] == 'function')	{
+									app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
+									}
+								else if(typeof app.ext.cart_message.cmResponse[messages[i][what.split('.')[0]]] == 'function')	{ //what.split will check for 'view' instead of view.product. allows for a default.
 									app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
 									}
 								// ### TODO -> what to do if the message type is not defined/unrecognized?
 								}
 							app.model.dpsSet('cartMessages',_rtag.jqObj.data('cartid'),messagesDPS);
+							app.model.dpsSet('cartMessages','lastMessageTS',app.u.epochNow()); //record when the last message came in. used at init.
 							}
 						else	{
 							(app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
@@ -143,7 +149,13 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					$("[data-app-role='messageHistory']",$context).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
 					},
 				'chat.post' : function(message,$context)	{
-					$("[data-app-role='messageHistory']",$context).append("<p class='chat_post'><span class='from'>"+message.FROM+"<\/span> "+message.message+"<\/p>");
+					//do not clear textarea for message input here. this gets run on the receiving side too and could clear something that was being written by the recipient of the chat.post.
+					var $history = $("[data-app-role='messageHistory']",$context);
+					$history.append("<p class='chat_post'><span class='from'>"+message.FROM+"<\/span> "+message.message+"<\/p>");
+					$history.parent().scrollTop($history.height());
+					},
+				'view' : function(message,$context)	{
+					
 					}
 				},
 
@@ -238,8 +250,8 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					var cartID = $context.data('cartid');
 					if(cartID)	{
 						app.ext.cart_message.vars.carts[cartID].timeout = setTimeout(function(){
-							var messagesDPS = app.model.dpsGet('cartMessages',$context.data('cartid')) || [];
-							app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((messagesDPS.length) ? (messagesDPS.length - 1) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
+
+							app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((app.u.thisNestedExists("app.data.cartMessageList.SEQ")) ? (app.data.cartMessageList.SEQ) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
 							app.model.dispatchThis('passive');
 							},when);
 						}
@@ -247,19 +259,22 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 						$context.anymessage({"message":"In cart_message.u.fetchCartMessages, $context did not have data('cartid') set. It is required.","gMessage":true});
 						}
 					},
-				
+
+//a generic init for use on both sides of the force (buyer and admin). Any 'special' handling that is app specific should be added outside this function.
 				initCartMessenger : function(cartID,$context){
 					if(cartID && $context instanceof jQuery)	{
 						$context.data('cartid',cartID);
-						var messagesDPS = app.model.dpsGet('cartMessages',cartID) || [];
+						var messagesDPS = app.model.dpsGet('cartMessages',cartID) || []; //, TS = app.model.dpsGet('cartMessages','lastMessageTS') || 0, since = 0;
 						app.ext.cart_message.vars.carts[cartID] = {
 							frequency : 7000,
 							timeout : null
 							}
-						app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((messagesDPS.length) ? (messagesDPS.length - 1) : 0),'_cartid':cartID,'_tag':	{
+
+						app.model.addDispatchToQ({'_cmd':'cartMessageList','since':0,'_cartid':cartID,'_tag':	{
 							'datapointer' : 'cartMessageList',
 							'callback':'handleCartMessageListPolling',
 							'extension' : 'cart_message',
+							'init':true, //pass along that this was requested as part of init. That way, if a large history is imported, event types can be skipped if necessary.
 							'jqObj' : $context
 							}},'mutable'); //polling takes place on passive after initial call.  starts on mutable just to piggy-back w/ rest of init calls.
 						}
@@ -267,6 +282,8 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 						$('#globalMessaging').anymessage({"message":"In cart_message.u.initCartMessenger, either cartid ["+cartID+"] not set or $context ["+($context instanceof jQuery)+"] is not a valid jquery instance","gMessage":true});
 						}
 					},
+//use this in an ADMIN session when a cart message session has ended.
+//if used on a storefront, the cart message polling will end.
 				destroyCartMessenger : function(cartID){
 					if(cartID)	{
 						window.clearTimeout(app.ext.cart_message.vars.carts[cartID].timeout);
@@ -301,10 +318,11 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset'), cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(app.u.validateForm($fieldset) && cartID)	{
-					var message = $ele.closest('fieldset').find("[name='message']").val();
-					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.post','message':message,'_cartid':cartID},'immutable');
+					var $message = $ele.closest('fieldset').find("[name='message']");
+					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.post','message':$message.val(),'_cartid':cartID},'immutable');
 					app.model.dispatchThis('immutable');
 					app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
+					$message.val(""); //reset textarea.
 					}
 				else	{
 					//validateForm handles error display if form contents not populated.
@@ -340,6 +358,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartID},'immutable');
 					app.model.dispatchThis('immutable');
 					app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
+					$ele.hide();
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In cart_message.e.cartCSRShortcutExec, unable to ascertain cartid.","gMessage":true});
