@@ -1,6 +1,6 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
 app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
-
+app.cmr = app.cmr || [];
 
 
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
@@ -163,6 +163,59 @@ app.u.initMVC = function(attempts){
 
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
+	app.cmr.push(["view",function(message,$context){
+		app.u.dump(" -> executing cmr.view");
+		var $history = $("[data-app-role='messageHistory']",$context);
+		var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>";
+		if(message.vars && message.vars.pageType)	{
+			app.u.dump(' -> pageType is set to: '+message.vars.pageType);
+			switch(message.vars.pageType)	{
+				case 'product':
+					if(message.vars.pid)	{
+						$o += 'product: '+message.vars.pid+' has been added to the product task list.'
+						app.ext.admin_prodEdit.u.addProductAsTask({'pid':message.vars.pid,'tab':'product','mode':'add'});
+						}
+					else	{$o += 'Page type set to product but no pid specified.'}
+					break;
+				
+				case 'category':
+					if(message.vars.navcat)	{
+						$o += 'category: '+message.vars.navcat;
+						if(message.vars.domain)	{$o.addClass('lookLikeLink').on('click',function(){
+							window.open(message.vars.domain+"/category/"+message.vars.navcat+"/");
+							})}
+						}
+					else	{$o += 'Page type set to category but no navcat specified.'}
+					break;
+				
+				case 'search':
+					if(message.vars.keywords)	{}
+					else	{$o += 'Page type set to search but no keywords specified.'}
+					break;
+				
+				case 'company':
+					if(message.vars.show)	{}
+					else	{$o += 'Page type set to company but show not specified.'}
+					break;
+				
+				case 'customer':
+					if(message.vars.show)	{}
+					else	{$o += 'Page type set to customer but show not specified.'}
+					break;
+				
+				default:
+					$o += 'unknown page type: '+message.vars.pageType+' (console contains more detail)';
+					app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(messages.vars);
+				}
+			}
+		else	{
+			$o += 'unspecified page type or no vars set in message. console will contain more info.';
+			app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(messages.vars);
+			}
+		$o += "</span><\/p>";
+		app.u.dump(" -> $o"); app.u.dump($o);
+		$history.append($o);
+		}]);
 	app.u.handleRQ(0); //will start loading resources and eventually init the app.
 	});
 
