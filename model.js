@@ -42,7 +42,7 @@ The rest is in the controller or extension. The model will execute callbacks.CAL
  -> d is the data object returned by the server. one of the few cases the raw response is returned.
 
 
-execute the zoovyModel function from within the controller. ex:  app.model = zoovyModel();
+execute the zModel function from within the controller. ex:  app.model = zModel();
  -> this will return an object into the app.model namespace. ex: app.model.dispatchThis()
 
 
@@ -78,7 +78,7 @@ app.globalAjax.overrideAttempts - keeps track of how many times a dispatch has a
 app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not currently used for much, but could allow for some auto-passive dispatches when idle.
 */
 
-function zoovyModel() {
+function zModel() {
 	var r = {
 	
 		

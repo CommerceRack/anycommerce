@@ -49,7 +49,7 @@ app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js', fu
 	}]);
 
 //required for init. don't change from 0.
-app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
+app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 

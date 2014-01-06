@@ -46,7 +46,7 @@ jQuery.extend(zController.prototype, {
 //		app = this;
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nested functions are preserved. If duplicates, 'this' will override P.
-		app.model = zoovyModel(); // will return model as object. so references are app.model.dispatchThis et all.
+		app.model = zModel(); // will return model as object. so references are app.model.dispatchThis et all.
 		app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
 
 		app.vars = app.vars || {};
