@@ -8,9 +8,9 @@
 #appPreView{width:280px;}
 
 /**** Header CSS****/
-#header {height:100px;}
-#logo {left: 5px;top: 5px;}
-#headerBar { top:35px; height:65px;}
+#header {height:75px;}
+#logo {left: 30px;top: 0px;}
+#headerBar { top:20px; height:55px;}
 .topNavRight {width:290px;}
 .productSearchForm{width:270px; padding:3px 10px;}
 .searchBar {width:215px;}
