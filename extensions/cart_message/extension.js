@@ -187,7 +187,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					if(cartID)	{
 						var $UI = $("<div \/>");
 						$UI.attr({'title':'CM: '+cartID,'id':'CM_'+cartID});
-						$UI.anycontent({'templateID':'adminCartMessageTemplate'});
+						$UI.anycontent({'templateID':'adminCartMessageTemplate'}).showLoading({'message':'Fetching cart detail'});
 						app.ext.cart_message.u.initCartMessenger(cartID,$("[data-app-role='cartMessenger']",$UI)); //starts the cart message polling. needs to be after the anycontent.
 						$UI.dialog({
 							'width' : '30%',
@@ -196,9 +196,10 @@ some defaults are present, but they can be overwritten by the app easily enough.
 								}
 							});
 						app.model.addCart2Session(cartID); //update app.vars.carts
+						app.u.handleButtons($UI);
+						$UI.anydelegate();
 						app.model.destroy('cartDetail|'+cartID);
 						app.calls.cartDetail.init(cartID,{'callback':'anycontent','translateOnly':true,'jqObj':$UI,'onComplete':function(rd){
-							$UI.anydelegate();
 							//if no CID is set, lock the edit buyer button.
 							if(!app.data[rd.datapointer].customer.cid)	{
 								$("[data-app-role='cartMessengerBuyerEditButton']",$UI).button('disable').attr('title','No customer record associated with this cart');

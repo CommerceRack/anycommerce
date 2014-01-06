@@ -3384,9 +3384,6 @@ $tmp.empty().remove();
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
-//			if(location == 'local')	{
-//				app.u.dump(" -> write ["+location+"] data for "+key); app.u.dump(key);
-//				}
 			var r = false;
 
 			if($.support[location+'Storage'])	{

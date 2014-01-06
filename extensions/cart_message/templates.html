@@ -3,11 +3,6 @@
 
 
 <div id='adminCartMessageTemplate' data-app-role='cartMessenger'>
-	<div class='buttonset alignRight smallButtons'>
-		<button class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button><!-- opens cart in order create/edit interface -->
-		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec'>Edit Customer</button><!-- opens customer in customer editor interface -->
-		<button>Show Page</button><!-- allows admin to send a product/category/results to buyer -->
-	</div>
 	<form action='#' onsubmit="return false;">
 		<section data-app-role='messageHistory' class='messageHistory'></section>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
@@ -15,7 +10,10 @@
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
-		<button data-app-click="cart_message|chatInitExec" class='applyButton'>Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+		<button class='applyButton' data-app-click="cart_message|chatInitExec">Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+		<button class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button><!-- opens cart in order create/edit interface -->
+		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec'>Edit Customer</button><!-- opens customer in customer editor interface -->
+<!-- 		<button>Show Page</button>allows admin to send a product/category/results to buyer -->
 		</section>
 	</form>
 </div>
