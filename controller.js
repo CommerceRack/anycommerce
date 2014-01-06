@@ -534,27 +534,6 @@ see jquery/api webdoc for required/optional param
 				}
 			},
 
-		buyerAddressAddUpdate  : {
-			init : function(cmdObj,_tag,Q)	{
-				var r = 0;
-				if(cmdObj && cmdObj.shortcut)	{
-					_tag = _tag || {};
-					_tag.datapointer = "buyerAddressAddUpdate|"+cmdObj.shortcut
-					r = 1;
-					this.dispatch(cmdObj,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'buyerAddressAddUpdate requires obj and obj.shortcut','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(cmdObj,_tag,Q)	{
-				cmdObj['_cmd'] = 'buyerAddressAddUpdate';
-				cmdObj._tag = _tag;
-				app.model.addDispatchToQ(cmdObj,Q || 'immutable');	
-				}
-			},//buyerAddressAddUpdate 
-
 		buyerAddressList : {
 			init : function(_tag,Q)	{
 				var r = 0;
@@ -734,24 +713,6 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //appBuyerLogout
 
-		buyerWalletList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "buyerWalletList";
-				if(app.model.fetchData(_tag.datapointer))	{
-					app.u.handleCallback(_tag);
-					}
-				else	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag": _tag},Q || 'mutable');
-				}
-			}, //buyerWalletList
 
 		canIUse : {
 			init : function(flag,Q)	{
