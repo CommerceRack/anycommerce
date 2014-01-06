@@ -811,40 +811,6 @@ else	{
 						}
 					}, //ebayShowTreeByChild
 
-/*			getUpdatedEBAYAttributesForm : function($form)	{
-
-				app.u.dump("BEGIN admin_syndication.u.updateSpecifics");
-
-				var
-					$chooser = $('#ebayCategoryChooser'),
-					$XSLContentArea = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form),
-					pid = $chooser.data('pid'),
-					categoryid = $chooser.data('categoryid');
-				app.u.dump(" -> categoryid: "+categoryid);
-				if($form && $XSLContentArea && categoryid)	{
-				
-					$chooser.showLoading({'message':'Updating item specifics'});
-					var dispatch = app.ext.admin_syndication.u.buildEBAYXSLCmd(categoryid,pid);
-					dispatch.form = $("[data-app-role='ebayCategoryChooserXSLContainer']",$form).serialize(); //sent as KvP cuz all the checkboxes have the same name. why wouldn't they? #@!%ing ebay.
-					dispatch._tag.callback = function(rd){
-						$chooser.hideLoading();
-						$form.show(); //form is hidden by default
-						if(app.model.responseHasErrors(rd)){
-							$form.anymessage({'message':rd})
-							}
-						else	{
-							$XSLContentArea.html(app.data[rd.datapointer].html);
-							app.u.handleAppEvents($chooser);
-							}
-						}
-
-					app.model.addDispatchToQ(dispatch,'mutable');
-					app.model.dispatchThis('mutable');
-					}
-				else	{
-					$('#APIForm').anymessage({'message':'In admin_syndication.u.getUpdatedEBAYAttributesForm, either $form ['+typeof $form+'] not passed or unable to determine categoryid from XSL content area ['+typeof $XSLContentArea+']','gMessage':true});
-					}
-				}, //getUpdatedEBAYAttributesForm */
 
 // !!! delete this once the templateEditor code is all refactored.
 			handleEBAYTemplateSelect : function(vars)	{
