@@ -15,7 +15,7 @@
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
 		<button class='applyButton' data-app-click="cart_message|chatInitExec">Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
 		<button class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button><!-- opens cart in order create/edit interface -->
-		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec'>Edit Customer</button><!-- opens customer in customer editor interface -->
+		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec' disabled="disabled" title='There is no customer record associated with this cart.'>Edit Customer</button><!-- opens customer in customer editor interface -->
 <!-- 		<button>Show Page</button>allows admin to send a product/category/results to buyer -->
 		</section>
 	</form>

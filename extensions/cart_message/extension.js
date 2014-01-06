@@ -47,6 +47,7 @@ var cart_message = function() {
 						}
 					
 					for(var i = (L-1); i >= 0; i -= 1)	{
+						app.u.dump(">>>>>>>>>>>> "+app.cmr[i][0]);
 						addCMResponse(app.cmr[i][0],app.cmr[i][1]);
 						delete app.cmr[i];
 						}
@@ -96,10 +97,12 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 								if(typeof app.ext.cart_message.cmResponse[messages[i].what] == 'function')	{
 									app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
 									}
-								else if(typeof app.ext.cart_message.cmResponse[messages[i][what.split('.')[0]]] == 'function')	{ //what.split will check for 'view' instead of view.product. allows for a default.
-									app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
+								else if(typeof app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]] == 'function')	{ //what.split will check for 'view' instead of view.product. allows for a default.
+									app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]](messages[i],_rtag.jqObj)
 									}
-								// ### TODO -> what to do if the message type is not defined/unrecognized?
+								else	{
+									// ### TODO -> what to do if the message type is not defined/unrecognized?
+									}
 								}
 							app.model.dpsSet('cartMessages',_rtag.jqObj.data('cartid'),messagesDPS);
 							app.model.dpsSet('cartMessages','lastMessageTS',app.u.epochNow()); //record when the last message came in. used at init.
@@ -153,9 +156,6 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					var $history = $("[data-app-role='messageHistory']",$context);
 					$history.append("<p class='chat_post'><span class='from'>"+message.FROM+"<\/span> "+message.message+"<\/p>");
 					$history.parent().scrollTop($history.height());
-					},
-				'view' : function(message,$context)	{
-					
 					}
 				},
 
@@ -213,8 +213,8 @@ some defaults are present, but they can be overwritten by the app easily enough.
 						app.model.destroy('cartDetail|'+cartID);
 						app.calls.cartDetail.init(cartID,{'callback':'anycontent','translateOnly':true,'jqObj':$UI,'onComplete':function(rd){
 							//if no CID is set, lock the edit buyer button.
-							if(!app.data[rd.datapointer].customer.cid)	{
-								$("[data-app-role='cartMessengerBuyerEditButton']",$UI).button('disable').attr('title','No customer record associated with this cart');
+							if(app.data[rd.datapointer].customer.cid)	{
+								$("[data-app-role='cartMessengerBuyerEditButton']",$UI).button('enable').attr('title','Edit customer record');
 								}
 							}},'mutable');
 						app.model.dispatchThis('mutable');

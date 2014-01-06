@@ -3066,9 +3066,10 @@ else	{
 				},
 			
 			cartMessagePageSend : function($ele,p)	{
-				var sotw = app.ext.myRIA.vars.sotw; //shortcut.
+				var vars = app.u.getWhitelistedObject(app.ext.myRIA.vars.sotw,['pageType','pid','show','navcat','keywords','templateID','uriParams']); //don't need everything in sotw.
 				var cartid = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
-				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+sotw.pageType,'vars':sotw,'_cartid':cartid},'passive');
+				vars.domain = (document.location.protocol == 'file:') ? app.vars.testURL : document.domain;
+				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid},'passive');
 				app.model.dispatchThis('passive');
 				},
 			
