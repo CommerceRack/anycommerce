@@ -983,8 +983,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 
 					if(app.u.buyerIsAuthenticated())	{
-						app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
-						app.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
+						app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable'); //will check localStorage.
+						app.model.addDispatchToQ({'_cmd':'buyerWalletList','_tag':	{'datapointer' : 'buyerWalletList','callback':'suppressErrors'}},'immutable'); //always obtain clean copy of wallets.
 						}
 
 					app.ext.orderCreate.vars[cartID] = app.ext.orderCreate.vars[cartID] || {'payment':{}};
@@ -1203,7 +1203,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									//don't send the entire item object. contains a lot of info the API will take care of.
 									var obj = app.ext.cco.u.buildCartItemAppendObj({'sku' : items[i].stid,'qty':items[i].qty,'price':items[i].price},cartID);
 									if(obj)	{
-										app.calls.cartItemAppend.init(obj,{},'immutable');
+										app.ext.coo.calls.cartItemAppend.init(obj,{},'immutable');
 										}
 									}
 //run an inventory check. However, do NOT auto-adjust. Merchants should be allowed to over-order if desired.
@@ -1320,7 +1320,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				else	{}
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-				app.calls.cartSet.init(obj);
+				app.ext.cco.calls.cartSet.init(obj);
 //destroys cart and updates big three panels (shipping, payment and summary)
 				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
 				app.model.dispatchThis("immutable");
@@ -1336,7 +1336,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					obj[$ele.attr('name').replace('bill/','ship/')] = $ele.val();
 					}
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-				app.calls.cartSet.init(obj); //update the cart
+				app.ext.cco.calls.cartSet.init(obj); //update the cart
 				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
 				app.model.dispatchThis('immutable');
 				}, //execAddressUpdate
@@ -1377,15 +1377,15 @@ note - the order object is available at app.data['order|'+P.orderID]
 								}
 							}
 //there was a callback on this, but no clear reason why it was necessary. removed for now (will test prior to deleting this code)
-//						app.calls.cartSet.init(cartUpdate,{'callback':function(){
+//						app.ext.cco.calls.cartSet.init(cartUpdate,{'callback':function(){
 //							app.ext.orderCreate.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 //							}}); //no need to populate address fields, shortcut handles that.
-						app.calls.cartSet.init(cartUpdate)
+						app.ext.cco.calls.cartSet.init(cartUpdate)
 						app.ext.orderCreate.u.handleCommonPanels($form);
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.calls.cartSet.init(cartUpdate,{},'passive');
+						app.ext.cco.calls.cartSet.init(cartUpdate,{},'passive');
 						app.model.dispatchThis('passive');
 						$ele.closest('fieldset').find("[data-app-role='addressEditButton']").data('validate-form',true).trigger('click');
 						}
@@ -1420,6 +1420,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.destroy('buyerWalletList');
 					app.model.destroy('cartDetail|'+$checkout.data('cartid'));
 
+					app.ext.cco.calls.cartSet.init({"bill/email":$email.val(),"_cartid":$checkout.data('cartid')}) //whether the login succeeds or not, set bill/email in the cart.
 					app.calls.appBuyerLogin.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
 //							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
 						$('body').hideLoading();
@@ -1443,7 +1444,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									});
 								}},'immutable');
 
-							app.calls.buyerWalletList.init({},'immutable');
+							app.model.addDispatchToQ({'_cmd':'buyerWalletList','_tag':	{'datapointer' : 'buyerWalletList','callback':''}},'immutable');
 							app.model.dispatchThis('immutable');
 							$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 							}
@@ -1520,7 +1521,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-				app.calls.cartSet.init(obj);
+				app.ext.cco.calls.cartSet.init(obj);
 				app.model.dispatchThis('immutable');
 				}, //execCartSet
 
@@ -1546,7 +1547,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				
 				obj[$ele.attr('name')] = $ele.val();
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-				app.calls.cartSet.init(obj); //update the cart w/ the country.
+				app.ext.cco.calls.cartSet.init(obj); //update the cart w/ the country.
 				app.ext.orderCreate.u.handleCommonPanels($form);
 				app.model.dispatchThis('immutable');
 				}, //execCountryUpdate
@@ -1685,7 +1686,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			tagAsBillToShip : function($ele,p)	{
 				var $form = $ele.closest('form');
-				app.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0,_cartid : $ele.closest("[data-app-role='checkout']").data('cartid')},{},'immutable'); //adds dispatches.
+				app.ext.cco.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0,_cartid : $ele.closest("[data-app-role='checkout']").data('cartid')},{},'immutable'); //adds dispatches.
 //when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
 // re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
 // originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
