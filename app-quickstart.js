@@ -1085,6 +1085,29 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 
 
 
+/*
+app messaging ui is a mechanism for buyers and merchants to communicate in real-time.
+it also allows the merchant to update the cart, load product or categories, or a variety of other things.
+the ui also helps the buyer show the merchant what they're looking at and, optionally, where they've been
+ -> while it's possible to automatically send a lot of info to the merchant, please keep in mind buyer privacy.
+*/
+			showBuyerCMUI : function()	{
+				var $ui = $('#cartMessenger').data('cartid',app.model.fetchCartID());
+				if($ui.hasClass('ui-dialog-content'))	{
+					//the help interface has been opened once already.
+					}
+				else	{
+					$ui.dialog({
+						'auto-open':'false'
+						});
+					app.u.handleButtons($ui);
+					app.u.handleCommonPlugins($ui);
+					$ui.anydelegate();
+					}
+				$ui.dialog('open');
+				return $ui;
+				},
+
 
 //context should be a container element that has 1 or more forms within it.
 //will look for inputs w/ qtyChanged class. Anything with that class is assumed to be an add to cart form and is treated as such.
