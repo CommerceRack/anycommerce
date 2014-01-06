@@ -154,6 +154,7 @@ body {
 }
 .ddMenuBtn {
     background: #D7D9DB;
+	border: 1px solid #939598;
     border-radius: 4px;
     color: #000000;
     font-size: 18px;
