@@ -47,7 +47,6 @@ var cart_message = function() {
 						}
 					
 					for(var i = (L-1); i >= 0; i -= 1)	{
-						app.u.dump(">>>>>>>>>>>> "+app.cmr[i][0]);
 						addCMResponse(app.cmr[i][0],app.cmr[i][1]);
 						delete app.cmr[i];
 						}
@@ -310,6 +309,23 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					$('#globalMessaging').anymessage({'message':'In cart_message.e.chatPostExec, unable to ascertain cartID.','gMessage':true});
 					}
 				},
+			
+			gotoProductShowChooser : function($ele,p)	{
+				var $buttons = $("<div \/>").data('cartid',$ele.closest("[data-app-role='cartMessenger']").data('cartid')); //the data(cartid) here is used on the events for the buttons appended to this element
+				$("<button \/>").text('Send to Buyer').attr('data-app-click','cart_message|gotoProductExec').button().appendTo($buttons);
+//				$("<button \/>").text('Add to Cart').attr('data-app-click','orderCreate|cartItemAddWithChooser').button().appendTo($buttons);
+
+				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
+				$buttons.anydelegate();
+				},
+			
+			gotoProductExec : function($ele,p)	{
+				var sku = $("input[name='sku']",'#chooserResultContainer').val();
+				//cart id on parent set by gotoProductShowChooser
+				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
+				app.model.dispatchThis('immutable');
+				},
+			
 			buyerEditExec : function($ele,p)	{
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				},

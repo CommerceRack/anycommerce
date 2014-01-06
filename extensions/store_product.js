@@ -737,7 +737,7 @@ NOTES
 						if(cartObj)	{
 							r = true;
 							
-							app.ext.coo.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
+							app.ext.cco.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						}
@@ -764,7 +764,7 @@ NOTES
 
 							var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this)); //handles error display.
 							if(cartObj)	{
-								app.ext.coo.calls.cartItemAppend.init(cartObj,_tag,'immutable');
+								app.ext.cco.calls.cartItemAppend.init(cartObj,_tag,'immutable');
 								}
 							});
 						app.model.dispatchThis('immutable');

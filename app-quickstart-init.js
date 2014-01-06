@@ -60,10 +60,24 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 	}
 
 
+//Cart Messaging Responses.
+
 app.cmr.push(['chat.join',function(message){
 	var $ui = app.ext.myRIA.a.showBuyerCMUI();
 	$("[data-app-role='messageInput']",$ui).show();
 	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+	}]);
+
+app.cmr.push(['goto',function(message,$context){
+	var $history = $("[data-app-role='messageHistory']",$context);
+	$P = $("<P>")
+		.addClass('chat_post')
+		.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
+		.on('click',function(){
+			showContent('',message.vars);
+			});
+	$history.append($P);
+	$history.parent().scrollTop($history.height());
 	}]);
 
 

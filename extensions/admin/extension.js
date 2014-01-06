@@ -4012,6 +4012,12 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				$('#resultsListItemCount').text(" ("+resultsSize+" remain)")
 				},
 
+
+			handleChooserResultsClick : function($t)	{
+				$('#chooserResultContainer').empty();
+				app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$t.data('pid'),'templateID':'productTemplateChooser'});
+				},
+
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
 			handleFinderSearch : function(findertype)	{
 				$('#finderSearchResults').empty().addClass('loadingBG');

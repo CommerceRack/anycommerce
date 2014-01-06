@@ -164,11 +164,11 @@ app.u.initMVC = function(attempts){
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
 	app.cmr.push(["view",function(message,$context){
-		app.u.dump(" -> executing cmr.view");
+//		app.u.dump(" -> executing cmr.view");
 		var $history = $("[data-app-role='messageHistory']",$context);
-		var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>";
+		var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>sent page view:<br \/>";
 		if(message.vars && message.vars.pageType)	{
-			app.u.dump(' -> pageType is set to: '+message.vars.pageType);
+//			app.u.dump(' -> pageType is set to: '+message.vars.pageType);
 			switch(message.vars.pageType)	{
 				case 'product':
 					if(message.vars.pid)	{
@@ -211,12 +211,12 @@ $(document).ready(function(){
 				}
 			}
 		else	{
-			$o += 'unspecified page type or no vars set in message. console will contain more info.';
+			$o += 'unspecified page type or no vars set in message. (console contains more detail)';
 			app.u.dump("Unspecified pageType in cart message.vars. vars follow:"); app.u.dump(message.vars);
 			}
 		$o += "</span><\/p>";
-		app.u.dump(" -> $o"); app.u.dump($o);
 		$history.append($o);
+		$history.parent().scrollTop($history.height());
 		}]);
 	app.u.handleRQ(0); //will start loading resources and eventually init the app.
 	});

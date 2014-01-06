@@ -165,11 +165,11 @@ calls should always return the number of dispatches needed. allows for cancellin
 				}
 			}, //cartPaymentQ
 			
-// REMOVE from controller when this extension deploys !!!
+
 		cartSet : {
 			init : function(obj,_tag,Q)	{
-				if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
-					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':cartID},'immutable');
+				if(obj._cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+obj._cartid))	{
+					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':obj._cartid},'immutable');
 					}
 				obj["_cmd"] = "cartSet";
 				obj._tag = _tag || {};
@@ -927,7 +927,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				if($container instanceof jQuery)	{
 					var sfo = this.buildCartItemAppendObj($container.serializeJSON(),$container.closest("[data-app-role='checkout']").data('cartid'));
 					if(sfo)	{
-						app.ext.coo.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
+						app.ext.cco.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
 						r = sfo;
 						}
 					else	{
