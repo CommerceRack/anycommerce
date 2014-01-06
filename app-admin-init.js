@@ -177,7 +177,9 @@ $(document).ready(function(){
 						}
 					else	{$o += 'Page type set to product but no pid specified.'}
 					break;
-				
+				case 'homepage':
+					$o += 'homepage';
+					break;
 				case 'category':
 					if(message.vars.navcat)	{
 						$o += 'category: '+message.vars.navcat;
@@ -205,12 +207,12 @@ $(document).ready(function(){
 				
 				default:
 					$o += 'unknown page type: '+message.vars.pageType+' (console contains more detail)';
-					app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(messages.vars);
+					app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(message.vars);
 				}
 			}
 		else	{
 			$o += 'unspecified page type or no vars set in message. console will contain more info.';
-			app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(messages.vars);
+			app.u.dump("Unrecognized pageType in cart messages var. vars follow:"); app.u.dump(message.vars);
 			}
 		$o += "</span><\/p>";
 		app.u.dump(" -> $o"); app.u.dump($o);
