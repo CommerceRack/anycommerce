@@ -1,6 +1,6 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
 app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
-
+app.cmr = app.cmr || []; //ensure array is defined. cmr = cart message response.
 
 
 app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
@@ -60,6 +60,13 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 	}
 
 
+app.cmr.push(['chat.join',function(message){
+	var $ui = app.ext.myRIA.a.showBuyerCMUI();
+	$("[data-app-role='messageInput']",$ui).show();
+	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+	}]);
+
+
 //gets executed once controller.js is loaded.
 //check dependencies and make sure all other .js files are done, then init controller.
 //function will get re-executed if not all the scripts in app.vars.scripts pass 1 are done loading.
@@ -105,7 +112,6 @@ app.u.initMVC = function(attempts){
 	}
 
 app.u.loadApp = function() {
-
 //instantiate controller. handles all logic and communication between model and view.
 //passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
 //tmp is a throw away variable. app is what should be used as is referenced within the mvc.

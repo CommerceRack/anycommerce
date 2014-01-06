@@ -35,6 +35,7 @@ var cart_message = function() {
 				onSuccess : function()	{
 					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 					app.cmr = app.cmr || [];
+//					app.u.dump(" -> app.cmr: "); app.u.dump(app.cmr);
 					var L = app.cmr.length;
 					
 					var addCMResponse = function(id,func){
@@ -136,6 +137,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 				'chat.exit' : function(message,$context)	{
 					$("[data-app-role='messageHistory']",$context).append("<p class='chat_exit'>"+message.FROM+" has left the chat.<\/p>");
 					},
+//in a storefront, chat.join will likely be overwritten. Most likely, you'll open a dialog w/ the cart messaging UI (or something like that).
 				'chat.join' : function(message,$context)	{
 					$("[data-app-role='messageInput']",$context).show();
 					$("[data-app-role='messageHistory']",$context).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
@@ -143,7 +145,6 @@ some defaults are present, but they can be overwritten by the app easily enough.
 				'chat.post' : function(message,$context)	{
 					$("[data-app-role='messageHistory']",$context).append("<p class='chat_post'><span class='from'>"+message.FROM+"<\/span> "+message.message+"<\/p>");
 					}
-
 				},
 
 
@@ -152,27 +153,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 			a : {
-/*
-app messaging ui is a mechanism for buyers and merchants to communicate in real-time.
-it also allows the merchant to update the cart, load product or categories, or a variety of other things.
-the ui also helps the buyer show the merchant what they're looking at and, optionally, where they've been
- -> while it's possible to automatically send a lot of info to the merchant, please keep in mind buyer privacy.
-*/
-				showBuyerCMUI : function()	{
-					var $ui = $('#cartMessenger').data('cartid',app.model.fetchCartID());
-					if($ui.hasClass('ui-dialog-content'))	{
-						//the help interface has been opened once already.
-						}
-					else	{
-						$ui.dialog({
-							'auto-open':'false'
-							});
-						app.u.handleButtons($ui);
-						app.u.handleCommonPlugins($ui);
-						$ui.anydelegate();
-						}
-					$ui.dialog('open');
-					},
+
 
 //used for admin.  Presents user w/ a text input for adding a CSR code.  Will return the cart id.
 				showCSR2CartID : function()	{
