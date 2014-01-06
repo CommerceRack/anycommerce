@@ -809,7 +809,7 @@ else	{
 //designed for use with the vars object in this extension, not the newer adminEmailList _cmd
 //this is shared, so do NOT add an app-click to the li here, do it with JS. -> used by bulk edit AND in order edit.
 		emailMessagesListItems : function($tag,data)	{
-			for(key in data.value)	{
+			for(var key in data.value)	{
 				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"' >"+data.value[key]+" ("+key+")</a></li>");
 				}
 			},
