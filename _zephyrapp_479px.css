@@ -30,6 +30,7 @@
 
 /**** Content Area CSS****/
 #appView{width:290px;}
+#contentArea{width:270px; padding:5px;}
 #contentArea.sideBarRightShow{width:270px; padding:5px;}
 #contentArea.sideBarRightHide{width:270px; padding:5px;}
 

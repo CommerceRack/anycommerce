@@ -123,6 +123,7 @@ body {
 .searchBar {
 	width: 302px;
 	height:13px;
+	font-size:12px;
 	border:1px solid #000066;
 	border-radius:0px;
 }
@@ -807,3 +808,28 @@ a:hover {
 }
 /***** ProductTemplate CSS End *****/
 
+
+/***** SearchTemplate CSS Start *****/
+.searchList {width:210px; margin:0 auto;}
+.searchList > li{
+	width:190px;
+	margin: 0px 10px 15px;
+	height:170px;
+}
+.moreDetails {	
+	background: -moz-linear-gradient(center top , #6F6F6F 0%, #464646 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    border-radius: 3px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin: 3px auto;
+    padding: 2px 0;
+    text-align: center;
+    width: 85px;
+	font-weight:normal;
+	font-size: 11px;
+}
+.moreDetails:hover{
+	background:-moz-linear-gradient(center top , #F4720C 0%, #FF3800 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+/***** SearchTemplate CSS End *****/
