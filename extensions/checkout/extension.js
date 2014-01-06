@@ -1203,7 +1203,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									//don't send the entire item object. contains a lot of info the API will take care of.
 									var obj = app.ext.cco.u.buildCartItemAppendObj({'sku' : items[i].stid,'qty':items[i].qty,'price':items[i].price},cartID);
 									if(obj)	{
-										app.ext.coo.calls.cartItemAppend.init(obj,{},'immutable');
+										app.ext.cco.calls.cartItemAppend.init(obj,{},'immutable');
 										}
 									}
 //run an inventory check. However, do NOT auto-adjust. Merchants should be allowed to over-order if desired.
@@ -1250,9 +1250,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				p.preventDefault();
 //$button is passed into the showFinder function. This is the button that appears IN the chooser/finder for adding to the cart/order.	
 				var $chkoutForm	= $ele.closest('form'), $checkout = $ele.closest("[data-app-role='checkout']")
-				var $button = $("<button>").text("Add to Order").button().on('click',function(event){
+				var $button = $("<button>").text("Add to Cart").button().on('click',function(event){
 					event.preventDefault();
-					app.u.dump("got to here");
 					$(this).button('disable'); //prevent doubleclick.
 					var $form = $('form','#chooserResultContainer');
 					if($form && $form.length)	{
@@ -1260,7 +1259,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						var sfo = $form.serializeJSON(); //Serialized Form Object.
 						var pid = sfo.sku;  //shortcut
 						sfo.product_id = pid; //
-						app.u.dump(" -> sfo: "); app.u.dump(sfo);
+//						app.u.dump(" -> sfo: "); app.u.dump(sfo);
 						if(app.ext.store_product.validate.addToCart(pid,$form))	{
 							app.u.dump(" -> passed validation");
 							app.ext.store_product.u.handleAddToCart($form);
@@ -1294,7 +1293,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$(this).button('enable');
 						}
 					});
-				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button});
 				},
 
 //ele is likely a div or section. the element around all the inputs.

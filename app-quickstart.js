@@ -1120,7 +1120,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 						$inputs.each(function(){
 							var obj = app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
 							if(obj)	{
-								app.ext.coo.calls.cartItemAppend.init(obj,{});
+								app.ext.cco.calls.cartItemAppend.init(obj,{});
 								}
 							});
 						app.calls.refreshCart.init({},'immutable');
@@ -3135,7 +3135,7 @@ else	{
 				p.preventDefault();
 				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
 				if(cartObj)	{
-					app.ext.coo.calls.cartItemAppend.init(cartObj,{},'immutable');
+					app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');
 					app.calls.refreshCart.init({'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});

@@ -57,7 +57,7 @@ PRODUCT FINDER/CHOOSER
 
 
 
-	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="$('#chooserResultContainer').empty(); app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$(this).data('pid'),'templateID':'productTemplateChooser'});">
+	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="app.ext.admin.u.handleChooserResultsClick($(this));">
 	<img class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
