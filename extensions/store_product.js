@@ -160,7 +160,9 @@ addToCart : function (pid,$form){
 	if(pid && $form instanceof jQuery)	{
 		app.u.dump(" -> have a pid and a valid $form.");
 		//copied locally for quick reference.
-		var sogJSON = app.data['appProductGet|'+pid]['@variations'], formJSON = $form.serializeJSON();
+		var
+			sogJSON = app.u.thisNestedExists("app.data.appProductGet|"+pid+".@variations") ? app.data['appProductGet|'+pid]['@variations'] : {},
+			formJSON = $form.serializeJSON();
 
 	//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 	
@@ -673,15 +675,16 @@ NOTES
 					}
 				}, //showProductDataIn
 
+//SANITY -> if multiple carts are in use, make sure that _cartid is part of $form as a hidden input.
 			buildCartItemAppendObj : function($form)	{
 				var obj = false; //what is returned. either the obj or false.
-				if($form && $form.is('form'))	{
+				if($form instanceof jQuery)	{
 					var $qtyInput = $("input[name='qty']",$form),
 					sku = $("input[name='sku']",$form).val();
 
 					if(sku && $qtyInput.val() >= 1)	{
 						obj = $form.serializeJSON();
-						obj._cartid = app.model.fetchCartID();
+
 						app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
 //here for the admin side of things. Will have no impact on retail as price can't be set.
 //should always occur, validating or not.
@@ -721,7 +724,7 @@ NOTES
 				else	{
 // ** 201318 returning false will prevent the addItemToCart from dispatching calls
 					obj = false;
-					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form was not a valid jquery instance.','gMessage':true});
 					}
 				return obj;
 				}, //buildCartItemAppendObj
@@ -730,7 +733,8 @@ NOTES
 			handleAddToCart : function($form,_tag)	{
 				var r = false; //what is returned. True if a dispatch occurs.
 				app.u.dump("BEGIN store_product.u.handleAddToCart");
-				if($form && $form.length && $form.is('form'))	{
+// SANITY -> don't 'require' $form to be a form. It could be a fieldset or some other container as part of a bigger form (such as order create).
+				if($form instanceof jQuery)	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
 //						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
@@ -746,7 +750,7 @@ NOTES
 						} //do nothing, the validation handles displaying the errors.
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In store_product.u.handleAddToCart, $form ["+typeof $form+"] not set, has no length ["+$form.length+"] or is not a form ["+$form.is('form')+"].",'gMessage':true});
+					$('#globalMessaging').anymessage({'message':"In store_product.u.handleAddToCart, $form is not an instanceof jQuery.",'gMessage':true});
 					}
 				return r;
 				}, //handleAddToCart

@@ -54,7 +54,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				if(obj._cartid)	{
-				app.u.dump(" -> appPaymentMethods cartID: "+obj._cartid);
+//				app.u.dump(" -> appPaymentMethods cartID: "+obj._cartid);
 					this.dispatch(obj,_tag,Q); //obj could contain country (as countrycode) and order total.
 					r = 1;
 					}
@@ -528,19 +528,22 @@ left them be to provide guidance later.
 				},
 
 //will get the items from a cart and return them as links. used for social marketing.
-			cartContentsAsLinks : function(datapointer)	{
+			cartContentsAsLinks : function(cartid)	{
 //				app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
-				var L = app.model.countProperties(app.data[datapointer]['@ITEMS']);
-//				app.u.dump(' -> # items in cart: '+L);
-				for(var i = 0; i < L; i += 1)	{
-//skip coupons.
-					if(app.data[datapointer]['@ITEMS'][i].sku[0] != '%')	{
-						r += "http://"+app.vars.sdomain+"/product/"+app.data[datapointer]['@ITEMS'][i].sku+"/\n";
+				if(cartid && app.u.thisNestedExists("app.data.cartDetail|"+cartid+".@items"))	{
+					var items = app.data[datapointer]['@ITEMS'], L = items.length;
+					for(var i = 0; i < L; i += 1)	{
+						//if the first character of a sku is a %, then it's a coupon, not a product.
+						if(items[i].sku.charAt(0) != '%')	{
+							r += "http://"+app.vars.sdomain+"/product/"+items[i].sku+"/\n";
+							}
 						}
 					}
-//				app.u.dump('links = '+r);
+				else	{
+					$('#globalMessaging').anymessage({'message':'In cco.u.cartContentsAsLinks, either cartid ['+cartid+'] not passed or the cart detail is not in memory.','gMessage':true});
+					}
 				return r;
 				}, //cartContentsAsLinks
 

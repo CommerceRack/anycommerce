@@ -226,7 +226,7 @@ var $tbody = $("<tbody \/>"); //used to store all the rows so the dom only gets 
 
 
 if(L)	{
-	app.u.dump(" -> ordersData.length (L): "+L);
+//	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
 		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerDetail call.
@@ -662,7 +662,7 @@ else	{
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
 			//
-			app.u.dump("BEGIN orders.a.showOrderList");
+//			app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
 				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
 				if($mainCol.data('activeRequestUUID'))	{
@@ -1948,15 +1948,16 @@ $('.editable',$container).each(function(){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else if(app.model.responseIsMissing(rd)){
-							//this point would be reached if the cart had expired. It's a 'success' in that the API call worked, but the a special case in the handling. how it's handled would be app-specific.
+							//this point would be reached if the cart had expired. It's a 'success' in that the API call worked, but a special case in the handling. how it's handled would be app-specific.
 							$li.hide();
 							app.model.removeCartFromSession(cartID);
 							}
 						else	{
 							$('.wait',$li).hide();
-							if(app.data[rd.datapointer].bill)	{
-								$('a',$li).text(app.data[rd.datapointer].bill['firstname']+" "+app.data[rd.datapointer].bill['lastname']);
+							if(app.u.thisNestedExists("app.data."+rd.datapointer+".bill") && (app.data[rd.datapointer].bill['firstname'] || app.data[rd.datapointer].bill['lastname']))	{
+								$('a',$li).text((app.data[rd.datapointer].bill['firstname']+" " || "")+(app.data[rd.datapointer].bill['lastname'] || ""));
 								}
+							else	{} //neither first or last name set in cart. show cart id.
 							}
 						}},'mutable');
 					}
