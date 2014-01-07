@@ -22,7 +22,7 @@
 .infoFooter {min-height:60px; padding-top:10px;}
 
 /**** Homepage CSS****/
-.randomList {height:2030px;}
+.randomList {height:2040px;}
 #sideBarRight {height:0px; overflow:hidden;}
 
 /**** Homepage CSS****/
@@ -37,8 +37,9 @@
 
 /**** ProdList CSS****/
 .productList {width:210px;}
-.productList > li {height: 240px; width:190px; margin: 0 10px 15px;}
-.prodThumb {display:block; margin:0 auto;}
+.productList > li {height: 190px; width:190px; margin: 0 10px 15px;}
+.prodThumb {margin:0 auto;}
+.prodListTagsContainer {right:0px; top:73px;}
 .productList .prodViewerAddToCartForm {left:27%;}
 
 /**** Product Page CSS****/
