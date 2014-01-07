@@ -174,23 +174,31 @@ var admin_user = function() {
 						'_cmd':'bossUserDetail',
 						'login':luser,
 						'_tag':	{
+							'callback' : 'anycontent',
 							'datapointer' : 'bossUserDetail|'+userID,
-							'callback': function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
+							'onComplete': function(rd){
+								//now handle role checkboxes.
+								var userData = app.data[rd.datapointer];
+								var L = userData['@roles'].length;
+							//loop backwards so that each row can be moved to the top but the original order will be preserved.
+								for(var i = (L-1); i >= 0; i -= 1)	{
+									$("[name='"+userData['@roles'][i]+"']",$panel).prop('checked','checked');
+									$("[name='"+userData['@roles'][i]+"']",$panel).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
 									}
-								else	{
-									//run through standard callback.
-									app.callbacks.anycontent.onSuccess(rd);
-									//now handle role checkboxes.
-									var userData = app.data[rd.datapointer];
-									var L = userData['@roles'].length;
-								//loop backwards so that each row can be moved to the top but the original order will be preserved.
-									for(var i = (L-1); i >= 0; i -= 1)	{
-										$("[name='"+userData['@roles'][i]+"']",$panel).attr('checked','checked');
-										$("[name='"+userData['@roles'][i]+"']",$panel).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
+//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
+								$("<button \/>").attr({'data-app-click':'admin|submitForm','data-app-role':'saveButton'}).append("Save <span class='numChanges'></span> Changes").button({'disabled':'disabled'}).appendTo($('form',$panel));
+			
+								$("[data-app-role='roleListTbody']",$panel).sortable({
+									stop : function(event,ui)	{
+										$(":checkbox",ui.item).addClass('edited');
+										app.u.dump(" -> ui.item.closest('.eventDelegation').length: "+ui.item.closest('.eventDelegation').length);
+										ui.item.closest('.eventDelegation').anydelegate('updateChangeCounts');
 										}
-									}
+									});
+			
+								$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
+								$("[name='password']",$panel).prop('required','').removeProp('required');
+								$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
 								},
 							'translateOnly' : true,
 							'jqObj' : $panel,
@@ -198,22 +206,6 @@ var admin_user = function() {
 							}
 						},'mutable');
 					app.model.dispatchThis('mutable');
-
-
-//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
-					$("<button \/>").attr({'data-app-click':'admin|submitForm','data-app-role':'saveButton'}).html("Save <span class='numChanges'></span> Changes").button({'disabled':true}).appendTo($('form',$panel));
-
-					$("[data-app-role='roleListTbody']",$panel).sortable({
-						stop : function(event,ui)	{
-							$(":checkbox",ui.item).addClass('edited');
-							app.u.dump(" -> ui.item.closest('.eventDelegation').length: "+ui.item.closest('.eventDelegation').length);
-							ui.item.closest('.eventDelegation').anydelegate('updateChangeCounts');
-							}
-						});
-
-					$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
-					$("[name='password']",$panel).prop('required','').removeProp('required');
-					$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
 					}
 				else	{
 					//missing some required params. throw error.
