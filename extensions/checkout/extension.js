@@ -212,35 +212,39 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
-				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData});
-//				app.u.handleAppEvents($checkout);
+				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData}); //show invoice
 
-				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID));
-				
-				$('.ocmTwitterComment').click(function(){
-					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
-					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
-					});
+//time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart id, if necessary (admin doesn't auto-create a new one).
 
-//the fb code only works if an appID is set, so don't show banner if not present.				
-				if(zGlobals.thirdParty.facebook.appId && typeof FB == 'object')	{
-					$('.ocmFacebookComment').click(function(){
-						app.thirdParty.fb.postToWall(cartContentsAsLinks);
-						_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
-						});
-					}
-				else	{$('.ocmFacebookComment').hide()}
+				app.model.removeCartFromSession(oldCartID); //keep this remove high in code so that if anything else goes wrong, this still gets done.
 
 
-//time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
-				app.model.removeCartFromSession(oldCartID);
 //if a cart messenger is open, log the cart update.
 				if(app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+oldCartID))	{
 					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':cartid},'immutable');
 					}
+
 				
-				if(app.vars.thisSessionIsAdmin)	{} //no need to get a new cart id for an admin session.
+				if(app.vars.thisSessionIsAdmin)	{} //no need to get a new cart id for an admin session or handle any third party display code.
 				else	{
+
+					var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks(oldCartID));
+	
+					if(zGlobals)	{
+						$('.ocmTwitterComment').click(function(){
+							window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
+							_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
+							});
+	//the fb code only works if an appID is set, so don't show banner if not present.				
+						if(app.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
+							$('.ocmFacebookComment').click(function(){
+								app.thirdParty.fb.postToWall(cartContentsAsLinks);
+								_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+								});
+							}
+						else	{$('.ocmFacebookComment').hide()}
+						}
+
 //cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
 //			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
@@ -254,14 +258,16 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 								app.model.dispatchThis('immutable');
 								}
 							}
-						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
+						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid.
+
+					if(typeof window._gaq)	{
+						_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
+						_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+						}
+
 					}
 				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
-				if(_gaq)	{
-					_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-					_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
-					}
 
 				if(app.ext.orderCreate.checkoutCompletes)	{
 					var L = app.ext.orderCreate.checkoutCompletes.length;
@@ -298,8 +304,6 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 							s.parentNode.insertBefore(gts, s);
 							})();
 						}
-				
-				
 				
 					}
 				else	{
@@ -406,7 +410,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
 					}
-//				app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
+					}
 				return valid;
 				}, //chkoutPreflightFieldset
 
@@ -427,7 +433,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
 					}
-//				app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
+					}
 				return valid;
 				}, //validate.chkoutAccountInfoFieldset
 				
@@ -448,8 +456,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
 					}
-
-//				app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
+					}
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
 				
@@ -475,13 +484,15 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					valid = 0;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
 					}
-//				app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
+					}
 				return valid;
 				}, //chkoutPayOptionsFieldset
 				
 			chkoutAddressBill: function($fieldset,formObj)	{
 				var valid = 0;
-
+				var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -490,6 +501,13 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
 					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
+						if(formObj['bill/shortcut'])	{valid = 1}
+						else	{
+							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
+							}
+						}
+//in an admin session w/ an existing user, make sure the address has been selected.
+					else if(app.vars.thisSessionIsAdmin && app.u.thisNestedExists("app.data.cartDetail|"+cartID+".customer.cid") && app.data['cartDetail|'+cartID].customer.cid > 0) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -528,8 +546,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					valid = 0;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
 					}
-
-//				app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
+					}
 				return valid;
 				}, //chkoutBillAddressFieldset
 				
@@ -575,8 +594,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					valid = 0;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressShip, $form or formObj not passed.','gMessage':true});
 					}
-
-				app.u.dump(" -> cs2o.validate.chkoutAddressShip: "+valid);
+				if(!valid)	{
+					app.u.dump(" -> cs2o.validate.chkoutAddressShip: "+valid);
+					}
 				return valid;
 				}, //chkoutBillAddressFieldset				
 
@@ -967,7 +987,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //don't execute this UNTIL you have a valid cart id.
 			startCheckout : function($chkContainer,cartID)	{
-				app.u.dump("BEGIN orderCreate.a.startCheckout");
+//				app.u.dump("BEGIN orderCreate.a.startCheckout");
 //				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length && cartID)	{
@@ -1006,7 +1026,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data[rd.datapointer]['@ITEMS'].length || app.vars.thisSessionIsAdmin)	{
-								app.u.dump(" -> cart has items or this is an admin session.");
+//								app.u.dump(" -> cart has items or this is an admin session.");
 								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout(cartID));
 				
 								if($checkoutContents.attr('id'))	{}
@@ -1257,6 +1277,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $('form','#chooserResultContainer');
 					if($form && $form.length)	{
 						app.u.dump(" -> found form");
+						$form.append("<input type='hidden' name='_cartid' value='"+$checkout.data('cartid')+"' \/>");
 						var sfo = $form.serializeJSON(); //Serialized Form Object.
 						var pid = sfo.sku;  //shortcut
 						sfo.product_id = pid; //
