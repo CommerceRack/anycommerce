@@ -1105,10 +1105,15 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 
 //always use this to remove a cart from a session. That way all the storage containers are empty
 		removeCartFromSession : function(cartID)	{
-			var carts = app.vars.carts || this.dpsGet('app','carts') || [];
-			carts.splice( $.inArray(cartID, carts), 1 );
-			app.model.destroy('cartDetail|'+cartID);
-			this.dpsSet('app','carts',carts); //update localStorage.
+			if(cartID)	{
+				var carts = app.vars.carts || this.dpsGet('app','carts') || [];
+				carts.splice( $.inArray(cartID, carts), 1 );
+				app.model.destroy('cartDetail|'+cartID);
+				this.dpsSet('app','carts',carts); //update localStorage.
+				}
+			else	{
+				$('#globalMessaging').anymessage({'message':'In model.removeCartFromSession, no cartid passed','gMessage':true});
+				}
 			},
 
 //gets the cart id.  carts are stored as an array.  the latest cart is always put on top of the array, which is what this returns.

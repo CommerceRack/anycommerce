@@ -372,10 +372,12 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<span class='applyButton' data-app-click="orderCreate|execCouponAdd" data-button-id='execCouponAdd' >add</span>
 	</div>
 
-	<button class='applyButton' data-app-click='orderCreate|cartOrderSave'>Save Changes</button>
-	<button class='applyButton ui-state-highlight' data-app-click="orderCreate|execCartOrderCreate">
-		Create Order
-	</button>
+
+	<div class='buttonset alignRight'>
+	<button class='floatLeft applyButton' data-app-click='orderCreate|adminCartRemoveFromSession' title="This will remove the cart from your session. It will NOT delete the cart.">Remove Cart</button>
+	<button class='applyButton' data-app-click='orderCreate|cartOrderSave' title="Save changes without creating an order. This will NOT save credit card numbers.">Save Changes</button>
+	<button class='applyButton ui-state-highlight' data-app-click="orderCreate|execCartOrderCreate">Create Order</button>
+	</div>
 
 <div data-app-role='referenceNumber' class='displayNone'>
 	<label>Purchase Order/Reference #: </label>
