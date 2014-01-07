@@ -81,7 +81,7 @@
 		<h2 class="smallPadding">Domain Configuration</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;" data-tablefilter-role='table'>
+	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-bind="var: domains(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
 	<thead>
 	<tr>
 		<th>Domain</th>
@@ -98,12 +98,12 @@
 	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
 		<button class='applyButton floatRight' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
 		<span class='marginRight floatRight'>
-		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter"  />
 		</span>
 		<h2 class="smallPadding">Projects</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth gridTable marginTop' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" data-tablefilter-role='table'>
+	<table class='fullWidth gridTable marginTop' data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
 	<thead>
 	<tr>
 		<th>Title</th>

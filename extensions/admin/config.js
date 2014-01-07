@@ -1393,6 +1393,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 
 			taxTableUpdateExec : function($ele,p)	{
+				p.preventDefault();
 //updating the tax table is a destructive update, meaning the entire table is emptied and then rebuilt.
 				var $container = $ele.closest("[data-app-role='taxConfigContainer']"), macros = new Array();
 				macros.push("TAXRULES/EMPTY");
@@ -1410,7 +1411,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					});
 
-				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'jqObj':$container},'immutable');
+				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'restoreInputsFromTrackingState':true,'jqObj':$container},'immutable');
 				app.model.dispatchThis('immutable');
 
 				},
