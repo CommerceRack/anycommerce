@@ -334,8 +334,8 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<input type="hidden" name="override" value="1" />
 	
 	<div class='displayNone cartItemAddDirectShow' data-add2cart-role='container'>
-		<label><span>Qty:</span><input type="text" name="qty" size="3" value="1"  /></label>
-		<label><span>Product id:</span><input type='text' name='sku' size='10' /></label>
+		<label><span>Qty:</span><input type="number" step='1' min='0' name="qty" size="3" value="1"  /></label>
+		<label><span>Product id:</span><input type='text' name='sku' size='10' data-input-keyup='data-input-format' data-input-format='pid' /></label>
 		<label><span>Price: </span><input type='number' class='price' size='5' name='price' step='0.01' min='0' /></label>
 		<span class='applyButton' data-app-click="orderCreate|cartItemAddFromForm">Add</span>
 	</div>

@@ -258,9 +258,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
-
-				_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-				_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+				if(_gaq)	{
+					_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
+					_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+					}
 
 				if(app.ext.orderCreate.checkoutCompletes)	{
 					var L = app.ext.orderCreate.checkoutCompletes.length;
@@ -319,8 +320,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 			onError : function(rd)	{
 				$('body').hideLoading();
 				$('#globalMessaging').anymessage({'message':rd});
-
-				_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
+				if(_gaq)	{
+					_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
+					}
 
 				}
 			} //cart2OrderIsComplete
@@ -1224,7 +1226,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			cartItemAddFromForm : function($ele,p)	{
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
-				app.ext.store_product.u.handleAddToCart($ele.closest('form'));
+				app.ext.store_product.u.handleAddToCart($chkoutForm);
 				app.model.destroy('cartDetail|'+$checkout.data('cartid'));
 				app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
 				app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
@@ -1234,12 +1236,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$ele.closest('fieldset').anymessage({'message':rd});
 							}
 						else	{
-							app.u.dump(" -> GOT TO HERE!");
-							app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+							app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+							app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 							}
 						}
 					},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
@@ -1573,7 +1574,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
 							app.model.dispatchThis('passive');
 							}
-						_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added']);
+						if(_gaq)	{
+							_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added']);
+							}
 						}
 					}});
 				
@@ -1600,7 +1603,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Giftcard added','_cartid':cartid},'passive');
 							app.model.dispatchThis('passive');
 							}
-						_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added']);
+						if(_gaq)	{
+							_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added']);
+							}
 						}
 					}});
 				app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
