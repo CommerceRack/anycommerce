@@ -5327,18 +5327,19 @@ not in use
 				var $table = $ele.closest("[data-tablefilter-role='container']").find("[data-tablefilter-role='table']");
 				if($('td.isSearchable',$table).length)	{
 					if($ele.val().length >= 2)	{
-			//only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
-						$('tbody tr:visible',$table).hide().data('hidden4Search',true);
+//only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
+//the 'not' is to target only the first level of table contents, no nested data (used in domains, for example).
+						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector')+":visible" : 'tbody tr:visible'),$table).not('tbody tbody',$table).hide().data('hidden4Search',true);
 						$('td.isSearchable',$table).each(function(){
 							if($(this).text().toLowerCase().indexOf($ele.val().toLowerCase()) >= 0)	{
-								$(this).closest('tr').show();
+								$(this).closest(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector') : 'tr')).show();
 								$(this).addClass('queryMatch');
 								}
 							})
 						}
 					else	{
 					//no query or short query. unhide any rows (query may have been removed).
-						$('tbody tr',$table).each(function(){
+						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector') : 'tr'),$table).each(function(){
 							if($(this).data('hidden4Search'))	{$(this).show();}
 							});
 						$('.queryMatch',$table).removeClass('queryMatch');

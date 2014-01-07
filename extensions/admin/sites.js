@@ -458,7 +458,7 @@ used, but not pre-loaded.
 				app.u.dump(" -> wasVisible: "+wasVisible);
 				if(wasVisible)	{}//was open and has already been closed
 				else	{
-					$detail.slideDown('slow');
+					$detail.show();
 					var domainname = $ele.closest("[data-domainname]").data('domainname');
 					if(domainname)	{
 						$detail.anycontent({'templateID':'domainUpdateTemplate','showLoadingMessage':'Fetching domain details'});
