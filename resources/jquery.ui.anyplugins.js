@@ -149,17 +149,21 @@ additionally, will apply some conditional form logic.
 
 		_formEventActions : {
 //used w/ keyup to modify the value of the input. ex: all uppercase. input-format accepts a comma separated list of values.
+//$CT = Current Target.
 			"input-format" : function($CT)	{
 				if($CT.data('input-format').indexOf('uppercase') > -1)	{
 					$CT.val($CT.val().toUpperCase());
 					}
 				
 				if($CT.data('input-format').indexOf('alphanumeric') > -1)	{
-					$CT.val($CT.val().replace(/\W/, '','g'));
+					$CT.val($CT.val().toString().replace(/\W+/g,""));
 					}
-					
-				if($CT.data('input-format').indexOf('numeric') > -1)	{
-					$CT.val($CT.val().replace(/^\d+$/, '','g'));
+//an input can not be both alphanumeric AND numeric.
+				else if($CT.data('input-format').indexOf('numeric') > -1)	{
+					$CT.val($CT.val().replace(/[^0-9]+/g, ''));
+					}							
+				else if($CT.data('input-format').indexOf('decimal') > -1)	{
+					$CT.val($CT.val().replace(/[^0-9\.]+/g, ''));
 					}							
 				
 				if($CT.data('input-format').indexOf('pid') > -1)	{
