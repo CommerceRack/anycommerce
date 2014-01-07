@@ -2218,7 +2218,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 								else if(mode == 'tabClick')	{
 //either tab clicked from a page within that tab or that tab was opened and has no content. Load the content.
 									if(opts.tab == app.ext.admin.vars.tab || $target.children().length === 0)	{
-										app.ext.admin.u.showTabLandingPage(path,$target,opts); //pass in as #!tab so that loadNative doesn't have to check for both.
+										if(app.ext.admin.u.showTabLandingPage(path,$target,opts)){} //pass in as #!tab so that loadNative doesn't have to check for both.
+										else	{
+											$('#globalMessaging').anymessage({"message":"In admin.u.navigateTo, unrecognized tabClick path ["+path+"]","gMessage":true});
+											}
 										}
 //tab click show existing content
 									else	{
@@ -3222,6 +3225,9 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($target);
 					}
+				else if(path == '#!cartManager')	{
+					app.ext.cart_message.a.showCartManager($target);
+					}
 				else if(path == '#!notifications')	{
 					app.ext.admin_config.a.showNotifications($target);
 					}
@@ -3448,7 +3454,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					$target.anycontent({'templateID':'pageUtilitiesTemplate','showLoading':false});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.u.showTabLandingPage, unrecognized tab ["+tab+"]","gMessage":true});
+					//don't display an error. the boolean response is used in navigateTo
 					r = false;
 					}
 				return r;
