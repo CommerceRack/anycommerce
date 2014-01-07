@@ -1175,7 +1175,7 @@ this will likely become more flexible in the future. ###
 				</div>
 				<div class="inventoryContainer" data-bind="useParentData:true; format:inventoryAvailQty; extension:store_zephyrapp;"></div>
 				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
-				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone displayNone'></fieldset>
 				<div data-bind="var: product(zoovy:grp_children); format:hideIfSet;">
 					<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton greenAddToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 				</div>
