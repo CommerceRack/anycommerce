@@ -47,10 +47,11 @@
 .prodPageName {padding:2px 6px 10px; background:none;}
 .prodPageName h1 {min-height:40px; font-size:17px; color:#194a75;}
 .imageContainer {width:270px;}
-.prodBigImage{margin:0 auto; display:block;}
-.imgThumbContainer img { border: 2px solid #CCCCCC; float: left; margin: 2px 1px 1px 2px;}
+.prodPageMainImage {float: left;}
+.prodBigImage{margin:0 auto; display:block; border: 1px solid #CCCCCC;}
+.additionalImageSection {float: right;}
+.imgThumbContainer img { border: 1px solid #CCCCCC; margin: 0px 0px 5px 2px;}
 .prodSummaryContainer {padding:0px; width:270px; text-align:left;}
-.priceContainer {margin:12px 0px 0px;}
 .tabbedProductContentTD {width:270px;}
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}
 .similarItemsSectionTD {float:left; width:260px; padding:3px;}
