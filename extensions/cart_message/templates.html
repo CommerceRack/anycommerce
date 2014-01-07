@@ -1,4 +1,45 @@
 
+<div id='adminCartManagementTemplate' class='ui-widget' data-tablefilter-role='container'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<span class='floatRight smallPadding'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+		<button data-app-click="cart_message|adminCartAddToSession" class='applyButton marginLeft' data-text='true' data-icon-primary='ui-icon-plus'>Add Cart</button>
+		</span>
+		<h2>Cart Management</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth gridTable applyAnytable' data-tablefilter-role='table'>
+	<thead>
+	<tr>
+		<th data-anytable-nosort='true'></th>
+		<th>Cart ID</th>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th># Items</th>
+		<th>Active Polling <span  class='toolTip' title="If this is on, the admin app is actively checking for updates on this cart. If you are not interacting with the cart, you should disable this to improve performance.">?</span></th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind='var:carts(carts); format:processList; loadsTemplate:adminCartManagementRowTemplate;' data-app-role='cartManagementCartsTbody'></tbody>
+	</table>
+	</div>
+</div>
+
+
+<table>
+<tr id='adminCartManagementRowTemplate'>
+	<td><span class='wait'></span></td>
+	<td class='isSearchable' data-bind="var: cart(value); format:text;"></td><!-- the carts array passed in has the cartID as the value, which process list sets as value -->
+	<td class='isSearchable' data-bind="var: cart(bill/firstname); format:text;"></td>
+	<td class='isSearchable' data-bind="var: cart(bill/lastname); format:text;"></td>
+	<td data-bind="var: cart(sum/items_count); format:text;"></td>
+	<td data-bind="var: cart(value); format:pollDetect; extension:cart_message;"></td>
+	<td data-bind='var:cart(value);format:assignAttribute; attribute:data-cartid;'>
+		<button data-text='false' data-icon-primary='ui-icon-cart' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartInteract'>Interact with Cart</button>
+		<button data-text='false' data-icon-primary='ui-icon-close' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartRemoveFromSession'>Remove from Session</button>
+	</td>
+</tr>
+</table>
 
 
 

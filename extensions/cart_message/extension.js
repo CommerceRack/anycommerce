@@ -165,18 +165,46 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 			a : {
 
+				showCartManager : function($target)	{
+					$target.anycontent({'templateID':'adminCartManagementTemplate','data':{'carts':app.vars.carts}});
+
+					$target.anydelegate();
+					app.u.handleButtons($target);
+					app.u.handleCommonPlugins($target);
+					
+					var $tbody = $("[data-app-role='cartManagementCartsTbody']",$target); //used for context below.
+
+					for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
+						app.u.dump("tr length: "+$("tr[data-value='"+app.vars.carts[i]+"']",$tbody).length);
+						app.calls.cartDetail.init(app.vars.carts[i],{
+							'callback':'anycontent',
+							'onComplete' : function(rd)	{
+								$('.wait',rd.jqObj).removeClass('wait');
+								$('button',rd.jqObj).button('enable');
+								},
+							'jqObj':$("tr[data-value='"+app.vars.carts[i]+"']",$tbody)
+							},'mutable');
+						}
+					
+					},
 
 //used for admin.  Presents user w/ a text input for adding a CSR code.  Will return the cart id.
-				showCSR2CartID : function()	{
+				showCart2SessionDialog : function(onComplete)	{
 					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Use CSR code to help buyer',
+						'title' : 'Add a cart to the session',
 						'showLoading' : false
 						});
-					$D.addClass('smallButton').dialog('option','width',220);
-					$D.append("<input type='text' name='csr' value='' size='8' required='required' />");
-					$("<button \/>").text('Get Cart ID').button().on('click',function(event){
+					$D.addClass('smallButton').dialog('option','width',320);
+					$D.append("<p class='hint'>Use either a full cart ID or a CSR code.<\/p>");
+					$D.append("<input type='text' name='csr' value='' required='required' class='fullWidth marginBottom' />");
+					$("<button \/>").text('Add').button().on('click',function(event){
 						event.preventDefault();
-						app.model.addDispatchToQ({'_cmd':'adminCSRLookup','csr':$("[name='csr']",$D).val(),'_tag':	{'datapointer':'adminCSRLookup','callback':function(rd){
+						var cartCSR = $("[name='csr']",$D).val(); //can either be a cartID or a CSR code.
+						if(cartCSR && cartCSR.length > 0)	{
+
+//one of two cmds could get executed here. Regardless of which is executed, the same callback is triggered, which executed the oncomplete passed in and passes in the cart id.
+						var callback = function(rd)	{
+							var thisCartid = false;
 							if(app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd});
 								}
@@ -184,10 +212,29 @@ some defaults are present, but they can be overwritten by the app easily enough.
 								$D.anymessage({'message':rd});
 								}
 							else	{
+								thisCartid = (rd.datapointer == 'adminCSRLookup') ? app.data[rd.datapointer].cartid : app.data[rd.datapointer].cart.cartid
 								$D.dialog('close');
-								app.ext.cart_message.a.showAdminCMUI(app.data[rd.datapointer].cartid);
 								}
-							}}},'mutable');
+							if(typeof onComplete == 'function')	{
+								onComplete(thisCartid);
+								}
+							}
+							
+							if(cartCSR.length == 4)	{
+								//at four characters, this is most likely a CSR code.
+								app.model.addDispatchToQ({'_cmd':'adminCSRLookup','csr':$("[name='csr']",$D).val(),'_tag':	{'datapointer':'adminCSRLookup','callback':callback}},'mutable');								
+								}
+							else if(cartCSR.length < 4)	{
+								$D.anymessage({'message':"A CSR code must be four characters.","errtype":"youerr"});
+								}
+							else	{
+								app.calls.cartDetail.init(cartCSR,{'callback' : callback},'mutable');
+								}
+							}
+						else	{
+							$D.anymessage({'message':"Please add a cart or csv code","errtype":"youerr"});
+							}
+
 						app.model.dispatchThis('mutable');
 						}).appendTo($D);
 					$D.dialog('open');
@@ -232,7 +279,14 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 			renderFormats : {
-	
+				pollDetect : function($tag,data)	{
+					if(app.u.thisNestedExists("app.ext.cart_message.vars.carts."+data.value+".timeout"))	{
+						$tag.append("<span class='ui-icon ui-icon-check'></span>")
+						}
+					else	{
+						$tag.append('disabled'); //here for testing. ### TODO -> remove this output.
+						}
+					}
 				}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -281,6 +335,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 						$('#globalMessaging').anymessage({"message":"In cart_message.u.initCartMessenger, either cartid ["+cartID+"] not set or $context ["+($context instanceof jQuery)+"] is not a valid jquery instance","gMessage":true});
 						}
 					},
+
 //use this in an ADMIN session when a cart message session has ended.
 //if used on a storefront, the cart message polling will end.
 				destroyCartMessenger : function(cartID){
@@ -300,7 +355,31 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			adminCartInteract : function($ele,p)	{
+				var cartid = $ele.closest("[data-cartid]").data('cartid');
+				app.ext.cart_message.a.showAdminCMUI(cartid);
+				},
+
+			adminCartRemoveFromSession : function($ele,p)	{
+				app.model.removeCartFromSession($ele.closest("[data-cartid]").data('cartid'));
+				$ele.closest('tr').empty().remove();
+				},
+			
+			adminCartAddToSession : function($ele,p)	{
+				//app.ext.cart_message.a.showAdminCMUI(app.data[rd.datapointer].cartid);
+				app.ext.cart_message.a.showCart2SessionDialog(function(cartid){
+					if(cartid)	{
+						app.model.addCart2Session(cartid);
+						navigateTo('#!cartManager');
+						}
+					else	{
+//Error display is handled in the cart2session dialog. false WILL be returned into this function so that additional error handling can be added.
+						}
+					});
+				},
+
 			cartEditExec : function($ele,p)	{
+				p.preventDefault();
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(cartID)	{
 					navigateTo('#!cartEdit',{'cartid':cartID});
@@ -311,6 +390,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				},
 			
 			gotoProductShowChooser : function($ele,p)	{
+				p.preventDefault();
 				var $buttons = $("<div \/>").data('cartid',$ele.closest("[data-app-role='cartMessenger']").data('cartid')); //the data(cartid) here is used on the events for the buttons appended to this element
 				$("<button \/>").text('Send to Buyer').attr('data-app-click','cart_message|gotoProductExec').button().appendTo($buttons);
 //				$("<button \/>").text('Add to Cart').attr('data-app-click','orderCreate|cartItemAddWithChooser').button().appendTo($buttons);
@@ -320,14 +400,18 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				},
 			
 			gotoProductExec : function($ele,p)	{
+				p.preventDefault();
 				var sku = $("input[name='sku']",'#chooserResultContainer').val();
 				//cart id on parent set by gotoProductShowChooser
 				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
 				app.model.dispatchThis('immutable');
 				},
-			
+
 			buyerEditExec : function($ele,p)	{
+				p.preventDefault();
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
+				alert('not done yet');
+				// ### TODO -> finish this.
 				},
 			//will add a chat post to the log. Could be executed by either an admin or buyer.
 			chatPostExec : function($ele,p)	{
@@ -347,7 +431,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 						}
 					} 
 				}, //chatPostExec
-			
+
 			cartCSRShortcutExec : function($ele,p)	{
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(cartID)	{
