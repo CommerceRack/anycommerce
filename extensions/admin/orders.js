@@ -2135,10 +2135,9 @@ $('.editable',$container).each(function(){
 					var $button = $("<button>").text("Add to Order").button().on('click',function(){
 						
 						var $parent = $btn.closest("[data-order-view-parent]"),
-						orderID = $parent.data('order-view-parent'),
+						orderID = $parent.data('order-view-parent'), //tested this in order edit and it works.
 						$form = $('form','#chooserResultContainer'),
-						formJSON = $form.serializeJSON(),
-						orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+						formJSON = $form.serializeJSON();
 	
 						formJSON.product_id = formJSON.sku;
 	
