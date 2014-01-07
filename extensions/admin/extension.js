@@ -2090,7 +2090,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //							app.u.dump(" -> $select:"); app.u.dump($select);
 							$tag.append($select.children());
 							if(data.value)	{
-								app.u.dump(" ->>>>>>>>>> data.value: "+data.value);
 								$tag.val(data.value);
 								}
 							}

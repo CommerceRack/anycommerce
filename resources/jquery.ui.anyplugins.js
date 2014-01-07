@@ -186,7 +186,6 @@ additionally, will apply some conditional form logic.
 
 //will show the matching selectors. (show-selector='.bob' will show all class='bob' elements.
 			"show-selector" : function($CT,$t)	{
-//				app.u.dump(' ->>>>>>>>>>>>> GOT HERE');
 				if($($CT.attr('data-show-selector'),$t).is(':visible'))	{}
 				else	{
 					$($CT.attr('data-show-selector'),$t).slideDown();
@@ -206,7 +205,6 @@ additionally, will apply some conditional form logic.
 //allows for a specific panel (or sets of panels) to be turned on/off based on selection. commonly used on a select list, but not limited to that.
 //provides more control that trying to accomplish the same thing with the show/hide-selectors.
 			"panel-selector" : function($CT)	{
-				app.u.dump(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				$($CT.data('panel-selector'),$CT.closest('form')).hide(); //hide all panels w/ matching selector.
 				
 				if($CT.is(':checkbox') && !$CT.is(':checked'))	{} //this is an unchecked checkbox. do nothing.
