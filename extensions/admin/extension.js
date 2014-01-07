@@ -2161,7 +2161,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
 						if(opts.tab){} // if tab is specified, always use it. this covers mode = tabClick too.
 						else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
-						else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined. dialog is only used for legacy mode, currently.
+						else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined. dialog is mostly used for legacy mode.
 						else if(mode == 'legacy'){
 							opts.tab = app.ext.admin.u.getTabFromPath(path);
 							}
@@ -2175,7 +2175,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
 //this is JUST setting targetID. it isn't showing content or opening modals.
 						if(opts.dialog && mode == 'app')	{
-							//an app in dialog mode will handle creating it's own dialog. however, a valid jquery instance is desired so create one.
+							//an app in dialog mode will handle creating it's own dialog.
 							}
 						else if(opts.dialog){
 							opts.targetID = 'uiDialog';
@@ -2192,6 +2192,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							$('#stickytabs').empty(); //clear all the sticky tabs.
 
 							}
+
 						if(opts.dialog && mode == 'app')	{
 							app.ext.admin.u.loadNativeApp(path,opts);
 							}
@@ -2221,9 +2222,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 										}
 //tab click show existing content
 									else	{
-										app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
+										app.ext.admin.u.uiHandleNavTabs({}); //clear navtabs or the last displayed navtabs (from previous section) will show up.
 										//when RETURNING to the product page, build navtabs again (search).
-//### TODO ### -> this code should not be here. it should be in the product editor. make it all selfcontained in showProductManager.
+//this is here as a work around for the product manager code being run during init to add it's template to the DOM so product task list works out of the gate.
+// once the new navigateTo is built w/ better support for individual tab customizations, this won't be necessary.
 										if(opts.tab == 'product')	{
 											app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
 											}
@@ -3318,6 +3320,11 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(path == '#!taskManager')	{
 					app.ext.admin_task.a.showTaskManager($target);
 					}
+//handle the default tabs specified as #! instead of #:
+				else if(app.ext.admin.u.showTabLandingPage(path,$(app.u.jqSelector('#',path.substring(2)+'Content')),opts))	{
+					//the showTabLandingPage will handle the display. It returns t/f
+
+					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.loadNativeApp, unrecognized path/app ["+path+"] passed.","gMessage":true});
 					app.u.throwGMessage("WARNING! ");
@@ -3395,7 +3402,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}
 				return $target;
 				},
-
+//path should be passed in as either #:orders or #!orders
 			showTabLandingPage : function(path,$target,opts)	{
 				var r = true;
 				var tab = path.substring(2);
