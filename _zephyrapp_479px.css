@@ -19,6 +19,7 @@
 .zephyrHelpBox {width:280px; height:auto;}
 .zephyrHelpBox ul { margin: 0; padding: 8px; width: 124px;}
 .zephyrHelpBox li {list-style: none;}
+.infoFooter {min-height:60px; padding-top:10px;}
 
 /**** Homepage CSS****/
 .randomList {height:2030px;}
