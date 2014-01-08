@@ -998,6 +998,8 @@ in a reorder, that data needs to be converted to the variations format required 
 				},
 
 //used in order create for adding a lineitem from a previous order, so test any changes there (admin UI) after making changes.
+/*
+## TOD -> make sure this isn't used any more and delete.
 			buildCartItemAppendSKU : function($container)	{
 				app.u.dump("BEGIN cco.u.buildCartItemAppendSKU");
 				var r = false; //what is returned. will be true if dispatch is created.
@@ -1017,7 +1019,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					}
 				return r;
 				},
-
+*/
 //cart must already be in memory when this is run.
 //will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
