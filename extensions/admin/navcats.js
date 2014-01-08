@@ -74,7 +74,7 @@ var admin_navcats = function() {
 					'path' : path
 					}))
 				
-				app.u.handleEventDelegation($target);
+				$target.anydelegate();
 				}
 
 			}, //Actions
@@ -260,7 +260,6 @@ Params:
 //SANITY	-> if event delegation occurs here, before $tree is added to the dom, the event delegation script can't look up the DOM to see if events have already been added. thus, dual-delegation could occur (bad).
 //			-> handle delegation by whatever calls getTree. Which is probably the right way to do it anyway since the delegation should occur at a high level. 
 //			-> this issue was discovered in product editor, so any changes to this function and events should be tested there.
-//						app.u.handleEventDelegation($tree); //handles click events
 
 						}
 					else	{

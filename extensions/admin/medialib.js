@@ -470,9 +470,8 @@ setTimeout(function(){
 
 //handles the buttons in the media lib header, such as add folder, delete selected, etc.
 					app.ext.admin_medialib.u.handleMediaLibButtons($target);
-//** 201338 -> file 'list' is using delegated events now. should be much faster w/ less memory consumption. eventually, the whole media lib should use this method.
-					app.u.handleEventDelegation($("#mediaLibInfiniteScroller")); //media list of files (within each folder or search results)
-					app.u.handleEventDelegation($("#mediaLibraryFocusMediaDetails")); //currently selected file.
+					$("#mediaLibInfiniteScroller").anydelegate(); //media list of files (within each folder or search results)
+					$("#mediaLibraryFocusMediaDetails").anydelegate(); //currently selected file.
 					
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');
 

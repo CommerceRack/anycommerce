@@ -879,9 +879,9 @@ app.u.throwMessage(responseData); is the default error handler.
 					
 					
 // use either delegated events OR app events, not both.
-					if(_rtag.handleEventDelegation)	{
+					if(_rtag.anydelegate)	{
 						app.u.dump(" ------> using delegated events in anycontent, not app events ");
-						app.u.handleEventDelegation($target);
+						$target.anydelegate();
 						}
 					else if(_rtag.skipAppEvents)	{}
 					else	{
@@ -1212,7 +1212,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					}
 				return r;
 				},
-//run from inside the handleEventDelegation function
+
+// ### TODO -> this is currently used in anytabs. when anytabs is upgraded, make sure it's more anydelegate friendly and this can be removed.
 			executeEvent : function($target,p){
 				p = p || {};
 				var newEventType = app.u.normalizeEventType(p.type);
@@ -1248,34 +1249,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					}
 				},
 
-//run on a container to manage event delegation.  add a data-app-EVENTTYPE to an element, where EVENTTYPE is = to an event, such as click or change.
-//The value of the data tag should be = "EXTENSION|FUNCTIONNAME" where extension = your extension and FUNCTIONNAME is the name of a function within the 'e' node.
-//This code is used for adding events only, not styling.  Use renderFormats for that or the 'apply' classes.
-//p in event = optional params. can be added when 'trigger' is executed. these are then passed into the app event and can be used to change behavior, if necessary.
-//a class is added when event delegation is added. The class is checked for when the function is run to prevent double-delegation.
-//a class is used instead of a data-attrib to be more efficient. Since we're adding/removing the class, it's 'safe' to use a class for this.
-// ### TODO -> get rid of this. test changes.
-			handleEventDelegation : function($container)	{
-//				app.u.dump("BEGIN app.u.handleEventDelegation");
-//				app.u.dump(" -> $container.data('hasdelegatedevents'): "+$container.data('hasdelegatedevents'));
-//				app.u.dump(" -> $container.closest('[data-hasdelegatedevents]').length: "+$container.closest('[data-hasdelegatedevents]').length);
-//				app.u.dump(" -> $container.parents('[data-hasdelegatedevents]').length: "+$container.parents('[data-hasdelegatedevents]').length);
 
-				if($container.data('hasdelegatedevents') || $container.closest('[data-hasdelegatedevents]').length >= 1)	{
-					app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
-					}
-				else	{
-					var supportedEvents = new Array("click","change","focus","blur","submit");
-					for(var i = 0; i < supportedEvents.length; i += 1)	{
-						$container.on(supportedEvents[i],"[data-app-"+supportedEvents[i]+"]",function(e,p){
-//							app.u.dump(" -> triggering the execute event code: "); app.u.dump(e);
-							app.u.executeEvent($(e.currentTarget),$.extend(p,e));
-							});						
-						}
-					$container.addClass('eventDelegation'); //here for the debugger.
-					$container.attr('data-hasdelegatedevents',true); //is a attribute so that an element can look for it via parent()
-					}
-				},
 
 			handleCommonPlugins : function($context)	{
 				$('.applyAnycb',$context).anycb();

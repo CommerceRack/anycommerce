@@ -76,7 +76,7 @@ var admin_tools = function() {
 					$SD = $("<div \/>").attr('title','Site Debug Tools').anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
 					app.u.handleButtons($SD);
 					app.u.handleCommonPlugins($SD);
-					app.u.handleEventDelegation($SD);
+					$SD.anydelegate();
 					app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
 					}
 				},
