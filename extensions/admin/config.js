@@ -212,7 +212,7 @@ var admin_config = function() {
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching your payment method settings'});
 				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
-				$target.anydelegate();
+				$target.anydelegate({'trackEdits':true});
 				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
 					'callback' : 'anycontent',
 					'datapointer' : 'adminConfigDetail|payment|'+app.vars.partition,
