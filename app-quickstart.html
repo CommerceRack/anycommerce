@@ -210,7 +210,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;withVariations:1; withInventory:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
@@ -252,7 +252,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; withInventory:1; withVariations; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; withInventory:1; withVariations:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
@@ -1027,7 +1027,7 @@ onclicks are recursive, so only add it to the parent element.
 This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
 -->
 
-<div id='cartTemplate' data-template-role='cart' class='clearfix'>
+<div id='cartTemplate' class='clearfix'><!-- template role gets added by the app. don't add it yourself -->
 
 <form action='#' onSubmit='return false'>
 
@@ -1112,7 +1112,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput numberInput' data-app-change="cco|cartItemQuantityUpdate"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
+		qty: <input type='number' class='qtyInput numberInput' data-app-change="cco|cartItemUpdateExec"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
