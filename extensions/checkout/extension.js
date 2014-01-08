@@ -810,6 +810,15 @@ an existing user gets a list of previous addresses they've used and an option to
 // the panel content IS rendered even if not shown. ship method needs to be set for paypal
 				if(L >= 1)	{
 //					app.u.dump(" -> Shipping methods are present.");
+//if the method selected is UPS AND the merchant has rules enabled for that method, UPS requires the disclaimer to be shown.
+					for(var i = 0; i < L; i += 1)	{
+						if(shipMethods[i][id] == formObj['want/shipping_id'])	{
+							if(shipMethods[i]._carrier == 'UPS' && shipMethods[i].rules)	{
+								$("[data-app-role='upsShipRulesDisclaimer']",$fieldset).show();
+								}
+							break; //exit early once a match is found.
+							}
+						}
 					}
 //no shipping methods and buyer is logged in.
 				else if(app.u.buyerIsAuthenticated())	{
@@ -828,13 +837,9 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 //no shipping methods present and buyer is logged out.
 				else {
-// *** 201324 -> 	correct typos. nice catch MikeC. The absence of a 'not' was causing messaging to appear at the wrong time.
-//					only impacted merchants who had 'require zip to quote shipping' enabled.
-//					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
 					if(formObj['want/bill_to_ship'] && !formObj['bill/postal'])	{
 						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
-//					else if(!formObj['want/bill_to_ship'] && formObj['ship/postal'])	{						
 					else if(!formObj['want/bill_to_ship'] && !formObj['ship/postal'])	{
 						$fieldset.anymessage({"message":"<p>Please enter a shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
