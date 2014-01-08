@@ -84,8 +84,8 @@ var admin_customer = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-//This is how the task manager is opened. Just execute this function.
-// later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
+//This is how the customer manager is opened. Just execute this function.
+// later, we may add the ability to load directly into 'edit' mode and open a specific customer. not supported just yet.
 			showCustomerManager : function($target,vars) {
 				vars = vars || {};
 				$target.intervaledEmpty();
@@ -120,7 +120,6 @@ var admin_customer = function() {
 				app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
 				},
 
-
 			showCampaignManager : function($target)	{
 				$target.empty();
 				var $table = app.ext.admin.i.DMICreate($target,{
@@ -134,9 +133,7 @@ var admin_customer = function() {
 						'_tag' : {'datapointer' : 'adminCampaignList'}
 						}
 					});
-//get this handy.
-// * 201336 -> moved this so templates are not requested till template chooser is opened.
-//				app.model.addDispatchToQ({'_cmd':'adminCampaignTemplateList','_tag':{'datapointer' : 'adminCampaignTemplateList'}},'mutable');
+				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				app.model.dispatchThis();
 
 				}, //showCampaignManager
@@ -200,7 +197,6 @@ var admin_customer = function() {
 				app.model.dispatchThis();
 				},
 
-
 			showReviewsManager : function($target)	{
 				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
@@ -227,8 +223,7 @@ var admin_customer = function() {
 				app.model.dispatchThis('mutable');
 				}, //showReviewsManager
 
-
-//in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
+//in obj, currently only CID and partition are required.
 			showCustomerEditor : function($custEditorTarget,obj)	{
 				obj = obj || {};
 				if($custEditorTarget && $custEditorTarget instanceof jQuery)	{
@@ -1438,8 +1433,7 @@ setTimeout(function(){
 							}
 						else if($tag.is('input') || $tag.is('select'))	{
 							if($tag.attr('name') == 'password')	{
-// * 201330 -> passwords weren't accepting + or & on save.
-								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); 
+								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); //password needs to be encoded (required for & and + to be acceptable password characters)
 								}
 							else if(pr == 'general')	{
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
@@ -1829,12 +1823,10 @@ setTimeout(function(){
 
 //executed on a button to show the customer create form.
 			showCustomerCreate : function($btn)	{
-				
 				$btn.button().off('click.showCustomerCreate').on('click.showCustomerCreate',function(event){
 					event.preventDefault();
 					app.ext.admin_customer.a.showCustomerCreateModal();
 					});
-				
 				}, //showCustomerCreate
 
 			showCustomerUpdate : function($btn)	{

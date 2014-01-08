@@ -380,7 +380,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 
 			cartEditExec : function($ele,p)	{
 				p.preventDefault();
-				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
+				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid') || $ele.closest("[data-cartid]").data('cartid');
 				if(cartID)	{
 					navigateTo('#!cartEdit',{'cartid':cartID});
 					}
@@ -405,6 +405,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				//cart id on parent set by gotoProductShowChooser
 				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
 				app.model.dispatchThis('immutable');
+				$('#prodFinder').anymessage({'message':'Product '+sku+' sent to buyer.','errtype':'done'});
 				},
 
 			buyerEditExec : function($ele,p)	{
