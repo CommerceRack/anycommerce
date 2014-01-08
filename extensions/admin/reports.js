@@ -586,9 +586,9 @@ var admin_reports = function() {
 					if(!app.ext.admin_reports.u.graphVarsIsMissingData(graphVars))	{
 						$target.showLoading({'message':'Fetching graph data'});
 //everything we need is accounted for. Move along... move along...
-
 						graphVars._tag = graphVars._tag || {};
-						graphVars.callback = function(rd){
+						graphVars._tag.datapointer = "adminKPIDBDataQuery+|"+graphVars.ddataset+"|"+graphVars.grpby;
+						graphVars._tag.callback = function(rd){
 							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
