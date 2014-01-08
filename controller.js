@@ -878,7 +878,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					app.u.handleButtons($target);
 					
 					
-// ** 201338 -> support for event delegation. only turned on if enabled. disables execution of app event code. Use one or the other, not both.
+// use either delegated events OR app events, not both.
 					if(_rtag.handleEventDelegation)	{
 						app.u.dump(" ------> using delegated events in anycontent, not app events ");
 						app.u.handleEventDelegation($target);
@@ -1220,10 +1220,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 				if($target && $target instanceof jQuery && newEventType)	{
 //					app.u.dump(" -> $target.data()"); app.u.dump($target.data());
-// ** 201342 -> once currentTarget was being used instead of e.target, this code became unnecessary.
-//					if($target.data('app-'+newEventType))	{}
-//					else	{$target = $target.closest("[data-app-"+newEventType+"]")}; //chrome doesn't seem to be bubbling up like I expected. registers a data-app that is on a button on the span for the icon/text
-					
 					if($target.data('app-'+newEventType))	{
 						var
 							actionExtension = $target.data('app-'+newEventType).split('|')[0],
@@ -1476,8 +1472,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 							}
 						}
 					else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging:visible');}
-	// ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
-	//	target of last resort is now the body element
 					else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
 					else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
 					else	{
@@ -1548,14 +1542,7 @@ URI PARAM
 			kvp2Array : function(s)	{
 				var r = false;
 				if(s && s.indexOf('=') > -1)	{
-// ** 201346 -> an improved method for building the object. built in URI decoding.
-	//				app.u.dump(s.replace(/"/g, "\",\x22"));
-//					s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
-					// .replace(/"/g, "\",\x22")
-	//				app.u.dump('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}');
-//					r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
 					r = s?JSON.parse('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
-//					app.u.dump(" -> r: "); app.u.dump(r);
 					}
 				else	{}
 				return r;
@@ -1642,7 +1629,7 @@ AUTHENTICATION/USER
 			getWhitelistedObject : function(obj,whitelist)	{
 				var r = {};
 				for(index in obj)	{
-	// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+// SANITY -> indexOf not supported for searching arrays in IE8
 					if($.inArray(index, whitelist) >= 0)	{
 						r[index] = obj[index];
 						}
@@ -1656,7 +1643,7 @@ AUTHENTICATION/USER
 			getBlacklistedObject : function(obj,blacklist)	{
 				var r = $.extend({},obj);
 				for(index in obj)	{
-	// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
+// SANITY -> indexOf not supported for searching arrays in IE8
 					if($.inArray(index, blacklist) >= 0)	{
 						delete r[index];
 						}
@@ -1812,7 +1799,6 @@ VALIDATION
 			return r;
 			},
 
-//* 201320 -> changed to support tab key.
 		alphaNumeric : function(event)	{
 			var r = true; //what is returned.
 //			if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
@@ -1894,7 +1880,6 @@ VALIDATION
 							}
 						}
 
-// * 201336 -> make sure a number input has a numerical value.
 					else if($input.attr('type') == 'number' && $input.val())	{
 //						app.u.dump(" -> number validation. value: "+$input.val()+" and isNaN: "+isNaN($input.val()));
 						if (!isNaN($input.val())) {
@@ -1922,7 +1907,6 @@ VALIDATION
 
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						//only 'error' if field is required. otherwise, show warning
-// ** 201330 -> field was erroring if email was invalid even if field was not required.						
 						if($input.attr('required') == 'required')	{
 							r = false;
 							$input.addClass('ui-state-error');
@@ -1933,21 +1917,20 @@ VALIDATION
 							}
 						else	{} //field is not required and blank.
 						}
-//* 201336 -> technically, maxlength isnt supported on a text area. so data-maxlength is used instead.
+//technically, maxlength isn't a supported attribute for a textarea. data-maxlength is used instead.
 					else if(($input.attr('maxlength') && $input.val().length > $input.attr('maxlength')) || ($input.attr('data-maxlength') && $input.val().length > $input.attr('data-maxlength')))	{
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('allows a max of '+($input.attr('maxlength') || $input.attr('data-maxlength'))+' characters'));
 						removeClass($input);
 						}
-//** 201318 -> error was being reported incorrectly.
 					else if($input.data('minlength') && $input.val().length < $input.data('minlength'))	{
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('requires a minimum of '+$input.data('minlength')+' characters'));
 						removeClass($input);
 						}
-// * 201320 -> now support 'min' attr which is the minimum numerical value (ex: 0 or 7) for the input value.
+//Support for 'min' attr which is the minimum numerical value (ex: 0 or 7) for the input value.
 //number input type has a native min for minimum value
 					else if($input.attr('min') && Number($input.val()) < Number($input.attr('min')))	{
 						r = false;
@@ -1955,15 +1938,15 @@ VALIDATION
 						$input.after($span.text('requires a minimum value of '+$input.attr('min')));
 						removeClass($input);
 						}
-// * 201320 -> now support 'min' attr which is the minimum numerical value (ex: 0 or 7) for the input value.
-//number input type has a native min for minimum value
+//Support 'max' attr which is the maximum numerical value (ex: 0 or 7) for the input value.
+//number input type has a native max for max value
 					else if($input.attr('max') && Number($input.val()) > Number($input.attr('max')))	{
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('requires a maximum value of '+$input.attr('max')));
 						removeClass($input);
 						}
-//** 201318 -> moved this down so that the more specific error messages would be displayed earlier
+//Checking required is last so that the more specific error messages would be displayed earlier
 					else if($input.attr('required') == 'required' && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');
@@ -2102,13 +2085,11 @@ b = bgcolor (used to pad if original image aspect ratio doesn't conform to aspec
  -> use TTTTTT for transparent png (will result in larger file sizes)
 class = css class
 tag = boolean. Set to true to output the <img tag. set to false or blank to just get url
-
+the old 'lib' feature for loading images from another media library is no longer supported.
 app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag":1});
 */
 		makeImage : function(a)	{
 //			app.u.dump(a);
-// ** 201318 -> other libs are no longer supported. forced to username
-//			a.lib = app.u.isSet(a.lib) ? a.lib : app.vars.username;  //determine protocol
 			a.m = a.m ? 'M' : '';  //default to minimal mode off. If anything true value (not 0, false etc) is passed in as m, minimal is turned on.
 //			app.u.dump(' -> library: '+a.lib+' and name: '+a.name);
 			if(a.name == null) { a.name = 'i/imagenotfound'; }
@@ -2117,17 +2098,13 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 			// alert(a.lib);		// uncomment then go into media library for some really wonky behavior 
 		
 				//default height and width to blank. setting it to zero or NaN is bad for IE.
-// *** 201338 Added better handling for when no parameters are set, as well as a bug fix where a necessary '-' character was being removed
-// from a valid use case. -mc
+//Handling for when no parameters are set, as well as a bug fix where a necessary '-' character was being removed -mc
 			if(a.h == null || a.h == 'undefined' || a.h == 0)
 				a.h = '';
 			if(a.w == null || a.w == 'undefined' || a.w == 0)
 				a.w = '';
 			if(a.b == null || a.b == 'undefined')
 				a.b = '';
-// *** 201318 -> new url for media library.			
-//			url = location.protocol === 'https:' ? 'https:' : 'http:';  //determine protocol
-//			url += '\/\/static.zoovy.com\/img\/'+a.lib+'\/';
 //In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
 			if(app.vars.thisSessionIsAdmin)	{
 				url = 'https:\/\/'+(app.vars.https_domain || app.data['adminDomainList']['media-host']);
@@ -2156,20 +2133,18 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 					url += 'B'+a.b+'-';
 					}
 				url += a.m;
-// *** 201338 Moved up into the else statement so that the valid case of no parameters produces the expected URL containing "/-/" instead of "//" -mc
+
 				if(url.charAt(url.length-1) == '-')	{
 					url = url.slice(0,url.length-1); //strip trailing - because it isn't stricly 'compliant' with media lib specs.
 					}
 				}
 			url += '\/'+a.name;
-
-//			app.u.dump(" -> URL: "+url);
 			
 			if(a.tag == true)	{
 				a['class'] = typeof a['class'] == 'string' ? a['class'] : ''; //default class to blank
 				a['id'] = typeof a['id'] == 'string' ? a['id'] : 'img_'+a.name; // default id to filename (more or less)
 				a['alt'] = typeof a['alt'] == 'string' ? a['alt'] : a.name; //default alt text to filename
-// ** 201318 if width and height are present, they are added to the tag.  This solves an issue that occurs in loading
+// If width and height are present, they are added to the tag.  This solves an issue that occurs in loading
 //	pic sliders where the width of the images, and thus the scroll amount, is not calculated correctly the first time
 //	the slider loads
 				var tag = "<img src='"+url+"' alt='"+a.alt+"' id='"+a['id']+"' class='"+a['class']+"'"
@@ -2691,7 +2666,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 			}
 		
 		}
-// ** 201342 -> added forceRender. if true, will always execute the render format, regardless of whether a value is set on the attribute.
+// forceRender, if true, will always execute the render format, regardless of whether a value is set on the attribute.
 	else if(value || (Number(value) == 0 && bindRules.hideZero === false) || bindRules.forceRender)	{
 		if(app.u.isSet(bindRules.className)){$focusTag.addClass(bindRules.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
 
@@ -2947,8 +2922,7 @@ do's should modify $tag or apply the value.
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
-//			app.u.dump(" -> showIfSet: "+data.value);
-// *** 201352 add support for whatever display type is necessary (ie 'inline' for spans, 'inline-block' for imgs) default to block. -mc
+//Support for whatever display type is necessary (ie 'inline' for spans, 'inline-block' for imgs) default to block. -mc
 			var displayType = data.bindData.displayType || 'block'
 			if(data.value)	{
 				$tag.show().css('display',displayType); //IE isn't responding to the 'show', so the display:block is added as well.
@@ -2997,18 +2971,14 @@ do's should modify $tag or apply the value.
 //			var csv = data.value.split(',');
 			var L = whitelist.length;
 			var tagsDisplayed = 0;
-			var maxTagsShown = app.u.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : 100; //default to a high # to show all tags.
+			var maxTagsShown = app.u.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : whitelist.length; //default to showing all enabled tags.
 			var spans = ""; //1 or more span tags w/ appropriate tag class applied
 			for(var i = 0; i < L; i += 1)	{
-//				app.u.dump("whitelist[i]: "+whitelist[i]+" and tagsDisplayed: "+tagsDisplayed+" and maxTagsShown: "+maxTagsShown);
-//				app.u.dump("data.value.indexOf(whitelist[i]): "+data.value.indexOf(whitelist[i]));
-// ** 201332 NOTE: data.value is assumed to be a String, a comma separated list of values.  If it were an array, we would
-//				need to use $.inArray instead of indexOf for IE8 compatibility
 				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
-
 					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
 					tagsDisplayed += 1;
 					}
+				if(tagsDisplayed >= maxTagsShown)	{break;} //exit early once enough tags are displayed.
 				}
 			$tag.append(spans);
 			}, //addTagSpans
@@ -3175,12 +3145,12 @@ $tmp.empty().remove();
 
 
 
-// ** 201324 -> used for displaying a new format for datastorage.
-//wikihash is the name of the datastorage format. looks like this:
+// Used for displaying a new format for datastorage.
+// wikihash is the name of the datastorage format. looks like this:
 // key:value\nAnotherkey:AnotherValue\n
 // use 'key' and 'value' in the data-binds of the template.
-//pass template to apply per row as loadsTemplate: on the databind.
-//there's an example of this in admin_syndication (ebay category chooser)
+// pass template to apply per row as loadsTemplate: on the databind.
+// there's an example of this in admin_syndication (ebay category chooser)
 		wikiHash2Template : function($tag,data)	{
 			var
 				rows = data.value.split("\n"),
@@ -3204,7 +3174,7 @@ $tmp.empty().remove();
 		processList : function($tag,data){
 //			app.u.dump("BEGIN renderFormats.processList");
 			$tag.removeClass('loadingBG');
-// * 201324 -> added check for value to be object, as that's what process list is intended for.
+// process list is intended for converting an object to individual rows/lists of templates.
 			if(data.bindData.loadsTemplate && typeof data.value === 'object')	{
 				var $o, //recycled. what gets added to $tag for each iteration.
 				int = 0;
@@ -3218,8 +3188,8 @@ $tmp.empty().remove();
 				
 //				app.u.dump(" -> data.value.length: "+data.value.length);
 				for(var i in data.value)	{
-// * 201336 -> mostly for use in admin. for processing the %sku object and subbing in the default attribs when there are no inventoryable variations.
-//if SKU is set, that means we're dealing with sku-level data.  if the sku does NOT have a :, we use the product %attribs
+// mostly for use in admin. for processing the %sku object and subbing in the default attribs when there are no inventoryable variations.
+// if SKU is set, that means we're dealing with sku-level data.  if the sku does NOT have a :, we use the product %attribs
 					if(data.bindData.sku)	{
 						if(data.value[i] && data.value[i].sku && data.value[i].sku.indexOf(':') < 0)	{
 							data.value[i]['%attribs'] = (app.data['adminProductDetail|'+data.value[i].sku]) ? app.data['adminProductDetail|'+data.value[i].sku]['%attribs'] : {};
@@ -3230,11 +3200,9 @@ $tmp.empty().remove();
 						//if no filter is declared, proceed. 
 						//This allows process list to only show matches
 						if(!filter || (filter && data.value[i][filter] == filterby))	{
-//if data.value was an associative array....
-// ** 201320 -> needed processList to support indexed arrays AND associative arrays.
-// ** 201324 -> added data.value check here. if val was null (which happened w/ bad data) then a JS error occured.
+// if data.value is an associative array....
+// added data.value check is here cuz if val is null (which could happen w/ bad data) a JS error occured.
 							if(data.value[i] && typeof data.value[i] === 'object')	{
-	
 								if(!data.value[i].index && isNaN(i)) {data.value[i].index = i} //add an 'index' field to the data. handy for hashes (like in flexedit) where the index is something useful to have in the display.
 								$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 								if($o instanceof jQuery)	{
@@ -3253,7 +3221,6 @@ $tmp.empty().remove();
 								$o.attr('data-obj_index',i);
 	//							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
 								}
-							
 							}
 						else	{
 							//value does not match filter.
@@ -3277,7 +3244,7 @@ $tmp.empty().remove();
 
 ////////////////////////////////////   						STORAGEFUNCTIONS						    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 					
-// !!! at some point, these should get moved to the model. the model should handle loading data from any source.
+// ### TODO -> these should get moved to the model which should handle loading data from any source.
 		
 	storageFunctions : {
 
@@ -3356,8 +3323,6 @@ $tmp.empty().remove();
 				}
 			}, //readLocal
 
-// read this.  see if there's a better way of handing cookies using jquery.
-//http://www.jquery4u.com/data-manipulation/jquery-set-delete-cookies/
 		readCookie : function(c_name){
 			var i,x,y,ARRcookies=document.cookie.split(";");
 			for (i=0;i<ARRcookies.length;i++)	{
@@ -3394,7 +3359,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 
 
 	thirdParty : {
-// !!! this should get moved out of here and either into a FB extension or quickstart.		
+// ### TODO -> move out of here and either into a FB extension or quickstart.		
 		fb : {
 			
 			postToWall : function(msg)	{
