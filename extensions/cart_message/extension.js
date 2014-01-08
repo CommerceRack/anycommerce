@@ -118,8 +118,11 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 						}
 					},
 				onError : function(rd)	{
-					if(_rtag && _rtag.jqObj && _rtag.jqObj.data('cartid'))	{
-						var cartID = cartID = _rtag.jqObj.data('cartid');
+					if(rd.errid == 4)	{
+						//this means the _cmd is not supported. not sense retrying every few seconds.
+						}
+					else if(rd && rd._rtag && rd._rtag.jqObj && rd._rtag.jqObj.data('cartid'))	{
+						var cartID = rd.jqObj.data('cartid');
 						app.ext.cart_message.vars.carts[cartID].frequency = 10000;
 						app.ext.cart_message.u.fetchCartMessages(app.ext.cart_message.vars.carts[cartID].frequency,rd._rtag.jqObj);
 						}
