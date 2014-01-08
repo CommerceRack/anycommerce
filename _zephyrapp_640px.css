@@ -7,19 +7,24 @@
 /**** appPreView CSS****/
 #appPreView{width:280px;}
 
+/**** Content Area CSS****/
+#appView{width:100%;}
+#contentArea{width:98%; padding:1%;}
+#contentArea.sideBarRightShow{width:98%; padding:1%;}
+#contentArea.sideBarRightHide{width:98%; padding:1%;}
+
 /**** Header CSS****/
-#header {height:75px;}
-#logo {left: 30px;top: 0px;}
-#headerBar { top:20px; height:55px;}
-.topNavRight {width:290px;}
-.productSearchForm{width:270px; padding:3px 10px;}
-.searchBar {width:215px;}
+#header {height:55px; background: url(images/topbar_logosection_bg.jpg) repeat-x bottom;}
+#logo {position:static;}
+.topNavRight {width:290px; float:none; margin:0 auto;}
+.productSearchForm{width:270px; float:none; margin:0 auto; padding:3px 10px 0px;}
+.searchBar {width:215px; height:16px;}
 
 /**** Footer CSS****/
 .zephyrHelpBox {width:280px; height:auto;}
 .zephyrHelpBox ul { margin: 0; padding: 8px; width: 124px;}
 .zephyrHelpBox li {list-style: none;}
-.infoFooter {min-height:60px; padding-top:10px;}
+.infoFooter {min-height:15px; padding:10px 0px;}
 
 /**** Homepage CSS****/
 .randomList {height:2040px;}
@@ -28,12 +33,6 @@
 /**** Homepage CSS****/
 .cartSummaryTotalsContainer h2 {font-size:16px; padding:4px 10px;}
 .cartButtons span {display:block; margin-bottom: 0.5em;}
-
-/**** Content Area CSS****/
-#appView{width:290px;}
-#contentArea{width:270px; padding:5px;}
-#contentArea.sideBarRightShow{width:270px; padding:5px;}
-#contentArea.sideBarRightHide{width:270px; padding:5px;}
 
 /**** ProdList CSS****/
 .productList {width:210px;}

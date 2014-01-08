@@ -12,7 +12,9 @@ body {
 .clear {
 	clear:both;
 }
-
+.marginAuto{
+	margin:0 auto;
+}
 /***** appPreView CSS Start *****/
 #appPreView {
     background: none repeat scroll 0 0 #C7C7C7;
@@ -149,7 +151,7 @@ body {
 .ddMenu {
     padding: 5px 0 0;
 	position: relative;
-    width: 260px;
+    width: 300px;
     margin: 0 auto;
 }
 .ddMenuBtn {
@@ -159,14 +161,14 @@ body {
     color: #000000;
     font-size: 18px;
     font-weight: bold;
-    line-height: 45px;
+    line-height: 36px;
     text-align: center;
 }
 .dropdown { 
 	background: #D7D9DB; 
 	position: absolute; 
 	z-index:999; 
-	top:50px; 
+	top:40px; 
 	left: 0px; 
 	height: 0px; 
 	border: 1px solid #939598; 
