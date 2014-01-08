@@ -2611,6 +2611,12 @@ function type2class(type)	{
 									//interpret the marketplace status table.
 									$mktStatusTbody.anycontent({'datapointer':rd.datapointer});
 									app.u.handleButtons($mktStatusTbody);
+									//the table list will show the product in focus and some related items/accessories. the button for 'add to task list' for the product in focus needs to be disabled because by this point, the user is already IN the task list for the product in focus.
+									$("tr[data-pid='"+pid+"']",$mktStatusTbody).find("button[data-app-role='productTaskListButton']").button('disable').attr('title','Task list for this item is already open.');
+									
+									//look through the market status table and if there's a row for the product in focus, disable the task list button () as it's redundant.
+									
+									
 									}
 								}
 							}
