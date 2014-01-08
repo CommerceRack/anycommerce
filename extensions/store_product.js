@@ -736,6 +736,11 @@ NOTES
 // SANITY -> don't 'require' $form to be a form. It could be a fieldset or some other container as part of a bigger form (such as order create).
 				if($form instanceof jQuery)	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
+					
+//					app.u.dump("cartObj from store_product:"); app.u.dump(cartObj);
+//					app.u.dump("cartObj from cco"); app.u.dump(app.ext.cco.u.buildCartItemAppendObj($form.serializeJSON(),app.model.fetchCartID()));
+					
+					
 					if(cartObj)	{
 //						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
 						if(cartObj)	{
@@ -761,7 +766,7 @@ NOTES
 				app.u.dump("BEGIN store_product.u.handleBulkAddToCart");
 				if(typeof $FP == 'object')	{
 					var $forms = $('form',$FP);
-					app.u.dump(" -> $forms.length: "+$forms.length);
+//					app.u.dump(" -> $forms.length: "+$forms.length);
 					_tag = _tag || {};
 					if($forms.length)	{
 						$forms.each(function(){

@@ -993,7 +993,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 				if($chkContainer && $chkContainer.length && cartID)	{
 					app.u.dump(" -> startCheckout cartid: "+cartID);
 					$chkContainer.empty();
-					$chkContainer.anydelegate();
+					$chkContainer.anydelegate({
+						trackEdits : app.vars.thisSessionIsAdmin //edits are only tracked in the admin interface
+						});
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.
 
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
@@ -1203,45 +1205,24 @@ note - the order object is available at app.data['order|'+P.orderID]
 				},
 
 			
-			//SKU/STID required (fully qualified, w/ variations et all);
 			cartItemAppendSKU : function($ele,p)	{
-				var $container = $ele.closest("[data-app-role='cartItemContainer']"), cartID = $ele.closest("[data-app-role='checkout']").data('cartid');
-				if(app.ext.cco.u.buildCartItemAppendSKU($container))	{
-					app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
-					app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'adminInventoryDiscrepencyDisplay','extension':'cco','jqObj':$container});
-					app.model.dispatchThis('immutable');
-					}
-				else	{} //the build function will handle error display.
+				p.skuArr = [$ele.closest("[data-sku]").data('sku')];
+				this.cartItemAppendAllSKUsFromOrder($ele,p);
 				},
 
 			//SKU/STID required (fully qualified, w/ variations et all);
 			cartItemAppendAllSKUsFromOrder : function($ele,p)	{
 				var $container = $ele.closest("[data-app-role='orderContainer']"), orderID = $container.data('orderid');
 				if(orderID)	{
-					var cartID = $ele.closest("[data-app-role='checkout']").data('cartid'), $form = $ele.closest('form');
-					app.ext.admin.calls.adminOrderDetail.init(orderID,{
-						'callback' : function(rd)	{
-							if(app.model.responseHasErrors(rd)){
-								$container.anymessage({'message':rd});
-								}
-							else	{
-								var items = app.data[rd.datapointer]['@ITEMS'];
-								for(var i = 0, L = items.length; i < L; i += 1)	{
-									//don't send the entire item object. contains a lot of info the API will take care of.
-									var obj = app.ext.cco.u.buildCartItemAppendObj({'sku' : items[i].stid,'qty':items[i].qty,'price':items[i].price},cartID);
-									if(obj)	{
-										app.ext.cco.calls.cartItemAppend.init(obj,{},'immutable');
-										}
-									}
+					var $checkout = $ele.closest("[data-app-role='checkout']"), cartID = $checkout.data('cartid');
+					app.ext.cco.u.appendOrderItems2Cart({'orderid':orderID,'cartid':cartID},function(rd){
 //run an inventory check. However, do NOT auto-adjust. Merchants should be allowed to over-order if desired.
 //throw a fatty warning tho to make sure it isn't missed.
-								app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'adminInventoryDiscrepencyDisplay','extension':'cco','jqObj':$container});
-								app.ext.orderCreate.u.handleCommonPanels($form);
-								app.model.dispatchThis('immutable');
-								}
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
+						app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'adminInventoryDiscrepencyDisplay','extension':'cco','jqObj':$container});
+						app.ext.orderCreate.u.handleCommonPanels($checkout);
+						app.model.dispatchThis('immutable');
+
+						},p.skuArr || []);
 					}
 				else	{
 					
@@ -1493,6 +1474,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			cartOrderSave : function($ele,p)	{
 				var $form = $ele.closest('form');
 				app.ext.cco.u.sanitizeAndUpdateCart($form);
+				
 				app.model.dispatchThis('immutable');
 				},
 

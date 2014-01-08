@@ -2132,7 +2132,7 @@ effects the display of the nav buttons only. should be run just after the handle
 	
 //no need to render template again.
 					if(!$product.length){
-						$product = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'}); // ### TODO -> see what app-pagetype is used for. see about removing or using data-template-role
+						$product = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID});
 						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
 						app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
@@ -3084,31 +3084,14 @@ else	{
 			execOrder2Cart : function($ele,p)	{
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID)	{
-					app.calls.buyerOrderGet.init({'orderid':orderID},{'callback':function(rd){
+					app.ext.cco.u.appendOrderItems2Cart({orderid:orderID,cartid:app.model.fetchCartID()},function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
-							var orderList = app.data[rd.datapointer].order['@ITEMS'],
-							L = orderList.length, cartID = app.model.fetchCartID()
-							for(var i = 0; i < L; i += 1)	{
-								var obj = {'sku':orderList[i].product,'qty':orderList[i].qty,'_cartid':cartID}
-								if(!$.isEmptyObject(orderList[i]['%options']))	{
-									var variations = orderList[i]['%options'];
-									obj['%variations'] = {};
-									for(var index in variations)	{
-										obj['%variations'][variations[index].id] = variations[index].v
-										}
-									}
-								app.ext.coo.calls.cartItemAppend.init(obj,{},'immutable');
-								app.calls.refreshCart.init({'callback':function(rd){
-									showContent('cart');
-									}},'immutable');
-								app.model.dispatchThis('immutable');
-								}
+							showContent('cart');
 							}
-						}},'immutable');
-					app.model.dispatchThis('immutable');
+						});
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':"In myRIA.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
@@ -3133,6 +3116,7 @@ else	{
 
 			productAdd2Cart : function($ele,p)	{
 				p.preventDefault();
+				$ele.append("<input type='hidden' name='_cartid' value='"+app.model.fetchCartID()+"' \/>");
 				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
 				if(cartObj)	{
 					app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');

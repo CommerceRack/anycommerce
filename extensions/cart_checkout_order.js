@@ -847,6 +847,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
 					delete formObj['coupon'];	
+					delete formObj['qty']; //admin UI for line item editing.	
+					delete formObj['price']; //admin UI for line item editing.
 
 					app.ext.cco.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
@@ -855,14 +857,13 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 //run when a payment method is selected. updates memory and adds a class to the radio/label.
 //will also display additional information based on the payment type (ex: purchase order will display PO# prompt and input)
-// ### TODO -> updatePayDetails is used in orders.js.  See if it can be replaced w/ cco.showSupplementalInputs
 			updatePayDetails : function($container)	{
 //				app.u.dump("BEGIN order_create.u.updatePayDetails.");
 				var paymentID = $("[name='want/payby']:checked",$container).val();
 
 				var o = '';
 				$('.ui-state-active',$container).removeClass('ui-state-active ui-corner-top ui-corner-all ui-corner-bottom');
- //in Admin, some of the supplemental inputs are shared between payment types (flag as paid)
+//in Admin, some of the supplemental inputs are shared between payment types (flag as paid)
 //so to ensure the checkbox isn't on by accident, remove all supplemental material when switching between.
 				$('.paybySupplemental', $container).empty().remove();
 				var $radio = $("[name='want/payby']:checked",$container);
@@ -900,28 +901,103 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				}, //updatePayDetails
 
 
+/*
+in an order detail, the item variations are stored as %options
+in a reorder, that data needs to be converted to the variations format required by cartItemAppend.
+*/
+
+			options2Variations : function(opts)	{
+				var variations = false; //what is returned. either false or an object.
+				if(!$.isEmptyObject(opts))	{
+					variations = {};
+					for(var index in opts)	{
+						variations[opts[index].id] = opts[index].v
+						}
+					}
+				return variations;
+				},
+
+//vars.orderID is the orderID we are ordering from. - required.
+//vars.cartid is the cart that the item(s) will be added to. - required.
+//callback is executed as part of the cartDetail call, which is piggy backed w/ the append calls.
+//skuArr is an optional param. if set, only the items in skuArr will be appended to the cart.
+			appendOrderItems2Cart : function(vars,callback,skuArr)	{
+				vars = vars || {};
+				if(vars.orderid && vars.cartid)	{
+					var cmd; //the command used for the dispatch. varies based on whether this is admin or buyer.
+					skuArr = skuArr || [];
+					if(app.vars.thisSessionIsAdmin)	{
+						cmd = 'adminOrderDetail';
+						}
+					else	{
+						cmd = 'buyerOrderGet';
+						}
+					
+					app.model.addDispatchToQ({
+						'_cmd':cmd,
+						'orderid':vars.orderid,
+						'_tag':	{
+							'datapointer' : cmd+"|"+vars.orderid,
+							'callback':function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									var items = (cmd == 'adminOrderDetail') ? app.data[rd.datapointer]['@ITEMS'] : app.data[rd.datapointer].order['@ITEMS'], L = items.length;
+									for(var i = 0; i < L; i += 1)	{
+										if(skuArr.length && !$.inArray(items[i].sku,skuArr))	{} //skuArr is defined and this item is NOT in the array. do nothing.
+										else	{
+											//skuArr is either not defined (append all sku's from order) OR skuArr is defined and this item is in that array. Either way, proceed w/ append.
+											var appendObj = app.ext.cco.u.buildCartItemAppendObj(items[i],vars.cartid); //will generate a new uuid.
+											app.u.dump(" -> appendObj"); app.u.dump(appendObj);
+											if(appendObj)	{
+												app.ext.cco.calls.cartItemAppend.init(appendObj,{},'immutable');
+												}
+											else	{
+												$('#globalMessaging').anymessage({'message':'In cco.u.appendOrderItems2Cart, cco.u.buildCartItemAppendObj failed. See console for details.','gMessage':true});
+												}
+											}
+										}
+									if(L)	{
+										app.calls.cartDetail.init(vars.cartid,{'callback': (typeof callback == 'function') ? callback : ''},'immutable');
+										app.model.dispatchThis('immutable');
+										}
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In cco.u.reorder, orderid ['+vars.orderid+'] and/or cartid ['+vars.cartid+'] left blank and both are required.','gMessage':true});
+					}
+
+				},
+
 //accepts an object (probable a serialized form object) which needs sku and qty.  In an admin session, also accepts price.
 //Will validate required fields and provide any necessary formatting.
 //used in orderCreate in the admin UI for adding a line item and a re-order for previous orders.
-// ### TODO -> store_product has a duplicate of this. compare and eliminate one if possible
 			buildCartItemAppendObj : function(sfo,_cartid)	{
 				var r = false; //what is returned. either an object or false
 				if(sfo.sku && sfo.qty)	{
 					if(sfo.price)	{}
 					else	{delete sfo.price} //don't pass an empty price, will set price to zero. if a price is passed when not in an admin session, it'll be ignored.
 					sfo.uuid = app.u.guidGenerator();
+					if(sfo['%options'])	{
+						sfo['%variations'] = this.options2Variations(sfo['%options'])
+						}
 					if(_cartid)	{sfo._cartid = _cartid;}
 					else	{sfo._cartid = app.model.fetchCartID();}
-					r = sfo;
+					r = app.u.getWhitelistedObject(sfo,['qty','%variations','price','sku','uuid','_cartid']); //whitelisted so all extra crap is dropped. ex: when %options is passed in from an existing order.
 					}
 				else	{
-					app.u.dump("In cco.u.buildCartItemAppendObj, both a sku ["+sfo.sku+"] and a qty ["+sfo.qty+"] are required and one was not set.",'warn')
+					app.u.dump("In cco.u.buildCartItemAppendObj, both a sku ["+sfo.sku+"] and a qty ["+sfo.qty+"] are required and one was not set.",'warn'); //parent function will handle error display so that it can be case specific.
 					r = false; //sku and qty are required.
 					}
 				return r;
 				},
+
 //used in order create for adding a lineitem from a previous order, so test any changes there (admin UI) after making changes.
-// ### TODO -> check out the execOrder2Cart in myRIA. may be better than this one. merge the two.
 			buildCartItemAppendSKU : function($container)	{
 				app.u.dump("BEGIN cco.u.buildCartItemAppendSKU");
 				var r = false; //what is returned. will be true if dispatch is created.
@@ -1187,7 +1263,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID ['+stid+'] and/or the cart id ['+cartid+'].','gMessage':true})
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemRemove, unable to ascertain item STID ['+stid+'] and/or the cart id ['+cartid+'].','gMessage':true})
 					}
 				}, //cartItemRemove
 			
@@ -1195,23 +1271,29 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				p.preventDefault();
 				alert('woot!'); // ### TODO -> wrap this up once template on completes are ready.
 				},
-			
-			cartItemQuantityUpdate : function($ele,p){
-				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
+			//this update could get triggered by a quantity update, a button or a price change (admin).
+			//$container will contain the qty and, if present, the price.
+			cartItemUpdateExec : function($ele,p){
+				var $container = $ele.closest('[data-stid]'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				
-				if(stid && cartid)	{
-					app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':$ele.val(),'_cartid':cartid},{
+				if($container.data('stid') && cartid)	{
+					var updateObj = {'stid':$container.data('stid'),'quantity':$("input[name='qty']",$container).val(),'_cartid':cartid,'uuid':$container.data('uuid')}
+					//in the admin UI, this'll update the price. in a non-admin session, it won't do anything but won't hurt either.
+					if($("input[name='price']",$container).val())	{
+						updateObj.price = $("input[name='price']",$container).val();
+						}
+					app.ext.cco.calls.cartItemUpdate.init(updateObj,{
 						'callback' : 'showMessaging',
-						'message' : 'Quantities updated for item '+stid,
+						'message' : 'Item '+$container.data('stid')+ ' updated.',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
 					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('form').anymessage({'message':'In cco.e.cartItemQuantityUpdate, unable to ascertain item STID ['+stid+'] and/or cartid ['+cartid+'].','gMessage':true})
+					$ele.closest('form').anymessage({'message':'In cco.e.cartItemUpdateExec, unable to ascertain item STID ['+stid+'] and/or cartid ['+cartid+'].','gMessage':true})
 					}
-				}, //cartItemQuantityUpdate
+				}, //cartItemUpdateExec
 
 			cartZipUpdateExec : function($ele,p)	{
 				
