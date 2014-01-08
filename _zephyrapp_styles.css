@@ -554,6 +554,10 @@ a:hover {
 
 
 /***** Category Page CSS Start *****/
+.breadcrumb {background:#ff7c00; padding:2px 4px;}
+.breadcrumb li:after {color:#ffffff; padding-left:3px;}
+.breadcrumb li a{color:#ffffff; font-size:11px; text-decoration:none;}
+.breadcrumb li:last-child a {color: #ffffff;}
 .categoryList{
 	background-color: #E6E6E6;
     border: 1px double #BBBBBB;
