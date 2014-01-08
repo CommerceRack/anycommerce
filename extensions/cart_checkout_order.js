@@ -997,29 +997,6 @@ in a reorder, that data needs to be converted to the variations format required 
 				return r;
 				},
 
-//used in order create for adding a lineitem from a previous order, so test any changes there (admin UI) after making changes.
-/*
-## TOD -> make sure this isn't used any more and delete.
-			buildCartItemAppendSKU : function($container)	{
-				app.u.dump("BEGIN cco.u.buildCartItemAppendSKU");
-				var r = false; //what is returned. will be true if dispatch is created.
-				
-				if($container instanceof jQuery)	{
-					var sfo = this.buildCartItemAppendObj($container.serializeJSON(),$container.closest("[data-app-role='checkout']").data('cartid'));
-					if(sfo)	{
-						app.ext.cco.calls.cartItemAppend.init(sfo,{'callback':'showMessaging','jqObj':$container,'message':'Item added to cart.'},'immutable');
-						r = sfo;
-						}
-					else	{
-						$container.anymessage({"message":"In orderCreate.e.cartItemAddStid, buildCartItemAppendObj was unsuccessful. see console for details.","gMessage":true});
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In orderCreate.e.cartItemAddStid, no data-app-role='cartItemContainer' specified around trigger element.","gMessage":true});
-					}
-				return r;
-				},
-*/
 //cart must already be in memory when this is run.
 //will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
