@@ -373,8 +373,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 */
 
 			setProdlistVars : function(obj)	{
-//				app.u.dump("BEGIN store_prodlist.u.setProdlistVars");
-//				app.u.dump(obj);
+//				app.u.dump("BEGIN store_prodlist.u.setProdlistVars"); app.u.dump(obj);
 				var r = false;
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
 				
@@ -475,12 +474,12 @@ if no parentID is set, then this function gets the data into memory for later us
 
 */
 			getProductDataForList : function(plObj,$tag,Q)	{
-//				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
+//				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]"); app.u.dump(plObj);
 
 				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
 				if(plObj && plObj.csv)	{
-					app.u.dump(" -> csv defined. length: "+plObj.csv.length);
+//					app.u.dump(" -> csv defined. length: "+plObj.csv.length);
 					var pageCSV = this.getSkusForThisPage(plObj);
 					var L = pageCSV.length;
 					var call = 'appProductGet';  //this call is used unless variations or inventory are needed. this call is 'light' and just gets basic info.
@@ -528,8 +527,7 @@ obj is most likely the databind object. It can be any params set in setProdlistV
 params that are missing will be auto-generated.
 */
 			buildProductList : function(obj,$tag)	{
-//				app.u.dump("BEGIN store_prodlist.u.buildProductList()");
-//				app.u.dump(" -> obj: "); app.u.dump(obj);
+//				app.u.dump("BEGIN store_prodlist.u.buildProductList()"); app.u.dump(" -> obj: "); app.u.dump(obj);
 
 //Need either the tag itself ($tag) or the parent id to build a list. recommend $tag to ensure unique parent id is created
 //also need a list of product (csv)
@@ -540,14 +538,14 @@ params that are missing will be auto-generated.
 
 // use child as template is used within KISS.
 					if(obj.useChildAsTemplate)	{
-						app.u.dump(" -> obj.useChildAsTemplate is true.");
+//						app.u.dump(" -> obj.useChildAsTemplate is true.");
 						obj.loadsTemplate = "_"+$tag.attr('id')+"ListItemTemplate";
 						if(app.templates[obj.loadsTemplate])	{
 							app.u.dump(" -> template already exists");
 							//child has already been made into a template. 
 							}
 						else	{
-							app.u.dump(" -> template does not exist. create it");
+//							app.u.dump(" -> template does not exist. create it");
 							if($tag.children().length)	{
 								app.u.dump(" -> tag has a child. create template: "+obj.loadsTemplate);
 								app.model.makeTemplate($("li:first",$tag),obj.loadsTemplate);
@@ -567,10 +565,10 @@ params that are missing will be auto-generated.
 					else	{$tag = $('#'+plObj.parentID);}
 					
 				
-					$tag.data('pageProductLoaded',0); //used to count how many product have been loaded (for prodlistComplete)
-					$tag.data('totalProductLoaded',0); //used to count how many product have been loaded (for prodlistComplete)					
+					$tag.data('pageProductLoaded',0); //used to count how many product have been loaded on this page (for prodlistComplete)
+					$tag.data('totalProductLoaded',0); //used to count how many product have been loaded for total count (for prodlistComplete)					
 					
-//a wrapper around all the prodlist content is created just one. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
+//a wrapper around all the prodlist content is created just once. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
 					if($('#'+plObj.parentID+'_container').length == 0)	{
 						if($tag.is('tbody'))	{
 							$tag.closest('table').wrap("<div id='"+plObj.parentID+"_container' />");
