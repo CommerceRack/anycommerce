@@ -1809,7 +1809,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				}
 			},
 		_anyContent : function()	{
-			app.u.dump("BEGIN _anycontent");
+//			app.u.dump("BEGIN _anycontent");
 			var 
 				o = this.options,
 				$content;
