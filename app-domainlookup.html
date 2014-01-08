@@ -64,7 +64,7 @@ $(document).ready(function(){
 //instantiate wiki parser.
 	myCreole = new Parse.Simple.Creole();
 	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js','callback':'initExtension'}]);
-	app.u.handleEventDelegation($(document.body));
+	$(document.body).anydelegate();
 	});
 </script>
 

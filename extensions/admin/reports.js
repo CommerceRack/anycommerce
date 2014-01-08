@@ -1447,8 +1447,8 @@ app.model.dispatchThis('immutable');
 
 					app.u.handleButtons($D);
 					app.u.handleCommonPlugins($D);
-					app.u.handleEventDelegation($D);
-					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+					$D.anydelegate();
+//					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 
 					$('.datepicker',$D).datepicker({
 						changeMonth: true,

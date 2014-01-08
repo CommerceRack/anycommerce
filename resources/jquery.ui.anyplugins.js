@@ -79,7 +79,7 @@ additionally, will apply some conditional form logic.
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
 			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
-				app.u.dump("handleEventDelegation was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
+				app.u.dump("anydelegate was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
 				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
@@ -141,7 +141,7 @@ additionally, will apply some conditional form logic.
 				
 				}
 			else	{
-				$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
+				$('#globalMessaging').anymessage({'message':"In ui.anydelegate._executeEvent, $CT is empty or not a valid jquery instance [isValid: "+($CT instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
 				}
 //			app.u.dump("_executeEvent r: "+r);
 			return r;
@@ -382,11 +382,11 @@ pass in an event name and a function and it will be added as an eventAction.
 					r = app.ext[AEF[0]].e[AEF[1]]($CT,ep);
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In app.u.executeEvent, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+					$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
 					}
 				}
 			else	{
-				$('#globalMessaging').anymessage({'message':"In anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+				$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
 				}						
 
 			return r;
@@ -759,7 +759,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 		_addEvent2Tabs : function()	{
 			var self = this;
 // *** 201336 -> tab clicks now use delegated events. more efficient.
-			this.tabs.on('click','a',function(event){
+			this.tabs.on('click.anytabs','a',function(event){
 				event.preventDefault();
 				var oldHash = window.location.hash;
 				_ignoreHashChange = true;
@@ -771,12 +771,6 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					}
 				return false;
 				});
-/*			$('a',this.tabs).each(function(){
-				$(this).on('click.anytabs',function(event){
-					app.u.dump('tab clicked!');
-					});
-				});
-*/
 			},
 
 		_addClasses2Tabs : function()	{
@@ -1987,7 +1981,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 	$.widget("ui.stickytab",{
 		options : {
 			tabID : '',
-			handleEventDelegation : false, //if enabled, will apply event delegation to table.
+			anydelegate : false, //if enabled, will apply event delegation to table.
 			tabtext : 'unnamed tab', //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
 			tabclass : 'ui-state-default' //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			},
@@ -2016,7 +2010,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
 	
 				this.sticky = $sticky; //global reference to container for easy access.
-				if(o.handleEventDelegation)	{
+				if(o.anydelegate)	{
 					$sticky.anydelegate();
 					}
 //* 202324  -> tabid wasn't getting applied to tab.

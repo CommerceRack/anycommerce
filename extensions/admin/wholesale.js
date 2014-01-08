@@ -141,8 +141,8 @@ else	{
 				
 				$("[data-app-role='slimLeftNav']",$target).accordion();
 				//target is likely a tab and I don't want to delegate to a tab at this time.
-				app.u.handleEventDelegation($("[data-app-role='slimLeftNav']",$target));
-				app.u.handleEventDelegation($("[data-app-role='slimLeftContentSection']",$target));
+				$("[data-app-role='slimLeftNav']",$target).anydelegate();
+				$("[data-app-role='slimLeftContentSection']",$target).anydelegate();
 				},
 
 			showPriceSchedules : function($target)	{
@@ -1299,7 +1299,7 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 			'VENDORID':VENDORID,
 			'_tag':	{
 				'callback': 'anycontent',
-				'handleEventDelegation' : true,
+				'anydelegate' : true,
 				'jqObj' : $('form',$D)
 				}
 			}

@@ -149,8 +149,6 @@ if(_rtag.jqObj)	{
 //hidden pid input is used by save. must come after the 'anycontent' above or form won't be set.
 	_rtag.jqObj.find('form').append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 
-//	app.u.handleEventDelegation(_rtag.jqObj);
-//	app.ext.admin.u.applyEditTrackingToInputs(_rtag.jqObj);
 	_rtag.jqObj.anydelegate({'trackEdits':true});
 	app.u.handleCommonPlugins(_rtag.jqObj);
 	app.u.handleButtons(_rtag.jqObj);
@@ -231,7 +229,6 @@ _rtag.jqObj.anydelegate({
 				else	{
 					$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
 					$("[data-app-role='productManagerResultsContent']",$target).anydelegate(); //this delegate is just on the results. each product get's it's own in quickview.
-//					app.u.handleEventDelegation($("[data-app-role='productManager']",$target));
 					}
 				}, //showProductManager
 
@@ -321,7 +318,6 @@ $target.anycontent({'templateID':P.templateID,'showLoading':false}).attr('data-p
 
 app.u.handleCommonPlugins($target);
 app.u.handleButtons($target);
-//app.u.handleEventDelegation($target);
 $target.anydelegate();
 					}
 				else if($target instanceof jQuery)	{
@@ -837,10 +833,9 @@ $target.anydelegate();
 					});
 				$( "[data-app-role='priceFilterRange']" ).val( "$" + $( ".sliderRange" ).slider( "values", 0 ) + " - $" + $( ".sliderRange" ).slider( "values", 1 ) );
 				$div.anydelegate();
-//				app.u.handleEventDelegation($div);
 				},
 
-//** 201334 -> for new product manager interface.
+//Used in product manager interface.
 			handleManagementCategoryFilters : function()	{
 //				app.u.dump("BEGIN admin_prodEdit.u.handleManagementCategoryFilters");
 				var $navtabs = $('#navTabs');// tabs container
