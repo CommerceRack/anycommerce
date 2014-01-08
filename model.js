@@ -170,7 +170,7 @@ function zModel() {
 				app.q[QID][uuid] = tmp;
 				r = uuid;
 // this breaks stuff.
-//				app.storageFunctions.writeLocal("response_"+uuid, JSON.stringify(tmp),'session'); //save a copy of each dispatch to sessionStorage for entymologist
+//				app.model.writeLocal("response_"+uuid, JSON.stringify(tmp),'session'); //save a copy of each dispatch to sessionStorage for entymologist
 				}
 			return r;
 			},// addDispatchToQ
@@ -575,8 +575,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			if(app.data[key])	{
 				delete app.data[key];
 				}
-			app.storageFunctions.nukeLocal(key,'local');
-			app.storageFunctions.nukeLocal(key,'session');
+			app.model.nukeLocal(key,'local');
+			app.model.nukeLocal(key,'session');
 			},
 
 
@@ -600,10 +600,10 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					}				
 				if(this.thisGetsSaved2Local(responseData['_rcmd'])){
 					app.u.dump(" -> passed check for save local: "+responseData['_rcmd']);
-					app.storageFunctions.writeLocal(datapointer,obj4Save,'local'); //save to localStorage, if feature is available.
+					app.model.writeLocal(datapointer,obj4Save,'local'); //save to localStorage, if feature is available.
 					}
 				if(this.thisGetsSaved2Session(responseData['_rcmd']))	{
-					app.storageFunctions.writeLocal(datapointer,obj4Save,'session'); //save to sessionStorage, if feature is available.
+					app.model.writeLocal(datapointer,obj4Save,'session'); //save to sessionStorage, if feature is available.
 					}
 
 				}
@@ -788,23 +788,6 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			app.model.handleResponse_authAdminLogin(responseData); //this will have the same response as a login if successful.
 			},
 
-//this function gets executed upon a successful request for a create order.
-//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
-/*
-* 201352 -> previously, only one cart was saved in memory.  Now that multiple carts can be stored, this code is no longer necessary. ### TODO -> delete after testing.
-		handleResponse_cartOrderCreate : function(responseData)	{
-	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
-//			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
-			var datapointer = "order|"+responseData.orderid;
-			app.storageFunctions.writeLocal(datapointer,app.data['cartDetail|'+responseData.order.cart]);  //save order locally to make it available for upselling et all.
-			app.data[datapointer] = app.data['cartDetail|'+responseData.order.cart]; //saved to object as well for easy access.
-	//nuke cc fields, if present.		
-			app.data[datapointer].cart['payment/cc'] = null;
-			app.data[datapointer].cart['payment/cv'] = null;
-			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
-			return responseData.orderid;
-			}, //handleResponse_cartOrderCreate
-*/	
 /*
 It is possible that multiple requests for page content could come in for the same page at different times.
 so to ensure saving to appPageGet|.safe doesn't save over previously requested data, we extend it the ['%page'] object.
@@ -819,7 +802,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				else	{
 					app.data[datapointer] = responseData;
 					}
-				app.storageFunctions.writeLocal(datapointer,app.data[datapointer],'session'); //save to session storage, if feature is available.
+				app.model.writeLocal(datapointer,app.data[datapointer],'session'); //save to session storage, if feature is available.
 				}
 			app.model.handleResponse_defaultAction(responseData);
 			}, //handleResponse_appPageGet
@@ -991,7 +974,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				uuid = app.vars.uuid; //if the uuid is set in the control, trust it.
 				}
 //in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal so readLocal doesn't have to be executed twice.
-			else if(L = app.storageFunctions.readLocal("uuid",'local'))	{
+			else if(L = app.model.readLocal("uuid",'local'))	{
 				L = Math.ceil(L * 1); //round it up (was occassionally get fractions for some odd reason) and treat as number.
 	//			app.u.dump(' -> isSet in local ('+L+' and typof = '+typeof L+')');
 				if($.isEmptyObject(app.q.mutable[L+1]) && $.isEmptyObject(app.q.immutable[L+1]) && $.isEmptyObject(app.q.passive[L+1])){
@@ -1014,7 +997,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	
 			uuid += 1;
 			app.vars.uuid = uuid;
-			app.storageFunctions.writeLocal('uuid',uuid); //save it locally.
+			app.model.writeLocal('uuid',uuid); //save it locally.
 //			app.u.dump('//END fetchUUID. uuid = '+uuid);
 			return uuid;
 			}, //fetchUUID
@@ -1089,7 +1072,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return r;
 			},
 	
-// ### TODO -> check to see if the cartID is already in carts. if so, remove old and add new id to top.
+// check to see if the cartID is already in carts. if so, remove old and add new id to top.
 // do we want a 'bringCartIntoFocus', which would move a cart id to the top? wait and see if it's necessary.
 		addCart2Session : function(cartID)	{
 			var carts = app.vars.carts || this.dpsGet('app','carts') || [];
@@ -1151,10 +1134,10 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 
 
 			if(!r)	{
-				local = app.storageFunctions.readLocal(datapointer,'session');
+				local = app.model.readLocal(datapointer,'session');
 				if(!local)	{
 //					app.u.dump(" -> data not found in local. check session");
-					local = app.storageFunctions.readLocal(datapointer,'local')
+					local = app.model.readLocal(datapointer,'local')
 					}
 				if(local)	{
 //					app.u.dump(" -> data was found in either session or local");		
@@ -1181,8 +1164,113 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			return r;
 			}, //fetchData
 	
-	
-	
+
+//location should be set to 'session' or 'local'.
+		writeLocal : function (key,value,location)	{
+			location = location || 'local';
+			var r = false;
+
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].setItem == 'function' )	{
+					r = true;
+					if (typeof value == "object") {
+						value = JSON.stringify(value);
+						}
+//a try is used here so that if storage is full, the error is handled gracefully.
+					try	{
+						window[location+'Storage'].setItem(key, value);
+						}
+					catch(e)	{
+						r = false;
+						app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
+						app.u.dump(e.message);
+						}
+					
+					}
+				else	{
+					app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
+					app.u.dump(" -> window."+location+"Storage is not defined.");
+					}
+				}
+			else	{
+				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
+			return r;
+			}, //writeLocal
+
+		nukeLocal : function(key,location)	{
+//			app.u.dump("BEGIN nukeLocal for "+key+" in "+location+"Storage");
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
+					try	{
+						window[location+'Storage'].removeItem(key);
+						}
+					catch(e)	{
+						app.u.dump("The attempt to run window."+location+"Storage.removeItem("+key+") failed. This occured after the $.support for that storage method. The catch error follows:"); app.u.dump(e);
+						}
+					}
+				}
+			else	{
+				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
+			},
+
+		readLocal : function(key,location)	{
+			location = location || 'local';
+			if(!$.support[location+'Storage'])	{
+				return ''; //exit early is the storage mechanism isn't supported. return blank needed because getLocal is used to set vars in some if statements.
+				}
+			else	{
+				var value = null;
+				try{
+					value = window[location+'Storage'].getItem(key);
+					}
+				catch(e)	{
+					//app.u.dump("Local storage does not appear to be available. e = ");
+					//app.u.dump(e);
+					}
+				if(value == null)	{
+					return '';
+					}
+		// assume it is an object that has been stringified
+				if(value && value[0] == "{") {
+					value = JSON.parse(value);
+					}
+				return value
+				}
+			}, //readLocal
+/*
+A note about cookies:
+	They're not particularly mobile friendly. All modern browsers support localStorage, even ie7, supports local/session storage, which is the main mechanism used by the model for persistent data storage.
+	So the cookie functions are here (for now), but should probably be avoided.
+*/
+		readCookie : function(c_name){
+			var i,x,y,ARRcookies=document.cookie.split(";");
+			for (i=0;i<ARRcookies.length;i++)	{
+				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				x=x.replace(/^\s+|\s+$/g,"");
+				if (x==c_name)	{
+					return unescape(y);
+					}
+				}
+			return false;  //return false if not set.
+			},
+
+		writeCookie : function(c_name,value)	{
+var myDate = new Date();
+myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
+document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
+document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
+			},
+//deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
+//test before earlier.
+		deleteCookie : function(c_name)	{
+document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+app.u.dump(" -> DELETED cookie "+c_name);
+			},
+
+
 /* functions for extending the controller (adding extensions and templates) */
 	
 	
@@ -1633,7 +1721,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
 //				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
-				var r = false, obj = app.storageFunctions.readLocal('session','local');
+				var r = false, obj = app.model.readLocal('session','local');
 //				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
 				if(obj == undefined)	{
 //					app.u.dump(" ^^ Entire 'session' object is empty.");
@@ -1659,7 +1747,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
-					var sessionData = app.storageFunctions.readLocal('session','local'); //readLocal returns false if no data local.
+					var sessionData = app.model.readLocal('session','local'); //readLocal returns false if no data local.
 //					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
 					sessionData = sessionData || {};
 					if(typeof sessionData[ext] === 'object'){
@@ -1673,7 +1761,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 //					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
 
-					app.storageFunctions.writeLocal('session',sessionData,'local'); //update the localStorage session var.
+					app.model.writeLocal('session',sessionData,'local'); //update the localStorage session var.
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");

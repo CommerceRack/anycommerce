@@ -56,10 +56,10 @@ var tools_ABtesting = function() {
 				//DETERMINE EXPERIMENTAL GROUPS
 				
 				//Grab any stored groupings for user consistency (a user will experience the same feature on returning to the app)
-				var cachedGroupings = app.storageFunctions.readLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
+				var cachedGroupings = app.model.readLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
 				
 				//Delete the stored groupings.  They will be rewritten after any non-existing groupings are assigned.
-				app.storageFunctions.nukeLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
+				app.model.nukeLocal(app.ext.tools_ABtesting.vars.localStorageKey,'local');
 
 				//if no value was present in localstorage, the storageFunctions attempts to readCookie instead
 				//if no cookie is present, false is returned.  In this case start fresh.
@@ -81,7 +81,7 @@ var tools_ABtesting = function() {
 					}
 				
 				//re-write localStorage.  Previously cached vars that have no grouping in the current extension are tossed, to avoid localStorage buildup.
-				app.storageFunctions.writeLocal(app.ext.tools_ABtesting.vars.localStorageKey, app.ext.tools_ABtesting.vars.groupings);
+				app.model.writeLocal(app.ext.tools_ABtesting.vars.localStorageKey, app.ext.tools_ABtesting.vars.groupings);
 				
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.

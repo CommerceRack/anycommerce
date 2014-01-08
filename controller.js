@@ -127,7 +127,7 @@ app.templates holds a copy of each of the templates declared in an extension but
 			app.u.dump(" -> session found on URI: "+app.vars._session);
 			}
 		else	{
-			app.vars._session = app.storageFunctions.readLocal('_session','local');
+			app.vars._session = app.model.readLocal('_session','local');
 			if(app.vars._session)	{
 				app.u.dump(" -> session found in localStorage: "+app.vars._session);
 				//use the local session id.
@@ -135,7 +135,7 @@ app.templates holds a copy of each of the templates declared in an extension but
 			else	{
 				//create a new session id.
 				app.vars._session = app.u.guidGenerator();
-				app.storageFunctions.writeLocal('_session',app.vars._session);
+				app.model.writeLocal('_session',app.vars._session);
 				app.u.dump(" -> generated new session: "+app.vars._session);
 				}
 			}
@@ -1213,7 +1213,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				return r;
 				},
 
-// ### TODO -> this is currently used in anytabs. when anytabs is upgraded, make sure it's more anydelegate friendly and this can be removed.
+// ### FUTURE -> this is currently used in anytabs. when anytabs is upgraded, make sure it's more anydelegate friendly and this can be removed.
 			executeEvent : function($target,p){
 				p = p || {};
 				var newEventType = app.u.normalizeEventType(p.type);
@@ -3211,116 +3211,7 @@ $tmp.empty().remove();
 
 
 
-////////////////////////////////////   						STORAGEFUNCTIONS						    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-					
-// ### TODO -> these should get moved to the model which should handle loading data from any source.
-		
-	storageFunctions : {
 
-//location should be set to 'session' or 'local'.
-		writeLocal : function (key,value,location)	{
-			location = location || 'local';
-			var r = false;
-
-			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].setItem == 'function' )	{
-					r = true;
-					if (typeof value == "object") {
-						value = JSON.stringify(value);
-						}
-//a try is used here so that if storage is full, the error is handled gracefully.
-					try	{
-						window[location+'Storage'].setItem(key, value);
-						}
-					catch(e)	{
-						r = false;
-						app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
-						app.u.dump(e.message);
-						}
-					
-					}
-				else	{
-					app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
-					app.u.dump(" -> window."+location+"Storage is not defined.");
-					}
-				}
-			else	{
-				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
-				}
-			return r;
-			}, //writeLocal
-
-		nukeLocal : function(key,location)	{
-//			app.u.dump("BEGIN nukeLocal for "+key+" in "+location+"Storage");
-			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
-					try	{
-						window[location+'Storage'].removeItem(key);
-						}
-					catch(e)	{
-						app.u.dump("The attempt to run window."+location+"Storage.removeItem("+key+") failed. This occured after the $.support for that storage method. The catch error follows:"); app.u.dump(e);
-						}
-					}
-				}
-			else	{
-				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
-				}
-			},
-
-		readLocal : function(key,location)	{
-			location = location || 'local';
-			if(!$.support[location+'Storage'])	{
-				return app.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
-				}
-			else	{
-				var value = null;
-				try{
-					value = window[location+'Storage'].getItem(key);
-					}
-				catch(e)	{
-					//app.u.dump("Local storage does not appear to be available. e = ");
-					//app.u.dump(e);
-					}
-				if(value == null)	{
-					return app.storageFunctions.readCookie(key);
-					}
-		// assume it is an object that has been stringified
-				if(value && value[0] == "{") {
-					value = JSON.parse(value);
-					}
-				return value
-				}
-			}, //readLocal
-
-		readCookie : function(c_name){
-			var i,x,y,ARRcookies=document.cookie.split(";");
-			for (i=0;i<ARRcookies.length;i++)	{
-				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-				x=x.replace(/^\s+|\s+$/g,"");
-				if (x==c_name)	{
-					return unescape(y);
-					}
-				}
-			return false;  //return false if not set.
-			},
-
-		writeCookie : function(c_name,value)	{
-var myDate = new Date();
-myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
-			},
-//deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
-//test before earlier.
-		deleteCookie : function(c_name)	{
-document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
-app.u.dump(" -> DELETED cookie "+c_name);
-			}
-
-		}, //storageFunctions
-	
-	
 
 
 ////////////////////////////////////   			thirdPartyFunctions		    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

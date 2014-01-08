@@ -4215,11 +4215,11 @@ else	{
 				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
 				var dps = app.model.dpsGet(); //all 'session' vars
 				localStorage.clear();
-				app.storageFunctions.writeLocal('authAdminLogin',admin);
+				app.model.writeLocal('authAdminLogin',admin);
 // * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
 				dps.admin.domain = '';
 				dps.admin.partition = '';
-				app.storageFunctions.writeLocal('session',dps);
+				app.model.writeLocal('session',dps);
 				},
 
 
