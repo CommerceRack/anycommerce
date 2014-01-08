@@ -300,8 +300,12 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
 	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</td>
-	<td class='alignRight'><span data-bind='var: product(qty); format:text;'></span></td>
-	<td class='alignRight'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
+	<td class='alignRight'>
+		<input type='number' name='qty' step='1' size='3' min='0' data-bind="var: product(qty); format:popVal;" data-app-change="cco|cartItemUpdateExec" />
+	</td>
+	<td class='alignRight'>
+		<input type='number' name='price' step='.01' size='8' min='0' data-bind="var: product(price); hideZero:false; format:popVal;" data-app-change="cco|cartItemUpdateExec" />
+	</td>
 	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' data-app-click='cco|cartItemRemove'>Remove Item From Cart</button></td>
 </tr>
@@ -375,7 +379,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 	<div class='buttonset alignRight'>
 	<button class='floatLeft applyButton' data-app-click='orderCreate|adminCartRemoveFromSession' title="This will remove the cart from your session. It will NOT delete the cart.">Remove Cart</button>
-	<button class='applyButton' data-app-click='orderCreate|cartOrderSave' title="Save changes without creating an order. This will NOT save credit card numbers.">Save Changes</button>
+	<button class='applyButton' data-app-role='saveButton' data-app-click='orderCreate|cartOrderSave' title="Save changes without creating an order. This will NOT save credit card numbers.">Save <span class='numChanges'></span> Changes</button>
 	<button class='applyButton ui-state-highlight' data-app-click="orderCreate|execCartOrderCreate">Create Order</button>
 	</div>
 
@@ -613,8 +617,5 @@ If this gets recycled, test in order history after making changes.
 <div id='chkoutOrderHistoryItemLineItem' data-app-role='cartItemContainer' class='marginTop'>
 	<span data-bind='var: item(stid); format:text;'></span> - 
 	<span data-bind='var: item(prod_name); format:text;'></span>
-	<input name='qty' type='number' size='2' step='1' min='0' value='' data-bind="var: item(qty); format:popVal;" />
-	<input name='sku' type='hidden' value='' data-bind="var: item(stid); format:popVal;" />
-	<input name='price' type='number' size='5' value='' step='.01' data-bind="var: item(price); format:popVal;" />
-	<button data-app-click='orderCreate|cartItemAppendSKU' class='applyButton' data-text='false' data-icon-primary='ui-icon-cart'>Add</button><!-- ### TOTO -> after an add or add all, do an inventory check -->
+	<button data-app-click='orderCreate|cartItemAppendSKU' class='applyButton' data-text='false' data-icon-primary='ui-icon-cart'>Add</button>
 </div>
