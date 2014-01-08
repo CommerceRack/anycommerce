@@ -795,7 +795,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				var updatedEvents = new Array(); //each time an event type is updated, add it here. This'll be used to make sure duplicate updates don't occur. one edit from an 'event type' updates all
 				var $tbody = $("[data-app-role='dataTable'] tbody",$form);
 				$("[data-app-role='dataTable'] tbody tr.edited",$form).each(function(index){
-					app.u.dump(" -> index: "+index);
+//					app.u.dump(" -> index: "+index);
 					var $tr = $(this);
 					var eventType = $tr.data('event');
 					if(eventType)	{

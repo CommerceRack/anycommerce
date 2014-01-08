@@ -354,7 +354,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 			app.ext.admin.u.applyEditTrackingToInputs($target);
 
 //populate 'extras' tab, which is used for tokens and profiles.
-app.u.dump(" -> $('.anytabsContainer',$target).find('li'): "+$('.anytabsContainer:first',$slimLeftContent).find('li:eq(2)').length);
+//			app.u.dump(" -> $('.anytabsContainer',$target).find('li'): "+$('.anytabsContainer:first',$slimLeftContent).find('li:eq(2)').length);
 			$('.anytabsContainer:first',$slimLeftContent).find('li:eq(1) a').trigger('click'); //make tokens and profiles tab active.
 			$extrasTabContent.anycontent({
 				'templateID' : 'ebayTokensAndProfilesTemplate',
@@ -380,7 +380,7 @@ app.model.dispatchThis('mutable');
 
 					var $profileContent = $("<div \/>").css('min-height','200').addClass('clearfix'); /* minheight is for showloading */
 					if(vars.fromupgrade)	{$profileContent.addClass('conditionMet')}
-	//instead of applying anycontent to the tab itself, it's applied to a child element. avoids potential conflicts down the road.
+//instead of applying anycontent to the tab itself, it's applied to a child element. avoids potential conflicts down the road.
 					$target.empty().append($profileContent);
 					$target.showLoading({'message':'Fetching launch profile details for '+profile});
 	
@@ -397,6 +397,9 @@ app.model.dispatchThis('mutable');
 								else	{
 //									app.u.dump(" -> app.data["+rd.datapointer+"]: "); app.u.dump(app.data[rd.datapointer]);
 									$profileContent.anycontent({'templateID':'ebayProfileCreateUpdateTemplate',data : $.extend(true,{},app.data[rd.datapointer],app.data.adminEBAYTemplateList,app.data.adminEBAYTokenList)});
+									app.u.handleButtons($profileContent);
+									app.u.handleCommonPlugins($profileContent);
+
 									$("[name='PROFILE']",$profileContent).closest('label').hide(); //field is not editable.
 
 									$("[data-panelname]",$profileContent).each(function(){
@@ -412,11 +415,8 @@ app.model.dispatchThis('mutable');
 										$fieldset.addClass('marginBottom');
 										})
 									app.u.handleAppEvents($profileContent);
-									app.u.handleButtons($profileContent);
 									app.ext.admin.u.applyEditTrackingToInputs($('form',$profileContent));
-									$('.applyAnycb',$profileContent).anycb();
 									$('.gridTable tbody',$profileContent).sortable({'items':'tr'});
-									$('.toolTip').tooltip();
 									}
 								}
 							}
@@ -1007,7 +1007,7 @@ if(mode == 'test' || mode == 'update')	{
 						if($shipping.length)	{
 							sfo['@ship_'+type+'services'] = new Array();
 							$shipping.each(function(index){
-								app.u.dump(" -> index: "+index);
+//								app.u.dump(" -> index: "+index);
 								var
 									$tr = $(this),
 									data = $tr.data();

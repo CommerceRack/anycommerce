@@ -1145,7 +1145,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			var expires = datapointer == 'authAdminLogin' ? (60*60*24*15) : (60*60*24); //how old the data can be before we fetch new.
 //checks to see if the request is already in app.data. IMPORTANT to check if object is empty in case empty objects are put up for extending defaults (checkout)
 			if(app.data && !$.isEmptyObject(app.data[datapointer]))	{
-				app.u.dump(' -> data ['+datapointer+'] already in memory.');
+//				app.u.dump(' -> data ['+datapointer+'] already in memory.');
 				r = true;
 				}
 

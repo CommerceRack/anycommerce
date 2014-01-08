@@ -5147,7 +5147,7 @@ not in use
 
 //used for delegated events and is triggered by app-event tagRowForRemove
 			tagRow4Remove : function($ele,p)	{
-				app.u.dump("tagRow4Remove click!");
+//				app.u.dump("tagRow4Remove click!");
 				$ele.toggleClass('ui-state-error');
 //Toggle the class first. That clearly indiciates the erest of the way whether we're in delete or undelete mode.
 //edited class added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.

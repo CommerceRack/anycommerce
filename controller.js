@@ -2672,19 +2672,19 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 
 		if(app.u.isSet(bindRules.format)){
 //the renderFunction could be in 1 of 2 places, so it's saved to a local var so it can be used as a condition before executing itself.
-			var renderFunction; //saves a copy of the renderFunction to a local var.
+			var renderFormat; //saves a copy of the renderFormat to a local var.
 			if(bindRules.extension && app.ext[bindRules.extension] && typeof app.ext[bindRules.extension].renderFormats == 'object' && typeof app.ext[bindRules.extension].renderFormats[bindRules.format] == 'function')	{
-				renderFunction = app.ext[bindRules.extension].renderFormats[bindRules.format];
+				renderFormat = app.ext[bindRules.extension].renderFormats[bindRules.format];
 				}
 			else if(typeof app.renderFormats[bindRules.format] == 'function'){
-				renderFunction = app.renderFormats[bindRules.format];
+				renderFormat = app.renderFormats[bindRules.format];
 				}
 			else	{
 				app.u.dump("WARNING! unrecognized render format: "+bindRules.format);
 				}
 
-			if(typeof renderFunction == 'function')	{
-				renderFunction($focusTag,{"value":value,"bindData":bindRules});
+			if(typeof renderFormat == 'function')	{
+				renderFormat($focusTag,{"value":value,"bindData":bindRules});
 				if(bindRules.pretext)	{$focusTag.prepend(bindRules.pretext)} //used for text
 				if(bindRules.posttext) {$focusTag.append(bindRules.posttext)}
 				if(bindRules.before) {$focusTag.before(bindRules.before)} //used for html
@@ -3050,6 +3050,7 @@ $tmp.empty().remove();
 //populates val() with the value
 //				cb needs to use 'prop' not 'attr'. That is the right way to do it.
 		popVal : function($tag,data){
+//			app.u.dump(" -> popVal var: "+data.bindData.var+" data.value: "+data.value);
 			if($tag.is(':checkbox'))	{
 //				app.u.dump(" -> popVal, is checkbox. value: "+data.value+" and number: "+Number(data.value));
 				if(Number(data.value) === 0)	{
@@ -3068,6 +3069,7 @@ $tmp.empty().remove();
 				if(typeof data.value === 'object')	{
 					var L = data.value.length;
 					for(var i = 0; i < L; i += 1)	{
+//						app.u.dump(i+") value: "+data.value[i]);
 						$('option[value="' + data.value[i] + '"]',$tag).prop('selected','selected');
 						}
 					}
@@ -3082,14 +3084,7 @@ $tmp.empty().remove();
 					$tag.prop('defaultValue',data.value); //allows for tracking the difference onblur.
 					}
 				}
-			
-			if($tag.data('trigger'))	{
-				if($tag.is('select'))	{}
-				else	{
-					$tag.trigger($tag.data('trigger'))
-					}
-				}
-			
+
 			}, //text
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
