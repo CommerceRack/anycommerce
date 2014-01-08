@@ -27,19 +27,19 @@
 .infoFooter {min-height:15px; padding:10px 0px;}
 
 /**** Homepage CSS****/
-.randomList {height:2040px;}
+.randomList {height:auto;}
 #sideBarRight {height:0px; overflow:hidden;}
+.listHeader{padding-left:10px; padding-top:4px; height:20px; margin:0px;}
 
-/**** Homepage CSS****/
+/**** Cart CSS****/
 .cartSummaryTotalsContainer h2 {font-size:16px; padding:4px 10px;}
 .cartButtons span {display:block; margin-bottom: 0.5em;}
 
 /**** ProdList CSS****/
-.productList {width:210px;}
-.productList > li {height: 190px; width:190px; margin: 0 10px 15px;}
-.prodThumb {margin:0 auto;}
-.prodListTagsContainer {right:0px; top:73px;}
-.productList .prodViewerAddToCartForm {left:27%;}
+.productList {width:100%;}
+.productList > li {height: auto; width:100%; margin:0px; padding:5px 0px; border-top:1px solid #D7D9DB;}
+.prodThumbContainer {float:left; padding-right:10px; margin:0px;}
+.productList .prodViewerAddToCartForm {position:static;}
 
 /**** Product Page CSS****/
 .prodPageNameContainer{padding:0px; background:none; border:0px;}
