@@ -207,9 +207,6 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				oldCartID = $checkout.closest("[data-app-role='checkout']").data('cartid'),
 				orderID = app.data[_rtag.datapointer].orderid;
 				
-				if(!oldCartID)	{
-					app.u.dump("Yo! $checkout.data(cartid) did NOT have the cart set. that's no good.",'error'); //### TODO -> make sure we don't hit this error at checkout.
-					}
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
 				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData}); //show invoice
@@ -812,7 +809,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //					app.u.dump(" -> Shipping methods are present.");
 //if the method selected is UPS AND the merchant has rules enabled for that method, UPS requires the disclaimer to be shown.
 					for(var i = 0; i < L; i += 1)	{
-						if(shipMethods[i][id] == formObj['want/shipping_id'])	{
+						if(shipMethods[i].id == formObj['want/shipping_id'])	{
 							if(shipMethods[i]._carrier == 'UPS' && shipMethods[i].rules)	{
 								$("[data-app-role='upsShipRulesDisclaimer']",$fieldset).show();
 								}
