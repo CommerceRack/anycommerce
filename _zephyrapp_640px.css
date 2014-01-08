@@ -1,5 +1,5 @@
 /* Mobile view */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 640px) {
 .displayBlockMobile {display:block;}
 .displayInlineMobile {display:inline;}
 .displayNoneMobile {display: none;}
