@@ -1056,55 +1056,52 @@ when an event type is changed, all the event types are dropped, then re-added.
 				else	{} //validateForm handles error display.
 				}, //shippingPartnerRegExec
 
-			shippingGeneralUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.shippingGeneralUpdateExec').on('click.shippingGeneralUpdateExec',function(){
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						$form.showLoading({"message":"Updating shipping settings"});
-						var macros = new Array();
-						macros.push("SHIPPING/CONFIG?"+$.param($form.serializeJSON({'cb':true})));
+			shippingGeneralUpdateExec : function($ele,P)	{
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					$form.showLoading({"message":"Updating shipping settings"});
+					var macros = new Array();
+					macros.push("SHIPPING/CONFIG?"+$.param($form.serializeJSON({'cb':true})));
 
 //if any new bans have occured, update the list.
-						var $bannedContainer = $("[data-app-role='bannedlistContainer']",$form);
-						if($('.edited',$bannedContainer).length)	{
-							macros.push("SHIPPING/BANNEDTABLE-EMPTY");
-							var countries = "";
-							$('tbody tr',$bannedContainer).each(function(){
-								var $tr = $(this);
-								if($tr.hasClass('rowTaggedForRemove'))	{
-									$tr.empty().remove();
-									} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
-								else	{
-									macros.push("SHIPPING/BANNEDTABLE-INSERT?match="+$tr.data('match')+"&type="+$tr.data('type'));
-									}
-								});
-							}
+					var $bannedContainer = $("[data-app-role='bannedlistContainer']",$form);
+					if($('.edited',$bannedContainer).length)	{
+						macros.push("SHIPPING/BANNEDTABLE-EMPTY");
+						var countries = "";
+						$('tbody tr',$bannedContainer).each(function(){
+							var $tr = $(this);
+							if($tr.hasClass('rowTaggedForRemove'))	{
+								$tr.empty().remove();
+								} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+							else	{
+								macros.push("SHIPPING/BANNEDTABLE-INSERT?match="+$tr.data('match')+"&type="+$tr.data('type'));
+								}
+							});
+						}
 // COUNTRIES!
 //if any changes have occured to the blacklisted countries, update the list.
-						var $blacklistContainer = $("[data-app-role='blacklistContainer']",$form);
-						if($blacklistContainer.find('.edited').length)	{
-							var blacklistMacro = "SHIPPING/CONFIG?blacklist="
-							$('tbody tr',$blacklistContainer).each(function(){
-								if($(this).hasClass('rowTaggedForRemove'))	{
-									$(this).empty().remove();
-									} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
-								else	{
-									blacklistMacro += $(this).data('country')+',';
-									}
-								});
-							macros.push(blacklistMacro);
-							}
-//						app.u.dump("macros: "); app.u.dump(macros);
-						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.','restoreInputsFromTrackingState':true,'removeFromDOMItemsTaggedForDelete':true},'immutable');
-						app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
-						app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'immutable');
-						app.model.dispatchThis('immutable');
-
-
+					var $blacklistContainer = $("[data-app-role='blacklistContainer']",$form);
+					if($blacklistContainer.find('.edited').length)	{
+						var blacklistMacro = "SHIPPING/CONFIG?blacklist="
+						$('tbody tr',$blacklistContainer).each(function(){
+							if($(this).hasClass('rowTaggedForRemove'))	{
+								$(this).empty().remove();
+								} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+							else	{
+								blacklistMacro += $(this).data('country')+',';
+								}
+							});
+						macros.push(blacklistMacro);
 						}
-					else	{} //validateForm handles error display
-					});
+//						app.u.dump("macros: "); app.u.dump(macros);
+					app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.','restoreInputsFromTrackingState':true,'removeFromDOMItemsTaggedForDelete':true},'immutable');
+					app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
+					app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'immutable');
+					app.model.dispatchThis('immutable');
+
+
+					}
+				else	{} //validateForm handles error display
 				}, //shippingGeneralUpdateExec
 
 			shipMethodUpdateShow : function($ele,p)	{
