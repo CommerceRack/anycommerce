@@ -549,7 +549,7 @@ left them be to provide guidance later.
 
 //This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
-				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
+				return (this.modifyPaymentQbyTender('PAYPALEC',null,app.model.fetchCartID())) ? true : false;
 				},
 
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
@@ -558,7 +558,7 @@ left them be to provide guidance later.
 //				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					return (Math.round(+new Date(PQI.TIMESTAMP)) > +new Date()) ? true : false;
-					});
+					},app.model.fetchCartID());
 				},
 /*
 once paypalEC has been approved by paypal, a lot of form fields lock down, but the user may decide to change
@@ -572,7 +572,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					//the delete cmd will reset want/payby to blank.
 					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
-					});
+					},app.model.fetchCartID());
 				},
 
 //pass in a tender/TN [CASH, PAYPALEC, CREDIT] and an array of matching id's is returned.
@@ -580,13 +580,12 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //if someFunction is set then that function will get executed over each match.
 //the value returned gets added to an array, which is returned by this function.
 //the entire lineitem in the paymentQ is passed in to someFunction.
-			modifyPaymentQbyTender : function(tender,someFunction){
+			modifyPaymentQbyTender : function(tender,someFunction,cartID){
 //				app.u.dump("BEGIN cco.u.modifyPaymentQbyTender");
 				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
 				r = new Array(), //what is returned if someFunction returns anything.
 				returned; //what is returned by this function.
-				var cartID = app.model.fetchCartID(); // ### TODO -> this can't use fetchCartID. MUST use cart in focus.
-				if(tender && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID]['@PAYMENTQ'])	{
+				if(tender && cartID && app.u.thisNestedExists("app.data.cartDetail|"+cartID+".@PAYMENTQ"))	{
 					if(app.data['cartDetail|'+cartID]['@PAYMENTQ'].length)	{
 	//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
 						var L = app.data['cartDetail|'+cartID]['@PAYMENTQ'].length;
@@ -607,7 +606,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						} //paymentQ is empty. no error or warning.
 					}
 				else	{
-					app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
+					app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] or cartID ["+cartID+"] not set or @PAYMENTQ does not exist.");
 					}
 //				app.u.dump(" -> num tender matches: "+r);
 				return returned;
