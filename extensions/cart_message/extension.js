@@ -122,7 +122,7 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 						//this means the _cmd is not supported. not sense retrying every few seconds.
 						}
 					else if(rd && rd._rtag && rd._rtag.jqObj && rd._rtag.jqObj.data('cartid'))	{
-						var cartID = rd.jqObj.data('cartid');
+						var cartID = rd._rtag.jqObj.data('cartid');
 						app.ext.cart_message.vars.carts[cartID].frequency = 10000;
 						app.ext.cart_message.u.fetchCartMessages(app.ext.cart_message.vars.carts[cartID].frequency,rd._rtag.jqObj);
 						}
@@ -178,7 +178,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					var $tbody = $("[data-app-role='cartManagementCartsTbody']",$target); //used for context below.
 
 					for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
-						app.u.dump("tr length: "+$("tr[data-value='"+app.vars.carts[i]+"']",$tbody).length);
+//						app.u.dump("tr length: "+$("tr[data-value='"+app.vars.carts[i]+"']",$tbody).length);
 						app.calls.cartDetail.init(app.vars.carts[i],{
 							'callback':'anycontent',
 							'onComplete' : function(rd)	{
@@ -188,7 +188,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 							'jqObj':$("tr[data-value='"+app.vars.carts[i]+"']",$tbody)
 							},'mutable');
 						}
-					
+					app.model.dispatchThis('mutable');
 					},
 
 //used for admin.  Presents user w/ a text input for adding a CSR code.  Will return the cart id.
@@ -360,6 +360,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 		e : {
 			adminCartInteract : function($ele,p)	{
 				var cartid = $ele.closest("[data-cartid]").data('cartid');
+				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartid},'mutable');
 				app.ext.cart_message.a.showAdminCMUI(cartid);
 				},
 
