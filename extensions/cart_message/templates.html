@@ -38,7 +38,7 @@
 	
 		<button data-text='false' data-icon-primary='ui-icon-close' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartRemoveFromSession'>Remove from Session</button>
 		<button data-text='false' data-icon-primary='ui-icon-cart' disabled='disabled' class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button>
-		<button data-text='false' data-icon-primary='ui-icon-transferthick-e-w' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartInteract'>Interact</button>
+		<button data-text='false' data-icon-primary='ui-icon-comment' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartInteract'>Interact</button>
 	</td>
 </tr>
 </table>
@@ -51,12 +51,12 @@
 		<div class='messageHistoryContainer' data-app-role='messageHistoryContainer'>
 			<section data-app-role='messageHistory'></section>
 		</div>
-		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
+		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer'>
 			<textarea name='message' required='required' placeholder='send a message'></textarea>
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
-		<button class='applyButton' data-app-click="cart_message|chatInitExec">Initiate Chat</button><!-- opens a chat dialog if an admin is available -->
+<!-- 		<button class='applyButton' data-app-click="cart_message|chatInitExec" title="">Initiate Chat</button>opens a chat dialog if an buyer is on an app 201401+ -->
 		<button class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button><!-- opens cart in order create/edit interface -->
 		<button class='applyButton' data-app-click='cart_message|gotoProductShowChooser'>Send Product</button><!-- opens product chooser and allows admin to send a given product to the buyer -->
 		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec' disabled="disabled" title='There is no customer record associated with this cart.'>Edit Customer</button><!-- opens customer in customer editor interface -->
