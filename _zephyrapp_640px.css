@@ -47,6 +47,10 @@
 .prodThumbContainer {float:left; padding-right:10px; margin:0px;}
 .productList .prodViewerAddToCartForm {position:static;}
 
+/**** ProdListSearch CSS****/
+.searchList{width:100%;}
+.searchList > li {width:100%; height:auto; padding:5px 0px; margin: 0px; border-top:1px solid #D7D9DB;}
+
 /**** Product Page CSS****/
 .prodPageNameContainer{padding:0px; background:none; border:0px;}
 .prodPageName {padding:2px 6px 10px; background:none;}
