@@ -79,7 +79,7 @@ additionally, will apply some conditional form logic.
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
 			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
-				app.u.dump("anydelegate was run on an element (or one of it's parents) that already has events delegated. DELEGATION SKIPPED.");
+				app.u.dump("anydelegate was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
 				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
@@ -1646,11 +1646,13 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$label.prepend($container);
 				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 //				app.u.dump('got here');
-// * 201324 -> changed from click to change. 'supposedly' this listens for programatic changes. I think that's a lie.
+// on change 'supposedly' this listens for programatic changes. I think that's a lie.
 				$input.on('change.anycb',function(){
 //					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
-					if($input.is(':checked')){self._turnOn();}
-					else	{self._turnOff();}
+					$input.is(':checked') ? self._turnOn() : self._turnOff();
+					app.u.dump("$input.prop('defaultChecked'): "+$input.prop('defaultChecked'));
+					$span.addClass('edited');
+//					$input.closest('.eventDelegation').anydelegate('updateChangeCounts');
 					});
 				}
 			else	{
