@@ -82,14 +82,12 @@ additionally, will apply some conditional form logic.
 				app.u.dump("anydelegate was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
-				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
-				
 
+				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
 //make sure there are no children w/ delegated events.
 				$('.eventDelegation',$t).each(function(){
 					$(this).anydelegate('destroy');
 					});
-				
 				for(var i = 0; i < self._supportedEvents.length; i += 1)	{
 					$t.on(self._supportedEvents[i]+".app","[data-app-"+self._supportedEvents[i]+"], [data-input-"+self._supportedEvents[i]+"]",function(e,p){
 //						app.u.dump(" -> delegated click triggered");
@@ -232,7 +230,7 @@ additionally, will apply some conditional form logic.
 			var self = this, $t = self.element, L = self._supportedEvents.length;
 			for(var i = 0; i < L; i += 1)	{
 				$("[data-input-"+self._supportedEvents[i]+"]",$t).each(function(index){
-					app.u.dump(index+") for form events.");
+//					app.u.dump(index+") for form events.");
 					var $i = $(this);
 					if($i.is('select'))	{
 						$('option:selected',$i).trigger(self._supportedEvents[i]+'.app');
@@ -1615,69 +1613,52 @@ and it'll turn the cb into an ios-esque on/off switch.
 			},
 		_init : function(){
 			var self = this,
-			$label;
-			
-			if(self.element.is('label'))	{$label = self.element}
-			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label');}
-			else	{}
-			
-		
-			if($label.data('anycb') === true)	{
-//				app.u.dump(" -> already anycb-ified"); //do nothing, already anycb-ified
-				}
-			else if(navigator.userAgent.toLowerCase().indexOf('msie') >= 0)	{} //ie not supported. didn't link binding.
-			else if($label.length)	{
-//				app.u.dump(" -> anycbifying. is label: "+$label.is('label'));
-				var $input = $("input",$label).first(),
-				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left'}),
-				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
-	
-				this.$input = $input;
-				$label.data('anycb',true).css({'min-height':'24px','cursor':'pointer'}); // allows for plugin to check if it's already been run on this element.
-				self.span = $span; //global (within instance) for easy reference.
-//				self.input = $input;//global (within instance) for easy reference.
+			$cb = this.element,
+			o = this.options;
 
-				$label.contents().filter(function() {
-					return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
-					}).wrap("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>"); //wrap around just the text. text().wrap() didn't work. don't use inline-block or ie8 doesn't work.
-
-				$input.hide();
-				$container.append($span);
-				$label.prepend($container);
-				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
-//				app.u.dump('got here');
-// on change 'supposedly' this listens for programatic changes. I think that's a lie.
-				$input.on('change.anycb',function(){
-//					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
-					$input.is(':checked') ? self._turnOn() : self._turnOff();
-					app.u.dump("$input.prop('defaultChecked'): "+$input.prop('defaultChecked'));
-					$span.addClass('edited');
-//					$input.closest('.eventDelegation').anydelegate('updateChangeCounts');
-					});
-				}
+			if($cb.data('anycb') === true)	{} //anycb already applied. do nothing.
+			else if(!$cb.is(':checkbox'))	{app.u.dump("anycb was applied to a non-checkbox element.","warn");} //anycb applied to a non-checkbox element. do nothing but throw a warning to the console.
+			else if(navigator.userAgent.toLowerCase().indexOf('msie') >= 0)	{} //ie not supported. didn't link binding. ## TODO -> Test this. may just need to bind toggle w/ a click event to trigger the cb.
 			else	{
-				app.u.dump("Warning! anycb() run on an element where it is NOT a label or no parent label found. non critical issue.");
-				}
+				$cb.data('anycb',true);
+				
+				var	
+					$toggle = $("<span \/>"),
+					$toggleText = $("<span \/>").text(self.options.text.off);
 
+				self.toggle = $toggle; //add to global object so it can be easily referenced.
+
+				$toggle.addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left'})
+				$toggleText.css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'}).addClass('anycbText ui-state-default');
+				
+				$toggle.append("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>");
+
+				$toggle.append($toggleText);
+				$cb.before($toggle);
+				
+				$cb.is(':checked') ? self._turnOn() : self._turnOff(); //set default
+				self._handleDisable();
+//the delegated events code will handle adding the edited class and updating the save button.
+				$cb.hide().on('change.anycb',function(){
+					$cb.is(':checked') ? self._turnOn() : self._turnOff();
+					});
+
+				}
 			}, //_init
 		_turnOn : function()	{
-//			app.u.dump(' -> anycb set to on');
-			this.span.text(this.options.text.on);
-			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
-			this.span.animate({'left':-1},'fast');
-//			this.input.prop('checked',true);
+			$('.anycbText',this.toggle).text(this.options.text.on).addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right').animate({'left':-1},'fast');
 			},
 		_turnOff : function()	{
-//			app.u.dump(' -> anycb set to off');
-			this.span.text(this.options.text.off);
-			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
-			this.span.animate({'left': 24},'fast');
-//			this.input.prop('checked',false);
+			$('.anycbText',this.toggle).text(this.options.text.off).addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left').animate({'left': 24},'fast');
 			},
-//if a checkbox is generated and 'checked' w/ js
+		_handleDisable : function()	{
+			this.element.prop('disabled') ? this.toggle.css({'opacity':'0.5'}) : this.toggle.css({'opacity':1}); // ### TODO -> test in IE and Chrome and make sure opacity takes.
+			},
+//can be run as selector.anycb('update') to programatically ensure state is correct. does NOT toggle the cb value.
+//should be run if a cb is enabled or disabled.
 		update : function()	{
-//			app.u.dump(' -> running update on: '+this.$input.attr('name')+' and checked: '+this.$input.is(':checked'));
-			this.$input.is(':checked') ? this._turnOn() : this._turnOff(); //set default
+			this._handleDisable();
+			this.element.is(':checked') ? this._turnOn() : this._turnOff(); //set default
 			},
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
