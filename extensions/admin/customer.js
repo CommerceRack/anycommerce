@@ -234,7 +234,6 @@ var admin_customer = function() {
 //partition allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
 						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || app.vars.partition},{},'mutable');
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
-//						app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
 // always obtain a new copy of the customer record. May have been updated by another process.
 						app.model.destroy("adminCustomerDetail|"+obj.CID);
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
@@ -253,7 +252,7 @@ else	{
 		var L = panArr.length;
 
 //yes, I know loops in loops are bad. But these are very small loops.
-//this will resort the panels into the order specified in local storage.
+//this will re-sort the panels into the order specified in local storage.
 		for(var i = 0; i < L; i += 1)	{
 			var $col = $("[data-app-column='"+(i+1)+"']",$custEditorTarget);
 			for(var index in panArr[i])	{
@@ -319,6 +318,7 @@ else	{
 	$("table.gridTable thead",$custEditorTarget).parent().anytable();
 	$("[type='checkbox']",$custEditorTarget).parent().anycb();
 	app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj);
+	$custEditorTarget.anydelegate({'trackEdits':true});
 	
 							}},'mutable');
 						app.model.dispatchThis('mutable');
