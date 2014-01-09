@@ -301,10 +301,10 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</td>
 	<td class='alignRight'>
-		<input type='number' name='qty' step='1' size='3' min='0' data-bind="var: product(qty); format:popVal;" data-app-change="cco|cartItemUpdateExec" />
+		<input type='number' class='smallInput' name='qty' step='1' size='3' min='0' data-bind="var: product(qty); format:popVal;" data-app-change="cco|cartItemUpdateExec" />
 	</td>
 	<td class='alignRight'>
-		<input type='number' name='price' step='.01' size='8' min='0' data-bind="var: product(price); hideZero:false; format:popVal;" data-app-change="cco|cartItemUpdateExec" />
+		<input type='number' class='smallInput' name='price' step='.01' size='8' min='0' data-bind="var: product(price); hideZero:false; format:popVal;" data-app-change="cco|cartItemUpdateExec" />
 	</td>
 	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button class='floatRight removeButton' data-bind='format:cartItemRemoveButton; extension:cco; useParentData:true;' data-app-click='cco|cartItemRemove'>Remove Item From Cart</button></td>
@@ -341,9 +341,9 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 			<input type="hidden" name="override" value="1" />
 			<input type="hidden" name="_cartid" value="" data-bind="var:cart(cart/cartid); format:popVal;"  /><!-- used in store_product.u.handleAddToCart -->
 	
-		<label><span>Qty:</span><input type="number" step='1' min='0' name="qty" size="3" value="1"  /></label>
+		<label><span>Qty:</span><input type='number' class='smallInput' step='1' min='0' name="qty" size="3" value="1"  /></label>
 		<label><span>Product id:</span><input type='text' name='sku' size='10' data-input-keyup='data-input-format' data-input-format='pid' /></label>
-		<label><span>Price: </span><input type='number' class='price' size='5' name='price' step='0.01' min='0' /></label>
+		<label><span>Price: </span><input type='number' class='price smallInput' size='5' name='price' step='0.01' min='0' /></label>
 		<span class='applyButton' data-app-click="orderCreate|cartItemAddFromForm">Add</span>
 	</div>
 	
