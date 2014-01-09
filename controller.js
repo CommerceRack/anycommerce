@@ -3028,23 +3028,23 @@ $tmp.empty().remove();
 			if($tag.is(':checkbox'))	{
 //				app.u.dump(" -> popVal, is checkbox. value: "+data.value+" and number: "+Number(data.value));
 				if(Number(data.value) === 0)	{
-					$tag.prop('checked',false); //have to handle unchecking in case checked=checked when template created.
+					$tag.prop({'checked':false,'defaultChecked':false}); //have to handle unchecking in case checked=checked when template created.
 					}
 				else	{
 //the value here could be checked, on, 1 or some other string. if the value is set (and we won't get this far if it isn't), check the box.
-					$tag.prop('checked',true);
+					$tag.prop({'checked':true,'defaultChecked':true});
 					}
 				}
 			else if($tag.is(':radio'))	{
 //with radio's the value passed will only match one of the radios in that group, so compare the two and if a match, check it.
-				if($tag.val() == data.value)	{$tag.prop('checked','checked')}
+				if($tag.val() == data.value)	{$tag.prop({'checked':true,'defaultChecked':true})}
 				}
 			else if($tag.is('select') && $tag.attr('multiple') == 'multiple')	{
 				if(typeof data.value === 'object')	{
 					var L = data.value.length;
 					for(var i = 0; i < L; i += 1)	{
 //						app.u.dump(i+") value: "+data.value[i]);
-						$('option[value="' + data.value[i] + '"]',$tag).prop('selected','selected');
+						$('option[value="' + data.value[i] + '"]',$tag).prop({'selected':'selected','defaultSelected':true});
 						}
 					}
 				}
