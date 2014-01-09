@@ -1051,7 +1051,7 @@ in a reorder, that data needs to be converted to the variations format required 
 						r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
 						}
 					$tag.append(r);
-					$tag.val(cartData[data.bindData.shiptype].countrycode || 'US');
+					$tag.val(app.u.thisNestedExists("app.data.cartDetail|"+cartid+"."+data.bindData.shiptype+".countrycode") ? cartData[data.bindData.shiptype].countrycode : 'US');
 					}
 				else if(!data.bindData.shiptype)	{
 					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'In cco.renderFormats.countriesAsOptions, data-bind rules must have a shiptype set.','gMessage':true}));

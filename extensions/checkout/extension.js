@@ -1133,44 +1133,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 					'editorID' : $checkout.attr('id')
 					};
 				
-				var $buttonset = $("<div class='buttonset alignRight' \/>");
-				$buttonset.append("<button class='applyButton' data-app-click='orderCreate|adminAddressCreateUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>");
-				app.ext.admin_customer.a.addressCreateUpdateShow(vars,$buttonset,app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+CID]['@'+vars.TYPE.toUpperCase()],$ele.closest("[data-_id]").data('_id'),vars.TYPE,false));
-				},
-
-			adminAddressCreateUpdateExec : function($ele,p)	{
-				p.preventDefault();
-				var $form = $ele.closest('form'), sfo = $form.serializeJSON() || {}, $D = $ele.closest('.ui-dialog-content');
-				if($form.data('mode') && sfo.TYPE && sfo.CID)	{
-					if(app.u.validateForm($form))	{
-
-						if($form.data('mode') == 'update' || $form.data('mode') == 'create')	{
-							delete sfo._id; //saved w/ shortcut which is in the form.
-							delete sfo.mode;
-							app.ext.admin.calls.adminCustomerUpdate.init(sfo.CID,["ADDR"+($form.data('mode').toUpperCase())+"?"+$.param(sfo)],{'callback' : function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									$ele.closest('.ui-dialog-content').dialog('close');
-									}
-								}},'immutable');
-							}
-						else	{
-							$D.anymessage({'message':'In orderCreate.e.adminAddressCreateUpdateExec, mode ['+vars.mode+'] was set but not valid. Must be set to create or update.','gMessage':true});
-							}
-						app.model.destroy('adminCustomerDetail|'+sfo.CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':sfo.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$(app.u.jqSelector('#',$form.data('editorID')))},'immutable');
-						app.model.dispatchThis('immutable');
-
-						}
-					else	{
-						//validate handles error display.
-						} 
-					}
-				else	{
-					$D.anymessage({'message':'In orderCreate.e.adminAddressCreateUpdateExec, form did not contain a type ['+sfo.type+'], mode ['+sfo.mode+'] and/or CID ['+sfo.CID+'].','gMessage':true});
-					}
+				app.ext.admin_customer.a.addressCreateUpdateShow(vars,function(v){
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+					},app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+CID]['@'+vars.TYPE.toUpperCase()],$ele.closest("[data-_id]").data('_id'),vars.TYPE,false));
 				},
 
 			adminCartRemoveFromSession : function($ele,p)	{

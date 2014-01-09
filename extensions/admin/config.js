@@ -565,7 +565,7 @@ var admin_config = function() {
 						}
 					else	{}
 					var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
-					app.u.handleAppEvents($D); //for toggle and save button.  ### TODO -> get rid of this once save/toggle are updated.
+					app.u.handleAppEvents($D); //for toggle and save button.  ### FUTURE -> get rid of this once save/toggle are updated.
 					$DMI.closest("[data-app-role='dualModeContainer']").data({'dataTable':vars});
 					
 					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
