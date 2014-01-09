@@ -17,8 +17,9 @@
 #header {height:55px; background: url(images/topbar_logosection_bg.jpg) repeat-x bottom;}
 #logo {position:static;}
 .topNavRight {width:290px; float:none; margin:0 auto;}
-.productSearchForm{width:270px; float:none; margin:0 auto; padding:3px 10px 0px;}
-.searchBar {width:215px; height:16px;}
+.productSearchForm{width:295px; float:none; margin:0 auto; padding:0px; position:relative;}
+.searchBar {width:240px; height:14px; font-size:11px; position:absolute; top:3px;}
+.searchBtn {position:absolute; right:0px; top:2px;}
 
 /**** Footer CSS****/
 .zephyrHelpBox {width:280px; height:auto;}
