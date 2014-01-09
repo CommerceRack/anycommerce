@@ -1499,10 +1499,10 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 				$table = this.element,
 				o = this.options;			
 			
-			if($table.data('widget-anytable'))	{} //already an anytable
+			if($table.data('anytable'))	{} //already an anytable
 			else{
 
-			$table.attr('data-widget-anytable',true);
+			$table.attr('data-widget-anytable',true).data('anytable',true);
 			this._styleHeader();
 			
 			
