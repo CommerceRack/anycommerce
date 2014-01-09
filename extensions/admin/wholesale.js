@@ -256,7 +256,7 @@ else	{
 			showSupplierEditor : function($editorContainer,VENDORID) {
 				app.u.dump("BEGIN admin_wholesale.a.showSupplierEditor");
 				if($editorContainer instanceof jQuery && VENDORID)	{
-					$editorContainer.anydelegate({'trackEdits':true});
+
 					$editorContainer.showLoading({"message":"Fetching supplier details"});
 
 					app.model.addDispatchToQ({
@@ -272,7 +272,8 @@ else	{
 								else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
 									app.u.handleAppEvents($editorContainer);
-									$(".applyAnycb",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
+									app.u.handleCommonPlugins($editorContainer);
+									$editorContainer.anydelegate({'trackEdits':true});
 
 //for FBA, most panel inputs get 'locked'
 									if(app.data[rd.datapointer].FORMAT == 'FBA' || app.data[rd.datapointer].CODE == 'FBA')	{
