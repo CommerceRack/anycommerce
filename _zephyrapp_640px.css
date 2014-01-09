@@ -69,8 +69,8 @@
 .reviewLineItem{border:0px; padding:0px;}
 .reviewLineItem blockquote {margin:0px;}
 #reviewFrm .ui-button {float:left;}
-.similarItemsSectionTD {float:left; width:260px; padding:3px;}
-.similarProductList {width:260px;}
+.similarItemsSectionTD {float:left; width:98%; padding:1%;}
+.similarProductList {width:100%;}
 #review-modal.ui-dialog-content.ui-widget-content{padding:5px;}
 #reviewFrm label {	text-align:left;}
 #reviewsMessage {height:125px; width:240px;}
