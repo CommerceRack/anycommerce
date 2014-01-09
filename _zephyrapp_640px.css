@@ -61,8 +61,14 @@
 .additionalImageSection {float: right;}
 .imgThumbContainer img { border: 1px solid #CCCCCC; margin: 0px 0px 5px 2px;}
 .prodSummaryContainer {padding:0px; width:270px; text-align:left;}
-.tabbedProductContentTD {width:270px;}
+.tabbedProductContentTD {width:100%;}
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}
+.tabContent.ui-tabs-panel.ui-widget-content.ui-corner-bottom{padding:1% 4%;}
+.productReviewsList {padding:0px;}
+.reviewBtn{width:90px; height:25px;}
+.reviewLineItem{border:0px; padding:0px;}
+.reviewLineItem blockquote {margin:0px;}
+#reviewFrm .ui-button {float:left;}
 .similarItemsSectionTD {float:left; width:260px; padding:3px;}
 .similarProductList {width:260px;}
 #review-modal.ui-dialog-content.ui-widget-content{padding:5px;}
