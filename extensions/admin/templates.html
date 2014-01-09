@@ -168,8 +168,8 @@ PRODUCT FINDER/CHOOSER
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		
 		<fieldset class='labelsAsBreaks'>
-			<label>Quantity: <input type='number' value='1' name='qty' /></label>
-			<label>Price: <input type='number' name='price' data-bind='var: product(zoovy:base_price); format:popVal;' /></label>
+			<label>Quantity: <input type='number' class='smallInput' value='1' name='qty' /></label>
+			<label>Price: <input type='number' class='smallInput' name='price' data-bind='var: product(zoovy:base_price); format:popVal;' /></label>
 		</fieldset>
 	
 	</form>
@@ -726,7 +726,7 @@ PRODUCT TAB
 
 	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
 	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
+	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT type='number' class='smallInput' NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
 			
 </fieldset>
 
@@ -902,8 +902,8 @@ ACHIEVEMENTS
 	</label>
 	<label>
 		<span>Image WxH</span>
-		<input type="number" step='1' min='1' name="image_w" required='required' value="75" size='4' data-bind="var: rss(image_w); format: popVal;" /> x
-		<input type="number" step='1' min='1' name="image_h" required='required' value="75" size='4' data-bind="var: rss(image_h); format: popVal;" /> 
+		<input type='number' class='smallInput' step='1' min='1' name="image_w" required='required' value="75" size='4' data-bind="var: rss(image_w); format: popVal;" /> x
+		<input type='number' class='smallInput' step='1' min='1' name="image_h" required='required' value="75" size='4' data-bind="var: rss(image_h); format: popVal;" /> 
 	</label>
 
 	<label>

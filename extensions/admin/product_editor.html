@@ -260,13 +260,13 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 	
 		<label><span>Product ID/SKU: </span><input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' data-input-keyup="format" data-input-format='pid,uppercase' /></label>
 		<label ><span>Product Name: </span><INPUT TYPE="text" NAME="zoovy:prod_name"  maxlength="55" VALUE="" required='required' /></label>
-		<label ><span>Sell For Price: </span>$<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></label>
+		<label ><span>Sell For Price: </span>$<INPUT type='number' class='smallInput' NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></label>
 				
 	</fieldset>
 	
 	<fieldset class='marginBottom labelsAsBreaks alignedLabels'>
 		<legend>Recommended Data</legend>
-		<label ><span>Your Cost: </span>$<INPUT TYPE="number" NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></label>
+		<label ><span>Your Cost: </span>$<INPUT type='number' class='smallInput' NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></label>
 		<label ><span>Product Description:</span><TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></label>
 		<label ><span>Base Weight:</span><INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</label>
 		<label ><span>Is product taxable?:</span></label> 
@@ -311,9 +311,9 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<form action='#' onSubmit='return false'>
 
 		<fieldset class='clearfix'>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
 
 			<input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" title="Product name" class='threeColumn floatLeft marginBottom' />
 			
@@ -356,7 +356,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 			<div class='marginBottom clearfix'>
 				<label class='threeColumn displayInlineBlock floatLeft'><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' />oz <span class='toolTip' title="Weight should be entered in ounces or in pounds by using a # symbol.">?</span></label>
 	
-				<label class='threeColumn displayInlineBlock floatLeft'><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> <span class='toolTip' title="Only applies if fixed shipping is enabled">?</span></label>
+				<label class='threeColumn displayInlineBlock floatLeft'><span>Fixed shipping cost:</span><input type='number' class='smallInput' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> <span class='toolTip' title="Only applies if fixed shipping is enabled">?</span></label>
 				
 				<label class='threeColumn displayInlineBlock floatLeft'><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popVal;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
 			</div>			
@@ -364,9 +364,9 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 			<div class='marginBottom clearfix'>
 			<h4>Ship dimensions</h4>
 			
-			<label class='threeColumn displayInlineBlock floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Length:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Height:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Width:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
 			
 			</div>
 
@@ -386,18 +386,18 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 				<tbody>
 				<tr>
 					<td>Domestic</td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></td>
 				</tr>
 				<tr>
 					<td>Canadian</td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></td>
 				</tr>
 				<tr>
 					<td>International</td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></td>
-					<td><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></td>
 				</tr>
 				</tbody>
 				</table>
@@ -407,11 +407,11 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 				</div>
 				
 				<div class='threeColumn floatLeft labelsAsBreaks'>
-					<label><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
+					<label><span>Marketplace markup:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
 					
-					<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
+					<label><span>Insurance amount:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
 					
-					<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
+					<label><span>Fixed handling:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
 					
 					<label><span>Promotion class</span><input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' /></label>
 					
@@ -565,7 +565,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 	
 	<tr>
 		<td><label><input type="checkbox" name="bing:ts" data-bind="var: product(bing:ts); format:popVal;"> Bing:</label></td>
-		<td>Commission: <input size=4 type="number" name="bing:commission" data-bind="var: product(bing:commission); format:popVal;" step='0.01' min='0'>%</td>
+		<td>Commission: <input size=4 type='number' class='smallInput' name="bing:commission" data-bind="var: product(bing:commission); format:popVal;" step='0.01' min='0'>%</td>
 		<td><input type="text" value="" name="bing:note" maxlength="60" size="60" data-bind="var: product(bing:note); format:popVal;"></td>
 	</tr>
 	
@@ -875,7 +875,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 	<label>
 		<span>Fulfillment latency (in days):</span>
-		<input type="number" min='0' step='1' size="6" value="" name="zoovy:ship_latency" data-bind="var: product(zoovy:ship_latency); format:popVal;">
+		<input type='number' class='smallInput' min='0' step='1' size="6" value="" name="zoovy:ship_latency" data-bind="var: product(zoovy:ship_latency); format:popVal;">
 	</label>
 	</fieldset>
 	
@@ -1064,16 +1064,16 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 					
 						<label>
 							<span>Starting bid</span>
-							$<input type="number" step='.01' min='0' size="6" value="" class='money' name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
+							$<input type='number'  step='.01' min='0' size="6" value="" class='money smallInput' name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
 						</label>
 						
 						<label>
 							<span>Buy it now</span>
-							$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
+							$<input type='number' class='smallInput' step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
 						</label>
 						<label>
 							<span>Reserve price</span>
-							$<input type="number" step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
+							$<input type='number' class='smallInput' step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
 							<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
 						</label>
 					</div>
@@ -1100,12 +1100,12 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<div data-app-role='showProductWithoutVariations'>
 			<label>
 				<span>Fixed price </span>
-				$<input type="number" step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				$<input type='number' class='smallInput' step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
 				<span class='toolTip' title="The 'BuyItNow' price on eBay">?</span>
 			</label>
 			<label>
 				<span>Offer qty</span>
-				<input type="number" step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<input type='number' class='smallInput' step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
 				<span class='toolTip' title="
 				Set offer quantity to positive integer to restrict the number of units offered on eBay.
 				Regardless of the quantity set the quantity will never exceed available inventory.
@@ -1309,7 +1309,7 @@ if it already has a simple, lock the button
 <fieldset>
 <label>
 	<span>Quantity</span>
-	<input type='number' step='1' value='' name='QTY' required='required' />
+	<input type='number' class='smallInput' step='1' value='' name='QTY' required='required' />
 </label>
 
 <label>
@@ -1342,12 +1342,12 @@ if it already has a simple, lock the button
 
 <tr id='competitionSkuRowTemplate'>
 	<td data-bind="var: detail(sku); format:text;"></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='floor' data-bind="var:product(%pricetags.floor); format:popVal;" /></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='ceiling' data-bind="var:product(%pricetags.ceiling); format:popVal;" /></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='standard' data-bind="var:product(%pricetags.standard); format:popVal;" /></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='expedited' data-bind="var:product(%pricetags.expedited); format:popVal;" /></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='secondday' data-bind="var:product(%pricetags.secondday); format:popVal;" /></td>
-	<td><input type='number' min='0' step='.01' class='numberInput' size='4' name='nextday' data-bind="var:product(%pricetags.nextday); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='floor' data-bind="var:product(%pricetags.floor); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='ceiling' data-bind="var:product(%pricetags.ceiling); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='standard' data-bind="var:product(%pricetags.standard); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='expedited' data-bind="var:product(%pricetags.expedited); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='secondday' data-bind="var:product(%pricetags.secondday); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='nextday' data-bind="var:product(%pricetags.nextday); format:popVal;" /></td>
 </tr>
 
 <tr id='inventoryDetailRowTemplate' data-bind="var: detail(BASETYPE); format: addClass; className:invDetail_;">
@@ -1356,7 +1356,7 @@ if it already has a simple, lock the button
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
 	<td class='alignLeft' >
-		<input data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' />
+		<input type='number' class='smallInput' data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' step='1' min='0' />
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
 
@@ -1409,10 +1409,10 @@ if it already has a simple, lock the button
 
 <tr id='schedulesRowTemplate'>
 	<td data-bind="var:schedule(schedule); format:text;"></td>
-	<td><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' /></td>
+	<td><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' class='smallInput' /></td>
 	<td><input name='qtyprice' value='' data-bind="var:schedule(qtyprice); format:popVal;" size='20' type='text' /></td>
-	<td><input name='qtymin' value='' data-bind="var:schedule(qtymin); format:popVal;" size='6' min='0' step='1' type='number' /></td>
-	<td><input name='qtyinc' value='' data-bind="var:schedule(qtyinc); format:popVal;" size='6' min='0' step='1' type='number' /></td>
+	<td><input name='qtymin' value='' data-bind="var:schedule(qtymin); format:popVal;" size='6' min='0' step='1' type='number' class='smallInput' /></td>
+	<td><input name='qtyinc' value='' data-bind="var:schedule(qtyinc); format:popVal;" size='6' min='0' step='1' type='number' class='smallInput' /></td>
 </tr>
 
 
@@ -1422,7 +1422,7 @@ if it already has a simple, lock the button
 
 
 <tr>
-	<td id='skuSchedulesRowTemplate'><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' /></td>
+	<td id='skuSchedulesRowTemplate'><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' class='smallInput' /></td>
 </tr>
 
 
@@ -1513,9 +1513,9 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 		<option value="DAMAGED">Damaged</option>
 		<option value="UNINSPECTED">Uninspected</option>
 	</select></td>-->
-	<td class='width1'><input name="sku:price" size="4" type="number" step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
-	<td class='width1'><input name="sku:cost" size="4" type="number" min='0' step='.01' data-bind='var:sku(%attribs.sku:cost); defaultVar:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
-	<td class='width1'><input name="sku:weight" size="4" type="text" data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
+	<td class='width1'><input name="sku:price" size="4" type='number' class='smallInput' step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
+	<td class='width1'><input name="sku:cost" size="4" type='number'  class='smallInput' min='0' step='.01' data-bind='var:sku(%attribs.sku:cost); defaultVar:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
+	<td class='width1'><input name="sku:weight" size="4" type="text" class='smallInput' data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
 
 </tr>
 
@@ -2180,12 +2180,12 @@ time.
 
 		<label>
 			<span>Thumbnail width</span>
-			<input type="number" min='25' step='1' value="" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
+			<input type='number' class='smallInput' min='25' step='1' value="" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
 		</label>
 		
 		<label>
 			<span>Thumbnail height</span>
-			<input type="number" min='25' step='1' value="" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
+			<input type='number' class='smallInput' min='25' step='1' value="" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
 		</label>
 		
 		<label>
@@ -2268,7 +2268,7 @@ time.
 
 	<label>
 		<span>Maximum length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
@@ -2278,12 +2278,12 @@ time.
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
 	</label>
 
 </fieldset>
@@ -2303,7 +2303,7 @@ time.
 
 	<label>
 		<span>Maximum length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
@@ -2313,12 +2313,12 @@ time.
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
 	</label>
 
 </fieldset>
@@ -2328,7 +2328,7 @@ time.
 
 	<label>
 		<span>Maximum Length</span>
-		<input type="number" min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
 	</label>
 	
 	<label>
@@ -2338,12 +2338,12 @@ time.
 	
 	<label>
 		<span>Minimum Number</span>
-		<input size="10" name="min" value="3" type="number" data-bind='var: variation(min); format:popVal;' />
+		<input size="10" name="min" value="3" type='number' class='smallInput' data-bind='var: variation(min); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Maximum Number</span>
-		<input type="number" value="8" name="max" size="10" data-bind='var: variation(max); format:popVal;' />
+		<input type='number' class='smallInput' value="8" name="max" size="10" data-bind='var: variation(max); format:popVal;' />
 	</label>
 
 </fieldset>
@@ -2374,17 +2374,17 @@ time.
 	
 	<label>
 		<span>Fee per character </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;' />
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per word </span>
-		$<input type="number" value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;' />
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Fee per line: </span>
-		$<input type="number" value="" step='.01' min='0' size="6" name="fee_line" data-bind='var: variation(fee_line); format:popVal;' />
+		$<input type='number' class='smallInput' value="" step='.01' min='0' size="6" name="fee_line" data-bind='var: variation(fee_line); format:popVal;' />
 	</label>
 </fieldset>
 
@@ -2445,9 +2445,9 @@ Snacks|Doughnuts<br />
 	<legend>Calendar Settings</legend>
 	<label>
 		<span>Add a rush fee of</span>
-		<input type="number" step='.01' value="" name="fee_rush" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
+		<input type='number' class='smallInput' step='.01' value="" name="fee_rush" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
 		for orders within
-		<input type='number' step='1' value='' name='rush_days' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
+		<input type='number' class='smallInput' step='1' value='' name='rush_days' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
 	</label>
 	
 	<label>

@@ -215,7 +215,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<div>
 	<label>
 		<span>Org ID: </span>
-		<input type="number" step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
+		<input type='number' class='smallInput' step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
 	</label>
 	<button data-app-event="admin_customer|showOrgChooser">Chooser</button>
 	
@@ -233,9 +233,9 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_customer;">Schedule: </label>
 	<label class='clearfix'><input type="checkbox" name="ALLOW_PO" data-bind="var:customer(WS.ALLOW_PO); format:popVal;"> Enable/Accept Purchase Orders</label>
 	<label class='clearfix'><input type="checkbox" name="RESALE" data-bind="var:customer(WS.RESALE); format:popVal;"> Do not charge sales tax</label>
-	<label><span>Credit Limit: $</span><input type="number" step='0.01' min='0' name="CREDIT_LIMIT"  size="10" data-bind="var:customer(WS.CREDIT_LIMIT); hideZero:false; format:popVal;" /></label>
-	<label><span>Credit Balance: $</span><input type="number" step='0.01' min='0' name="CREDIT_BALANCE"  size="10" data-bind="var:customer(WS.CREDIT_BALANCE); hideZero:false; format:popVal;" /></label>
-	<label><span>Resale #: </span><input type="number" name="RESALE_PERMIT"  size="15" data-bind="var:customer(WS.RESALE_PERMIT); format:popVal;" /></label>
+	<label><span>Credit Limit: $</span><input type='number' class='smallInput' step='0.01' min='0' name="CREDIT_LIMIT"  size="10" data-bind="var:customer(WS.CREDIT_LIMIT); hideZero:false; format:popVal;" /></label>
+	<label><span>Credit Balance: $</span><input type='number' class='smallInput' step='0.01' min='0' name="CREDIT_BALANCE"  size="10" data-bind="var:customer(WS.CREDIT_BALANCE); hideZero:false; format:popVal;" /></label>
+	<label><span>Resale #: </span><input type='number' class='smallInput' name="RESALE_PERMIT"  size="15" data-bind="var:customer(WS.RESALE_PERMIT); format:popVal;" /></label>
 	<label><span>Account Manager: </span><input type="text" name="ACCOUNT_MANAGER"  size="10" data-bind="var:customer(WS.ACCOUNT_MANAGER); format:popVal;" /></label>
 	</div>
 </div>
@@ -398,8 +398,8 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 <form action='#'>
 <fieldset class='labelsAsBreaks'>
 	<label><span>CC</span><input type='number' required='required' size='20' maxlength="16" name='CC' value='' /></label>
-	<label><span>YY</span><input type='number' required='required' size='2' maxlength="2" name='YY' value='' /></label>
-	<label><span>MM</span><input type='number' required='required' size='2' maxlength="2" name='MM' value='' /></label>
+	<label><span>YY</span><input type='number' class='smallInput' required='required' size='2' maxlength="2" name='YY' value='' /></label>
+	<label><span>MM</span><input type='number' class='smallInput' required='required' size='2' maxlength="2" name='MM' value='' /></label>
 </fieldset>
 
 <button data-app-event='admin_customer|execWalletCreate'>Save Wallet</button>
@@ -774,7 +774,7 @@ The checkbox below does not work.
 	
 	<label>
 		<span>Balance</span>
-		$<input type="number" min='0' step='.01' name="balance" value="0.00" size="5" required='required' data-bind="var:giftcard(BALANCE); format:popVal;" />
+		$<input type='number' class='smallInput' min='0' step='.01' name="balance" value="0.00" size="5" required='required' data-bind="var:giftcard(BALANCE); format:popVal;" />
 	</label>
 
 	<label>
@@ -873,7 +873,7 @@ The checkbox below does not work.
 	
 	<label>
 		<span>Amount</span>
-		<input type="number" min='0' step='.01' name="PRICE" size="5" required='required' />
+		<input type='number' class='smallInput' min='0' step='.01' name="PRICE" size="5" required='required' />
 	</label>
 	<p class='hint'>HINT: set an amount of 0 to create an "amount" option that lets the user select an amount. </p>
 
@@ -928,7 +928,7 @@ The checkbox below does not work.
 
 	<label>
 		<span>Balance</span>
-		$<input type="number" min='0' step='.01' name="balance" value="0.00" size="5" required='required' />
+		$<input type='number' class='smallInput' min='0' step='.01' name="balance" value="0.00" size="5" required='required' />
 	</label>
 	<label>
 		<span>Card Type</span>
@@ -946,7 +946,7 @@ The checkbox below does not work.
 	
 	<label>
 		<span>Quantity</span>
-		<input type="number" min='1' step='1' value="1" name="quantity" size="4" required='required' />
+		<input type='number' class='smallInput' min='1' step='1' value="1" name="quantity" size="4" required='required' />
 		<span class='toolTip' title="If you select more than quantity 1, no customer or email will be assigned. You may create up to 9,999 giftcards at one time.  A list of pre-authorized card codes will be generated, these can then be merged into a direct mail or other personalized electronic campaign.">?</span>
 	</label>
 	

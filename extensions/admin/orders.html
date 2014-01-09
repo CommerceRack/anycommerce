@@ -16,7 +16,7 @@
 	<input type='search' name='keyword' class='fixedWidth' />
 	</label>
 	<label><input type='checkbox' name='isDetailedSearch' />detailed search</label>
-	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
+	<label># orders: <input type='number' class='smallInput' max="250" min="1" name='size' value='30' size='3' /></label>
 
 	<button data-app-click="admin_orders|orderSearch" class='applyButton'>Show Results</button>
 
@@ -91,7 +91,7 @@
 			</ul>
 			</section>
 
-			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' class='smallInput' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
+			<div class='marginBottom marginTop'><label># orders: <input type='number' class='smallInput' max="250" min="1" id='filterLimit' value='30' size='3' class='smallInput' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
 	
 		</div>
 
@@ -369,8 +369,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 				<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 				<!-- tax is NOT editable on marketplace orders -->
 				<div data-bind="var: order(is/origin_marketplace); format:hideIfSet;">
-				<label>State tax rate: <input type='number' size='4' step='0.01' min='0' name='sum/tax_rate_state' />%</label>
-				<label>Local tax rate: <input type='number' size='4' step='0.01' min='0' name='sum/tax_rate_zone' />%</label>
+				<label>State tax rate: <input type='number' class='smallInput' size='4' step='0.01' min='0' name='sum/tax_rate_state' />%</label>
+				<label>Local tax rate: <input type='number' class='smallInput' size='4' step='0.01' min='0' name='sum/tax_rate_zone' />%</label>
 				</div>
 				<div class='orderShipping'>
 				<select name='sum/shp_carrier' data-bind='var:order(sum/shp_carrier);format:popVal;'>
@@ -380,7 +380,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 					<option value='ELSE'>other</option>
 				</select>
 				<input type='text' name='sum/shp_method' size='15' data-bind='var:order(sum/shp_method);format:popVal;' />
-				<input type='number' name='sum/shp_total' size='5' data-bind='var: cart(sum/shp_total); format:popVal;' step='0.01' min='0' /><!--
+				<input type='number' class='smallInput' name='sum/shp_total' size='5' data-bind='var: cart(sum/shp_total); format:popVal;' step='0.01' min='0' /><!--
 				<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
 				<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>-->
 				</div>
@@ -459,7 +459,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<fieldset>
 		<legend>Add Payment</legend>
 		<div class='labelsAsBreaks' data-bind='useParentData:true; format:fetchAndDisplayPayMethods; extension: admin_orders;'></div>
-		<div><label>Amount: <input type='number' size='7' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
+		<div><label>Amount: <input type='number' class='smallInput' size='7' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
 		<div><label>Note: <input type='text' name='note' /></label></div>
 		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
 	</fieldset>
@@ -508,8 +508,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 			
 			<label><span>Tracking #: </span><input name="value" type="text" size='15' /></label>
 			
-			<label><span>Cost: </span> <input size="5" name="cost" type="number" step='0.01' min='0' /></label>
-			<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" /></label>
+			<label><span>Cost: </span> <input size="5" name="cost" type='number'  class='smallInput' step='0.01' min='0' /></label>
+			<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" class='smallInput' /></label>
 			<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
 		
 			<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>

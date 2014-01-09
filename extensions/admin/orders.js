@@ -1342,7 +1342,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if(action && pref)	{
 //these are vars so that they can be maintained easily.
 					var reasonInput = "<label class='marginBottom'>Reason/Note: <input size=20 type='textbox' name='note' \/><\/label>";
-					var amountInput = "<label class='marginBottom'>Amount: $<input size='7' type='number' name='amt' step='0.01' min='0' value='"+pref.amt+"' \/><\/label>";
+					var amountInput = "<label class='marginBottom'>Amount: $<input size='7' type='number' class='smallInput' name='amt' step='0.01' min='0' value='"+pref.amt+"' \/><\/label>";
 					output += "<input type='hidden' name='uuid' value='"+pref.uuid+"' \/>";
 					output += "<input type='hidden' name='ACTION' value='"+action+"' \/>";
 					switch(action)	{
@@ -2214,7 +2214,7 @@ $('.editable',$container).each(function(){
 					app.u.dump("BEGIN admin_orders.buttonActions.orderItemAddBasic.click");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
 					$parent = $btn.closest("[data-order-view-parent]"),
-					$form = $("<form>").append("<label><span>sku:</span><input type='text' name='stid' value='' required='required' /></label><label><span>name:</span><input type='text' name='title' value='' required='required'  /></label><label><span>qty:</span><input type='number' size='3' name='qty' value='1' required='required'  /></label><label><span>price:</span><input type='number' size='7' name='price' value=''  step='0.01' min='0' required='required'  /></label>"),
+					$form = $("<form>").append("<label><span>sku:</span><input type='text' name='stid' value='' required='required' /></label><label><span>name:</span><input type='text' name='title' value='' required='required'  /></label><label><span>qty:</span><input type='number' class='smallInput' size='3' name='qty' value='1' required='required'  /></label><label><span>price:</span><input type='number' class='smallInput' size='7' name='price' value=''  step='0.01' min='0' required='required'  /></label>"),
 					$modal = $("<div \/>").addClass('labelsAsBreaks orderItemAddBasic').attr('title','Add item to order').append($form),
 					$button = $("<button \/>").addClass('alignCenter').text("Add to Order").button();
 					$form.append($button);

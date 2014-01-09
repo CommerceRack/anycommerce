@@ -128,6 +128,8 @@ h5,h6	{font-size: 1em; margin: .3em 0px; font-weight: bold; padding:0;}
 
 
 fieldset	{margin:0; padding:0; margin-bottom:1em; border:0;}
+input.smallInput	{max-width:6.2em;} /* will fit six chars plus a decimal. */
+
 
 .hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
 .small	{font-size:.85em;}

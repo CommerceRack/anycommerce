@@ -27,7 +27,7 @@
 	<p>As a precaution, any time this page is loaded, the number you see on this page will be permanently lost - this is an intentional safety mechanism built to avoid duplicating order numbers.</p>
 	<label>
 		<span>Next Order #</span>
-		<input type="number" min='' step='1' value="" size="5" name="start" data-bind="var: config(%ORDER.sequence); format:popVal;" /><!-- ### use a custom render format and set min to whatever the value is -->
+		<input type='number' class='smallInput' min='' step='1' value="" size="5" name="start" data-bind="var: config(%ORDER.sequence); format:popVal;" /><!-- ### use a custom render format and set min to whatever the value is -->
 		<input type="hidden" value="" name="hidden_order_num" data-bind="var: config(%ORDER.sequence); format:popVal;" />
 	</label>
 	<p class='hint'>
@@ -702,7 +702,7 @@ keep all inputs within one fieldset for the save function.
 		<legend>US Shipping Origin</legend>
 		<label>
 			<span>Zip:</span>
-			<input type="number" min='0' step='1' value="" maxlength="5" size="5" name="ship_origin_zip" data-bind="var: shipping(ship_origin_zip); format: popVal;" />
+			<input type='number' class='smallInput' min='0' step='1' value="" maxlength="5" size="5" name="ship_origin_zip" data-bind="var: shipping(ship_origin_zip); format: popVal;" />
 			<span class='toolTip' title="zip code your packages will ship from">?</span>
 		</label>
 	</fieldset>			
@@ -713,7 +713,7 @@ keep all inputs within one fieldset for the save function.
 	
 		<label>
 			<span>Fulfillment Latency (in days)</span>
-			<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal; hideZero:false;" />
+			<input type='number' class='smallInput' value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal; hideZero:false;" />
 			<span class='toolTip' title="# of days products take to be fulfilled">?</span>
 		</label>
 		<label>
@@ -870,15 +870,15 @@ keep all inputs within one fieldset for the save function.
 	<tbody>
 	<tr>
 		<td>First Item:</td>
-		<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popVal; hideZero:false;" /></td>
 	</tr>
 	<tr>
 		<td>Additional Items:</td>
-		<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popVal; hideZero:false;" /></td>
+		<td>$<input type='number' class='smallInput' name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popVal; hideZero:false;" /></td>
 	</tr>
 	</tbody>
 	</table>
@@ -926,7 +926,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -952,7 +952,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -980,7 +980,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -1016,7 +1016,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -1042,7 +1042,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -1070,7 +1070,7 @@ keep all inputs within one fieldset for the save function.
 		<tbody>
 		<tr>
 			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 		</tr>
 		</tbody>
@@ -1129,15 +1129,15 @@ keep all inputs within one fieldset for the save function.
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type='number' class='smallInput' name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
 </tr>
 </tbody>
 </table>
@@ -1178,7 +1178,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
@@ -1204,7 +1204,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
@@ -1232,7 +1232,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<tbody>
 	<tr>
 		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
 		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
 	</tr>
 	</tbody>
@@ -1701,7 +1701,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <label>
 	<span>Amount:</span>
-	$<input type="number" value="" name="total" step='0.01' min='0' data-bind="var:shipmethod(total); format:popVal; hideZero:false;" />
+	$<input type='number' class='smallInput' value="" name="total" step='0.01' min='0' data-bind="var:shipmethod(total); format:popVal; hideZero:false;" />
 </label>
 <p class='hint'>The mininum order/package total that qualifies for free shipping (ex: use zero dollars for free shipping on every order/package)</p>
 	
@@ -1735,8 +1735,8 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<legend>Weight Based Shipping Table</legend>
 	
 	<div class='floatRight' data-table-role='inputs'>
-	<label><span>Max weight</span><input size='6' type='text' name='weight' class='skipTrack' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack'  step='0.01' min='0' /></label>
+	<label><span>Max weight</span><input size='6' type='text' name='weight' class='skipTrack smallInput' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack smallInput'  step='0.01' min='0' /></label>
 	<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 	</div>
 	
@@ -1762,7 +1762,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <label>
    <span>Min price:</span>
-   <input size=6 type="number" value="" name="min_price" step='0.01' min='0' data-bind="var:shipmethod(min_price); format:popVal; hideZero:false;" />
+   <input size=6 type='number' class='smallInput' value="" name="min_price" step='0.01' min='0' data-bind="var:shipmethod(min_price); format:popVal; hideZero:false;" />
 </label>
 <p class='hint'>The minimum price of a cart in order to use this method.</p>
 
@@ -1772,8 +1772,8 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<legend>Price Based Shipping Table</legend>
 	
 	<div class='floatRight' data-table-role='inputs'>
-	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' class='skipTrack' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
+	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' class='skipTrack smallInput' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack smallInput' step='0.01' min='0' /></label>
 	<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 	</div>
@@ -1802,14 +1802,14 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <label>
    <span>First item:</span>
-   <input size=6 type="number" value="" name="itemprice" step='0.01' min='0' data-bind="var:shipmethod(itemprice); format:popVal; hideZero:false;" />
+   <input size=6 type='number' class='smallInput' value="" name="itemprice" step='0.01' min='0' data-bind="var:shipmethod(itemprice); format:popVal; hideZero:false;" />
    The price if only one item is in the cart.
 </label>
 
 
 <label>
    <span>Each additional item:</span>
-   <input size=6 type="number" value="" name="addprice" step='0.01' min='0' data-bind="var:shipmethod(addprice); format:popVal; hideZero:false;" />
+   <input size=6 type='number' class='smallInput' value="" name="addprice" step='0.01' min='0' data-bind="var:shipmethod(addprice); format:popVal; hideZero:false;" />
    The price for each subsequent item after the first.
 </label>
 
@@ -1827,7 +1827,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<div class='floatRight' data-table-role='inputs'>
 		<label><span>Start zip</span><input size='6' type='text' name='zip1' class='skipTrack' /></label>
 		<label><span>End zip</span><input size='6' type='text' name='zip2' class='skipTrack' /></label>
-		<label><span>Ship price</span><input size='6' type='number' name='fee' step='0.01' min='0' class='skipTrack' /></label>
+		<label><span>Ship price</span><input size='6' type='number' name='fee' step='0.01' min='0' class='skipTrack smallInput' /></label>
 		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
 		<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 		</div>
@@ -1868,7 +1868,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 	<div class='floatRight'>
 	<label><span>Zip code pattern</span><input size='6' type='text' name='postal' class='skipTrack' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack smallInput' step='0.01' min='0' /></label>
 	<label>
 		<span>Pickup instructions</span>
 		<textarea name='text' class='skipTrack'></textarea>
@@ -2176,7 +2176,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 
 <label id='paymentHandlingFeeTemplate'>
 	<span>Handling Fee: </span>
-	<input type='number' name='fee' step='0.01' min='0'  data-bind='var: payment(fee); format:popVal;' />
+	<input type='number' name='fee' step='0.01' min='0'  data-bind='var: payment(fee); format:popVal;' class='smallInput' />
 	
 </label>
 
@@ -2576,32 +2576,32 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<tr>
 		<td>&nbsp;</td>
 		<td>CC Fees</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="CC_TRANSFEE" data-bind='var: payment(CC_TRANSFEE); format:popVal; hideZero:false;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="CC_TRANSFEE" data-bind='var: payment(CC_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_visa" data-bind='var: payment(cc_type_visa); format:popVal;'></td>
 		<td>Visa</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal; hideZero:false;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_mc" data-bind='var: payment(cc_type_mc); format:popVal;'></td>
 		<td>Mastercard</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal; hideZero:false;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_amex" data-bind='var: payment(cc_type_amex); format:popVal;'></td>
 		<td>American Express</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal; hideZero:false;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
 		<td><input type="checkbox" name="cc_type_novus" data-bind='var: payment(cc_type_novus); format:popVal;'></td>
 		<td>Discover/Novus</td>
-		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal; hideZero:false;' /></td>
-		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal; hideZero:false;' /></td>
+		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	</tbody>
 	</table>
@@ -2730,12 +2730,12 @@ SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
 	<fieldset data-app-role='zipspan' class='taxTypeConfiguration' data-panel-id='taxTypeConfigurationZipSpan'>
 		<label>
 		<span>Start Zip</span>
-		<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
+		<input type='number' class='smallInput' value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
 		</label>
 		
 		<label>
 		<span>End zip</span>
-		<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
+		<input type='number' class='smallInput' value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
 		</label>
 		
 		<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
@@ -2794,7 +2794,7 @@ This uses data-table, which means variables are whitelisted.  If you add an inpu
 
 no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket applied and a -X% is used to compensate in specific locales
 -->
-		<label><span>Tax percentage</span><input type="number" value="" name="rate" size="5" step='0.01' />%</label>
+		<label><span>Tax percentage</span><input type='number' class='smallInput' value="" name="rate" size="5" step='0.01' />%</label>
 
 		<div class='label'>
 		Also applies to:
@@ -2814,7 +2814,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 	<label>
 		<span>Expiration</span>
-		<input type='number' size="8" name='expires' value="" />
+		<input type='number' class='smallInput' size="8" name='expires' value="" />
 		<span class='toolTip' title="Optional: Provide a Year, Month, and Day that a particular rate will expire. Remember: rules are applied from top to bottom, the last matching rule will set the rate. Be sure to have the rule which will supercede the expiring rule above the expiring rule.">?</span>
 	</label>
 
