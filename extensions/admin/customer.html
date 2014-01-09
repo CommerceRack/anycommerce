@@ -48,7 +48,7 @@
 			</thead>
 			<tbody data-bind="var: users(@CUSTOMERS); format:processList; loadsTemplate:customerManagerResultsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 			</table>
-			<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+			<div data-app-role='dualModeDetailContainer' class='displayNone'></div>
 			</div>
 
 		</div>
@@ -81,15 +81,17 @@ if the data attrib is changed or any changes are made to the values (especially 
 
 <div id='customerEditorTemplate' class='clearfix customerEditor' data-app-role='customerManager'>
 	<form action='#'>
-	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
-		<h2 class='floatLeft ui-widget-header-padding'>
-User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
+	<div class='buttonBar clearfix marginBottom'>
+		<div class='floatRight smallButtons'>
+			<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+			<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
+			<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete</button>
+			<button class='floatRight' data-app-event='admin_customer|showMailTool'>Email</button>
+		</div>
 
+		<h2>
+User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
 		</h2>
-		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
-		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete</button>
-		<button class='floatRight' data-app-event='admin_customer|showMailTool'>Email</button>
 	</div>
 
 
