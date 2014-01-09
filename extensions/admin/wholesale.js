@@ -272,7 +272,6 @@ else	{
 								else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
 									app.u.handleAppEvents($editorContainer);
-									app.u.handleCommonPlugins($editorContainer);
 									$editorContainer.anydelegate({'trackEdits':true});
 
 //for FBA, most panel inputs get 'locked'
@@ -306,7 +305,9 @@ else	{
 										});
 								//### the panels are sortable, BUT this code doesn't allow for persistance. address when time permits.
 								
-								
+								//run after the FBA code so that if the cb's are disabled, the aesthetic is right.
+								app.u.handleCommonPlugins($editorContainer);
+									
 								//make panels draggable
 									var sortCols = $('.twoColumn').sortable({  
 										connectWith: '.twoColumn',
