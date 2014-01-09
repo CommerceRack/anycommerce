@@ -363,10 +363,9 @@ obj.show is required. currently, only 'dialog' is supported. however, more may b
 address is optional. if _id is passed, that input will get locked. pass 'id' to set a default but allow it to be changed.
 
 $D is returned.
-The save button runs 'submitForm', so if you want a custom callback, set it within the form using a hidden input name='_tag/callback' and name='_tag/extension'
- -> $form is returned and will be passed into the callback as jqObj.  add any necessary params onto form as data or as additional _tag hidden inputs.
+
 */
-			addressCreateUpdateShow : function(vars,$buttonset,address)	{
+			addressCreateUpdateShow : function(vars,callback,address)	{
 				vars = vars || {};
 				address = address || {};
 //				app.u.dump(" -> address: "); app.u.dump(address);
@@ -374,28 +373,61 @@ The save button runs 'submitForm', so if you want a custom callback, set it with
 					//add CID and mode to address object so that translator adds them to hidden inputs.
 					address.CID = vars.CID;
 					address.TYPE = vars.TYPE;
-					
+
 					var $D = app.ext.admin.i.dialogCreate({
 						'title' : vars.mode+' address ('+vars.TYPE+')',
 						'templateID' : 'customerAddressAddUpdateTemplate',
 						'data' : address,
 						});
-					
-					
+
+					//if the email isn't set, use the customer record email to populate.
+					if(address.TYPE == 'bill' && !address.email && app.u.thisNestedExists("app.data.adminCustomerDetail|"+vars.CID+"._EMAIL"))	{
+						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
+						}
+					//the id can't be changed once it's set.
 					if(vars.mode == 'update' || address._id)	{
 						$("input[name='SHORTCUT']",$D).prop('disabled','disabled');
 						}
-					if(vars.type == 'ship')	{
+					//ship addresses don't support email address.
+					if(vars.TYPE == 'ship')	{
 						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
 						}
 					
-					if($buttonset instanceof jQuery)	{
-						$('form',$D).append($buttonset);
-						}
-					else	{
-						$D.anymessage({'message':'in admin_customer.a.addressCreateUpdateShow, $buttonset is not a valid jquery instance.','gMessage':true})
-						}
-					$('form:first',$D).data(vars);
+					var $form = $('form:first',$D);
+					
+					$("<button \/>").html("Save <span class='numChanges'></span> Changes").attr('data-app-role','saveButton').button().on('click',function(event){
+						event.preventDefault();
+						if(app.u.validateForm($form))	{
+							if(vars.mode == 'update' || vars.mode == 'create')	{
+								var sfo = $form.serializeJSON();
+								delete sfo._id; //shortcut is used in save, which is already part of sfo
+								delete sfo.mode; //this is for forming macro cmd, not part of address.
+								//customerUpdate does return some of the updated customer object, but none of the extras, like wallets, org, orders, etc.
+								app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,["ADDR"+(vars.mode.toUpperCase())+"?"+$.param(sfo)],{'callback' : function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd});
+										}
+									else	{
+										$D.dialog('close');
+										if(typeof callback == 'function')	{
+											callback(vars);
+											}
+										}
+									}},'immutable');
+								}
+							else	{
+								$D.anymessage({'message':'In admin_customer.a.addressCreateUpdateShow, mode ['+vars.mode+'] was set but not valid. Must be set to create or update.','gMessage':true});
+								}
+							app.model.destroy('adminCustomerDetail|'+vars.CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':vars.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{},'immutable');
+							app.model.dispatchThis('immutable');
+
+							}
+						else	{} //validateForm will handle error display
+						}).appendTo($form);
+					
+
+					$form.data(vars);
 					app.u.handleCommonPlugins($D);
 					app.u.handleButtons($D);
 					$D.anydelegate({'trackEdits' : (vars.mode == 'update' ? true : false)});
@@ -406,57 +438,8 @@ The save button runs 'submitForm', so if you want a custom callback, set it with
 					$('#globalMessaging').anymessage({"message":"In admin_customer.a.createUpdateAddressShow, a required param was left blank [vars.type: "+vars.type+" (must be bill or ship), vars.mode = "+vars.mode+" && vars.CID = "+vars.CID+" and vars.show = "+vars.show+"].","gMessage":true});
 					}
 				},
-// ### TODO -> this should be replaced with the new addressCreateUpdate function.
-//obj required params are cid, type (bill or ship)
-			showAddAddressModal : function(obj,$customerEditor){
-				var $modal = $('#customerUpdateModal').empty();
-				$('.ui-dialog-title',$modal.parent()).text(''); //blank the title bar so old title doesn't show up if error occurs
-				$modal.dialog('open');
-				
-				if(obj && obj.CID && obj.type)	{
-					$('.ui-dialog-title',$modal.parent()).text('Add a new '+obj.type.substring(0).toLowerCase()+' customer address');
-					$modal.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false});
-					$("[name='TYPE']",$modal).val(obj.type.toUpperCase().substring(1)); //val is @ship or @bill and needs to be SHIP or BILL
-					if(obj.type == '@SHIP')	{
-						$("[type='email']",$modal).parent().empty().remove();
-						}
-					else if(app.data["adminCustomerDetail|"+obj.CID] && app.data["adminCustomerDetail|"+obj.CID]._EMAIL )	{
-						$("[type='email']",$modal).val(app.data["adminCustomerDetail|"+obj.CID]._EMAIL); //populate email address w/ default.
-						}
-					else	{}
-					
-					var $form = $('form',$modal).first(),
-					$btn = $("<button \/>").text('Add Address').button().on('click',function(event){
-						event.preventDefault();
-						app.model.destroy('adminCustomerDetail|'+obj.CID);
-						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj,function(rd){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$modal.anymessage({'message':rd});
-								}
-							else	{
-								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistent':true});
-								//clear existing addresses and re-render.
-								var $panel = $("[data-app-role='"+obj.type.substring(1).toLowerCase()+"']",$customerEditor); //ship or bill panel.
-								app.u.dump(" -> $panel.length: "+$panel.length);
-								app.u.dump(" -> $customerEditor.length: "+$customerEditor.length);
-								$("tbody",$panel).empty(); //clear address rows so new can be added.
-								$panel.anycontent({'data' : app.data[rd.datapointer]['%CUSTOMER']}); //translate panel, which add all addresses.
-								app.data['adminCustomerDetail|'+obj.CID] = app.data[rd.datapointer]['%CUSTOMER'];
-								delete app.data[rd.datapointer]; //get rid of this so pointer between customerDetail and customerUpdate is dropped.
-								app.u.handleAppEvents($panel);
-								}
-							});
-						});
 
-					$form.append($btn);
 
-					}
-				else	{
-					$modal.anymessage({'message':'In admin_customer.a.showAddAddressInModal, either CID ['+obj.CID+'] or type ['+obj.type+'] is not set.','gMessage':true});
-					}
-				
-				}, //showAddAddressModal
 //data should be a hash that optionally includes 'scope' and 'searchfor' params.
 //if both are set, those criteria will automatically be entered into the form and a search performed.
 //if only one or the other is set, they'll be the default values selected.
@@ -607,12 +590,34 @@ The save button runs 'submitForm', so if you want a custom callback, set it with
 			handleAnypanelButtons : function($customerEditor,obj){
 				if($customerEditor && typeof $customerEditor == 'object')	{
 					if(obj.CID)	{
+
+						var addrCallback = function(v)	{
+							var $panel = $("[data-app-role='"+v.TYPE.toLowerCase()+"']",v.$customerEditor); //ship or bill panel.
+							app.u.dump(" -> $panel.length: "+$panel.length);
+							app.u.dump(" -> $customerEditor.length: "+v.$customerEditor.length);
+							$("tbody",$panel).empty(); //clear address rows so new can be added.
+							$panel.anycontent({'data' : app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
+							app.u.handleAppEvents($panel);
+							}
+
 						$('.panel_ship',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.showAddAddressModal({type:'@SHIP','CID':obj.CID},$customerEditor);
+							app.ext.admin_customer.a.addressCreateUpdateShow({
+								'mode' : 'create', //will b create or update.
+								'show' : 'dialog',
+								'$customerEditor':$customerEditor,
+								'TYPE' : 'ship',
+								'CID' : obj.CID
+								},addrCallback);
 							}});
 
 						$('.panel_bill',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.showAddAddressModal({type:'@BILL','CID':obj.CID},$customerEditor);
+							app.ext.admin_customer.a.addressCreateUpdateShow({
+								'mode' : 'create', //will b create or update.
+								'show' : 'dialog',
+								'$customerEditor':$customerEditor,
+								'TYPE' : 'bill',
+								'CID' : obj.CID
+								},addrCallback);
 							}});
 
 						$("[data-app-role='wallets']",$customerEditor).anypanel('option','settingsMenu',{'Add Wallet':function(){
@@ -1774,50 +1779,26 @@ setTimeout(function(){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					var $modal = $('#customerUpdateModal').empty(),
-					$addrPanel = $btn.closest('.ui-widget-anypanel');
-					
-					app.u.dump(" -> $addrPanel.length: "+$addrPanel.length);
-					
-					$('.ui-dialog-title',$modal.parent()).text('Update customer address');
-					$modal.dialog('open');
-					
-					var CID = $(this).closest('.panel').data('cid'),
-					type = $btn.closest("[data-address-type]").data('address-type'),
-					index = Number($btn.closest('tr').data('obj_index'));
 
-					if(CID && index >= 0 && type)	{
-						$modal.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
-						$("[name='TYPE']",$modal).val(type.toUpperCase().substring(1)); //val is @ship or @bill and needs to be SHIP or BILL
-						$("[name='SHORTCUT']",$modal).attr('disabled','disabled').parent().append('not editable'); //once created, the shortcut is not editable.
+					var
+						addrType = $btn.closest("[data-address-type]").attr('data-address-type'), //@SHIP or @BILL. how it's referenced in the customer object.
+						addrTypeTrimd = addrType.toLowerCase().substring(1), //ship or bill. how addressCreateUpdateShow wants type formatted.
+						CID = $btn.closest('.panel').data('cid'),
+						index = Number($btn.closest('tr').data('obj_index')); // set by process list. is the index of this address in the customer bill/ship address array.
+				
+					app.ext.admin_customer.a.addressCreateUpdateShow({
+						'mode' : 'update', //will b create or update.
+						'show' : 'dialog',
+						'TYPE' : addrTypeTrimd,
+						'CID' : CID
+						},function(v){
+							var $panel = $btn.closest(".ui-widget-anypanel"); //ship or bill panel.
+							app.u.dump(" -> $panel.length: "+$panel.length);
+							$("tbody",$panel).empty(); //clear address rows so new can be added.
+							$panel.anycontent({'data' : app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
+							app.u.handleAppEvents($panel);
+							},app.data['adminCustomerDetail|'+CID][addrType][index]);
 
-						if(type == '@SHIP')	{
-							$("[type='email']",$modal).parent().empty().remove();
-							}
-
-						var $button = $("<button \/>").text('Save Address').button().on('click',function(event){
-							event.preventDefault();
-							var $form = $('form',$modal);
-							app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRUPDATE',{'CID':CID,'type':type},function(rd){
-								$form.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$modal.anymessage({'message':rd});
-									}
-								else	{
-									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistent':true});
-									//clear existing addresses and re-render.
-									$("tbody",$addrPanel).empty();
-									$addrPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
-									app.u.handleAppEvents($addrPanel);
-									
-									}
-								});
-							});						
-						$modal.append($button);
-						}
-					else	{
-						$modal.anymessage({'message':'In admin_customer.e.customerAddressUpdate, unable to determine CID ['+CID+'] or address type ['+type+'] or address index ['+index+']',gMessage:true});
-						}
 					});
 				}, //showAddrUpdate
 
