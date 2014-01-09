@@ -1042,31 +1042,27 @@ in a reorder, that data needs to be converted to the variations format required 
 
 
 		renderFormats : {
-//value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
-//so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
-// ### TODO -> this will need fixing.
+// pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesAsOptions : function($tag,data)	{
-				var r = '';
-				if(app.data['appCheckoutDestinations|'+data.value] && app.data['cartDetail|'+data.value] && data.bindData.shiptype)	{
-					var destinations = app.data['appCheckoutDestinations|'+data.value]['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+data.value];
+				var r = '', cartid = data.value.cart.cartid;
+				if(app.data['appCheckoutDestinations|'+cartid] && app.data['cartDetail|'+cartid] && data.bindData.shiptype)	{
+					var destinations = app.data['appCheckoutDestinations|'+cartid]['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+cartid];
 					for(var i = 0; i < L; i += 1)	{
 						r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
 						}
-					var selected = 'US'; //default
-					if(data.bindData.shiptype && cartData[data.bindData.shiptype] && cartData[data.bindData.shiptype][data.bindData.shiptype+'/countrycode'])	{
-						selected = cartData[data.bindData.shiptype][data.bindData.shiptype+'/countrycode']
-						}
-					$("select[name='"+data.bindData.shiptype+"/countrycode']").val(selected);
-					$tag.html(r);
+					$tag.append(r);
+					$tag.val(cartData[data.bindData.shiptype].countrycode || 'US');
+					}
+				else if(!data.bindData.shiptype)	{
+					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'In cco.renderFormats.countriesAsOptions, data-bind rules must have a shiptype set.','gMessage':true}));
 					}
 				else	{
-					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+data.value+'] is not available in memory.','gMessage':true}));
+					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+cartid+'] or app.data.cartDetail|'+cartid+' and both are required. is not available in memory.','gMessage':true}));
 					}
 				},
 
 //data.value should be the item object from the cart.
 			cartItemRemoveButton : function($tag,data)	{
-
 				if(data.value.stid[0] == '%')	{$tag.remove()} //no remove button for coupons.
 				else if(data.value.asm_master)	{$tag.remove()} //no remove button for assembly 'children'
 				else	{
