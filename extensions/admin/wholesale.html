@@ -123,9 +123,9 @@
 	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popVal;' />Allow Resale/Tax Exempt</label>
 	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popVal;' />Is Locked</label>
 	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
+	<div class='label'><input type='number' class='smallInput' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
+	<div class='label'><input type='number' class='smallInput' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
+	<div class='label'><input type='number' class='smallInput' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
 </fieldset>
 
 <div class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
@@ -235,7 +235,7 @@
 	
 	<label>
 		<span>Quantity</span>
-		<input type='number' step='1' min='0' name='QTY' value='0' class='number resetMeOnComplete' />
+		<input type='number' step='1' min='0' name='QTY' value='0' class='number resetMeOnComplete smallInput' />
 	</label>
 
 	<button data-app-event="admin_wholesale|adminSupplierInventoryAddExec">Add</button>
@@ -648,17 +648,17 @@
 					
 					<label class='marginLeft'>
 						<span>Per Order</span> $
-						<input type="number" step='.01' min='0' name="hnd_perorder" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perorder); format:popVal;" />
+						<input type='number' class='smallInput' step='.01' min='0' name="hnd_perorder" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perorder); format:popVal;" />
 					</label>
 					
 					<label class='marginLeft'>
 						<span>Per Item</span> $
-						<input type="number" step='.01' min='0' name="hnd_peritem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_peritem); format:popVal;" />
+						<input type='number' class='smallInput' step='.01' min='0' name="hnd_peritem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_peritem); format:popVal;" />
 					</label>
 					
 					<label class='marginLeft'>
 						<span>Per Unique Item</span> $
-						<input type="number" step='.01' min='0' name="hnd_perunititem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perunititem); format:popVal;" />
+						<input type='number' class='smallInput' step='.01' min='0' name="hnd_perunititem" value="" size="5" data-bind="var:vendor(%SHIP.hnd_perunititem); format:popVal;" />
 					</label>
 				</div>
 		
@@ -702,7 +702,7 @@
 			
 			<label>
 				<span>Preference</span>
-				<input type='number' name='PREFERENCE' value='' data-bind="var:vendor(PREFERENCE); format:popVal;" max='100' step='1' min='1' size='3' />
+				<input type='number' class='smallInput' name='PREFERENCE' value='' data-bind="var:vendor(PREFERENCE); format:popVal;" max='100' step='1' min='1' size='3' />
 			</label>
 			
 			</fieldset>
@@ -946,13 +946,13 @@
 	
 	<label>
 		<span>Shipping Latency (in Days):</span>
-		<input type="number" value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" min='0' step='1' data-bind='var:warehouse(SHIPPING_LATENCY_IN_DAYS); format:popVal;' />
+		<input type='number' class='smallInput' value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" min='0' step='1' data-bind='var:warehouse(SHIPPING_LATENCY_IN_DAYS); format:popVal;' />
 		<span class='toolTip' title="The maximum number of days before an order is processed.">?</span>
 	</label>
 	
 	<label>
 		<span>Shipping Cutoff Hour:</span>
-		<input type="number" value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" min='0' step='1' max="24" data-bind='var:warehouse(SHIPPING_CUTOFF_HOUR_PST); format:popVal;' />
+		<input type='number' class='smallInput' value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" min='0' step='1' max="24" data-bind='var:warehouse(SHIPPING_CUTOFF_HOUR_PST); format:popVal;' />
 		<span class='toolTip' title="Use 24 hour format, PST time zone (ex: '16' is 4:00pm PST).">?</span>
 	</label>
 
@@ -999,11 +999,11 @@
 
 	<div class='twoColumn column2 labelsAsBreaks alignedLabels'>
 		<input type='hidden' name='uuid' value='' /><!-- if an editor is introduced, populate this field w/ the rest of the form -->
-		<label><span>Row</span><input type='number' name='row' value='' size='5' data-bind="var: location(row); format:popVal;" class='skipTrack' /></label>
-		<label><span>Shelf begin</span><input type='text' name='shelf' value='' size='5' data-bind="var: location(shelf); format:popVal;" class='skipTrack' /></label>
-		<label><span>Shelf end</span><input type='text' name='shelf_end' value='' size='5' data-bind="var: location(shelf_end); format:popVal;" class='skipTrack' /></label>
-		<label><span>Slot begin</span><input type='text' name='slot' value='' size='5' data-bind="var: location(slot); format:popVal;" class='skipTrack' /></label>
-		<label><span>Slot end</span><input type='text' name='slot_end' value='' size='5' data-bind="var: location(slot_end); format:popVal;" class='skipTrack' /></label>
+		<label><span>Row</span><input type='number' name='row' value='' size='5' data-bind="var: location(row); format:popVal;" class='skipTrack smallInput' /></label>
+		<label><span>Shelf begin</span><input type='text' name='shelf' value='' size='5' data-bind="var: location(shelf); format:popVal;" class='skipTrack smallInput' /></label>
+		<label><span>Shelf end</span><input type='text' name='shelf_end' value='' size='5' data-bind="var: location(shelf_end); format:popVal;" class='skipTrack smallInput' /></label>
+		<label><span>Slot begin</span><input type='text' name='slot' value='' size='5' data-bind="var: location(slot); format:popVal;" class='skipTrack smallInput' /></label>
+		<label><span>Slot end</span><input type='text' name='slot_end' value='' size='5' data-bind="var: location(slot_end); format:popVal;" class='skipTrack smallInput' /></label>
 		<button data-app-event="admin_config|dataTableAddExec">Apply Position</button>
 	</div>
 </fieldset>
@@ -1098,7 +1098,7 @@
 	</label>
 	<label>
 		<span>Zone preference</span>
-		<input type="number" step='1' min='0' size="3" maxlength="3" name="ZONE_PREFERENCE" value="" />
+		<input type='number' class='smallInput' step='1' min='0' size="3" maxlength="3" name="ZONE_PREFERENCE" value="" />
 		<span class='toolTip' title="Zones with a higher preference are picked from first.">?</span>
 	</label>
 
@@ -1419,7 +1419,7 @@ for updateing inventory records per pid/sku (setting location)
 	<td>Zone*Position</td>
 	<td><input type='text' name='LOC' value='' size='25'  required='required' /></td>
 	<td>Qty</td>
-	<td>+<input type='number' min='0' step='1' name='QTY' value='' size='25'  required='required' /></td>
+	<td>+<input type='number' min='0' step='1' name='QTY' value='' size='10'  required='required' /></td>
 	
 	<td><button class='applyButton' data-app-click="admin_wholesale|whimSetSKULocation">Set as a Location</button></td>
 </tr>
