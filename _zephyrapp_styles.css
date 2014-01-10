@@ -155,28 +155,30 @@ body {
     margin: 0 auto;
 }
 .ddMenuBtn {
-    background: #D7D9DB;
-	border: 1px solid #939598;
-    border-radius: 4px;
-    color: #000000;
-    font-size: 18px;
+    background: #0878da;
+	border: 1px solid #060606;
+    border-radius: 13px;
+    color: #ffffff;
+    font-size: 20px;
     font-weight: bold;
     line-height: 36px;
     text-align: center;
 }
+.dropdownArrow{margin:14px 0px 0px 5px;}
 .dropdown { 
-	background: #D7D9DB; 
+	background: #0878da; 
 	position: absolute; 
 	z-index:999; 
 	top:40px; 
 	left: 0px; 
 	height: 0px; 
-	border: 1px solid #939598; 
+	border: 1px solid #060606; 
 	border-top: none; 
-	border-radius: 0px 0px 7px 7px;
+	border-radius: 0px 0px 13px 13px;
 }
 .dropdown > div { 
-	border-top: 1px solid #939598; 
+	border-top: 1px solid #060606; 
+	color:#ffffff;
 	font-size: 15px; 
 	line-height: 30px; 
 	text-align: center;

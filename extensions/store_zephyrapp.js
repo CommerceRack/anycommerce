@@ -244,11 +244,13 @@ var store_zephyrapp = function() {
 						$container.data('timeout','false');
 					}
 					$dropdown.stop().animate({"height":height+"px"}, 500);
+					$(".ddMenuBtn",$container).animate({"height":"44px"}, 500);
 					
 					$('html, .ddMenuBtn').on('click.dropdown',function(){
 						//hide the dropdown
 						app.u.dump('hiding');
 						$(".dropdown", $container).stop().animate({"height":"0px"}, 500);
+						$(".ddMenuBtn",$container).animate({"height":"36px"}, 500);
 						if($container.data('timeout') && $container.data('timeout')!== "false"){
 							$container.data('timeout')
 							$container.data('timeout','false');
