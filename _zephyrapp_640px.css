@@ -14,8 +14,9 @@
 #contentArea.sideBarRightHide{width:98%; padding:1%;}
 
 /**** Header CSS****/
-#header {height:55px; background: url(images/topbar_logosection_bg.jpg) repeat-x bottom;}
-#logo {position:static;}
+#header {height:50px; padding:8px 0px 0px; background: #ffffff;}
+.mobileTopNav{width:290px;}
+.mobileTopNavSearch{margin-left:7px;}
 .topNavRight {width:290px; float:none; margin:0 auto;}
 .productSearchForm{width:295px; float:none; margin:0 auto; padding:0px; position:relative;}
 .searchBar {width:240px; height:14px; font-size:11px; position:absolute; top:3px;}

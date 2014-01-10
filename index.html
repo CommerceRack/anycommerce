@@ -101,9 +101,14 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 
 <div id="topBar">
 	<div id="header">
-		<div id="logo" onClick="showContent('homepage');" class='pointer logoSection'>
-			<img width="317" height="105" class="displayNoneMobile" src="images/zephyr_logo.png"/>
-			<img width="175" class="displayNone displayBlockMobile marginAuto" src="images/zephyr_logo.png"/>
+		<div id="logo" onClick="showContent('homepage');" class='pointer logoSection displayNoneMobile'>
+			<img width="317" height="105" src="images/zephyr_logo.png"/>
+		</div>
+		<div class="mobileTopNav displayNone displayBlockMobile marginAuto">
+			<img onClick="showContent('homepage');" class="pointer" width="148" height="48" src="images/zephyr_logo_small.png"/>
+			<img class="mobileTopNavSearch" src="images/topbar_searchicon.png"/>
+			<a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img src="images/topbar_customericon.png"/></a>
+			<a class="pointer"  onClick="return showContent('cart',{});"><img src="images/topbar_carticon.png"/></a>
 		</div>
 		<div id="headerBar" class="displayNoneMobile">
 			<div class="headerBarLinks">
