@@ -32,7 +32,7 @@ var tools_zoom = function() {
 			onSuccess : function()	{
 				var r = false; 
 
-				app.u.loadResourceFile(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
+			//	app.u.loadResourceFile(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
 				
 				r = true;
 
