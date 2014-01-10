@@ -244,7 +244,7 @@ var store_zephyrapp = function() {
 						$container.data('timeout','false');
 					}
 					$dropdown.stop().animate({"height":height+"px"}, 500);
-					$(".ddMenuBtn",$container).animate({"height":"44px"}, 500);
+					$(".ddMenuBtn",$container).animate({"height":"44px"}, 100);
 					
 					$('html, .ddMenuBtn').on('click.dropdown',function(){
 						//hide the dropdown
