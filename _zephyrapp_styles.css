@@ -145,11 +145,11 @@ body {
 /***** Top Bar CSS End *****/
 
 /***** Responsive ddMenu CSS Start *****/
-#responsiveDropdown{
-    background:#FFFFFF;
+.responsiveDropdown{
+    background:url("images/ddmenubtn_bg.jpg") no-repeat scroll right center #000000;
 }
 .ddMenu {
-    padding: 5px 0 0;
+    padding: 7px 0;
 	position: relative;
     width: 300px;
     margin: 0 auto;
