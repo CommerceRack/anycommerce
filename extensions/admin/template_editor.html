@@ -5,7 +5,7 @@
 	<div class='stdPadding'>
 		<label class='site displayNone'>
 		<span>Choose Template</span>
-		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_templateEditor|adminSiteTemplateEdit'>
+		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_template|adminSiteTemplateEdit'>
 			<option value='' disabled="disabled" selected="selected">Choose Template</option>
 		</select>
 		</label>
@@ -19,10 +19,10 @@
 	<div class='marginLeft'>
 	
 		<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
-	<!--		<button data-app-event="admin_templateEditor|adminTemplateCampaignExit">Exit</button> -->
+	<!--		<button data-app-event="admin_template|adminTemplateCampaignExit">Exit</button> -->
 	
-			<button data-app-event="admin_templateEditor|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
-			<button data-app-event='admin_templateEditor|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus'>Save</button>
+			<button data-app-event="admin_template|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
+			<button data-app-event='admin_template|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus'>Save</button>
 		</div>
 	
 	<section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
@@ -35,11 +35,11 @@
 	
 			<h5>Highlight Elements</h5>
 			<!-- labels are in divs because the .show() applies a display:inline class. -->
-			<div class='marginTop clearfix ebay'><label data-app-role='highlightContainer_product'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label></div>
+			<div class='marginTop clearfix ebay'><label data-app-role='highlightContainer_product'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label></div>
 			
-			<div class='clearfix campaign'><label data-app-role='highlightContainer_buyer'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightBuyerAttributes' data-objecttype='BUYER' />Buyer<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with buyer data. Any content added inside these areas is likely to be lost when the buyer data is added.">?</span></label></div>
+			<div class='clearfix campaign'><label data-app-role='highlightContainer_buyer'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightBuyerAttributes' data-objecttype='BUYER' />Buyer<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with buyer data. Any content added inside these areas is likely to be lost when the buyer data is added.">?</span></label></div>
 			
-			<div class='clearfix'><label data-app-role='highlightContainer_wizard'><input data-app-event="admin_templateEditor|templateHighlightToggle" type='checkbox' name='highlightKISSAttributes' data-objecttype='KISS' />Wizard<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label></div>
+			<div class='clearfix'><label data-app-role='highlightContainer_wizard'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightKISSAttributes' data-objecttype='KISS' />Wizard<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label></div>
 	
 		</div>
 	</section>
@@ -53,7 +53,7 @@
 	<div data-app-role='wizardMessaging' class='small'></div>
 	
 	<form id='wizardForm' action='#' onSubmit='return false;'>
-	<button data-app-event='admin_templateEditor|startWizardExec'>Start Wizard</button>
+	<button data-app-event='admin_template|startWizardExec'>Start Wizard</button>
 	</form>
 	
 	
@@ -66,7 +66,7 @@
 		<h4 class='smallPadding ui-widget-header ui-corner-top'>Viewport Size</h4>
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 	
-		<select name='viewport' class='small' data-app-event='admin_templateEditor|templateEditorIframeResizeExec'>
+		<select name='viewport' class='small' data-app-event='admin_template|templateEditorIframeResizeExec'>
 			<option value='default'>default</option>
 			<optgroup label='Amazon'>
 				<option value='600x1024'>Kindle Fire 600x1024</option>
@@ -142,7 +142,7 @@
 		
 		<span class='toolTip' title="This feature is available to give you an idea of what your message will look like on a specific device. There may be device-specific display differences. Also, the pixel density on phones is higher than a computer, so the phone around your content is enlarged to reflect this.">?</span>
 		
-		<button data-app-event='admin_templateEditor|templateEditorIframeRotateExec'>Rotate Orientation</button>
+		<button data-app-event='admin_template|templateEditorIframeRotateExec'>Rotate Orientation</button>
 		
 		
 		</div>
@@ -153,7 +153,7 @@
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 		<p class='hint'>This will make a new template for use on other profiles</p>
 		<input name='template' id='templateName' value='' placeholder='template name' />
-		<button data-app-event="admin_templateEditor|adminSaveAsTemplateExec">Save As New Template</button>
+		<button data-app-event="admin_template|adminSaveAsTemplateExec">Save As New Template</button>
 		</div>
 	</section>
 
@@ -175,14 +175,14 @@
 <div id='templateChooserDetailTemplate'>
 	<div class='marginBottom clearfix'>
 		<div class='floatRight alignRight'>
-			<button class='smallButton'  data-app-event='admin_templateEditor|templateChooserExec'>Choose</button><!--
+			<button class='smallButton'  data-app-event='admin_template|templateChooserExec'>Choose</button><!--
 			<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
 			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>-->
 		</div>
 		<h2 data-bind="var:template(SUBDIR); format:text;"></h2>
 	</div>
 	<div class='clearfix'>
-<img border="0" src="" data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;'>
+<img border="0" src="" data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_template;'>
 <p data-bind="var:template(%info.about); format:text;"></p>
 	</div>
 </div>
@@ -220,8 +220,8 @@
 
 
 <ul>
-	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-event='admin_templateEditor|templateChooserPreview'>
-	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_templateEditor;'  />
+	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-event='admin_template|templateChooserPreview'>
+	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_template;'  />
 	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink'></div>
 	</li>
 </ul>

@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var admin_templateEditor = function() {
+var admin_template = function() {
 	
 	var theseTemplates = new Array('templateEditorTemplate');
 	
@@ -38,7 +38,7 @@ var admin_templateEditor = function() {
 					var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 	//the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/template_editor.html',theseTemplates);
-					app.ext.admin_templateEditor.u.declareMagicFunctions(); //adds some global functions to the dom. shortcuts for template editing.
+					app.ext.admin_template.u.declareMagicFunctions(); //adds some global functions to the dom. shortcuts for template editing.
 					return r;
 					},
 				onError : function()	{
@@ -62,7 +62,7 @@ var admin_templateEditor = function() {
 				vars = vars || {};
 //				app.u.dump(" -> vars: "); app.u.dump(vars);
 				//will be false if it is not missing params
-				if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
+				if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
 //By here, we know that we have a valid mode and that any requirements in 'vars' based on the mode ARE present.
 
 					var $D = $('#templateEditor');
@@ -159,15 +159,15 @@ var admin_templateEditor = function() {
 								
 								var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
 									"|", 
-									app.ext.admin_templateEditor.u.getEditorButton_imageadd(),
-									app.ext.admin_templateEditor.u.getEditorButton_image()
+									app.ext.admin_template.u.getEditorButton_imageadd(),
+									app.ext.admin_template.u.getEditorButton_image()
 									]);
 
 //handle some mode specifics.
 								$('.ebay, .campaign, .site').hide(); // hide all 'specifics' by default. show as needed.
 								if(mode == 'EBAYProfile')	{
 									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_prodattributeadd())
+									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_prodattributeadd())
 									$(".ebay",$D).show();
 									}
 								if(mode == 'Site')	{
@@ -176,11 +176,11 @@ var admin_templateEditor = function() {
 									}
 								else if(mode == 'Campaign')	{
 									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_style());
+									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_style());
 									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButton_buyerattributeadd());
+									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_buyerattributeadd());
 									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_templateEditor.u.getEditorButtonNativeApp());
+									toolbarButtons.push(app.ext.admin_template.u.getEditorButtonNativeApp());
 									$(".campaign",$D).show();
 									}
 								else	{}
@@ -192,7 +192,7 @@ var admin_templateEditor = function() {
 									.width('95%')
 									.height($D.height() - 100)
 									.css('width','95%')
-									.val(app.ext.admin_templateEditor.u.preprocessTemplate(mode,vars,app.data[rd.datapointer]['body']))
+									.val(app.ext.admin_template.u.preprocessTemplate(mode,vars,app.data[rd.datapointer]['body']))
 									.htmlarea({
 										// Override/Specify the Toolbar buttons to show
 										toolbar: toolbarButtons // 
@@ -202,9 +202,9 @@ var admin_templateEditor = function() {
 								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
 								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
 								var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
-								app.ext.admin_templateEditor.u.handleWizardObjects($iframeBody,$objectInspector);
+								app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
 								
-								app.ext.admin_templateEditor.u.handleTemplateModeSpecifics(mode,vars,$iframeBody); //needs to be after iframe is added to the DOM.
+								app.ext.admin_template.u.handleTemplateModeSpecifics(mode,vars,$iframeBody); //needs to be after iframe is added to the DOM.
 								
 								app.u.handleAppEvents($D);
 								$('.toolTip',$D).tooltip();
@@ -240,14 +240,14 @@ var admin_templateEditor = function() {
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_templateEditor.a.showTemplateEditor, "+app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_template.a.showTemplateEditor, "+app.ext.admin_template.u.missingParamsByMode(mode,vars),"gMessage":true});
 					}				
 				
 				}, //showTemplateEditor
 
 			showTemplateChooserInModal : function(vars)	{
 				vars = vars || {};
-				if(!app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars))	{
+				if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
 
 					var dialogObject = {'showLoading':false};
 					vars._cmd = 'admin'+vars.mode+'TemplateList';
@@ -298,7 +298,7 @@ var admin_templateEditor = function() {
 					app.u.handleAppEvents($D);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_marketplace.a.showTemplateChooserInModal, "+app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars)+".","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_marketplace.a.showTemplateChooserInModal, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars)+".","gMessage":true});
 					}
 				}, //showTemplateChooserInModal
 
@@ -384,7 +384,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 								},
 							'complete' : function(){}
 							}).parent().css({top:'-13px','position':'relative'});
-						app.ext.admin_templateEditor.u.handleWizardProgressBar($("[data-app-role='progressBar']",$templateEditor));
+						app.ext.admin_template.u.handleWizardProgressBar($("[data-app-role='progressBar']",$templateEditor));
 						}
 					});
 				} //initWizard
@@ -419,26 +419,26 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 				missingParamsByMode : function(mode,data)	{
 					var r = false;
 					if(mode && !$.isEmptyObject(data))	{
-						if($.inArray(mode,app.ext.admin_templateEditor.vars.templateModes) > -1)	{
+						if($.inArray(mode,app.ext.admin_template.vars.templateModes) > -1)	{
 							if(mode == 'EBAYProfile' && !data.profile)	{
-								r = "In admin_templateEditor.u.missingParamsByMode, mode set to EBAYProfile but no profile passed."
+								r = "In admin_template.u.missingParamsByMode, mode set to EBAYProfile but no profile passed."
 								}
 							else if(mode == 'Site' && !data.domain)	{
-								r = "In admin_templateEditor.u.missingParamsByMode, mode set to Site but no domain passed."
+								r = "In admin_template.u.missingParamsByMode, mode set to Site but no domain passed."
 								}
 							else if(mode == 'Campaign' && !data.campaignid)	{
-								r = "In admin_templateEditor.u.missingParamsByMode, mode set to Campaign but no campaignid passed."
+								r = "In admin_template.u.missingParamsByMode, mode set to Campaign but no campaignid passed."
 								}
 							else	{
 								//Success.
 								}
 							}
 						else	{
-							r = "In admin_templateEditor.u.missingParamsByMode, Invalid mode ["+mode+"] passed."
+							r = "In admin_template.u.missingParamsByMode, Invalid mode ["+mode+"] passed."
 							}
 						}
 					else	{
-						r = "In admin_templateEditor.u.missingParamsByMode, no mode passed or data was empty."
+						r = "In admin_template.u.missingParamsByMode, no mode passed or data was empty."
 						}
 					return r;
 					},
@@ -581,7 +581,7 @@ var $input = $(app.u.jqSelector('#',ID));
 			var $target = getTarget(selector,'magic.inspect');
 			r = null;
 			if($target)	{
-				app.ext.admin_templateEditor.u.showObjectInInspector($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+				app.ext.admin_template.u.showObjectInInspector($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
 				r = $target;
 				}
 			else	{} //getTarget handles error display.
@@ -710,7 +710,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, pbar ["+$pbar instanceof jQuery+"] is not a valid jquery object.",'gMessage':true});
+						$('#globalMessaging').anymessage({'message':"In admin_template.u.handleWizardProgressBar, pbar ["+$pbar instanceof jQuery+"] is not a valid jquery object.",'gMessage':true});
 						}
 					},
 
@@ -720,11 +720,11 @@ var $input = $(app.u.jqSelector('#',ID));
 						$iframeBody.on('click',function(e){
 							var $target = $(e.target);
 	//						app.u.dump(" -> $target.id: "+$target.attr('id'));
-							app.ext.admin_templateEditor.u.showObjectInInspector($target,$objectInspector); //updates object inspector when any element is clicked.
+							app.ext.admin_template.u.showObjectInInspector($target,$objectInspector); //updates object inspector when any element is clicked.
 							});
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+						$('#globalMessaging').anymessage({'message':"In admin_template.u.handleWizardProgressBar, either iframeBody ["+$iframeBody instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
 						}
 					},
 
@@ -752,7 +752,7 @@ var $input = $(app.u.jqSelector('#',ID));
 //This will add a style tag (classes) used by the editor. They're added to the template (stripped on save).
 // it will also add some classes on data-object elements. These stay (they do no harm)
 				preprocessTemplate : function(mode,vars,template)	{
-					app.u.dump("BEGIN admin_templateEditor.u.preprocessTemplate");
+					app.u.dump("BEGIN admin_template.u.preprocessTemplate");
 //					app.u.dump(" -> mode: "+mode); app.u.dump(" -> vars: "); app.u.dump(vars);
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
@@ -778,12 +778,12 @@ var $input = $(app.u.jqSelector('#',ID));
 							}
 						})
 	
-					$template.append(app.ext.admin_templateEditor.u.buildTemplateStyleSheet())
+					$template.append(app.ext.admin_template.u.buildTemplateStyleSheet())
 					return $template.html();
 					}, //preprocessTemplate
 
 				handleTemplateModeSpecifics : function(mode,vars,$iframeContents)	{
-					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
+					if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
 						if($iframeContents instanceof jQuery)	{
 							if(mode == 'Site')	{
 								$("[data-app-role='saveButton']",$("#templateEditor")).text("Save Templates");
@@ -800,11 +800,11 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, $iframeContents is not a valid jQuery instance ['+($iframeContents instanceof jQuery)+'].','gMessage':true});
+							$('#globalMessaging').anymessage({'message':'In admin_template.u.handleTemplateModeSpecifics, $iframeContents is not a valid jQuery instance ['+($iframeContents instanceof jQuery)+'].','gMessage':true});
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateModeSpecifics, '+app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),'gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_template.u.handleTemplateModeSpecifics, '+app.ext.admin_template.u.missingParamsByMode(mode,vars),'gMessage':true});
 						}
 					//data-app-role='siteTemplateSelect'
 					},
@@ -824,7 +824,7 @@ var $input = $(app.u.jqSelector('#',ID));
 									}
 								else	{
 									$('#wizardForm').html(app.data[rd.datapointer].body)
-									app.ext.admin_templateEditor.a.initWizard();
+									app.ext.admin_template.a.initWizard();
 									}
 								}
 							}
@@ -896,7 +896,7 @@ var $input = $(app.u.jqSelector('#',ID));
 	
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In admin_templateEditor.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+						$('#globalMessaging').anymessage({'message':"In admin_template.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
 						}
 					},
 
@@ -905,7 +905,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 					if($D instanceof jQuery)	{
 						var mode = $D.data('mode');
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
+						if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
 	
 							$D.showLoading({'message':'Saving changes'});
 							var docBody;
@@ -938,11 +938,11 @@ var $input = $(app.u.jqSelector('#',ID));
 									docBody = "<html>\n<!DOCTYPE html>\n"+$.trim($oTemplate.html())+"/n</html>"; //putting the template body into a jquery object strips the html and doctype tags.
 									}
 								else	{
-									$D.anymessage({'message':'In admin_templateEditor.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
+									$D.anymessage({'message':'In admin_template.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
 									}
 								}
 							else	{
-								docBody = app.ext.admin_templateEditor.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode);
+								docBody = app.ext.admin_template.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode);
 								}
 							var dObj = {
 								'_cmd' : 'admin'+mode+'FileSave',
@@ -977,11 +977,11 @@ var $input = $(app.u.jqSelector('#',ID));
 								
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_templateEditor.u.handleTemplateSave, object passed in not a valid jquery object.','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_template.u.handleTemplateSave, object passed in not a valid jquery object.','gMessage':true});
 						}
 					},
 
@@ -992,7 +992,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					var $TC = $('#templateChooser');
 					var mode = $TC.data('mode'); //should never get changed through this code.
 					
-					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars))	{
+					if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
 						if(vars.SUBDIR)	{
 							//all is well at this point. proceed.
 							$TC.showLoading({'message':'One moment please. Copying files into directory.'});
@@ -1010,7 +1010,7 @@ var $input = $(app.u.jqSelector('#',ID));
 //app.u.dump("vars: "); app.u.dump(vars);
 //app.u.dump("whitelist: "); app.u.dump(app.u.getWhitelistedObject(vars,['domain','templateid','profile']));
 
-											app.ext.admin_templateEditor.a.showTemplateEditor(mode,app.u.getWhitelistedObject(vars,['domain','campaignid','profile']));
+											app.ext.admin_template.a.showTemplateEditor(mode,app.u.getWhitelistedObject(vars,['domain','campaignid','profile']));
 											}
 										}
 									}	
@@ -1043,12 +1043,12 @@ var $input = $(app.u.jqSelector('#',ID));
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, SUBDIR not passed in.","gMessage":true});
+							$TC.anymessage({"message":"In admin_template.u.handleTemplateSelect, SUBDIR not passed in.","gMessage":true});
 							}
 						
 						}
 					else	{
-						$TC.anymessage({"message":"In admin_templateEditor.u.handleTemplateSelect, "+app.ext.admin_templateEditor.u.missingParamsByMode(mode,vars),"gMessage":true});
+						$TC.anymessage({"message":"In admin_template.u.handleTemplateSelect, "+app.ext.admin_template.u.missingParamsByMode(mode,vars),"gMessage":true});
 						}
 
 					}, //handleTemplateSelect
@@ -1163,7 +1163,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						'text' : 'Native App Settings',
 						action: function () {
 						
-							var $metaTags = app.ext.admin_templateEditor.u.pluckObjectFromTemplate('meta')
+							var $metaTags = app.ext.admin_template.u.pluckObjectFromTemplate('meta')
 							var data = {};
 
 //							app.u.dump(" -> $metaTags.length: "+$metaTags.length); app.u.dump($metaTags instanceof jQuery);
@@ -1184,12 +1184,12 @@ var $input = $(app.u.jqSelector('#',ID));
 								{ text: "Close", click: function() { $( this ).dialog( "close" ); } },
 								{ text: "Apply", click: function() {
 									var sfo = $('form',$D).serializeJSON();
-									var $templateHead = app.ext.admin_templateEditor.u.pluckObjectFromTemplate('head');
+									var $templateHead = app.ext.admin_template.u.pluckObjectFromTemplate('head');
 //									app.u.dump(" -> sfo: "); app.u.dump(sfo);
 
 									$D.showLoading({"message":"Applying Changes"});
 									for(index in sfo)	{
-										var $meta = app.ext.admin_templateEditor.u.pluckObjectFromTemplate("meta[name='"+index+"']");
+										var $meta = app.ext.admin_template.u.pluckObjectFromTemplate("meta[name='"+index+"']");
 										//update meta if it already exists.
 										if($meta.length)	{ //data is a list of meta tags that existed at the outset of this operation. if it's here, it exists as a meta in the template already.
 //											app.u.dump(" --> MATCH!");
@@ -1248,7 +1248,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								attributes.push({attribute:'zoovy:prod_image'+i, data : {'label':'Image '+i,'object':'PRODUCT','format':'img'},'id':'PROD_IMAGE'+i });
 								}
 
-							app.ext.admin_templateEditor.u.appendAttributeListTo($D,jhtml,attributes);
+							app.ext.admin_template.u.appendAttributeListTo($D,jhtml,attributes);
 							}
 						}
 					}, //getEditorButton_prodattributeadd
@@ -1271,7 +1271,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								{attribute: 'buyer:email', data : {'input-cols':'50','input-type':'TEXTBOX','label':'Email address','object':'BUYER'},'id':'PROD_EMAIL' }
 								]
 
-							app.ext.admin_templateEditor.u.appendAttributeListTo($D,jhtml,attributes);
+							app.ext.admin_template.u.appendAttributeListTo($D,jhtml,attributes);
 							}
 						}
 					}, //getEditorButton_prodattributeadd
@@ -1289,7 +1289,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						$ul.on('click',function(e){
 							var $target = $(e.target); //the element that was clicked.
 	//								app.u.dump(" -> attributes[i]"); app.u.dump(attributes[$target.data('attributeIndex')]);
-							if(app.ext.admin_templateEditor.u.applyElementToTemplate(jhtml,attributes[$target.data('attributeIndex')]))	{
+							if(app.ext.admin_template.u.applyElementToTemplate(jhtml,attributes[$target.data('attributeIndex')]))	{
 								$D.dialog('close');
 								}
 							else	{
@@ -1299,11 +1299,11 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					else if(!jhtml)	{
 						r = false;
-						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, jhtml was not defined and it is required.");
+						app.u.dump("In admin_template.u.applyElementToTemplate, jhtml was not defined and it is required.");
 						}
 					else	{
 						r = false;
-						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
+						app.u.dump("In admin_template.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
 						}
 					return (r === true) ? $ul : false;
 					},
@@ -1360,7 +1360,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							html += "</span>"
 							}
 						else	{
-							app.u.dump("In admin_templateEditor.u.applyElementToTemplate, either  data-type ["+attObj.data['input-type']+"] is invalid or data-format ["+attObj.data.format+"] is invalid. attObj:"); app.u.dump(attObj);
+							app.u.dump("In admin_template.u.applyElementToTemplate, either  data-type ["+attObj.data['input-type']+"] is invalid or data-format ["+attObj.data.format+"] is invalid. attObj:"); app.u.dump(attObj);
 							r = false;
 							}
 						
@@ -1368,10 +1368,10 @@ var $input = $(app.u.jqSelector('#',ID));
 						
 						}
 					else if(!jhtml)	{
-						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, jhtml was not defined and it is required.");
+						app.u.dump("In admin_template.u.applyElementToTemplate, jhtml was not defined and it is required.");
 						}
 					else	{
-						app.u.dump("In admin_templateEditor.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
+						app.u.dump("In admin_template.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
 						r = false;
 						}
 					return r;
@@ -1392,7 +1392,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 					$ele.off('change.adminSiteTemplateEdit').on('change.adminSiteTemplateEdit',function(){
 						//when a template is changed, all that needs to be done is to load the wizard. the wizard should take care of everything.
-						app.ext.admin_templateEditor.u.summonWizard("wizard-"+$(this).val()+".html")
+						app.ext.admin_template.u.summonWizard("wizard-"+$(this).val()+".html")
 						});
 					
 					},
@@ -1405,7 +1405,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							$D = $('#templateEditor');
 						var mode = $D.data('mode');
 						
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data()))	{
+						if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
 
 							$D.showLoading({'message':'Saving as new template: '+templateName});
 							var dObj = {
@@ -1435,7 +1435,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
 							}
 						});
 					},
@@ -1445,7 +1445,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					if($ele.is('button'))	{$ele.button();}
 					$ele.off('click.templateChooserExec').on('click.templateChooserExec',function(event){
 						event.preventDefault();
-						app.ext.admin_templateEditor.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
+						app.ext.admin_template.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
 						});
 					},
 
@@ -1457,7 +1457,7 @@ var $input = $(app.u.jqSelector('#',ID));
 				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
 					
 					event.preventDefault();
-					app.u.dump("BEGIN admin_templateEditor.e.templateChooserPreview");
+					app.u.dump("BEGIN admin_template.e.templateChooserPreview");
 					var $chooser = $("#templateChooser");
 					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
 					var mode = $chooser.data('mode');
@@ -1505,11 +1505,11 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 							}
 						else	{
-							$chooser.anymessage({'message':'In admin_templateEditor.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
+							$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
 							}
 						}
 					else	{
-						$chooser.anymessage({'message':'In admin_templateEditor.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
+						$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
 						}
 					});
 				},
@@ -1521,7 +1521,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
 						}
 					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
-						app.ext.admin_templateEditor.e.delContainerFileUploadShow($btn);
+						app.ext.admin_template.e.delContainerFileUploadShow($btn);
 						});
 					}, //containerFileUploadShow
 				
@@ -1550,7 +1550,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						var mode = $btn.data('mode');
 						var data = $btn.closest('.buttonset').data();
 app.u.dump(" -> data: "); app.u.dump(data);
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
+						if(!app.ext.admin_template.u.missingParamsByMode(mode,data))	{
 							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
 							var dObj = {
 								'_cmd' : 'admin'+mode+'ZipDownload',
@@ -1578,7 +1578,7 @@ app.u.dump(" -> data: "); app.u.dump(data);
 							
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In admin_templateEditor.e.containerZipDownloadExec, "+app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)+". The required params should be on the .buttonset around the download button"});
+							$('#globalMessaging').anymessage({'message':"In admin_template.e.containerZipDownloadExec, "+app.ext.admin_template.u.missingParamsByMode(mode,data)+". The required params should be on the .buttonset around the download button"});
 							}
 						});
 					}, //containerZipDownloadExec
@@ -1617,7 +1617,7 @@ else	{
 						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
 							if(app.u.isValidEmail($input.val()))	{
 								$D.showLoading({'message':'Sending Test Email'});
-								app.ext.admin_templateEditor.u.handleTemplateSave($('#templateEditor'));
+								app.ext.admin_template.u.handleTemplateSave($('#templateEditor'));
 								app.model.addDispatchToQ({
 									'_cmd':'adminCampaignTest',
 									'CAMPAIGNID' : $('#templateEditor').data('campaignid'),
@@ -1677,7 +1677,7 @@ if(profile && pid)	{
 	app.model.dispatchThis('immutable');
 	}
 else	{
-	$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.adminEBAYProfilePreviewShow, either pid ["+pid+"] or profile ["+profile+"] not set. Both are required.","gMessage":true});
+	$('#globalMessaging').anymessage({"message":"In admin_template.e.adminEBAYProfilePreviewShow, either pid ["+pid+"] or profile ["+profile+"] not set. Both are required.","gMessage":true});
 	}
 
 					},
@@ -1723,34 +1723,34 @@ The names for these delegated events are temporary. use the original names once 
 
 				delTemplateChooserShow : function($ele,p)	{
 					if($ele.data('mode') == 'Campaign')	{
-						app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
+						app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
 						}
 					else if ($ele.data('mode') == 'Site')	{
 						var domainname = $ele.closest("[data-domainname]").data('domainname');
 						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
 						if(hostname && domainname)	{
-							app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
+							app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
 							}
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
-						app.ext.admin_templateEditor.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$ele.closest("[data-profile]").data('profile')});
+						app.ext.admin_template.a.showTemplateChooserInModal({"mode":"EBAYProfile","profile":$ele.closest("[data-profile]").data('profile')});
 						}
 					else	{
 						//invalid mode set.
-						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateChooserShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_template.e.templateChooserShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
 						}
 					}, //delTemplateChooserShow
 
 				delTemplateEditorShow : function($ele,p)	{
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
-						app.ext.admin_templateEditor.a.showTemplateEditor('Campaign',{"campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
+						app.ext.admin_template.a.showTemplateEditor('Campaign',{"campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
-						app.ext.admin_templateEditor.a.showTemplateEditor('EBAYProfile',{"profile":$ele.closest("[data-profile]").data('profile')});
+						app.ext.admin_template.a.showTemplateEditor('EBAYProfile',{"profile":$ele.closest("[data-profile]").data('profile')});
 						}
 					else if ($ele.data('mode') == 'Site')	{
 						
@@ -1758,15 +1758,15 @@ The names for these delegated events are temporary. use the original names once 
 						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
 						
 						if(hostname && domainname)	{
-							app.ext.admin_templateEditor.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
+							app.ext.admin_template.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_templateEditor.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
 							}
 						}
 					else	{
 						//invalid mode set.
-						$('#globalMessaging').anymessage({"message":"In admin_templateEditor.e.templateEditorShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_template.e.templateEditorShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
 						}
 					}, //delTemplateEditorShow
 					
@@ -1782,7 +1782,7 @@ The names for these delegated events are temporary. use the original names once 
 					$D.dialog('option','height','400');
 					$D.dialog('open');
 					
-					if(!app.ext.admin_templateEditor.u.missingParamsByMode(mode,data))	{
+					if(!app.ext.admin_template.u.missingParamsByMode(mode,data))	{
 						$('form',$D).append("<input type='hidden' name='mode' value='"+mode+"' \/>");
 						if(mode == 'EBAYProfile')	{
 							$('form',$D).append("<input type='hidden' name='profile' value='"+data.profile+"' \/>");
@@ -1798,7 +1798,7 @@ The names for these delegated events are temporary. use the original names once 
 						app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'adminFileUpload');	
 						}
 					else	{
-						$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,data)});
+						$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,data)});
 						}
 					}, //delContainerFileUploadShow
 
@@ -1810,7 +1810,7 @@ The names for these delegated events are temporary. use the original names once 
 						$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
 						}
 					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
-						app.ext.admin_templateEditor.e.delTemplateChooserShow($btn);
+						app.ext.admin_template.e.delTemplateChooserShow($btn);
 						});
 					}, //templateChooserShow
 
@@ -1821,7 +1821,7 @@ The names for these delegated events are temporary. use the original names once 
 						}
 				
 					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
-						app.ext.admin_templateEditor.e.delTemplateEditorShow($btn);
+						app.ext.admin_template.e.delTemplateEditorShow($btn);
 						});
 					}, //templateEditorShow
 
@@ -1837,7 +1837,7 @@ The names for these delegated events are temporary. use the original names once 
 						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
 							$btn.button('disable').hide();
 							event.preventDefault();
-							app.ext.admin_templateEditor.u.summonWizard($meta.attr('content'));
+							app.ext.admin_template.u.summonWizard($meta.attr('content'));
 							});
 						}
 					},
@@ -1858,12 +1858,12 @@ The names for these delegated events are temporary. use the original names once 
 					$btn.button();
 					$btn.off('click.adminTemplateSaveExec').on('click.adminTemplateSaveExec',function(){
 						var $D = $('#templateEditor');
-						if(!app.ext.admin_templateEditor.u.missingParamsByMode($D.data('mode'),$D.data()))	{
-							app.ext.admin_templateEditor.u.handleTemplateSave($D); 
+						if(!app.ext.admin_template.u.missingParamsByMode($D.data('mode'),$D.data()))	{
+							app.ext.admin_template.u.handleTemplateSave($D); 
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_templateEditor.u.missingParamsByMode(mode,$D.data())});
+							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
 							}
 						});
 	
