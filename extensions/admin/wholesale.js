@@ -1200,7 +1200,7 @@ app.model.dispatchThis('immutable');
 						var $row = $(this).closest('tr');
 						app.u.dump(" -> $row.data('code'): "+$row.data('code'));
 						if($row.data('code'))	{
-							app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'SUPPLIER/'+$row.data('code')+'/'+$ele.data('verb')});
+							app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'SUPPLIER/'+$row.data('code')+'/'+$ele.data('verb')});
 							}
 						else	{
 							$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.supplierBatchExec, unable to ascertain vendor code.","gMessage":true});

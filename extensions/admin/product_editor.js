@@ -2978,7 +2978,7 @@ function type2class(type)	{
 										app.callbacks.fileDownloadInModal.onSuccess(rd)
 										}
 									else if(data['@BODY'] && data['@HEAD'])	{
-										app.ext.admin_batchJob.callbacks.showReport.onSuccess(rd)
+										app.ext.admin_batchjob.callbacks.showReport.onSuccess(rd)
 										}
 									else	{
 										$debugWin.anymessage({'message':'In admin_prodEdit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});

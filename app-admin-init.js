@@ -31,7 +31,7 @@ app.rq.push(['extension',0,'admin_marketplace','extensions/admin/marketplace.js'
  
 app.rq.push(['extension',0,'admin_config','extensions/admin/config.js']);
 app.rq.push(['extension',0,'admin_reports','extensions/admin/reports.js']);
-app.rq.push(['extension',0,'admin_batchJob','extensions/admin/batchjob.js']);
+app.rq.push(['extension',0,'admin_batchjob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',0,'admin_customer','extensions/admin/customer.js']);
 app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']);
 app.rq.push(['extension',0,'admin_user','extensions/admin/user.js']);

@@ -1370,7 +1370,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
 						sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
 						}
-					app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+					app.ext.admin_batchjob.a.adminBatchJobCreate(sfo);
 					}
 				},
 

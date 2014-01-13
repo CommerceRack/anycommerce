@@ -559,7 +559,7 @@ $target.append("<br \/>");
 									}
 								}
 
-							app.ext.admin_batchJob.a.adminBatchJobCreate(obj,batchOptions);
+							app.ext.admin_batchjob.a.adminBatchJobCreate(obj,batchOptions);
 							}
 						else	{
 							$form.anymessage({'message':'Please specify at least one attribute/action in step 2.'})
@@ -618,7 +618,7 @@ $target.append("<br \/>");
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
 						else	{
-							app.ext.admin_batchJob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/PRODUCTS'});
+							app.ext.admin_batchjob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/PRODUCTS'});
 							}
 						}
 					else	{
