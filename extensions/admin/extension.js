@@ -4580,10 +4580,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						app.u.handleAppEvents($panel);
 						}
 					
-					$('.applyAnycb',$panel).anycb();
-					$('.applyAnytable',$panel).anytable();
-					$('.toolTip',$panel).tooltip();
-					$('.applyAnytabs',$panel).anytabs();
+					app.u.handleCommonPlugins($panel);
 					}
 				
 				return $panel;
@@ -4655,13 +4652,10 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 
 				if(vars.handleAppEvents)	{
-					
 					app.u.handleAppEvents($D,vars);
 					}
 
-//				$('.applyAnycb',$D).anycb();
-				$('.applyAnytable',$D).anytable();
-				$('.toolTip',$D).tooltip();
+				app.u.handleCommonPlugins($D);
 				return $D;
 				} //dialogCreate
 

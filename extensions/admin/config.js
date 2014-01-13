@@ -454,9 +454,6 @@ var admin_config = function() {
 						
 						}
 
-//					$('label :checkbox',$target).anycb();
-//					$('.toolTip',$target).tooltip();
-//					app.u.handleAppEvents($target);
 					app.u.handleCommonPlugins($target);
 					app.u.handleButtons($target);
 					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));

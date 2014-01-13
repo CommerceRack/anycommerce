@@ -122,7 +122,7 @@ var admin_tools = function() {
 			
 			showProductExport : function($target)	{
 				$target.empty().anycontent({'templateID':'productExportToolTemplate','showLoading':false});
-				$(':checkbox',$target).anycb(); //run before picker added to dom so that picker isn't affected.
+				app.u.handleCommonPlugins($target);  //run before picker added to dom so that picker isn't affected by anycb.
 
 				var $picker = $("[data-app-role='pickerContainer']:first",$target);
 				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));

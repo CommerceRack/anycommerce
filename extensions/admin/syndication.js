@@ -145,10 +145,7 @@ var admin_syndication = function() {
 //need both the data in the response and the wholesaleScheduleList for 'settings' page.
 					$target.anycontent({data: $.extend(true,{},app.data[_rtag.datapointer],app.data.adminPriceScheduleList),'templateID':_rtag.templateID});
 
-					$('.toolTip',$target).tooltip();
-					$(':checkbox.applyAnycb',$target).anycb();
-					$('table.applyAnytable',$target).anytable();
-					$('.applyAnytabs',$target).anytabs();
+					app.u.handleCommonPlugins($target);
 
 					app.u.handleAppEvents($target);
 
@@ -313,7 +310,6 @@ var admin_syndication = function() {
 							}}	
 						]
 					});
-//					$(':checkbox',$D).anycb(); //{'text' : {'on' : 'yes','off':'no'}} //not working in a dialog for some reason.
 				$D.dialog('open');
 				}, //showAmzRegisterModal
 
@@ -350,7 +346,7 @@ app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'ad
 				'dataAttribs':{'dst':'EBF'}
 				});
 			app.u.handleAppEvents($target);
-			$(':checkbox.applyAnycb',$target).anycb();
+			app.u.handleCommonPlugins($target);
 			app.ext.admin.u.applyEditTrackingToInputs($target);
 
 //populate 'extras' tab, which is used for tokens and profiles.
@@ -1650,7 +1646,7 @@ app.model.dispatchThis('mutable');
 					else	{$tr.attr('data-guid',app.u.guidGenerator())} 
 					
 					$btn.closest('fieldset').find('input, textarea').val("");
-					$btn.closest('fieldset').find("[data-app-role='thesaurusDataTableInputs']").anycontent({'data':$tr.data()}).find(':checkbox').anycb('update');
+					$btn.closest('fieldset').find("[data-app-role='thesaurusDataTableInputs']").anycontent({'data':$tr.data()}).find(':checkbox:data(anycb)').anycb('update');
 					})
 				}, //variationOptionUpdateShow
 
@@ -1919,7 +1915,7 @@ app.model.dispatchThis('mutable');
 							$(this).dialog('destroy').remove();
 							}
 						});
-//					$(':checkbox',$D).anycb(); //{'text' : {'on' : 'yes','off':'no'}} //not working in a dialog for some reason.
+					app.u.handleCommonPlugins($D);
 					$D.dialog('open');
 
 					});

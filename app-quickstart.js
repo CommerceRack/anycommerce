@@ -2413,7 +2413,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									else	{
 										$article.anycontent({'datapointer':rd.datapointer});
 										app.u.handleAppEvents($article);
-										$(":checkbox",$article).each(function(){$(this).closest('label').anycb()});
+										app.u.handleCommonPlugins($article);
 										}									
 									}},'mutable'); app.model.dispatchThis();
 								break;
@@ -2428,7 +2428,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									else	{
 										$article.anycontent({'datapointer':rd.datapointer});
 										app.u.handleAppEvents($article);
-										$("label",$article).anycb();
+										app.u.handleCommonPlugins($article);
 										}									
 									}},'mutable'); app.model.dispatchThis();
 								break;	
