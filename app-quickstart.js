@@ -997,7 +997,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 								$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
 								$('#mainContentArea').append($checkoutContainer );
 								}
-							app.ext.orderCreate.a.startCheckout($checkoutContainer,app.model.fetchCartID());
+							app.ext.order_create.a.startCheckout($checkoutContainer,app.model.fetchCartID());
 							}
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);

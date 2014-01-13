@@ -17,7 +17,7 @@
 
 
 ************************************************************** */
-//SCO = Shared Checkout Object
+//CCO = Cart, Checkout and Orders. Lots of shared code across these three areas.
 var cco = function() {
 	var r = {
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -288,7 +288,7 @@ left them be to provide guidance later.
 				return true; //returns false if checkout can't load due to account config conflict.
 				},
 			onError : function()	{
-				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
+				app.u.dump('BEGIN app.ext.order_create.callbacks.init.error');
 				//This would be reached if a templates was not defined in the view.
 				}
 			}, //init
@@ -567,8 +567,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 */
 			nukePayPalEC : function(_tag) {
 //				app.u.dump("BEGIN cco.u.nukePayPalEC");
-				app.ext.orderCreate.vars['payment-pt'] = null;
-				app.ext.orderCreate.vars['payment-pi'] = null;
+				app.ext.order_create.vars['payment-pt'] = null;
+				app.ext.order_create.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					//the delete cmd will reset want/payby to blank.
 					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
@@ -793,7 +793,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON();
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
-					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
+					if(app.ext.order_create.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
 						}
 // to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
@@ -976,7 +976,7 @@ in a reorder, that data needs to be converted to the variations format required 
 
 //accepts an object (probable a serialized form object) which needs sku and qty.  In an admin session, also accepts price.
 //Will validate required fields and provide any necessary formatting.
-//used in orderCreate in the admin UI for adding a line item and a re-order for previous orders.
+//used in order_create in the admin UI for adding a line item and a re-order for previous orders.
 			buildCartItemAppendObj : function(sfo,_cartid)	{
 				var r = false; //what is returned. either an object or false
 				if(sfo.sku && sfo.qty)	{

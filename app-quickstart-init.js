@@ -3,7 +3,7 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 app.cmr = app.cmr || []; //ensure array is defined. cmr = cart message response.
 
 
-app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
+app.rq.push(['extension',0,'order_create','extensions/checkout/extension.js']);
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 

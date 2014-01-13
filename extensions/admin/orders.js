@@ -832,7 +832,7 @@ else	{
 	//						app.u.dump("rd: "); app.u.dump(rd);
 	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
 	//					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",app.data[rd.datapointer]);
-						$tag.append(app.ext.orderCreate.u.buildPaymentOptionsAsRadios(app.data[rd.datapointer]['@methods']));
+						$tag.append(app.ext.order_create.u.buildPaymentOptionsAsRadios(app.data[rd.datapointer]['@methods']));
 						$(':radio',$tag).each(function(){
 							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
 	//generates the bulk of the inputs. shared with store. these are admin only inputs.
@@ -1930,7 +1930,7 @@ $('.editable',$container).each(function(){
 			
 			inProgressOrderEditExec : function($ele,p)	{
 				p.preventDefault();
-				app.ext.orderCreate.a.startCheckout($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$ele.data('cartid'));
+				app.ext.order_create.a.startCheckout($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$ele.data('cartid'));
 				},
 //This was intentionally set up to generate the carts each time the dropdown was clicked so that if the orders tab is open, then elsewhere in the ui a new cart is created, it will seamlessly show up here.
 //the cartDetail call WILL use a session/local copy of the cart if it's available.

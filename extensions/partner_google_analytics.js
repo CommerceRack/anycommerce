@@ -81,7 +81,7 @@ app.templates.pageNotFoundTemplate.on('complete.googleanalytics',function(P) {_g
 
 
 //for GoogleTrustedStores.
-app.ext.orderCreate.checkoutCompletes.push(function(P){
+app.ext.order_create.checkoutCompletes.push(function(P){
 	if(typeof window.GoogleTrustedStore)	{
 		if(P && P.datapointer && app.data[P.datapointer] && app.data[P.datapointer].order)	{
 			var order = app.data[P.datapointer].order,
@@ -130,8 +130,8 @@ app.ext.orderCreate.checkoutCompletes.push(function(P){
 	});
 
 
-app.ext.orderCreate.checkoutCompletes.push(function(P){
-	app.u.dump("BEGIN google_analytics code pushed on orderCreate.checkoutCompletes");
+app.ext.order_create.checkoutCompletes.push(function(P){
+	app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
 	if(P && P.datapointer && app.data[P.datapointer] && app.data[P.datapointer].order)	{
 		var order = app.data[P.datapointer].order;
 		_gaq.push(['_addTrans',

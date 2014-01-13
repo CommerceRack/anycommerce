@@ -17,7 +17,7 @@
 
 ************************************************************** */
 
-var orderCreate = function() {
+var order_create = function() {
 	var theseTemplates = new Array(
 	'checkoutTemplate', //container for whole checkout page.
 	'chkoutPreflightTemplate',
@@ -54,7 +54,7 @@ var orderCreate = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
+//				app.u.dump('BEGIN app.ext.order_create.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
 //				if(app.vars._clientid == '1pc')	{
 //					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
@@ -77,7 +77,7 @@ var orderCreate = function() {
 //messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
 					$('#globalMessaging').anymessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'});
-					$('#'+app.ext.orderCreate.vars.containerID).append("");
+					$('#'+app.ext.order_create.vars.containerID).append("");
 					r = true;
 					}
 				else if(!app.vars.checkoutAuthMode)	{
@@ -97,10 +97,10 @@ var orderCreate = function() {
 					this.onError();
 					}
 				return r;
-//				app.u.dump('END app.ext.orderCreate.init.onSuccess');
+//				app.u.dump('END app.ext.order_create.init.onSuccess');
 				},
 			onError : function()	{
-				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
+				app.u.dump('BEGIN app.ext.order_create.callbacks.init.error');
 				}
 			}, //init
 
@@ -108,13 +108,13 @@ var orderCreate = function() {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
 //				app.u.dump("BEGIN adminCustomerDetail callback for 1PC");
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
-				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 				}
 			},
 
@@ -125,7 +125,7 @@ var orderCreate = function() {
 //this gives us a 1 call model for success and 2 calls for failure (instead of 2 and 2).
 		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
+				app.u.dump('BEGIN order_create[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
 				//this is the callback AFTER the payment is added to the Q, so no success is needed, only specific error handling.
 				},
 			onError : function(responseData,uuid)	{
@@ -139,10 +139,10 @@ var orderCreate = function() {
 $('body').hideLoading();
 var $context = responseData._rtag.jqObj;
 
-app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+app.ext.order_create.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+app.ext.order_create.u.handlePanel($context,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 					}});
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
 				app.model.destroy('cartDetail|'+cartid);
@@ -175,10 +175,10 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 							}
 						else	{
 							app.u.dump(" -> inventory adjustment has occurred. update panels to reflect change.");
-							app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($form,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
 							}
 						}},'immutable');
 					app.model.dispatchThis('immutable');
@@ -200,7 +200,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 */
 		cart2OrderIsComplete : {
 			onSuccess : function(_rtag)	{
-//				app.u.dump('BEGIN app.ext.orderCreate.callbacks.checkoutSuccess.onSuccess   datapointer = '+_rtag.datapointer);
+//				app.u.dump('BEGIN app.ext.order_create.callbacks.checkoutSuccess.onSuccess   datapointer = '+_rtag.datapointer);
 				$('body').hideLoading();
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $checkout = _rtag.jqObj,
@@ -267,14 +267,14 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
 
-				if(app.ext.orderCreate.checkoutCompletes)	{
-					var L = app.ext.orderCreate.checkoutCompletes.length;
+				if(app.ext.order_create.checkoutCompletes)	{
+					var L = app.ext.order_create.checkoutCompletes.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.ext.orderCreate.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer});
+						app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer});
 						}
 					}
 
-				app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
+				app.ext.order_create.u.scripts2iframe(checkoutData['@TRACKERS'])
 // ### TODO -> move this out of here. move it into the appropriate app init.
 				if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
@@ -368,8 +368,8 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						var $fieldset = $(this),
 						role = $(this).data('app-role');
 						
-						if(role && typeof app.ext.orderCreate.validate[role] === 'function')	{
-							sum += app.ext.orderCreate.validate[role]($fieldset,formObj);
+						if(role && typeof app.ext.order_create.validate[role] === 'function')	{
+							sum += app.ext.order_create.validate[role]($fieldset,formObj);
 							}
 						else	{
 							errors += "<div>validate role ["+role+"] is not a function<\/div>";
@@ -379,7 +379,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					//errors would only be set if something went wrong in validation, not for missing fields which are handled within the individual panel validation.
 					if(errors != '')	{
 						r = false;
-						$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In order_create.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
 						}
 					else if(sum == $fieldsets.length)	{
 						r = true;
@@ -391,7 +391,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 				else	{
 					r = false;
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, $form was not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.checkout, $form was not passed.','gMessage':true});
 					}
 				app.u.dump("validate.checkout: "+r);
 				return r;
@@ -406,10 +406,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					else {valid = 0}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
-					app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
+					app.u.dump(" -> order_create.validate.chkoutPreflight: "+valid);
 					}
 				return valid;
 				}, //chkoutPreflightFieldset
@@ -429,10 +429,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					else	{valid = 0;} //didn't pass the basic validation.
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
-					app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
+					app.u.dump(" -> order_create.validate.chkoutAccountCreate: "+valid);
 					}
 				return valid;
 				}, //validate.chkoutAccountInfoFieldset
@@ -452,10 +452,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
-					app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
+					app.u.dump(" -> order_create.validate.chkoutMethodsShip: "+valid);
 					}
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
@@ -480,10 +480,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
-					app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
+					app.u.dump(" -> order_create.validate.chkoutMethodsPay: "+valid);
 					}
 				return valid;
 				}, //chkoutPayOptionsFieldset
@@ -542,10 +542,10 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
-					app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
+					app.u.dump(" -> order_create.validate.chkoutAddressBill: "+valid);
 					}
 				return valid;
 				}, //chkoutBillAddressFieldset
@@ -590,7 +590,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressShip, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In order_create.validate.chkoutAddressShip, $form or formObj not passed.','gMessage':true});
 					}
 				if(!valid)	{
 					app.u.dump(" -> cs2o.validate.chkoutAddressShip: "+valid);
@@ -634,7 +634,7 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			chkoutPreflight : function(formObj,$fieldset)	{
-//				app.u.dump("BEGIN orderCreate.panelDisplayLogic.chkoutPreflight");
+//				app.u.dump("BEGIN order_create.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
 				$("[data-app-role='buyerLogout']").hide(); //make sure this is hidden. Will be shown when necessary.
 				if(app.u.buyerIsAuthenticated() || app.ext.cco.u.thisSessionIsPayPal())	{
@@ -657,11 +657,11 @@ payment options, pricing, etc
 					$("[data-app-role='username']",$fieldset).hide();
 					$("[data-app-role='loginPasswordContainer']",$fieldset).show();
 					}
-				app.ext.orderCreate.u.handlePlaceholder($fieldset);
+				app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //preflight
 
 			chkoutAccountCreate : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN orderCreate.panelDisplayLogic.chkoutAccountCreate');
+//				app.u.dump('BEGIN order_create.panelDisplayLogic.chkoutAccountCreate');
 				
 				var authState = app.u.determineAuthentication(),
 				createCustomer = formObj['want/create_customer'];
@@ -678,7 +678,7 @@ payment options, pricing, etc
 						$fieldset.hide();
 						}
 					}
-				app.ext.orderCreate.u.handlePlaceholder($fieldset);
+				app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //chkoutAccountCreate
 				
 /*
@@ -709,11 +709,11 @@ an existing user gets a list of previous addresses they've used and an option to
 					$fieldset.show(); //make sure panel is visible.
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
-					$("address button[data-app-click='orderCreate|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
+					$("address button[data-app-click='order_create|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['bill/shortcut'])	{
 						app.u.dump("Bill shortcut is set: "+formObj['bill/shortcut']);
 //highlight the checked button of the address selected.<<
-						var $button = $("[data-_id='"+formObj['bill/shortcut']+"'] button[data-app-click='orderCreate|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
+						var $button = $("[data-_id='"+formObj['bill/shortcut']+"'] button[data-app-click='order_create|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -725,7 +725,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='billCountry']",$fieldset).hide();
 						}
 					}
-				app.ext.orderCreate.u.handlePlaceholder($fieldset);
+				app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressBill
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
@@ -753,11 +753,11 @@ an existing user gets a list of previous addresses they've used and an option to
 				else if($("address",$fieldset).length >= 1)	{
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
-					$("address button[data-app-click='orderCreate|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
+					$("address button[data-app-click='order_create|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['ship/shortcut'])	{
 						app.u.dump("Ship shortcut is set: "+formObj['ship/shortcut']);
 //highlight the checked button of the address selected.<<
-						var $button = $("[data-_id='"+formObj['ship/shortcut']+"'] button[data-app-click='orderCreate|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
+						var $button = $("[data-_id='"+formObj['ship/shortcut']+"'] button[data-app-click='order_create|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -768,11 +768,11 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='shipCountry']",$fieldset).hide();
 						}
 					}
-				app.ext.orderCreate.u.handlePlaceholder($fieldset);
+				app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressShip
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
+//				app.u.dump('BEGIN app.ext.order_create.panelContent.shipMethods');
 //close any existing error messages
 				if($('.ui-widget-anymessage',$fieldset).length)	{
 					$fieldset.anymessage('close');
@@ -800,7 +800,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //add the click event so that a change updates the cart/panels as needed.
 //not in the render format itself so that it can be recycled.
 				$(":radio",$fieldset).each(function(){
-					$(this).attr('data-app-change','orderCreate|shipOrPayMethodSelectExec');
+					$(this).attr('data-app-change','order_create|shipOrPayMethodSelectExec');
 					})
 
 //must appear after panel is loaded because otherwise the divs don't exist.
@@ -893,7 +893,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //also show a message to allow the merchant to remove the paypal payment option and use a different method?
 					$("[data-app-role='giftcardContainer']",$fieldset).hide();
 					$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
-					$("[data-app-click='orderCreate|execChangeFromPayPal']",$fieldset).show();
+					$("[data-app-click='order_create|execChangeFromPayPal']",$fieldset).show();
 					}
 				else	{
 					$fieldset.show();
@@ -934,7 +934,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					if(formObj['want/payby'])	{
 						var
 							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
-							$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
+							$supplemental = app.ext.order_create.u.showSupplementalInputs($radio,app.ext.order_create.vars);
 						
 						$radio.attr('checked','checked');
 						if($supplemental)	{
@@ -959,7 +959,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			}, //panelDisplayLogic
 	
-//push onto this (orderCreate.checkoutCompletes.push(function(P){});
+//push onto this (order_create.checkoutCompletes.push(function(P){});
 //after checkout, these will be iterated thru and executed.
 /*
 Parameters included are as follows:
@@ -982,7 +982,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					else	{
 //appCartCreate will automatically update the carts object in localstorage
-						app.ext.orderCreate.a.startCheckout($target,app.data[rd.datapointer]._cartid);
+						app.ext.order_create.a.startCheckout($target,app.data[rd.datapointer]._cartid);
 						}
 				}},'immutable');
 				app.model.dispatchThis('immutable');
@@ -990,7 +990,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //don't execute this UNTIL you have a valid cart id.
 			startCheckout : function($chkContainer,cartID)	{
-//				app.u.dump("BEGIN orderCreate.a.startCheckout");
+//				app.u.dump("BEGIN order_create.a.startCheckout");
 //				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length && cartID)	{
@@ -1006,7 +1006,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					else if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
 						app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
-						app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'orderCreate','jqObj':$chkContainer});
+						app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create','jqObj':$chkContainer});
 						}
 
 					if(app.u.buyerIsAuthenticated())	{
@@ -1014,9 +1014,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.addDispatchToQ({'_cmd':'buyerWalletList','_tag':	{'datapointer' : 'buyerWalletList','callback':'suppressErrors'}},'immutable'); //always obtain clean copy of wallets.
 						}
 
-					app.ext.orderCreate.vars[cartID] = app.ext.orderCreate.vars[cartID] || {'payment':{}};
+					app.ext.order_create.vars[cartID] = app.ext.order_create.vars[cartID] || {'payment':{}};
 
-					app.ext.orderCreate.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
+					app.ext.order_create.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
 					app.ext.cco.calls.appPaymentMethods.init({_cartid:cartID},{},'immutable');
 					app.ext.cco.calls.appCheckoutDestinations.init(cartID,{},'immutable');
 					
@@ -1032,7 +1032,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data[rd.datapointer]['@ITEMS'].length || app.vars.thisSessionIsAdmin)	{
 //								app.u.dump(" -> cart has items or this is an admin session.");
-								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout(cartID));
+								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.order_create.u.extendedDataForCheckout(cartID));
 				
 								if($checkoutContents.attr('id'))	{}
 								else	{
@@ -1047,25 +1047,25 @@ note - the order object is available at app.data['order|'+P.orderID]
 									
 									$fieldset.addClass('ui-corner-all');
 									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
-									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
+									app.ext.order_create.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
 									});
 //								app.u.dump(" -> handlePanel has been run over all fieldsets.");
 								if(app.vars.thisSessionIsAdmin && app.data[rd.datapointer].customer.cid)	{
 									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
 									$chkContainer.showLoading({'message':'Fetching customer record'});
-									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$chkContainer},'mutable');
+									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$chkContainer},'mutable');
 									app.model.dispatchThis('mutable');
 									}
 								else if(document.compatMode == 'CSS1Compat')	{}
 								else	{
 									app.u.dump(" -> Quirks mode detected. Re-render the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
 									setTimeout(function(){
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
 										},1000);
 									}
 								}
@@ -1078,7 +1078,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'in orderCreate.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'in order_create.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
 					}
 				} //startCheckout
 			
@@ -1097,9 +1097,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 					cartid = $context.data('cartid');
 				if(email)	{
 					app.ext.admin_customer.a.customerSearch({'searchfor':email,'scope':'EMAIL'},function(customer){
-						app.ext.orderCreate.u.handlePanel($context,'chkoutPreflight',['empty','showLoading']);
-						app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','showLoading']);
-						app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','showLoading']);
+						app.ext.order_create.u.handlePanel($context,'chkoutPreflight',['empty','showLoading']);
+						app.ext.order_create.u.handlePanel($context,'chkoutAddressBill',['empty','showLoading']);
+						app.ext.order_create.u.handlePanel($context,'chkoutAddressShip',['empty','showLoading']);
 						
 						app.ext.cco.calls.cartSet.init({'_cartid':cartid,'bill/email':customer.EMAIL});
 						app.model.addDispatchToQ({
@@ -1113,7 +1113,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.destroy('adminCustomerDetail|'+customer.CID); 
 						app.calls.cartDetail.init(cartid,{},'immutable');
 						app.ext.cco.calls.appPaymentMethods.init({_cartid:cartid},{},'immutable'); //update pay and ship anytime either address changes.
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':customer.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$context},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':customer.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$context},'immutable');
 						app.model.dispatchThis('immutable');
 						});
 					}
@@ -1135,12 +1135,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 					};
 				
 				app.ext.admin_customer.a.addressCreateUpdateShow(vars,function(v){
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
 					},app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+CID]['@'+vars.TYPE.toUpperCase()],$ele.closest("[data-_id]").data('_id'),vars.TYPE,false));
 				},
 
@@ -1160,18 +1160,18 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In orderCreate.e.adminOrderDetailShow, unable to ascertain orderid.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In order_create.e.adminOrderDetailShow, unable to ascertain orderid.","gMessage":true});
 					}
 				},
 
 			buyerLogout : function($ele,p)	{
-//				app.u.dump(" BEGIN orderCreate.e.buyerLogout");
-//					app.u.dump(" -> orderCreate.e.buyerLogout (Click!)");
+//				app.u.dump(" BEGIN order_create.e.buyerLogout");
+//					app.u.dump(" -> order_create.e.buyerLogout (Click!)");
 				app.calls.buyerLogout.init({'callback':function(rt){
-					app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutPreflight',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+					app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 					app.model.dispatchThis('immutable');
 					}});
 				app.model.dispatchThis('immutable');
@@ -1192,7 +1192,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //run an inventory check. However, do NOT auto-adjust. Merchants should be allowed to over-order if desired.
 //throw a fatty warning tho to make sure it isn't missed.
 						app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'adminInventoryDiscrepencyDisplay','extension':'cco','jqObj':$container});
-						app.ext.orderCreate.u.handleCommonPanels($checkout);
+						app.ext.order_create.u.handleCommonPanels($checkout);
 						app.model.dispatchThis('immutable');
 
 						},p.skuArr || []);
@@ -1218,7 +1218,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					vars.price = $("input[name='price']",$container).val();
 					}
 				
-				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$ele.closest('form')}))	{
+				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$ele.closest('form')}))	{
 					app.model.destroy('cartDetail|'+cartid);
 					app.calls.cartDetail.init(cartid,{},'immutable');
 					app.model.dispatchThis('immutable');
@@ -1240,11 +1240,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$ele.closest('fieldset').anymessage({'message':rd});
 							}
 						else	{
-							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+							app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+							app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 							}
 						}
 					},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
@@ -1279,11 +1279,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 										}
 									else	{
 										$('#prodFinder').dialog('close');
-										app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-										app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-										app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-										app.ext.orderCreate.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+										app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+										app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+										app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 										}
 									}
 								},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
@@ -1295,7 +1295,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						}
 					else	{
-						$('#productFinderContents').anymessage({"message":"In orderCreate.e.cartItemAddWithChooser, #chooserResultContainer had no length.","gMessage":true});
+						$('#productFinderContents').anymessage({"message":"In order_create.e.cartItemAddWithChooser, #chooserResultContainer had no length.","gMessage":true});
 						$(this).button('enable');
 						}
 					});
@@ -1310,14 +1310,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$input.off("change.addTriggerPayMethodUpdate").on("change.addTriggerPayMethodUpdate", function(){
 						app.ext.cco.calls.cartSet.init({'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid'),'want/payby':$input.val()});
 						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
-						app.ext.orderCreate.u.showSupplementalInputs($input);
-						app.ext.orderCreate.u.handlePanel($input.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+						app.ext.order_create.u.showSupplementalInputs($input);
+						app.ext.order_create.u.handlePanel($input.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
 						});
 					})
 				}, //addTriggerPayMethodUpdate
 			
 			shipOrPayMethodSelectExec : function($ele,p)	{
-				app.u.dump("BEGIN orderCreate.e.shipOrPayMethodSelectExec");
+				app.u.dump("BEGIN order_create.e.shipOrPayMethodSelectExec");
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
 				if($ele.data('updatemode') == 'cart')	{
@@ -1327,7 +1327,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.ext.cco.calls.cartSet.init(obj);
 //destroys cart and updates big three panels (shipping, payment and summary)
-				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+				app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 				app.model.dispatchThis("immutable");
 				},
 			
@@ -1342,7 +1342,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.ext.cco.calls.cartSet.init(obj); //update the cart
-				app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+				app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 				app.model.dispatchThis('immutable');
 				}, //execAddressUpdate
 
@@ -1383,10 +1383,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 //there was a callback on this, but no clear reason why it was necessary. removed for now (will test prior to deleting this code)
 //						app.ext.cco.calls.cartSet.init(cartUpdate,{'callback':function(){
-//							app.ext.orderCreate.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+//							app.ext.order_create.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 //							}}); //no need to populate address fields, shortcut handles that.
 						app.ext.cco.calls.cartSet.init(cartUpdate)
-						app.ext.orderCreate.u.handleCommonPanels($form);
+						app.ext.order_create.u.handleCommonPanels($form);
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -1396,7 +1396,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					}
 				else	{
-					$ele.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
+					$ele.closest('fieldset').anymessage({'message':'In order_create.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
 					}
 
 				}, //execBuyerAddressSelect
@@ -1436,7 +1436,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$fieldsets = $('fieldset',$form);
 //set all panels to loading.
 							$fieldsets.each(function(){
-								app.ext.orderCreate.u.handlePanel($form,$(this).data('app-role'),['showLoading']);
+								app.ext.order_create.u.handlePanel($form,$(this).data('app-role'),['showLoading']);
 								});
 
 //can't piggyback these on login because they'll error at the API side (and will kill the login request)
@@ -1445,7 +1445,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //no error handling needed. if call fails or returns zero addesses, the panels still need to be rendered.
 //re-render all panels. each could be affected by a login (either just on the display side or new/updated info for discounts, addresses, giftcards, etc)
 								$fieldsets.each(function(){
-									app.ext.orderCreate.u.handlePanel($form,$(this).data('app-role'),['empty','translate','handleDisplayLogic']);
+									app.ext.order_create.u.handlePanel($form,$(this).data('app-role'),['empty','translate','handleDisplayLogic']);
 									});
 								}},'immutable');
 
@@ -1491,12 +1491,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							window.location = app.data[rd.datapointer].URL
 							}
-						},"extension":"orderCreate",'parentID': $ele.closest("[data-app-role='checkout']").attr('id')},'immutable');
+						},"extension":"order_create",'parentID': $ele.closest("[data-app-role='checkout']").attr('id')},'immutable');
 					app.model.dispatchThis('immutable');
 					}
 				else	{
 				
-					if(app.ext.orderCreate.validate.checkout($form))	{
+					if(app.ext.order_create.validate.checkout($form))	{
 						$('body').showLoading({'message':'Creating order...'});
 						app.ext.cco.u.sanitizeAndUpdateCart($form);
 						var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
@@ -1507,7 +1507,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							app.ext.cco.u.buildPaymentQ($form,cartid);
 							}
-						app.ext.cco.calls.cartOrderCreate.init(cartid,{'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
+						app.ext.cco.calls.cartOrderCreate.init(cartid,{'callback':'cart2OrderIsComplete','extension':'order_create','jqObj':$form});
 						app.model.dispatchThis('immutable');						
 						
 						}
@@ -1534,10 +1534,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 			execChangeFromPayPal : function($ele,p)	{
 				app.ext.cco.u.nukePayPalEC();
 				var $form = $ele.closest('form');
-				app.ext.orderCreate.u.handleCommonPanels($form);
+				app.ext.order_create.u.handleCommonPanels($form);
 				app.calls.ping.init({callback:function(){
-					app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-					app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 					}},'immutable');
 				app.model.dispatchThis('immutable');
 				},
@@ -1554,7 +1554,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				obj[$ele.attr('name')] = $ele.val();
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				app.ext.cco.calls.cartSet.init(obj); //update the cart w/ the country.
-				app.ext.orderCreate.u.handleCommonPanels($form);
+				app.ext.order_create.u.handleCommonPanels($form);
 				app.model.dispatchThis('immutable');
 				}, //execCountryUpdate
 
@@ -1574,7 +1574,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 						$input.val(''); //reset input only on success.  allows for a typo to be corrected.
 						$fieldset.anymessage(app.u.successMsgObject('Your coupon has been added.'));
-						app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
 //if a cart messenger is open, log the cart update.
 						if(cartid && app.u.thisNestedExists('app.ext.cart_message.vars.carts.'+cartid))	{
 							app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
@@ -1586,7 +1586,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					}});
 				
-				app.ext.orderCreate.u.handleCommonPanels($form);
+				app.ext.order_create.u.handleCommonPanels($form);
 				app.model.dispatchThis('immutable');
 				}, //execCouponAdd
 
@@ -1614,7 +1614,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						}
 					}});
-				app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
+				app.ext.order_create.u.handleCommonPanels($input.closest('form'));
 				app.model.dispatchThis('immutable');
 				}, //execGiftcardAdd
 
@@ -1634,7 +1634,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.ext.store_crm.u.showAddressAddModal({'addressType':addressType},function(rd,serializedForm){
 //by here, the new address has been created.
 //set appropriate address panel to loading.
-					app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+					app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
 //update cart and set shortcut as address.
 					var updateObj = {'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid')}
 					updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
@@ -1646,11 +1646,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 //get the updated address list and update the address panel.
 					app.model.destroy('buyerAddressList');
 					app.calls.buyerAddressList.init({'callback':function(rd){
-						app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
 						}},'immutable');
 
 //update appropriate address panel plus big three.
-					app.ext.orderCreate.u.handleCommonPanels($checkoutForm);
+					app.ext.order_create.u.handleCommonPanels($checkoutForm);
 					app.model.dispatchThis('immutable');
 					});
 					}
@@ -1671,12 +1671,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 //by here, the new address has been edited.
 //set appropriate address panel to loading.
 //editing and address does NOT auto-select it.
-					app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+					app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
 
 //get the updated address list and update the address panel.
 					app.model.destroy('buyerAddressList');
 					app.calls.buyerAddressList.init({'callback':function(rd){
-						app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
 						}},'immutable');
 
 					app.model.dispatchThis('immutable');
@@ -1687,9 +1687,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var $checkout = $ele.closest("[data-app-role='checkout']");
 				app.ext.cco.calls.cartSet.init({'_cartid':$checkout.data('cartid'),'want/create_customer': $ele.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
 				app.model.destroy('cartDetail|'+$checkout.data('cartid'));
-				app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutPreflight',['handleDisplayLogic']);
+				app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutPreflight',['handleDisplayLogic']);
 				app.calls.cartDetail.init($checkout.data('cartid'),{'callback':function(rd){
-					app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
 					}},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //tagAsAccountCreate
@@ -1703,13 +1703,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 				if($ele.is(':checked'))	{
 //** Fixes bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
 					app.ext.cco.u.sanitizeAndUpdateCart($form,{
-						'callback':function(rd){app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic'])}
+						'callback':function(rd){app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic'])}
 						});
 					}
 				else	{
-					app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
+					app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
 					}
-				app.ext.orderCreate.u.handleCommonPanels($form);
+				app.ext.order_create.u.handleCommonPanels($form);
 				app.model.dispatchThis('immutable');
 				} //tagAsBillToShip
 			},
@@ -1722,7 +1722,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 //Combines the various data objects into one, so that they can be fed into the translator and rendered in one pass.
 			extendedDataForCheckout : function(cartID)	{
-//				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout - 2013-04-13");
+//				app.u.dump("BEGIN order_create.u.extendedDataForCheckout - 2013-04-13");
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				var obj = {};
 				if(cartID)	{
@@ -1761,9 +1761,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In orderCreate.u.extendedDataForCheckout, no cart id passed.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In order_create.u.extendedDataForCheckout, no cart id passed.","gMessage":true});
 					}
-//				app.u.dump("END orderCreate.u.extendedDataForCheckout");
+//				app.u.dump("END order_create.u.extendedDataForCheckout");
 				return obj;
 				}, //extendedDataForCheckout
 
@@ -1802,17 +1802,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 					ao.hideLoading = function (formObj, $fieldset){$(".panelContent",$fieldset).hideLoading()},
 					ao.empty = function(formObj, $fieldset){$(".panelContent",$fieldset).empty()},
 					ao.handleDisplayLogic = function(formObj, $fieldset){
-						if(typeof app.ext.orderCreate.panelDisplayLogic[role] === 'function')	{
-							app.ext.orderCreate.panelDisplayLogic[role](formObj,$fieldset);
+						if(typeof app.ext.order_create.panelDisplayLogic[role] === 'function')	{
+							app.ext.order_create.panelDisplayLogic[role](formObj,$fieldset);
 							}
 						else	{
-							$fieldset.anymessage({'message':'In orderCreate.u.handlePanel, panelDisplayLogic['+role+'] not a function','gMessage':true});
+							$fieldset.anymessage({'message':'In order_create.u.handlePanel, panelDisplayLogic['+role+'] not a function','gMessage':true});
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
 //						app.u.dump(" -> translating "+role);
-//						app.u.dump("app.ext.orderCreate.u.extendedDataForCheckout()"); app.u.dump(app.ext.orderCreate.u.extendedDataForCheckout());
-						$fieldset.anycontent({'data' : app.ext.orderCreate.u.extendedDataForCheckout(cartID)});
+//						app.u.dump("app.ext.order_create.u.extendedDataForCheckout()"); app.u.dump(app.ext.order_create.u.extendedDataForCheckout());
+						$fieldset.anycontent({'data' : app.ext.order_create.u.extendedDataForCheckout(cartID)});
 						} //populates the template.
 					
 					for(var i = 0; i < L; i += 1)	{
@@ -1820,7 +1820,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							ao[actions[i]](formObj, $fieldset);
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In orderCreate.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
+							$('#globalMessaging').anymessage({'message':"In order_create.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
 							}
 						app.u.handleButtons($fieldset);
 						$('.applyAnycb',$fieldset).each(function(){
@@ -1830,7 +1830,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In orderCreate.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
+					$('#globalMessaging').anymessage({'message':"In order_create.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
 					}
 				}, //handlePanel
 
@@ -1841,33 +1841,33 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
 				app.u.dump(" -> handleCommonPanels cartID: "+cartid);
 				if(cartid)	{
-					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
-					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
-					app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
+					app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
+					app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
+					app.ext.order_create.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
 					
 					app.model.destroy('cartDetail|'+cartid);
 					app.ext.cco.calls.appPaymentMethods.init({_cartid:cartid},{},'immutable'); //update pay and ship anytime either address changes.
 					app.calls.cartDetail.init(cartid,{'callback':function(){
 	//					app.u.dump('cartDetail: '); app.u.dump(app.data.cartDetail);
-						app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-						app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-						app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+						app.ext.order_create.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 						//in an admin session, the cart contents are updated much more frequently because the 'cart' is editable.
 						//if a storefront offers an editable cart within checkout, then remove the if around the chkoutCartItemsList update.
 						if(app.vars.thisSessionIsAdmin)	{
-							app.ext.orderCreate.u.handlePanel($context,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($context,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
 							}
 						}},'immutable');
 					}
 				else	{
-					$context.anymessage({'message':'In orderCreate.u.handleCommonPanels, unable to ascertain cartid [closest(data-app-role="checkout").length: '+$context.closest("[data-app-role='checkout']").length+'] ','gMessage':true})
+					$context.anymessage({'message':'In order_create.u.handleCommonPanels, unable to ascertain cartid [closest(data-app-role="checkout").length: '+$context.closest("[data-app-role='checkout']").length+'] ','gMessage':true})
 					}
 				}, //handleCommonPanels
 
 
 
 			handlePaypalInit : function($context)	{
-//				app.u.dump("BEGIN orderCreate.u.handlePaypalInit");
+//				app.u.dump("BEGIN order_create.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1883,10 +1883,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 						$context.anymessage({'message':'Welcome Back! you are almost done. Simply verify the information below and push the place order button to complete your transaction.','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'});
 						app.u.dump("It appears we've just returned from PayPal.");
-						app.ext.orderCreate.vars['payment-pt'] = token;
-						app.ext.orderCreate.vars['payment-pi'] = payerid;
+						app.ext.order_create.vars['payment-pt'] = token;
+						app.ext.order_create.vars['payment-pi'] = payerid;
 						
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':$context.closest("[data-app-role='checkout']").data('cartid')},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':$context.closest("[data-app-role='checkout']").data('cartid')},{"extension":"order_create","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
@@ -1896,10 +1896,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.u.dump(" -> validPayalTender found. Nuke it.");
 						app.ext.cco.u.nukePayPalEC();
 						//update the panels too so that the ship/billing is 'unlocked' and payments get updated.
-						app.ext.orderCreate.u.handleCommonPanels($form);
+						app.ext.order_create.u.handleCommonPanels($form);
 						app.calls.ping.init({callback:function(){
-							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+							app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}
@@ -1908,7 +1908,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				else	{
 					//do nothing.
 					}
-//				app.u.dump("END orderCreate.u.handlePaypalInit");
+//				app.u.dump("END order_create.u.handlePaypalInit");
 				}, //handlePaypalInit
 
 //run when a payment method is selected or when payment panel is re-rendered.
@@ -1926,7 +1926,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
 					$("[data-app-role='supplementalPaymentInputsContainer']",$fieldset).empty().remove(); //must be removed so form inputs are not present.
 					
-					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars[cartID].payment);
+					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.order_create.vars[cartID].payment);
 					if($supplementalOutput)	{
 						$label.addClass("ui-state-active ui-corner-top");
 						$supplementalOutput.addClass('ui-corner-bottom ui-widget ui-widget-content').appendTo($pmc);
@@ -1934,7 +1934,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 						$label.addClass("ui-state-active ui-corner-all");
 						}
-					app.ext.orderCreate.u.handlePlaceholder($pmc);
+					app.ext.order_create.u.handlePlaceholder($pmc);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In cco.u.showSupplementalInputs, $input not defined or not a jquery object.','gMessage':true});
@@ -1949,7 +1949,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.u.dump('running scripts2iframe');
 				if(typeof window.scriptCallback == 'function')	{}
 				else	{
-					window.scriptCallback = app.ext.orderCreate.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
+					window.scriptCallback = app.ext.order_create.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
 					app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
@@ -2069,19 +2069,19 @@ app.model.dispatchThis('passive');
 				}, //shipMethodsAsRadioButtons
 
 			payMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.orderCreate.renderFormats.payOptionsAsRadioButtons');
+//				app.u.dump('BEGIN app.ext.order_create.renderFormats.payOptionsAsRadioButtons');
 //				app.u.dump(data);
 				var o = '', cartData,pMethods;
 				if(app.data['cartDetail|'+data.value] && app.data['appPaymentMethods|'+data.value])	{
 					cartData = app.data['cartDetail|'+data.value];
 					pMethods = app.data['appPaymentMethods|'+data.value]['@methods'];
-					o = app.ext.orderCreate.u.buildPaymentOptionsAsRadios(pMethods,cartData.want.payby);
+					o = app.ext.order_create.u.buildPaymentOptionsAsRadios(pMethods,cartData.want.payby);
 					$(":radio",o).each(function(){
-						$(this).attr('data-app-change','orderCreate|shipOrPayMethodSelectExec');
+						$(this).attr('data-app-change','order_create|shipOrPayMethodSelectExec');
 						});
 					}
 				else	{
-					o = $("<div \/>").anymessage({'persistent':true,'message':'In orderCreate.renderFormats.payMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
+					o = $("<div \/>").anymessage({'persistent':true,'message':'In order_create.renderFormats.payMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
 					}
 				$tag.html(o);
 				} //payMethodsAsRadioButtons
