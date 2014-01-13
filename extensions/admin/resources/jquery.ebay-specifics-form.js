@@ -320,7 +320,7 @@
 			}
 		});
 
-		$(ebaySpecsBlock+' .dropDownArrow').click(function() { handleDropDownArrow(this) });
+		$(ebaySpecsBlock+' .dropDownArrow').on('click.handleDropDownArrow',function(event) { handleDropDownArrow(this); return false; });
 		$(ebaySpecsBlock+' .dropDownList li').click(function() { handleDropDownList(this) });
 		$(ebaySpecsBlock+' .dropDownList li').mouseover(function() { $(this).addClass('dropDownHover') });
 		$(ebaySpecsBlock+' .dropDownList li').mouseout(function() { $(this).removeClass('dropDownHover') });
@@ -512,19 +512,32 @@
 	// When we have <input> + smart suggest dropdown
 	// there's a small Down Arrow - pressing it shows <ul> with all recommended values
 	function handleDropDownArrow(el) {
-		if(!$(el).hasClass('dropDownArrowDisabled')) {
-			if($(el).next('.dropDownList:visible').length) {
-				$(el).removeClass('dropDownArrowPressed').next('.dropDownList').fadeOut('fast');
-			} else {
-				$(el).addClass('dropDownArrowPressed').next('.dropDownList').fadeIn('fast');
+// 201352 -> added a little usability here. only one menu will be open at a time. once a click occurs (anywhere), the menu will close. That's a fairly expected behavior for menus of this nature.
+		var $el = $(el), $D = $el.closest('.ui-dialog-content'); //$D is the dialog content area. used for context.
+		//first, close all the other open dropdowns.
+		$('.dropDownArrowPressed',$D).removeClass('dropDownArrowPressed'); // this is the 'active' state for the dropdown button when it's menu is open.
+		$('.dropDownList',$D).hide(); 
+		
+		if($(el).hasClass('dropDownArrowDisabled')) {
+			//the dropdown is disabled. do nothing.
+			}
+		else	{
+			var $dropdown = $el.next('.dropDownList');
+			$el.addClass('dropDownArrowPressed');
+			$dropdown.fadeIn('fast');
+			// close the menu on the first click anywhere on the page.
+			$(document.body).one('click',function(){
+				$dropdown.fadeOut('fast');
+				$el.removeClass('dropDownArrowPressed');
+				});
 			}
 		}
-	}
 
 	// When user presses li - we insert selected value to the input and hide the recommendations ul
 	// $(el).parent().prev().prev() - this is the <input>
 	function handleDropDownList(el) {
-		$(el).parent().fadeOut('fast').prev('.dropDownArrow').removeClass('dropDownArrowPressed');
+//		$(el).parent().fadeOut('fast').prev('.dropDownArrow').removeClass('dropDownArrowPressed');
+//* 201352 -> closing the dropdown and changing the class are handled by the 'one' click event added in handleDropDownArrow - jt
 		if($(el).hasClass('dropDownOwn')) {
 			$(el).parent().prev().prev().val('').change().focus();
 		} else {
