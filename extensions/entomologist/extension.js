@@ -75,7 +75,7 @@ var entomologist = function() {
 							}
 						});
 						
-					$('.tabificateMe', $debugger).anytabs();
+					$('.tabificateMe', $debugger).anytabs(); //consider adding an 'applyAnytabs' to this element and running app.u.handleCommonPlugins($debugger);
 					$debugger.dialog({'title':'Entomology Lab', 'height':height, 'width':width});
 					}
 								

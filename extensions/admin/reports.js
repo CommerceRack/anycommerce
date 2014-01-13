@@ -95,8 +95,7 @@ var admin_reports = function() {
 				$target.empty();
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}}).anydelegate();
 				app.u.handleButtons($target);				
-				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
-				$('.toolTip',$target).tooltip();
+				app.u.handleCommonPlugins($target);
 				$('.datepicker',$target).datepicker({
 					changeMonth: true,
 					changeYear: true,

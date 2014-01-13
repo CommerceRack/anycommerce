@@ -379,7 +379,7 @@
 
 <div id='reportsPageTemplate'>
 
-	<div data-app-role='reportsTabsContainer'>
+	<div data-app-role='reportsTabsContainer' class='applyAnytabs'>
 
 		<ul>
 			<li><a href='#reports'>Reports</a></li>
@@ -429,7 +429,7 @@
 	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/SALES_SKU_RANK', '%vars':{'PERIOD':'thismonth','GUID':app.u.guidGenerator()}}); return false;" >This Month</a>
 	</li>
 	
-	<li><b><a href='#' onclick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','#salesReports'); return false;">More Options</a></b></li>
+	<li><b><a href='#' onclick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','salesReports'); return false;">More Options</a></b></li>
 
 </ul>
 
@@ -438,7 +438,7 @@
 <h2>Inventory Reports</h2>
 <p>See how much inventory you have in stock, on-shelf and available, buy supplier, warehouse or everything.</p>
 <ul>
-	<li><a href='#' onclick="$(this).closest('.ui-widget-anytabs').anytabs('reveal','#inventory'); return false;">Report Generator</a></b></li>
+	<li><a href='#' onclick="$(this).closest('.ui-widget-anytabs').anytabs('reveal','inventory'); return false;">Report Generator</a></b></li>
 </ul>
 -->
 
@@ -447,7 +447,7 @@
 <ul>
 	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/EBAY_LISTING', '%vars':{'type':'ACTIVE-ALL', 'detail':'NONE'}}); return false;">eBay Active Listing w/Detail</a></li>
 	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT/PRODUCT_DISPOSITION', '%vars':{}}); return false;">Marketplace Disposition Report</a></li>
-	<li><b><a href='#' onClick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','#eBayReports'); return false;">More Options</a></b></li>
+	<li><b><a href='#' onClick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','eBayReports'); return false;">More Options</a></b></li>
 </ul>
 
 
