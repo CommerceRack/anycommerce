@@ -1347,7 +1347,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 				$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
 				$btn.off('click.ebayLaunchProfileRefreshListingsExec').on('click.ebayLaunchProfileRefreshListingsExec',function(){
 
-					app.ext.admin_batchJob.a.adminBatchJobCreate({
+					app.ext.admin_batchjob.a.adminBatchJobCreate({
 						'guid' : app.u.guidGenerator(),
 						'profile' : $btn.closest('tr').data('profile'),
 						'function' : 'refresh',
@@ -1868,7 +1868,7 @@ app.model.dispatchThis('mutable');
 									'FEEDTYPE' : 'PRODUCT',
 									'_tag' : {
 										'callback':'showBatchJobStatus',
-										'extension':'admin_batchJob',
+										'extension':'admin_batchjob',
 										'datapointer' : 'adminBatchJobStatus',
 										'jqObj':$form}
 									},'immutable');

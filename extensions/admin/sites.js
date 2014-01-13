@@ -174,9 +174,9 @@ used, but not pre-loaded.
 						}
 					
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
-						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_batchJob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
 						}
 					if($menu.children().length)	{
 						$menu.menu();

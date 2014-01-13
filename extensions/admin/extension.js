@@ -3186,7 +3186,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
 				else if(path == '#!batchManager')	{
-					app.ext.admin_batchJob.a.showBatchJobManager($target);
+					app.ext.admin_batchjob.a.showBatchJobManager($target);
 					}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
 				else if(path == '#!variationsManager')	{
@@ -3566,7 +3566,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 						msgObj.persistent = true; //for testing, don't hide.
 						
 						if(msgObj.BATCH)	{
-							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchJob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
+							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchjob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
 							}
 //						app.u.dump(msgObj);	
 						var r = app.u.throwMessage(msgObj);
