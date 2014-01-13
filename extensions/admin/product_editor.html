@@ -56,11 +56,11 @@
 <!-- navtabs template -->
 <div id='productEditorNavtabsTemplate' class='clearfix smallPadding' data-app-role='productEditorNavtab'>
 	
-	<button data-app-click='admin_prodEdit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
+	<button data-app-click='admin_prodedit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
 	<form class='floatLeft marginLeft' action='#' onSubmit='return false'>
 		search <input type='search' name='KEYWORDS' x-webkit-speech="x-webkit-speech" />
-		<button data-app-click='admin_prodEdit|productSearchExec' class='applyButton'>go</button>
-		<button data-app-click='admin_prodEdit|productFiltersShow' class='applyButton' data-icon-primary='ui-icon-triangle-1-s' data-text='true'>Filter</button>
+		<button data-app-click='admin_prodedit|productSearchExec' class='applyButton'>go</button>
+		<button data-app-click='admin_prodedit|productFiltersShow' class='applyButton' data-icon-primary='ui-icon-triangle-1-s' data-text='true'>Filter</button>
 	</form>
 	
 
@@ -68,9 +68,9 @@
 	<div data-app-role='productManagerFilters' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
 	<form action='#' onSubmit='return false'>
 	<div class='alignRight buttonset'>
-		<button data-app-click='admin_prodEdit|productFiltersClear' class='applyButton'>Clear All Filters</button>
-		<button data-app-click='admin_prodEdit|productFiltersClose' class='applyButton'>Cancel</button>
-		<button data-app-click='admin_prodEdit|productFiltersExec' class='applyButton'>Filter</button>
+		<button data-app-click='admin_prodedit|productFiltersClear' class='applyButton'>Clear All Filters</button>
+		<button data-app-click='admin_prodedit|productFiltersClose' class='applyButton'>Cancel</button>
+		<button data-app-click='admin_prodedit|productFiltersExec' class='applyButton'>Filter</button>
 	</div>
 	<table class='fullWidth'>
 	<tr>
@@ -188,11 +188,11 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		</div>
 		
 		<div class='floatRight marginLeft'>
-			<button title="Open editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
+			<button title="Open editor for this product" data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
 		
-			<button title="Close editor for this product" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
+			<button title="Close editor for this product" data-app-click='admin_prodedit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
 		
-			<button title="Remove this item from Q" data-app-click='admin_prodEdit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
+			<button title="Remove this item from Q" data-app-click='admin_prodedit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
 	
 		</div>
 		<div class='floatRight marginLeft'>
@@ -223,7 +223,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
  	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
  	</div>
 	</td>
-	<td data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='lookLikeLink' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">
+	<td data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='lookLikeLink' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">
 		<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span>
 	</td>
 	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
@@ -233,8 +233,8 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 	</td>
 	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'>
-	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
-	<button data-app-click='admin_prodEdit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-pencil"  data-text='false'>Edit Now</button>
+	<button class='applyButton' data-app-click='admin_prodedit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	<button data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-pencil"  data-text='false'>Edit Now</button>
 	</td>
 </tr>
 
@@ -275,7 +275,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		
 	</fieldset>		
 			
-	<button class='applyButton' data-app-click='admin_prodEdit|productCreateExec' data-app-role='saveButton'>Save Product</button>
+	<button class='applyButton' data-app-click='admin_prodedit|productCreateExec' data-app-role='saveButton'>Save Product</button>
 	
 	</form>
 
@@ -289,21 +289,21 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 <div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
 	
 	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
-	<button class='floatRight applyButton' data-app-role='masterSaveButton' data-app-click="admin_prodEdit|adminProductMacroSaveAllTabsExec">Save All <span class='numChanges'></span> Changes</button>
+	<button class='floatRight applyButton' data-app-role='masterSaveButton' data-app-click="admin_prodedit|adminProductMacroSaveAllTabsExec">Save All <span class='numChanges'></span> Changes</button>
 
 	<ul class='productTabsUL'>
 		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li><!-- add this: <span data-anydelegate-changes='numGeneralChanges'><span class='numChanges'></span></span> and set this on the corresponding form:data-changes-container='numGeneralChanges' -->
 		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
 		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
-		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodEdit|handleAttributesTabContent">Attributes</a></li>
-		<li><a href='#inventory' data-app-role='inventoryTab' data-app-click="admin_prodEdit|handleInventoryTabContent" >Inventory</a></li>
-		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodEdit|handleCategorizationTabContent">Categorization</a></li>
-		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodEdit|handleVariationsTabContent">Variations</a></li>
+		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodedit|handleAttributesTabContent">Attributes</a></li>
+		<li><a href='#inventory' data-app-role='inventoryTab' data-app-click="admin_prodedit|handleInventoryTabContent" >Inventory</a></li>
+		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodedit|handleCategorizationTabContent">Categorization</a></li>
+		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodedit|handleVariationsTabContent">Variations</a></li>
 <!--		<li><a href='#ci' data-app-role='ciTab'>CI</a></li> -->
-		<li><a href='#amazon' data-app-role='amazonTab' data-app-click="admin_prodEdit|handleAmazonTabContent">Amazon</a></li>
+		<li><a href='#amazon' data-app-role='amazonTab' data-app-click="admin_prodedit|handleAmazonTabContent">Amazon</a></li>
 		<li><a href='#buycom' data-app-role='buycomTab'>Buy.com</a></li>
-		<li><a href='#ebay' data-app-role='ebayTab' data-app-click="admin_prodEdit|handleEbayTabContent">eBay</a></li>
-		<li><a href='#competition' data-app-role='competitionTab' data-app-click="admin_prodEdit|handleCompetitionTabContent">Competition</a></li>
+		<li><a href='#ebay' data-app-role='ebayTab' data-app-click="admin_prodedit|handleEbayTabContent">eBay</a></li>
+		<li><a href='#competition' data-app-role='competitionTab' data-app-click="admin_prodedit|handleCompetitionTabContent">Competition</a></li>
 	</ul>
 	
 	
@@ -311,9 +311,9 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<form action='#' onSubmit='return false'>
 
 		<fieldset class='clearfix'>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
-			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' class='moneyInput' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7'  /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
 
 			<input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" title="Product name" class='threeColumn floatLeft marginBottom' />
 			
@@ -437,20 +437,20 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 
 			<div class='clearfix marginBottom'>
 				<!-- all the product images -->
-				<ul class='prodImagesContainer paddingNone listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit;" data-app-role='prodImagesContainer'></ul>
+				<ul class='prodImagesContainer paddingNone listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodedit;" data-app-role='prodImagesContainer'></ul>
 			</div>		
 		</fieldset>
 	
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
-<!--			<button class='applyButton floatLeft' data-app-click="admin_prodEdit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button> -->
-			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
-			<button class='applyButton floatLeft' data-attribute='zoovy:accessory_products' data-app-click='admin_prodEdit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
-			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
-			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodEdit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
-			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
+<!--			<button class='applyButton floatLeft' data-app-click="admin_prodedit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button> -->
+			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodedit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
+			<button class='applyButton floatLeft' data-attribute='zoovy:accessory_products' data-app-click='admin_prodedit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodedit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodedit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button>
+			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodedit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
 			
-			<button title="Open a dialog with some debug tools." class='floatLeft applyButton' data-verb='debug' data-templateid='productDebuggerTemplate' data-app-click='admin_prodEdit|showProductTemplateInDialog'>Debug</button>
+			<button title="Open a dialog with some debug tools." class='floatLeft applyButton' data-verb='debug' data-templateid='productDebuggerTemplate' data-app-click='admin_prodedit|showProductTemplateInDialog'>Debug</button>
 			
 			
 		</div>
@@ -590,7 +590,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 	</tbody>
 	</table>
 	<div class='buttonset alignRight'>
-		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /marketplaces tab content -->
@@ -618,7 +618,7 @@ also uncomment the line executing handleManagementCategoryFilters() in u.handleN
 		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsTableRowTemplate;'></tbody>
 	</table>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /social tab content -->
@@ -662,7 +662,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
 	
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="flex,schedule">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="flex,schedule">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /attributes tab content -->
@@ -677,7 +677,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	
 		
 	<div class='buttonset alignRight'>
-		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="inventory">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="inventory">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /inventory tab content -->
@@ -688,8 +688,8 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<form action='#' onSubmit='return false'>
 		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroNavcatClearallExec">Remove from All</button>
-			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="navigation">Save <span class='numChanges'></span> Changes</button>
+			<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroNavcatClearallExec">Remove from All</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="navigation">Save <span class='numChanges'></span> Changes</button>
 		</div>
 	</form>
 	</section><!-- /categorization tab content -->
@@ -741,7 +741,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	</div>
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -838,7 +838,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<option value="WIRELESS.WIRELESSACCESSORIES">Wireless Accessories</option>
 			<option value="WIRELESS.WIRELESSDOWNLOADS">Wireless Downloads</option>
 		</select>
-		<button data-app-click="admin_prodEdit|amazonProductDefinitionsShow" class='applyButton'>Edit Specifics</button>
+		<button data-app-click="admin_prodedit|amazonProductDefinitionsShow" class='applyButton'>Edit Specifics</button>
 	</label>
 	
 	<label>
@@ -905,12 +905,12 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<fieldset>
 	<div class='ebayMacroUpdateMessaging'></div>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 
-		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductAmazonValidateExec' title="Test this product for Amazon errors">Validate</button>
-		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE" title="Send item to Amazon and clear history log.">Queue Now</button>
-		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER" title="Send item later (30 hours) to Amazon and clear history log.">Queue Later</button>
-		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodEdit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE" title="Send a delete command to Amazon. Can take up to 24 hours for Amazon to remove.">Remove</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductAmazonValidateExec' title="Test this product for Amazon errors">Validate</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE" title="Send item to Amazon and clear history log.">Queue Now</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER" title="Send item later (30 hours) to Amazon and clear history log.">Queue Later</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE" title="Send a delete command to Amazon. Can take up to 24 hours for Amazon to remove.">Remove</button>
 	</div>
 	</fieldset>
 
@@ -951,7 +951,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	</table>
 	</fieldset>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -972,14 +972,14 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 					<label >
 						<span>eBay category 1</span>
 						<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
-						<button data-categoryselect='primary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<button data-categoryselect='primary' data-app-click='admin_prodedit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
 						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
 					</label>
 		
 					<label class='floatLeft marginRight'>
 						<span>eBay category 2</span>
 						<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
-						<button data-categoryselect='secondary' data-app-click='admin_prodEdit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<button data-categoryselect='secondary' data-app-click='admin_prodedit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
 						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
 					</label>
 				</div>
@@ -998,7 +998,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 				
 				<label class='floatLeft marginRight' >
 					<span>Launch profile</span>
-					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodEdit;" name='zoovy:profile'></select>
+					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodedit;" name='zoovy:profile'></select>
 					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
 				</label>
 			</div>
@@ -1081,8 +1081,8 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 		
 				<div class='buttonset clearfix'>
 					<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview Auction</button>
-					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION" data-trigger='save'>Test Auction</button>
-					<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Auction</button>
+					<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION" data-trigger='save'>Test Auction</button>
+					<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Auction</button>
 				</div>
 		
 			</fieldset>
@@ -1136,16 +1136,16 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 			<div data-bind="var: product(ebay:ts); format:showIfSet;" class='buttonset marginTop marginBottom'>
 				<button class='applyButton' data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" >Preview Syndication</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-SYNDICATION">Create Syndication</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-SYNDICATION">Create Syndication</button>
 				<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
 			</div>
 
 	
 			<div class='buttonset' data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<button data-app-click="admin_templateEditor|adminEBAYProfilePreviewShow" class='applyButton' >Preview Fixed</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-FIXED">Test Fixed</button>
-				<button class='applyButton' data-app-click="admin_prodEdit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-FIXED">Create Fixed</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-FIXED">Test Fixed</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-FIXED">Create Fixed</button>
 			</div>
 		</fieldset>
 
@@ -1177,7 +1177,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 		</fieldset>
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section>
@@ -1219,7 +1219,7 @@ list of skus.
 	</fieldset>
 
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="pricetags">Save <span class='numChanges'></span> Changes</button>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="pricetags">Save <span class='numChanges'></span> Changes</button>
 	</div>
 	</form>
 	</section><!-- /social tab content -->
@@ -1262,14 +1262,14 @@ OR when the inventory panel for a product WITHOUT inventory-able options shows u
 <tfoot>
 <tr>
 	<th colspan='2' class='positionRelative'>
-	<button class='applyButton displayNone' data-icon-secondary='ui-icon-triangle-1-s' data-text='true' data-app-click='admin_prodEdit|invDetailFilterShow'>Show</button>
+	<button class='applyButton displayNone' data-icon-secondary='ui-icon-triangle-1-s' data-text='true' data-app-click='admin_prodedit|invDetailFilterShow'>Show</button>
 	<ul class='displayNone'>
 	<!-- content populated w/ js based on what types of records are present -->
 	</ul>
 	</th>
 	<th colspan='8'>
-	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Constant</button>
-	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodEdit|addDetailType2SKUShow'>Add Simple</button>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodedit|addDetailType2SKUShow'>Add Constant</button>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodedit|addDetailType2SKUShow'>Add Simple</button>
 	</th>
 	<th></th><!-- intentionally didn't put the buttons here. if diagnostics 'gets long', I want these buttons visible. -->
 </tr>
@@ -1329,14 +1329,14 @@ if it already has a simple, lock the button
 
 
 <tr id='inventoryRowTemplate'>
-	<td data-app-click='admin_prodEdit|inventoryDetailsToggle' data-bind='var:detail(sku); format:assignAttribute; attribute:data-sku;' class='lookLikeLink'>
+	<td data-app-click='admin_prodedit|inventoryDetailsToggle' data-bind='var:detail(sku); format:assignAttribute; attribute:data-sku;' class='lookLikeLink'>
 	<span data-bind="var: detail(sku); format:text;"></span>
 	</td>
 	<td data-bind="var: product(zoovy:sku_pogdesc); format:text;"></td>
 	<td><span data-bind="var:detail(%SUMMARY.available); format:popVal; hideZero:false;"></span></td>
 	<td data-bind="var: product(zoovy:sku_pogdetail); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-click='admin_prodEdit|inventoryDetailsToggle' class='applyButton' data-icon-primary='ui-icon-circle-triangle-s' data-text='false'>Show</button>
+	<button data-app-click='admin_prodedit|inventoryDetailsToggle' class='applyButton' data-icon-primary='ui-icon-circle-triangle-s' data-text='false'>Show</button>
 	</td>
 </tr>
 
@@ -1430,7 +1430,7 @@ if it already has a simple, lock the button
 
 <tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
 	<td data-bind="var: detail(PRODUCT); format:text;"></td>
-	<td class='lookLikeLink' data-bind="var: detail(EBAY_ID); format:link2eBayByID; extension:admin_prodEdit;"><span data-bind="var: detail(EBAY_ID); format:text;"></span></td>
+	<td class='lookLikeLink' data-bind="var: detail(EBAY_ID); format:link2eBayByID; extension:admin_prodedit;"><span data-bind="var: detail(EBAY_ID); format:text;"></span></td>
 	<td data-bind="var: detail(IS_GTC); format:text;"></td>
 	<td data-bind="var: detail(CLASS); format:text;"></td>
 	<td data-bind="var: detail(CATEGORY); format:text;"></td>
@@ -1452,7 +1452,7 @@ used in the amzon panel for the details.
 AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 -->
 <tr id='amazonDetailRowTemplate' data-clone='true'>
-	<td data-app-click='admin_prodEdit|productTaskPidToggle' data-bind="var: detail(pid); format:assignAttribute; attribute:data-pid;" class='lookLikeLink'>
+	<td data-app-click='admin_prodedit|productTaskPidToggle' data-bind="var: detail(pid); format:assignAttribute; attribute:data-pid;" class='lookLikeLink'>
 	<span data-bind="var: detail(SKU); format:text;" ></span>
 	</td>
 	<td data-bind="var: detail(PID); format:text;"></td>
@@ -1461,12 +1461,12 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<td data-bind="var: detail(AMZ_UUID); format:text;"></td>
 	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
 	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
-	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodEdit;"></td>
+	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodedit;"></td>
 	<td>
-	<button class='applyButton displayNone' data-app-click='admin_prodEdit|amazonLogShow' data-bind="var: detail(@LOG.length); format:showIfSet;" data-icon-primary='ui-icon-alert' data-text='false'>Error and History Report</button>
+	<button class='applyButton displayNone' data-app-click='admin_prodedit|amazonLogShow' data-bind="var: detail(@LOG.length); format:showIfSet;" data-icon-primary='ui-icon-alert' data-text='false'>Error and History Report</button>
 	</td>
 	<td>
-	<button class='applyButton' data-app-click='admin_prodEdit|productTaskPidToggle' data-app-role='productTaskListButton' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	<button class='applyButton' data-app-click='admin_prodedit|productTaskPidToggle' data-app-role='productTaskListButton' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
 	</td>
 </tr>
 
@@ -1525,7 +1525,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 <tr id='prodEditSKUImageTemplate'>
 	<td data-bind="var: product(sku); format:text;"></td>
 	<td>
-	<ul class='listStyleNone sortableImagery skuList' data-app-role='skulist'  data-bind="useParentData:true; format:prodImages; extension:admin_prodEdit; h:35; w:35;"></ul>
+	<ul class='listStyleNone sortableImagery skuList' data-app-role='skulist'  data-bind="useParentData:true; format:prodImages; extension:admin_prodedit; h:35; w:35;"></ul>
 	</td>
 </tr>
 
@@ -1543,7 +1543,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 	<form action='#' onSubmit='return false'>
 		<fieldset data-app-role='flexContainer' class='alignedLabels labelsAsBreaks'></fieldset><!-- gets it's own container within tab because eventually this tab will have more content -->
 		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
-			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
 		</div>
 	</form>
 	</div><!-- /flex tab content -->
@@ -1570,7 +1570,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
 		</select>
 	</label>
-	<button data-app-click="admin_prodEdit|productDebugReportExec" class='applyButton'>View Report</button>
+	<button data-app-click="admin_prodedit|productDebugReportExec" class='applyButton'>View Report</button>
 	</form>
 
 	<div data-app-role='reportsContent'></div>
@@ -1591,7 +1591,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
 			<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
 			<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
-			<button data-verb='CLONE' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Clone Product</button>
+			<button data-verb='CLONE' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Clone Product</button>
 		</fieldset>
 
 		<fieldset class='marginRight marginBottom labelsAsBreaks'>
@@ -1600,7 +1600,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 				<span>New PID</span>
 				<input type="textbox" name="NEWID" maxlength="20" />
 			</label>
-			<button  data-verb='RENAME' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Rename Product</button>
+			<button  data-verb='RENAME' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Rename Product</button>
 		</fieldset>
 		
 		<fieldset class='marginRight marginBottom labelsAsBreaks'>
@@ -1608,7 +1608,7 @@ AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
 			<label>
 				<input type="checkbox" name="IMAGES"> Delete Images
 			</label>
-			<button data-verb='NUKE' data-app-click='admin_prodEdit|handlePIDCloneChangeRemoveExec' class='applyButton'>Delete Product</button><!-- open confirm prompt before executing delete -->
+			<button data-verb='NUKE' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Delete Product</button><!-- open confirm prompt before executing delete -->
 		</fieldset>
 	</section>
 </div>
@@ -1842,7 +1842,7 @@ time.
 
 <div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding' data-app-role='variationManager'>
 	<div class='clearfix marginBottom'>
-		<button class='floatRight applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store">Add New</button>
+		<button class='floatRight applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="store">Add New</button>
 		<h1>Store Variations</h1>
 	</div>
 <table class='fullWidth gridTable applyAnytable'>
@@ -1874,9 +1874,9 @@ time.
 	<td data-bind="var:variation(type); format:text;"></td>
 	<td class='alignRight'>
 	
-		<button data-app-click='admin_prodEdit|adminSOGDeleteConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
-		<button data-app-click="admin_prodEdit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
-		<button data-variationmode="store" data-app-click='admin_prodEdit|variationUpdateShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
+		<button data-app-click='admin_prodedit|adminSOGDeleteConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
+		<button data-app-click="admin_prodedit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
+		<button data-variationmode="store" data-app-click='admin_prodedit|variationUpdateShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
 	</td>
 </tr>
 </table>
@@ -1905,33 +1905,33 @@ time.
 <div class='threeColumn floatLeft'>
 
 	<label>
-	<input type="radio" value="select" name='type' required='required' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="select" name='type' required='required' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Select box (drop down)*
 	<span class='toolTip' title="A select list is also commonly known as a drop down list. A select list should be used when the number of options exceeds 5 or more. As a rule when designing options you should never use more than 25 options in a select list since it will make it difficult for the user to see all the choices and arrive at a decision.">?</span>
 	</label>
 
 
 	<label>
-	<input type="radio" value="radio" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="radio" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Radio buttons*
 	<span class='toolTip' title="Used to display all the options available with a circle next to each option. The user chooses the appropriate option and the circle becomes filled in. Unlike select lists a radio button		always displays all options to the customer. Radio buttons should typically be used with 10 or less options since they consume a lot of screen space and make the customer need to scroll.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="cb" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="cb" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Checkbox*
 	<span class='toolTip' title="Have only two possible states, either ON or OFF. Checkboxes should be used whenever the user has only two possible choices. ">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="hidden" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="hidden" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Hidden Attributes
 	<span class='toolTip' title="A hidden attribute allows you to specify additional text which will appear in the product description. Such as a disclaimer or any text which you want to be printed in the product description to the customer and which is NOT editable by the customer.">?</span>
 	</label>
 
 
 	<label>
-	<input type="radio" value="assembly" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="assembly" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Base Assembly 
 	<span class='toolTip' title="A hidden attribute uses the option subsystem to set/store properties of an item (usually this is done through a custom javascript module).">?</span>
 	</label>
@@ -1941,25 +1941,25 @@ time.
 
 <div class='threeColumn floatLeft'>
 	<label>
-	<input type="radio" value="text" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="text" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Free-Form text
 	<span class='toolTip' title="This is the simpliest form of customer input. A text input should be used for limited text entry. 	If you need multiple lines consider using a text area. 	You can assses additional fees per character or per line. Fees are additive and will be summed together to present a total.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="number" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="number" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Free-Form Number
 	<span class='toolTip' title="Allows a customer to input a number. This is NOT the same as quantity, and should not be used for any sort of inventory control. You can restrict the number to a specific minimum and maximu value.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="textarea" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="textarea" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Multi-Line Text Area
 	<span class='toolTip' title="Large format text box in which users can enter a block of text. You can also restrict the number of characters. Like a text you can assess fees per character (excluding spaces and punctuation), and per word.  The textarea also allows you assess fees per line. Fees are additive and can be used together.">?</span>
 	</label>
 
 	<label>
-	<input type="radio" value="readonly" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="readonly" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Readonly Instructions	
 	<span class='toolTip' title="Displays contents to buyer but allows no interaction or input.">?</span>
 	</label>
@@ -1969,28 +1969,28 @@ time.
 
 
 	<label>
-	<input type="radio" value="biglist" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="biglist" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Dynamic "BIG" List
 	<span class='toolTip' title="Biglist lets you create a multi-stage select (drop down) list. When the first option is chosen, then the customer must make a second selection in another box which appears. The boxes may only go two deep. Use this when you have options which are tiered to reduce the number of decisions a customer needs to make. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="imgselect" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="imgselect" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Image Select List*
 	<span class='toolTip' title="When a customer chooses an option an image (if available) will be displayed adjacent to it. Image select lists are ideally suited for situations where there are 10 or more options and it is likely the customer will NOT want to look at all the pictures before making a choice. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="imggrid" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="imggrid" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Image Grid*
 	<span class='toolTip' title="Unlike an image select list which the user must manually choose each option in order to see the image associated with it - instead all images are displayed in a grid with a radio button below each option. The advantage of an image grid is it displays ALL the possible choices and their respective images to the customer, which is also it's disadvantage if you have a product with a lot of pictures it can consume a vast amount of real-estate and increase page load times. ">?</span>
 	</label>
 	
 
 	<label>
-	<input type="radio" value="calendar" name='type' data-app-change='admin_prodEdit|variationHandleTypeSelect' />
+	<input type="radio" value="calendar" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
 	Calendar
 	<span class='toolTip' title="Allows the user to easily choose a date. The date is stored in a text field in YYYY/MM/DD format. The calendar has the ability to apply a rush fee if the date is within a certain number of days of today. This allows you to create additional revenue for speciality things like 'Rush Fees'. ">?</span>
 	</label>
@@ -2003,7 +2003,7 @@ time.
 <fieldset data-app-role='variationInventorySettings' class='displayNone'>
 	<legend>Inventory</legend>
 	<label>
-		<input type='checkbox' name='inv' class='applyAnycb' data-app-click="admin_prodEdit|variationHandleInventoryChange" />
+		<input type='checkbox' name='inv' class='applyAnycb' data-app-click="admin_prodedit|variationHandleInventoryChange" />
 		This option affects inventory.
 		<span class='toolTip' title="If you want to have price and/or weight modifiers or track inventory per variation, enable this.">?</span>
 	</label>
@@ -2028,7 +2028,7 @@ time.
 </fieldset>
 <p class='hint'>Before saving please take a moment to review your choices as most of the settings on this page cannot be edited once the option group is saved.</p>
 
-<button data-app-click="admin_prodEdit|variationCreateExec" data-app-role='saveButton' class='applyButton'>Save Variation</button>
+<button data-app-click="admin_prodedit|variationCreateExec" data-app-role='saveButton' class='applyButton'>Save Variation</button>
 </form>
 
 </div>
@@ -2213,7 +2213,7 @@ time.
 <!-- show this only for select/radio style editor. allows left side of editor to be minimized so there's more room for dataTable. -->
 	<td class='variationEditorSplitter smallButton'>
 	<div>
-	<button data-app-click="admin_prodEdit|variationSettingsToggle" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-triangle-w'>Toggle Variations Settings Display</button>
+	<button data-app-click="admin_prodedit|variationSettingsToggle" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-triangle-w'>Toggle Variations Settings Display</button>
 	</div>
 	</td>
 
@@ -2223,7 +2223,7 @@ time.
 
 <div class='buttonset alignRight marginRight'>
 <!--<button data-app-click='admin|execDialogClose'>Cancel Changes</button> -->
-<button class='applyButton' data-app-click='admin_prodEdit|variationAdminProductMacroExec' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+<button class='applyButton' data-app-click='admin_prodedit|variationAdminProductMacroExec' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 </div>
 
 	</td>
@@ -2413,7 +2413,7 @@ time.
 	<legend>Big List Settings</legend>
 	
 	<p>A Big List is a dynamic, two level menu. A Big List may have a maximum of 1296 options. At this time - you may not have price and weight modifiers on Big Lists. </p>
-	<textarea rows="20" cols="50" name="biglist_contents" data-bind="var:variations(@options); format:bigListOptions; extension:admin_prodEdit;"></textarea>
+	<textarea rows="20" cols="50" name="biglist_contents" data-bind="var:variations(@options); format:bigListOptions; extension:admin_prodedit;"></textarea>
 	<p>
 	<b>Example:</b><br />
 Drinks|Soda<br />
@@ -2516,7 +2516,7 @@ Snacks|Doughnuts<br />
 
 
 		<div class='buttonset alignRight'>
-			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodEdit|variationOptionAddShow'>Add New Option</button>
+			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodedit|variationOptionAddShow'>Add New Option</button>
 		</div>
 		
 		<div  data-table-role='inputs' data-app-role='varitionOptionAddUpdateContainer' >
@@ -2560,7 +2560,7 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 	</label>
 	
 	<div class='displayNone marginBottom label  imgOnly'>
-		<span>Image <a data-app-click="admin_prodEdit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
+		<span>Image <a data-app-click="admin_prodedit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
 
 		<img width="70" height="70" src="app-admin/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
 		
@@ -2588,9 +2588,9 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 	<td data-bind="var:option(asm); format:text;"></td>
 	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
-	<div data-app-click='admin_prodEdit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
+	<div data-app-click='admin_prodedit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
 	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-circle-close' data-text='false'>Delete</button>
-	<button data-app-click="admin_prodEdit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-pencil' data-text='false'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
+	<button data-app-click="admin_prodedit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-pencil' data-text='false'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
 	</td>
 </tr>
 </table>
@@ -2627,7 +2627,7 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 			<td class='valignTop'>
 			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
 		<div class='clearfix'>
-			<button class='floatRight applyButton' data-app-click='admin_prodEdit|storeVariationsRefresh' data-icon-secondary='ui-icon-refresh' data-text='false'>Refresh Store Variations</button>
+			<button class='floatRight applyButton' data-app-click='admin_prodedit|storeVariationsRefresh' data-icon-secondary='ui-icon-refresh' data-text='false'>Refresh Store Variations</button>
 			<h2>Store Variations</h2>
 		</div>
 		<div class='storeVariationsListContainer'>
@@ -2649,14 +2649,14 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 		</table>
 
 		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
-<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-click="admin_prodEdit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
-			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodEdit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
+<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-click="admin_prodedit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
+			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
 			
-			<button title="Add a new product-specific variation group." class='applyButton' data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodEdit|variationCreateShowMenu'>Create Variation</button>
+			<button title="Add a new product-specific variation group." class='applyButton' data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodedit|variationCreateShowMenu'>Create Variation</button>
 			<!-- when this is upgraded to app events, change this to be a menu() -->
 			<div class='displayNone ui-widget ui-widget-content ui-corner-all alignCenter'>
-				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="product">Product Specific</button>
-				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodEdit|variationCreateShow' data-variationmode="store" data-ui-source='productEditor'>Store Wide</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="product">Product Specific</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="store" data-ui-source='productEditor'>Store Wide</button>
 			</div>
 		</div>
 
@@ -2680,14 +2680,14 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 	<td data-bind="var: variation(prompt); format:text;"></td>
 	<td data-bind="var: variation(type); format:text;"></td>
 	<td data-bind="var: variation(id); format:text;"></td>
-	<td><button title="Add store option group to product" data-app-click='admin_prodEdit|variationAddToProduct' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-w'>Apply</button></td>
+	<td><button title="Add store option group to product" data-app-click='admin_prodedit|variationAddToProduct' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-w'>Apply</button></td>
 </tr>
 
 <tr id='productVariationManagerProductRowTemplate' class='pointer'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
 	<td>
 		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-close'>Remove</button>
-		<button data-bind="var:variation(global); format:hideIfSet; extension:admin_prodEdit;" data-app-click='admin_prodEdit|variationUpdateShow' data-variationmode='product' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Variations</button>
+		<button data-bind="var:variation(global); format:hideIfSet; extension:admin_prodedit;" data-app-click='admin_prodedit|variationUpdateShow' data-variationmode='product' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Variations</button>
 	</td>
 	<td data-bind="var: variation(prompt); format:text;"></td>
 	<td>

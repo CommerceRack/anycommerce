@@ -1989,7 +1989,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).attr({'data-macro-cmd':data.value[i].cmd,'data-app-click':'admin_orders|adminOrderMacroExec'}).button().appendTo($tag);
 						}
 					else	{
-						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodedit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
 						}
 					}
 				},
@@ -2230,7 +2230,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //this is here as a work around for the product manager code being run during init to add it's template to the DOM so product task list works out of the gate.
 // once the new navigateTo is built w/ better support for individual tab customizations, this won't be necessary.
 										if(opts.tab == 'product')	{
-											app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+											app.ext.admin_prodedit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
 											}
 										} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
 									}
@@ -2867,7 +2867,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
 // ** 201338 -> need the product task list ul generated as early as possible.
-				app.ext.admin_prodEdit.a.showProductManager();
+				app.ext.admin_prodedit.a.showProductManager();
 				
 				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 				$('#messagesContent').anydelegate();
@@ -3191,7 +3191,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
 				else if(path == '#!variationsManager')	{
 //					app.u.dump("$target: "); app.u.dump($target);
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $target);
+					app.ext.admin_prodedit.a.showStoreVariationsManager($target || $target);
 					}
 				else if(path == '#!help')	{
 					$('#supportContent').empty();
@@ -3241,7 +3241,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_config.a.showBillingHistory($target);
 					}
 				else if(path == '#!globalVariations')	{
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($target);
+					app.ext.admin_prodedit.a.showStoreVariationsManager($target);
 					}
 				else if(path == '#!publicFiles')	{
 					app.ext.admin_medialib.u.showPublicFiles(path,opts);
@@ -3424,7 +3424,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.u.bringTabContentIntoFocus($target);
 
 				if(tab == 'product')	{
-					app.ext.admin_prodEdit.a.showProductManager(opts);					
+					app.ext.admin_prodedit.a.showProductManager(opts);					
 					}
 				else if(tab == 'kpi')	{
 					app.ext.admin_reports.a.showKPIInterface();
@@ -4373,7 +4373,7 @@ else	{
 					}
 				}
 			else	{
-				$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.getProductVariationByID, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
+				$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.getProductVariationByID, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
 				}
 //			app.u.dump(" -> getIndexInArrayByObjValue r:"+r);
 			return r;

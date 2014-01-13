@@ -922,7 +922,7 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 
 			//for forcing a product into the product task list
 			forcePIDIntoPTL : function($ele,p)	{
-				app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
+				app.ext.admin_prodedit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
 				}
 				
 			} //e [app Events]
