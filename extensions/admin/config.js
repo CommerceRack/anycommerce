@@ -1181,8 +1181,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 				
 				//currently, handling and insurance have multiple tables, so they get handled slight differently, a table is passed in addition to provider.
 					if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{
-						$dataTable.each(function(){
-							var tableID = $(this).attr('data-table');
+						$dataTableTbody.each(function(){
+							var tableID = $(this).closest('table').attr('data-table');
 							macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider+"&table="+tableID);
 							$('tbody',$(this)).find('tr').each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.

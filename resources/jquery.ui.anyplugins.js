@@ -193,6 +193,10 @@ additionally, will apply some conditional form logic.
 					$($CT.attr('data-show-selector'),$t).slideDown();
 					}
 				},
+			
+///			"toggle-selector" : function($CT,$t)	{
+				
+//				},
 
 			"checked-classes" : function($CT,$t)	{
 				$t.removeClass($CT.data('check-selectors'));
@@ -275,7 +279,7 @@ additionally, will apply some conditional form logic.
 				self._updateSaveButtonInContext(this.element,"[data-app-role='saveButton']");
 				}
 			if(this.options.masterSaveSelector)	{
-				self._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']")
+				self._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']");
 				}
 			},
 

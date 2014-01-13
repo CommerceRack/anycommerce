@@ -845,7 +845,7 @@ PAGE STYLES
 /* this was a horrible idea. at some point, these should be removed */
 .page section	{display:block; padding:0; margin:0 0 24px 0}
 .page section.displayNone	{display:none;}
-.page fieldset	{border:none; padding:0; margin-bottom:.8em;}
+.page fieldset	{border:none; padding:0;}
 
 
 /*
@@ -1151,7 +1151,6 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 /* batch jobs and manager */
 
 .batchTimer:before	{content:"Auto update in: "}
-
 
 
 
