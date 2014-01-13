@@ -397,7 +397,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var $buttons = $("<div \/>").data('cartid',$ele.closest("[data-app-role='cartMessenger']").data('cartid')); //the data(cartid) here is used on the events for the buttons appended to this element
 				$("<button \/>").text('Send to Buyer').attr('data-app-click','cart_message|gotoProductExec').button().appendTo($buttons);
-//				$("<button \/>").text('Add to Cart').attr('data-app-click','orderCreate|cartItemAddWithChooser').button().appendTo($buttons);
+//				$("<button \/>").text('Add to Cart').attr('data-app-click','order_create|cartItemAddWithChooser').button().appendTo($buttons);
 
 				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
 				$buttons.anydelegate();

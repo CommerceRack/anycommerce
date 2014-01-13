@@ -533,8 +533,8 @@ This is used to get add an array of skus, most likely for a product list.
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 
 //** 201338 -> if the placeholder attribute on an input is not supported (thx IE8), then add labels.
-					if(app.ext.orderCreate)	{
-						app.ext.orderCreate.u.handlePlaceholder($editor);
+					if(app.ext.order_create)	{
+						app.ext.order_create.u.handlePlaceholder($editor);
 						}
 					$(":input",$editor).each(function(index){
 						var $input = $(this);

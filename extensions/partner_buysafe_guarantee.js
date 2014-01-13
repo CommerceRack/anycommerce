@@ -81,7 +81,7 @@ if(buySAFE.Hash.length > 0)	{
 								
 	app.templates.checkoutTemplate.on('complete.buysafe',function($ele,P){
 		
-		app.u.dump("BEGIN buysafe_guarantee code pushed on orderCreate.checkoutCompletes");
+		app.u.dump("BEGIN buysafe_guarantee code pushed on order_create.checkoutCompletes");
 		var order = app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
