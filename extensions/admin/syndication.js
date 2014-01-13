@@ -439,7 +439,7 @@ app.model.dispatchThis('mutable');
 					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
 	
 						
-					$('.anytabsContainer',$target).anytabs();
+					app.u.handleCommonPlugins();
 //there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
 // when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
 					
@@ -454,7 +454,7 @@ app.model.dispatchThis('mutable');
 						app.ext.admin_syndication.a.showEBAY($form);
 						}
 					else	{
-						$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
+						$('.applyAnytabs',$target).find('li:first').trigger('click.anytabs');
 						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
 						}
 

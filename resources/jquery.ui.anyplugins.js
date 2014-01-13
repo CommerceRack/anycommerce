@@ -705,13 +705,17 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 */
 (function($) {
 	$.widget("ui.anytabs",{
-		options : {},
+		options : {
+			'extension' : null, //a dps namespace for saving what tab is open. allows for that tab to become the default when the next instance of the tabs is opened. 
+			// ex: product editor > edit product. open marketplaces tab. next product opened will have marketplaces open by default. requires persist to be enabled.
+			'persist' : false //if set to true AND extension is set, DPS will be used to read what tab was last open and bring that tab into focus at init.
+			},
 
 		_init : function(){
 			var self = this,
 			o = self.options, //shortcut
-			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-// * 201320 -> changed attr from widget to data-widget-anytabs. widget isn't a valid attribute plus no conducive to multiple widgets on one element.
+			$t = self.element; //this is the targeted element (ex: $('#bob').anytabs() then $t is bob)
+
 			if($t.attr('data-widget-anytabs'))	{
 				app.u.dump("data-widget-anytabs -> already enabled.");
 				} //element has already been set as tabs.
@@ -719,15 +723,14 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				$t.attr('data-widget-anytabs',true)
 				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
 				self.tabs = $("ul",$t).first();
-	
-	//style and move tabs into container.
+//style and move tabs into container.
 				self._handleContent();
 				self._addClasses2Content();
 				
-	//style and add click events to tabs.
-				self._addClasses2Tabs();
+//style and add click events to tabs.
+				self._addClassesAndData2Tabs();
 				self._addEvent2Tabs();
-	//make a tab visible/active.
+//make a tab visible/active.
 				self._handleDefaultTab();
 				}
 			}, //_init
@@ -736,52 +739,41 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
 
-		_activateFirstTab : function()	{
-			this.tabs.children().first().addClass('ui-state-active ui-tabs-active');
-			this.tabContent.children().first().css('display','block');
-			},
-
 		_handleDefaultTab : function()	{
-			var anchor = document.location.hash;
+			var o = this.options;
 //if no anchor is set, activate the default.
-			if(anchor)	{
-				var foundMatch = false;
-				$('a',this.element).each(function(){
-					if($(this).attr('href') == anchor)	{$(this).trigger('click'); foundMatch = true; return false;} //the return false breaks out of the loop.
-					});
-//if href value matches the anchor, trigger the default tab.
-				if(foundMatch)	{}
-				else	{this._activateFirstTab();}
+			if(o.persist && o.extension)	{
+				var theAnchor = app.model.dpsGet(o.extension,'anytabs') || {};
+				if(theAnchor.recentTab && $("li[data-anytabs-tab='"+theAnchor+"']",this.element).length)	{
+					this.reveal($("li[data-anytabs-tab='"+theAnchor+"']",this.element));
+					}
+				else	{
+					this.reveal($("li:first",this.element));
+					}
 				}
 			else	{
-				this._activateFirstTab();
+				this.reveal($("li:first",this.element));
 				}
 			},
 
 		_addEvent2Tabs : function()	{
 			var self = this;
-// *** 201336 -> tab clicks now use delegated events. more efficient.
-			this.tabs.on('click.anytabs','a',function(event){
+			//the click is registered on the li, not the a. that way any part of the 'tab' can be clicked.
+			this.tabs.on('click.anytabs','li',function(event){
 				event.preventDefault();
-				var oldHash = window.location.hash;
-				_ignoreHashChange = true;
-				window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
-				_ignoreHashChange = false;
-				self.reveal($(this).parent());
-				if($(this).data('app-click'))	{
-					app.u.executeEvent($(this),{'type':'click'});
-					}
-				return false;
+				self._handleTabClick($(this));
+//				return false; //if function returns false, any delegated events on tab don't run.
 				});
 			},
 
-		_addClasses2Tabs : function()	{
+		_addClassesAndData2Tabs : function()	{
 			this.tabs.addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix').css({'padding-left':'0px'});
-			this.tabs.find('a').addClass('ui-tabs-anchor').attr('role','presentation');
+			this.tabs.find('a').addClass('ui-tabs-anchor').attr('data-role','presentation');
 // * 201336 -> wanted a data reference on the li of the tab that was consistent. can be used to show or hide tab, if needed.
 			this.tabs.find('li').each(function(){
 				$(this).addClass('ui-state-default ui-corner-top');
-				$(this).attr('data-anytabs-tab',$(this).find('a').first().attr('href').substr(1));
+				var thisAnchor = $(this).find('a').first().attr('href').substr(1);
+				$(this).attr('data-anytabs-tab',thisAnchor).data('tab',thisAnchor);
 				});
 			},
 //create a container div and add each content panel to it.
@@ -798,42 +790,54 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 		_addClasses2Content : function()	{
 			$("[data-anytab-content]",this.element).addClass("ui-tabs-panel ui-widget-content ui-corner-bottom").css('display','none');
-			
 			},
 
-		
-
-		reveal : function($tab)	{
-			if(typeof $tab == 'string')	{
-				if($tab.charAt(0) == '#')	{}
-				else	{$tab = '#'+$tab}
-				$('a',this.element).each(function(){
-					if($(this).attr('href') == $tab)	{
-// * 201218 -> more targeted click name to reduce likelyhood of unintentional nuking of event
-						$(this).trigger('click.anytabs'); //will re-execute this function with $tab as object.
-						return false; //breaks out of each loop.
-						}
-					});
-				
-				}
-			else if(typeof $tab == 'object')	{
-				var dac = $tab.find('a').attr('href').substring(1); //data-anytab-content
-				document.location.hash = dac; //set hash. triggering click doesn't do this.
+//handle click needs to be separate from reveal. That way an anytabs('reveal','suchandsuch') can 'trigger' the click on the tab, thus executing any other delegated events that are present.
+// any programatic tab changes should trigger the reveal code except the actual delegated click event (that click action would already trigger any other delegated events).
+		_handleTabClick : function($tab2show)	{
+			var o = this.options;
+			if($tab2show)	{
+				var dac = $tab2show.data('tab'); //data-anytab-content
 				this.tabs.find('.ui-state-active').removeClass('ui-state-active ui-tabs-active');
-				$tab.addClass('ui-state-active ui-tabs-active');
+				$tab2show.addClass('ui-state-active ui-tabs-active');
 
 				this.tabContent.find('.ui-tabs-panel').hide();
 				$("[data-anytab-content='"+dac+"']",this.tabContent).show();
+				if(o.persist && o.extension)	{
+					var dps = app.model.dpsGet(o.extension,'anytabs') || {};
+					dps.recentTab = dac;
+					app.model.dpsSet(o.extension,'anytabs',dps);
+					}
 				}
 			else	{} //unknownn type for $tab far
 			},
 
+		reveal : function($tab)	{
+			var $tab2show = false;
+			//method accepts string or jquery object as the trigger.
+			if(typeof $tab == 'string')	{
+				$tab2show = $("li[data-anytabs-tab='"+$tab+"']",this.tabs);
+				}
+			//testing for data('tab') ensures that the jquery object passed in is, indeed a tab.
+			else if($tab instanceof jQuery && $tab.length && $tab.data('tab'))	{
+				$tab2show = $tab;
+				}
+			else	{
+				console.warn("In anytabs, a 'reveal' was triggered but the $tab passed in was either not a string or an object ["+typeof $tab+"] or it was an object but not a valid jquery instance ["+($tab instanceof jQuery)+"], had no length ["+$tab.length+"] or not a tab");
+				}
+			
+			if($tab2show)	{
+				//click triggered is NOT specific to anytabs so that any other delegated events are also triggered.
+				//if any internal process needs to trigger just the anytabs code, run the _handleTabClick code OR trigger click.anytabs
+				$tab2show.trigger('click'); 
+				}
+			
+			},
+
 //clear the message entirely. run after a close. removes element from DOM.
 		destroy : function(){
-			this.element.intervaledEmpty(500,true);
-			this.element.removeClass("ui-tabs");
-			this.element.removeClass("ui-widget");
-			this.element.removeClass("ui-widget-anytabs");
+//			this.element.intervaledEmpty(500,true);
+			this.element.removeClass("ui-tabs ui-widget ui-widget-anytabs");
 			this.element.data("widget-anytabs","");
 			this.element.attr("data-widget-anytabs","").removeAttr('data-widget-anytabs');
 			}
