@@ -2354,7 +2354,7 @@ function aus_js_submit() {
         	for (var i =0;i< aus_form.length;i++) if (aus_form.elements[i].name=="aus_form_changed") aus_form.elements[i].value=1;
         	aus_form.ButtonLoad.value = 1;
 			disable_inputs();
-        	app.ext.admin_syndication.u.getUpdatedEBAYAttributesForm($('#APIForm')); // this will request adminEBAYCategory, passing along the form, categoryID, XSL, et all and get updated HTML in response.
+        	app.ext.admin_marketplace.u.getUpdatedEBAYAttributesForm($('#APIForm')); // this will request adminEBAYCategory, passing along the form, categoryID, XSL, et all and get updated HTML in response.
     	}
 }
 

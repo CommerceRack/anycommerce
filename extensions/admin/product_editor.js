@@ -1151,7 +1151,7 @@ $target.anydelegate();
 						$input.appendTo($r);
 						
 		//$("<button>Chooser</button>").on('click',function(){
-		//	app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':'MODEL10','categoryselect':'primary'},jQuery(app.u.jqSelector('#','ebay:category_name')));
+		//	app.ext.admin_marketplace.a.showEBAYCategoryChooserInModal($input,{'pid':'MODEL10','categoryselect':'primary'},jQuery(app.u.jqSelector('#','ebay:category_name')));
 		//	}).appendTo($r);				
 						}
 		*/			else if(type == 'select')	{
@@ -2924,7 +2924,7 @@ function type2class(type)	{
 					var $input = $(':input:first',$container);
 					var $catName = $("[data-app-role='ebayCategoryName']",$container);
 										
-					app.ext.admin_syndication.a.showEBAYCategoryChooserInModal($input,{'pid':pid,'categoryselect':$ele.data('categoryselect')},$catName)
+					app.ext.admin_marketplace.a.showEBAYCategoryChooserInModal($input,{'pid':pid,'categoryselect':$ele.data('categoryselect')},$catName)
 
 					}
 				else	{

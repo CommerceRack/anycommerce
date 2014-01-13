@@ -298,7 +298,7 @@ var admin_templateEditor = function() {
 					app.u.handleAppEvents($D);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showTemplateChooserInModal, "+app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars)+".","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_marketplace.a.showTemplateChooserInModal, "+app.ext.admin_templateEditor.u.missingParamsByMode(vars.mode,vars)+".","gMessage":true});
 					}
 				}, //showTemplateChooserInModal
 
@@ -1596,7 +1596,7 @@ else	{
 		app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),data.campaignid);
 		}
 	else if(data.mode == 'EBAYProfile')	{
-		app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile);
+		app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile);
 		}
 	else	{
 		

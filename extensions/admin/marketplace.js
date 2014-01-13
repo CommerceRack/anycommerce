@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var admin_syndication = function() {
+var admin_marketplace = function() {
 	var theseTemplates = new Array(
 	'pageSyndicationTemplate',
 	'syndicationDetailTemplate',
@@ -41,11 +41,11 @@ var admin_syndication = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/syndication.html',theseTemplates);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
 				
 				/*var ebayxsl = $.ajax(app.vars.baseURL+'extensions/admin/resources/syi_attributes.xsl',{
 					success : function(data,b,c)	{
-						app.ext.admin_syndication.vars.ebayXSL = c.responseText;
+						app.ext.admin_marketplace.vars.ebayXSL = c.responseText;
 						},
 					error : function(a,b,c)	{
 						$('#globalMessaging').anymessage(app.u.errMsgObject('An error occured while trying to load a resource file. The eBay category chooser is not likely to work properly during this session. If you need this feature, please refresh your browser. If the error persists, please contact technical support.'))
@@ -69,7 +69,7 @@ var admin_syndication = function() {
 // this was not the method that got implemented. processForm was.
 		handleMacroUpdate : {
 			onSuccess : function(_rtag,macroResponses)	{
-				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate.onSuccess");
+				app.u.dump("BEGIN admin_marketplace.callbacks.handleMacroUpdate.onSuccess");
 				app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
 				var $target;
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj === 'object')	{
@@ -99,7 +99,7 @@ var admin_syndication = function() {
 				
 				},
 			onError : function(rd)	{
-				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate.onError");
+				app.u.dump("BEGIN admin_marketplace.callbacks.handleMacroUpdate.onError");
 				var $target;
 				if(rd && rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj=== 'object')	{
 					$target = rd._rtag.jqObj;
@@ -119,7 +119,7 @@ var admin_syndication = function() {
 
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					if(app.data[_rtag.datapointer].enable)	{
-						app.ext.admin_syndication.callbacks.anycontentPlus.onSuccess(_rtag); //this is how all the other marketplaces (which don't require auth) are handled.
+						app.ext.admin_marketplace.callbacks.anycontentPlus.onSuccess(_rtag); //this is how all the other marketplaces (which don't require auth) are handled.
 						}
 					else	{
 						_rtag.jqObj.hideLoading();
@@ -186,7 +186,7 @@ var admin_syndication = function() {
 //var keys are all lower case to allow for easy set via 'data' and consistency.
 //$path is an optional param which, if set, will have the path of the selected category set.
 			showEBAYCategoryChooserInModal : function($input,vars,$path)	{
-				app.u.dump("BEGIN admin_syndication.a.showEBAYCategoryChooserInModal");
+				app.u.dump("BEGIN admin_marketplace.a.showEBAYCategoryChooserInModal");
 				vars = vars || {};
 				if($input && $input instanceof jQuery)	{
 					if(vars.pid && vars.categoryselect == 'primary' || vars.categoryselect == 'secondary')	{
@@ -242,7 +242,7 @@ var admin_syndication = function() {
 								}
 							else	{
 								if($input.val())	{
-									app.ext.admin_syndication.u.ebayShowTreeByChild($input.val());
+									app.ext.admin_marketplace.u.ebayShowTreeByChild($input.val());
 									}
 								$("[data-app-role='ebayCategoryChooserTable']",$D).anycontent(rd);
 								app.u.handleAppEvents($D);
@@ -403,7 +403,7 @@ app.model.dispatchThis('mutable');
 //										app.u.dump(" -> $fieldset.data('panelname'): "+$fieldset.data('panelname'));
 										$fieldset.anypanel({
 											'showClose': false,
-											'extension' : 'admin_syndication',
+											'extension' : 'admin_marketplace',
 											'state' : 'persistent',
 											'persistent' : true,
 											'name' : $fieldset.data('panelname')
@@ -421,14 +421,14 @@ app.model.dispatchThis('mutable');
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_syndication.a.showEBAYLaunchProfileEditor, either $target not a valid jquery object ["+($target instanceof jQuery)+"] or profile ["+profile+"] is blank.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_marketplace.a.showEBAYLaunchProfileEditor, either $target not a valid jquery object ["+($target instanceof jQuery)+"] or profile ["+profile+"] is blank.","gMessage":true});
 					
 					}
 				}, //showEBAYLaunchProfileEditor
 
 //shows the editor for a given marketplace, by DST code.
 			showDSTDetails : function(DST,$target)	{
-//				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
+//				app.u.dump("BEGIN admin_marketplace.a.showDSTDetails"); 
 				app.ext.admin.calls.adminPriceScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
 
@@ -451,11 +451,11 @@ app.model.dispatchThis('mutable');
 				
 
 					if(DST == 'EBF')	{
-						app.ext.admin_syndication.a.showEBAY($form);
+						app.ext.admin_marketplace.a.showEBAY($form);
 						}
 					else	{
 						$('.applyAnytabs',$target).find('li:first').trigger('click.anytabs');
-						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+						app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_marketplace','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
 						}
 
 						
@@ -491,7 +491,7 @@ app.model.dispatchThis('mutable');
 							else if(cmd)	{
 								$tab.data('haveContent',true);
 								$tabContent.showLoading({'message':'Fetching File List'});
-								app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_syndication','jqObj':$tabContent},'mutable');
+								app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_marketplace','jqObj':$tabContent},'mutable');
 								app.model.dispatchThis('mutable');
 								}
 							else	{
@@ -555,7 +555,7 @@ if the category IS a leaf:
 pass in an LI.  expects certain data params to be set on the li itself. specifically 
 */
 			handleEBAYChild : function($li)	{
-				app.u.dump("BEGIN admin_syndication.u.handleEBAYChild");
+				app.u.dump("BEGIN admin_marketplace.u.handleEBAYChild");
 				if($li && $li.length && $li.data('categoryid'))	{
 					var
 						categoryid = $li.data('categoryid'),
@@ -592,7 +592,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 								},'passive');			
 							app.model.dispatchThis('passive');
 							if(data.pathid)	{
-								var path = app.ext.admin_syndication.u.buildEBAYCategoryPath(categoryid);
+								var path = app.ext.admin_marketplace.u.buildEBAYCategoryPath(categoryid);
 								if(path)	{$(app.u.jqSelector('#',data.pathid)).text(path)}
 								else	{
 									$('.appMessaging').anymessage({"message":"In admin.u.handleEBAYChildren, unable to determine path for categoryid. As long as the category ID populated the form as needed, this is not a big deal. Dev: see console for details."});
@@ -619,7 +619,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 							
 							$chooser.showLoading({'message':'Fetching item specifics data'});
 							
-							var dispatch = app.ext.admin_syndication.u.fetchEBAYRecommendationsCmd(categoryid,data.pid);
+							var dispatch = app.ext.admin_marketplace.u.fetchEBAYRecommendationsCmd(categoryid,data.pid);
 							dispatch._tag.callback = function(rd){
 								$chooser.hideLoading();
 								if(app.model.responseHasErrors(rd)){
@@ -686,7 +686,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						}
 					}
 				else	{
-					app.u.dump("In admin_syndication.u.buildEBAYCategoryPath, unable to build category path for ["+categoryid+"]");
+					app.u.dump("In admin_marketplace.u.buildEBAYCategoryPath, unable to build category path for ["+categoryid+"]");
 					}
 				return r;
 				}, //buildEBAYCategoryPath
@@ -718,7 +718,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 				}, //buildItemSpecificsMacro */
 
 			ebayShowTreeByChild : function(categoryid)	{
-					app.u.dump("BEGIN admin_syndication.u.ebayShowTreeByChild");
+					app.u.dump("BEGIN admin_marketplace.u.ebayShowTreeByChild");
 					app.u.dump(' -> categoryid: '+categoryid);
 					//app.u.dump(vars);
 					$('#APIForm').show(); //make sure form is visible.
@@ -791,7 +791,7 @@ if(categoryid && data.pid)	{
 	app.model.dispatchThis('mutable');
 	}
 else if(!data.pid)	{
-	$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild, unable to ascertain data.pid. Expected on $(#ebayCategoryChooser).data(pid).','gMessage':true});
+	$messageDiv.anymessage({'message':'In admin_marketplace.u.ebayShowTreeByChild, unable to ascertain data.pid. Expected on $(#ebayCategoryChooser).data(pid).','gMessage':true});
 	app.u.dump("This is data() from $(#ebayCategoryChooser): "); app.u.dump(data);
 	}
 else	{
@@ -802,7 +802,7 @@ else	{
 						}
 					else	{
 						
-						$messageDiv.anymessage({'message':'In admin_syndication.u.ebayShowTreeByChild,no categoryid passed.','gMessage':true});
+						$messageDiv.anymessage({'message':'In admin_marketplace.u.ebayShowTreeByChild,no categoryid passed.','gMessage':true});
 						
 						}
 					}, //ebayShowTreeByChild
@@ -866,7 +866,7 @@ else	{
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In admin_syndication.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
+					$('#globalMessaging').anymessage({'message':"In admin_marketplace.u.handleWizardProgressBar, either object ["+$object instanceof jQuery+"] or objectInspector ["+$objectInspector instanceof jQuery+"] were not valid jquery objects.",'gMessage':true});
 					}
 				},
 
@@ -1081,7 +1081,7 @@ if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
 										$('#globalMessaging').anymessage({'message':rd});
 										}
 									else	{
-										app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
+										app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($tab,sfo.PROFILE);
 										$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved'));
 									}
 								}
@@ -1097,7 +1097,7 @@ if(sfo["Item\\DisableBuyerRequirements\\@BOOLEAN"] == 0)	{
 
 	}
 else	{
-	$('#globalMessaging').anymessage({"message":"In admin_syndication.u.ebayProfileUpdateOrTest, mode ["+mode+"] is invalid (must be test or update).","gMessage":true});
+	$('#globalMessaging').anymessage({"message":"In admin_marketplace.u.ebayProfileUpdateOrTest, mode ["+mode+"] is invalid (must be test or update).","gMessage":true});
 	}
 
 
@@ -1202,7 +1202,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 
 						/*if($("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",$form).find('.inputContainer').length)	{
 							app.u.dump(" -> there are item specifics. add a macro.");
-							obj['@updates'].push(app.ext.admin_syndication.u.buildItemSpecificsMacro());
+							obj['@updates'].push(app.ext.admin_marketplace.u.buildItemSpecificsMacro());
 							}*/
 						
 						//set the category.
@@ -1212,7 +1212,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						obj['@updates'].push("SET-EBAY?itemspecifics="+encodeURIComponent(res.specificsStr));
 
 						if(data.pathid)	{
-							var path = app.ext.admin_syndication.u.buildEBAYCategoryPath(categoryid);
+							var path = app.ext.admin_marketplace.u.buildEBAYCategoryPath(categoryid);
 							if(path)	{ 
 								$(app.u.jqSelector('#',data.pathid)).text(path);
 								}
@@ -1250,7 +1250,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 						app.model.dispatchThis('immutable');
 						}
 					else if(!data.pid || !data.categoryselect || !data.inputid || !categoryid)	{
-						$form.anymessage({'message':'In admin_syndication.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on $(\'#ebayCategoryChooser\').data()','gMessage':true});
+						$form.anymessage({'message':'In admin_marketplace.e.ebaySaveCatAndUpdateItemSpecifics, unable to ascertain the pid ['+data.pid+'] and/or categoryselect ['+data.categoryselect+'] and/or categoryid ['+categoryid+'] , expected to find them on $(\'#ebayCategoryChooser\').data()','gMessage':true});
 						}
 					});
 				}, //ebaySaveCatAndUpdateItemSpecifics
@@ -1333,7 +1333,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 											else	{
 												$D.hideLoading();
 												$D.dialog('close');
-												app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),profile);
+												app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),profile);
 												}
 											}
 										}
@@ -1404,7 +1404,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 				$btn.button();
 				$btn.off('click.ebayLaunchProfileUpdateTestExec').on('click.ebayLaunchProfileUpdateTestExec',function(event){
 					event.preventDefault();
-					app.ext.admin_syndication.u.ebayProfileUpdateOrTest($btn.data('mode'),$btn.closest('form'))
+					app.ext.admin_marketplace.u.ebayProfileUpdateOrTest($btn.data('mode'),$btn.closest('form'))
 					});
 				}, //ebayLaunchProfileCreateUpdateExec
 
@@ -1428,7 +1428,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 							});
 						}
 //now show the editor.  This must happen after stickytab generation or the click events on the row buttons in the table get dropped.
-					app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('profile'));
+					app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('profile'));
 					
 					});
 				}, //ebayLaunchProfileUpdateShow
@@ -1460,8 +1460,8 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 											}
 										else	{
 											$D.dialog('close');
-											app.ext.admin_syndication.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile,{'fromupgrade':true});
-//											app.ext.admin_syndication.a.showEBAY($btn.closest("[data-app-role='slimLeftContentSection']"));
+											app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile,{'fromupgrade':true});
+//											app.ext.admin_marketplace.a.showEBAY($btn.closest("[data-app-role='slimLeftContentSection']"));
 											}
 										}
 									}
@@ -1492,7 +1492,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 			ebayShowTreeByChild : function($ele)	{
 				$ele.children().first().attr({'disabled':'disabled','selected':'selected'});
 				$ele.off('change.ebayShowTreeByChild').on('change.ebayShowTreeByChild',function(){
-					app.ext.admin_syndication.u.ebayShowTreeByChild($ele.val());
+					app.ext.admin_marketplace.u.ebayShowTreeByChild($ele.val());
 					});
 				}, //ebayShowTreeByChild
 			
@@ -1522,7 +1522,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 									else	{
 										$D.dialog('close');
 										$('#globalMessaging').anymessage(app.u.successMsgObject('Your token has been removed.'));
-										app.ext.admin_syndication.a.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
+										app.ext.admin_marketplace.a.showEBAY($ele.closest("[data-app-role='slimLeftContentSection']"));
 										}
 									}
 								}
@@ -1582,7 +1582,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 								else	{
 									$('#globalMessaging').anymessage({'message':'eBay authorization is now complete.','errtype':'success'});
 									//reload the ebay interface so that presence of valid token enables UI as needed.
-									app.ext.admin_syndication.a.showDSTDetails('EBF',$btn.closest("[data-app-role='slimLeftContentSection']"))
+									app.ext.admin_marketplace.a.showDSTDetails('EBF',$btn.closest("[data-app-role='slimLeftContentSection']"))
 									}
 								}
 							}
@@ -1608,7 +1608,7 @@ app.model.addDispatchToQ({
 			else	{
 				if(app.data[rd.datapointer].SessionID && app.data[rd.datapointer].RuName)	{
 				//show the button the user needs to click. disable the rest to avoid confusion.
-					$btn.parent().find('button').button('disable').end().find("button[data-app-event='admin_syndication|ebayTokenVerify']").button('enable').show().end().anymessage({'message':'Upon returning from eBay, you MUST push the complete authorization button below to finish the process','errtype':'todo','persistent':true});
+					$btn.parent().find('button').button('disable').end().find("button[data-app-event='admin_marketplace|ebayTokenVerify']").button('enable').show().end().anymessage({'message':'Upon returning from eBay, you MUST push the complete authorization button below to finish the process','errtype':'todo','persistent':true});
 					//no, that's not a typo, ebay is expecting SessID. We left it as SessionID because that's how it is referred to EVERYWHERE else.
 					linkOffSite(($btn.data('sandbox') == 1 ? 'https://signin.sandbox.ebay.com' : 'https://signin.ebay.com') + '/ws/eBayISAPI.dll?SignIn&RuName='+app.data[rd.datapointer].RuName+'&SessID='+encodeURIComponent(app.data[rd.datapointer].SessionID),'ebay.com to continue this registration process','',true);
 					}
@@ -1657,10 +1657,10 @@ app.model.dispatchThis('mutable');
 					$ele.addClass('selectedMarket ui-corner-all');
 
 					if($ele.data('mkt'))	{
-						app.ext.admin_syndication.a.showDSTDetails($ele.data('mkt'),$mktContainer)
+						app.ext.admin_marketplace.a.showDSTDetails($ele.data('mkt'),$mktContainer)
 						}
 					else	{
-						$mktContainer.anymessage({"message":"In admin_syndication.e.showDSTDetail, unable to determine mkt.","gMessage":true});
+						$mktContainer.anymessage({"message":"In admin_marketplace.e.showDSTDetail, unable to determine mkt.","gMessage":true});
 						}
 					});
 				}, //showDSTDetail
@@ -1799,19 +1799,19 @@ app.model.dispatchThis('mutable');
 										}
 									else	{
 										//HUH! shouldn't have gotten here.
-										$('#globalMessaging').anymessage({'message':'in admin_syndication.e.adminSyndicationMacroExec, unknown case for amazon thesaurus. Does not appear to be new or delete, why is it flagged as edited?','gMessage':true});
+										$('#globalMessaging').anymessage({'message':'in admin_marketplace.e.adminSyndicationMacroExec, unknown case for amazon thesaurus. Does not appear to be new or delete, why is it flagged as edited?','gMessage':true});
 										}
 									});
 								}
 //							app.u.dump("macros: "); app.u.dump(macros);
 							$form.showLoading({'message':'Updating Marketplace Settings...'});
-							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_syndication','jqObj':$form},'immutable');
+							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_marketplace','jqObj':$form},'immutable');
 							app.ext.admin.calls.adminSyndicationDetail.init(DST,{},'immutable');
 							app.model.dispatchThis('immutable');
 
 							}
 						else	{
-							$form.anymessage({"message":"In admin_syndication.u.adminSyndicationMacroExec, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+							$form.anymessage({"message":"In admin_marketplace.u.adminSyndicationMacroExec, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 							}		
 						}
 					else	{} //validateForm handles error display.
@@ -1827,7 +1827,7 @@ app.model.dispatchThis('mutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+						$form.anymessage({"message":"In admin_marketplace.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
 				}, //adminSyndicationUnsuspendMacro
@@ -1840,11 +1840,11 @@ app.model.dispatchThis('mutable');
 						var $tbody = $btn.closest('.ui-tabs-panel').find('tbody')
 						$tbody.empty().showLoading({'message':'Clearing errors...'})
 						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{'callback' : 'showMessaging','message':'Your errors have been cleared','jqObj':$('#globalMessaging')},'immutable');
-						app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_syndication','jqObj':$tbody},'immutable');
+						app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_marketplace','jqObj':$tbody},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$btn.closest('section').anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+						$btn.closest('section').anymessage({"message":"In admin_marketplace.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
 				}, //adminSyndicationUnsuspendAndClearErrorMacro
