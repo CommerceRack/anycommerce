@@ -315,8 +315,7 @@ else	{
 		});
 
 	app.u.handleAppEvents($custEditorTarget);
-	$("table.gridTable thead",$custEditorTarget).parent().anytable();
-	$("[type='checkbox']",$custEditorTarget).parent().anycb();
+	app.u.handleCommonPlugins($custEditorTarget);
 	app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj);
 	$custEditorTarget.anydelegate({'trackEdits':true});
 	

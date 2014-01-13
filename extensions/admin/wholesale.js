@@ -205,12 +205,9 @@ else	{
 								else	{
 									$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate',datapointer:rd.datapointer});
 									$('form',$target).data('orgid',vars.orgID);
-									$("input",$target).each(function(){
+									$(":input",$target).each(function(){
 										var $input = $(this);
 										$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
-										if($input.is(':checkbox'))	{
-											$input.anycb();
-											}
 										});
 									$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate' data-app-role='saveButton'>Save Changes</button>");
 									app.u.handleAppEvents($target);
@@ -1518,7 +1515,6 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 						'data' : $btn.closest('tr').data()
 						});
 					app.u.handleAppEvents($panel);
-					$(":checkbox",$panel).anycb();
 					app.model.dispatchThis('mutable');
 					});
 				}, //priceScheduleUpdateShow
@@ -1671,7 +1667,7 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 						var $input = $(this);
 						$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
 						if($input.is(':checkbox'))	{
-							$input.parent().anycb({text : {'on':'yes','off':'no'}});
+							$input.anycb({text : {'on':'yes','off':'no'}});
 							}
 						});
 					$('.buttonset',$D).append("<button data-app-event='admin_wholesale|execOrganizationCreate'>Create Organization</button>");
