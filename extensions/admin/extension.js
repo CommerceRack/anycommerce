@@ -3442,7 +3442,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_support.a.showTicketManager($target);
 					}
 				else if(tab == 'syndication')	{
-					app.ext.admin_syndication.a.showSyndication($target);
+					app.ext.admin_marketplace.a.showSyndication($target);
 					}
 				else if (tab == 'orders')	{
 					app.ext.admin_orders.a.initOrderManager($target,opts);

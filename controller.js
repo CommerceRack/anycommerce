@@ -3119,7 +3119,7 @@ $tmp.empty().remove();
 // key:value\nAnotherkey:AnotherValue\n
 // use 'key' and 'value' in the data-binds of the template.
 // pass template to apply per row as loadsTemplate: on the databind.
-// there's an example of this in admin_syndication (ebay category chooser)
+// there's an example of this in admin_marketplace (ebay category chooser)
 		wikiHash2Template : function($tag,data)	{
 			var
 				rows = data.value.split("\n"),

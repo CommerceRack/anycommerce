@@ -1207,7 +1207,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					else	{} //perfectlynormal to not have a data table.
 				
-					app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_syndication','jqObj':$form},'immutable');
+					app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
 				//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
 					app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
 					app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
