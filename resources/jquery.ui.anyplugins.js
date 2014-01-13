@@ -1636,13 +1636,19 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$toggle.append($toggleText);
 				$cb.before($toggle);
 				
+				$toggle.on('click.anycb',function(event){
+					event.preventDefault(); //prevents a double-execution if the toggleText is the target.
+					$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
+					$cb.trigger('change');
+					});
+				
 				$cb.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 				self._handleDisable();
 //the delegated events code will handle adding the edited class and updating the save button.
 				$cb.hide().on('change.anycb',function(){
+					app.u.dump(" -> $cb change triggered. is(:checked):" + $cb.is(':checked'));
 					$cb.is(':checked') ? self._turnOn() : self._turnOff();
 					});
-
 				}
 			}, //_init
 		_turnOn : function()	{
