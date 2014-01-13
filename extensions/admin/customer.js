@@ -809,7 +809,7 @@ $D is returned.
 			showCampaignTemplateEditor : function($btn)	{
 				$btn.button();
 				$btn.off('click.showCampaignTemplateEditor').on('click.showCampaignTemplateEditor',function(){
-					app.ext.admin_templateEditor.a.showTemplateEditorInModal('campaign',{'campaignid':$btn.data('campaignid')})
+					app.ext.admin_template.a.showTemplateEditorInModal('campaign',{'campaignid':$btn.data('campaignid')})
 					})
 				}, //showTemplateEditorInModal
 
