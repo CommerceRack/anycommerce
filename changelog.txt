@@ -41,6 +41,7 @@ ADMIN
 	enhancement - new ui 'theme'.
 	new - product editor now has 'competition' tab.
 	enhancement - utilities > reviews manager.  Export now available.
+	enhancement - general UI cleanup, including 'hiding' inputs where an enable is required (ex: shipping > insurance > flat, weight or price)
 
 
 CONTROLLER
