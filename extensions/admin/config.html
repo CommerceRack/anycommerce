@@ -856,60 +856,59 @@ keep all inputs within one fieldset for the save function.
 		<label><input type="radio" value="0" name="optional" data-bind="var: shipmethod(optional); format: popVal; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 	</div>
 	
-	<label><input type="checkbox" name="flat" class='applyAnycb' data-bind="var: shipmethod(flat); format: popVal;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	<fieldset>
+		<legend>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></legend>
 	
-	<table>
-	<thead>
-	<tr>
-		<td></td>
-		<th>Domestic</th>
-		<th>Canada</th>
-		<th>International</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>First Item:</td>
-		<td>$<input type='number' class='smallInput' name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type='number' class='smallInput' name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popVal; hideZero:false;" /></td>
-		<td>$<input type='number' class='smallInput' name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popVal; hideZero:false;" /></td>
-	</tr>
-	<tr>
-		<td>Additional Items:</td>
-		<td>$<input type='number' class='smallInput' name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type='number' class='smallInput' name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popVal; hideZero:false;" /></td>
-		<td>$<input type='number' class='smallInput' name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popVal; hideZero:false;" /></td>
-	</tr>
-	</tbody>
-	</table>
+		<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Disabled (do not configure handling per product)</label>
+		<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
+		<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
+		<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
+		<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
+		<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
+	</fieldset>
+
+
+	<fieldset>
+		<legend>Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></legend>
+
+		<label><input type="checkbox" name="flat" class='applyAnycb' data-bind="var: shipmethod(flat); format: popVal;" data-show-panel='insurancePerItemInputs' data-panel-selector=".insurancePerItemInputs" data-input-change='show-panel' />Enable</label>
+		
+		<table class='insurancePerItemInputs displayNone' data-table-role='container' data-panel-id='insurancePerItemInputs'>
+		<thead>
+		<tr>
+			<td></td>
+			<th>Domestic</th>
+			<th>Canada</th>
+			<th>International</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>First Item:</td>
+			<td>$<input type='number' class='smallInput' name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popVal; hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popVal; hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popVal; hideZero:false;" /></td>
+		</tr>
+		<tr>
+			<td>Additional Items:</td>
+			<td>$<input type='number' class='smallInput' name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popVal; hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popVal; hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popVal; hideZero:false;" /></td>
+		</tr>
+		</tbody>
+		</table>	
+	
+	</fieldset>
 
 	
+	<fieldset class='clearfix'>
 	
-	<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
+	<legend>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></legend>
 	
+	<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" data-show-panel='insuranceWeightInputs' data-panel-selector=".insuranceWeightInputs" data-input-change='show-panel' /> Enable</label>
 	
-	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Disabled (do not configure handling per product)</label>
-	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
-	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
-	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
-	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
-	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
-	
-	
-	
-	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
-	
-	<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
-	
-	
-	
-	<!--
-	SANITY -> in the fieldsets/data-tables below, the inputs are whitelisted in admin_config|shipmethodAddUpdateExec
-	-->
-	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>Domestic</legend>
+	<div class='floatLeft marginRight insuranceWeightInputs displayNone' data-table-role='container' data-panel-id='insuranceWeightInputs'>
+		<h4>Domestic</h4>
 		<table data-table='WEIGHT_US'>
 		<thead>
 		<tr>
@@ -931,12 +930,11 @@ keep all inputs within one fieldset for the save function.
 		</tr>
 		</tbody>
 		</table>
-	</fieldset>
+	</div>
 	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>Canada</legend>
-		<table data-app-role='dataTable' data-table='WEIGHT_CA'>
+	<div class='floatLeft marginRight insuranceWeightInputs displayNone' data-table-role='container' data-panel-id='insuranceWeightInputs'>
+		<h4>Canada</h4>
+		<table data-table='WEIGHT_CA'>
 		<thead>
 		<tr>
 			<th>Weight</th>
@@ -957,13 +955,10 @@ keep all inputs within one fieldset for the save function.
 		</tr>
 		</tbody>
 		</table>
-	</fieldset>
+	</div>
 	
-	
-	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>International</legend>
+	<div class='floatLeft marginRight insuranceWeightInputs displayNone' data-table-role='container' data-panel-id='insuranceWeightInputs'>
+		<h4>International</h4>
 		<table data-app-role='dataTable' data-table='WEIGHT_INT'>
 		<thead>
 		<tr>
@@ -985,108 +980,101 @@ keep all inputs within one fieldset for the save function.
 		</tr>
 		</tbody>
 		</table>
+	</div>
+	
 	</fieldset>
 	
-	<div class='clearfix'></div>
+
 	
-	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
+	<fieldset class='clearfix'>
+
+		<legend>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></legend>
+
+		<label><input type="checkbox" class='applyAnycb' name="enable_price_table"  data-bind="var: shipmethod(enable_price_table); format: popVal;" data-show-panel='insurancePriceInputs' data-panel-selector=".insurancePriceInputs" data-input-change='show-panel' /> Enable</label>
 	
-	<label><input type="checkbox" class='applyAnycb' name="enable_price_table"  data-bind="var: shipmethod(enable_price_table); format: popVal;" /> Enable</label>
-	
-	
-	
-	
-	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>Domestic</legend>
-		<table data-app-role='dataTable' data-table='PRICE_US'>
-		<thead>
-		<tr>
-			<th>Subtotal</th>
-			<th>Fee</th>
-		</tr>
-		</thead>
-		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		<div class='floatLeft marginRight displayNone insurancePriceInputs' data-panel-id='insurancePriceInputs' data-table-role='container'>
+			<h4>Domestic</h4>
+			<table data-app-role='dataTable' data-table='PRICE_US'>
+			<thead>
+			<tr>
+				<th>Subtotal</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+			
+			</tbody>
+			</table>
 		
-		</tbody>
-		</table>
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+				<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
 	
-		<table data-table-role='inputs'>
-		<tbody>
-		<tr>
-			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-		</tr>
-		</tbody>
-		</table>
-	</fieldset>
-	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>Canada</legend>
-		<table data-app-role='dataTable' data-table='PRICE_CA'>
-		<thead>
-		<tr>
-			<th>Subtotal</th>
-			<th>Fee</th>
-		</tr>
-		</thead>
-		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		<div class='floatLeft marginRight displayNone insurancePriceInputs' data-panel-id='insurancePriceInputs' data-table-role='container'>
+			<h4>Canada</h4>
+			<table data-app-role='dataTable' data-table='PRICE_CA'>
+			<thead>
+			<tr>
+				<th>Subtotal</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+			
+			</tbody>
+			</table>
 		
-		</tbody>
-		</table>
-	
-		<table data-table-role='inputs'>
-		<tbody>
-		<tr>
-			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-		</tr>
-		</tbody>
-		</table>
-	</fieldset>
-	
-	
-	
-	
-	<fieldset class='floatLeft marginRight' data-table-role='container'>
-		<legend>International</legend>
-		<table data-app-role='dataTable' data-table='PRICE_INT'>
-		<thead>
-		<tr>
-			<th>Subtotal</th>
-			<th>Fee</th>
-		</tr>
-		</thead>
-		<tbody data-table-role='content' data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+				<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
 		
-		</tbody>
-		</table>
+		<div class='floatLeft marginRight displayNone insurancePriceInputs' data-panel-id='insurancePriceInputs' data-table-role='container'>
+			<h4>International</h4>
+			<table data-app-role='dataTable' data-table='PRICE_INT'>
+			<thead>
+			<tr>
+				<th>Subtotal</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+			
+			</tbody>
+			</table>
+		
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+				<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
 	
-		<table data-table-role='inputs'>
-		<tbody>
-		<tr>
-			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-			<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-			<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-		</tr>
-		</tbody>
-		</table>
 	</fieldset>
 	
-	<div class='clearfix'></div>
 	
-	
-	
-	
-	<p>
-		<h5>Special Insurance Rules:</h5>
-		Use rules to handle the "special cases" that come up from time to time.<br />
+	<fieldset>
+		<legend>Special Insurance Rules:</legend>
+		<div class='hint marginBottom'>Use rules to handle the "special cases" that come up from time to time.</div>
 		<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
-	</p>
+	</fieldset>
 
 </div>
 
@@ -1616,28 +1604,28 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	   </tr>
 	   <tr>
 		  <td>Priority Mail (6-10 days)</td>
-		  <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popVal;" /></td>
+		  <td><input type="checkbox" class='applyAnycb' name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popVal;" /> Flat Box.<br />
-			 <input type="checkbox" class='applyAnycb' name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popVal;" /> Flat Env.<br />
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popVal;" /> Other Pkg.</label>
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popVal;" /> Flat Box.</label>
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popVal;" /> Flat Env.</label>
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Express Mail (3-5 days)</td>
 		  <td><input type="checkbox" class='applyAnycb' name="usps_dom_express" data-bind="var: shipmethod(usps_dom_express); format: popVal;" /></td>
 		  <td>
-			 <input type="checkbox" class='applyAnycb' name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" class='applyAnycb' name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.<br />
+			 <label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popVal;" /> Other Pkg.</label>
+			 <label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popVal;" /> Flat Env.</label>
 		  </td>
 	   </tr>
 	   <tr>
 		  <td>Global Express Guaranteed (1-3 days)</td>
 		  <td></td>
 		  <td>
-			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popVal;" /> Other Pkg.<br />
-			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popVal;" /> Rectangular.<br />
-			 <input type="checkbox" class='applyAnycb' name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popVal;" /> Non-Rectangular.<br />
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popVal;" /> Other Pkg.</label>
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popVal;" /> Rectangular.</label>
+			<label class='clearfix'><input type="checkbox" class='applyAnycb' name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popVal;" /> Non-Rectangular.</label>
 		  </td>
 	   </tr>
 	   <tr>
@@ -1686,7 +1674,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
-	<label><input type="checkbox" name="rules" class='applyAnycb' data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
+	<label class='clearfix marginBottom'><input type="checkbox" name="rules" class='applyAnycb' data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
 	<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 </fieldset>
 
