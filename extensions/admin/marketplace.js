@@ -42,19 +42,7 @@ var admin_marketplace = function() {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
-				
-				/*var ebayxsl = $.ajax(app.vars.baseURL+'extensions/admin/resources/syi_attributes.xsl',{
-					success : function(data,b,c)	{
-						app.ext.admin_marketplace.vars.ebayXSL = c.responseText;
-						},
-					error : function(a,b,c)	{
-						$('#globalMessaging').anymessage(app.u.errMsgObject('An error occured while trying to load a resource file. The eBay category chooser is not likely to work properly during this session. If you need this feature, please refresh your browser. If the error persists, please contact technical support.'))
-						app.u.dump("An error occured loading the XSL file to ebay store categories. eBay category chooser will NOT work properly. error details:",'error');
-						app.u.dump(a);
-						app.u.dump(b);
-						app.u.dump(c);
-						}
-					})*/
+
 				r = true;
 
 				return r;
