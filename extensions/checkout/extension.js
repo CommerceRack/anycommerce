@@ -104,7 +104,7 @@ var orderCreate = function() {
 				}
 			}, //init
 
-		adminCustomerDetail : {
+		updateAllPanels : {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
 //				app.u.dump("BEGIN adminCustomerDetail callback for 1PC");
@@ -114,6 +114,7 @@ var orderCreate = function() {
 				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
 				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
 				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 				}
 			},
 
@@ -164,7 +165,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 					r = "<p>It appears that some inventory adjustments needed to be made:<ul>";
 					for(var key in app.data[_rtag.datapointer]['%changes']) {
 						r += "<li>sku: "+key+" was set to "+app.data[_rtag.datapointer]['%changes'][key]+" due to availability<\/li>";
-						app.ext.cco.calls.cartItemUpdate.init({'stid':key,'quantity':app.data[_rtag.datapointer]['%changes'][key]});
+						app.ext.cco.calls.cartItemUpdate.init({'stid':key,'quantity':app.data[_rtag.datapointer]['%changes'][key]}); //## TODO -> this probably needs a cartid.
 						}
 					app.u.dump(" -> SANITY: an extra cartDetail call is occuring because inventory availability required some cartUpdates to occur.");
 					app.model.destroy('cartDetail|'+cartid);
@@ -1052,7 +1053,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 								if(app.vars.thisSessionIsAdmin && app.data[rd.datapointer].customer.cid)	{
 									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
 									$chkContainer.showLoading({'message':'Fetching customer record'});
-									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$chkContainer},'mutable');
+									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$chkContainer},'mutable');
 									app.model.dispatchThis('mutable');
 									}
 								else if(document.compatMode == 'CSS1Compat')	{}
@@ -1112,7 +1113,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.destroy('adminCustomerDetail|'+customer.CID); 
 						app.calls.cartDetail.init(cartid,{},'immutable');
 						app.ext.cco.calls.appPaymentMethods.init({_cartid:cartid},{},'immutable'); //update pay and ship anytime either address changes.
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':customer.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$context},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':customer.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$context},'immutable');
 						app.model.dispatchThis('immutable');
 						});
 					}
@@ -1201,6 +1202,31 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				},
 
+			//updates line item in cart. This event can be fired on an element (input, button, etc) within the scope of the line item template.
+			cartItemUpdateExec : function($ele,p){
+				var
+					$container = $ele.closest('[data-stid]'),
+					cartid = $ele.closest(":data(cartid)").data('cartid'),
+					vars = {
+						stid : $container.data('stid'),
+						uuid : $container.data('uuid'),
+						qty : $("input[name='qty']",$container).val(), //admin wants qty.
+						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
+						}
+				
+				if($("input[name='price']",$container).val() && app.vars.thisSessionIsAdmin)	{
+					vars.price = $("input[name='price']",$container).val();
+					}
+				
+				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'updateAllPanels','extension':'orderCreate','jqObj':$ele.closest('form')}))	{
+					app.model.destroy('cartDetail|'+cartid);
+					app.calls.cartDetail.init(cartid,{},'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					//cartItemUpdate will handle error display.
+					}
+				}, //cartItemUpdateExec
 
 			cartItemAddFromForm : function($ele,p)	{
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
