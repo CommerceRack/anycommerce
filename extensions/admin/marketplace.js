@@ -690,20 +690,6 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 					}
 				}, //fetchEBAYRecommendationsCmd (old buildEBAYXSLCmd)
 
-// NOT USED ANY MORE - jquery.ebay-specifics-form.js plugin handles this
-//for item specifics, can't just serialize the fieldset because the wikihash format wants the data formatted differently.
-// there are two inputs on each row, the value of 1 is the key and the value of the second is the value.			
-/*			buildItemSpecificsMacro : function()	{
-				var	$fieldset = $("[data-app-role='ebayCategoryChooserItemSpecificsFieldset']",'#APIForm');
-				var kvp = "";
-				$('.inputContainer',$fieldset).each(function(){
-					var $row = $(this);
-					if($('input:first',$row).val() && $('input:last',$row).val())	{
-						kvp += $('input:first',$row).val()+":"+$('input:last',$row).val()+"\n";
-						}
-					})
-				return "SET-EBAY?itemspecifics="+encodeURIComponent(kvp);
-				}, //buildItemSpecificsMacro */
 
 			ebayShowTreeByChild : function(categoryid)	{
 					app.u.dump("BEGIN admin_marketplace.u.ebayShowTreeByChild");

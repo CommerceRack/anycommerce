@@ -3305,7 +3305,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					app.ext.admin_customer.a.showReviewsManager($target);
 					}
 				else if (path == '#!appChooser')	{
-					app.ext.admin_templateEditor.a.showAppChooser();
+					app.ext.admin_template.a.showAppChooser();
 					}
 				else if (path == '#!rss')	{
 					app.ext.admin.a.showRSS($target);
