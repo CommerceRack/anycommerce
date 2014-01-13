@@ -1072,7 +1072,7 @@ keep all inputs within one fieldset for the save function.
 	
 	<fieldset>
 		<legend>Special Insurance Rules:</legend>
-		<div class='hint marginBottom'>Use rules to handle the "special cases" that come up from time to time.</div>
+		<p class='hint marginTopNone'>Use rules to handle the "special cases" that come up from time to time.</p>
 		<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
 	</fieldset>
 
@@ -1089,155 +1089,160 @@ keep all inputs within one fieldset for the save function.
 
 <div id='shippingGlobal_handling'>
 
-<input type='hidden' name='provider' value='HANDLING' />
-
-<p>Handling fees are applied to all shipping methods after the rules based shipping calculation. Handling fees are typically used to cover the packaging expenses and/or labor involved in assembling an order. You may enable as many handling calculations as you like,  all methods will be summed together to arrive at the final handling total. </p>
-
-<div class='label'>
-	Handling fees for orders will be:<br />
-	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popVal; hideZero:false;" required='required' /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popVal;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popVal;" /> Displays as it's own line item under shipping.</label>
-	<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
-</div>
-
-
-<label><input type="checkbox" class='applyAnycb' name="flat"  data-bind="var: shipmethod(flat); format: popVal;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
-
-
-<table>
-<thead>
-<tr>
-	<td></td>
-	<th>Domestic</th>
-	<th>Canada</th>
-	<th>International</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td>First Item:</td>
-	<td>$<input type='number' class='smallInput' name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type='number' class='smallInput' name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type='number' class='smallInput' name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
-</tr>
-<tr>
-	<td>Additional Items:</td>
-	<td>$<input type='number' class='smallInput' name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type='number' class='smallInput' name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
-	<td>$<input type='number' class='smallInput' name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
-</tr>
-</tbody>
-</table>
-
-
-<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
-
-<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal; hideZero:false;" /> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
-
-
-<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
-lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" /> Enable</label>
-
-
-
-
-<fieldset class='floatLeft marginRight'  data-table-role='container'>
-	<legend>Domestic</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_US'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<input type='hidden' name='provider' value='HANDLING' />
 	
-	</tbody>
-	</table>
-
-	<table data-table-role='inputs'>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-
-<fieldset class='floatLeft marginRight' data-table-role='container'>
-	<legend>Canada</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_CA'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<p>Handling fees are applied to all shipping methods after the rules based shipping calculation. Handling fees are typically used to cover the packaging expenses and/or labor involved in assembling an order. You may enable as many handling calculations as you like,  all methods will be summed together to arrive at the final handling total. </p>
 	
-	</tbody>
-	</table>
-
-	<table data-table-role='inputs'>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
+	<div class='label'>
+		Handling fees for orders will be:<br />
+		<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popVal; hideZero:false;" required='required' /> Not Used/Disabled.</label>
+		<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popVal;" /> Included as part of the shipping total.</label>
+		<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popVal;" /> Displays as it's own line item under shipping.</label>
+		<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
+	</div>
 
 
 
-
-<fieldset class='floatLeft marginRight' data-table-role='container'>
-	<legend>International</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_INT'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	<fieldset>
+		<legend>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></legend>
 	
-	</tbody>
-	</table>
+		<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popVal; hideZero:false;" /> Disabled (do not configure handling per product)</label>
+		<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for all destinations</label>
+		<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for domestic orders only</label>
+		<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada orders only</label>
+		<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for international orders only</label>
+		<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popVal;" /> Use per product for canada + international orders</label>
+	
+	</fieldset>
 
-	<table data-table-role='inputs'>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
-		<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
+	
+	<fieldset>
+	
+		<legend>Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></legend>
+	
+		<label><input type="checkbox" class='applyAnycb' name="flat"  data-bind="var: shipmethod(flat); format: popVal;" data-show-panel='handlingPerItemInputs' data-panel-selector=".handlingPerItemInputs" data-input-change='show-panel' />Enable</label>
+		
+		
+		<table class='handlingPerItemInputs displayNone' data-table-role='container' data-panel-id='handlingPerItemInputs'>
+		<thead>
+		<tr>
+			<td></td>
+			<th>Domestic</th>
+			<th>Canada</th>
+			<th>International</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>First Item:</td>
+			<td>$<input type='number' class='smallInput' name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
+		</tr>
+		<tr>
+			<td>Additional Items:</td>
+			<td>$<input type='number' class='smallInput' name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
+			<td>$<input type='number' class='smallInput' name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
+		</tr>
+		</tbody>
+		</table>
+	
+	</fieldset>
 
-<div class='clearfix'></div>
+
+	<fieldset>
+		<legend>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
+lookup table to determine the next highest handling fee.">?</span></legend>
+
+		<label><input type="checkbox" class='applyAnycb' name="enable_weight_table" data-bind="var: shipmethod(enable_weight_table); format: popVal;" data-show-panel='handlingWeightInputs' data-panel-selector=".handlingWeightInputs" data-input-change='show-panel' /> Enable</label>
 
 
 
-<p>
-	<h5>Special Handling Rules:</h5>
-	Use shipping rules to handle the "special cases" that come up from time to time.<br />
-	<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
-</p>
+
+		<div class='floatLeft marginRight handlingWeightInputs displayNone' data-panel-id='handlingWeightInputs' data-table-role='container'>
+			<h4>Domestic</h4>
+			<table data-app-role='dataTable' data-table='WEIGHT_US'>
+			<thead>
+			<tr>
+				<th>Weight</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+			
+			</tbody>
+			</table>
+		
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+				<td >Fee:<input type='number' min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+	
+		<div class='floatLeft marginRight handlingWeightInputs displayNone' data-table-role='container' data-panel-id='handlingWeightInputs'>
+			<h4>Canada</h4>
+			<table data-app-role='dataTable' data-table='WEIGHT_CA'>
+			<thead>
+			<tr>
+				<th>Weight</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+			
+			</tbody>
+			</table>
+		
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+				<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+	
+		<div class='floatLeft marginRight handlingWeightInputs displayNone' data-table-role='container' data-panel-id='handlingWeightInputs'>
+			<h4>International</h4>
+			<table data-app-role='dataTable' data-table='WEIGHT_INT'>
+			<thead>
+			<tr>
+				<th>Weight</th>
+				<th>Fee</th>
+			</tr>
+			</thead>
+			<tbody data-table-role='content' data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+			
+			</tbody>
+			</table>
+		
+			<table data-table-role='inputs'>
+			<tbody>
+			<tr>
+				<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+				<td >Fee:<input type='number'  min='0' step='.01' size="5" name="fee" class='skipTrack smallInput' /></td>
+				<td  ><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+
+	</fieldset>
 
 
+	<fieldset>
+		<legend>Special Handling Rules:</legend>
+		<p class='hint marginTopNone'>Use handling rules to handle the "special cases" that come up from time to time.</p>
+		<button class='applyButton' data-app-click="admin_config|ruleBuilderShow" data-rulesmode="shipping" data-table='RULES'>Manage Rules</button>
+	</fieldset>
 
 
 </div>
