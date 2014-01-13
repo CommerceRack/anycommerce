@@ -439,7 +439,7 @@ app.model.dispatchThis('mutable');
 					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
 	
 						
-					app.u.handleCommonPlugins();
+					app.u.handleCommonPlugins($target);
 //there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
 // when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
 					
