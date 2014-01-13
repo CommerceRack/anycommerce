@@ -1608,8 +1608,9 @@ if(!isNaN(o.defaultSortColumn))	{
 
 
 
-run $('label').anycb() over a piece of html formatted as <label><input type='checkbox'>Prompt</label>
-and it'll turn the cb into an ios-esque on/off switch.
+run $(':checkbox').anycb() over a checkbox input type and it'll turn the cb into an ios-esque on/off switch.
+The toggle is added before the cb on the dom. the cb is not inside the toggle so that the browser does not register a click on the toggle as on the cb (potentially causing a double-fire).
+the cb itself is then hidden.
 */
 (function($) {
 	$.widget("ui.anycb",{
@@ -1631,42 +1632,49 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$cb.data('anycb',true);
 				
 				var	
-					$toggle = $("<span \/>"),
+					$toggle = $("<span \/>").data('cbName',this.element.attr('name')),
 					$toggleText = $("<span \/>").text(self.options.text.off);
-
-				self.toggle = $toggle; //add to global object so it can be easily referenced.
-
-				$toggle.addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left'})
-				$toggleText.css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'}).addClass('anycbText ui-state-default');
 				
-				$toggle.append("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>");
+				this.toggle = $toggle; //add to global object so it can be reliably referenced. can't use this.element.closest because cb is not inside toggle.
+
+
+				$toggle.addClass('ui-widget ui-widget-content ui-widget-anycb ui-corner-all ui-widget-header').css({'box-sizing':'border-box','position':'relative','display':'block','width':'55px','margin-right':'6px','height':'1.2em','z-index':1,'padding':0,'float':'left'})
+				$toggleText.css({'box-sizing':'border-box','padding':'0px','width':'50%','text-align':'center','height':'1.3em','line-height':'1.3em','position':'absolute','top':-1,'z-index':2,'font-size':'.9em'}).addClass('anycbText ui-state-default');
+				
+//				$toggle.append("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>");
 
 				$toggle.append($toggleText);
 				$cb.before($toggle);
 				
 				$toggle.on('click.anycb',function(event){
 					event.preventDefault(); //prevents a double-execution if the toggleText is the target.
-					$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
-					$cb.trigger('change');
+					//the click event is tracked on the span, not the cb. So if the cb is disabled, the span shouldn't trigger the click
+					if($cb.prop('disabled') == 'disabled')	{
+						self._handleDisable();
+						}
+					else	{
+						$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
+						$cb.trigger('change');
+						}
 					});
 				
 				$cb.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 				self._handleDisable();
 //the delegated events code will handle adding the edited class and updating the save button.
 				$cb.hide().on('change.anycb',function(){
-					app.u.dump(" -> $cb change triggered. is(:checked):" + $cb.is(':checked'));
+//					app.u.dump(" -> $cb change triggered. is(:checked):" + $cb.is(':checked'));
 					$cb.is(':checked') ? self._turnOn() : self._turnOff();
 					});
 				}
 			}, //_init
 		_turnOn : function()	{
-			$('.anycbText',this.toggle).text(this.options.text.on).addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right').animate({'left':-1},'fast');
+			this.toggle.find(".anycbText").text(this.options.text.on).addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right').animate({'left':-1},'fast');
 			},
 		_turnOff : function()	{
-			$('.anycbText',this.toggle).text(this.options.text.off).addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left').animate({'left': 24},'fast');
+			this.toggle.find(".anycbText").text(this.options.text.off).addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left').animate({'left': (this.toggle.width() / 2)},'fast');
 			},
 		_handleDisable : function()	{
-			this.element.prop('disabled') ? this.toggle.css({'opacity':'0.5'}) : this.toggle.css({'opacity':1}); // ### TODO -> test in IE and Chrome and make sure opacity takes.
+			this.toggle.css({'opacity': this.element.prop('disabled') ? '0.5' : 1}); // ### TODO -> test in IE and Chrome and make sure opacity takes.
 			},
 //can be run as selector.anycb('update') to programatically ensure state is correct. does NOT toggle the cb value.
 //should be run if a cb is enabled or disabled.
