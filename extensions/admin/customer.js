@@ -450,9 +450,9 @@ $D is returned.
 					'templateID' : 'customerSearchTemplate',
 					'data' : data || {},
 					});
+				$D.dialog('open');
 				app.u.handleButtons($D);
 				app.u.handleCommonPlugins($D);
-				$D.dialog('open');
 				
 				$("form[data-app-role='customerSearch']:first",$D).on('submit',function(){
 					var sfo = $(this).serializeJSON();
@@ -469,8 +469,13 @@ $D is returned.
 								$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
 								}
 							else if(app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
+								//encountered an issue in order create > lookup customer where $D didn't register as a dialog yet.
+								//	closing it directly here caused a JS error. a slight pause solved this.
+								if($D.is(':data(dialog)'))	{$D.dialog('close');}
+								else	{
+									setTimeout(function(){$D.dialog('close');},500);
+									}
 								callback(app.data[rd.datapointer]['@CUSTOMERS'][0]);
-								$D.dialog('close');
 								}
 							else	{
 								$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){

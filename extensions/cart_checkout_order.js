@@ -997,6 +997,55 @@ in a reorder, that data needs to be converted to the variations format required 
 				return r;
 				},
 
+//cartid is required.
+// vars must have qty and stid (store) or uuid (admin). in admin, vars.price is optional
+			cartItemUpdate : function(cartid,vars,_tag){
+				vars = vars || {};
+				var r = false; //what is returned. will be true if a dispatch is added.
+				if(cartid)	{
+//this object that is going to be added to the dispact Q.
+					var cmdObj = {
+						'_cartid' : cartid,
+						'_tag' : _tag || {}
+						}
+					
+					if(app.vars.thisSessionIsAdmin)	{
+						if(vars.qty && vars.uuid)	{
+							r = true;
+							cmdObj._cmd = 'adminCartMacro';
+							cmdObj['@updates'] = ["ITEMUPDATE?"+$.param(vars)];
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In cco.u.cartItemUpdate, vars.qty ['+vars.qty+'] and/or vars.uuid ['+vars.uuid+'] are blank, both of which are required in an admin session.','gMessage':true});
+							}
+						}
+					else	{
+						if(vars.quantity && vars.stid)	{
+							r = true;
+							cmdObj.stid = $container.data('stid');
+							cmdObj.quantity = $("input[name='qty']",$container).val();
+							cmdObj.uuid = $container.data('uuid');
+							cmdObj._cmd = 'cartItemUpdate';							
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In cco.u.cartItemUpdate, vars.quantity ['+vars.quantity+'] and/or vars.stid ['+vars.stid+'] are blank, both of which are required in an admin session.','gMessage':true});
+							}
+						}
+					
+					if(r)	{
+						app.model.addDispatchToQ(cmdObj,'immutable');
+						}
+					
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In cco.u.cartItemUpdate, cartid is required and was left blank.','gMessage':true});
+					}
+				return r;
+				}, //cartItemUpdateExec
+
+
+
+
 //cart must already be in memory when this is run.
 //will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
@@ -1026,7 +1075,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					return obj;
 					} //which3PCAreAvailable
 	
-				}, //util
+			}, //util
 
 
 
@@ -1244,29 +1293,35 @@ in a reorder, that data needs to be converted to the variations format required 
 			
 			cartShipmethodSelect : function($ele,p)	{
 				p.preventDefault();
-				alert('woot!'); // ### TODO -> wrap this up once template on completes are ready.
+				// ### TODO -> wrap this up once template on completes are ready.
 				},
 			//this update could get triggered by a quantity update, a button or a price change (admin).
 			//$container will contain the qty and, if present, the price.
+			
+			
+			//this can be used to update a store or admin session. the callback here is fixed and will update the cart IF the cart was generated using getCartAsJqObj
 			cartItemUpdateExec : function($ele,p){
-				var $container = $ele.closest('[data-stid]'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
-				
-				if($container.data('stid') && cartid)	{
-					var updateObj = {'stid':$container.data('stid'),'quantity':$("input[name='qty']",$container).val(),'_cartid':cartid,'uuid':$container.data('uuid')}
-					//in the admin UI, this'll update the price. in a non-admin session, it won't do anything but won't hurt either.
-					if($("input[name='price']",$container).val())	{
-						updateObj.price = $("input[name='price']",$container).val();
+				var
+					$container = $ele.closest('[data-stid]'),
+					cartid = $ele.closest(":data(cartid)").data('cartid'),
+					vars = {
+						stid : $container.data('stid'),
+						uuid : $container.data('uuid'),
+						qty : $("input[name='qty']",$container).val(), //admin wants qty.
+						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
 						}
-					app.ext.cco.calls.cartItemUpdate.init(updateObj,{
-						'callback' : 'showMessaging',
-						'message' : 'Item '+$container.data('stid')+ ' updated.',
-						'jqObj' : $ele.closest('form')
-						},'immutable');
+				
+				if($("input[name='price']",$container).val() && app.vars.thisSessionIsAdmin)	{
+					vars.price = $("input[name='price']",$container).val();
+					}
+
+				
+				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'showMessaging','message' : 'Item '+$container.data('stid')+ ' updated.','jqObj' : $ele.closest('form')}))	{
 					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('form').anymessage({'message':'In cco.e.cartItemUpdateExec, unable to ascertain item STID ['+stid+'] and/or cartid ['+cartid+'].','gMessage':true})
+					//cartItemUpdate will handle error display.
 					}
 				}, //cartItemUpdateExec
 
