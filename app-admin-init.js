@@ -4,7 +4,7 @@ app.cmr = app.cmr || [];
 
 
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
-app.rq.push(['extension',0,'admin_prodEdit','extensions/admin/product_editor.js']);
+app.rq.push(['extension',0,'admin_prodedit','extensions/admin/product_editor.js']);
 app.rq.push(['extension',0,'admin_orders','extensions/admin/orders.js']);
 app.rq.push(['extension',0,'admin_sites','extensions/admin/sites.js']);
 //app.rq.push(['extension',0,'admin_launchpad','extensions/admin/launchpad.js']); 
@@ -173,7 +173,7 @@ $(document).ready(function(){
 				case 'product':
 					if(message.vars.pid)	{
 						$o += 'product: '+message.vars.pid+' has been added to the product task list.'
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':message.vars.pid,'tab':'product','mode':'add'});
+						app.ext.admin_prodedit.u.addProductAsTask({'pid':message.vars.pid,'tab':'product','mode':'add'});
 						}
 					else	{$o += 'Page type set to product but no pid specified.'}
 					break;

@@ -23,7 +23,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 
-var admin_prodEdit = function() {
+var admin_prodedit = function() {
 	var theseTemplates = new Array(
 		'ProductCreateNewTemplate',
 		'variationsDSTInputsTemplate',
@@ -81,7 +81,7 @@ var admin_prodEdit = function() {
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN admin_prodEdit.callbacks.init.onError');
+					app.u.dump('BEGIN admin_prodedit.callbacks.init.onError');
 					}
 				},
 
@@ -91,7 +91,7 @@ var admin_prodEdit = function() {
 
 			handlePMSearchResults : {
 				onSuccess : function(_rtag)	{
-//					app.u.dump("BEGIN admin_prodEdit.callbacks.handlePMSearchResults.onSuccess");
+//					app.u.dump("BEGIN admin_prodedit.callbacks.handlePMSearchResults.onSuccess");
 	
 	
 					var
@@ -120,7 +120,7 @@ var admin_prodEdit = function() {
 								$thisLI = app.renderFunctions.transmogrify({'id':eleID,'pid':pid},_rtag.templateID,app.data[_rtag.datapointer].hits.hits[i]['_source']);
 								$tbody.prepend($thisLI);
 								if($("li[data-pid='"+pid+"']",$PMTaskList).length)	{
-									$("[data-app-click='admin_prodEdit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
+									$("[data-app-click='admin_prodedit|productTaskPidToggle']",$thisLI).addClass('ui-state-highlight');
 									//li is already in PM task list. don't re-add. the prepend below will move it to the top of the list (it's proper place in the results, anyway).
 									}
 								app.u.handleButtons($thisLI);
@@ -136,7 +136,7 @@ var admin_prodEdit = function() {
 	
 			flex2HTMLEditor : {
 				onSuccess : function(_rtag)	{
-//					app.u.dump("BEGIN admin_prodEdit.callbacks.flex2HTMLEditor");
+//					app.u.dump("BEGIN admin_prodedit.callbacks.flex2HTMLEditor");
 					var pid = _rtag.pid;
 					app.u.dump(" -> PID: "+pid);
 if(_rtag.jqObj)	{
@@ -144,7 +144,7 @@ if(_rtag.jqObj)	{
 	_rtag.jqObj.hideLoading();
 	_rtag.jqObj.anycontent(_rtag);
 
-	_rtag.jqObj.find("[data-app-role='flexContainer']").append(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data[_rtag.datapointer].contents,app.data['adminProductDetail|'+pid]));
+	_rtag.jqObj.find("[data-app-role='flexContainer']").append(app.ext.admin_prodedit.u.flexJSON2JqObj(app.data[_rtag.datapointer].contents,app.data['adminProductDetail|'+pid]));
 	
 //hidden pid input is used by save. must come after the 'anycontent' above or form won't be set.
 	_rtag.jqObj.find('form').append("<input type='hidden' name='pid' value='"+pid+"' \/>");
@@ -194,7 +194,7 @@ $('form',_rtag.jqObj).each(function(){
 	$(this).append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 	});
 
-app.ext.admin_prodEdit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
+app.ext.admin_prodedit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
 app.u.handleCommonPlugins(_rtag.jqObj);
 app.u.handleButtons(_rtag.jqObj);
 _rtag.jqObj.anydelegate({
@@ -218,12 +218,12 @@ _rtag.jqObj.anydelegate({
 //This code should NOT bring the product tab into focus. That should be done by the code that executes this.
 //  -> allows this code build the product manager interface in the background so that the product task list 'add' works prior to the product editor being opened.
 			showProductManager : function(P)	{
-//				app.u.dump("BEGIN admin_prodEdit.a.showProductManager");
+//				app.u.dump("BEGIN admin_prodedit.a.showProductManager");
 				P = P || {};
 				var $target = $("#productContent");
 //				app.u.dump(" -> P:"); app.u.dump(P);
 
-				app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+				app.ext.admin_prodedit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
 				
 				if($target.children().length)	{} //product manager only gets rendered once and ONLY within the product tab.
 				else	{
@@ -276,7 +276,7 @@ _rtag.jqObj.anydelegate({
 							'renderTaskContainer' : vars.renderTaskContainer,
 							'templateID':'productEditorTabbedTemplate',
 							'jqObj' : $target,
-							'extension' : 'admin_prodEdit',
+							'extension' : 'admin_prodedit',
 							'callback' : 'handleProductEditor'
 							}
 						},'mutable');
@@ -285,7 +285,7 @@ _rtag.jqObj.anydelegate({
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductEditor, either $target is not an instance of jquery or pid is not set.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.a.showProductEditor, either $target is not an instance of jquery or pid is not set.","gMessage":true});
 					}
 				}, //showProductEditor
 
@@ -321,16 +321,16 @@ app.u.handleButtons($target);
 $target.anydelegate();
 					}
 				else if($target instanceof jQuery)	{
-					$target.anymessage({"message":"In admin_prodEdit.a.showProductDebugger, either no pid ["+P.pid+"] and/or no templateid ["+P.templateID+"] passed. both are required.","gMessage":true});
+					$target.anymessage({"message":"In admin_prodedit.a.showProductDebugger, either no pid ["+P.pid+"] and/or no templateid ["+P.templateID+"] passed. both are required.","gMessage":true});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showProductDebugger, $target is not a valid instance of jquery.",'gMessage':true})
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.a.showProductDebugger, $target is not a valid instance of jquery.",'gMessage':true})
 					}
 				},
 	
 	
 			showStoreVariationsManager : function($target)	{
-//				app.u.dump("BEGIN admin_prodEdit.a.showStoreVariationsManager");
+//				app.u.dump("BEGIN admin_prodedit.a.showStoreVariationsManager");
 				if($target && $target instanceof jQuery)	{
 					var _tag = {
 						'datapointer' : 'adminSOGComplete',
@@ -355,7 +355,7 @@ $target.anydelegate();
 	
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.showStoreVariationsManager, $target was either not specified or is not an instance of jQuery.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.a.showStoreVariationsManager, $target was either not specified or is not an instance of jQuery.","gMessage":true});
 					}
 				}, //showStoreVariationsManager
 				
@@ -365,7 +365,7 @@ $target.anydelegate();
 //executed when 'edit' is clicked from either sog list in store variation manager or in product edit > variations > edit variation group.
 //what's built gets returned, which means it is NOT added to the dom within this function. so event delegation should occur OUTSIDE this function or double-execution could occur.
 			getVariationEditor : function(mode, varObj, PID)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.getVariationEditor");
+//				app.u.dump("BEGIN admin_prodedit.u.getVariationEditor");
 				varObj = varObj || {}; //defauilt to object to avoid JS error in error checking.
 				var $r = $("<div \/>").addClass('variationEditorContainer'); //what is returned. Either the editor or some error messaging.
 				if(!$.isEmptyObject(varObj) && (mode == 'store' || (mode == 'product' && PID)) && varObj.type){
@@ -399,7 +399,7 @@ $target.anydelegate();
 					$('.toolTip',$r).tooltip();
 	
 	//for 'select' based variations, need to add some additional UI functionality.
-					if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(varObj.type))	{
+					if(app.ext.admin_prodedit.u.variationTypeIsSelectBased(varObj.type))	{
 						$("[data-app-role='variationsOptionsTbody']",$r).addClass('sortGroup').sortable();
 						$("[data-app-role='variationsOptionsTbody'] tr",$r).each(function(){
 							var $tr = $(this);
@@ -410,7 +410,7 @@ $target.anydelegate();
 							var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
 							$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 							$tbody.parent().show().anycontent({'data':app.data.adminSOGComplete['%SOGS'][varObj.id]});
-							$("[data-app-click='admin_prodEdit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
+							$("[data-app-click='admin_prodedit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
 
 							$tbody.sortable({
 								connectWith: '.sortGroup',
@@ -420,7 +420,7 @@ $target.anydelegate();
 									else	{
 										//moved to new parent.
 										$('button',$tr).show();
-										$("[data-app-click='admin_prodEdit|variationsOptionToggle']",$tr).hide();
+										$("[data-app-click='admin_prodedit|variationsOptionToggle']",$tr).hide();
 										app.u.handleButtons($tr);
 										}
 									//optionsEditorRowTemplate
@@ -456,14 +456,14 @@ $target.anydelegate();
 					
 					}
 				else	{
-					$r.anymessage({"message":"In admin_prodEdit.a.getVariationEditor, either mode ["+mode+"] or type["+varObj.type+"] was blank, varOjb was empty ["+$.isEmptyObject(varObj)+"] or mode was set to product and PID ["+PID+"] was empty.","gMessage":true});
+					$r.anymessage({"message":"In admin_prodedit.a.getVariationEditor, either mode ["+mode+"] or type["+varObj.type+"] was blank, varOjb was empty ["+$.isEmptyObject(varObj)+"] or mode was set to product and PID ["+PID+"] was empty.","gMessage":true});
 					}
 				return $r;
 				}, //getVariationEditor
 	
 	// opened when editing a product. shows enabled options and ability to add store variations to product.
 			showProductVariationManager : function($target,pid)	{
-//				app.u.dump("BEGIN admin_prodEdit.a.showProductVariationManager. pid: "+pid);
+//				app.u.dump("BEGIN admin_prodedit.a.showProductVariationManager. pid: "+pid);
 				
 				if($target instanceof jQuery && pid)	{
 //					app.u.dump(" -> $target is valid and pid is set.");
@@ -503,7 +503,7 @@ $target.anydelegate();
 							app.u.handleButtons($target);
 // compare the sog list and the variations on the product and disable the buttons.
 // this avoids the same SOG being added twice.
-							app.ext.admin_prodEdit.u.handleApply2ProdButton($target);
+							app.ext.admin_prodedit.u.handleApply2ProdButton($target);
 							
 							}		
 						
@@ -513,7 +513,7 @@ $target.anydelegate();
 	
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.a.getProductVariationManager, either $target not specified or PID ["+PID+"] was left blank.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.a.getProductVariationManager, either $target not specified or PID ["+PID+"] was left blank.","gMessage":true});
 					}
 				} //showProductVariationManager
 	
@@ -547,7 +547,7 @@ $target.anydelegate();
 				},
 
 			prodImages : function($tag,data)	{
-	//			app.u.dump("BEGIN admin_prodEdit.renderFormat.prodImages");
+	//			app.u.dump("BEGIN admin_prodedit.renderFormat.prodImages");
 				var L = data.bindData.max || 99;
 	//			app.u.dump(" -> data.value: "); app.u.dump(data.value);
 				if(data.value && data.value['%attribs'])	{
@@ -569,7 +569,7 @@ $target.anydelegate();
 
 
 			amazonIs : function($tag,data)	{
-//				app.u.dump("BEGIN admin_prodEdit.renderFormats.amazonIs.");
+//				app.u.dump("BEGIN admin_prodedit.renderFormats.amazonIs.");
 				var sum = 0;
 				for(index in data.value['%IS'])	{
 					sum += Number(data.value['%IS'][index]);
@@ -586,7 +586,7 @@ $target.anydelegate();
 							$btn.parent().find('.toggleMe').hide();
 							}
 						}).appendTo($tag);
-					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodEdit.u.amazonFeeds2Message(data.value['SKU'],data.value['%IS'])).appendTo($tag);
+					$("<div \/>").addClass('displayNone toggleMe').append(app.ext.admin_prodedit.u.amazonFeeds2Message(data.value['SKU'],data.value['%IS'])).appendTo($tag);
 					}
 				else	{} //all the values of the is report are zero. no point showing an empty report.
 				},
@@ -600,7 +600,7 @@ $target.anydelegate();
 				},
 
 			ebayLaunchProfiles : function($tag,data)	{
-				app.u.dump("BEGIN admin_prodEdit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
+				app.u.dump("BEGIN admin_prodedit.renderFormat.ebayLaunchProfiles. data.value: "+data.value);
 				if(app.data.adminEBAYProfileList)	{
 					if(app.data.adminEBAYProfileList['@PROFILES'].length)	{
 						var profiles = app.data.adminEBAYProfileList['@PROFILES']; //shortcut.
@@ -659,7 +659,7 @@ $target.anydelegate();
 					}
 				else	{
 					//missing something we need.
-					$('#globalMessaging').anymessage({"message":"in admin_prodEdit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
 					}
 				return r;
 				},
@@ -809,8 +809,8 @@ $target.anydelegate();
 // commented out till management categories get added to elastic.				
 
 //buildFilterListByCommand -> whitelisted by cmd type. will use local storage if available.
-				app.ext.admin_prodEdit.u.buildFilterListByCommand('adminEBAYProfileList');
-//				app.ext.admin_prodEdit.u.buildFilterListByCommand('adminSupplierList'); //need to uncomment data-elastic-key='prod_supplierid' in .html file too.
+				app.ext.admin_prodedit.u.buildFilterListByCommand('adminEBAYProfileList');
+//				app.ext.admin_prodedit.u.buildFilterListByCommand('adminSupplierList'); //need to uncomment data-elastic-key='prod_supplierid' in .html file too.
 				
 				app.u.handleButtons($navtabs);
 
@@ -837,7 +837,7 @@ $target.anydelegate();
 
 //Used in product manager interface.
 			handleManagementCategoryFilters : function()	{
-//				app.u.dump("BEGIN admin_prodEdit.u.handleManagementCategoryFilters");
+//				app.u.dump("BEGIN admin_prodedit.u.handleManagementCategoryFilters");
 				var $navtabs = $('#navTabs');// tabs container
 				var $manCatsList = $("[data-app-role='managementCategoryList']",$navtabs);
 				
@@ -901,7 +901,7 @@ $target.anydelegate();
 					vars.textPointer = 'PROFILE';
 					}				
 				
-//				app.u.dump("BEGIN admin_prodEdit.u.handleLaunchProfileFilters");
+//				app.u.dump("BEGIN admin_prodedit.u.handleLaunchProfileFilters");
 				var $navtabs = $('#navTabs');// tabs container
 				var $list = $("[data-app-role='"+_cmd+"']",$navtabs);
 
@@ -952,7 +952,7 @@ $target.anydelegate();
 
 
 			handleImagesInterface : function($context,pid)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.handleImagesInterface.  pid: "+pid);
+//				app.u.dump("BEGIN admin_prodedit.u.handleImagesInterface.  pid: "+pid);
 				if(pid && $context && $context instanceof jQuery)	{
 					pid = pid.toString(); //treat pid as string. 'could' be treated as number if no letters.
 
@@ -1039,7 +1039,7 @@ $target.anydelegate();
 							},
 						upload : function(f,e,rd)	{app.u.dump(' -> logged an upload.')}
 						}).append($("<li class='dropzone'>Click or drop file here to add image</li>").on('click',function(){
-							app.ext.admin_prodEdit.u.handleAddImageToList($(this).parent());
+							app.ext.admin_prodedit.u.handleAddImageToList($(this).parent());
 							}));
 		
 					$context.on('mouseenter','img',function(e){
@@ -1076,10 +1076,10 @@ $target.anydelegate();
 					}
 				else	{
 					if($context && $context instanceof jQuery)	{
-						$context.anymessage({'message':'In admin_prodEdit.u.handleImagesInterface, pid not specified.','gMessage':true})
+						$context.anymessage({'message':'In admin_prodedit.u.handleImagesInterface, pid not specified.','gMessage':true})
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.handleImagesInterface, $context either not specified or not an instance of jQuery.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.handleImagesInterface, $context either not specified or not an instance of jQuery.","gMessage":true});
 						}
 					}
 
@@ -1088,7 +1088,7 @@ $target.anydelegate();
 	//data is the individual flexedit piece of data. an object w/ id, type, title set. This is a combo of what came from merchant data and the global settings.
 	//prodData is an optional object. should be adminProductDetail and include %attribs, inventory, etc.
 			flexBuildInput : function(type,data,prodData)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.flexBuildInput. type: "+type);
+//				app.u.dump("BEGIN admin_prodedit.u.flexBuildInput. type: "+type);
 				
 				//create empty product object if one isn't passed.
 				prodData = prodData || {}; 
@@ -1114,7 +1114,7 @@ $target.anydelegate();
 							prodData['@skus'][i]['%attribs'] = prodData['%attribs'];
 							}
 						//if sku is set, this'll cause a never ending loop. so stid is used in the save (from data() on the label).
-						$div.append(app.ext.admin_prodEdit.u.flexBuildInput(type,$.extend(app.u.getBlacklistedObject(data,['sku']),{'title':prodData['@skus'][i].sku,'stid':prodData['@skus'][i].sku}),prodData['@skus'][i]));
+						$div.append(app.ext.admin_prodedit.u.flexBuildInput(type,$.extend(app.u.getBlacklistedObject(data,['sku']),{'title':prodData['@skus'][i].sku,'stid':prodData['@skus'][i].sku}),prodData['@skus'][i]));
 //						$("<label \/>",{'title':data.id}).html("<span>"+prodData['@skus'][i].sku+"<\/span>").append("<input type='text' class='handleAsSku' size='20' name='"+data.id+"|"+prodData['@skus'][i].sku+"' value='"+(prodData['@skus'][i]['%attribs'][data.id] || "")+"' \/>").appendTo($r);
 						}
 					$div.appendTo($r);
@@ -1280,7 +1280,7 @@ $target.anydelegate();
 				}, //flexBuildInput
 	
 			flexJSON2JqObj : function(thisFlex,prodData)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.flexJSONJqObj");
+//				app.u.dump("BEGIN admin_prodedit.u.flexJSONJqObj");
 //				app.u.dump(" -> prodData: "); app.u.dump(prodData);
 
 				var r = $("<div \/>");; //what is returned. Either a chunk of html or an error message.
@@ -1295,13 +1295,13 @@ $target.anydelegate();
 //							app.u.dump("ID: "+thisFlex[i].id);
 							var gfo = app.data['appResource|product_attribs_all.json'].contents[thisFlex[i].id] || {}; //Global Flex Object. may be empty for custom attributes.
 							var type = thisFlex[i].type || gfo.type;
-							if(type && app.ext.admin_prodEdit.vars.flexTypes[type] && app.ext.admin_prodEdit.vars.flexTypes[type].type)	{
-								r.append(app.ext.admin_prodEdit.u.flexBuildInput(app.ext.admin_prodEdit.vars.flexTypes[type].type,$.extend(true,{},gfo,thisFlex[i]),prodData)) //thisFlex merged into gfo with precedence set of thisFlex attributes. 
+							if(type && app.ext.admin_prodedit.vars.flexTypes[type] && app.ext.admin_prodedit.vars.flexTypes[type].type)	{
+								r.append(app.ext.admin_prodedit.u.flexBuildInput(app.ext.admin_prodedit.vars.flexTypes[type].type,$.extend(true,{},gfo,thisFlex[i]),prodData)) //thisFlex merged into gfo with precedence set of thisFlex attributes. 
 								}
 							else	{
 	//							app.u.dump(' -> no valid editor.');
 								r.append($("<div \/>").anymessage({
-									'message':'Could not find valid editor for this input.  flex input type = '+type+' and typeof flexTypes[type] = '+typeof app.ext.admin_prodEdit.vars[type]}));					
+									'message':'Could not find valid editor for this input.  flex input type = '+type+' and typeof flexTypes[type] = '+typeof app.ext.admin_prodedit.vars[type]}));					
 								}
 							}
 						else	{
@@ -1319,7 +1319,7 @@ $target.anydelegate();
 
 	//executed when the 'add image' link is clicked, which appears in the images panel of the product editor (both in the sku and product imagery sections).
 			handleAddImageToList : function($list)	{
-				app.u.dump("BEGIN admin_prodEdit.u.handleAddImageToList");
+				app.u.dump("BEGIN admin_prodedit.u.handleAddImageToList");
 	//			var $img = $list.children().last().find('img');
 				var $img = $(":nth-child("+($list.children().length - 1)+")",$list).find('img');
 	//if 'choose from media...' is pushed and cancelled prior to selection, there'd be an li w/ an img without a src. use that one if this is the case. otherwise, create an li w/ an img without a src.
@@ -1357,14 +1357,14 @@ app.model.addDispatchToQ({
 			else	{
 				$target.empty();
 				$target.append("<p>Thank you, <b>"+pid+"<\/b> has now been created and added to your product task list. What would you like to do next?<\/p>");
-				app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'});
+				app.ext.admin_prodedit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'});
 				$("<button \/>").text('Edit '+pid).button().on('click',function(){
-					app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'edit'});
+					app.ext.admin_prodedit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'edit'});
 					$target.dialog('close');
 					}).appendTo($target);
 
 				$("<button \/>").text('New Product').button().on('click',function(){
-					app.ext.admin_prodEdit.a.showCreateProductDialog();
+					app.ext.admin_prodedit.a.showCreateProductDialog();
 					}).appendTo($target);
 				
 				$("<button \/>").text('Close Window').button().on('click',function(){
@@ -1404,7 +1404,7 @@ app.model.dispatchThis('immutable');
 				},
 
 			buildPriceRange4Filter : function($form)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.buildPriceRange4Filter");
+//				app.u.dump("BEGIN admin_prodedit.u.buildPriceRange4Filter");
 				var r = false;
 				var $slider = $('.sliderRange',$form);
 				if($slider.length > 0)	{
@@ -1426,13 +1426,13 @@ app.model.dispatchThis('immutable');
 					}//query
 				
 				
-				var priceRange = app.ext.admin_prodEdit.u.buildPriceRange4Filter($form);
+				var priceRange = app.ext.admin_prodedit.u.buildPriceRange4Filter($form);
 				if(priceRange)	{filters.and.push(priceRange)}
 				
 				
 				$('.filterList',$form).each(function(){
-					if(app.ext.admin_prodEdit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')))	{
-						filters.and.push(app.ext.admin_prodEdit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')));
+					if(app.ext.admin_prodedit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')))	{
+						filters.and.push(app.ext.admin_prodedit.u.buildElasticTerms($(this).find('.ui-selected'),$(this).closest('fieldset').data('elastic-key')));
 						}	
 					});
 				
@@ -1465,7 +1465,7 @@ app.model.dispatchThis('immutable');
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.prepContentArea4Results, $container is not a valid instance of jquery.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.prepContentArea4Results, $container is not a valid instance of jquery.","gMessage":true});
 					}
 				}, //prepContentArea4Results
 			
@@ -1473,14 +1473,14 @@ app.model.dispatchThis('immutable');
 				if(obj && obj.KEYWORDS)	{
 					
 					var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-					app.ext.admin_prodEdit.u.prepContentArea4Results($container);
+					app.ext.admin_prodedit.u.prepContentArea4Results($container);
 					$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'});
-					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodEdit','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
+					app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handlePMSearchResults','extension':'admin_prodedit','templateID':'prodManagerProductResultsTemplate','list':$("[data-app-role='productManagerSearchResults']",$container)});
 					app.model.dispatchThis();
 					}
 				else	{
 					//keywords are required.
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.handleProductKeywordSearch, KEYWORDS not present in serialized form object.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.handleProductKeywordSearch, KEYWORDS not present in serialized form object.","gMessage":true});
 					}
 				}, //handleProductKeywordSearch
 			
@@ -1494,7 +1494,7 @@ app.model.dispatchThis('immutable');
 	//the default option editor shows all the inputs.  Need to clear some out that are image or inventory specific.
 	//executed from variationOptionUpdateShow and variationOptionAddShow
 			handleOptionEditorInputs : function($target,data)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
+//				app.u.dump("BEGIN admin_prodedit.u.handleOptionEditorInputs. type: "+data.type); app.u.dump(data);
 				$("[name='html']",$target).val(unescape($("[name='html']",$target).val()))
 	//an inventory-able option does not have price or weight modifiers. price and weight are set by STID in the inventory panel.
 				if(Number(data.inv))	{} else {$('.nonInvOnly',$target).removeClass('displayNone')}
@@ -1513,7 +1513,7 @@ Required params include:
 */
 
 			addProductAsTask : function(P,$ele)	{
-//				app.u.dump("BEGIN admin_prodEdit.u.addProductAsTask");
+//				app.u.dump("BEGIN admin_prodedit.u.addProductAsTask");
 				if(P.pid && P.tab && P.mode)	{
 					
 					var $taskList = $("ul[data-app-role='"+P.tab+"ContentTaskResults']",app.u.jqSelector('#',P.tab+'Content'));
@@ -1524,7 +1524,7 @@ Required params include:
 							$li.empty().remove();
 							});
 //if the product is in the search results list, make sure the toggle button is not highlighted.
-						$(app.u.jqSelector('#','prodManager_'+P.pid)).find("[data-app-click='admin_prodEdit|productTaskPidToggle']").removeClass('ui-state-highlight');
+						$(app.u.jqSelector('#','prodManager_'+P.pid)).find("[data-app-click='admin_prodedit|productTaskPidToggle']").removeClass('ui-state-highlight');
 						}
 					else if(P.mode == 'close')	{
 						$("[data-app-role='productEditorContainer']",$li).slideUp('fast',function(){
@@ -1594,23 +1594,23 @@ Required params include:
 							else	{
 								$li.slideDown();
 								}
-							app.ext.admin_prodEdit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
+							app.ext.admin_prodedit.a.showProductEditor($("[data-app-role='productEditorContainer']",$li).show(),P.pid,{'renderTaskContainer':true});
 							}
 						else	{
 							//error. unrecognized mode.
-							$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, unrecognized mode ["+P.mode+"] passed.","gMessage":true});
+							$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.addProductAsTask, unrecognized mode ["+P.mode+"] passed.","gMessage":true});
 							}
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.addProductAsTask, required param(s) missing.  P.pid ["+P.pid+"] and P.tab ["+P.tab+"] are required.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.addProductAsTask, required param(s) missing.  P.pid ["+P.pid+"] and P.tab ["+P.tab+"] are required.","gMessage":true});
 					}
 				}, //addProductAsTask
 
 //$target is where the inventory detail report is going to show up.  must be a valid jquery object.
 //vars can contain a mode. Right now, it's optional. may be necessary when it comes time to save.
 			handleInventoryDetail : function($target,sku,vars)	{
-				app.u.dump("BEGIN admin_prodEdit.u.handleInventoryDetail");
+				app.u.dump("BEGIN admin_prodedit.u.handleInventoryDetail");
 				vars = vars || {};
 				if($target instanceof jQuery)	{
 					app.u.dump(" -> have a valid jquery target");
@@ -1640,7 +1640,7 @@ Required params include:
 									});
 								}
 							else	{
-								$target.anymessage({"message":"In admin_prodEdit.u.handleInventory, app.data['adminProductInventoryDetail|'+"+PID+"] is in memory, but %INVENTORY is not present and is required.","gMessage":true});
+								$target.anymessage({"message":"In admin_prodedit.u.handleInventory, app.data['adminProductInventoryDetail|'+"+PID+"] is in memory, but %INVENTORY is not present and is required.","gMessage":true});
 								}
 							$('tbody:first',$target).sortable({
 								'start' : function(event,ui)	{
@@ -1674,7 +1674,7 @@ Required params include:
 									$('button',$(this)).prop('disabled','disabled');
 									});
 //skip the inventory details button, as it has already been buttonified and running it again will set the wrong icon (which is changed by the click event)
-							app.u.handleButtons($target.not("[data-app-click='admin_prodEdit|inventoryDetailsToggle']")); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
+							app.u.handleButtons($target.not("[data-app-click='admin_prodedit|inventoryDetailsToggle']")); //if this moves before the basetype asm code, change the basetype code to button('disable') so the button changes.
 //only 1 simple and 1 constant detail record are allowed. lock respective button if record already exists.
 							if(!$.isEmptyObject(invData))	{
 								if(app.ext.admin.u.getValueByKeyFromArray(invData,'BASETYPE','SIMPLE'))	{
@@ -1686,31 +1686,31 @@ Required params include:
 								}
 
 							if($('tbody:first',$target).find('tr:hidden').length)	{
-								var $ul = $("button[data-app-click='admin_prodEdit|invDetailFilterShow']",$target).show().next('ul');
+								var $ul = $("button[data-app-click='admin_prodedit|invDetailFilterShow']",$target).show().next('ul');
 								
 								if($('tbody:first',$target).find("tr[data-basetype='_ASM_']").length)	{
-									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='_ASM_'>show "+$('tbody:first',$target).find("tr[data-basetype='_ASM_']").length+" ASM record(s)</li>");
+									$ul.append("<li data-app-click='admin_prodedit|invDetailFilterExec' data-show-basetype='_ASM_'>show "+$('tbody:first',$target).find("tr[data-basetype='_ASM_']").length+" ASM record(s)</li>");
 									}
 								if($('tbody:first',$target).find("tr[data-basetype='DONE']").length)	{
-									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='DONE'>show "+$('tbody:first',$target).find("tr[data-basetype='DONE']").length+" done record(s)</li>");
+									$ul.append("<li data-app-click='admin_prodedit|invDetailFilterExec' data-show-basetype='DONE'>show "+$('tbody:first',$target).find("tr[data-basetype='DONE']").length+" done record(s)</li>");
 									}
 								if($('tbody:first',$target).find("tr[data-basetype='PICK']").length)	{
-									$ul.append("<li data-app-click='admin_prodEdit|invDetailFilterExec' data-show-basetype='PICK'>show "+$('tbody:first',$target).find("tr[data-basetype='PICK']").length+" pick record(s)</li>");
+									$ul.append("<li data-app-click='admin_prodedit|invDetailFilterExec' data-show-basetype='PICK'>show "+$('tbody:first',$target).find("tr[data-basetype='PICK']").length+" pick record(s)</li>");
 									}
 								$ul.width(220).menu();
 								}
 
 							}
 						else	{
-							$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|"+PID+"'] not in memory.","gMessage":true});
+							$target.anymessage({"message":"In admin_prodedit.u.handleInventoryDetail, app.data['adminProductInventoryDetail|"+PID+"'] not in memory.","gMessage":true});
 							}
 						}
 					else	{
-						$target.anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, sku not passed.","gMessage":true});
+						$target.anymessage({"message":"In admin_prodedit.u.handleInventoryDetail, sku not passed.","gMessage":true});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.handleInventoryDetail, $target is not a valid instance of jQuery.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.handleInventoryDetail, $target is not a valid instance of jQuery.","gMessage":true});
 					}
 				},
 			
@@ -1768,7 +1768,7 @@ Required params include:
 					}
 				else	{
 					$prodImageUL.insertBefore($("<div \/>").anymessage({
-						'message':'In admin_prodEdit.u.handleImageSave, invalid mode ['+mode+'] passed. must be pid or sku.',
+						'message':'In admin_prodedit.u.handleImageSave, invalid mode ['+mode+'] passed. must be pid or sku.',
 						'gMessage':true
 						}));
 					
@@ -1828,7 +1828,7 @@ Required params include:
 						}
 					}
 
-				if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+				if(app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 					$("[data-app-role='skuSchedulesContainer']",$form).find('input.edited').each(function(){
 						cmdObj['@updates'].push("SET-SCHEDULE-PRICE?SKU="+$(this).closest("[data-sku]").attr('data-sku')+"&schedule="+$(this).closest("[data-schedule]").attr('data-schedule')+"&price="+$(this).val());
 						});				
@@ -1975,7 +1975,7 @@ Required params include:
 						if($('.edited',$tr).length)	{
 							//clear all the sku images.
 							cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest("[data-sku]").data('sku')+"&zoovy:prod_image1=&zoovy:prod_image2=&zoovy:prod_image3="); 
-							cmdObj['@updates'].push(app.ext.admin_prodEdit.u.handleImageSave($('ul:first',$tr),'sku'))
+							cmdObj['@updates'].push(app.ext.admin_prodedit.u.handleImageSave($('ul:first',$tr),'sku'))
 							}
 						else {} //no edits in this row.
 						});
@@ -2052,7 +2052,7 @@ Required params include:
 					var cmdObj = {
 						'_cmd' : 'adminProductUpdate',
 						'pid' : pid,
-						'%attribs' : app.ext.admin_prodEdit.u.handleImageSave($prodImageUL,'pid'), //used for prod images
+						'%attribs' : app.ext.admin_prodedit.u.handleImageSave($prodImageUL,'pid'), //used for prod images
 						'_tag' : {
 							'callback' : 'showMessaging',
 							restoreInputsFromTrackingState : true,
@@ -2086,7 +2086,7 @@ Required params include:
 									}
 								else	{
 									$form.anymessage(app.u.successMsgObject('Variations have been updated.'));
-									app.ext.admin_prodEdit.a.showProductVariationManager($("[data-app-role='productVariations']",$form).empty(),cmdObj.pid);
+									app.ext.admin_prodedit.a.showProductVariationManager($("[data-app-role='productVariations']",$form).empty(),cmdObj.pid);
 									$form.closest('.eventDelegation').anydelegate('updateChangeCounts'); //execute AFTER showPordVarMan above or the counts will be off (cuz old variation data still on DOM).
 									}
 								}
@@ -2241,12 +2241,12 @@ else	{} //no changes in sku attribs.
 				},
 
 			productFiltersExec : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.productFiltersExec (click!)");
+				app.u.dump("BEGIN admin_prodedit.e.productFiltersExec (click!)");
 
 				var $container = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='productManager']");
-				app.ext.admin_prodEdit.u.prepContentArea4Results($container);
+				app.ext.admin_prodedit.u.prepContentArea4Results($container);
 				$("[data-app-role='productManagerSearchResults']",$container).showLoading({'message':'Performing search...'});
-				$ele.parent().find("[data-app-click='admin_prodEdit|productFiltersClose']").trigger('click');
+				$ele.parent().find("[data-app-click='admin_prodedit|productFiltersClose']").trigger('click');
 //				app.u.dump("name='size'.length: "+$("select[name='size']",'#navTabs').length+" and val: "+$("select[name='size']",'#navTabs').val());
 
 				var keywords = $("[name='KEYWORDS']","#navTabs").val();
@@ -2254,7 +2254,7 @@ else	{} //no changes in sku attribs.
 					'type' : 'product',
 					"mode" : "elastic-native",
 					"size" : $("select[name='size']",'#navTabs').val() || 25,
-					"filter" : app.ext.admin_prodEdit.u.buildElasticFilters($ele.closest('form'))
+					"filter" : app.ext.admin_prodedit.u.buildElasticFilters($ele.closest('form'))
 					}//query
 				if(keywords)	{
 					query.query =  {"query_string" : {'query':keywords}};
@@ -2263,7 +2263,7 @@ else	{} //no changes in sku attribs.
 
 				app.ext.store_search.calls.appPublicProductSearch.init(query,{
 					'callback':'handlePMSearchResults',
-					'extension':'admin_prodEdit',
+					'extension':'admin_prodedit',
 					'datapointer' : 'productManagerFilterSearch',
 					'templateID':'prodManagerProductResultsTemplate',
 					'list':$("[data-app-role='productManagerSearchResults']",$container)
@@ -2289,19 +2289,19 @@ else	{} //no changes in sku attribs.
 				},
 
 			productCreateExec : function($ele,p)	{
-				app.ext.admin_prodEdit.u.handleCreateNewProduct($ele.closest('form'));
+				app.ext.admin_prodedit.u.handleCreateNewProduct($ele.closest('form'));
 				},
 
 //executed from within the queue/task list when edit, remove or close is pushed.
 			productEditorShow : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.productEditorShow. (click!)");
+//				app.u.dump("BEGIN admin_prodedit.e.productEditorShow. (click!)");
 				if($ele.data('pid') && $ele.data('taskmode'))	{
 					var mode = $ele.data('taskmode');
 					$ele.closest("[data-app-role='productManagerResultsContent']").hide();
-					app.ext.admin_prodEdit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':mode},$ele.closest('li'));
+					app.ext.admin_prodedit.u.addProductAsTask({'pid':$ele.data('pid'),'tab':'product','mode':mode},$ele.closest('li'));
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.showProductEditor, either data-pid ["+$ele.data('pid')+"] or data-taskmode ["+$ele.data('taskmode')+"] not set on element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.showProductEditor, either data-pid ["+$ele.data('pid')+"] or data-taskmode ["+$ele.data('taskmode')+"] not set on element.","gMessage":true});
 					}
 				},
 
@@ -2351,7 +2351,7 @@ function type2class(type)	{
 					$D.dialog('open');
 					}
 				else	{
-					$ele.closest('fieldset').anymessage({"message":"In admin_prodEdit.e.amazonLogShow, unable to ascertain pid ["+pid+"] or index ["+index+"] or app.data['adminProductAmazonDetail|"+pid+"']['@DETAIL']["+index+"] doesn't exist.","gMessage":true});
+					$ele.closest('fieldset').anymessage({"message":"In admin_prodedit.e.amazonLogShow, unable to ascertain pid ["+pid+"] or index ["+index+"] or app.data['adminProductAmazonDetail|"+pid+"']['@DETAIL']["+index+"] doesn't exist.","gMessage":true});
 					}
 				
 				},
@@ -2366,15 +2366,15 @@ function type2class(type)	{
 				if(pid)	{
 					if($ele.hasClass('ui-state-highlight'))	{
 						$ele.removeClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'remove'},$ele.closest('tr'));
+						app.ext.admin_prodedit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'remove'},$ele.closest('tr'));
 						}
 					else	{
 						$ele.addClass('ui-state-highlight');
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'},$ele.closest('tr'));
+						app.ext.admin_prodedit.u.addProductAsTask({'pid':pid,'tab':'product','mode':'add'},$ele.closest('tr'));
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productTaskPidToggle, no data-pid set on element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.productTaskPidToggle, no data-pid set on element.","gMessage":true});
 					}
 				},
 
@@ -2384,7 +2384,7 @@ function type2class(type)	{
 					pid = $PE.data('pid');
 				
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+					if(app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 //item has inventory-able variations
 						}
 					else	{
@@ -2401,7 +2401,7 @@ function type2class(type)	{
 					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
 
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(app.ext.admin_prodEdit.u.thisPIDHasInventorableVariations(pid))	{
+					if(app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 						var $scheduleContainer = $("[data-app-role='skuSchedulesContainer']",$PE).show();
 //build the table headers for the schedules.
 						if(app.data['adminProductDetail|'+pid]['@skus'][0] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
@@ -2437,7 +2437,7 @@ function type2class(type)	{
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
-								$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodEdit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
+								$flexContent.hideLoading().addClass('labelsAsBreaks alignedLabels').prepend(app.ext.admin_prodedit.u.flexJSON2JqObj(app.data['adminConfigDetail|flexedit']['%flexedit'],app.data['adminProductDetail|'+pid]));
 								$flexContent.find('form').append("<input type='hidden' name='pid' value='"+pid+"' />");
 								}
 							}
@@ -2474,7 +2474,7 @@ function type2class(type)	{
 									if(app.data['adminProductDetail|'+pid]['@skus'].length == 1 && app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(":") < 0)	{
 										// SANITY -> PID mode.
 //all the magic happens in the handleInventoryDetail function. It'll be run on the pid and per sku in sku mode.
-										app.ext.admin_prodEdit.u.handleInventoryDetail($invContainer,app.data['adminProductDetail|'+pid]['@skus'][0].sku,{'mode':'pid'});
+										app.ext.admin_prodedit.u.handleInventoryDetail($invContainer,app.data['adminProductDetail|'+pid]['@skus'][0].sku,{'mode':'pid'});
 										}
 //if inventory-able options are present, a list of sku's is shown and the detail is available on click.
 									else	{
@@ -2509,7 +2509,7 @@ function type2class(type)	{
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.handleAttributesTabContent, either pid ["+pid+"] not set or $content ["+$content.length+"] has no length.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.handleAttributesTabContent, either pid ["+pid+"] not set or $content ["+$content.length+"] has no length.","gMessage":true});
 					}
 				},
 
@@ -2651,16 +2651,16 @@ function type2class(type)	{
 				},
 
 			handleVariationsTabContent : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.handleVariationsContent");
+//				app.u.dump("BEGIN admin_prodedit.e.handleVariationsContent");
 				var $PE = $ele.closest("[data-app-role='productEditorContainer']");
 				var $variationsContent = $("section[data-anytab-content='variations']:first",$PE).find("[data-app-role='productVariations']");
 				
-				app.ext.admin_prodEdit.u.handleImagesInterface($("section[data-anytab-content='variations']:first",$PE),$PE.data('pid'));
+				app.ext.admin_prodedit.u.handleImagesInterface($("section[data-anytab-content='variations']:first",$PE),$PE.data('pid'));
 				
 				if($variationsContent.children().length)	{} //already rendered content.
 				else	{
 //					app.u.dump(" -> $PE.length: "+$PE.length);
-					app.ext.admin_prodEdit.a.showProductVariationManager($variationsContent,$PE.data('pid'));
+					app.ext.admin_prodedit.a.showProductVariationManager($variationsContent,$PE.data('pid'));
 					}
 				},
 
@@ -2705,7 +2705,7 @@ function type2class(type)	{
 			inventoryDetailsToggle : function($ele,p)	{
 				var
 					$target = $ele.closest('tr').find('td:last-child'), //drop contents into the last column of the row. event is triggered from sku link and button (in different columns)
-					$btn = $("button[data-app-click='admin_prodEdit|inventoryDetailsToggle']:first",$target),
+					$btn = $("button[data-app-click='admin_prodedit|inventoryDetailsToggle']:first",$target),
 					icons = $btn.button( "option", "icons" );
 				
 				if($ele.data('sku'))	{
@@ -2722,12 +2722,12 @@ function type2class(type)	{
 							$("[data-app-role='inventoryDetailContainer']",$target).show();
 							}
 						else	{
-							app.ext.admin_prodEdit.u.handleInventoryDetail($target,$ele.data('sku'),{'mode':'sku'});
+							app.ext.admin_prodedit.u.handleInventoryDetail($target,$ele.data('sku'),{'mode':'sku'});
 							}
 						}
 					}
 				else	{
-					$target.anymessage({"message":"In admin_prodEdit.e.inventoryDetailsShow, data('sku') not set on trigger element.","gMessage":true});
+					$target.anymessage({"message":"In admin_prodedit.e.inventoryDetailsShow, data('sku') not set on trigger element.","gMessage":true});
 					}
 				},
 
@@ -2736,7 +2736,7 @@ function type2class(type)	{
 					$ele.closest('table').find("tr[data-basetype='"+$ele.attr('data-show-basetype')+"']").toggle();
 					}
 				else	{
-					$ele.closest('td').anymessage({'message':'In admin_prodEdit.e.invDetailFilterExec, trigger element had no data-show-basetype.','gMessage':true});
+					$ele.closest('td').anymessage({'message':'In admin_prodedit.e.invDetailFilterExec, trigger element had no data-show-basetype.','gMessage':true});
 					}
 				},
 
@@ -2806,7 +2806,7 @@ function type2class(type)	{
 					app.ext.admin.calls.appResource.init('definitions/amz/'+$catalog.val()+'.json',{
 						'callback' : 'flex2HTMLEditor',
 						'templateID' : 'productEditorFlexTemplate',
-						'extension' : 'admin_prodEdit',
+						'extension' : 'admin_prodedit',
 						'pid':pid,
 						jqObj : $D
 						},'mutable');
@@ -2823,7 +2823,7 @@ function type2class(type)	{
 				}, //amazonProductDefinitionsShow
 
 			adminProductMacroExec : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.adminProductMacroExec (Click!)");
+//				app.u.dump("BEGIN admin_prodedit.e.adminProductMacroExec (Click!)");
 				var
 					$PE = $ele.closest("[data-app-role='productEditorContainer']"),
 					pid = $PE.data('pid');
@@ -2873,7 +2873,7 @@ function type2class(type)	{
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroExec, either pid ["+pid+"] or data-macro-cmd ["+$ele.data('macro-cmd')+"] is not set and both are required.","gMessage":true});
+					$ele.closest('fieldset').find('.ebayMacroUpdateMessaging').anymessage({"message":"In admin_prodedit.e.adminProductMacroExec, either pid ["+pid+"] or data-macro-cmd ["+$ele.data('macro-cmd')+"] is not set and both are required.","gMessage":true});
 					}
 				},
 
@@ -2887,33 +2887,33 @@ function type2class(type)	{
 					app.ext.admin.a.showFinderInModal('PRODUCT',$ele.closest("[data-pid]").data('pid'),$ele.data('attribute'));
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.productAttributeFinderShow, data-attribute not set on event element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.productAttributeFinderShow, data-attribute not set on event element.","gMessage":true});
 					}
 				}, //productAttributeFinderShow
 
 			webPageEditor : function($ele,p)	{
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid)	{navigateTo('/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PRODUCT&FS=P&SKU='+pid);}
-				else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
+				else	{app.u.throwGMessage("In admin_prodedit.uiActions.webPageEditor, unable to determine pid.");}
 				}, //webPageEditor
 
 			viewProductOnWebsite : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.viewProductOnWebsite");
+				app.u.dump("BEGIN admin_prodedit.e.viewProductOnWebsite");
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid)	{
 					app.ext.admin.u.linkOffSite("http://"+app.vars.domain+"/product/"+pid+"/",'',true);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.uiActions.configOptions, unable to determine pid.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.uiActions.configOptions, unable to determine pid.","gMessage":true});
 					}
 				}, //viewProductOnWebsite
 
 			productSearchExec : function($ele,p)	{
-				app.ext.admin_prodEdit.u.handleProductKeywordSearch($ele.closest('form').serializeJSON());
+				app.ext.admin_prodedit.u.handleProductKeywordSearch($ele.closest('form').serializeJSON());
 				}, //productSearchExec
 
 			adminProductCreateShow : function($ele,p)	{
-				app.ext.admin_prodEdit.a.showCreateProductDialog();
+				app.ext.admin_prodedit.a.showCreateProductDialog();
 				}, //adminProductCreateShow
 
 			ebayCategoryChooserShow : function($ele,p)	{
@@ -2928,14 +2928,14 @@ function type2class(type)	{
 
 					}
 				else	{
-					$ele.closest('fieldset').anymessage({'message':'In admin_prodEdit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});
+					$ele.closest('fieldset').anymessage({'message':'In admin_prodedit.e.ebayCategoryChooserShow, unable to resolve pid ['+pid+'] OR data-categoryselect ['+$ele.data('categoryselect')+'] not set/valid (should be primary or secondary).','gMessage':true});
 					}
 				}, //ebayCategoryChooserShow
 
 
 //executed when the 'debug' button is pushed.
 			showProductTemplateInDialog : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.showProductTemplateInDialog (click!)");
+				app.u.dump("BEGIN admin_prodedit.e.showProductTemplateInDialog (click!)");
 				var pid = $ele.closest("form").find("input[name='pid']").val();
 				if(pid)	{
 //don't use dialogCreate because this isn't a modal. when browser scoller issue is resolved, this can be updated.
@@ -2947,10 +2947,10 @@ function type2class(type)	{
 							$(this).intervaledEmpty(1000);
 							}
 						});
-					app.ext.admin_prodEdit.a.showProductDebugger($D,{'pid':pid,'templateID':$ele.data('templateid')});
+					app.ext.admin_prodedit.a.showProductDebugger($D,{'pid':pid,'templateID':$ele.data('templateid')});
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.showProductTemplateInDialog, unable to ascertain PID.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_prodedit.e.showProductTemplateInDialog, unable to ascertain PID.','gMessage':true});
 					}
 				},
 
@@ -2981,7 +2981,7 @@ function type2class(type)	{
 										app.ext.admin_batchjob.callbacks.showReport.onSuccess(rd)
 										}
 									else	{
-										$debugWin.anymessage({'message':'In admin_prodEdit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});
+										$debugWin.anymessage({'message':'In admin_prodedit.e.productDebugReportExec, the response came in an unsupported format.','gMessage':true});
 										}
 									}
 								else	{
@@ -3022,7 +3022,7 @@ function type2class(type)	{
 					}
 				else	{
 					//invalid verb.
-					$ele.closest('.appMessaging').anymessage({"message":'In admin_prodEdit.e.handlePIDCloneChangeRemoveExec, invalid data-verb specified on element.','gMessage':true});
+					$ele.closest('.appMessaging').anymessage({"message":'In admin_prodedit.e.handlePIDCloneChangeRemoveExec, invalid data-verb specified on element.','gMessage':true});
 					}
 
 				if(cmdObj['@updates'].length)	{
@@ -3062,7 +3062,7 @@ function type2class(type)	{
 					app.model.addDispatchToQ(cmdObj,'immutable');
 //if new pid or clone, add item to task list.  This needs to be after the dispatch or the new pid won't exist.
 					if(verb == 'CLONE' || verb == 'RENAME')	{
-						app.ext.admin_prodEdit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
+						app.ext.admin_prodedit.u.addProductAsTask({'pid':sfo.NEWID,'tab':'product','mode':'add'});
 						}
 					app.model.dispatchThis('immutable');
 					
@@ -3073,7 +3073,7 @@ function type2class(type)	{
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.handlePIDCloneChangeRemoveExec, either unable to ascertain pid ['+pid+'] or data-verb ['+$ele.data('verb')+'] not set on element.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_prodedit.e.handlePIDCloneChangeRemoveExec, either unable to ascertain pid ['+pid+'] or data-verb ['+$ele.data('verb')+'] not set on element.','gMessage':true});
 					}
 				},
 
@@ -3091,7 +3091,7 @@ function type2class(type)	{
 
 // Didn't use macrobuilders because they're designed for making 1 _cmd
 // The product save may execute more than one. We want lots of littls saves here as opposed to 1 big one.
-// set data-save-handler="" on the button. a comma separated list is supported. the values should match a function in admin_prodEdit.saveHandlers
+// set data-save-handler="" on the button. a comma separated list is supported. the values should match a function in admin_prodedit.saveHandlers
 			adminProductMacroSaveHandlersExec : function($ele,p)	{
 				var $form = $ele.closest('form');
 				if($form.length && $ele.data('save-handlers'))	{
@@ -3103,11 +3103,11 @@ function type2class(type)	{
 						
 						$form.showLoading({'message':'Saving Changes...'});
 						for(var i = 0; i < L; i += 1)	{
-							if(typeof app.ext.admin_prodEdit.saveHandlers[handlers[i]] == 'function')	{
-								app.ext.admin_prodEdit.saveHandlers[handlers[i]]($form);
+							if(typeof app.ext.admin_prodedit.saveHandlers[handlers[i]] == 'function')	{
+								app.ext.admin_prodedit.saveHandlers[handlers[i]]($form);
 								}
 							else	{
-								$form.anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, saveHandlers."+handlers[i]+" is not a function.","gMessage":true});
+								$form.anymessage({"message":"In admin_prodedit.e.adminProductMacroSaveHandlersExec, saveHandlers."+handlers[i]+" is not a function.","gMessage":true});
 								}
 							}
 //when a save occurs, we should update the product record in memory as well.
@@ -3146,7 +3146,7 @@ function type2class(type)	{
 						} //validateForm handles error display for the specific fields.
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.adminProductMacroSaveHandlersExec, either unable to determine $form ["+$form.length+"] or data-save-handlers ["+$ele.data('save-handlers')+"] not set on button, both of which are required.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.adminProductMacroSaveHandlersExec, either unable to determine $form ["+$form.length+"] or data-save-handlers ["+$ele.data('save-handlers')+"] not set on button, both of which are required.","gMessage":true});
 					}
 				},
 
@@ -3154,7 +3154,7 @@ function type2class(type)	{
 
 //executed when the 'debug' button is pushed.
 			addDetailType2SKUShow : function($ele,p)	{
-//				app.u.dump("BEGIN admin_prodEdit.e.addDetailType2SKUShow (click!)");
+//				app.u.dump("BEGIN admin_prodedit.e.addDetailType2SKUShow (click!)");
 				
 				if($ele.data('detail-type'))	{
 					
@@ -3202,7 +3202,7 @@ function type2class(type)	{
 						
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_prodEdit.e.addDetailType2SKUShow, unable to ascertain PID ['+pid+'] and/or SKU ['+sku+'].','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_prodedit.e.addDetailType2SKUShow, unable to ascertain PID ['+pid+'] and/or SKU ['+sku+'].','gMessage':true});
 						}
 					}
 				else	{
@@ -3215,7 +3215,7 @@ function type2class(type)	{
 			
 			variationSearchByIDExec : function($ele,p)	{
 				var varID = $ele.closest('tr').data('id');
-				app.ext.admin_prodEdit.u.prepContentArea4Results($('#productContent'));
+				app.ext.admin_prodedit.u.prepContentArea4Results($('#productContent'));
 
 				$("[data-app-role='productManagerSearchResults']",$('#productContent')).showLoading({'message':'Performing search...'});
 
@@ -3226,7 +3226,7 @@ function type2class(type)	{
 					"_cmd":"appPublicSearch",
 					"_tag" : {
 						'callback':'handlePMSearchResults',
-						'extension':'admin_prodEdit',
+						'extension':'admin_prodedit',
 						'datapointer' : 'appPublicSearch|variation|'+varID,
 						'templateID':'prodManagerProductResultsTemplate',
 						'list': $("[data-app-role='productManagerSearchResults']",$('#productContent'))
@@ -3274,7 +3274,7 @@ function type2class(type)	{
 
 
 //data for saving options in a 'select' based option requires some manipulation to get into '@options' array.
-				if(app.ext.admin_prodEdit.u.variationTypeIsSelectBased(variationData.variationtype))	{
+				if(app.ext.admin_prodedit.u.variationTypeIsSelectBased(variationData.variationtype))	{
 //						app.u.dump(" -> variation type ["+variationData.variationtype+"] IS select based.");
 //						app.u.dump(" -> index: "+index);
 //						app.u.dump(" -> sfo['%sog']: "); app.u.dump(sfo['%sog']);
@@ -3327,7 +3327,7 @@ function type2class(type)	{
 								}
 							else	{
 								app.ext.admin.u.restoreInputsFromTrackingState($form);
-								$('#productTabMainContent').empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anydelegate({'trackEdits':true}).anymessage(app.u.successMsgObject('Your changes have been saved'));
+								$('#productTabMainContent').empty().append(app.ext.admin_prodedit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anydelegate({'trackEdits':true}).anymessage(app.u.successMsgObject('Your changes have been saved'));
 								}
 							}
 						}
@@ -3371,11 +3371,11 @@ function type2class(type)	{
 						app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationAddToProduct, product or product variation object not in memory.","gMessage":true});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationAddToProduct, unable to resolve PID.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationAddToProduct, unable to resolve PID.","gMessage":true});
 					}
 				}, //variationAddToProduct
 
@@ -3460,7 +3460,7 @@ function type2class(type)	{
 							}))
 						);
 //below, closest.form includes 'type' and other globals necessary for what inputs are available in editor.
-				app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$.extend(true,{},$ele.closest('form').serializeJSON(),$ele.closest('tr').data()));
+				app.ext.admin_prodedit.u.handleOptionEditorInputs($optionEditor,$.extend(true,{},$ele.closest('form').serializeJSON(),$ele.closest('tr').data()));
 				}, //variationOptionUpdateShow
 
 //executed when the 'add new option' button is clicked within a select or radio style variation group.
@@ -3507,7 +3507,7 @@ function type2class(type)	{
 								$(this).closest("[data-app-role='varitionOptionAddUpdateContainer']").empty(); //kill the form on update for usability purposes.
 								}
 							})));
-				app.ext.admin_prodEdit.u.handleOptionEditorInputs($optionEditor,$ele.closest('form').serializeJSON());
+				app.ext.admin_prodedit.u.handleOptionEditorInputs($optionEditor,$ele.closest('form').serializeJSON());
 				}, //variationOptionAddShow
 
 			variationOptionImgLibShow : function($ele,p)	{
@@ -3520,7 +3520,7 @@ function type2class(type)	{
 			
 				p = p || {};
 				if($ele.data('variationmode') == 'store')	{
-					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodEdit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anydelegate({'trackEdits':true}));
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.ext.admin_prodedit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anydelegate({'trackEdits':true}));
 					$("[data-app-role='variationsHeaderContainer']:first","#"+app.ext.admin.vars.tab+'Content').addClass('smallButton').prepend($("<button \/>").addClass('floatRight').text('Global Variations').button({icons: {primary: "ui-icon-arrowthick-1-w"},text: true}).on('click',function(){
 						navigateTo("#!globalVariations");
 						}));
@@ -3551,7 +3551,7 @@ function type2class(type)	{
 							'appendTo' : $ele.closest("[data-app-role='productVariations']") //appended to the variation editor so that the dialog can look up the tree to modify the variation editor itself.
 							});
 	
-						$D.append(app.ext.admin_prodEdit.a.getVariationEditor('product',data,pid));
+						$D.append(app.ext.admin_prodedit.a.getVariationEditor('product',data,pid));
 						$D.anydelegate({'trackEdits':true}); //add after $D is on the dom so anydlegate can look up the tree to see if events are already delegated.
 						$D.dialog('option','height',($(document.body).height() - 100));
 //a little css tuning to make this shared content look better in a modal.
@@ -3563,11 +3563,11 @@ function type2class(type)	{
 						$D.dialog('open');
 						}
 					else	{
-						$ele.closest('form').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, unable to ascertain pid.","gMessage":true});
+						$ele.closest('form').anymessage({"message":"In admin_prodedit.e.variationUpdateShow, unable to ascertain pid.","gMessage":true});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_prodEdit.e.variationUpdateShow, btn mode ["+$ele.data('variationmode')+"] either not set or invalid (only 'store' and 'product' are valid).","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_prodedit.e.variationUpdateShow, btn mode ["+$ele.data('variationmode')+"] either not set or invalid (only 'store' and 'product' are valid).","gMessage":true});
 					}
 
 				}, //variationUpdateShow
@@ -3654,7 +3654,7 @@ function type2class(type)	{
 							else	{
 								$tbody.anycontent(rd); 
 								app.u.handleButtons($tbody);
-								app.ext.admin_prodEdit.u.handleApply2ProdButton($ele.closest("[data-app-role='productVariationManagerContainer']"));
+								app.ext.admin_prodedit.u.handleApply2ProdButton($ele.closest("[data-app-role='productVariationManagerContainer']"));
 								}
 							}
 						}
@@ -3663,7 +3663,7 @@ function type2class(type)	{
 				},
 
 			variationCreateExec : function($ele,p)	{
-				app.u.dump("BEGIN admin_prodEdit.e.variationCreateExec");
+				app.u.dump("BEGIN admin_prodedit.e.variationCreateExec");
 				var 
 					mode = $ele.closest('.ui-dialog-content').data('variationmode'),
 					pid = $ele.closest("[data-pid]").data('pid'),
@@ -3689,7 +3689,7 @@ function type2class(type)	{
 									else	{
 										$ele.closest('.ui-dialog-content').dialog('close');
 										newSogID = app.data[rd.datapointer].sogid;
-										app.ext.admin_prodEdit.a.showStoreVariationsManager($('#productTabMainContent'));
+										app.ext.admin_prodedit.a.showStoreVariationsManager($('#productTabMainContent'));
 										$('#productTabMainContent').anymessage(app.u.successMsgObject('Your variation group has been added.'))
 										}
 									}
@@ -3721,7 +3721,7 @@ function type2class(type)	{
 												app.u.handleButtons($tbody);
 //apply the new sog to the list of product variations.
 												if(newSogID)	{
-													$("[data-id='"+newSogID+"']",$tbody).find("button[data-app-click='admin_prodEdit|variationAddToProduct']").trigger('click');
+													$("[data-id='"+newSogID+"']",$tbody).find("button[data-app-click='admin_prodedit|variationAddToProduct']").trigger('click');
 													}
 												
 												}
@@ -3753,7 +3753,7 @@ function type2class(type)	{
 						}
 					else	{
 						//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.
-						$ele.closest('form').anymessage({"message":"In admin_prodEdit.e.variationCreateExec, either variationmode ["+mode+"] was unable to be determined or was an invalid value (only store and product are supported) or mode was set to product and PID ["+pid+"] was unable to be determined. ","gMessage":true});
+						$ele.closest('form').anymessage({"message":"In admin_prodedit.e.variationCreateExec, either variationmode ["+mode+"] was unable to be determined or was an invalid value (only store and product are supported) or mode was set to product and PID ["+pid+"] was unable to be determined. ","gMessage":true});
 						}
 
 
