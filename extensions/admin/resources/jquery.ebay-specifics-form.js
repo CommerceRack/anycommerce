@@ -319,7 +319,10 @@
 				ebaySpecificsFormSave(this);
 			}
 		});
-
+// ## TODO -> test me. B's working on the API right now.
+//		$(ebaySpecsBlock+' .dropDownArrow').each(function(){
+//			$(this).button({icons: {primary: "ui-icon-circle-triangle-s"}});
+//			});
 		$(ebaySpecsBlock+' .dropDownArrow').on('click.handleDropDownArrow',function(event) { handleDropDownArrow(this); return false; });
 		$(ebaySpecsBlock+' .dropDownList li').click(function() { handleDropDownList(this) });
 		$(ebaySpecsBlock+' .dropDownList li').mouseover(function() { $(this).addClass('dropDownHover') });
