@@ -1714,7 +1714,7 @@ Required params include:
 					}
 				},
 			
-			
+
 			handleImageSave : function($prodImageUL,mode)	{
 				var r; //what is returned. a string for sku (updates) and an object (attribs) for pid
 				if(mode == 'sku' || mode == 'pid')	{
@@ -1722,7 +1722,7 @@ Required params include:
 					if(mode == 'sku')	{r = "SET-SKU?SKU="+$prodImageUL.closest("[data-sku]").data('sku')}
 					else	{r = {}}
 					
-					var imgIndex = 0; //used for setting which prod_image attribute is set.
+					var imgIndex = 0, skuImgIndex = 1; //used for setting which prod_image attribute is set.
 //loop through all the li's, even those not edited, so that imgIndex is accurate.
 //can't use the li index() because there are hidden (removed) li's.
 					$("li:visible",$prodImageUL).not('.dropzone').each(function(){
@@ -1733,7 +1733,8 @@ Required params include:
 							if($img.length && $img.data('filename'))	{
 								//image either an original OR added w/ media lib.
 								if(mode == 'sku')	{
-									r += "&zoovy:prod_image"+(imgIndex)+"="+$img.data('filename');
+									r += "&zoovy:prod_image"+(skuImgIndex)+"="+$img.data('filename');
+									skuImgIndex++;
 									}
 								else	{
 									r['zoovy:prod_image'+(imgIndex)] = $img.data('filename');
@@ -1744,10 +1745,10 @@ Required params include:
 								}
 							else	{
 								//uh oh. something went wrong. Whether shuffled, added w/ media lib or using dropzone, data-filename should be set.
-								// !!! what to do?
+								// ### TODO -> what to do here?
 								}
 							}
-						})
+						});
 
 					//app.u.dump(" -> finished w/ setting images. now handle emptying.");
 					//if there are fewer images now than when the session began, delete values for the images that were removed/shifted.
@@ -1970,11 +1971,12 @@ Required params include:
 							jqObj : $form
 							}
 						}
-					$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$form).each(function(){
+					$("[data-app-role='prodEditSkuImagesContainer'] tbody tr",$form).each(function(index){
 						var $tr = $(this);
+						app.u.dump(" -> index: "+index+" and sku: "+$tr.data('sku'));
 						if($('.edited',$tr).length)	{
 							//clear all the sku images.
-							cmdObj['@updates'].push("SET-SKU?SKU="+$(this).closest("[data-sku]").data('sku')+"&zoovy:prod_image1=&zoovy:prod_image2=&zoovy:prod_image3="); 
+							cmdObj['@updates'].push("SET-SKU?SKU="+$tr.data('sku')+"&zoovy:prod_image1=&zoovy:prod_image2=&zoovy:prod_image3="); 
 							cmdObj['@updates'].push(app.ext.admin_prodedit.u.handleImageSave($('ul:first',$tr),'sku'))
 							}
 						else {} //no edits in this row.
