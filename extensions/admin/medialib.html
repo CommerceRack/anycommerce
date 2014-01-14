@@ -489,22 +489,12 @@ account being billed for the time necessary to diagnose and repair the issue.
 	<h3>Import Type &amp; Target</h3>
 	<label><input type='radio' name='HEADERS' checked value='BASETYPE=SIMPLE'> SIMPLE (%SKU,%QTY,%NOTE,%COST)</label>
 
-	<div data-app-role='fileImportWMSContainer'></div>
-	<div data-app-role='fileImportSupplierContainer'></div>
-<!--	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=AAA'> WMS GEO:AAA (%SKU,%WMS_ZONE,%WMS_POS,%NOTE,%QTY,%COST)</label>
-	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=ABC'> WMS GEO:ABC </label>
-	<label><input type='radio' name='HEADERS' value='BASETYPE=WMS|WMS_GEO=DEF'> WMS GEO:DEF </label>
-	
-	<label><input type='radio' name='HEADERS' value='BASETYPE=SUPPLIER|SUPPLIER_ID=123'> SUPPLIER ID:123 (%SKU,%QTY,%COST,%SUPPLIER_SKU) </label>
--->
+	<div data-app-role='fileImportWMSContainer'></div><!-- WMS import options will get loaded here -->
+	<div data-app-role='fileImportSupplierContainer'></div><!-- supplier import options will get loaded here -->
 	<label><input type='radio' name='HEADERS' value='ADVANCED'> Advanced Cmd's &amp; Multi-type (requires %CMD, %BASETYPE, etc.)</label>
 
 	<br>	
 
-<!--
-	<label><input type="checkbox" name="ENABLEINVENTORY"> Enable Inventory for each SKU imported</label>
-	<label><input type="checkbox" name="STRIPDASH"> Strip Dashes from SKU field.</label>
--->
 	<h3>Action</h3>
 	<label><input type="radio" name="CMD" checked value="SET"> SET: %QTY is the absolute number.</label>
 	<label><input type="radio" name="CMD" value="INC"> INC: %QTY is an incremental (+/-) number that should be added or removed.</label>

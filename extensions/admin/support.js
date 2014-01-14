@@ -198,15 +198,7 @@ var admin_support = function() {
 					}
 				},
 
-			addSupportFileUploadToID : function(id,ticketid,uuid)	{
-				var $target = $(app.u.jqSelector('#',id));
-				$target.empty(); //clear any previous instantiations of the uploader. (in case of doubleclick)
-				$target.append(app.renderFunctions.transmogrify({'ticketid':ticketid,'uuid':uuid},'supportFileUploadTemplate',{}));
-				$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
-				$('#supportFileUploadForTicket').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
-				$('#supportFileUploadForTicket').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
-				app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
-				},
+
 			
 			showFileUploadInModal : function(ticketid,uuid){
 				if((ticketid === 0 || ticketid) && uuid)	{
@@ -319,6 +311,11 @@ var admin_support = function() {
 								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
 								}
 							},q);
+						
+//						$("[data-app-role='supportFileUploadContainer']",$context).anyupload({'filesChange' : function(files,ui)	{
+//							app.u.dump(" >>>>>>>");
+//							}});
+						
 						}
 					else	{
 						$context.anymessage({"message":"In admin_support.e.adminTicketDetailShow, unable to ascertain ticketID ["+ticketID+"] and/or UUID ["+uuid+"], both of which are required.","gMessage":true});
