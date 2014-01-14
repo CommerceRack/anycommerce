@@ -2081,7 +2081,12 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 				a.b = '';
 //In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
 			if(app.vars.thisSessionIsAdmin)	{
-				url = 'https:\/\/'+(app.vars.https_domain || app.data['adminDomainList']['media-host']);
+				if(location.protocol === 'file:')	{
+					url = 'http:\/\/'+(app.vars.domain);
+					}
+				else	{
+					url = 'https:\/\/'+(app.vars.https_domain || app.data['adminDomainList']['media-host']);
+					}
 				//make sure domain ends in a /
 				if(url.charAt(url.length) != '/')	{
 					url+="\/"
