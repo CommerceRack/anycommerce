@@ -1703,7 +1703,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				if($ele.is(':checked'))	{
 //** Fixes bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
 					app.ext.cco.u.sanitizeAndUpdateCart($form,{
-						'callback':function(rd){app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic'])}
+						'callback':'updateAllPanels',
+						'extension' : 'order_create'
 						});
 					}
 				else	{
