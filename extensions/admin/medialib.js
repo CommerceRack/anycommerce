@@ -925,7 +925,6 @@ if(selector && mode)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 				}
-//*** 201324 -> this wasn't getting dispatched!
 			app.model.dispatchThis('immutable');
 			}, 
 		'publicFileUpload' : function(data,textStatus)	{

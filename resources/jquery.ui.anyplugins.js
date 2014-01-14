@@ -673,8 +673,6 @@ In both cases, keep watching for further changes.
 			this.element.empty().remove();
 			}
 		}); // create the widget
-})(jQuery); 
-
 
 
 
@@ -703,7 +701,7 @@ and execute with $('#bob').anytabs();
 open a tab like this: $('#bob').anytabs('reveal','deer');
 or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 */
-(function($) {
+
 	$.widget("ui.anytabs",{
 		options : {
 			'extension' : null, //a dps namespace for saving what tab is open. allows for that tab to become the default when the next instance of the tabs is opened. 
@@ -842,15 +840,6 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			this.element.attr("data-widget-anytabs","").removeAttr('data-widget-anytabs');
 			}
 		}); // create the widget
-})(jQuery); 
-
-
-
-
-
-
-
-
 
 
 /*
@@ -867,7 +856,7 @@ either templateID or (data or datapointer) are required.
 
 */
 
-(function($) {
+
 	$.widget("ui.anycontent",{
 		options : {
 			templateID : null, //The template to be used
@@ -1022,6 +1011,8 @@ either templateID or (data or datapointer) are required.
 //			app.u.dump(" --> this.element.data():"); app.u.dump(this.element.data());
 			}
 		}); // create the widget
+
+
 })(jQuery); 
 
 
@@ -1029,7 +1020,7 @@ either templateID or (data or datapointer) are required.
 
 
 
-///// anyupload \\\\\
+///// ANYUPLOAD \\\\\
 /*
 turn any element into a drop zone for files to be dragged from a users desktop onto the browser.
 
@@ -1258,7 +1249,7 @@ app.u.dump(" -> self.options.autoUpload: "+self.options.autoUpload);
 //executed when a file is dropped onto a dropzone.
 		_drop : function(event)	{
 			var self = this;
-			app.u.dump(" -> a file has been dropped into a dropzone. instanteUpload: "+self.options.instantUpload);
+			app.u.dump(" -> a file has been dropped into a dropzone. instantUpload: "+self.options.instantUpload);
 			event.preventDefault();
 			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
 			new self._buildPreviews(dt.files,event,self); // !!! revisit this. should pass in 'events' and 'ui' like other plugins. need to figure that out.
