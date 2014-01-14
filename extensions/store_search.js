@@ -152,6 +152,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							$controlsContainer = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom'); //used to hold menus and buttons.
 							
 //							$menuContainer.append($sortMenu); //sorting not working. commented out for now. !!!
+							$parent.find(".resultsHeader").remove(); //make sure headers don't stack when using pagination. // ### TODO -> test this.
 							$header.prependTo($parent);
 //pageMenu will be false if there are no pages. If there's no pagination, no further output is needed.
 							if($pageMenu)	{
@@ -201,7 +202,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				EQ = $list.data('elastic-query'); //Elastic Query
 				
 				if(datapointer && $list && EQ)	{
-					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top hideInMinimalMode');
+					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top hideInMinimalMode'); // note - resultsHeader is used to search/replace any existing headers.
 					if(EQ.query && EQ.query.query_string && EQ.query.query_string.query){
 						$header.text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
 						}
