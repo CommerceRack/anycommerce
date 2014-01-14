@@ -142,7 +142,7 @@ var admin_reports = function() {
 			
 				app.model.dispatchThis('mutable');
 				
-				},
+				}, //showReportsPage
 			
 			showeBayListingsReport : function()	{
 				var $content = $("#utilitiesContent");
@@ -154,7 +154,7 @@ var admin_reports = function() {
 				$('.datepicker',$content).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
 
 				app.u.handleAppEvents($content);
-				},
+				}, //showeBayListingsReport
 
 			showKPIInterface : function()	{
 				
@@ -178,7 +178,7 @@ var admin_reports = function() {
 						}
 					}},'mutable');
 				app.model.dispatchThis();
-				},
+				}, //showKPIInterface
 				
 
 //currently supported modes are:  add or edit
@@ -283,6 +283,7 @@ var admin_reports = function() {
 								stop: function( event, ui ) {
 									var graphs = new Array();
 									var result = $(this).sortable('toArray', {attribute: 'data-uuid'});
+
 									for(var index in result)	{
 //toArray is returning a blank in the zero spot sometimes, so only push it on if index has a value.
 										if(result[index])	{graphs.push(app.ext.admin_reports.u.getGraphByUUID(app.data[rd.datapointer]['@GRAPHS'],result[index]));}
@@ -306,7 +307,7 @@ var admin_reports = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_reports.a.showKPICollectionEditor, either $target ['+typeof $target+'] or collection ['+collection+'] not passed','gMessage':true});
 					}
-				},
+				}, //showKPICollectionEditor
 
 			showKPICollectionTitleChange : function(collection,$context)	{
 				if(collection)	{
@@ -387,15 +388,15 @@ var admin_reports = function() {
 							{text: "Delete Graph", click: function() {
 	$D.parent().showLoading({'message':'Removing graph...'});
 	
-	var graphs = app.data['adminKPIDBCollectionDetail|'+collection]['@GRAPHS'];
+	var graphs = app.data['adminKPIDBCollectionDetail|'+collection]['@GRAPHS'], L = graphs.length
 
 //	app.u.dump(" -> graphUUID: "+graphUUID);
 	//got to loop backwards otherwise if match is at 0, elements shift down and when L is reached, that index in graphs is empty.
-	for(var index in graphs)	{
-		app.u.dump(index+" uuid: "+graphs[index].uuid);
-		if(graphs[index].uuid == graphUUID) {
+	for(var i = 0; i < L; i += 1)	{
+		app.u.dump(i+" uuid: "+graphs[i].uuid);
+		if(graphs[i].uuid == graphUUID) {
 			app.u.dump("MATCH");
-			graphs.splice(index, 1);
+			graphs.splice(i, 1);
 			}
 		}
 
@@ -497,6 +498,8 @@ var admin_reports = function() {
 		u : {
 
 
+//FOR GOOGLE VISUALIZATIONS (REPORTS)
+
 			drawToolbar : function (id)	{
 				if(id)	{
 					var components = [
@@ -519,6 +522,7 @@ var admin_reports = function() {
 //when a table header is clicked to change sort, the entire contents of the container (id) are rewritten.
 //keep that in mind when and deciding what ID to pass in.
 			drawTable : function(id,header,rows) {
+				app.u.dump(" -> BEGIN admin_reports.u.drawTable");
 //				app.u.dump("header: "); app.u.dump(header);
 //				app.u.dump("rows: "); app.u.dump(rows);
 				var data = new google.visualization.DataTable();
@@ -535,6 +539,10 @@ var admin_reports = function() {
 					showRowNumber: true
 					});
 				}, //drawTable
+
+
+
+//FOR HIGHCHARTS (KPI)
 
 //used not on a form validation, but when requesting data. This is a global check to make sure all the necessary variables are present.
 //returns false if valid. Returns error log if data is missing.
@@ -560,7 +568,7 @@ var admin_reports = function() {
 					}
 				
 				return (r == "") ? false : r;
-				},
+				}, //graphVarsIsMissingData
 
 //all this does is empty and re-render the collections. you must destroy and re-aquire prior to running this.
 			updateKPICollections : function($context)	{
@@ -572,12 +580,13 @@ var admin_reports = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_reports.u.updateKPICollections, either $context not passed.','gMessage':true});
 					}
-				},
+				}, //updateKPICollections
 
 //vars will contain a grpby and column.  It will also contain a period OR startyyyymmdd and stopyyyymmdd
 //vars can contain a dataset OR dataset can be passed in as the second param. This is to accomodate the KPI data storage pattern.
 //outside of KPI, there's a good chance dataset will be passed in w/ the vars.
 			getChartData : function($target,graphVars)	{
+//				app.u.dump(" -> BEGIN reports.u.getChartData");
 				var $chartObj = false;
 				if(graphVars && !$.isEmptyObject(graphVars) && $target)	{
 //at this point, graphVars IS an object and is not empty.
@@ -585,8 +594,10 @@ var admin_reports = function() {
 					if(!app.ext.admin_reports.u.graphVarsIsMissingData(graphVars))	{
 						$target.showLoading({'message':'Fetching graph data'});
 //everything we need is accounted for. Move along... move along...
+						graphVars._cmd = graphVars._cmd || 'adminKPIDBDataQuery';
 						graphVars._tag = graphVars._tag || {};
-						graphVars._tag.datapointer = "adminKPIDBDataQuery+|"+graphVars.ddataset+"|"+graphVars.grpby;
+						graphVars._tag.datapointer = "adminKPIDBDataQuery|"+graphVars.uuid;
+//						app.u.dump(" -> datapointer: "+graphVars._tag.datapointer);
 						graphVars._tag.callback = function(rd){
 							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
@@ -600,17 +611,18 @@ var admin_reports = function() {
 						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, graphVars is missing data: <br>'+app.ext.admin_reports.u.graphVarsIsMissingData(graphVars),'gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, graphVars is missing data: <br>'+app.ext.admin_reports.u.graphVarsIsMissingData(graphVars),'gMessage':true});
 						}
 
 					}
 				else	{
-					$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, graphVars [typeof '+typeof graphVars+'] and/or $target not passed or graphVars is empty object.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, graphVars [typeof '+typeof graphVars+'] and/or $target not passed or graphVars is empty object.','gMessage':true});
 					}
 				return $chartObj;
-				},
-			
+				}, //getChartData
+
 			getTextGraph : function(graphVars,highChartObj)	{
+				app.u.dump(" -> BEGIN reports.u.getTextGraph");
 				var
 					$C = $("<div \/>"),
 					L = highChartObj.series.length,
@@ -627,11 +639,12 @@ var admin_reports = function() {
 					}
 				$T.appendTo($C);
 				return $C;
-				},
-			
+				}, //getTextGraph
+
 			getGraphByUUID : function(graphs,graphUUID)	{
 				var r = false;
 				if(graphs && graphs.length && graphUUID)	{
+					app.u.dump(" -> in getGraphByUUID, just before index loop");
 					for(var index in graphs)	{
 						if(graphs[index].uuid == graphUUID)	{
 							r = graphs[index]
@@ -644,127 +657,117 @@ var admin_reports = function() {
 					$('#globalMessaging').anymessage({'message':'In admin_reports.u.getGraphByUUID, graphs not set/has no children of graphUUID ['+graphUUID+'] not passed.','gMessage':true});
 					}
 				return r;
-				},
+				}, //getGraphByUUID
 
 //This will display the actual graph. requires that data be passed in. executed by getChartData.			
 			addGraph : function($target,graphVars,data)	{
-				
+//				app.u.dump(" -> BEGIN reports.u.addGraph");
 				if($target && graphVars && data)	{
 
+					var
+						myDataSet = new Array(),//the data for the graph.
+						highChartObj = {
+							chart: {type: graphVars.graph},
+							title: {text: graphVars.title},
+							subtitle: {text: data.startyyyymmdd + " to " + data.stopyyyymmdd},
+							tooltip: {pointFormat: '{series.name} <b>{point.y:,.0f}</b> on {point.x}'}
+							}; //what is passed into highcharts(); varies based on graph type.
 
-var
-//the data for the graph.
-	myDataSet = new Array(),
-//what is passed into highcharts(); varies based on graph type.
-	highChartObj = {
-		chart: {type: graphVars.graph},
-		title: {text: graphVars.title},
-		subtitle: {text: data.startyyyymmdd + " to " + data.stopyyyymmdd},
-		tooltip: {pointFormat: '{series.name} <b>{point.y:,.0f}</b> on {point.x}'}
-		}; 
-
-if(graphVars.graph == 'pie' && graphVars.dataColumns == 'dynamic')	{
-	var L = data['@YAxis'].length;
-	app.u.dump(" -> L: "+L);
-	for(var i = 0; i < L; i += 1)	{
-//		app.u.dump(" -> "+data['@YAxis'][i][1]+" ("+key+") : "+data[key][0]);
-		myDataSet.push([data['@YAxis'][i][1],data[data['@YAxis'][i][0]][0]])
-		}
-	}
-else if(graphVars.graph == 'pie' && graphVars.dataColumns == 'fixed')	{
-	var L = graphVars['@datasets'].length
-	app.u.dump(" -> L: "+L);
-	for(var i = 0; i < L; i += 1)	{
-//		app.u.dump(" -> "+graphVars['@datasets'][i]+" : "+data[graphVars['@datasets'][i]][0]);
-		myDataSet.push([graphVars['@datasets'][i],data[graphVars['@datasets'][i]][0]])
-		}
-	}
-else if(graphVars.dataColumns == 'fixed')	{
-	var L = graphVars['@datasets'].length
-	for(var i = 0; i < L; i += 1)	{
-		myDataSet.push({'name':graphVars['@datasets'][i],'data':data[graphVars['@datasets'][i]]})
-		}
-	}
-else if(graphVars.dataColumns == 'dynamic')	{
-	var L = data['@YAxis'].length;
-	for(var i = 0; i < L; i += 1)	{
-		myDataSet.push({'name':data['@YAxis'][i][1],'data':data[data['@YAxis'][i][0]]})
-		}
-	}
-else	{
-	
-	} //catch. really, by now, we should never get here.
-
-if(graphVars.graph == 'pie')	{
-	highChartObj.plotOptions = {
-		pie: {
-			allowPointSelect: true,
-			cursor: 'pointer',
-			dataLabels: {
-				enabled: true,
-				color: '#000000',
-				connectorColor: '#000000',
-				formatter: function() {return (this.percentage == 0) ? null : '<b>'+ this.point.name +'</b>: '+ (Math.round(this.percentage*100)/100 ) +' %';}
-				}
-			}
-		}
-	
-	highChartObj.series = [{
-		type: 'pie',
-		name: '',
-		data: myDataSet
-		}]
-
-	}
-//the line charts all expect the data about the same.
-else	{
-	highChartObj.xAxis = {
-		categories : data['@xAxis'],
-		tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 , //will skip ticks in graphs w/ lots of x-axis values.
-		labels: {
-			formatter: function() {return this.value;} // clean, unformatted value
-			}
-		}
-
-	highChartObj.yAxis = {
-			title: {
-				text: '' //runs up left side of chart.
-			},
-			labels: {
-				formatter: function() {
-					return this.value / 1000 +'k';
-				}
-			}
-		}
-	highChartObj.series = myDataSet
-
-	}
-
-if(myDataSet.length)	{
-	if(graphVars.graph == 'text')	{
-		$target.append(app.ext.admin_reports.u.getTextGraph(graphVars,highChartObj));
-		}
-	else	{
-		$target.highcharts(highChartObj);
-		}
-	}
-else	{
-	$target.anymessage({'message':'No data available'});
-	}
+						if(graphVars.graph == 'pie' && graphVars.dataColumns == 'dynamic')	{
+							var L = data['@YAxis'].length;
+							app.u.dump(" -> L: "+L);
+							for(var i = 0; i < L; i += 1)	{
+						//		app.u.dump(" -> "+data['@YAxis'][i][1]+" ("+key+") : "+data[key][0]);
+								myDataSet.push([data['@YAxis'][i][1],data[data['@YAxis'][i][0]][0]])
+								}
+							}
+						else if(graphVars.graph == 'pie' && graphVars.dataColumns == 'fixed')	{
+							var L = graphVars['@datasets'].length
+							app.u.dump(" -> L: "+L);
+							for(var i = 0; i < L; i += 1)	{
+						//		app.u.dump(" -> "+graphVars['@datasets'][i]+" : "+data[graphVars['@datasets'][i]][0]);
+								myDataSet.push([graphVars['@datasets'][i],data[graphVars['@datasets'][i]][0]])
+								}
+							}
+						else if(graphVars.dataColumns == 'fixed')	{
+							var L = graphVars['@datasets'].length
+							for(var i = 0; i < L; i += 1)	{
+								myDataSet.push({'name':graphVars['@datasets'][i],'data':data[graphVars['@datasets'][i]]})
+								}
+							}
+						else if(graphVars.dataColumns == 'dynamic')	{
+							var L = data['@YAxis'].length;
+							for(var i = 0; i < L; i += 1)	{
+								myDataSet.push({'name':data['@YAxis'][i][1],'data':data[data['@YAxis'][i][0]]})
+								}
+							}
+						else	{
+							app.u.dump("In reports.u.addGraph, reached an unhandled case in the if/else that builds myDataSet.",'error');
+							} //catch. really, by now, we should never get here.
 
 
-
-
-
+//					app.u.dump(" -> myDataSet.length: "+myDataSet.length);
+					if(myDataSet.length)	{
+						if(graphVars.graph == 'pie')	{
+							highChartObj.plotOptions = {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										color: '#000000',
+										connectorColor: '#000000',
+										formatter: function() {return (this.percentage == 0) ? null : '<b>'+ this.point.name +'</b>: '+ (Math.round(this.percentage*100)/100 ) +' %';}
+										}
+									}
+								}
+							
+							highChartObj.series = [{
+								type: 'pie',
+								name: '',
+								data: myDataSet
+								}]
+						
+							}
+						//the line charts all expect the data about the same.
+						else	{
+							highChartObj.xAxis = {
+								categories : data['@xAxis'],
+								tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 , //will skip ticks in graphs w/ lots of x-axis values.
+								labels: {
+									formatter: function() {return this.value;} // clean, unformatted value
+									}
+								}
+						
+							highChartObj.yAxis = {
+									title: {
+										text: '' //runs up left side of chart.
+									},
+									labels: {
+										formatter: function() {
+											return this.value / 1000 +'k';
+										}
+									}
+								}
+							highChartObj.series = myDataSet
+							}
+						if(graphVars.graph == 'text')	{
+							$target.append(app.ext.admin_reports.u.getTextGraph(graphVars,highChartObj));
+							}
+						else	{
+							$target.highcharts(highChartObj);
+							}
+						}
+					else	{
+						$target.anymessage({'message':'No data available'});
+						}
 
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_reports.u.addGraph, graphsvars ['+typeof graphVars+'] and data['+typeof data+'] are both required.','gMessage':true});
 					}
 				else	{
-					
 					$("#globalMessaging").anymessage({'message':'In admin_reports.u.addGraph, $target ['+typeof $target+'] andgraphsvars ['+typeof graphVars+'] and data['+typeof data+'] are both required.','gMessage':true});
-					
 					}
 				
 				},
@@ -794,7 +797,7 @@ else	{
 
 //This is what displays a collection.  It'll show it in target.
 			addKPICollectionTo : function($target,collection)	{
-				app.u.dump("BEGIN admin_reports.u.addKPICollectionTo $target");
+				app.u.dump("BEGIN admin_reports.u.addKPICollectionTo");
 				if($target && collection)	{
 //					app.u.dump(" -> $target and collection are set.");
 					$target.empty().showLoading({'message':'Fetching collection details'});
@@ -806,18 +809,17 @@ else	{
 						else	{
 							//get detail for each graph
 //							app.u.dump(" -> app.data[rd.datapointer]"); app.u.dump(app.data[rd.datapointer]);
-if(app.data[rd.datapointer]['@GRAPHS'])	{
-	var graphs = app.data[rd.datapointer]['@GRAPHS']; //shortcut
-	for(var index in graphs)	{
-//		app.u.dump(index+"). adding graph."); app.u.dump(graphs[index]);
-		var $div = $("<div\/>").attr('data-graph-uuid',graphs[index].uuid).addClass('graph').appendTo($target);
-		app.ext.admin_reports.u.getChartData($div,graphs[index]); //getChartData handles dispatch so that each chart gets it's own ajax req. (faster loading for smaller charts)
-		}
-	}
-else	{
-	$target.append("<P>There are no graphs in this collection.<\/P>");
-	}
-
+							if(app.data[rd.datapointer]['@GRAPHS'])	{
+								var graphs = app.data[rd.datapointer]['@GRAPHS'], L = graphs.length//shortcut
+								for(var i = 0; i < L; i += 1)	{
+//									app.u.dump(i+"). adding graph "+graphs[i].uuid); //app.u.dump(graphs[index]);
+									var $div = $("<div\/>").attr('data-graph-uuid',graphs[i].uuid).addClass('graph').appendTo($target);
+									app.ext.admin_reports.u.getChartData($div,graphs[i]); //getChartData handles dispatch so that each chart gets it's own ajax req. (faster loading for smaller charts)
+									}
+								}
+							else	{
+								$target.append("<P>There are no graphs in this collection.<\/P>");
+								}
 							}
 						}},'mutable');
 					}
@@ -944,8 +946,6 @@ else	{
 					app.ext.admin_reports.a.showKPIAddUpdateInModal('add',{});
 					});
 				}, //showChartAdd
-
-
 			
 			showKPIGraphPreview : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-image"},text: true});
@@ -971,7 +971,6 @@ else	{
 					});
 				}, //showChartAdd
 
-
 			showChartUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: true});
 				$btn.off('click.showChartUpdate').on('click.showChartUpdate',function(){
@@ -992,6 +991,7 @@ else	{
 					
 					});
 				}, //showChartUpdate
+
 			showChartRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: true});
 				$btn.off('click.showChartRemove').on('click.showChartRemove',function(){
