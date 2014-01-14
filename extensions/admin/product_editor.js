@@ -178,7 +178,7 @@ _rtag.jqObj.anycontent({'templateID':'productEditorTabbedTemplate','data':$.exte
 
 
 //check to see if item has inventoryable variations.
-if(app.data[_rtag.datapointer]['@skus'] && app.data[_rtag.datapointer]['@skus'][0] && app.data[_rtag.datapointer]['@skus'][0].sku.indexOf(':') >= 0)	{
+if(app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 	//this product has inventoryable options.
 	$("[data-app-role='showProductWithVariations']",_rtag.jqObj).show();
 	$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).hide();
@@ -187,6 +187,7 @@ else {
 	// no variations
 	$("[data-app-role='showProductWithVariations']",_rtag.jqObj).hide();
 	$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).show();
+	$("[data-app-role='prodEditSkuImagesFieldset']",_rtag.jqObj).hide(); //hide sku-specific images. That code is designed to only have three images and could inadvertantly remove product imagery. ## TODO -> test this.
 	}
 
 
@@ -654,7 +655,7 @@ $target.anydelegate();
 			thisPIDHasInventorableVariations : function(pid)	{
 				var r = false;
 				if(pid && app.data['adminProductDetail|'+pid] && app.data['adminProductDetail|'+pid]['@skus'] && app.data['adminProductDetail|'+pid]['@skus'].length)	{
-					app.u.dump(" -> sku: "+app.data['adminProductDetail|'+pid]['@skus'][0].sku);
+//					app.u.dump(" -> sku: "+app.data['adminProductDetail|'+pid]['@skus'][0].sku);
 					if(app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(':') > 0 )	{r = true}
 					}
 				else	{
