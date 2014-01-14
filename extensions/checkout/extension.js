@@ -1701,7 +1701,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 // re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
 // originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
 				if($ele.is(':checked'))	{
-//** Fixes bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
+// -> Sanitize is here to address bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
+// all panels get updated because shipping, totals and potentially payment methods can be impacted by ship country.
 					app.ext.cco.u.sanitizeAndUpdateCart($form,{
 						'callback':'updateAllPanels',
 						'extension' : 'order_create'
