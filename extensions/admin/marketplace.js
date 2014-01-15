@@ -1406,7 +1406,8 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					
 					});
 				}, //ebayLaunchProfileUpdateShow
-			
+/*
+// ### FUTURE -> at 201412ish, remove this. legacy launch profile support was 201346
 			ebayLaunchProfileUpgradeConfirm : function($btn)	{
 				var data = $btn.closest('tr').data();
 				if(Number(data.v) === 0)	{
@@ -1449,7 +1450,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					$btn.hide();
 					} //already upgraded. don't show button.
 				}, //ebayLaunchProfileUpgradeConfirm
-			
+			*/
 			ebayAddCustomDetailShow : function($btn)	{
 
 				$btn.button();
