@@ -55,19 +55,11 @@ var order_create = function() {
 		init : {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.order_create.init.onSuccess');
-//1PC can't load the templates remotely. causes XSS issue.
-//				if(app.vars._clientid == '1pc')	{
-//					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
-//					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
-//					}
-//				else {
-					app.u.loadCSSFile(app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
-//					}
-				var r = true; //returns false if checkout can't load due to account config conflict.
 
-//				app.u.dump(" -> document.compatMode: "+document.compatMode);
-//				app.u.dump(" -> document.documentMode: "+document.documentMode);
+				app.u.loadCSSFile(app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
+
+				var r = true; //returns false if checkout can't load due to account config conflict.
 
 				if(typeof _gaq === 'undefined' && !app.vars.thisSessionIsAdmin)	{
 //					app.u.dump(" -> _gaq is undefined");
@@ -84,12 +76,18 @@ var order_create = function() {
 					r = false;
 					$('#globalMessaging').anymessage({'message':'<strong>Uh Oh!<\/strong> app.vars.checkoutAuthMode is not set. should be set to passive, required or active (depending on the checkout behavior desired).'});
 					}
+				else if(app.u.thisIsAnAdminSession())	{
+					r = true;
+					//don't execute a localStorage.clear() on an admin session cuz it'll nuke the session ID and the carts.
+					}
 				else	{
 					r = true;
+					
 					if(document.domain.indexOf('app-hosted.com') >= 0)	{
 						if(jQuery.support.localStorage)	{
 							window.localStorage.clear();
 							}
+						
 						} //clear localStorage for shared domain to avoid cross-store contamination.
 					}
 
