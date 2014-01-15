@@ -2833,7 +2833,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin_prodedit.a.showProductManager();
 
 				$('#messagesContent').anydelegate();
-				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+//				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				$('.username','#appView').text(app.vars.userid);
@@ -2863,11 +2863,11 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 				app.model.dispatchThis('immutable');
 //if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
-				var	DPSMessages = app.model.dpsGet('admin','messages') || [];
+/*				var	DPSMessages = app.model.dpsGet('admin','messages') || [];
 				if(DPSMessages.length)	{
 					app.ext.admin.u.displayMessages(DPSMessages);
 					}
-
+*/
 				}, //showHeader
 
 
@@ -2903,7 +2903,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				if(!$.isEmptyObject(adminObj))	{
 					app.vars.domain = adminObj.domain;
 					app.vars.partition = adminObj.partition;
-					app.vars['media-host'] = adminObj.media-host;
+					app.vars['media-host'] = adminObj['media-host'];
 					}
 
 				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars['media-host'])	{

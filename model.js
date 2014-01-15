@@ -1171,7 +1171,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			var r = false;
 
 			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].setItem == 'function' )	{
+				if(typeof window[location+'Storage'].setItem == 'function' )	{
 					r = true;
 					if (typeof value == "object") {
 						value = JSON.stringify(value);
@@ -1720,9 +1720,9 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //this allows for one extension to read anothers preferences and use/change them.
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
-//				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
+				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
 				var r = false, obj = app.model.readLocal('session','local');
-//				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
+				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
 				if(obj == undefined)	{
 //					app.u.dump(" ^^ Entire 'session' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.
