@@ -1165,110 +1165,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			}, //fetchData
 	
 
-//location should be set to 'session' or 'local'.
-		writeLocal : function (key,value,location)	{
-			location = location || 'local';
-			var r = false;
 
-			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'].setItem == 'function' )	{
-					r = true;
-					if (typeof value == "object") {
-						value = JSON.stringify(value);
-						}
-//a try is used here so that if storage is full, the error is handled gracefully.
-					try	{
-						window[location+'Storage'].setItem(key, value);
-						}
-					catch(e)	{
-						r = false;
-						app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
-						app.u.dump(e.message);
-						}
-					
-					}
-				else	{
-					app.u.dump(" -> window[location+'Storage']: "+window[location+'Storage']);
-					app.u.dump(" -> window."+location+"Storage is not defined.");
-					}
-				}
-			else	{
-				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
-				}
-			return r;
-			}, //writeLocal
-
-		nukeLocal : function(key,location)	{
-//			app.u.dump("BEGIN nukeLocal for "+key+" in "+location+"Storage");
-			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
-					try	{
-						window[location+'Storage'].removeItem(key);
-						}
-					catch(e)	{
-						app.u.dump("The attempt to run window."+location+"Storage.removeItem("+key+") failed. This occured after the $.support for that storage method. The catch error follows:"); app.u.dump(e);
-						}
-					}
-				}
-			else	{
-				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
-				}
-			},
-
-		readLocal : function(key,location)	{
-			location = location || 'local';
-			if(!$.support[location+'Storage'])	{
-				return ''; //exit early is the storage mechanism isn't supported. return blank needed because getLocal is used to set vars in some if statements.
-				}
-			else	{
-				var value = null;
-				try{
-					value = window[location+'Storage'].getItem(key);
-					}
-				catch(e)	{
-					//app.u.dump("Local storage does not appear to be available. e = ");
-					//app.u.dump(e);
-					}
-				if(value == null)	{
-					return '';
-					}
-		// assume it is an object that has been stringified
-				if(value && value[0] == "{") {
-					value = JSON.parse(value);
-					}
-				return value
-				}
-			}, //readLocal
-/*
-A note about cookies:
-	They're not particularly mobile friendly. All modern browsers support localStorage, even ie7, supports local/session storage, which is the main mechanism used by the model for persistent data storage.
-	So the cookie functions are here (for now), but should probably be avoided.
-*/
-		readCookie : function(c_name){
-			var i,x,y,ARRcookies=document.cookie.split(";");
-			for (i=0;i<ARRcookies.length;i++)	{
-				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-				x=x.replace(/^\s+|\s+$/g,"");
-				if (x==c_name)	{
-					return unescape(y);
-					}
-				}
-			return false;  //return false if not set.
-			},
-
-		writeCookie : function(c_name,value)	{
-var myDate = new Date();
-myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
-			},
-//deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
-//test before earlier.
-		deleteCookie : function(c_name)	{
-document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
-app.u.dump(" -> DELETED cookie "+c_name);
-			},
 
 
 /* functions for extending the controller (adding extensions and templates) */
@@ -1688,24 +1585,24 @@ ADMIN/USER INTERFACE
 				}
 
 
-cmdObj = {
-	_cmd : 'adminUIExecuteCGI',
-	uri : path,
-	'_tag' : {
-		datapointer : 'adminUIExecuteCGI',
-		callback : function(rd)	{
-			if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
-			else	{
-				app.ext.admin.u.uiHandleContentUpdate(path,app.data[rd.datapointer],viewObj)
-				app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
-				}
-			}
-		}
-	};
-if(!$.isEmptyObject(data)) {cmdObj['%vars'] = data} //only pass vars if present. would be a form post.
-app.model.addDispatchToQ(cmdObj,'mutable');
-app.model.dispatchThis('mutable');
-		},
+			cmdObj = {
+				_cmd : 'adminUIExecuteCGI',
+				uri : path,
+				'_tag' : {
+					datapointer : 'adminUIExecuteCGI',
+					callback : function(rd)	{
+						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+						else	{
+							app.ext.admin.u.uiHandleContentUpdate(path,app.data[rd.datapointer],viewObj)
+							app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
+							}
+						}
+					}
+				};
+			if(!$.isEmptyObject(data)) {cmdObj['%vars'] = data} //only pass vars if present. would be a form post.
+			app.model.addDispatchToQ(cmdObj,'mutable');
+			app.model.dispatchThis('mutable');
+			},
 
 
 /*
@@ -1714,26 +1611,133 @@ methods of getting data from non-server side sources, such as cookies, local or 
 
 */
 
+//location should be set to 'session' or 'local'.
+		writeLocal : function (key,value,location)	{
+			app.u.dump("BEGIN model.writeLocal");
+			location = location || 'local';
+			var r = false;
+
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'].setItem == 'function' )	{
+					r = true;
+					if (typeof value == "object") {value = JSON.stringify(value);}
+
+//a try is used here so that if storage is full, the error is handled gracefully.
+					try	{
+						window[location+'Storage'].setItem(key, value);
+						}
+					catch(e)	{
+						r = false;
+						app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
+						app.u.dump(e.message);
+						}
+					
+					}
+				else	{
+					app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
+					}
+				}
+			else	{
+				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
+			return r;
+			}, //writeLocal
+
+		nukeLocal : function(key,location)	{
+//			app.u.dump("BEGIN nukeLocal for "+key+" in "+location+"Storage");
+			if($.support[location+'Storage'])	{
+				if(typeof window[location+'Storage'] == 'object' && typeof window[location+'Storage'].removeItem == 'function')	{
+					try	{
+						window[location+'Storage'].removeItem(key);
+						}
+					catch(e)	{
+						app.u.dump("The attempt to run window."+location+"Storage.removeItem("+key+") failed. This occured after the $.support for that storage method. The catch error follows:"); app.u.dump(e);
+						}
+					}
+				}
+			else	{
+				app.u.dump("in nukeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
+				}
+			},
+
+		readLocal : function(key,location)	{
+			location = location || 'local';
+			if(!$.support[location+'Storage'])	{
+				return ''; //exit early is the storage mechanism isn't supported. return blank needed because getLocal is used to set vars in some if statements.
+				}
+			else	{
+				var value = null;
+				try{
+					value = window[location+'Storage'].getItem(key);
+					}
+				catch(e)	{
+					//app.u.dump("Local storage does not appear to be available. e = ");
+					//app.u.dump(e);
+					}
+				if(value == null)	{
+					return '';
+					}
+		// assume it is an object that has been stringified
+				if(value && value[0] == "{") {
+					value = JSON.parse(value);
+					}
+				return value
+				}
+			}, //readLocal
+/*
+A note about cookies:
+	They're not particularly mobile friendly. All modern browsers support localStorage, even ie7, supports local/session storage, which is the main mechanism used by the model for persistent data storage.
+	So the cookie functions are here (for now), but should probably be avoided.
+*/
+		readCookie : function(c_name){
+			var i,x,y,ARRcookies=document.cookie.split(";");
+			for (i=0;i<ARRcookies.length;i++)	{
+				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				x=x.replace(/^\s+|\s+$/g,"");
+				if (x==c_name)	{
+					return unescape(y);
+					}
+				}
+			return false;  //return false if not set.
+			},
+
+		writeCookie : function(c_name,value)	{
+var myDate = new Date();
+myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
+document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
+document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
+			},
+//deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
+//test before earlier.
+		deleteCookie : function(c_name)	{
+document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+app.u.dump(" -> DELETED cookie "+c_name);
+			},
+
+
+
 //Device Persistent Settings (DPS) Get  ### here for search purposes:   preferences settings localstorage
 //false is returned if there are no matchings session vars.
 //if no extension is passed, return the entire sesssion object (if it exists).
 //this allows for one extension to read anothers preferences and use/change them.
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
-				app.u.dump(" ^ DPS GET. ext: "+ext+" and ns: "+ns);
-				var r = false, obj = app.model.readLocal('session','local');
-				app.u.dump("DPS 'session' obj: "); app.u.dump(obj);
-				if(obj == undefined)	{
-//					app.u.dump(" ^^ Entire 'session' object is empty.");
+				app.u.dump(" <<<<< DPS GET. ext: "+ext+" and ns: "+ns+" >>>>>");
+				var r = false, DPS = app.model.readLocal('dps','local') || {};
+				
+				if($.isEmptyObject(DPS))	{
+//					app.u.dump(" ^^ Entire 'DPS' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
 				else	{
-					if(ext && obj[ext] && ns)	{r = obj[ext][ns]} //an extension and namespace were passed and an object exists.
-					else if(ext && obj[ext])	{r = obj[ext]} //an extension was passed and an object exists.
-					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
+					if(ext && DPS[ext] && ns)	{r = DPS[ext][ns]} //an extension and namespace were passed and an object exists.
+					else if(ext && DPS[ext])	{r = DPS[ext]} //an extension was passed and an object exists.
+					else if(!ext)	{r = DPS} //return the global object. obj existing is already known by here.
 					else	{} //could get here if ext passed but obj.ext doesn't exist.
 //					app.u.dump(" ^^ value for DPS Get: "); app.u.dump(r);
 					}
+				app.u.dump("DPS returned: "); app.u.dump(r);
 				return r;
 				},
 
@@ -1743,25 +1747,21 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-//				app.u.dump(" * DPS SET. \next: "+ext+"\nns: "+ns);
+				app.u.dump(" >>>>> DPS SET <<<<< \next: "+ext+"\nns: "+ns);
 //				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
-					var sessionData = app.model.readLocal('session','local'); //readLocal returns false if no data local.
-//					app.u.dump(" ** sessionData: "); app.u.dump(sessionData);
-					sessionData = sessionData || {};
-					if(typeof sessionData[ext] === 'object'){
-						sessionData[ext][ns] = varObj;
+					var DPS = app.model.readLocal('dps','local') || {}; //readLocal returns false if no data local.
+//					app.u.dump(" ** DPS: "); app.u.dump(DPS);
+					if(typeof DPS[ext] === 'object'){
+						DPS[ext][ns] = varObj;
 						}
 					else	{
-						sessionData[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
-						sessionData[ext][ns] = varObj;
+						DPS[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
+						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.
-
-//can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-//					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
-
-					app.model.writeLocal('session',sessionData,'local'); //update the localStorage session var.
+//SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
+					app.model.writeLocal('dps',DPS,'local'); //update the localStorage session var.
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
