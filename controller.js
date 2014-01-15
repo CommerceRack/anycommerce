@@ -87,7 +87,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';compatMode:'+document.compatMode;
 
 		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
-		app.u.dump(app.vars.release+"-"+app.model.version);
+		app.u.dump("version: "+app.model.version+" and release "+app.vars.release);
 		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
 /*
