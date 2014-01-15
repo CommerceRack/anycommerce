@@ -89,7 +89,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';compatMode:'+document.compatMode;
 
 		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
-		
+		app.u.dump(app.vars.release+"-"+app.vars.model);
 		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
 /*
@@ -2085,7 +2085,7 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 					url = 'http:\/\/'+(app.vars.domain);
 					}
 				else	{
-					url = 'https:\/\/'+(app.vars.https_domain || app.data['adminDomainList']['media-host']);
+					url = 'https:\/\/'+(app.vars['media-host'] || app.data['adminDomainList']['media-host']);
 					}
 				//make sure domain ends in a /
 				if(url.charAt(url.length) != '/')	{
