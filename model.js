@@ -1612,8 +1612,6 @@ methods of getting data from non-server side sources, such as cookies, local or 
 
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
-			app.u.dump("############### BEGIN model.writeLocal. key: "+key+" and value: "); app.u.dump(value);
-//			app.u.dump(" -> is dps empty? "); app.model.dpsGet('admin','domain'); //dpsGet purely for debug
 			location = location || 'local';
 			var r = false;
 
@@ -1640,7 +1638,6 @@ methods of getting data from non-server side sources, such as cookies, local or 
 			else	{
 				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
-			app.u.dump(" -> NOW is dps empty? "); app.model.dpsGet('admin','domain');  //dpsGet purely for debug
 			return r;
 			}, //writeLocal
 
