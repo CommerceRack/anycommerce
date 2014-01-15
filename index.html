@@ -1175,25 +1175,25 @@ this will likely become more flexible in the future. ###
 				<span class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true;'></span>
 				<span class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true;'></span>
 			</div>
-			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm marginTop clearfix' action='#' onSubmit="app.ext.store_zephyrapp.u.addItemToCart($(this), {'action':'modal'}); return false;">
+			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_zephyrapp.u.addItemToCart($(this), {'action':'modal'}); return false;">
 				<div class="prodChildren displayNone" data-bind="var: product(zoovy:grp_children); format:showIfSet; className:active;">
 					<select class="childDropdown" data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildrenOption; withInventory:1; withVariations:1;">
 						<option value="">Choose Option...</option>
 					</select>
 				</div>
-				<div class="inventoryContainer" data-bind="useParentData:true; format:inventoryAvailQty; extension:store_zephyrapp;"></div>
+				<div class="inventoryContainer displayNoneMobile" data-bind="useParentData:true; format:inventoryAvailQty; extension:store_zephyrapp;"></div>
 				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone displayNone'></fieldset>
-				<div data-bind="var: product(zoovy:grp_children); format:hideIfSet;">
+				<div class="addToCartSection" data-bind="var: product(zoovy:grp_children); format:hideIfSet;">
 					<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton greenAddToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 				</div>
-				<div class="displayNone" data-bind="var: product(zoovy:grp_children); format:showIfSet;">
+				<div class="displayNone addToCartSection" data-bind="var: product(zoovy:grp_children); format:showIfSet;">
 					<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton greenAddToCartButton displayNone' />
 				</div>
 			</form>
 			<a class="displayNoneMobile" target="_blank" href="https://www.zephyrpaintball.com/media/merchant/zephyrsports/shipping_times_003.html"><img class="marginTop" src="images/zs09_p_btn_arrdate-156x31.jpg"/></a>
 			
-			<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
+			<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom displayNoneMobile'></div>
 			<div data-app-role='timeInTransit' class='displayNone'></div>
 			
 			<div class='marginTop marginBottom'>
