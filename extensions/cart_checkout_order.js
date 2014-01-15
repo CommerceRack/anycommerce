@@ -926,7 +926,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				if(vars.orderid && vars.cartid)	{
 					var cmd; //the command used for the dispatch. varies based on whether this is admin or buyer.
 					skuArr = skuArr || [];
-					if(app.vars.thisSessionIsAdmin)	{
+					if(app.u.thisIsAnAdminSession())	{
 						cmd = 'adminOrderDetail';
 						}
 					else	{
@@ -1009,7 +1009,7 @@ in a reorder, that data needs to be converted to the variations format required 
 						'_tag' : _tag || {}
 						}
 					
-					if(app.vars.thisSessionIsAdmin)	{
+					if(app.u.thisIsAnAdminSession())	{
 						if(vars.qty && vars.uuid)	{
 							r = true;
 							cmdObj._cmd = 'adminCartMacro';
@@ -1311,7 +1311,7 @@ in a reorder, that data needs to be converted to the variations format required 
 						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
 						}
 				
-				if($("input[name='price']",$container).val() && app.vars.thisSessionIsAdmin)	{
+				if($("input[name='price']",$container).val() && app.u.thisIsAnAdminSession())	{
 					vars.price = $("input[name='price']",$container).val();
 					}
 

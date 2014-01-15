@@ -110,6 +110,8 @@ app.templates holds a copy of each of the templates declared in an extension but
 		
 		app.vars.extensions = app.vars.extensions || []; //the list of extensions that are/will be loaded
 		
+		//the var for thisSessionIsAdmin should only be used here and in extension inits.  it's just an indicator and will be true whether logged in or not.
+		// app.u.thisIsAnAdminSession() will only be true after login has occured.
 		if(app.vars.thisSessionIsAdmin)	{
 			app.handleAdminVars(); //needs to be late because it'll use some vars set above.
 			}
@@ -2078,7 +2080,7 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 			if(a.b == null || a.b == 'undefined')
 				a.b = '';
 //In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
-			if(app.vars.thisSessionIsAdmin)	{
+			if(app.u.thisIsAnAdminSession())	{
 				if(location.protocol === 'file:')	{
 					url = 'http:\/\/'+(app.vars.domain);
 					}

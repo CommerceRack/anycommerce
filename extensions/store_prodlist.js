@@ -225,7 +225,7 @@ A special translate template for product so that reviews can be merged into the 
 				$prodlist.data('totalProductLoaded',($prodlist.data('totalProductLoaded') + 1));
 				
 //for UI prod finder. if admin session, adds a 'remove' button so merchant can easily take missing items from list.
-				if(app.vars.thisSessionIsAdmin)	{
+				if(app.u.thisIsAnAdminSession())	{
 					$("<button \/>").text("Remove "+pid).button().on('click',function(){
 						app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]")); //function accepts a jquery object.
 						}).appendTo($('.ui-widget-anymessage',$product));
