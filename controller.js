@@ -56,17 +56,15 @@ jQuery.extend(zController.prototype, {
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
+			app.u.dump(" !!! Flush is enabled. session and local storage get nuked !!!");
 			if($.support.sessionStorage)	{
-				app.u.dump("URI param flush is true. Clear SESSION storage.");
 				window.sessionStorage.clear();
 				}
 			if($.support.localStorage)	{
-				app.u.dump("URI param flush is true. Clear LOCAL storage.");
 				window.localStorage.clear();
 				}
 			}
 		//needs to be after the 'flush' above, or there's no way to flush the cart/session.
-		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
 
 		app.handleSession(); //get existing session or create a new one.
@@ -127,15 +125,15 @@ app.templates holds a copy of each of the templates declared in an extension but
 			app.u.dump(" -> session found on URI: "+app.vars._session);
 			}
 		else	{
-			app.vars._session = app.model.readLocal('_session','local');
+			app.vars._session = app.model.dpsGet('controller','_session');
 			if(app.vars._session)	{
-				app.u.dump(" -> session found in localStorage: "+app.vars._session);
+				app.u.dump(" -> session found in DPS: "+app.vars._session);
 				//use the local session id.
 				}
 			else	{
 				//create a new session id.
 				app.vars._session = app.u.guidGenerator();
-				app.model.writeLocal('_session',app.vars._session);
+				app.model.dpsSet('controller','_session',app.vars._session);
 				app.u.dump(" -> generated new session: "+app.vars._session);
 				}
 			}
