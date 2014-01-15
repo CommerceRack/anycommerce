@@ -2899,7 +2899,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
  -> all three of the vars are required. images require the media-host and several configDetail calls require partition.
 */
 				var adminObj = app.model.dpsGet('admin') || {};
-				app.u.dump(" -> domain object from dpsGet: "); app.u.dump(adminObj);
+//				app.u.dump(" -> domain object from dpsGet: "); app.u.dump(adminObj);
 				if(!$.isEmptyObject(adminObj))	{
 					app.vars.domain = adminObj.domain;
 					app.vars.partition = adminObj.partition;
@@ -4220,7 +4220,7 @@ else	{
 				var admin = {};
 				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
 				var dps = app.model.dpsGet(); //all 'session' vars
-				localStorage.clear();
+				window.localStorage.clear();
 				app.model.writeLocal('authAdminLogin',admin);
 // * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
 				dps.admin.domain = '';
@@ -5024,7 +5024,7 @@ not in use
 				$btn.button();
 				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
 					event.preventDefault();
-					localStorage.clear();
+					app.ext.admin.u.selectivelyNukeLocalStorage();
 					app.u.handleAppEvents($('#createAccountContainer'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
