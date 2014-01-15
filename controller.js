@@ -68,7 +68,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
 
 		app.handleSession(); //get existing session or create a new one.
-		
+
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
@@ -135,8 +135,8 @@ app.templates holds a copy of each of the templates declared in an extension but
 			else	{
 				//create a new session id.
 				app.vars._session = app.u.guidGenerator();
-				app.model.dpsSet('controller','_session',app.vars._session);
 				app.u.dump(" -> generated new session: "+app.vars._session);
+				app.model.dpsSet('controller','_session',app.vars._session);
 				}
 			}
 		}, //handleSession
