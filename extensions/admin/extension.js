@@ -1431,9 +1431,9 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 						}
 				//	app.u.dump(uriParams);
 					}
-					
+				app.vars.trigger = uriParams.trigger;
 //Merchant is most likely returning to the app from a partner site for some sort of verification
-				if(uriParams.trigger == 'adminPartnerSet')	{
+				if(app.vars.trigger == 'adminPartnerSet')	{
 					app.u.dump(" -> execute adminPartnerSet call"); app.u.dump(uriParams);
 					app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
 					app.model.dispatchThis('immutable');
@@ -2910,11 +2910,29 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or media-host ["+app.vars['media-host']+"] not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
+//used to ensure the domain selected (either from document.domain or dpsGet) is valid for this account.
+				function validateDomain(domain)	{
+					app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',domain) || {};
+							if(!$.isEmptyObject(domObj))	{
+								app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
+								}
+							else	{
+//To get here, the user logged in from a domain that is NOT in their list of domains or something went horribly wrong.
+								app.ext.admin.a.showDomainChooser(); //domain list is in memory at this point. no need to dispatch.
+								$domainChooser.anymessage({"message":"The domain you logged in from does not appear in your active list of domains. Please select a domain to use:"});
+								}
+							}
+						}},'immutable');
+					}
 
 				if(app.vars.domain)	{
-					//by now, if partition or media-host was blank, domain would be false. That means everything we needs is here. update the header and we're done.
-					$('.partition','#appView').text(app.vars.partition);
-					$('.domain','#appView').text(app.vars.domain);
+					//by now, if partition or media-host was blank, domain would be false. Verify the domain is valid (important for multi-account users on a shared ssl cert)
+					validateDomain(app.vars.domain);
 					}
 				else	{
 					//ok, so no domain is set BUT one was used to log in from unless we're local. use it, but fetch list of domains and set partition et all.
@@ -2922,22 +2940,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 						app.ext.admin.a.showDomainChooser();
 						}
 					else	{
-						app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',document.domain) || {};
-								if(!$.isEmptyObject(domObj))	{
-									app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
-									}
-								else	{
-				//To get here, the user logged in from a domain that is NOT in their list of domains or something went horribly wrong.
-									app.ext.admin.a.showDomainChooser(); //domain list is in memory at this point. no need to dispatch.
-									$domainChooser.anymessage({"message":"The domain you logged in from does not appear in your active list of domains. Please select a domain to use:"});
-									}
-								}
-							}},'immutable');
+						validateDomain(document.domain);
 						}	
 					}
 				},
@@ -4223,9 +4226,12 @@ else	{
 				var dps = app.model.dpsGet(); //all 'dps' vars
 				window.localStorage.clear();
 				app.model.writeLocal('authAdminLogin',admin);
-// * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
-				dps.admin.domain = '';
-				dps.admin.partition = '';
+//domain and partition are persitent between sessions. bad for support so clear them.
+//for multi-account users, the domainInit code checks to make sure the selected domain is valid.
+				if(app.vars.trigger == 'support')	{
+					dps.admin.domain = '';
+					dps.admin.partition = '';
+					}
 				app.model.writeLocal('dps',dps);
 				},
 
