@@ -1745,12 +1745,8 @@ app.u.dump(" -> DELETED cookie "+c_name);
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext and namespace (ns) are required. reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-				app.u.dump(" >>>>> DPS SET <<<<< \n\text: "+ext+"\n\tns: "+ns);
-//				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
-					app.u.dump("dpsSet for "+ext+"["+ns+"] has everything necessary to proceed with a save.");
 					var DPS = app.model.readLocal('dps','local') || {}; //readLocal returns false if no data local.
-					app.u.dump(" DPS loaded in dpsSet: "); app.u.dump(DPS);
 					if(typeof DPS[ext] === 'object'){
 						DPS[ext][ns] = varObj;
 						}
@@ -1760,8 +1756,6 @@ app.u.dump(" -> DELETED cookie "+c_name);
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 					app.model.writeLocal('dps',DPS,'local'); //update the localStorage session var.
-					app.u.dump(" ------------------------ ")
-					app.u.dump("write local just executed in dpsSet. here's what DPS now looks like: "); app.u.dump(app.model.dpsGet());
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
