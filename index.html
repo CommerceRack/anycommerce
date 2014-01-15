@@ -1161,7 +1161,7 @@ this will likely become more flexible in the future. ###
 		</div>
 
 		<td class='prodSummaryContainer marginBottom no_underline alignRight'>
-			<div class='priceContainer'>
+			<div class='priceContainer displayNoneMobile'>
 				<div class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Zephyr Sale Price: ;'></div>
 				<div class="savingsSection">Compare to:
 					<span class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true;'></span>
@@ -1170,6 +1170,10 @@ this will likely become more flexible in the future. ###
 						<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
 					</span>
 				</div>
+			</div>
+			<div class='priceContainer displayNone displayBlockMobile'>
+				<span class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true;'></span>
+				<span class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true;'></span>
 			</div>
 			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm marginTop clearfix' action='#' onSubmit="app.ext.store_zephyrapp.u.addItemToCart($(this), {'action':'modal'}); return false;">
 				<div class="prodChildren displayNone" data-bind="var: product(zoovy:grp_children); format:showIfSet; className:active;">

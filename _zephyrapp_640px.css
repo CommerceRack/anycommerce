@@ -62,6 +62,8 @@
 .prodBigImage{margin:0 auto; display:block; border: 1px solid #CCCCCC;}
 .additionalImageSection {float: right;}
 .imgThumbContainer img { border: 1px solid #CCCCCC; margin: 0px 0px 5px 2px;}
+.prodMSRP {font-family: 'Nunito', sans-serif; font-size:24px; font-weight:bold; color:#434242; padding-right:7px;}
+.basePrice {font-family: 'Nunito', sans-serif; font-size:24px; color:#0878da;}
 .prodSummaryContainer {padding:0px; width:270px; text-align:left;}
 .tabbedProductContentTD {width:100%;}
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}
