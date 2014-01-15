@@ -56,194 +56,141 @@ var admin_template = function() {
 
 		a : {
 
-//for mode = ebay, vars.profile is required.
-			showTemplateEditor : function(mode,vars)	{
 
+			showTemplateEditor : function($target, vars){
 				vars = vars || {};
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
-				//will be false if it is not missing params
-				if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
-//By here, we know that we have a valid mode and that any requirements in 'vars' based on the mode ARE present.
+				if($target instanceof jQuery)	{
+					if(vars.mode)	{
+						if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
+//everything that is necessary is now confirmed to be present.
 
-					var $D = $('#templateEditor');
-						
-					if($D.length)	{
-						$('#globalMessaging').anymessage({'message':'The template editor was already open for '+$D.data('mode')+'. That editor was closed'})
-						//template editor has been opened before. nuke the template vars so nothing carries over.
-						$D.removeData('profile');
-						$D.removeData('campaignid');
-						$D.removeData('domain');
-						$D.removeData('mode');
-						$D.empty().remove();
-						}
-
-
-					$D = $("<div \/>",{'id':'templateEditor','title':'Edit '+mode+' template'}).attr('data-app-role','templateEditor');
-					
-
-					vars.editor = 'inline'; //hard coded for now. may change later. support for dialog, fullscreen are also present.
-					var iframeHeight = 'auto';
-					
-					if(vars.editor == 'inline')	{
-						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append($D);
-						iframeHeight = $(window).height() - $('#mastHead').height() - 100;
-						}
-					else if(vars.editor == 'fullscreen')	{
-						$D.appendTo('body');
-						$('#templateEditor').fullScreen({
-							'background' : '#ffffff',
-							'callback' : function(state)	{}
-							});
-						iframeHeight = $(window).height() - 100;
-						}
-					else if (vars.editor == 'dialog')	{
-//must scroll to top of body/html first or issues with modal placement and lack of browser scrollbars.						
-						$('html, body').animate({scrollTop:0}, 'fast');
-
-						$D.dialog({
-							'modal':true,
-							'autoOpen':false,
-							'width':'96%',
-							close: function(event, ui)	{
-								$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-//if the css editor was opened, close it.
-								if($('#templateEditorCSSDialog').length && $('#templateEditorCSSDialog').hasClass('ui-dialog-content'))	{
-									$('#templateEditorCSSDialog').dialog('close');
+//make sure that no previous template editor data is on the target.					
+							$target.removeData('profile campaignid domain mode');
+							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.u.guidGenerator()});  //title is added in case this is opened in a dialog.
+							
+							
+							vars.editor = 'inline'; //hard coded for now. may change later. support for dialog, fullscreen are also present.
+							
+							if(vars.editor)	{
+								
+								$target.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
+							
+								$target.showLoading({"message":"Fetching template HTML"});
+								var callback = function(rd){
+									$target.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$target.anymessage({'message':rd})
+										}
+									else	{
+										app.u.dump(' -> template contents obtained');
+							//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
+										$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
+										$("[data-app-role='templateObjectInspectorContainer']",$target).anypanel({
+											'state' : 'persistent',
+											showClose : false, //set to false to disable close (X) button.
+											wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+											extension : 'template_editor', //used in conjunction w/ persist.
+											name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+											persistentStateDefault : 'collapse',
+											persistent : true
+											});
+							
+										var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target);
+										
+										var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
+											"|", 
+											app.ext.admin_template.u.getEditorButton_imageadd(vars,$target),
+											app.ext.admin_template.u.getEditorButton_image(vars,$target)
+											]);
+							
+							//handle some mode specifics.
+										$('.ebay, .campaign, .site').hide(); // hide all 'specifics' by default. show as needed.
+										if(vars.mode == 'EBAYProfile')	{
+											toolbarButtons.push("|");
+											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_prodattributeadd(vars,$target))
+											$(".ebay",$target).show();
+											}
+										if(vars.mode == 'Site')	{
+											toolbarButtons.push("|");
+											$(".site",$target).show();
+											}
+										else if(vars.mode == 'Campaign')	{
+											toolbarButtons.push("|");
+											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_style(vars,$target));
+											toolbarButtons.push("|");
+											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_buyerattributeadd(vars,$target));
+											toolbarButtons.push("|");
+											toolbarButtons.push(app.ext.admin_template.u.getEditorButtonNativeApp(vars,$target));
+											$(".campaign",$target).show();
+											}
+										else	{}
+										
+										$("textarea:first",$target)
+											.show()
+											.width('95%')
+											.height($target.height() - 100)
+											.addClass('fullWidth')
+											.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']))
+											.htmlarea({
+												// Override/Specify the Toolbar buttons to show
+												toolbar: toolbarButtons // 
+												});
+										
+									
+										// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
+										$("div.jHtmlArea, div.ToolBar",$target).width('100%').css('box-sizing','border-box'); //having issue with toolbar collapsing.
+										var $iframe = $('iframe',$target);
+										$iframe.width('100%').height(($(document.body).innerHeight() - $('#mastHead').outerHeight() - 100)); //the 100 covers the various margins and paddings that occur
+										var $iframeBody = $iframe.contents().find('body');
+										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
+										
+										app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
+										
+										app.u.handleAppEvents($target); //TODO -> get rid of this.
+										$target.anydelegate();
+										app.u.handleCommonPlugins($target);
+										}
 									}
-								},
-							open : function(event,ui)	{
-								$('body').css({'height':'100%','overflow':'hidden'}) //get rid of browser scrollbars.
+							
+								var cmdObj = {
+									'_cmd':'admin'+vars.mode+'FileContents',
+									'FILENAME' : 'index.html',
+									'_tag' : {
+										'callback' : callback
+										}
+									}
+								
+								if(vars.mode == 'EBAYProfile')	{
+									cmdObj.PROFILE = vars.profile;
+									cmdObj._tag.datapointer = 'adminEBAYProfileFileContents|'+vars.profile;
+									}
+								else if(vars.mode == 'Campaign')	{
+									cmdObj.CAMPAIGNID = vars.campaignid;
+									cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
+									}
+								else if(vars.mode == 'Site')	{
+									cmdObj.DOMAIN = vars.domain;
+									cmdObj._tag.datapointer = 'adminSiteFileContents|'+vars.domain;
+									}
+								else	{
+									} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
+							
+								app.model.addDispatchToQ(cmdObj,'mutable');
+								app.model.dispatchThis('mutable');
 								}
-							});
-						$D.dialog("option", "position", "center");
-						$D.dialog('option','height',($(window).height() - 100));
-						
-						$D.dialog('open');
-
-
+							}
+						else	{
+							$target.anymessage({"message":"In admin_template.a.showTemplateEditor, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
+							}	
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'No editor mode passed.'});
+						$target.anymessage({"message":"In admin_template.a.showNewTemplateEditor, vars.mode was not set and it is required","gMessage":true})
 						}
-
-					if(vars.editor)	{
-						
-	
-						$D.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
-						$D.data('mode',mode);
-					
-						$D.showLoading({"message":"Fetching template HTML"});
-						app.u.dump(' -> go get template contents ');
-						var callback = function(rd){
-							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$D.anymessage({'message':rd})
-								}
-							else	{
-								app.u.dump(' -> template contents obtained');
-								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
-//								app.u.dump(" -> $D.length: "+$D.length);
-								$D.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
-//								app.u.dump(" -> $D.children().length: "+$D.children().length); app.u.dump($D);
-
-								$("[data-app-role='templateObjectInspectorContainer']",$D).anypanel({
-									'state' : 'persistent',
-									showClose : false, //set to false to disable close (X) button.
-									wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-									extension : 'template_editor', //used in conjunction w/ persist.
-									name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-									persistentStateDefault : 'collapse',
-									persistent : true
-									});
-								var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$D);
-								
-								var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
-									"|", 
-									app.ext.admin_template.u.getEditorButton_imageadd(),
-									app.ext.admin_template.u.getEditorButton_image()
-									]);
-
-//handle some mode specifics.
-								$('.ebay, .campaign, .site').hide(); // hide all 'specifics' by default. show as needed.
-								if(mode == 'EBAYProfile')	{
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_prodattributeadd())
-									$(".ebay",$D).show();
-									}
-								if(mode == 'Site')	{
-									toolbarButtons.push("|");
-									$(".site",$D).show();
-									}
-								else if(mode == 'Campaign')	{
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_style());
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_template.u.getEditorButton_buyerattributeadd());
-									toolbarButtons.push("|");
-									toolbarButtons.push(app.ext.admin_template.u.getEditorButtonNativeApp());
-									$(".campaign",$D).show();
-									}
-								else	{}
-//								app.u.dump(" -> toolbarButtons: "); app.u.dump(toolbarButtons);
-								
-								
-								$("textarea:first",$D)
-									.show()
-									.width('95%')
-									.height($D.height() - 100)
-									.css('width','95%')
-									.val(app.ext.admin_template.u.preprocessTemplate(mode,vars,app.data[rd.datapointer]['body']))
-									.htmlarea({
-										// Override/Specify the Toolbar buttons to show
-										toolbar: toolbarButtons // 
-										});
-								
-							
-								// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-								$("div.jHtmlArea, div.ToolBar",$D).width('97%'); //having issue with toolbar collapsing.
-								var $iframeBody = $('iframe',$D).width('97%').height(iframeHeight).contents().find('body');
-								app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
-								
-								app.ext.admin_template.u.handleTemplateModeSpecifics(mode,vars,$iframeBody); //needs to be after iframe is added to the DOM.
-								
-								app.u.handleAppEvents($D);
-								$('.toolTip',$D).tooltip();
-								}
-							}
-
-						var cmdObj = {
-							'_cmd':'admin'+mode+'FileContents',
-							'FILENAME' : 'index.html',
-							'_tag' : {
-								'callback' : callback
-								}
-							}
-						
-							if(mode == 'EBAYProfile')	{
-								cmdObj.PROFILE = vars.profile;
-								cmdObj._tag.datapointer = 'adminEBAYProfileFileContents|'+vars.profile;
-								}
-							else if(mode == 'Campaign')	{
-								cmdObj.CAMPAIGNID = vars.campaignid;
-								cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
-								}
-							else if(mode == 'Site')	{
-								cmdObj.DOMAIN = vars.domain;
-								cmdObj._tag.datapointer = 'adminSiteFileContents|'+vars.domain;
-								}
-							else	{
-								} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
-
-							app.model.addDispatchToQ(cmdObj,'mutable');
-							app.model.dispatchThis('mutable');
-						}
-					
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_template.a.showTemplateEditor, "+app.ext.admin_template.u.missingParamsByMode(mode,vars),"gMessage":true});
-					}				
-				
-				}, //showTemplateEditor
+					$('#globalMessaging').anymessage({"message":"In admin_template.a.showNewTemplateEditor, $target was not a valid jquery instance.","gMessage":true})
+					}
+				},
 
 			showTemplateChooserInModal : function(vars)	{
 				vars = vars || {};
@@ -302,14 +249,14 @@ var admin_template = function() {
 					}
 				}, //showTemplateChooserInModal
 
-			initWizard : function()	{
-				var	$wizardForm = $('#wizardForm');
+			initWizard : function($wizardForm)	{
+				
 //the success fieldset, which is last in the list.
 				$wizardForm.find('fieldset:last').after("<fieldset class='wizardCompleted' class='displayNone'>Congrats! You have completed the wizard for this template.<\/fieldset>");
 				
 				var
 					$fieldsets = $('fieldset',$wizardForm),
-					$templateEditor = $('#templateEditor'), //referenced for context on multiple occasions.
+					$templateEditor = $wizardForm.closest("[data-templateeditor-role='container']"), //referenced for context on multiple occasions.
 					$iframeBody = $('iframe',$templateEditor).contents().find('body');
 
 				
@@ -445,23 +392,31 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 
 //adds some global functions for easy reference from the supporting html file for the wizard
 				declareMagicFunctions : function()	{
-	
+
+// NOTE -> the way the magic functions were originally written there was only one instance open at a time, so 'instance' was not pertinent, there was only 1.
+// now, however, there are (potentially) more than one open at a time, so we get the instance within the tab in focus. If a dialog or 'full screen' version of this are ever available, we'll need to rethink magic.
+// getContext was created so that, down the road, when a better method is available, it'll be easy to search and replace or to update.	
+//also, media library (search for kissTemplate) uses a selector similar to this.
+	function getContext()	{
+		return $("[data-templateeditor-role='container']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+		}
 	
 	function getTarget(selector,functionName){
 //		app.u.dump("getTarget selector: "+selector);
 		var r = false
 		if(selector)	{
+			var $templateEditor = getContext();
 //jqSelector doesn't play well using : or [ as first param.
-			var $target = $('iframe',$('#templateEditor')).contents().find((selector.indexOf('#') == 0 || selector.indexOf('.') == 0) ? app.u.jqSelector(selector.charAt(0),selector.substring(1)) : app.u.jqSelector("",selector));
+			var $target = $('iframe',$templateEditor).contents().find((selector.indexOf('#') == 0 || selector.indexOf('.') == 0) ? app.u.jqSelector(selector.charAt(0),selector.substring(1)) : app.u.jqSelector("",selector));
 			if($target.length)	{
 				r = $target;
 				}
 			else	{
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'The element selector ['+selector+'] passed into '+functionName+' does not exist within the template. This is likely the result of an error in the wizard.js file.'});
+				$("[data-app-role='wizardMessaging']",$templateEditor).anymessage({'message':'The element selector ['+selector+'] passed into '+functionName+' does not exist within the template. This is likely the result of an error in the wizard.js file.'});
 				}
 			}
 		else	{
-			$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'No element selector passed into '+functionName+'. This is likely the result of an error in the wizard.js file.'});
+			$("[data-app-role='wizardMessaging']",$templateEditor).anymessage({'message':'No element selector passed into '+functionName+'. This is likely the result of an error in the wizard.js file.'});
 			}
 		return r;	
 		}
@@ -524,36 +479,29 @@ var $input = $(app.u.jqSelector('#',ID));
 //				$target.append("<br><h2>JT WAS HERE</h2><br>");
 				var $prodlistTemplate = $(app.u.jqSelector('#',vars.templateID));
 				if($prodlistTemplate.length)	{
-
-
-						//success content goes here.
-						$target = getTarget(selector,'magic.prodlist'); //have to redeclare target. 'focus' of target in iframe was getting lost. for expediency's sake, this was quickest solution.
+					//success content goes here.
+					$target = getTarget(selector,'magic.prodlist'); //have to redeclare target. 'focus' of target in iframe was getting lost. for expediency's sake, this was quickest solution.
 //						app.u.dump("$target.length: "+$target.length);
 //						$target.append("<br><h2>And Here Too!</h2><br>");
-						if(prodlist)	{
-							
-							var $prodlistContainer = $prodlistTemplate.clone();
+					if(prodlist)	{
+						var $prodlistContainer = $prodlistTemplate.clone();
 //							app.u.dump(" -> $prodlistContainer.length: "+$prodlistContainer.length);
-							$prodlistContainer.attr('id','WIZ_PL_'+app.u.guidGenerator().substring(0,10)); //change the ID so it's unique.
-							$prodlistContainer.appendTo($target);
-							
-							$prodlistContainer.anycontent({'data':{'@products':prodlist}});
-							}
-						else	{
-							$D.anymessage({'message':'Your selectors returned zero product.'});
-							}
-
-
-
-
+						$prodlistContainer.attr('id','WIZ_PL_'+app.u.guidGenerator().substring(0,10)); //change the ID so it's unique.
+						$prodlistContainer.appendTo($target);
+						
+						$prodlistContainer.anycontent({'data':{'@products':prodlist}});
+						}
+					else	{
+						$D.anymessage({'message':'Your selectors returned zero product.'});
+						}
 					}
 				else	{
-					$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'vars.templateID was passed into magic.prodlist but element does not exist on the DOM.'});
+					$('#globalMessaging').anymessage({'message':'vars.templateID was passed into magic.prodlist but element does not exist on the DOM.'});
 					}
 
 				}
 			else	{
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'vars.templateID was not passed into magic.prodlist.'});
+				$('#globalMessaging').anymessage({'message':'vars.templateID was not passed into magic.prodlist.'});
 				}
 			} //magic.prodlist
 		
@@ -579,9 +527,10 @@ var $input = $(app.u.jqSelector('#',ID));
 		//selector is an element within the wizard itself.
 		window.magic.inspect = function(selector)	{
 			var $target = getTarget(selector,'magic.inspect');
+			var $templateEditor = getContext();
 			r = null;
 			if($target)	{
-				app.ext.admin_template.u.showObjectInInspector($target,$("[data-app-role='templateObjectInspectorContent']",$('#templateEditor')));
+				app.ext.admin_template.u.showObjectInInspector($target,$("[data-app-role='templateObjectInspectorContent']",$templateEditor));
 				r = $target;
 				}
 			else	{} //getTarget handles error display.
@@ -630,7 +579,7 @@ var $input = $(app.u.jqSelector('#',ID));
 				}
 			else	{
 				pass = false;
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid fieldset ['+($fieldset instanceof jQuery)+'] not passed into magic.exists.'});
+				$("#globalMessaging").anymessage({'message':'Invalid fieldset ['+($fieldset instanceof jQuery)+'] not passed into magic.exists.'});
 				}
 			app.u.dump(" -> verify pass: "+pass);
 			return (pass === true) ? r : 0;
@@ -673,7 +622,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							break;
 						
 						default:
-							$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Method ['+method+'] passed into magic.modify passed validation but is not declared in switch.','gMessage':true});
+							$("#globalMessaging").anymessage({'message':'Method ['+method+'] passed into magic.modify passed validation but is not declared in switch.','gMessage':true});
 						}
 		
 		
@@ -681,20 +630,22 @@ var $input = $(app.u.jqSelector('#',ID));
 				else	{} //getTarget handles error display.
 				}
 			else	{
-				$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':'Invalid or blank method ['+method+'] passed into magic.modify. This is likely the result of an error in the wizard.js file.'});
+				$("#globalMessaging").anymessage({'message':'Invalid or blank method ['+method+'] passed into magic.modify. This is likely the result of an error in the wizard.js file.'});
 				}
 			}
 		}
-					},
+
+					}, //declareMagicFunctions
 	
 //updates the progress bar based on the number of fieldsets and the index of the fieldset in view (yes, going backwards means progress bar regresses)
 				handleWizardProgressBar : function($pbar)	{
 					if($pbar instanceof jQuery)	{
-						var $fieldsets = $("fieldset",'#wizardForm');
+						var $wizardForm = $pbar.closest("[data-templateeditor-role='wizardContainer']").find("form[data-templateeditor-role='wizardForm']");
+						var $fieldsets = $("fieldset",$wizardForm);
 						if($fieldsets.length)	{
 							// * 201334 -> better handling if animation is in progress.
 							//if the animation is in progress already, don't mess w/ it. let it wrap up, but adjust the progress.
-							var progress = Math.round((($("fieldset:visible",'#wizardForm').index() / $fieldsets.length ) * 100));
+							var progress = Math.round((($("fieldset:visible",$wizardForm).index() / $fieldsets.length ) * 100));
 							if($pbar.is(':animated'))	{
 								$pbar.progressbar('option','value',progress);
 								}
@@ -782,16 +733,16 @@ var $input = $(app.u.jqSelector('#',ID));
 					return $template.html();
 					}, //preprocessTemplate
 
-				handleTemplateModeSpecifics : function(mode,vars,$iframeContents)	{
+				handleTemplateModeSpecifics : function(mode,vars,$iframeContents,$templateEditor)	{
 					if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
 						if($iframeContents instanceof jQuery)	{
 							if(mode == 'Site')	{
-								$("[data-app-role='saveButton']",$("#templateEditor")).text("Save Templates");
-								$("[data-app-role='templateEditorSaveAsTemplate']",$('#templateEditor')).hide();
+								$("[data-app-role='saveButton']",$templateEditor).text("Save Templates");
+								$("[data-app-role='templateEditorSaveAsTemplate']",$templateEditor).hide();
 								$iframeContents.children().hide();
 //build the list of templates that are editable and update the select list.
 //								app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
-								var $select = $("[data-app-role='siteTemplateSelect']",$('#templateEditor'));
+								var $select = $("[data-app-role='siteTemplateSelect']",$templateEditor);
 								$("[data-wizard]",$iframeContents).each(function(){
 									var $ele = $(this);
 									//create an MD5 for the contents of the element which can be used to compare later to see if any changes occured.
@@ -809,46 +760,55 @@ var $input = $(app.u.jqSelector('#',ID));
 					//data-app-role='siteTemplateSelect'
 					},
 
-				summonWizard : function(filename)	{
+				summonWizard : function($context,filename)	{
+					if($context instanceof jQuery && filename)	{
+						var $wizardForm = $("[data-templateeditor-role='wizardForm']",$context);
+						$wizardForm.showLoading({"message":"Summoning Wizard..."});
 
-					$('#wizardForm').showLoading({"message":"Summoning Wizard..."});
-
-					var editorData = $('#templateEditor').data();
-					var cmdObj = {
-						'FILENAME':filename,
-						'_tag':	{
-							'datapointer' : 'admin'+editorData.mode+'FileContents|'+filename,
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$("[data-app-role='wizardMessaging']",$('#templateEditor')).anymessage({'message':rd});
-									}
-								else	{
-									$('#wizardForm').html(app.data[rd.datapointer].body)
-									app.ext.admin_template.a.initWizard();
+						var editorData = $context.data();
+						if(!app.ext.admin_template.u.missingParamsByMode(editorData.mode,editorData))	{
+							var cmdObj = {
+								'FILENAME':filename,
+								'_tag':	{
+									'datapointer' : 'admin'+editorData.mode+'FileContents|'+filename,
+									'callback':function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$("[data-app-role='wizardMessaging']",$context).anymessage({'message':rd});
+											}
+										else	{
+											$wizardForm.html(app.data[rd.datapointer].body)
+											app.ext.admin_template.a.initWizard($wizardForm);
+											}
+										}
 									}
 								}
+		
+							if(editorData.mode == 'EBAYProfile')	{
+								cmdObj._cmd = 'adminEBAYProfileFileContents'
+								cmdObj.PROFILE = editorData.profile
+								}
+							else if(editorData.mode == 'Campaign')	{
+								cmdObj._cmd = 'adminCampaignFileContents'
+								cmdObj.CAMPAIGNID = editorData.campaignid
+								}
+							else if(editorData.mode == 'Site')	{
+								cmdObj._cmd = 'adminSiteFileContents'
+								cmdObj.DOMAIN = editorData.domain
+								}
+							else	{
+								//throw error.
+								}
+		
+							app.model.addDispatchToQ(cmdObj,'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						else	{
+							$context.anymessage({'message':'In admin_template.u.summonWizard, '+app.ext.admin_template.u.missingParamsByMode(editorData.mode,editorData),'gMessage':true});
 							}
 						}
-
-					if(editorData.mode == 'EBAYProfile')	{
-						cmdObj._cmd = 'adminEBAYProfileFileContents'
-						cmdObj.PROFILE = editorData.profile
-						}
-					else if(editorData.mode == 'Campaign')	{
-						cmdObj._cmd = 'adminCampaignFileContents'
-						cmdObj.CAMPAIGNID = editorData.campaignid
-						}
-					else if(editorData.mode == 'Site')	{
-						cmdObj._cmd = 'adminSiteFileContents'
-						cmdObj.DOMAIN = editorData.domain
-						}
 					else	{
-						//throw error.
+						$('#globalMessaging').anymessage({'message':'In admin_template.a.summonWizard, either $context is not a jquery instance ['+($context instanceof jQuery)+'] or filename ['+filename+'] was not passed.','gMessage':true});
 						}
-
-					app.model.addDispatchToQ(cmdObj,'mutable');
-					app.model.dispatchThis('mutable');
-
 					},
 
 
@@ -901,20 +861,20 @@ var $input = $(app.u.jqSelector('#',ID));
 					},
 
 //does not and SHOULD not dispatch.  Allows this to be used w/ test in campaigns.
-				handleTemplateSave : function($D)	{
+				handleTemplateSave : function($templateEditor)	{
 
-					if($D instanceof jQuery)	{
-						var mode = $D.data('mode');
-						if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
+					if($templateEditor instanceof jQuery)	{
+						var mode = $templateEditor.data('mode');
+						if(!app.ext.admin_template.u.missingParamsByMode(mode,$templateEditor.data()))	{
 	
-							$D.showLoading({'message':'Saving changes'});
+							$templateEditor.showLoading({'message':'Saving changes'});
 							var docBody;
 							if(mode == 'Site')	{
-								var dp = 'adminSiteFileContents|'+$D.data('domain')
+								var dp = 'adminSiteFileContents|'+$templateEditor.data('domain')
 								if(app.data[dp] && app.data[dp].body)	{
 									var $oTemplate = $("<html>").html(app.data[dp].body); //the original instance of the template.
 					
-									$("[data-app-role='siteTemplateSelect']",$('#templateEditor')).first().find('option').each(function(){
+									$("[data-app-role='siteTemplateSelect']",$templateEditor).first().find('option').each(function(){
 										var $option = $(this);
 										if($option.data('md5') && $option.data('elementid'))	{
 											var $thisTemplate = magic.inspect(app.u.jqSelector('#',$option.data('elementid')));
@@ -938,23 +898,23 @@ var $input = $(app.u.jqSelector('#',ID));
 									docBody = "<html>\n<!DOCTYPE html>\n"+$.trim($oTemplate.html())+"/n</html>"; //putting the template body into a jquery object strips the html and doctype tags.
 									}
 								else	{
-									$D.anymessage({'message':'In admin_template.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
+									$templateEditor.anymessage({'message':'In admin_template.u.handleTemplateSave, unable to obtain original template body in app.data'+dp,'gMessage':true});
 									}
 								}
 							else	{
-								docBody = app.ext.admin_template.u.postprocessTemplate($('.jHtmlArea iframe:first',$D).contents().find('html').html(),mode);
+								docBody = app.ext.admin_template.u.postprocessTemplate($('.jHtmlArea iframe:first',$templateEditor).contents().find('html').html(),mode);
 								}
 							var dObj = {
 								'_cmd' : 'admin'+mode+'FileSave',
 								'FILENAME' : 'index.html',
 								'_tag' : {
 									'callback' : function(responseData)	{
-										$D.hideLoading();
+										$templateEditor.hideLoading();
 										if(app.model.responseHasErrors(responseData)){
-											$D.anymessage({'message':responseData})
+											$templateEditor.anymessage({'message':responseData})
 											}
 										else	{
-											if($D.data('editor') == 'dialog')	{$D.dialog('close');}
+											if($templateEditor.data('editor') == 'dialog')	{$templateEditor.dialog('close');}
 											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
 											}
 										}
@@ -963,13 +923,13 @@ var $input = $(app.u.jqSelector('#',ID));
 								}
 	
 							if(mode == 'EBAYProfile')	{
-								dObj.PROFILE = $D.data('profile');
+								dObj.PROFILE = $templateEditor.data('profile');
 								}
 							else if(mode == 'Campaign')	{
-								dObj.CAMPAIGNID = $D.data('campaignid');
+								dObj.CAMPAIGNID = $templateEditor.data('campaignid');
 								}
 							else if(mode == 'Site')	{
-								dObj.DOMAIN = $D.data('domain');
+								dObj.DOMAIN = $templateEditor.data('domain');
 								}
 							else	{} //shouldn't get here. mode is verified earlier to be a supported mode.
 //							app.u.dump(" -> cmd: "); app.u.dump(dObj);
@@ -977,7 +937,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
+							$templateEditor.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$templateEditor.data())});
 							}
 						}
 					else	{
@@ -985,7 +945,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					},
 
-//Used to copy a template into a profile or campaign (or whatever as more get added).
+//Copies a template into a profile or campaign (or whatever as more get added).
 //vars needs to include SUBDIR and PROJECTID.  Vars is most likely passed from an li.data(), but doesn't have to be.
 				handleTemplateSelect : function(vars)	{
 					vars = vars || {};
@@ -994,6 +954,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 					if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
 						if(vars.SUBDIR)	{
+							vars.mode = mode; //used when passed into navigateTo
 							//all is well at this point. proceed.
 							$TC.showLoading({'message':'One moment please. Copying files into directory.'});
 							var dObj = {
@@ -1006,11 +967,7 @@ var $input = $(app.u.jqSelector('#',ID));
 										else	{
 											$TC.dialog('close');
 											$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the template "+vars.SUBDIR+" has been copied."));
-//											$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
-//app.u.dump("vars: "); app.u.dump(vars);
-//app.u.dump("whitelist: "); app.u.dump(app.u.getWhitelistedObject(vars,['domain','templateid','profile']));
-
-											app.ext.admin_template.a.showTemplateEditor(mode,app.u.getWhitelistedObject(vars,['domain','campaignid','profile']));
+											navigateTo('#!templateEditor',app.u.getWhitelistedObject(vars,['domain','campaignid','profile','mode']));
 											}
 										}
 									}	
@@ -1053,7 +1010,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 					}, //handleTemplateSelect
 				
-				getEditorButton_imageadd : function()	{
+				getEditorButton_imageadd : function(vars,$templateEditor)	{
 					return {
 						css : 'imageadd',
 						'text' : 'Upload New Image to Profile',
@@ -1072,14 +1029,14 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					}, //getEditorButton_imageadd
 					
-				getEditorButton_image : function()	{
+				getEditorButton_image : function(vars,$templateEditor)	{
 					return {
 						css: 'image',
 						text: 'Place Image',
 						action: function (btn) {
 							var 
 								$D = $('#ebayTemplateEditorImageListModal'),
-								profile = $('#templateEditor').data('profile'),
+								profile = vars.profile,
 								jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
 							if($D.length)	{
 								$D.empty(); //clear contents
@@ -1124,9 +1081,7 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					}, //getEditorButton_image
 
-
-
-				getEditorButton_style : function(){
+				getEditorButton_style : function(vars,$templateEditor){
 					return {
 						css : 'styletagedit',
 						'text' : 'Style Tags',
@@ -1140,13 +1095,13 @@ var $input = $(app.u.jqSelector('#',ID));
 							$D.dialog('option','width','500');
 //							$D.dialog('option','modal',false); warning - toggling between css editor as a dialog caused template iframe body to empty. odd.
 							
-							var $style = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("style:first");
+							var $style = $('.jHtmlArea iframe:first',$templateEditor).contents().find("style:first");
 //templatebuildercss is not editable. it's what the app adds for highlighting classes and it is nuked on save.
 //if that's the first style on the page, append a new style tag to the head of the template for future use.
 							if($style.parent().attr('id') == 'templateBuilderCSS')	{
 								app.u.dump("First style tag is the templateBuilderCSS. Don't use it.");
 								$style = $("<style \/>"); 
-								$('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("head").append($style);
+								$('.jHtmlArea iframe:first',$templateEditor).contents().find("head").append($style);
 								}
 
 							$("<textarea \/>").width('100%').height('350px').on('blur',function(){
@@ -1157,13 +1112,13 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					}, //getEditorButton_style
 
-				getEditorButtonNativeApp : function(){
+				getEditorButtonNativeApp : function(vars,$templateEditor){
 					return {
 						css : 'nativeappinputsshow',
 						'text' : 'Native App Settings',
 						action: function () {
 						
-							var $metaTags = app.ext.admin_template.u.pluckObjectFromTemplate('meta')
+							var $metaTags = app.ext.admin_template.u.pluckObjectFromTemplate('meta',$templateEditor);
 							var data = {};
 
 //							app.u.dump(" -> $metaTags.length: "+$metaTags.length); app.u.dump($metaTags instanceof jQuery);
@@ -1184,12 +1139,12 @@ var $input = $(app.u.jqSelector('#',ID));
 								{ text: "Close", click: function() { $( this ).dialog( "close" ); } },
 								{ text: "Apply", click: function() {
 									var sfo = $('form',$D).serializeJSON();
-									var $templateHead = app.ext.admin_template.u.pluckObjectFromTemplate('head');
+									var $templateHead = app.ext.admin_template.u.pluckObjectFromTemplate('head',$templateEditor);
 //									app.u.dump(" -> sfo: "); app.u.dump(sfo);
 
 									$D.showLoading({"message":"Applying Changes"});
 									for(index in sfo)	{
-										var $meta = app.ext.admin_template.u.pluckObjectFromTemplate("meta[name='"+index+"']");
+										var $meta = app.ext.admin_template.u.pluckObjectFromTemplate("meta[name='"+index+"']",$templateEditor);
 										//update meta if it already exists.
 										if($meta.length)	{ //data is a list of meta tags that existed at the outset of this operation. if it's here, it exists as a meta in the template already.
 //											app.u.dump(" --> MATCH!");
@@ -1309,8 +1264,8 @@ var $input = $(app.u.jqSelector('#',ID));
 					},
 
 //this function does NOT escape the selector, so any selector that is a variable and needs escaping should be escaped before it's dumped in.
-				pluckObjectFromTemplate : function(selector)	{
-					return $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find(selector);
+				pluckObjectFromTemplate : function(selector,$templateEditor)	{
+					return $('.jHtmlArea iframe:first',$templateEditor).contents().find(selector);
 					},
 				
 				applyElementToTemplate : function(jhtml,attObj){
@@ -1392,7 +1347,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 					$ele.off('change.adminSiteTemplateEdit').on('change.adminSiteTemplateEdit',function(){
 						//when a template is changed, all that needs to be done is to load the wizard. the wizard should take care of everything.
-						app.ext.admin_template.u.summonWizard("wizard-"+$(this).val()+".html")
+						app.ext.admin_template.u.summonWizard($ele.closest("[data-templateeditor-role='container']"),"wizard-"+$(this).val()+".html")
 						});
 					
 					},
@@ -1401,9 +1356,9 @@ var $input = $(app.u.jqSelector('#',ID));
 					$btn.button();
 					$btn.off('click.adminSaveAsTemplateExec').on('click.adminSaveAsTemplateExec',function(){
 						var
-							templateName = $('#templateName').val(),
-							$D = $('#templateEditor');
-						var mode = $D.data('mode');
+							$D = $btn.closest("[data-templateeditor-role='container']"),
+							templateName = $("[input[name='template']",$D).val(),
+							mode = $D.data('mode');
 						
 						if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
 
@@ -1617,10 +1572,11 @@ else	{
 						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
 							if(app.u.isValidEmail($input.val()))	{
 								$D.showLoading({'message':'Sending Test Email'});
-								app.ext.admin_template.u.handleTemplateSave($('#templateEditor'));
+								var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
+								app.ext.admin_template.u.handleTemplateSave($templateEditor);
 								app.model.addDispatchToQ({
 									'_cmd':'adminCampaignTest',
-									'CAMPAIGNID' : $('#templateEditor').data('campaignid'),
+									'CAMPAIGNID' : $templateEditor.data('campaignid'),
 									'RECIPIENTS' : "emails="+$input.val()+"\n",
 									'_tag':	{
 										'callback':function(rd)	{
@@ -1683,7 +1639,8 @@ else	{
 					},
 
 				templateEditorIframeResizeExec : function($ele)	{
-					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));
+					var $templateEditor = $ele.closest("[data-templateeditor-role='container']");
+					var $iframe = $('.jHtmlArea iframe:first',$templateEditor);
 					$iframe.data('originalHeight',$iframe.height());
 					$iframe.parent().removeClass()
 					$iframe.parent().find('.device').remove(); //remove all css classes from parent, then any 'device' elements used for bg's 
@@ -1709,7 +1666,8 @@ else	{
 
 				templateEditorIframeRotateExec : function($btn)	{
 					$btn.button();
-					var $iframe = $('.jHtmlArea iframe:first',$('#templateEditor'));
+					var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
+					var $iframe = $('.jHtmlArea iframe:first',$templateEditor);
 					$btn.off('click.templateEditorIframeResizeExec').on('click.templateEditorIframeResizeExec',function(){
 //						app.u.dump("rotate click event triggered. iframe.length: "+$iframe.length);
 						var W = $iframe.width();
@@ -1747,10 +1705,10 @@ The names for these delegated events are temporary. use the original names once 
 				delTemplateEditorShow : function($ele,p)	{
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
-						app.ext.admin_template.a.showTemplateEditor('Campaign',{"campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
+						navigateTo('#!templateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
-						app.ext.admin_template.a.showTemplateEditor('EBAYProfile',{"profile":$ele.closest("[data-profile]").data('profile')});
+						navigateTo('#!templateEditor',{'profile':$ele.closest("[data-profile]").data('profile'),'mode':'EBAYProfile'});
 						}
 					else if ($ele.data('mode') == 'Site')	{
 						
@@ -1758,7 +1716,7 @@ The names for these delegated events are temporary. use the original names once 
 						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
 						
 						if(hostname && domainname)	{
-							app.ext.admin_template.a.showTemplateEditor('Site',{"domain":hostname.toLowerCase()+'.'+domainname});
+							navigateTo('#!templateEditor',{'domain':hostname.toLowerCase()+'.'+domainname,'mode':'Site'});
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
@@ -1828,8 +1786,9 @@ The names for these delegated events are temporary. use the original names once 
 
 				startWizardExec : function($btn)	{
 					$btn.button();
-					var $meta = $('.jHtmlArea iframe:first',$('#templateEditor')).contents().find("meta[name='wizard']");
-					var editorData = $('#templateEditor').data(); 
+					var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
+					var $meta = $('.jHtmlArea iframe:first',$templateEditor).contents().find("meta[name='wizard']");
+					var editorData = $templateEditor.data(); 
 					
 					if($meta.length == 0)	{$btn.button('disable')}
 					else	{
@@ -1837,7 +1796,7 @@ The names for these delegated events are temporary. use the original names once 
 						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
 							$btn.button('disable').hide();
 							event.preventDefault();
-							app.ext.admin_template.u.summonWizard($meta.attr('content'));
+							app.ext.admin_template.u.summonWizard($btn.closest("[data-templateeditor-role='container']"),$meta.attr('content'));
 							});
 						}
 					},
@@ -1857,13 +1816,13 @@ The names for these delegated events are temporary. use the original names once 
 				adminTemplateSaveExec : function($btn)	{
 					$btn.button();
 					$btn.off('click.adminTemplateSaveExec').on('click.adminTemplateSaveExec',function(){
-						var $D = $('#templateEditor');
-						if(!app.ext.admin_template.u.missingParamsByMode($D.data('mode'),$D.data()))	{
-							app.ext.admin_template.u.handleTemplateSave($D); 
+						var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
+						if(!app.ext.admin_template.u.missingParamsByMode($templateEditor.data('mode'),$templateEditor.data()))	{
+							app.ext.admin_template.u.handleTemplateSave($templateEditor); 
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
+							$templateEditor.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$templateEditor.data())});
 							}
 						});
 	

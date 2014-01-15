@@ -552,7 +552,8 @@ setTimeout(function(){
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 //						app.u.dump(" -> we have everything we need to proceed. Proceed.");
-						var $image = (mediaData.mode == 'kissTemplate') ? $('iframe',$('#templateEditor')).contents().find(mediaData.imageID) : $(mediaData.imageID);
+						var $templateEditor = $("[data-templateeditor-role='container']",app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+						var $image = (mediaData.mode == 'kissTemplate') ? $('iframe',$templateEditor).contents().find(mediaData.imageID) : $(mediaData.imageID);
 						var oldSrc = $image.src;
 //						app.u.dump(" -> $image.length: "+$image.length);
 //						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
