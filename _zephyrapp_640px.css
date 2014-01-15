@@ -55,8 +55,8 @@
 
 /**** Product Page CSS****/
 .prodPageNameContainer{padding:0px; background:none; border:0px;}
-.prodPageName {padding:2px 6px 10px; background:none;}
-.prodPageName h1 {min-height:40px; font-size:17px; color:#194a75;}
+.prodPageName {padding:0px 5px 5px; background:none;}
+.prodPageName h1 {min-height:40px; font-size:18px; color:#000000;}
 .imageContainer {width:270px;}
 .prodPageMainImage {float: left;}
 .prodBigImage{margin:0 auto; display:block; border: 1px solid #CCCCCC;}

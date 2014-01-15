@@ -702,9 +702,10 @@ a:hover {
 	padding:10px 10px 18px 0px; 
 }
 .prodPageName h1 {
-	font-size:21px; 
 	color:#FFFFFF;
+	font-size:21px; 
 	font-weight: normal;
+	font-family: 'Nunito', sans-serif;
 }
 .tagsContainer span{
 	display: inline-block;
