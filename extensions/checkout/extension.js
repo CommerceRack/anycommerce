@@ -61,7 +61,7 @@ var order_create = function() {
 
 				var r = true; //returns false if checkout can't load due to account config conflict.
 
-				if(typeof _gaq === 'undefined' && !app.u.thisIsAnAdminSession())	{
+				if(typeof _gaq === 'undefined' && !app.vars.thisSessionIsAdmin)	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
 					r = false;					
@@ -76,10 +76,12 @@ var order_create = function() {
 					r = false;
 					$('#globalMessaging').anymessage({'message':'<strong>Uh Oh!<\/strong> app.vars.checkoutAuthMode is not set. should be set to passive, required or active (depending on the checkout behavior desired).'});
 					}
-				else if(app.u.thisIsAnAdminSession())	{
+				else if(app.vars.thisSessionIsAdmin)	{
+					r = true;
 					//don't execute a localStorage.clear() on an admin session cuz it'll nuke the session ID and the carts.
 					}
 				else	{
+					r = true;
 					if(document.domain.indexOf('app-hosted.com') >= 0)	{
 						if(jQuery.support.localStorage)	{
 							window.localStorage.clear();
