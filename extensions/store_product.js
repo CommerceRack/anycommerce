@@ -77,7 +77,7 @@ var store_product = function() {
 				obj["_cmd"] = "appProductGet";
 				obj["withVariations"] = 1;
 //only get inventory if it matters. inv_mode of 1 means inventory is not important.
-				if(app.vars.thisSessionIsAdmin || (typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1))
+				if(app.u.thisIsAnAdminSession() || (typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1))
 					obj["withInventory"] = 1;
 				obj["pid"] = pid;
 				obj["_tag"] = tagObj;

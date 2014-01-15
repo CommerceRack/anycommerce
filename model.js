@@ -820,7 +820,6 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				app.vars.userid = responseData.userid.toLowerCase();
 				app.vars.username = responseData.username.toLowerCase();
 				app.vars.thisSessionIsAdmin = true;
-				
 				}
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
@@ -1548,7 +1547,7 @@ This is checks for two things:
 // if set to true and in a non-admin mode, won't hurt anything, but is less clean.
 //these are whitelisted server side. add anything non supported and comatibility mode calls will die a most horrible death.
 		setHeader : function(xhr){
-			if(app.vars.thisSessionIsAdmin)	{
+			if(app.u.thisIsAnAdminSession())	{
 				xhr.setRequestHeader('x-clientid',app.vars._clientid); //set by app
 				xhr.setRequestHeader('x-session',app.vars._session); //set by app. 
 				xhr.setRequestHeader('x-domain',app.vars.domain); //what domain is in focus. set by app or user
