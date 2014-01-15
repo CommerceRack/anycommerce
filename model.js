@@ -1614,7 +1614,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 //location should be set to 'session' or 'local'.
 		writeLocal : function (key,value,location)	{
 			app.u.dump("############### BEGIN model.writeLocal. key: "+key+" and value: "+value);
-			app.u.dump(" -> is dps empty? "); app.model.dpsGet('admin','domain'); //dpsGet purely for debug
+//			app.u.dump(" -> is dps empty? "); app.model.dpsGet('admin','domain'); //dpsGet purely for debug
 			location = location || 'local';
 			var r = false;
 
@@ -1641,7 +1641,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 			else	{
 				app.u.dump("in writeLocal for key ["+key+"], check for $.support."+location+"Storage returned: "+$.support[location+'Storage']);
 				}
-			app.u.dump(" -> NOW is dps empty? "); app.model.dpsGet('admin','domain');  //dpsGet purely for debug
+//			app.u.dump(" -> NOW is dps empty? "); app.model.dpsGet('admin','domain');  //dpsGet purely for debug
 			return r;
 			}, //writeLocal
 
@@ -1725,9 +1725,9 @@ app.u.dump(" -> DELETED cookie "+c_name);
 //this allows for one extension to read anothers preferences and use/change them.
 //ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
-				app.u.dump(" <<<<< DPS GET. ext: "+ext+" and ns: "+ns+" >>>>>");
+//				app.u.dump(" <<<<< DPS GET. ext: "+ext+" and ns: "+ns+" >>>>>");
 				var r = false, DPS = app.model.readLocal('dps','local') || {};
-				app.u.dump("DPS from local: "); app.u.dump(DPS);
+//				app.u.dump("DPS from local: "); app.u.dump(DPS);
 				if($.isEmptyObject(DPS))	{
 //					app.u.dump(" ^^ Entire 'DPS' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.
@@ -1739,7 +1739,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 					else	{} //could get here if ext passed but obj.ext doesn't exist.
 //					app.u.dump(" ^^ value for DPS Get: "); app.u.dump(r);
 					}
-				app.u.dump("DPS returned: "); app.u.dump(r);
+//				app.u.dump("DPS returned: "); app.u.dump(r);
 				return r;
 				},
 
@@ -1747,14 +1747,14 @@ app.u.dump(" -> DELETED cookie "+c_name);
 //For updating preferences, which are currently device specific.
 //Uses local storage
 //for instance, in orders, what were the most recently selected filter criteria.
-//ext is required (currently). reduces likelyhood of nuking entire preferences object.
+//ext and namespace (ns) are required. reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-				app.u.dump(" >>>>> DPS SET <<<<< \next: "+ext+"\nns: "+ns);
+				app.u.dump(" >>>>> DPS SET <<<<< \n\text: "+ext+"\n\tns: "+ns);
 //				app.u.dump(" * varObj (value for dps set): "); app.u.dump(varObj);
 				if(ext && ns && (varObj || varObj == 0))	{
-//					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
+					app.u.dump("dpsSet for "+ext+"["+ns+"] has everything necessary to proceed with a save.");
 					var DPS = app.model.readLocal('dps','local') || {}; //readLocal returns false if no data local.
-//					app.u.dump(" ** DPS: "); app.u.dump(DPS);
+					app.u.dump(" DPS loaded in dpsSet: "); app.u.dump(DPS);
 					if(typeof DPS[ext] === 'object'){
 						DPS[ext][ns] = varObj;
 						}
@@ -1764,6 +1764,8 @@ app.u.dump(" -> DELETED cookie "+c_name);
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 					app.model.writeLocal('dps',DPS,'local'); //update the localStorage session var.
+					app.u.dump(" ------------------------ ")
+					app.u.dump("write local just executed in dpsSet. here's what DPS now looks like: "); app.u.dump(app.model.dpsGet());
 					}
 				else	{
 					app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
