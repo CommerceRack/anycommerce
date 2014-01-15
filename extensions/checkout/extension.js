@@ -61,7 +61,7 @@ var order_create = function() {
 
 				var r = true; //returns false if checkout can't load due to account config conflict.
 
-				if(typeof _gaq === 'undefined' && !app.vars.thisSessionIsAdmin)	{
+				if(typeof _gaq === 'undefined' && !app.u.thisIsAnAdminSession())	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
 					r = false;					
@@ -77,17 +77,13 @@ var order_create = function() {
 					$('#globalMessaging').anymessage({'message':'<strong>Uh Oh!<\/strong> app.vars.checkoutAuthMode is not set. should be set to passive, required or active (depending on the checkout behavior desired).'});
 					}
 				else if(app.u.thisIsAnAdminSession())	{
-					r = true;
 					//don't execute a localStorage.clear() on an admin session cuz it'll nuke the session ID and the carts.
 					}
 				else	{
-					r = true;
-					
 					if(document.domain.indexOf('app-hosted.com') >= 0)	{
 						if(jQuery.support.localStorage)	{
 							window.localStorage.clear();
 							}
-						
 						} //clear localStorage for shared domain to avoid cross-store contamination.
 					}
 
@@ -223,7 +219,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					}
 
 				
-				if(app.vars.thisSessionIsAdmin)	{} //no need to get a new cart id for an admin session or handle any third party display code.
+				if(app.u.thisIsAnAdminSession())	{} //no need to get a new cart id for an admin session or handle any third party display code.
 				else	{
 
 					var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks(oldCartID));
@@ -505,7 +501,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 							}
 						}
 //in an admin session w/ an existing user, make sure the address has been selected.
-					else if(app.vars.thisSessionIsAdmin && app.u.thisNestedExists("app.data.cartDetail|"+cartID+".customer.cid") && app.data['cartDetail|'+cartID].customer.cid > 0) {
+					else if(app.u.thisIsAnAdminSession() && app.u.thisNestedExists("app.data.cartDetail|"+cartID+".customer.cid") && app.data['cartDetail|'+cartID].customer.cid > 0) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -515,7 +511,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //handle phone number input based on zGlobals setting.
 
-						if(!app.vars.thisSessionIsAdmin && zGlobals && zGlobals.checkoutSettings && zGlobals.checkoutSettings.chkout_phone == 'REQUIRED')	{
+						if(!app.u.thisIsAnAdminSession() && zGlobals && zGlobals.checkoutSettings && zGlobals.checkoutSettings.chkout_phone == 'REQUIRED')	{
 							$("input[name='bill/phone']",$fieldset).attr('required','required');
 							}
 						else	{
@@ -953,7 +949,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
 					}
-				else if(app.vars.thisSessionIsAdmin || zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
+				else if(app.u.thisIsAnAdminSession() || zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
 				else	{$fieldset.hide()}
 				} //chkoutNotes
 
@@ -997,12 +993,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.u.dump(" -> startCheckout cartid: "+cartID);
 					$chkContainer.empty();
 					$chkContainer.anydelegate({
-						trackEdits : app.vars.thisSessionIsAdmin //edits are only tracked in the admin interface
+						trackEdits : app.u.thisIsAnAdminSession() //edits are only tracked in the admin interface
 						});
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.
 
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
-					if(app.vars.thisSessionIsAdmin)	{
+					if(app.u.thisIsAnAdminSession())	{
 						}
 					else if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
 						app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
@@ -1030,7 +1026,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
-							if(app.data[rd.datapointer]['@ITEMS'].length || app.vars.thisSessionIsAdmin)	{
+							if(app.data[rd.datapointer]['@ITEMS'].length || app.u.thisIsAnAdminSession())	{
 //								app.u.dump(" -> cart has items or this is an admin session.");
 								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.order_create.u.extendedDataForCheckout(cartID));
 				
@@ -1050,7 +1046,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									app.ext.order_create.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
 									});
 //								app.u.dump(" -> handlePanel has been run over all fieldsets.");
-								if(app.vars.thisSessionIsAdmin && app.data[rd.datapointer].customer.cid)	{
+								if(app.u.thisIsAnAdminSession() && app.data[rd.datapointer].customer.cid)	{
 									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
 									$chkContainer.showLoading({'message':'Fetching customer record'});
 									app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$chkContainer},'mutable');
@@ -1214,7 +1210,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
 						}
 				
-				if($("input[name='price']",$container).val() && app.vars.thisSessionIsAdmin)	{
+				if($("input[name='price']",$container).val() && app.u.thisIsAnAdminSession())	{
 					vars.price = $("input[name='price']",$container).val();
 					}
 				
@@ -1367,7 +1363,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					cartUpdate[addressType+"/shortcut"] = addressID;
 					cartUpdate._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 					
-					var addrObj = app.vars.thisSessionIsAdmin ? app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+app.data['cartDetail|'+$checkout.data('cartid')].customer.cid]['@'+addressType.toUpperCase()],addressID,addressType,true) : app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
+					var addrObj = app.u.thisIsAnAdminSession() ? app.ext.cco.u.getAndRegularizeAddrObjByID(app.data['adminCustomerDetail|'+app.data['cartDetail|'+$checkout.data('cartid')].customer.cid]['@'+addressType.toUpperCase()],addressID,addressType,true) : app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
 
 					if(app.ext.cco.u.verifyAddressIsComplete(addrObj,addressType))	{
 						
@@ -1627,7 +1623,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$checkoutForm = $ele.closest('form'), //used in some callbacks later.
 					$checkoutAddrFieldset = $ele.closest('fieldset'),
 					addressType = $ele.data('app-addresstype').toLowerCase();
-				if(app.vars.thisSessionIsAdmin)	{
+				if(app.u.thisIsAnAdminSession())	{
 					var $D = app.ext.admin_customer.a.createUpdateAddressShow({'mode':'create','show':'dialog','type':addressType});
 					}
 				else	{
@@ -1728,7 +1724,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				var obj = {};
 				if(cartID)	{
-					if(app.vars.thisSessionIsAdmin)	{
+					if(app.u.thisIsAnAdminSession())	{
 						//can skip all the paypal code in an admin session. it isn't a valid payment option.
 						if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].customer && app.data['cartDetail|'+cartID].customer.cid && app.data['adminCustomerDetail|'+app.data['cartDetail|'+cartID].customer.cid])	{
 							//change this so object stores the data how buyerAddressList and buyerWalletList would.
@@ -1841,7 +1837,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //does NOT dispatch. That way, other requests can be piggy-backed.
 			handleCommonPanels : function($context)	{
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
-				app.u.dump(" -> handleCommonPanels cartID: "+cartid);
+//				app.u.dump(" -> handleCommonPanels cartID: "+cartid);
 				if(cartid)	{
 					app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
 					app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
@@ -1856,7 +1852,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.ext.order_create.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
 						//in an admin session, the cart contents are updated much more frequently because the 'cart' is editable.
 						//if a storefront offers an editable cart within checkout, then remove the if around the chkoutCartItemsList update.
-						if(app.vars.thisSessionIsAdmin)	{
+						if(app.u.thisIsAnAdminSession())	{
 							app.ext.order_create.u.handlePanel($context,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
 							}
 						}},'immutable');
