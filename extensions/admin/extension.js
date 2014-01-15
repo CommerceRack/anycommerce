@@ -1991,8 +1991,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			},
 
 		graphicURL : function($tag,data)	{
-			$tag.attr('src',"https://"+app.vars.https_domain+data.value);
-			$tag.wrap("<a href='https://"+app.vars.https_domain+data.value+"' data-gallery='gallery'>");
+			$tag.attr('src',"https://"+app.vars['media-host']+data.value);
+			$tag.wrap("<a href='https://"+app.vars['media-host']+data.value+"' data-gallery='gallery'>");
 			},
 
 		publicURL : function($tag,data)	{
@@ -2576,11 +2576,11 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					if(domain && (partition == 0 || Number(partition) > 0))	{
 						app.vars.domain = domain;
 						app.vars.partition = partition;
-						app.vars.https_domain = app.data['adminDomainList']['media-host'];
+						app.vars['media-host'] = app.data.adminDomainList['media-host'];
 	//set the vars in localStorage. This is what will be used upon return to preselect a domain.
 						app.model.dpsSet('admin',"domain",domain); 
 						app.model.dpsSet('admin',"partition",partition); 
-						app.model.dpsSet('admin',"https_domain",app.vars.https_domain); 
+						app.model.dpsSet('admin',"media-host",app.vars['media-host']); 
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
@@ -2850,7 +2850,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 						}
 					}
 				else if(!app.vars.domain)	{
-					//if no domain is set, don't go anywhere yet. domain/prt/https_domain are pretty essential.
+					//if no domain is set, don't go anywhere yet. domain/prt/media-host are pretty essential.
 					//the chooser will prompt the user to select a domain and execute a navigateTo.
 					}
 				else	{
@@ -2895,23 +2895,24 @@ once multiple instances of the finder can be opened at one time, this will get u
 /*
 if the user has logged in before, the domain used is stored in dps.
 if the domain is not in dps, use the domain that is in the url. should be valid or jsonapi will return errors.
-Changing the domain in the chooser will set three vars in localStorage so they'll be available next time (domain, partition and https_domain).
- -> all three of the vars are required. images require the https_domain and several configDetail calls require partition.
+Changing the domain in the chooser will set three vars in localStorage so they'll be available next time (domain, partition and media-host).
+ -> all three of the vars are required. images require the media-host and several configDetail calls require partition.
 */
 				var adminObj = app.model.dpsGet('admin') || {};
+				app.u.dump(" -> domain object from dpsGet: "); app.u.dump(adminObj);
 				if(!$.isEmptyObject(adminObj))	{
 					app.vars.domain = adminObj.domain;
 					app.vars.partition = adminObj.partition;
-					app.vars.https_domain = adminObj.https_domain;
+					app.vars['media-host'] = adminObj.media-host;
 					}
 
-				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
+				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars['media-host'])	{
+					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or media-host ["+app.vars['media-host']+"] not set. set domain to blank to trigger domain chooser.");
 					app.vars.domain = false;  //
 					}
 
 				if(app.vars.domain)	{
-					//by now, if partition or https_domain was blank, domain would be false. That means everything we needs is here. update the header and we're done.
+					//by now, if partition or media-host was blank, domain would be false. That means everything we needs is here. update the header and we're done.
 					$('.partition','#appView').text(app.vars.partition);
 					$('.domain','#appView').text(app.vars.domain);
 					}
