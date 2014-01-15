@@ -1725,7 +1725,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 			dpsGet : function(ext,ns)	{
 				app.u.dump(" <<<<< DPS GET. ext: "+ext+" and ns: "+ns+" >>>>>");
 				var r = false, DPS = app.model.readLocal('dps','local') || {};
-				
+				app.u.dump("DPS from local: "); app.u.dump(DPS);
 				if($.isEmptyObject(DPS))	{
 //					app.u.dump(" ^^ Entire 'DPS' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.

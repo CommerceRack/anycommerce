@@ -4217,15 +4217,16 @@ else	{
 //login data will allow the user to return without logging in.
 //session data is panel disposition and order and things like that.
 			selectivelyNukeLocalStorage : function(){
+				app.u.dump(" !!!!!!!! selectivelyNukeLocalStorage executed !!!!!!!! ");
 				var admin = {};
 				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
-				var dps = app.model.dpsGet(); //all 'session' vars
+				var dps = app.model.dpsGet(); //all 'dps' vars
 				window.localStorage.clear();
 				app.model.writeLocal('authAdminLogin',admin);
 // * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
 				dps.admin.domain = '';
 				dps.admin.partition = '';
-				app.model.writeLocal('session',dps);
+				app.model.writeLocal('dps',dps);
 				},
 
 
