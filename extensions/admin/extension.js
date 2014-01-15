@@ -3233,6 +3233,9 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($target);
 					}
+				else if(path == '#!templateEditor')	{
+					app.ext.admin_template.a.showTemplateEditor($target,opts);
+					}
 				else if(path == '#!cartManager')	{
 					app.ext.cart_message.a.showCartManager($target);
 					}

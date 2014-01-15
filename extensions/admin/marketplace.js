@@ -1470,7 +1470,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					app.ext.admin_marketplace.u.ebayShowTreeByChild($ele.val());
 					});
 				}, //ebayShowTreeByChild
-			
+
 			ebayTokenDeleteConfirm : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.ebayTokenDeleteConfirm').on('click.ebayTokenDeleteConfirm',function(event){

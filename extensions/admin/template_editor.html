@@ -1,5 +1,5 @@
 
-<table id='templateEditorTemplate' class='fullWidth'>
+<table id='templateEditorTemplate' class='fullWidth templateEditor'>
 <tr>
 	<td  class='valignTop width75 ui-widget ui-widget-content ui-corner-all'>
 	<div class='stdPadding'>
@@ -46,13 +46,13 @@
 	
 	
 	
-	<section class='ui-widget marginBottom'>
+	<section class='ui-widget marginBottom' data-templateeditor-role='wizardContainer'>
 		<h4 class='smallPadding ui-widget-header ui-corner-top'>Wizard</h4>
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 	
 	<div data-app-role='wizardMessaging' class='small'></div>
 	
-	<form id='wizardForm' action='#' onSubmit='return false;'>
+	<form action='#' onSubmit='return false;' data-templateeditor-role='wizardForm' class='wizardForm'>
 	<button data-app-event='admin_template|startWizardExec'>Start Wizard</button>
 	</form>
 	
