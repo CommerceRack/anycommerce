@@ -1366,7 +1366,6 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])
 	}]);
 
-
 				return r;
 				},
 			onError : function(d)	{
@@ -1388,46 +1387,11 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 					}
 				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
 
-if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
-	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
-	}
-
-
-//get list of domains and show chooser.
-				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
-				$domainChooser.dialog({
-					'autoOpen':false,
-					'modal':true,
-					'width': '90%',
-					'height': 500,
-					'closeOnEscape': false,
-					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon. will close on domain selection
-					});
-
-//** 201320 -> no more hunting and pecking for domain. stored in dps and if it isn't there, the user will be prompted (in showHeader) to select one.
-//the domainChange will set these three vars in localStorage so they'll be there next time.
-//all three of the vars are required. images require the https_domain and several configDetail calls require partition.
-var adminObj = app.model.dpsGet('admin');
-if(!$.isEmptyObject(adminObj))	{
-	app.vars.domain = adminObj.domain;
-	app.vars.partition = adminObj.partition;
-	app.vars.https_domain = adminObj.https_domain;
-	}
-			
-//				app.u.dump(" -> domain: "+app.vars.domain);
-//				app.u.dump(" -> partition: "+app.vars.partition);
-//				app.u.dump(" -> https_domain: "+app.vars.https_domain);
-				
-				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
-					app.vars.domain = false;  //
+				if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
+					app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 					}
 
-//make sure all the links in the header use the proper syntax.
-				$('.bindByAnchor','#mastHead').each(function(){
-					// app.u.dump("BEGIN #mastHead rewriteLink");
-					app.ext.admin.u.rewriteLink($(this));
-					})
+
 //if supported, update hash while navigating.
 // see handleHashState function for what this is and how it works.
 				if("onhashchange" in window)	{ // does the browser support the hashchange event?
@@ -1447,63 +1411,59 @@ if(!$.isEmptyObject(adminObj))	{
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 
-
-document.write = function(v){
-	if(console && console.warn){
-		console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();");
-		console.log("document.write contents: "+v);
-		}
-	$("body").append(v);
-	}
+//a document.write and app are like dogs and cats. They don't get along. this is the workaround
+				document.write = function(v){
+					app.u.dump("document.write was executed. That's bad mojo. Rewritten to $('body').append();",'warn');
+					app.u.dump("document.write contents: "+v);
+					$("body").append(v);
+					}
 
 
-var uriParams = {};
-var ps = window.location.href; //param string. find a regex for this to clean it up.
-if(ps.indexOf('?') >= 1)	{
-	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-	if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
-	else	{
-		if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-//	app.u.dump(ps);
-		uriParams = app.u.kvp2Array(ps);
-		}
-//	app.u.dump(uriParams);
-	}
-
-// app.u.dump(" -> uriParams"); app.u.dump(uriParams);
-if(uriParams.trigger == 'adminPartnerSet')	{
-	app.u.dump(" -> execute adminPartnerSet call");
-	//Merchant is most likely returning to the app from a partner site for some sort of verification
-	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
-	app.model.dispatchThis('immutable');
-	}
+				var uriParams = {};
+				var ps = window.location.href; //param string. find a regex for this to clean it up.
+				if(ps.indexOf('?') >= 1)	{
+					ps = ps.split('?')[1]; //ignore everything before the first questionmark.
+					if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
+					else	{
+						if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
+				//	app.u.dump(ps);
+						uriParams = app.u.kvp2Array(ps);
+						}
+				//	app.u.dump(uriParams);
+					}
+					
+//Merchant is most likely returning to the app from a partner site for some sort of verification
+				if(uriParams.trigger == 'adminPartnerSet')	{
+					app.u.dump(" -> execute adminPartnerSet call"); app.u.dump(uriParams);
+					app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
+					app.model.dispatchThis('immutable');
+					}
 
 
 
-if(app.vars.debug)	{
-//	$('button','#debugPanel').button();
-	var $DP = $('#debugPanel');
-	$DP.show().find('.debugMenu').menu()
-	$DP.append("<h6 class='clearfix'>debug: "+app.vars.debug+"</h6><h6 class='clearfix'>v: "+app.vars.release+"</h6><hr />");
-	$('<input \/>').attr({'type':'text','placeholder':'destroy','size':'10'}).on('blur',function(){
-		app.model.destroy($(this).val());
-		app.u.dump("DEBUG: "+$(this).val()+" was just removed from memory and local storage");
-		$(this).val('');
-		}).appendTo($DP);
-	$('#jtSectionTab').show();
-	}
+				if(app.vars.debug)	{
+				//	$('button','#debugPanel').button();
+					var $DP = $('#debugPanel');
+					$DP.show().find('.debugMenu').menu()
+					$DP.append("<h6 class='clearfix'>debug: "+app.vars.debug+"</h6><h6 class='clearfix'>v: "+app.vars.release+"</h6><hr />");
+					$('<input \/>').attr({'type':'text','placeholder':'destroy','size':'10'}).on('blur',function(){
+						app.model.destroy($(this).val());
+						app.u.dump("DEBUG: "+$(this).val()+" was just removed from memory and local storage");
+						$(this).val('');
+						}).appendTo($DP);
+					}
 
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
-if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
-	app.u.dump(" -> Treat as anycommerce");
-	$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
-	$('body').addClass('isAnyCommerce');
-	}
-else	{
-	app.u.dump(" -> Treat as zoovy");
-	$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
-	}
+				if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
+					app.u.dump(" -> Treat as anycommerce");
+					$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
+					$('body').addClass('isAnyCommerce');
+					}
+				else	{
+					app.u.dump(" -> Treat as zoovy");
+					$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
+					}
 
 
 //if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
@@ -1719,7 +1679,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.empty().append("<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='noBorders floatRight marginLeft ad-300x250'><\/iframe>");
+//				$target.empty().append("<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='noBorders floatRight marginLeft ad-300x250'><\/iframe>");
 				var L = data.length;
 				$target.hideLoading();
 				if(L)	{
@@ -2788,13 +2748,11 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 //opens a dialog with a list of domains for selection.
-//a domain being selected for their UI experience is important, so the request is immutable.
-//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
-//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
+// contents of the domain chooser are populated in callbacks.handleDomainChooser
+// the 'open' event on the dialog triggers the call and showLoading.
 			showDomainChooser : function(){
 //				app.u.dump("BEGIN admin.a.showDomainChooser");
-				$('#domainChooserDialog').dialog('open').showLoading({'message':'Fetching your list of domains.'});
-				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+				$('#domainChooserDialog').dialog('open'); 
 				},	 //showDomainChooser
 				
 			showDashboard : function()	{
@@ -2866,65 +2824,42 @@ once multiple instances of the finder can be opened at one time, this will get u
 				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
-// ** 201338 -> need the product task list ul generated as early as possible.
+//will add domain chooser to dom.
+//will prompt user to choose a domain, if necessary.
+//does not dispatch itself, will piggyback on the following immutable dispatches.
+				app.ext.admin.u.handleDomainInit();
+
+//It's necessary to get the product task list elements on to the dom asap so they can be utilized.
 				app.ext.admin_prodedit.a.showProductManager();
-				
-				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+
 				$('#messagesContent').anydelegate();
+				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
+				$('.username','#appView').text(app.vars.userid);
 				
-//if no domain is set, check to see if the domain on the uri is a valid (merchant-owned) domain and, fi so, use it. if not, show domain chosoer.
-				if(!app.vars.domain) {
-					if(location.protocol == 'file:')	{
-						app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
-						app.model.dispatchThis('mutable');
+				var linkFrom = linkFrom = app.u.getParameterByName('linkFrom');
+				if(linkFrom)	{
+					app.u.dump("INCOMING! looks like we've just returned from a partner page");
+					if(linkFrom == 'amazon-token')	{
+						app.ext.admin.a.navigateTo('#!syndication');
+						app.ext.admin.a.showAmzRegisterModal();
 						}
 					else	{
-						app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',document.domain);
-								if(domObj)	{
-									app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
-									}
-								else	{
-									//the selection of a domain name will load the page content. (but we'll still need to nav)
-									app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
-									app.model.dispatchThis('mutable');
-									}
-								}
-							}},'immutable');
+						app.ext.admin.a.navigateTo('#!dashboard');
 						}
 					}
-				else {
-					
-					app.ext.admin.calls.adminDomainList.init({},'immutable');
-					
-					$('.username','#appView').text(app.vars.userid);
-					$('.domain','#appView').text(app.vars.domain);
-					$('.partition','#appView').text(app.vars.partition);
-					var linkFrom = linkFrom = app.u.getParameterByName('linkFrom');
-					if(linkFrom)	{
-						app.u.dump("INCOMING! looks like we've just returned from a partner page");
-						if(linkFrom == 'amazon-token')	{
-							app.ext.admin.a.navigateTo('#!syndication');
-							app.ext.admin.a.showAmzRegisterModal();
-							}
-						else	{
-							app.ext.admin.a.navigateTo('#!dashboard');
-							}
-						}
-					else	{
-						app.ext.admin.a.navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
+				else if(!app.vars.domain)	{
+					//if no domain is set, don't go anywhere yet. domain/prt/https_domain are pretty essential.
+					}
+				else	{
+					app.ext.admin.a.navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
+					}
 
-						if(document.URL.indexOf("/future/") > 0)	{
-							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
-							}
-						}
+				if(document.URL.indexOf("/future/") > 0)	{
+					$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
 					}
+
 				app.model.dispatchThis('immutable');
 //if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
 				var	DPSMessages = app.model.dpsGet('admin','messages') || [];
@@ -2936,6 +2871,74 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 
+
+			handleDomainInit : function()	{
+
+//add the domain chooser to the DOM.
+// the list of domains is added when the domain chooser is opened to ensure that list is always up to date.
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
+				$domainChooser.dialog({
+					'autoOpen':false,
+					'modal':true,
+					'width': '90%',
+					'height': 500,
+					'closeOnEscape': false,
+					open: function(event, ui) {
+						$(this).showLoading({'message':'Fetching your list of domains.'});
+						app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable');
+						app.model.dispatchThis('immutable');
+						$(".ui-dialog-titlebar-close", $(this).parent()).hide();
+						} //hide 'close' icon. will close on domain selection
+					});
+
+/*
+if the user has logged in before, the domain used is stored in dps.
+if the domain is not in dps, use the domain that is in the url. should be valid or jsonapi will return errors.
+Changing the domain in the chooser will set three vars in localStorage so they'll be available next time (domain, partition and https_domain).
+ -> all three of the vars are required. images require the https_domain and several configDetail calls require partition.
+*/
+				var adminObj = app.model.dpsGet('admin') || {};
+				if(!$.isEmptyObject(adminObj))	{
+					app.vars.domain = adminObj.domain;
+					app.vars.partition = adminObj.partition;
+					app.vars.https_domain = adminObj.https_domain;
+					}
+
+				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
+					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
+					app.vars.domain = false;  //
+					}
+
+				if(app.vars.domain)	{
+					//by now, if partition or https_domain was blank, domain would be false. That means everything we needs is here. update the header and we're done.
+					$('.partition','#appView').text(app.vars.partition);
+					$('.domain','#appView').text(app.vars.domain);
+					}
+				else	{
+					//ok, so no domain is set BUT one was used to log in from unless we're local. use it, but fetch list of domains and set partition et all.
+					if(location.protocol == 'file:')	{
+						app.ext.admin.a.showDomainChooser();
+						}
+					else	{
+						app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								var domObj = app.ext.admin.u.getValueByKeyFromArray(app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',document.domain) || {};
+								if(!$.isEmptyObject(domObj))	{
+									app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
+									}
+								else	{
+				//To get here, the user logged in from a domain that is NOT in their list of domains or something went horribly wrong.
+									app.ext.admin.a.showDomainChooser(); //domain list is in memory at this point. no need to dispatch.
+									$domainChooser.anymessage({"message":"The domain you logged in from does not appear in your active list of domains. Please select a domain to use:"});
+									}
+								}
+							}},'immutable');
+						}	
+					}
+				},
 
 
 
@@ -2967,7 +2970,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 						}
 					}
 				else	{
-					app.u.throwGMessage("In admin.u.whatPageToShow, unable to determine 'page'");
+					$('#globalMessaging').anymessage({"message":"In admin.u.whatPageToShow, unable to determine 'page'"});
 					}
 //				app.u.dump(" -> page: "+page);
 				return page;
@@ -3691,7 +3694,8 @@ once multiple instances of the finder can be opened at one time, this will get u
 						});
 					}
 				}, //rewriteLink
-//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true of being triggered by a click.
+
+//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true if being triggered by a click.
 			linkOffSite : function(url,pretty,skipInterstitial){
 				app.u.dump("BEGIN admin.u.linkOffSite to "+url);
 				if(url)	{
