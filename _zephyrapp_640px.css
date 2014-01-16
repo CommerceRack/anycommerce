@@ -67,6 +67,14 @@
 .prodViewerAddToCartForm fieldset {margin:0px;}
 .addToCartSection {width:300px; margin:0 auto;}
 .addToCartButton.greenAddToCartButton{background:url("images/addtocart_btn_mobile.jpg") no-repeat; height:40px; width:300px; padding:0px;}
+.mobileProdDesc {background:#d7d4d4; border:2px solid #000000; padding:5px 10px;}
+.mobileProdDescTitle {color:#000000; font-weight:bold; padding-bottom:3px;}
+.mobileProdDesc h1, h2{color:#000000; font-weight:normal;}
+.mobileProdDesc ul {margin:0px;}
+.prodDetailSection {font-family: 'Nunito', sans-serif; font-size:13px; padding:6px 0px; border-top: 4px solid #e5e5e5; border-bottom: 4px solid #e5e5e5;}
+.prodDetailSection h1{font-size:14px; color:#000000; padding-bottom:3px;}
+.prodDetailSection span {font-family:Arial,​Helvetica,​sans-serif;}
+.prodPageMFG span {color:#ff0101;}
 .prodSummaryContainer {padding:0px; width:270px; text-align:left;}
 .tabbedProductContentTD {width:100%;}
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}

@@ -1196,10 +1196,20 @@ this will likely become more flexible in the future. ###
 			<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom displayNoneMobile'></div>
 			<div data-app-role='timeInTransit' class='displayNone'></div>
 			
-			<div class='marginTop marginBottom'>
+			<div class='marginTop marginBottom displayNoneMobile'>
 				<div class="prodPageMFG" data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></div>
 				<div data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></div>
 				<div class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></div>
+			</div>
+			<div class="mobileProdDesc marginTop">
+				<div class="mobileProdDescTitle">Description:</div>
+				<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+			</div>
+			<div class='marginTop marginBottom displayNone displayBlockMobile prodDetailSection'>
+				<h1>Product Details</h1>
+				<div class='stid'>Sku: <span data-bind='var: product(pid); format:text;'></span></div>
+				<div class="prodPageMFG">Manufacturer: <span data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA;'></span></div>
+				<div>Manufacturer ID: <span data-bind='var: product(zoovy:prod_mfgid); format:text;'></span></div>
 			</div>
 
 		<div class="socialLinks"></div>
@@ -1232,7 +1242,7 @@ this will likely become more flexible in the future. ###
 		</td>
 	</tr>
 	<div class="clear"></div>
-	<tr>
+	<tr class="displayNoneMobile">
 		<td colspan='2' class="tabbedProductContentTD">
 	<!--
 	the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
