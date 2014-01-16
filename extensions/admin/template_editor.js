@@ -127,7 +127,7 @@ var admin_template = function() {
 										
 										$("textarea:first",$target)
 											.show()
-											.width('95%')
+											.width('100%')
 											.height($target.height() - 100)
 											.addClass('fullWidth')
 											.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']))
@@ -138,13 +138,13 @@ var admin_template = function() {
 										
 									
 										// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-										$("div.jHtmlArea, div.ToolBar",$target).width('100%').css('box-sizing','border-box'); //having issue with toolbar collapsing.
-										var $iframe = $('iframe',$target);
-										$iframe.width('100%').height(($(document.body).innerHeight() - $('#mastHead').outerHeight() - 100)); //the 100 covers the various margins and paddings that occur
-										var $iframeBody = $iframe.contents().find('body');
-										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
+//										$("div.jHtmlArea, div.ToolBar",$target).width('100%').css('box-sizing','border-box'); //having issue with toolbar collapsing.
+//										var $iframe = $('iframe',$target);
+//										$iframe.width('100%').height(($(document.body).innerHeight() - $('#mastHead').outerHeight() - 100)); //the 100 covers the various margins and paddings that occur
+//										var $iframeBody = $iframe.contents().find('body');
+//										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
 										
-										app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
+//										app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
 										
 										app.u.handleAppEvents($target); //TODO -> get rid of this.
 										$target.anydelegate();
