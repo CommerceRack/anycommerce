@@ -579,6 +579,10 @@ params that are missing will be auto-generated.
 						}
 //adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
 //can't just transmogrify beccause sequence is important and if some data is local and some isn't, order will get messed up.
+
+//***201352 Separating out the placeholders so that they can be used in getProductDataForList individually for the jqObj.
+//			Otherwise the callback tries to reference the placeholder by using the parentID, but in the case of anycontent
+//			when we already have the data, the placeholder is not yet on the DOM and then data is never rendered.  -mc
 					plObj.placeholders = this.getProdlistPlaceholders(plObj);
 					$tag.append(plObj.placeholders).removeClass('loadingBG');
 					$tag.data('prodlist',plObj); //sets data object on parent
