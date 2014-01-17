@@ -16,12 +16,13 @@
 /**** Header CSS****/
 #header {height:50px; padding:8px 0px 0px; background: #ffffff;}
 .mobileTopNav{width:290px;}
-.mobileTopNavSearch{margin-left:7px;}
+.mobileTopNavSearch{margin:6px 0px 0px 8px;}
+.mobileTopNavCart {margin:2px 0px 0px;}
 .topNavRight {width:290px; float:none; margin:0 auto;}
-.searchSection{height:37px; background:#000000;}
-.productSearchForm{width:319px; float:none; margin:0 auto; padding:0px; }
-.searchBar {width:270px; height:31px; font-size:15px; border-radius:1px; border:1px solid #5a5a5a;}
-.searchBtn {background:url("images/searchbtn.jpg") repeat #000000; height:36px; width:44px; padding:0px;}
+.searchSection{height:34px; background:#ffffff;}
+.productSearchForm{width:301px; float:none; margin:0 auto; padding:0px; border:1px solid #5a5a5a; border-radius:3px;}
+.searchBar {width:265px; height:28px; font-size:15px; border:none;}
+.searchBtn {background:url("images/searchbtn_orange.jpg") no-repeat; height:32px; width:33px; padding:0px;}
 
 /**** Footer CSS****/
 .zephyrHelpBox {width:98%; height:auto;}
