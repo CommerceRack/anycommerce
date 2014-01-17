@@ -9,6 +9,7 @@
 
 /**** Content Area CSS****/
 #appView{width:100%;}
+#container {padding:0px 5px;}
 #contentArea{width:98%; padding:1%;}
 #contentArea.sideBarRightShow{width:98%; padding:1%;}
 #contentArea.sideBarRightHide{width:98%; padding:1%;}
@@ -16,11 +17,11 @@
 /**** Header CSS****/
 #header {height:50px; padding:8px 0px 0px; background: #ffffff;}
 .mobileTopNav{width:290px;}
-.mobileTopNavSearch{margin:6px 0px 0px 8px;}
+.mobileTopNavSearch{margin:6px 3px 0px 8px;}
 .mobileTopNavCart {margin:2px 0px 0px;}
 .topNavRight {width:290px; float:none; margin:0 auto;}
 .searchSection{height:34px; background:#ffffff;}
-.productSearchForm{width:301px; float:none; margin:0 auto; padding:0px; border:1px solid #5a5a5a; border-radius:3px;}
+.productSearchForm{width:301px; float:none; margin:0 auto; padding:0px; border:1px solid #5d5d5d; border-radius:3px;}
 .searchBar {width:265px; height:28px; font-size:15px; border:none;}
 .searchBtn {background:url("images/searchbtn_orange.jpg") no-repeat; height:32px; width:33px; padding:0px;}
 
