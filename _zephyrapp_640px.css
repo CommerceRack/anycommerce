@@ -50,8 +50,8 @@
 }
 
 /**** Category CSS****/
-.categoryList {padding:2px;}
-.categoryList > li {height:72px; width:70px;}
+.categoryList {padding:4px 2px; max-width:292px; background:url(images/subcatlist_bg.jpg) no-repeat top center #B3B0B0; border:1px solid #000000; border-radius:2px; margin:0 auto; max-width:}
+.categoryList > li {height:93px; width:93px; margin:2px 2px 3px; border-bottom:1px solid #706e6e; padding-bottom:1px;}
 
 /**** Cart CSS****/
 #cartStuffList li {border:none;}
