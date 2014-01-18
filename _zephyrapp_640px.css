@@ -34,7 +34,20 @@
 /**** Homepage CSS****/
 .randomList {height:auto;}
 #sideBarRight {height:0px; overflow:hidden;}
-.listHeader{padding-left:10px; padding-top:4px; height:20px; margin:0px;}
+.listHeaderContainer {border-top:1px solid #D7D9DB;}
+.listHeader{
+	padding:0px; 
+	margin:0px; 
+	height:25px; 
+	line-height:25px; 
+	background:#ffffff; 
+	color:#000000; 
+	font-size:20px;
+	font-family: 'Nunito', sans-serif;
+	text-align:center;
+	border-bottom:1px solid #636363; 
+	border-top:1px solid #636363;
+}
 
 /**** Category CSS****/
 .categoryList {padding:2px;}
