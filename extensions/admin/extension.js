@@ -1353,7 +1353,7 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/downloads.html'
 //SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
 //this is the lesser of two weevils.
 //app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/legacy_compat.js']);
 
 
 
@@ -1363,13 +1363,13 @@ app.rq.push(['script',0,app.vars.baseURL+'admin/resources/tinymce-4.0.12/tinymce
 	}]);
 
 /* used for html editor.
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.8/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.8/style/jHtmlArea.css','jHtmlArea']);
+app.rq.push(['css',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
+app.rq.push(['css',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/style/jHtmlArea.css','jHtmlArea']);
 //note - the editor.css file that comes with jhtmlarea is NOT needed. just sets the page bgcolor to black.
 
 // colorpicker isn't loaded until jhtmlarea is done to avoid a js error due to load order.
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.8/jHtmlArea-0.8.min.js',function(){
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.8/jHtmlArea.ColorPickerMenu-0.8.min.js'])
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jHtmlArea-0.8.min.js',function(){
+	app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jHtmlArea.ColorPickerMenu-0.8.min.js'])
 	}]);
  */
 				return r;

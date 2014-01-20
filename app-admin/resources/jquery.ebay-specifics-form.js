@@ -41,8 +41,8 @@
 	
 	// this block is created automatically inside, dont change class to id, don't remove '.'
 	var ebaySpecsBlock = '.ebaySpecificsFormInner';
-	var ebaySpecsCSS = 'extensions/admin/resources/jquery.ebay-specifics-form.css';
-	var ebaySpecsPNG = 'extensions/admin/resources/jquery.ebay-specifics-form.png';
+	var ebaySpecsCSS = 'app-admin/resources/jquery.ebay-specifics-form.css';
+	var ebaySpecsPNG = 'app-admin/resources/jquery.ebay-specifics-form.png';
 	if(app && app.vars && app.vars.baseURL) {
 		ebaySpecsCSS = ebaySpecsCSS+app.vars.baseURL;
 		ebaySpecsPNG = ebaySpecsPNG+app.vars.baseURL;
