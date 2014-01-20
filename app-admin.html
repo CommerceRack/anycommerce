@@ -58,8 +58,8 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <!-- ** 201344 -> reversed the order of these two to solve the issue w/ selected files preview not showing up -->
-<script src="extensions/admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
-<script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<script src="app-admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<script src="app-admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 
 
 <!-- not much is going to run without these two. load em early -->
@@ -71,12 +71,6 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 </script>
-
-
-
-
-
-
 
 </head>
 <body class="control" onLoad="jQuery('#appversion').text(app.vars.release);">
