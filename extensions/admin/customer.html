@@ -1,11 +1,11 @@
-<div id='CustomerPageTemplate' class='page pageCustomer' data-app-role='dualModeContainer' data-app-mode='list'>
+<div id='CustomerPageTemplate' class='page pageCustomer smallButtons' data-app-role='dualModeContainer' data-app-mode='list'>
 
 	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
-			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add Customer</button>
+			<button class='floatRight marginLeft applyButton' data-app-click="admin_customer|adminCustomerCreateShow" data-text='true' data-icon-primary='ui-icon-plus'>Add Customer</button>
 			</div>
 			
 			<h3 class='heading'>Customer Search</h3>
@@ -26,7 +26,7 @@
 			<option value='ACCOUNT_TYPE'>account type (org)</option>
 		</select>
 		<input type='search' name='searchfor' placeholder='keyword' size='30'  />
-		<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
+		<button class='applyButton' data-app-role='customerSearchButton' data-app-click='admin_customer|execCustomerSearch' data-text='true' data-icon-primary='ui-icon-search'>Search</button>
 		</form>		
 		</div>
 		
@@ -66,7 +66,7 @@
 	<td data-bind='var: customer(PHONE); format:text;'></td>
 	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
 	<td>
-	<button data-app-event="admin_customer|showCustomerUpdate">Edit Customer</button>
+	<button data-app-click="admin_customer|adminCustomerUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-app-role='customerEditButton'>Edit Customer</button>
 	</td>
 </tr>
 </table>
@@ -80,13 +80,13 @@ if the data attrib is changed or any changes are made to the values (especially 
 
 
 <div id='customerEditorTemplate' class='clearfix customerEditor' data-app-role='customerManager'>
-	<form action='#'>
+	<form action='#'  data-app-submit='admin_customer|execCustomerEditorSave'>
 	<div class='buttonBar clearfix marginBottom'>
 		<div class='floatRight smallButtons'>
-			<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
-			<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
-			<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete</button>
-			<button class='floatRight' data-app-event='admin_customer|showMailTool'>Email</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerEditorSave' disabled='disabled' data-app-role='saveButton' data-text='true'>Save <span class='numChanges'></span> Changes</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|execHintReset' data-text='true' data-icon-primary='ui-icon-close'>Remove Password Hint</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerRemove' data-text='true' data-icon-primary='ui-icon-trash'>Delete</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|showMailTool' data-text='true' data-icon-primary='ui-icon-mail-closed'>Email</button>
 		</div>
 
 		<h2>
@@ -202,8 +202,8 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	</table>
 
 	<fieldset class='alignedInputs'>
-		<input type='text' name='noteText' class='skipTrack' placeholder="Enter your note here" data-app-event="admin_customer|tagNoteButtonAsEnabled" />
-		<button data-app-event='admin_customer|execNoteCreate'>Add Note</button>
+		<input type='text' name='noteText' class='skipTrack' placeholder="Enter your note here" />
+		<button data-app-click='admin_customer|execNoteCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Add Note</button>
 	</fieldset>
 	
 	</div>
@@ -217,7 +217,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 		<span>Org ID: </span>
 		<input type='number' class='smallInput' step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
 	</label>
-	<button data-app-event="admin_customer|showOrgChooser">Chooser</button>
+	<button data-app-click="admin_customer|showOrgChooser" class='applyButton' data-text='true' data-icon-primary='ui-icon-search'>Chooser</button>
 	
 	<div data-bind="var: customer(%ORG.company); format:text; pretext: Company: ;"></div>
 	<div data-bind="var: customer(%ORG.SCHEDULE); format:text; pretext: Schedule: ;"></div>
@@ -279,37 +279,6 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	</div>
 </div>
 
-<!--
-<div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
-	<h2>Dropship</h2>
-	<div>
-<fieldset class='marginBottom'>
-	<legend>Logo</legend>
-	<img width="200" height="70" src="app-admin/images/blank.gif" id='customerDropshipLogoImg'  data-bind='var: customer(WS.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' class='marginTop' >
-	<a data-app-event="admin_customer|showMediaLib4DropshipLogo" href="#"><b>[Edit]</b></a>
-	<input type='text' name='LOGO' id='customerDropshipLogo' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
-	<!--
-</fieldset>
-<fieldset data-role='dropship-bill-address'>
-
-	<legend>Billing Address</legend>
-	<label><span>Contact:</span><input type='text' name='CONTACT' data-bind='var: customer(WS.CONTACT); format:popVal;' /></label>
-	<label><span>Phone:</span><input type='text' name='phone' data-bind='var: customer(WS.phone); format:popVal;' /></label>
-	<label><span>Address 1:</span><input type='text' name='address1' data-bind='var: customer(WS.address1); format:popVal;' /></label>
-	<label><span>Address 2:</span><input type='text' name='address2' data-bind='var: customer(WS.address2); format:popVal;' /></label>
-	<label><span>City:</span><input type='text' name='city' data-bind='var: customer(WS.city); format:popVal;' /></label>
-	<label><span>State/Region:</span><input type='text' name='region' data-bind='var: customer(WS.region); format:popVal;' /></label>
-	<label><span>Zip/Postal:</span><input size='9' type='text' name='postal' data-bind='var: customer(WS.postal); format:popVal;' /></label>
-	<label><span>Country Code:</span><input size='2' type='text' name='countrycode' data-bind='var: customer(WS.countrycode); format:popVal;' /></label>
-	
-	<p class='hint'>For internal use only</p>
-
-</fieldset>
-	</div>
-</div>
--->
-
-
 	</div><!-- /column 2 -->
 
 	</form>
@@ -337,7 +306,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
 	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
 	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
-	<td class='alignRight'><button data-app-event="admin_customer|adminGiftcardUpdateShow" data-edit-mode='dialog'>Edit Giftcard</button></td>
+	<td class='alignRight'><button data-app-click="admin_customer|adminGiftcardUpdateShow" data-edit-mode='dialog' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Giftcard</button></td>
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
@@ -358,9 +327,8 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	</td>
 	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_customer|showAddrUpdate">Edit this address</button>
-<button data-app-event="admin|tagRowForRemove">Delete this address</button><!--
-<button data-app-event="admin_customer|tagRowForIsDefault">Set address as default</button> -->
+<button class='applyButton' data-app-click="admin_customer|showAddrUpdate" data-text='false' data-icon-primary='ui-icon-pencil'>Edit this address</button>
+<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this address</button>
 	</td>
 </tr>
 
@@ -369,7 +337,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<td data-bind="var:note(LUSER); format:text;"></td>
 	<td data-bind="var:note(NOTE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin|tagRowForRemove">Delete this note</button>
+	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this note</button>
 	</td>
 </tr>
 
@@ -378,9 +346,9 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<td class='alignRight' data-bind="var:wallet(TC); format:text;"></td>
 	<td class='alignRight' data-bind="var:wallet(TE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin_customer|adminCustomerWalletPeekShow" title='View wallet - requires admin access'>View this wallet</button>
-	<button data-app-event="admin|tagRowForRemove">Delete this wallet</button><!--
-	<button data-app-event="admin_customer|tagRowForIsDefault">Set wallet as default</button>--></td>
+	<button data-app-click="admin_customer|adminCustomerWalletPeekShow" title='View wallet - requires admin access' class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>View this wallet</button>
+	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this wallet</button>
+	</td>
 </tr>
 </table>
 
@@ -459,7 +427,7 @@ The checkbox below does not work.
 <label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
 -->
 
-<button data-app-event='admin_customer|execAdminCustomerCreate'>Create Customer</button>
+<button data-app-click='admin_customer|execAdminCustomerCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Create Customer</button>
 
 </fieldset>
 </form>
@@ -734,7 +702,7 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(EXPIRES_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(LAST_ORDER); format:text;" class='hideInDetailMode'></td>
-	<td data-bind='var: giftcard(CID); format:assignAttribute; attribute:data-cid;' data-app-event="admin_customer|customerEditorModalShow"><span class='lookLikeLink' data-bind="var: giftcard(CID); format:text;"></span></td>
+	<td data-bind='var: giftcard(CID); format:assignAttribute; attribute:data-cid;' data-app-click="admin_customer|customerEditorModalShow"><span class='lookLikeLink' data-bind="var: giftcard(CID); format:text;"></span></td>
 	<td data-bind="var: giftcard(BALANCE); format:money;"></td>
 	<td data-bind="var: giftcard(TXNCNT); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(TYPE); format:text;" class='hideInDetailMode'></td>
