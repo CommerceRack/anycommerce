@@ -114,7 +114,8 @@ console.log("FILES SERVED FROM=> "+PROJECT_DIRECTORY);
 // Create a new instance of HttProxy to use in your server
 //
 var localWebserverPort = 9000;
-var FILEMISSINGproxy = new httpProxy.RoutingProxy();
+//var FILEMISSINGproxy = new httpProxy.RoutingProxy(); // *** 201352 -> new API for httpProxy
+var FILEMISSINGproxy = new httpProxy.createProxyServer();
 
 http.createServer(function(req, res) {
 
@@ -131,7 +132,9 @@ http.createServer(function(req, res) {
 		// return
 		
 		// for now we'll do all our requests http (we still need a way to know if origin request was http or https)
-		FILEMISSINGproxy.proxyRequest(req, res, {
+// *** 201352 -> new API for httpProxy
+//		FILEMISSINGproxy.proxyRequest(req, res, {
+		FILEMISSINGproxy.ws(req,res,{
 			host: req.headers.host,
 			port: 80
 			});
@@ -168,7 +171,9 @@ http.createServer(function(req, res) {
 		cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
 	}
 };
-httpProxy.createServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
+// *** 201352 -> new API for httpProxy
+//httpProxy.createServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
+httpProxy.createProxyServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
  // console.log("HTTPS proxy to static file server running at => http://localhost:9002");
 
 
@@ -189,7 +194,9 @@ var REALHOST_PROXYoptions = {
     xforward: true // enables X-Forwarded-For
   },
 };
-httpProxy.createServer(REALHOST_PROXYoptions).listen(8001);
+// *** 201352 -> new API for httpProxy
+//httpProxy.createServer(REALHOST_PROXYoptions).listen(8001);
+httpProxy.createProxyServer(REALHOST_PROXYoptions).listen(8001);
  //console.log("Realhost proxy running at => http://localhost:8001");
 
 http.createServer(function (req, res) {
@@ -218,30 +225,39 @@ function logError(e) {
 }
  
 // this proxy will handle regular HTTP requests
-var regularProxy = new httpProxy.RoutingProxy();
+// *** 201352 -> new API for httpProxy
+//var regularProxy = new httpProxy.RoutingProxy();
+var regularProxy = new httpProxy.createProxyServer();
  
 // standard HTTP server that will pass requests 
 // to the proxy
 var proxyWebServer = http.createServer(function (req, res) {
   console.log('running createServer');
-  logRequest(req);
+//  logRequest(req);
   uri = url.parse(req.url);
 
   var parts = req.url.split(':', 2);
   console.log('REQ HOST:'+uri.host);
   if (uri.host == TESTING_DOMAIN) {
 	// we'll send this to the local server
-	//console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
-	regularProxy.proxyRequest(req, res, {
-		host: '127.0.0.1',
-		port: 9000		
+	console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
+//	regularProxy.proxyRequest(req, res, {
+//		host: '127.0.0.1',
+//		port: 9000		
+//		});
+	regularProxy.ws(req,res,{
+		target : uri.protocol+'127.0.0.1:9000'
 		});
 	}
   else {
 	// a regular connection to another non-local host
-	regularProxy.proxyRequest(req, res, {
-		host: uri.hostname,
-		port: uri.port || 80		
+	console.log("!!!!!!!!!!!!!!!!!!** non magic call **!!!!!!!!!!!!!!!!!!!!!!!!!");
+//	regularProxy.proxyRequest(req, res, {
+//		host: uri.hostname,
+//		port: uri.port || 80		
+//		});
+	regularProxy.web(req,res,{
+		target : req.url
 		});
 	}
 });
@@ -249,8 +265,8 @@ var proxyWebServer = http.createServer(function (req, res) {
 // when a CONNECT request comes in, the 'upgrade'
 // event is emitted
 proxyWebServer.on('upgrade', function(req, socket, head) {
-	//console.log('running UPGRADE');
-	logRequest(req);
+	console.log("\n\nrunning UPGRADE");
+//	logRequest(req);
 	// URL is in the form 'hostname:port'
 	var parts = req.url.split(':', 2);
 	// open a TCP connection to the remote host
@@ -266,8 +282,8 @@ proxyWebServer.on('upgrade', function(req, socket, head) {
 // when a CONNECT request comes in, the 'upgrade'
 // event is emitted
 proxyWebServer.on('connect', function(req, socket, head) {
-	// console.log('running CONNECT');
-	logRequest(req);
+	console.log("\n\nrunning CONNECT");
+//	logRequest(req);
 	// URL is in the form 'hostname:port'
 	var parts = req.url.split(':', 2);
 	var hostname = parts[0];
@@ -288,6 +304,12 @@ proxyWebServer.on('connect', function(req, socket, head) {
 		conn.pipe(socket);
 	});
 });
+
+//proxyWebServer.on('error', function(err,req,res){
+//	console.log("\n\nrunning ERROR");
+//	console.log(err);
+//	});
+
 // proxyWebServer will accept connections on port 8081
 proxyWebServer.listen(8081);
 console.log("Ready to work\n .. use ctrl+C to exit\n");
