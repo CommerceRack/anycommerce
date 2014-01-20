@@ -1786,18 +1786,12 @@ VALIDATION
 
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
 				var radios = {} //stores a list of which radio inputs are required.
-				$('input, select, textarea',$form).each(function(){
+				$(':input',$form).each(function(){
 					var
 						$input = $(this),
 						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
-
-//app.u.dump(" -> "+$input.attr('name')+": "+$input.attr('type'));
-
-//					if($input.prop('type') != 'radio')	{
-//						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')
-//						}
 					
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
@@ -1909,8 +1903,9 @@ VALIDATION
 					if($input.hasClass('ui-state-error'))	{
 						app.u.dump(" -> "+$input.attr('name')+" did not validate. ishidden: "+$input.is(':hidden'));
 						}
-					
 					});
+
+
 //app.u.dump(" -> radios:"); app.u.dump(radios);
 				if(!$.isEmptyObject(radios))	{
 //					app.u.dump(" -> radios is not empty");
