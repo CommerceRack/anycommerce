@@ -695,7 +695,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		//expiration is less of a concern
 						case 'CREDIT':
 	
-							tmp += "<div><label>Credit Card # <input type='text' size='30' name='payment/CC' onKeyPress='return app.u.numbersOnly(event);' class='creditCard' value='";
+							tmp += "<div><label>Credit Card # <input type='text' size='30' name='payment/CC' data-input-format='numeric' data-app-keyup='input-format' class='creditCard' value='";
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
@@ -704,7 +704,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<\/select>";
 							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
-							tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+							tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
 							tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							
