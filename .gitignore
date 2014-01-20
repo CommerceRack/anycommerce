@@ -6,7 +6,7 @@
 .project
 .metadata
 bin/
-/utilities/proxy/node_modules/
+/utilities/nodeproxy/node_modules/
 /utilities/nodeproxy/jt.key
 /utilities/nodeproxy/www-spork*
 tmp/

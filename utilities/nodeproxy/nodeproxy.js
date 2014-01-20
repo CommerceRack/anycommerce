@@ -12,6 +12,7 @@
 // 1a. download + install node.js 
 //		* node is a server side javascript engine based on chromes v8 javascript engine.
 //		* node can be downloaded from http://www.nodejs.org
+//		* restart your computer after node install.
 // 1b. in a dos cmd window:
 //		# npm install http-proxy colors mime
 // 1c. open dos/cmd window, then change directory to where the proxy is installed then run:
@@ -61,7 +62,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3a. change any of these variables to match your project:
-var TESTING_DOMAIN = "www.zoovy.com";
+var TESTING_DOMAIN = "www.zoovy.com"; //www-sporktacular-com.app-hosted.com
 var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
 
 // 3b. run: node nodeproxy.js
