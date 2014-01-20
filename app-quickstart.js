@@ -1490,10 +1490,34 @@ setTimeout(function(){
 				return infoObj //returning this saves some additional looking up in the appInit
 				},
 
+
+
+//used in checkout to populate username: so either login or bill/email will work.
+//never use this to populate the value of an email form field because it may not be an email address.
+			getUsernameFromCart : function(cartID)	{
+	//			app.u.dump('BEGIN u.getUsernameFromCart');
+				var r = false;
+				if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].customer && app.u.isSet(app.data['cartDetail|'+cartID].customer.login))	{
+					r = app.data['cartDetail|'+cartID].customer.login;
+	//				app.u.dump(' -> login was set. email = '+r);
+					}
+				else if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].bill && app.u.isSet(app.data['cartDetail|'+cartID].bill.email)){
+					r = app.data['cartDetail|'+cartID].bill.email;
+	//				app.u.dump(' -> bill/email was set. email = '+r);
+					}
+				else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
+	//				app.u.dump(' -> user is logged in via facebook');
+					r = app.vars.fbUser.email || false;
+					}
+				return r;
+				}, //getUsernameFromCart
+
+
 			handleLoginActions : function()  {
 				$('body').addClass('buyerLoggedIn');
-				if(app.u.getUsernameFromCart())	{
-					$('.username').text(app.u.getUsernameFromCart());
+				var login = app.ext.myRIA.u.getUsernameFromCart(app.model.fetchCartID());
+				if(login)	{
+					$('.username').text(login);
 					}
 				},
 
