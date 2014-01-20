@@ -39,7 +39,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		<span class="btn btn-success fileinput-button">
 			<i class="icon-plus icon-white"></i>
 			<span>Add files...</span>
-			<input type="file" name="files[]" multiple>
+			<input type="file" name="files[]" multiple="multiple" />
 		</span>
 	</div>
 </div>
@@ -51,7 +51,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
    	<div class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<h6 class='clearfix'>Drag your files here from your desktop</h6>
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
+        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" /></noscript>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar clearfix">
             <div class="span7 clearfix">
