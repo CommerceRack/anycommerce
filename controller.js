@@ -1628,47 +1628,22 @@ AUTHENTICATION/USER
 
 
 
-//used in checkout to populate username: so either login or bill/email will work.
-//never use this to populate the value of an email form field because it may not be an email address.
-//later, this could be expanded to include a facebook id.
-			getUsernameFromCart : function()	{
-	//			app.u.dump('BEGIN u.getUsernameFromCart');
-				var r = false, cartID = app.model.fetchCartID();
-				if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].customer && app.u.isSet(app.data['cartDetail|'+cartID].customer.login))	{
-					r = app.data['cartDetail|'+cartID].customer.login;
-	//				app.u.dump(' -> login was set. email = '+r);
-					}
-				else if(app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].bill && app.u.isSet(app.data['cartDetail|'+cartID].bill.email)){
-					r = app.data['cartDetail|'+cartID].bill.email;
-	//				app.u.dump(' -> bill/email was set. email = '+r);
-					}
-				else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
-	//				app.u.dump(' -> user is logged in via facebook');
-					r = app.vars.fbUser.email;
-					}
-				return r;
-				}, //getUsernameFromCart
-
 
 /*
 
 BROWSER/OS
-
+this information is collected and sent along w/ an order create or in the admin UI for a ticket create for troubleshooting purposes.
 */
 
 
-// .browser returns an object of info about the browser (name and version).
 			getBrowserInfo : function()	{
-	// *** .browser() is not supported as of jquery 1.9+
 				var
 					ua= navigator.userAgent.toLowerCase(),
 					match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
-				//app.u.dump("browser: "+match[ 1 ] || "-" + match[ 2 ] || "0");
 				return match[ 1 ] || "-" + match[ 2 ] || "0";
 				}, //getBrowserInfo
 			
 			getOSInfo : function()	{
-	
 				var OSName="Unknown OS";
 				if (navigator.appVersion.indexOf("Win")!=-1) OSName="WI";
 				if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MC";
