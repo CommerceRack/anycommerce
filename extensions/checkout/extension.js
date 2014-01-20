@@ -1175,7 +1175,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.model.dispatchThis('immutable');
 				},
 
-			
 			cartItemAppendSKU : function($ele,p)	{
 				p.skuArr = [$ele.closest("[data-sku]").data('sku')];
 				this.cartItemAppendAllSKUsFromOrder($ele,p);

@@ -845,8 +845,6 @@ else	{
 				},'immutable');
 			app.model.dispatchThis('immutable');
 
-
-
 			},
 
 		billzone : function($tag,data){

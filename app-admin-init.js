@@ -57,7 +57,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/crypto-md5-2.5.3.js']); //used for authentication and in various other places.
 
@@ -73,7 +73,7 @@ app.rq.push(['css',1,app.vars.baseURL+'resources/jquery-ui-timepicker-addon.css'
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery-ui-timepicker-addon.js']);
 
 // required for building/restoring ebay item specifics from @RECOMMENDATIONS list + 'ebay:itemspecifics'
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ebay-specifics-form.js']);
+app.rq.push(['script',1,app.vars.baseURL+'app-admin/resources/jquery.ebay-specifics-form.js']);
 
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
@@ -84,17 +84,17 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.qrcode-0.7.0.js'])
 
 
 // jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.
-app.rq.push(['css',1,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.css']);
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.js']); //must be in first pass in case orders is the landing page.
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ui.position.js']);
+app.rq.push(['css',1,app.vars.baseURL+'app-admin/resources/jquery.contextMenu.css']);
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jquery.contextMenu.js']); //must be in first pass in case orders is the landing page.
+app.rq.push(['script',1,app.vars.baseURL+'app-admin/resources/jquery.ui.position.js']);
 
 
 //used for image enlargement in template chooser (in syndication but suspect it will be in email, newsletter, app, etc soon enough)
 app.rq.push(['script',1,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
-//app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.ui.touch-punch.min.js']);
-//app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.shapeshift.js']);
+//app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jquery.ui.touch-punch.min.js']);
+//app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jquery.shapeshift.js']);
 
 
 
