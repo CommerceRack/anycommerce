@@ -131,12 +131,15 @@ var admin_template = function() {
 											.height($target.height() - 100)
 											.addClass('fullWidth')
 											.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']))
+											.tinymce()
+
+/*											
 											.htmlarea({
 												// Override/Specify the Toolbar buttons to show
 												toolbar: toolbarButtons // 
 												});
 										
-									
+*/									
 										// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
 //										$("div.jHtmlArea, div.ToolBar",$target).width('100%').css('box-sizing','border-box'); //having issue with toolbar collapsing.
 //										var $iframe = $('iframe',$target);
