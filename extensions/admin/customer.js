@@ -1463,7 +1463,7 @@ app.model.dispatchThis('immutable');
 				var CID = $ele.closest('[data-cid]').data('cid');
 				if(CID)	{
 //params also support anything in dialogCreate
-					var $D = app.ext.admin.u.dialogConfirmRemove({
+					var $D = app.ext.admin.i.dialogConfirmRemove({
 						message : "Are you sure you want to delete this Customer? There is no undo for this action.",
 						title : "Delete Customer Record",
 						removeButtonText : "Delete Customer",
@@ -1506,45 +1506,49 @@ app.model.dispatchThis('immutable');
 					$editorContainer = $("[data-app-role='dualModeDetailContainer']",$custManager).first(),
 					$form = $("[data-app-role='customerSearch']",$custManager).first(),
 					formObj = $form.serializeJSON();
-
-				$custManager.showLoading({"message":"Searching Customers"});
-				app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
-					$custManager.hideLoading();
-					$('.dualModeListMessaging',$custManager).empty();
-					if(app.model.responseHasErrors(rd)){
-						$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
-						}
-					else	{
-						//if there was only 1 result, the API returns just that CID. open that customer.
-						if(app.data[rd.datapointer] && app.data[rd.datapointer].CID && (app.data[rd.datapointer].PRT == app.vars.partition))	{
-							$resultsTable.hide();
-							$editorContainer.show();
-							app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
-							}
-						else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
-							$resultsTable.show();
-							$editorContainer.hide();	
-							$("tbody",$resultsTable).empty(); //clear any previous customer search results.
-							$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
-							app.u.handleButtons($resultsTable);
-							$("tbody tr",$resultsTable).each(function(){
-								var $tr = $(this);
-								if($tr.data('prt') == app.vars.partition)	{
-									$('td:first',$tr).addClass('lookLikeLink').attr('data-app-click','admin_customer|showCustomerUpdate');
-									}
-								else	{
-									$("button[data-app-role='customerEditButton']:first",$tr).button('disable').attr('title','Only customers for the partition in focus can be edited.');
-									}
-								});
-							$resultsTable.anytable();
+				
+				if(app.u.validateForm($form))	{
+					$custManager.showLoading({"message":"Searching Customers"});
+					app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
+						$custManager.hideLoading();
+						$('.dualModeListMessaging',$custManager).empty();
+						if(app.model.responseHasErrors(rd)){
+							$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
 							}
 						else	{
-							$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
+							//if there was only 1 result, the API returns just that CID. open that customer.
+							if(app.data[rd.datapointer] && app.data[rd.datapointer].CID && (app.data[rd.datapointer].PRT == app.vars.partition))	{
+								$resultsTable.hide();
+								$editorContainer.show();
+								app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
+								}
+							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
+								$resultsTable.show();
+								$editorContainer.hide();	
+								$("tbody",$resultsTable).empty(); //clear any previous customer search results.
+								$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
+								app.u.handleButtons($resultsTable);
+								$("tbody tr",$resultsTable).each(function(){
+									var $tr = $(this);
+									if($tr.data('prt') == app.vars.partition)	{
+										$('td:first',$tr).addClass('lookLikeLink').attr('data-app-click','admin_customer|adminCustomerUpdateShow');
+										}
+									else	{
+										$("button[data-app-role='customerEditButton']:first",$tr).button('disable').attr('title','Only customers for the partition in focus can be edited.');
+										}
+									});
+								$resultsTable.anytable();
+								}
+							else	{
+								$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
+								}
 							}
-						}
-					}},'mutable');
-				app.model.dispatchThis();
-
+						}},'mutable');
+					app.model.dispatchThis();					
+					}
+				else	{
+					//validateForm handles error display.
+					}
 				}, //execCustomerSearch
 
 			execHintReset : function($ele,P)	{
@@ -1708,7 +1712,7 @@ app.model.dispatchThis('immutable');
 				$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
 				$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
 				app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
-				}, //showCustomerUpdate
+				}, //adminCustomerUpdateShow
 
 
 
