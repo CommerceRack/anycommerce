@@ -59,7 +59,7 @@
 
 /**** ProdList CSS****/
 .productList {width:100%; font-family: 'Nunito',sans-serif; border-top:1px solid #D7D9DB;}
-.productList > li {height: auto; width:100%; margin:0px; padding:4px 0px 2px; border-bottom:3px solid #e5e5e5; position:relative;}
+.productList > li {height: auto; width:100%; margin:0px; padding:4px 0px; border-bottom:3px solid #e5e5e5; position:relative;}
 .prodThumbContainer {float:left; padding-right:10px; margin:0px;}
 .prodListName {color: #000102;font-size: 12px; line-height: 16px;}
 .prodListMSRP{color:#434242; font-size:12px; font-weight:bold; text-decoration:line-through; padding-right:4px;}
