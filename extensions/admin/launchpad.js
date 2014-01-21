@@ -142,7 +142,8 @@ app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmo
 				var $ele = $("<li \/>").addClass('tileDomainSelect tile_1x1');
 				$ele.addClass((app.vars.domain == domainArr.id) ? 'blue8' : 'blue2')
 				$ele.on('click.domainSelect',function(){
-					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'),'#!setup');
+					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
+					navigateTo('#:setup');
 					$(this).closest('ul').children().each(function(){$(this).removeClass('blue8').addClass('blue2');});
 					$(this).addClass('blue8').removeClass('blue2');
 					})
