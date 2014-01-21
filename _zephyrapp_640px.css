@@ -70,8 +70,8 @@
 .prodListArrow {position:absolute; right: 5px; top:40px;}
 
 /**** ProdListSearch CSS****/
-.searchList{width:100%;}
-.searchList > li {width:100%; height:auto; padding:5px 0px; margin: 0px; border-top:1px solid #D7D9DB;}
+.searchList{width:100%; font-family: 'Nunito',sans-serif}
+.searchList > li {width:100%; height:auto; position:relative; padding:4px 0px; margin: 0px; border-bottom:3px solid #e5e5e5;}
 
 /**** Product Page CSS****/
 .prodPageNameContainer{padding:0px; background:none; border:0px;}

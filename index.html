@@ -1056,13 +1056,19 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumbSearchResults floatLeft' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='100' height='100' />
+		<img src='blank.gif' class='prodThumbSearchResults floatLeft' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='90' height='90' />
 		</div>
-		<div class="prodListName displayNoneMobile" data-bind='var: product(prod_name); format:text;'></div>
-		<div class="prodListName displayNone displayBlockMobile" data-bind='var: product(prod_name); format:truncText; numCharacters: 69;'></div>
-		<div class="prodListPrice"> Zephyr Sale Price: <span data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></span></div>
+		<div class="prodListName" data-bind='var: product(prod_name); format:text;'></div>
+		<div class="prodListPrice displayNoneMobile"> Zephyr Sale Price: <span data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></span></div>
+		<div class="prodListPricing displayNone displayBlockMobile">
+		<!--
+			<span class="prodListMSRP" data-bind='var: product(prod_msrp); format:money; isElastic:1; currencySign: $;  hideZero:true;'></span>
+		--->	
+			<span class="prodListPrice" data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></span>
+		</div>
+		<img class="prodListArrow displayNone displayBlockMobile" src="images/prodlist_arrow.png">
 	</div>
-	<div class='hideInMinimalMode pointer moreDetails moreDetailsSearch' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">More Details</div>
+	<div class='hideInMinimalMode pointer moreDetails moreDetailsSearch displayNoneMobile' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">More Details</div>
 </li>
 
 <li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
