@@ -1630,7 +1630,7 @@ the cb itself is then hidden.
 				this.toggle = $toggle; //add to global object so it can be reliably referenced. can't use this.element.closest because cb is not inside toggle.
 
 
-				$toggle.addClass('ui-widget ui-widget-content ui-widget-anycb ui-corner-all ui-widget-header').css({'box-sizing':'border-box','position':'relative','display':'block','width':'55px','margin-right':'6px','height':'1.2em','z-index':1,'padding':0,'float':'left'})
+				$toggle.addClass('ui-widget ui-widget-content ui-widget-anycb ui-corner-all ui-widget-header').css({'box-sizing':'border-box','position':'relative','display':'block','width':'55px','margin-right':'6px','height':'1.2em','z-index':1,'padding':0,'float':'left'}).css({'cursor':'pointer'})
 				$toggleText.css({'box-sizing':'border-box','padding':'0px','width':'50%','text-align':'center','height':'1.3em','line-height':'1.3em','position':'absolute','top':-1,'z-index':2,'font-size':'.9em'}).addClass('anycbText ui-state-default');
 				
 //				$toggle.append("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>");
