@@ -66,8 +66,8 @@ var admin_template = function() {
 
 //make sure that no previous template editor data is on the target.					
 							$target.removeData('profile campaignid domain mode');
+							$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEdtiorTitle(vars)+"<\/h1>");
 							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
-							
 							
 							vars.editor = 'inline'; //hard coded for now. may change later. 
 							
@@ -97,7 +97,10 @@ var admin_template = function() {
 											persistentStateDefault : 'collapse',
 											persistent : true
 											});
-											
+
+// ### TODO -> here, if mode == site, a modified version of the editor needs to get run. each 'template' within the site get's it's own editor. Prob. put all these in an accordion.
+// old. 	app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
+
 										$textarea.attr('id','textarea_'+app.ext.admin_template.u.buildTemplateEditorID(vars)).show();
 										$textarea.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']));
 										
@@ -119,16 +122,23 @@ var admin_template = function() {
 												],
 											toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
 											});
-											
-										var $iframe = $('iframe',$target);
-										var $iframeBody = $iframe.contents().find('body');
-
-										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
-//										app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
-										
 										app.u.handleAppEvents($target); //TODO -> get rid of this.
 										$target.anydelegate();
 										app.u.handleCommonPlugins($target);
+
+										//takes a moment for tiny to update the dom et all.
+										setTimeout(function(){
+											var $iframe = $('#'+($textarea.attr('id')+'_ifr'),$target); //textarea_EBAYProfile_201352_ifr
+											app.u.dump(" -> $iframe.length: "+$iframe.length);
+											var $iframeBody = $iframe.contents().find('body');
+											var $meta = $iframeBody.find("meta[name='wizard']");
+											if($meta.length >- 1)	{
+												$("button[data-app-role='startWizardButton']:first").data('wizardContent',$meta.attr('content')).button('enable');
+												}
+
+											app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
+											},3000);
+										
 										}
 									}
 							
@@ -324,10 +334,10 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-				templateThumb : function($tag,data)	{
-					$tag.attr('src',"data:"+data.value[0].type+";base64,"+data.value[0].base64);
-					$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' >"); //data-gallery='gallery'
-					}
+			templateThumb : function($tag,data)	{
+				$tag.attr('src',"data:"+data.value[0].type+";base64,"+data.value[0].base64);
+				$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' >"); //data-gallery='gallery'
+				}
 			}, //renderFormats
 
 
@@ -647,6 +657,7 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //delegates a click event on the template container which updates the object inspector w/ information about the clicked element.
 				handleWizardObjects : function($iframeBody,$objectInspector)	{
+					app.u.dump("$iframeBody.length: "+$iframeBody.length+" and $objectInspector.length: "+$objectInspector.length);
 					if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
 						$iframeBody.on('click',function(e){
 							var $target = $(e.target);
@@ -1339,6 +1350,35 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 						
 					return r;
+					},
+				//vars should contain mode and any mode-specific vars (campaignid if mode is Campaign)
+				//will concatonate mode and mode specific vars.
+				buildTemplateEdtiorTitle : function(vars)	{
+					var r = '';
+					if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
+						r += "Template Editor for ";
+						switch(vars.mode)	{
+							case 'Campaign':
+								r += 'Campaign '+vars.campaignid;
+								break;
+							case 'EBAYProfile':
+								r += 'eBay Profile ' + vars.profile;
+								break;
+							case 'Site':
+								r += 'Site/Domain '+vars.domain;
+								break;
+							default:
+								$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEdtiorTitle, vars passed 'missingParamsByMode' but failed to find a valid case in the switch statement.","gMessage":true});
+								//shouldn't get here. missingParamsByMode should validate mode.
+								r = false;
+								break;
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEdtiorTitle, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
+						}
+						
+					return r;
 					}
 
 			}, //u [utilities]
@@ -1796,18 +1836,16 @@ The names for these delegated events are temporary. use the original names once 
 				startWizardExec : function($btn)	{
 					$btn.button();
 					var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
-					var $meta = $('.jHtmlArea iframe:first',$templateEditor).contents().find("meta[name='wizard']");
+					var $meta = $('iframe:first',$templateEditor).contents().find("meta[name='wizard']");
 					var editorData = $templateEditor.data(); 
 					
-					if($meta.length == 0)	{$btn.button('disable')}
-					else	{
 //						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
-						$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
-							$btn.button('disable').hide();
-							event.preventDefault();
-							app.ext.admin_template.u.summonWizard($btn.closest("[data-templateeditor-role='container']"),$meta.attr('content'));
-							});
-						}
+					$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
+						$btn.button('disable').hide();
+						event.preventDefault();
+						app.u.dump(" -> $btn.data()"); app.u.dump($btn.data());
+						app.ext.admin_template.u.summonWizard($btn.closest("[data-templateeditor-role='container']"),$btn.data('wizardContent'));
+						});
 					},
 
 				templateHighlightToggle : function($cb)	{
