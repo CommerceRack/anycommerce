@@ -858,7 +858,7 @@ return [{
 					});
 				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
 				$D.dialog('open');
-				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
+				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'templateMediaUpload');
 				}
 			}	,	{
 			css: 'image',
