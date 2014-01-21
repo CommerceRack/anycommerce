@@ -303,57 +303,56 @@ var admin_marketplace = function() {
 
 
 			showEBAY : function($target)	{
-$target.empty().showLoading({'message':'Fetching eBay data'});
+				$target.empty().showLoading({'message':'Fetching eBay data'});
+				
+				var
+					$slimLeftContent = $target.closest("[data-app-role='slimLeftContentSection']"),
+					$extrasTab = $("[data-app-role='extrasTab']",$slimLeftContent),
+					$extrasTabContent = $("[data-anytab-content='extras']",$slimLeftContent);
+					
+				
+				$extrasTab.show().find('a').text('Tokens & Profiles');
+				
+				//ebayTokensAndProfilesTemplate
+				//ebay takes a very different path at this point.  
+				//go get 
+				app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
+				app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
+				// * 201336 -> moved this so templates are not requested till template chooser is opened.
+				//app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
+				app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
+					$target.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd})
+						}
+					else	{
+						if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
+				//populate syndication tab
+							$target.anycontent({
+								'templateID':'syndication_ebf',
+								'data' : app.data['adminSyndicationDetail|EBF'],
+								'dataAttribs':{'dst':'EBF'}
+								});
+							app.u.handleAppEvents($target);
+							app.u.handleCommonPlugins($target);
+							app.ext.admin.u.applyEditTrackingToInputs($target);
 
-var
-	$slimLeftContent = $target.closest("[data-app-role='slimLeftContentSection']"),
-	$extrasTab = $("[data-app-role='extrasTab']",$slimLeftContent),
-	$extrasTabContent = $("[data-anytab-content='extras']",$slimLeftContent);
-	
-
-$extrasTab.show().find('a').text('Tokens & Profiles');
-
-//ebayTokensAndProfilesTemplate
-//ebay takes a very different path at this point.  
-//go get 
-app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
-app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
-// * 201336 -> moved this so templates are not requested till template chooser is opened.
-//app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
-app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
-	$target.hideLoading();
-	if(app.model.responseHasErrors(rd)){
-		$target.anymessage({'message':rd})
-		}
-	else	{
-		if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
-//populate syndication tab
-			$target.anycontent({
-				'templateID':'syndication_ebf',
-				'data' : app.data['adminSyndicationDetail|EBF'],
-				'dataAttribs':{'dst':'EBF'}
-				});
-			app.u.handleAppEvents($target);
-			app.u.handleCommonPlugins($target);
-			app.ext.admin.u.applyEditTrackingToInputs($target);
-
+							$('.applyAnytabs:first',$slimLeftContent).find("li[data-app-role='extrasTab']:first").trigger('click'); //make tokens and profiles tab active.
 //populate 'extras' tab, which is used for tokens and profiles.
-//			app.u.dump(" -> $('.anytabsContainer',$target).find('li'): "+$('.anytabsContainer:first',$slimLeftContent).find('li:eq(2)').length);
-			$('.anytabsContainer:first',$slimLeftContent).find('li:eq(1) a').trigger('click'); //make tokens and profiles tab active.
-			$extrasTabContent.anycontent({
-				'templateID' : 'ebayTokensAndProfilesTemplate',
-				'data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList)
-				});
-			$('table',$extrasTabContent).anytable();
-			app.u.handleAppEvents($extrasTabContent);
-			}
-		else	{
-			$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
-			app.u.handleAppEvents($target);
-			}
-		}
-	}}},'mutable');
-app.model.dispatchThis('mutable');
+							$extrasTabContent.anycontent({
+								'templateID' : 'ebayTokensAndProfilesTemplate',
+								'data' : $.extend(true,{},app.data['adminSyndicationDetail|EBF'],app.data.adminEBAYProfileList,app.data.adminEBAYTokenList)
+								});
+							$('table',$extrasTabContent).anytable();
+							app.u.handleAppEvents($extrasTabContent);
+							}
+						else	{
+							$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
+							app.u.handleAppEvents($target);
+							}
+						}
+					}}},'mutable');
+				app.model.dispatchThis('mutable');
 
 
 				}, //showEBAY
