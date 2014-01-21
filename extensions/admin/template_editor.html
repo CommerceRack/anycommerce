@@ -53,7 +53,7 @@
 	<div data-app-role='wizardMessaging' class='small'></div>
 	
 	<form action='#' onSubmit='return false;' data-templateeditor-role='wizardForm' class='wizardForm'>
-	<button data-app-event='admin_template|startWizardExec'>Start Wizard</button>
+	<button data-app-event='admin_template|startWizardExec' disabled='disabled' data-app-role='startWizardButton'>Start Wizard</button>
 	</form>
 	
 	
@@ -61,7 +61,8 @@
 	</section>
 	
 	
-	
+	<!--
+	disabled for now due to tinymce integration
 	<section class='ui-widget marginBottom campaign' data-app-role='templateEditorViewportChooser'>
 		<h4 class='smallPadding ui-widget-header ui-corner-top'>Viewport Size</h4>
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
@@ -75,7 +76,7 @@
 	
 			<optgroup label='Apple'>
 				<option value='320x480'>iPhone, iPod Touch 320x480</option>
-				<option value='320x568' data-deviceclass='iphone5'>iPhone 5 320x568</option><!-- -19px for clock/battery bar -->
+				<option value='320x568' data-deviceclass='iphone5'>iPhone 5 320x568</option>
 				<option value='768x1024'>iPad/Mini 768x1024</option>
 			</optgroup>
 	
@@ -147,7 +148,7 @@
 		
 		</div>
 	</section>
-	
+	-->
 	<section class='ui-widget marginBottom' data-app-role='templateEditorSaveAsTemplate'>
 		<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
