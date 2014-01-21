@@ -11,7 +11,7 @@
 		</label>
 	
 		<div data-app-role="ebayTemplateEditorIframeContainer">
-		<textarea id='ebayTemplateHTMLTextarea' rows='10' class='fullWidth'></textarea>
+		<textarea rows='10' data-app-role='templateEditorTextarea'></textarea>
 		</div>
 	</div>
 	</td>
@@ -152,7 +152,7 @@
 		<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 		<p class='hint'>This will make a new template for use on other profiles</p>
-		<input name='template' id='templateName' value='' placeholder='template name' />
+		<input name='template' value='' placeholder='template name' />
 		<button data-app-event="admin_template|adminSaveAsTemplateExec">Save As New Template</button>
 		</div>
 	</section>
@@ -195,12 +195,6 @@
 		
 		<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:templateChooserItemTemplate;" class='listStyleNone clearfix'></ul>
 		
-<!--
-<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer'  data-appid='b2b'>
-			<img src='app-b2b/preview-120x120.jpg' width='120' height='100' alt='Shadow' />
-			<div>B 2 B</div>
-			</li>
--->
 	</section>	
 	
 	<section class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel' data-app-role='appPreviewPanel'>
