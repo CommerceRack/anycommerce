@@ -43,7 +43,6 @@
 	background:#ffffff; 
 	color:#000000; 
 	font-size:20px;
-	font-family: 'Nunito', sans-serif;
 	text-align:center;
 	border-bottom:1px solid #636363; 
 	border-top:1px solid #636363;
@@ -59,10 +58,16 @@
 .cartButtons span {display:block; margin-bottom: 0.5em;}
 
 /**** ProdList CSS****/
-.productList {width:100%;}
-.productList > li {height: auto; width:100%; margin:0px; padding:5px 0px; border-top:1px solid #D7D9DB;}
+.productList {width:100%; font-family: 'Nunito',sans-serif; border-top:1px solid #D7D9DB;}
+.productList > li {height: auto; width:100%; margin:0px; padding:4px 0px 2px; border-bottom:3px solid #e5e5e5; position:relative;}
 .prodThumbContainer {float:left; padding-right:10px; margin:0px;}
-.productList .prodViewerAddToCartForm {position:static;}
+.prodListName {color: #000102;font-size: 12px; line-height: 16px;}
+.prodListMSRP{color:#434242; font-size:12px; font-weight:bold; text-decoration:line-through; padding-right:4px;}
+.prodListPricing {margin:2px 0px 0px;}
+.prodListPrice {color:#0092e2;}
+.prodListPrice span {color:#0092e2;}
+.shipFreeIcon{margin-bottom: 2px;}
+.prodListArrow {position:absolute; right: 5px; top:40px;}
 
 /**** ProdListSearch CSS****/
 .searchList{width:100%;}

@@ -847,3 +847,17 @@ a:hover {
 	background:-moz-linear-gradient(center top , #F4720C 0%, #FF3800 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
 }
 /***** SearchTemplate CSS End *****/
+
+/***** Review Section CSS Start *****/
+.reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px;}
+.review_1 	{background-position: 0px 0px;}
+.review_2	{background-position: 0px 0px;}
+.review_3	{background-position: 0px -28px;}
+.review_4	{background-position: 0px -28px;}
+.review_5	{background-position: 0px -56px;}
+.review_6	{background-position: 0px -56px;}
+.review_7	{background-position: 0px -84px;}
+.review_8	{background-position: 0px -84px;}
+.review_9	{background-position: 0px -112px;}
+.review_10	{background-position: 0px -112px;}
+/***** Review Section CSS End *****/

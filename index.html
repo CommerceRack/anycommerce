@@ -916,24 +916,33 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
 			<img src='blank.gif' class='prodThumb displayNoneMobile' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='150' />
-			<img src='blank.gif' class='prodThumb displayNone displayBlockMobile' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='100' height='100' />
+			<img src='blank.gif' class='prodThumb displayNone displayBlockMobile' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='90' height='90' />
 			<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodListTagsContainer displayNoneMobile'></div>
 		</div>
 
 		<div class="prodListName" data-bind='var: product(zoovy:prod_name); format:text;'></div>
 		
-		<div class="prodListPricing">
+		<div class="prodListPricing displayNoneMobile">
 			<div class="prodListPrice"> Zephyr Sale Price: <span data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price;'></span></div>
 			<span class='prodListSavings'>
 				<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
 				<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
 			</span>
 		</div>
+		<div class="prodListPricing displayNone displayBlockMobile">
+			<span class='prodListMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true;'></span>
+			<span class="prodListPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price;'></span>
+		</div>
+		<div class='displayNone' data-bind='var: product(is:shipfree); format:showIfSet;'>
+			<img class="displayNone displayBlockMobile shipFreeIcon" width="103" height="13" src="images/freeshipping_icon.jpg"/>
+		</div>
+		
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm displayNoneMobile' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
 			<input type='hidden' name='qty' value='1' />
 			<button  class="addToCartButton" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>More Details</button>
 		</form>
+		<img src="images/prodlist_arrow.png" class="prodListArrow displayNone displayBlockMobile"/>
 	</div>
 	
 </li>
