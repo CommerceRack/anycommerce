@@ -1,18 +1,15 @@
 
-<table id='templateEditorTemplate' class='fullWidth templateEditor'>
+<table id='templateEditorTemplate' class='fullWidth smallButton templateEditor'>
 <tr>
-	<td  class='valignTop width75 ui-widget ui-widget-content ui-corner-all'>
+	<td class='valignTop width75 ui-widget ui-widget-content ui-corner-all'>
 	<div class='stdPadding'>
-		<label class='site displayNone'>
-		<span>Choose Template</span>
-		<select name='templateSelector' class='site' data-app-role='siteTemplateSelect' data-app-event='admin_template|adminSiteTemplateEdit'>
-			<option value='' disabled="disabled" selected="selected">Choose Template</option>
-		</select>
-		</label>
+
+		<div data-app-role='templateEditorSupplementalContent'></div><!-- used for the template editor to add mode specific content, if necessary. Site uses this. -->
 	
-		<div data-app-role="ebayTemplateEditorIframeContainer">
+		<div data-app-role="templateEditorTextareaContainer">
 		<textarea rows='10' data-app-role='templateEditorTextarea'></textarea>
 		</div>
+		
 	</div>
 	</td>
 	<td class='valignTop width20'>
@@ -21,8 +18,8 @@
 		<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
 	<!--		<button data-app-event="admin_template|adminTemplateCampaignExit">Exit</button> -->
 	
-			<button data-app-event="admin_template|adminTemplateCampaignTestShow" class='campaign'>Send Test</button>
-			<button data-app-event='admin_template|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus'>Save</button>
+			<button data-app-click="admin_template|adminTemplateCampaignTestShow" class='campaign applyButton' data-text='true' data-icon-primary='ui-icon-mail-closed'>Send Test</button>
+			<button data-app-click='admin_template|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus applyButton' data-text='true'>Save</button>
 		</div>
 	
 	<section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
@@ -53,7 +50,7 @@
 	<div data-app-role='wizardMessaging' class='small'></div>
 	
 	<form action='#' onSubmit='return false;' data-templateeditor-role='wizardForm' class='wizardForm'>
-	<button data-app-event='admin_template|startWizardExec' disabled='disabled' data-app-role='startWizardButton'>Start Wizard</button>
+	<button data-app-click='admin_template|startWizardExec' disabled='disabled' data-app-role='startWizardButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-triangle-e'>Start Wizard</button>
 	</form>
 	
 	
@@ -154,7 +151,7 @@
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 		<p class='hint'>This will make a new template for use on other profiles</p>
 		<input name='template' value='' placeholder='template name' />
-		<button data-app-event="admin_template|adminSaveAsTemplateExec">Save As New Template</button>
+		<button data-app-click="admin_template|adminSaveAsTemplateExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Save As New Template</button>
 		</div>
 	</section>
 

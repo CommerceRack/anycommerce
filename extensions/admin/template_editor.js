@@ -66,105 +66,127 @@ var admin_template = function() {
 
 //make sure that no previous template editor data is on the target.					
 							$target.removeData('profile campaignid domain mode');
-							$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEditorTitle(vars)+"<\/h1>");
-// ### TODO -> add an 'exit' button. should destroy the tinymce instance. should return to UI based on mode.
-							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
 							
-							vars.editor = 'inline'; //hard coded for now. may change later. 
-//## TODO -> check if editor already exists. if open on another tab, throw a warning. if not, see about destroying it. re-opening it doesn't play well.
-							if(vars.editor)	{
-								
-								$target.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
-							
-								$target.showLoading({"message":"Fetching template HTML"});
-								var callback = function(rd){
-									$target.hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										$target.anymessage({'message':rd})
-										}
-									else	{
-										app.u.dump(' -> template contents obtained');
-							//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
-										$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template
+							var taID = 'textarea_'+app.ext.admin_template.u.buildTemplateEditorID(vars); //added to textarea dynamically. if already on DOM, do no open another instance of editor.
 
-										var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target), $textarea = $("textarea[data-app-role='templateEditorTextarea']:first",$target);
-										
-										$("[data-app-role='templateObjectInspectorContainer']",$target).anypanel({
-											'state' : 'persistent',
-											showClose : false, //set to false to disable close (X) button.
-											wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
-											extension : 'template_editor', //used in conjunction w/ persist.
-											name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
-											persistentStateDefault : 'collapse',
-											persistent : true
-											});
-
-// ### TODO -> here, if mode == site, a modified version of the editor needs to get run. each 'template' within the site get's it's own editor. Prob. put all these in an accordion.
-// old. 	app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
-
-										$textarea.attr('id','textarea_'+app.ext.admin_template.u.buildTemplateEditorID(vars)).show();
-										$textarea.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']));
-										
-										$textarea.tinymce({
-											valid_children : "head[style|meta|base],body[style|meta|base]",
-											esxtended_valid_elements : "@[class]",
-											menubar : 'edit insert view format table tools',
-											height : ($(document.body).height() - $('#mastHead').outerHeight() - 200),
-											visual: false, //turn off visual aids by default. menu choice will still show up.
-											keep_styles : true,
-											image_list: [],
-											plugins: [
-												"_image advlist autolink lists link charmap print preview anchor",
-												"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
-												"media table contextmenu paste"
-												],
-											toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
-											});
-										app.u.handleAppEvents($target); //TODO -> get rid of this.
-										$target.anydelegate();
-										app.u.handleCommonPlugins($target);
-
-										//takes a moment for tiny to update the dom et all.
-										setTimeout(function(){
-											var $iframe = $('#'+($textarea.attr('id')+'_ifr'),$target); //textarea_EBAYProfile_201352_ifr
-											app.u.dump(" -> $iframe.length: "+$iframe.length);
-											var $iframeBody = $iframe.contents().find('body');
-											var $meta = $iframeBody.find("meta[name='wizard']");
-											if($meta.length >- 1)	{
-												$("button[data-app-role='startWizardButton']:first").data('wizardContent',$meta.attr('content')).button('enable');
-												}
-
-											app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
-											},3000);
-										
-										}
-									}
-							
-								var cmdObj = {
-									'_cmd':'admin'+vars.mode+'FileContents',
-									'FILENAME' : 'index.html',
-									'_tag' : {
-										'callback' : callback
-										}
-									}
-								
-								if(vars.mode == 'EBAYProfile')	{
-									cmdObj.PROFILE = vars.profile;
-									cmdObj._tag.datapointer = 'adminEBAYProfileFileContents|'+vars.profile;
-									}
-								else if(vars.mode == 'Campaign')	{
-									cmdObj.CAMPAIGNID = vars.campaignid;
-									cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
-									}
-								else if(vars.mode == 'Site')	{
-									cmdObj.DOMAIN = vars.domain;
-									cmdObj._tag.datapointer = 'adminSiteFileContents|'+vars.domain;
+							if(taID)	{
+								var $textarea = $(app.u.jqSelector('#',taID));
+								if($textarea.length)	{
+									$target.anymessage({"message":"You are attempting to open an instance of a template which is already open ("+app.ext.admin_template.u.buildTemplateEditorTitle+") in "+($textarea.closest('.tabContent').data('section'))+". To reduce the likelyhood of inadvertantly saving over changes, only one copy of a template may be edited at a time.","errtype":"halt","persistent":true});
 									}
 								else	{
-									} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
-							
-								app.model.addDispatchToQ(cmdObj,'mutable');
-								app.model.dispatchThis('mutable');
+									$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEditorTitle(vars)+"<\/h1>");
+// ### TODO -> add an 'exit' button. should destroy the tinymce instance. should return to UI based on mode.
+// 			also need to destroy any tinymce in memory for this template if it has already been opened once.
+									$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
+
+									$target.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
+
+									$target.showLoading({"message":"Fetching template HTML"});
+									var callback = function(rd){
+										$target.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$target.anymessage({'message':rd})
+											}
+										else	{
+											app.u.dump(' -> template contents obtained');
+								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
+											$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template
+	
+											var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target), $textarea = $("textarea[data-app-role='templateEditorTextarea']:first",$target);
+
+											$("[data-app-role='templateObjectInspectorContainer']",$target).anypanel({
+												'state' : 'persistent',
+												showClose : false, //set to false to disable close (X) button.
+												wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
+												extension : 'template_editor', //used in conjunction w/ persist.
+												name : 'templateEditorObjectInspector', //used in conjunction w/ persist.
+												persistentStateDefault : 'collapse',
+												persistent : true
+												});
+											
+											$textarea.attr('id',taID);
+
+	// ### TODO -> here, if mode == site, a modified version of the editor needs to get run. each 'template' within the site get's it's own editor. Prob. put all these in an accordion.
+	// old. 	app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
+											if(vars.mode == 'Site')	{
+												$textarea.hide(); //the default text area isn't used.
+												app.ext.admin_template.u.buildSupplementalSiteEditors($target,$(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body'])));
+												}
+											else	{
+												$textarea.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']).html());
+												$textarea.show();
+												$textarea.tinymce({
+													init_instance_callback : function(editor)	{
+														var $iframe = $("iframe:first",$(editor.getContentAreaContainer()));
+														var $iframeBody = $iframe.contents().find('body');
+														var $meta = $iframeBody.find("meta[name='wizard']");
+														if($meta.length >- 1)	{
+															$("button[data-app-role='startWizardButton']:first").data('wizardContent',$meta.attr('content')).button('enable');
+															}
+														else	{
+															$("button[data-app-role='startWizardButton']:first").button('disable');
+															}
+														app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
+														},
+													valid_children : "head[style|meta|base],+body[style|meta|base]", //,body[style|meta|base] -> this seems to cause some dropped lines after an inline 'style'
+													valid_elements: "*[*]",
+													esxtended_valid_elements : "@[class]",
+													menubar : 'edit insert view format table tools',
+													height : ($(document.body).height() - $('#mastHead').outerHeight() - 200),
+													visual: false, //turn off visual aids by default. menu choice will still show up.
+													keep_styles : true,
+													image_list: [],
+													plugins: [
+														"_image advlist autolink lists link charmap print preview anchor",
+														"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
+														"media table contextmenu paste"
+														],
+													toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+													});
+												}
+											
+
+											
+											
+											
+
+											$target.anydelegate();
+											app.u.handleCommonPlugins($target);
+											app.u.handleButtons($target);
+											}
+										} //ends callback.
+
+									var cmdObj = {
+										'_cmd':'admin'+vars.mode+'FileContents',
+										'FILENAME' : 'index.html',
+										'_tag' : {
+											'callback' : callback
+											}
+										}
+									
+									if(vars.mode == 'EBAYProfile')	{
+										cmdObj.PROFILE = vars.profile;
+										cmdObj._tag.datapointer = 'adminEBAYProfileFileContents|'+vars.profile;
+										}
+									else if(vars.mode == 'Campaign')	{
+										cmdObj.CAMPAIGNID = vars.campaignid;
+										cmdObj._tag.datapointer = 'adminCampaignFileContents|'+vars.campaignid;
+										}
+									else if(vars.mode == 'Site')	{
+										cmdObj.DOMAIN = vars.domain;
+										cmdObj._tag.datapointer = 'adminSiteFileContents|'+vars.domain;
+										}
+									else	{
+										} //should never get this far. the if check at the top verifies valid mode. This is just a catch all.
+								
+									app.model.addDispatchToQ(cmdObj,'mutable');
+									app.model.dispatchThis('mutable');
+
+									}
+								}
+							else	{
+								//to get here, taID is false. buildTemplateEditorID will handle the error display.
 								}
 							}
 						else	{
@@ -685,7 +707,12 @@ var $input = $(app.u.jqSelector('#',ID));
 				postprocessTemplate : function(template,mode)	{
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
-					$('#templateBuilderCSS',$template).empty().remove();
+					$('#templateBuilderCSS',$template).empty().remove(); //removes the stylesheet added in preProcessTemplate (for code block highlights)
+					var $head = $("head",$template);
+					//move all meta and style tags from the body to the head where they belong.
+					$("body meta, body style",$template).each(function(){
+						$(this).appendTo($head);
+						})
 					return $template.html();
 					}, //postprocessTemplate
 
@@ -699,7 +726,7 @@ var $input = $(app.u.jqSelector('#',ID));
 					
 					if(mode == 'Site')	{
 //						app.u.dump(" -> Is a Site template");
-						$('base',$template).attr('href','http://www.'+vars.domain); //!!! this is temporary. Need a good solution for protocol and domain prefix/host.
+						$('base',$template).attr('href','http://www.'+vars.domain); //### TODO -> this is temporary. Need a good solution for protocol and domain prefix/host.
 						$('script',$template).remove(); //make sure the app template doesn't instantiate itself.
 						}
 					
@@ -719,34 +746,74 @@ var $input = $(app.u.jqSelector('#',ID));
 						})
 	
 					$template.append(app.ext.admin_template.u.buildTemplateStyleSheet())
-					return $template.html();
+					return $template;
 					}, //preprocessTemplate
 
-				handleTemplateModeSpecifics : function(mode,vars,$iframeContents,$templateEditor)	{
-					if(!app.ext.admin_template.u.missingParamsByMode(mode,vars))	{
-						if($iframeContents instanceof jQuery)	{
-							if(mode == 'Site')	{
-								$("[data-app-role='saveButton']",$templateEditor).text("Save Templates");
-								$("[data-app-role='templateEditorSaveAsTemplate']",$templateEditor).hide();
-								$iframeContents.children().hide();
-//build the list of templates that are editable and update the select list.
-//								app.u.dump("# of wizards: "+$("[data-wizard]",$template).length);
-								var $select = $("[data-app-role='siteTemplateSelect']",$templateEditor);
-								$("[data-wizard]",$iframeContents).each(function(){
-									var $ele = $(this);
-									//create an MD5 for the contents of the element which can be used to compare later to see if any changes occured.
-									$select.append($("<option \/>").text($ele.data('wizard')).val($ele.data('wizard')).attr({'data-md5':Crypto.MD5($(app.u.jqSelector('#',$ele.attr('id')),$iframeContents).html()),'data-elementid':$ele.attr('id')}));
-									})
+
+//$template is a jquery instance of the original template, BEFORE it's been added a text area.
+				buildSupplementalSiteEditors : function($templateEditor,$template)	{
+					if($templateEditor instanceof jQuery && $template instanceof jQuery)	{
+						var
+							$supp = $("[data-app-role='templateEditorSupplementalContent']:first",$templateEditor),
+							taID = 'textarea_'+app.ext.admin_template.u.buildTemplateEditorID($templateEditor.data());
+						if(taID)	{
+							$("[data-wizard]",$template).each(function(){
+								var $wizele = $(this);
+								$supp.append($("<h3 \/>").text($wizele.attr('data-wizard-title') || $wizele.data('wizard')).data('wizard',$wizele.data('wizard')));
+	//create an MD5 for the contents of the element which can be used to compare later to see if any changes occured.
+								var $textarea = $("<textarea \/>",{'id':taID+"_"+$wizele.data('wizard')}).attr({
+									'data-md5':Crypto.MD5($wizele.html()),
+									'data-elementid':$wizele.attr('id')
+									}).val($wizele.html());
+								$supp.append($("<div \/>").append($textarea));
+								});
+							
+							if($supp.children().length)	{
+								// #### TODO -> this needs to trigger the wizard.
+								//note -> could use tinymce.FocusEvent if need be. http://www.tinymce.com/wiki.php/api4:class.tinymce.FocusEvent
+								$supp.accordion({
+									heightStyle: "content",
+									beforeActivate : function(event,ui)	{
+										app.u.dump("accordian beforeActivate. wizard: "+ui.newHeader.data('wizard'));
+										$("button[data-app-role='startWizardButton']:first",$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))).data('wizardContent','wizard-'+ui.newHeader.data('wizard')+'.html').button('enable');
+										}
+									});
+// ### TODO -> need to trigger the beforeActivate code on the first header to enable the wizard button.
+								$("textarea",$supp).tinymce({
+									init_instance_callback : function(editor)	{
+										var $iframe = $("iframe:first",$(editor.getContentAreaContainer()));
+										var $iframeBody = $iframe.contents().find('body');
+										app.ext.admin_template.u.handleWizardObjects($iframeBody,$("[data-app-role='templateObjectInspectorContent']",$templateEditor));										
+										},
+//									setup : function(editor) {editor.on('focus', function(e) {});editor.on('change', function(e) {});},
+									valid_elements: "*[*]",
+									esxtended_valid_elements : "@[class]",
+									menubar : 'edit insert view format table tools',
+									height : 200,
+									visual: false, //turn off visual aids by default. menu choice will still show up.
+									keep_styles : false, //for sites, no inline styles are allowed.
+									image_list: [],
+									plugins: [
+										"_image advlist autolink lists link charmap print preview anchor",
+										"searchreplace visualblocks code fullscreen",
+										"media table contextmenu paste"
+										],
+									toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+									});
+
 								}
+							else	{
+								$supp.anymessage({"message":"","errtype":"halt","persistent":true});
+								}
+
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_template.u.handleTemplateModeSpecifics, $iframeContents is not a valid jQuery instance ['+($iframeContents instanceof jQuery)+'].','gMessage':true});
+							//taID didn't generate. builderTemplateEditorID will throw the error.
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_template.u.handleTemplateModeSpecifics, '+app.ext.admin_template.u.missingParamsByMode(mode,vars),'gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_template.u.handleSiteTemplateEditor, either $templateEditor ['+($templateEditor instanceof jQuery)+'] or $template ['+($template instanceof jQuery)+'] were not valid instances of jQuery.','gMessage':true});
 						}
-					//data-app-role='siteTemplateSelect'
 					},
 
 				summonWizard : function($context,filename)	{
@@ -863,10 +930,10 @@ var $input = $(app.u.jqSelector('#',ID));
 								if(app.data[dp] && app.data[dp].body)	{
 									var $oTemplate = $("<html>").html(app.data[dp].body); //the original instance of the template.
 					
-									$("[data-app-role='siteTemplateSelect']",$templateEditor).first().find('option').each(function(){
-										var $option = $(this);
-										if($option.data('md5') && $option.data('elementid'))	{
-											var $thisTemplate = magic.inspect(app.u.jqSelector('#',$option.data('elementid')));
+									$("[data-app-role='templateEditorSupplementalContent']:first",$templateEditor).find('textarea').each(function(){
+										var $te = $(this);
+										if($te.data('md5') && $te.data('elementid'))	{
+											var $thisTemplate = magic.inspect(app.u.jqSelector('#',$te.data('elementid')));
 //											app.u.dump(" -> $thisTemplate.length: "+$thisTemplate.length);
 //											app.u.dump(" -> old md5 : "+$option.data('md5'));
 //											app.u.dump(" -> new md5 : "+Crypto.MD5($thisTemplate.html()));
@@ -875,7 +942,7 @@ var $input = $(app.u.jqSelector('#',ID));
 												$thisTemplate.removeAttr('style'); //if no styles are set, remove the empty tag. that way the md5 'should' match if no change occured.
 												}
 
-											if(Crypto.MD5($thisTemplate.html()) != $option.data('md5'))	{
+											if(Crypto.MD5($thisTemplate.html()) != $te.data('md5'))	{
 												app.u.dump(" -> save occuring for element "+$option.data('elementid'));
 												$(app.u.jqSelector('#',$option.data('elementid')),$oTemplate).replaceWith($thisTemplate);
 												}
@@ -891,7 +958,11 @@ var $input = $(app.u.jqSelector('#',ID));
 									}
 								}
 							else	{
-								docBody = app.ext.admin_template.u.postprocessTemplate($('.jHtmlArea iframe:first',$templateEditor).contents().find('html').html(),mode);
+								var $textarea = $("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor)
+								docBody = app.ext.admin_template.u.postprocessTemplate($textarea.tinymce().getContent());
+//								var taID = "textarea_"+app.ext.admin_template.u.buildTemplateEditorID($templateEditor.data('mode'));
+//								$textarea = $(app.u.jqSelector('#',taID))
+//								docBody = app.ext.admin_template.u.postprocessTemplate($('iframe:first',$templateEditor).contents().find('html').html(),mode);
 								}
 							var dObj = {
 								'_cmd' : 'admin'+mode+'FileSave',
@@ -903,8 +974,7 @@ var $input = $(app.u.jqSelector('#',ID));
 											$templateEditor.anymessage({'message':responseData})
 											}
 										else	{
-											if($templateEditor.data('editor') == 'dialog')	{$templateEditor.dialog('close');}
-											$('#globalMessaging').anymessage(app.u.successMsgObject('Your changes have been saved.'));
+											$templateEditor.anymessage(app.u.successMsgObject('Your changes have been saved.'));
 											}
 										}
 									},
@@ -999,74 +1069,6 @@ var $input = $(app.u.jqSelector('#',ID));
 
 					}, //handleTemplateSelect
 				
-				getEditorButton_imageadd : function(vars,$templateEditor)	{
-					return {
-						css : 'imageadd',
-						'text' : 'Upload New Image to Profile',
-						action: function (btn) {
-							var $D = app.ext.admin.i.dialogCreate({
-								title : "Upload a file for this template",
-								'templateID' : 'ebayTemplateEditorImageUpload',
-								anycontent : true, //the dialogCreate params are passed into anycontent
-								handleAppEvents : false //defaults to true
-								});
-							$D.dialog('open');
-							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'templateMediaUpload');
-							}
-						}
-					}, //getEditorButton_imageadd
-					
-				getEditorButton_image : function(vars,$templateEditor)	{
-					return {
-						css: 'image',
-						text: 'Place Image',
-						action: function (btn) {
-							var 
-								$D = $('#ebayTemplateEditorImageListModal'),
-								profile = vars.profile,
-								jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
-							if($D.length)	{
-								$D.empty(); //clear contents
-								}
-							else	{
-								$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
-								$D.dialog({
-									'title' : 'Select Media',
-									'modal':true,
-									'width':'60%',
-									'autoOpen' : false
-									});
-								}
-							$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
-							$D.dialog('open');
-							$D.showLoading({'message':'Updating File List'});
-							app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									var L = app.data[rd.datapointer]['@images'].length;
-			//need a 'path' set for the data-bind to render.
-									for(var i = 0; i < L; i += 1)	{
-										app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
-										}
-									$D.anycontent({'datapointer':rd.datapointer});
-									app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
-									$D.imagegallery({
-										selector: 'a[data-gallery="gallery"]',
-										show: 'fade',
-										hide: 'fade',
-										fullscreen: false,
-										slideshow: false
-										});
-									$D.dialog("option", "position", "center");
-									}
-								}},'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						}
-					}, //getEditorButton_image
 
 				getEditorButton_style : function(vars,$templateEditor){
 					return {
@@ -1414,58 +1416,45 @@ var $input = $(app.u.jqSelector('#',ID));
 
 
 			e : {
-//a site index.html file may contain several editable 'templates', each with their own wizard.
-//a dropdown is added to the template editor to allow the user to select a given template. The wizard file is then loaded.
-				adminSiteTemplateEdit : function($ele)	{
-					
-					$ele.off('change.adminSiteTemplateEdit').on('change.adminSiteTemplateEdit',function(){
-						//when a template is changed, all that needs to be done is to load the wizard. the wizard should take care of everything.
-						app.ext.admin_template.u.summonWizard($ele.closest("[data-templateeditor-role='container']"),"wizard-"+$(this).val()+".html")
-						});
-					
-					},
 
-				adminSaveAsTemplateExec : function($btn)	{
-					$btn.button();
-					$btn.off('click.adminSaveAsTemplateExec').on('click.adminSaveAsTemplateExec',function(){
-						var
-							$D = $btn.closest("[data-templateeditor-role='container']"),
-							templateName = $("[input[name='template']",$D).val(),
-							mode = $D.data('mode');
-						
-						if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
+				adminSaveAsTemplateExec : function($ele)	{
+					var
+						$D = $ele.closest("[data-templateeditor-role='container']"),
+						templateName = $("[input[name='template']",$D).val(),
+						mode = $D.data('mode');
+					
+					if(!app.ext.admin_template.u.missingParamsByMode(mode,$D.data()))	{
 
-							$D.showLoading({'message':'Saving as new template: '+templateName});
-							var dObj = {
-								'SUBDIR' : templateName,
+						$D.showLoading({'message':'Saving as new template: '+templateName});
+						var dObj = {
+							'SUBDIR' : templateName,
 //								'PROJECTID' : $D.data('PROJECTID'), //not passed cuz the user doesnt 'choose' the projectid. it'll be set to TEMPLATES
-								'_tag' : {
-									'callback' : function(responseData)	{
-										$D.hideLoading();
-										if(app.model.responseHasErrors(responseData)){
-											$D.anymessage({'message':responseData})
-											}
-										else	{
-											$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
-											}
+							'_tag' : {
+								'callback' : function(responseData)	{
+									$D.hideLoading();
+									if(app.model.responseHasErrors(responseData)){
+										$D.anymessage({'message':responseData})
+										}
+									else	{
+										$D.anymessage(app.u.successMsgObject('The contents have been saved as a template.'));
 										}
 									}
 								}
-
-							dObj._cmd = (mode == 'EBAYProfile') ? 'adminEBAYTemplateCreateFrom' : 'admin'+mode+'TemplateCreateFrom';
-
-							if(mode == 'EBAYProfile')	{dObj.PROFILE = $D.data('profile');}
-							else if(mode == 'Campaign')	{dObj.CAMPAIGNID = $D.data('campaignid');}
-							else	{} //shouldn't ever get here.
-
-							app.model.addDispatchToQ(dObj,'immutable');
-							app.model.dispatchThis('immutable');
-
 							}
-						else	{
-							$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
-							}
-						});
+
+						dObj._cmd = (mode == 'EBAYProfile') ? 'adminEBAYTemplateCreateFrom' : 'admin'+mode+'TemplateCreateFrom';
+
+						if(mode == 'EBAYProfile')	{dObj.PROFILE = $D.data('profile');}
+						else if(mode == 'Campaign')	{dObj.CAMPAIGNID = $D.data('campaignid');}
+						else	{} //shouldn't ever get here.
+
+						app.model.addDispatchToQ(dObj,'immutable');
+						app.model.dispatchThis('immutable');
+
+						}
+					else	{
+						$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$D.data())});
+						}
 					},
 					
 //executed when a template is selected.
@@ -1481,67 +1470,66 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //$ele is probably an li.  This is exectued when a template preview is clicked. It'll open a detail template.
 //a 'choose' button will be present within the detail pane.
-			templateChooserPreview : function($ele)	{
-				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
-					
-					event.preventDefault();
-					app.u.dump("BEGIN admin_template.e.templateChooserPreview");
-					var $chooser = $("#templateChooser");
-					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
-					var mode = $chooser.data('mode');
-					
-					if(mode)	{
-						app.u.dump(" --> mode is set ("+mode+")");
-						var listDP = (mode == 'EBAYProfile') ? 'adminEBAYTemplateList' : 'admin'+mode+'TemplateList'; //ebay is ebayprofile most of the time, but sometimes just ebay. handy.
-						if(app.data[listDP] && app.data[listDP]['@TEMPLATES'] && app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')])	{
-							var templateData = app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')];
-							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
-							
-//							app.u.dump(" -> $chooser.length: "+$chooser.length);
-//							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
-//							app.u.dump(" -> $panel already exists: "+$panel.length);
-							
-							if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
-							else	{
-								app.u.dump(" --> panel is NOT generated (first time click). build new panel");
-								$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
-								$panel.attr('data-subdir',templateData.SUBDIR);
-								$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
-								$panel.appendTo($panelContainer);
-								app.u.handleAppEvents($panel);
+				templateChooserPreview : function($ele)	{
+					$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+						
+						event.preventDefault();
+						app.u.dump("BEGIN admin_template.e.templateChooserPreview");
+						var $chooser = $("#templateChooser");
+						var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
+						var mode = $chooser.data('mode');
+						
+						if(mode)	{
+							app.u.dump(" --> mode is set ("+mode+")");
+							var listDP = (mode == 'EBAYProfile') ? 'adminEBAYTemplateList' : 'admin'+mode+'TemplateList'; //ebay is ebayprofile most of the time, but sometimes just ebay. handy.
+							if(app.data[listDP] && app.data[listDP]['@TEMPLATES'] && app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')])	{
+								var templateData = app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')];
+								var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
+								
+	//							app.u.dump(" -> $chooser.length: "+$chooser.length);
+	//							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
+	//							app.u.dump(" -> $panel already exists: "+$panel.length);
+								
+								if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
+								else	{
+									app.u.dump(" --> panel is NOT generated (first time click). build new panel");
+									$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
+									$panel.attr('data-subdir',templateData.SUBDIR);
+									$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
+									$panel.appendTo($panelContainer);
+									app.u.handleAppEvents($panel);
+									}
+	
+								//set all preview li's to default state then the new active one to active.
+								$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
+								$ele.addClass('ui-state-active').removeClass('ui-state-default');
+								if($panel.is(':visible'))	{} //panel already in focus. do nothing.
+								else if($panelContainer.children().length > 1)	{
+									app.u.dump(" --> more than 1 child. transition between them");
+	//hide the current preview and show the new one.					
+									$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
+										$panel.show('scale');
+										});
+									}
+								else	{
+									app.u.dump(" --> only 1 panel. just expand.");
+									$panel.show('scale',function(){
+										app.u.dump(' --> now recenter the dialog');
+										//after the first preview is displayed, resize and recenter the modal.
+										$chooser.dialog("option", "position", "center");
+										$chooser.dialog('option','height',($('body').height() - 100));
+										});
+									}
 								}
-
-							//set all preview li's to default state then the new active one to active.
-							$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
-							$ele.addClass('ui-state-active').removeClass('ui-state-default');
-							if($panel.is(':visible'))	{} //panel already in focus. do nothing.
-							else if($panelContainer.children().length > 1)	{
-								app.u.dump(" --> more than 1 child. transition between them");
-//hide the current preview and show the new one.					
-								$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
-									$panel.show('scale');
-									});
-								}
 							else	{
-								app.u.dump(" --> only 1 panel. just expand.");
-								$panel.show('scale',function(){
-									app.u.dump(' --> now recenter the dialog');
-									//after the first preview is displayed, resize and recenter the modal.
-									$chooser.dialog("option", "position", "center");
-									$chooser.dialog('option','height',($('body').height() - 100));
-									});
+								$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
 								}
 							}
 						else	{
-							$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
+							$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
 							}
-						}
-					else	{
-						$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
-						}
-					});
-				},
-
+						});
+					},
 
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
 				containerFileUploadShow : function($btn){
@@ -1634,46 +1622,42 @@ else	{
 
 					}, //adminTemplateCampaignExit
 
-				adminTemplateCampaignTestShow : function($btn)	{
-					$btn.button();
-
-					$btn.off('click.adminTemplateCampaignTestShow').on('click.adminTemplateCampaignTestShow',function(){
-						var $D = app.ext.admin.i.dialogCreate({"title":"Send a Test Email for this Campaign"});
-						var $input = $("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
-						
-						$D.dialog('option','width','350');
-						$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
-							if(app.u.isValidEmail($input.val()))	{
-								$D.showLoading({'message':'Sending Test Email'});
-								var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
-								app.ext.admin_template.u.handleTemplateSave($templateEditor);
-								app.model.addDispatchToQ({
-									'_cmd':'adminCampaignTest',
-									'CAMPAIGNID' : $templateEditor.data('campaignid'),
-									'RECIPIENTS' : "emails="+$input.val()+"\n",
-									'_tag':	{
-										'callback':function(rd)	{
-											$D.hideLoading();
-											if(app.model.responseHasErrors(rd)){
-												$D.anymessage({'message':rd});
-												}
-											else	{
-												$D.anymessage(app.u.successMsgObject('Test email has been sent'));
-												$D.dialog({ buttons: [ { text: "Close", click: function() {$D.dialog('close')}}]});
-												}
+				adminTemplateCampaignTestShow : function($ele,P)	{
+					var $D = app.ext.admin.i.dialogCreate({"title":"Send a Test Email for this Campaign"});
+					var $input = $("<input \/>",{'name':'email','type':'email','placeholder':'email address'}).appendTo($D);
+					
+					$D.dialog('option','width','350');
+					$D.dialog({ buttons: [ { text: "Send Test", click: function() { 
+						if(app.u.isValidEmail($input.val()))	{
+							$D.showLoading({'message':'Sending Test Email'});
+							var $templateEditor = $ele.closest("[data-templateeditor-role='container']");
+							app.ext.admin_template.u.handleTemplateSave($templateEditor);
+							app.model.addDispatchToQ({
+								'_cmd':'adminCampaignTest',
+								'CAMPAIGNID' : $templateEditor.data('campaignid'),
+								'RECIPIENTS' : "emails="+$input.val()+"\n",
+								'_tag':	{
+									'callback':function(rd)	{
+										$D.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											$D.anymessage(app.u.successMsgObject('Test email has been sent'));
+											$D.dialog({ buttons: [ { text: "Close", click: function() {$D.dialog('close')}}]});
 											}
 										}
-									},'immutable');
-								app.model.dispatchThis('immutable');
-								}
-							else	{
-								$D.anymessage({'message':'Please enter a valid email address.'});
-								}
-						 } } ] });
-						$D.dialog('open');
-						});
-					
+									}
+								},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$D.anymessage({'message':'Please enter a valid email address.'});
+							}
+					 } } ] });
+					$D.dialog('open');
 					},
+
 //USES DELEGATED EVENTS
 				adminEBAYProfilePreviewShow : function($ele,p)	{
 						var $D = app.ext.admin.i.dialogCreate({"title":"HTML Listing Preview"});
@@ -1833,8 +1817,6 @@ The names for these delegated events are temporary. use the original names once 
 						}
 					}, //delContainerFileUploadShow
 
-
-
 //opens the template chooser interface.
 				templateChooserShow : function($btn)	{
 					if($btn.is('button'))	{
@@ -1856,20 +1838,19 @@ The names for these delegated events are temporary. use the original names once 
 						});
 					}, //templateEditorShow
 
+				startWizardExec : function($ele,P)	{
+					P.preventDefault();
+					var
+						$templateEditor = $ele.closest("[data-templateeditor-role='container']"),
+						editorData = $templateEditor.data(); 
 
-				startWizardExec : function($btn)	{
-					$btn.button();
-					var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
-					var $meta = $('iframe:first',$templateEditor).contents().find("meta[name='wizard']");
-					var editorData = $templateEditor.data(); 
-					
-//						app.u.dump(" -> $meta.attr('content'): "+$meta.attr('content'));
-					$btn.off('click.startWizardExec').on('click.startWizardExec',function(event){
-						$btn.button('disable').hide();
-						event.preventDefault();
-						app.u.dump(" -> $btn.data()"); app.u.dump($btn.data());
-						app.ext.admin_template.u.summonWizard($btn.closest("[data-templateeditor-role='container']"),$btn.data('wizardContent'));
-						});
+					if($ele.data('wizardContent'))	{
+						app.u.dump(" -> $btn.data()"); app.u.dump($ele.data());
+						app.ext.admin_template.u.summonWizard($ele.closest("[data-templateeditor-role='container']"),$ele.data('wizardContent'));
+						}
+					else	{
+						$templateEditor.anymessage({"message":"In admin_template.e.startWizardExec, trigger element did not have data('wizardContent') set on it.","gMessage":true});
+						}
 					},
 
 				templateHighlightToggle : function($cb)	{
@@ -1884,19 +1865,16 @@ The names for these delegated events are temporary. use the original names once 
 						});
 					},
 
-				adminTemplateSaveExec : function($btn)	{
-					$btn.button();
-					$btn.off('click.adminTemplateSaveExec').on('click.adminTemplateSaveExec',function(){
-						var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
-						if(!app.ext.admin_template.u.missingParamsByMode($templateEditor.data('mode'),$templateEditor.data()))	{
-							app.ext.admin_template.u.handleTemplateSave($templateEditor); 
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							$templateEditor.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$templateEditor.data())});
-							}
-						});
-	
+				adminTemplateSaveExec : function($ele,P)	{
+					app.u.dump("GOT HERE");
+					var $templateEditor = $ele.closest("[data-templateeditor-role='container']");
+					if(!app.ext.admin_template.u.missingParamsByMode($templateEditor.data('mode'),$templateEditor.data()))	{
+						app.ext.admin_template.u.handleTemplateSave($templateEditor); 
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$templateEditor.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,$templateEditor.data())});
+						}
 					},
 
 //executed on click in file chooser portion of the template editor (in jhtml toolbar add image)
