@@ -62,7 +62,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3a. change any of these variables to match your project:
-var TESTING_DOMAIN = "www.zoovy.com"; //www-sporktacular-com.app-hosted.com
+var TESTING_DOMAIN = "www-sporktacular-com.app-hosted.com"; //www.zoovy.com
 var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
 
 // 3b. run: node nodeproxy.js
@@ -99,12 +99,12 @@ console.log("INTERCEPT DOMAIN => "+TESTING_DOMAIN);
 console.log("HTTP/HTTPS Proxy => 127.0.0.1:8081");
 console.log("FILES SERVED FROM=> "+PROJECT_DIRECTORY);
   
- var WEBSERVERoptions = {
-  https: {
-    key: fs.readFileSync('test.key', 'utf8'),
-    cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
-  }
-};
+var WEBSERVERoptions = {
+	https: {
+		key: fs.readFileSync('test.key', 'utf8'),
+		cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
+		}
+	};
 
 //
 // LOCAL *FAKE* WEBSERVER - PORT 127.0.0.1:9000
@@ -121,7 +121,7 @@ http.createServer(function(req, res) {
 
 	var uri = url.parse(req.url).pathname, filename = path.join(PROJECT_DIRECTORY, uri);
    
-	if (! fs.existsSync(filename)) {
+	if (!fs.existsSync(filename)) {
 		// no local file, so we 'll try and grab it remotely!
 		console.log("!!!!!!!!!!!!!!!!!! FORWARD MAGIC "+req.headers.host+uri);
 
@@ -145,37 +145,37 @@ http.createServer(function(req, res) {
 	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
  
     fs.readFile(filename, "binary", function(err, file) {
-	if(err) {        
-		res.writeHead(500, {"Content-Type": "text/plain"});
-		res.write(err + "\n");
+		if(err) {        
+			res.writeHead(500, {"Content-Type": "text/plain"});
+			res.write(err + "\n");
+			res.end();
+			return;
+			}
+	
+		var content_type = mime.lookup(filename); 
+		if ((content_type == "text/html") || (content_type == "text/css")) {
+			// tell the webbrowser the files we're working on are utf8 by appending to Content-Type
+			content_type = content_type + "; charset=utf-8";
+			}
+		res.writeHead(200, {"Content-Type": content_type});
+		res.write(file, "binary");
 		res.end();
-		return;
-		}
+		});
+	}).listen(parseInt(localWebserverPort));
 
-	var content_type = mime.lookup(filename); 
-	if ((content_type == "text/html") || (content_type == "text/css")) {
-		// tell the webbrowser the files we're working on are utf8 by appending to Content-Type
-		content_type = content_type + "; charset=utf-8";
-		}
-	res.writeHead(200, {"Content-Type": content_type});
-	res.write(file, "binary");
-	res.end();
-	});
-}).listen(parseInt(localWebserverPort));
- // console.log("Static file server running at => http://localhost:" + localWebserverPort);
+// console.log("Static file server running at => http://localhost:" + localWebserverPort);
 
 // LOCAL *FAKE* HTTPS/HTTP PROXY SERVER (CONNECTS TO LOCAL *FAKE* WEBSERVER)
- var FAKEHOST_HTTPS_PROXY_options = {
+var FAKEHOST_HTTPS_PROXY_options = {
 	https: {
 		key: fs.readFileSync('test.key', 'utf8'),
 		cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
-	}
-};
+		}
+	};
 // *** 201352 -> new API for httpProxy
 //httpProxy.createServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
 httpProxy.createProxyServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
- // console.log("HTTPS proxy to static file server running at => http://localhost:9002");
-
+// console.log("HTTPS proxy to static file server running at => http://localhost:9002");
 
 //
 // Create a standalone HTTP/HTTPS proxy server that will receive connections from port 8081
@@ -185,26 +185,28 @@ httpProxy.createProxyServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROX
 // Proxy options
 //
 var REALHOST_PROXYoptions = {
-  target: {
-	https: true,
-	port : 8000, 
-    host : 'localhost',
-	},
- enable : {
-    xforward: true // enables X-Forwarded-For
-  },
-};
+	target: {
+		https: true,
+		port : 8000, 
+		host : 'localhost',
+		},
+	enable : {
+		xforward: true // enables X-Forwarded-For
+		}
+	};
+
 // *** 201352 -> new API for httpProxy
 //httpProxy.createServer(REALHOST_PROXYoptions).listen(8001);
 httpProxy.createProxyServer(REALHOST_PROXYoptions).listen(8001);
- //console.log("Realhost proxy running at => http://localhost:8001");
+//console.log("Realhost proxy running at => http://localhost:8001");
 
 http.createServer(function (req, res) {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.write('hello https\n');
-  res.end();
-}).listen(8000);
-  //console.log("Routing proxy running at => http://localhost:8000");
+	res.writeHead(200, { 'Content-Type': 'text/plain' });
+	res.write('hello https\n');
+	res.end();
+	}).listen(8000);
+
+//console.log("Routing proxy running at => http://localhost:8000");
 
  
 process.on('uncaughtException', logError);
@@ -212,17 +214,18 @@ process.on('uncaughtException', logError);
 function truncate(str) {
 	var maxLength = 64;
 	return (str.length >= maxLength ? str.substring(0,maxLength) + '...' : str);
-}
+	}
  
 function logRequest(req) {
 	console.log(req.method + ' ' + truncate(req.url));
-	for (var i in req.headers)
+	for (var i in req.headers)	{
 		console.log(' * ' + i + ': ' + truncate(req.headers[i]));
-}
+		}
+	}
  
 function logError(e) {
 	console.warn('*** ' + e);
-}
+	}
  
 // this proxy will handle regular HTTP requests
 // *** 201352 -> new API for httpProxy
@@ -232,20 +235,21 @@ var regularProxy = new httpProxy.createProxyServer();
 // standard HTTP server that will pass requests 
 // to the proxy
 var proxyWebServer = http.createServer(function (req, res) {
-  console.log('running createServer');
+	console.log('running createServer');
 //  logRequest(req);
-  uri = url.parse(req.url);
+	uri = url.parse(req.url);
 
-  var parts = req.url.split(':', 2);
-  console.log('REQ HOST:'+uri.host);
-  if (uri.host == TESTING_DOMAIN) {
+	var parts = req.url.split(':', 2);
+	console.log('REQ HOST:'+uri.host);
+
+	if(uri.host == TESTING_DOMAIN) {
 	// we'll send this to the local server
 	console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
 //	regularProxy.proxyRequest(req, res, {
 //		host: '127.0.0.1',
 //		port: 9000		
 //		});
-	regularProxy.ws(req,res,{
+	regularProxy.web(req,res,{
 		target : uri.protocol+'127.0.0.1:9000'
 		});
 	}
@@ -261,7 +265,7 @@ var proxyWebServer = http.createServer(function (req, res) {
 		});
 	}
 });
- 
+
 // when a CONNECT request comes in, the 'upgrade'
 // event is emitted
 proxyWebServer.on('upgrade', function(req, socket, head) {
@@ -277,6 +281,7 @@ proxyWebServer.on('upgrade', function(req, socket, head) {
 		socket.pipe(conn);
 		conn.pipe(socket);
 	});
+	
 });
 
 // when a CONNECT request comes in, the 'upgrade'
@@ -285,30 +290,33 @@ proxyWebServer.on('connect', function(req, socket, head) {
 	console.log("\n\nrunning CONNECT");
 //	logRequest(req);
 	// URL is in the form 'hostname:port'
+	console.log("req.url: "+req.url);
 	var parts = req.url.split(':', 2);
 	var hostname = parts[0];
-	var port = parts[0];
-	// open a TCP connection to the remote host
+	var port = parts[1];
+	console.log('hostname: '+hostname+"\nport: "+port);
 
-	console.log('REQ 0:'+parts[0]+" 1:"+parts[1]);
-	if (parts[0] == TESTING_DOMAIN) {
-		// console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** HTTP MAGIC **!!!!!!!!!!!!!!!!!!!!!");
-		parts[0] = "127.0.0.1"; parts[1] = "9002";
+	// open a TCP connection to the remote host
+	if(hostname == TESTING_DOMAIN) {
+		console.log("hostname matches the testing domain. update hostname and port.");
+		hostname = "127.0.0.1";
+		port = "9002";
 		}
 	
-	var conn = net.connect(parts[1], parts[0], function() {
+	var conn = net.connect(port, hostname, function() {
+		console.log("attempt tcp connection");
 		// respond to the client that the connection was made
 		socket.write("HTTP/1.1 200 OK\r\n\r\n");
 		// create a tunnel between the two hosts
 		socket.pipe(conn);
 		conn.pipe(socket);
+		});
 	});
-});
 
-//proxyWebServer.on('error', function(err,req,res){
-//	console.log("\n\nrunning ERROR");
-//	console.log(err);
-//	});
+proxyWebServer.on('error', function(err,req,res){
+	console.log("\n\nrunning ERROR");
+	console.log(err);
+	});
 
 // proxyWebServer will accept connections on port 8081
 proxyWebServer.listen(8081);
