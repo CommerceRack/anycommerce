@@ -1357,10 +1357,8 @@ app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/legacy_compat.js']
 
 
 
-app.rq.push(['script',0,app.vars.baseURL+'admin/resources/tinymce-4.0.12/tinymce.min.js',function(){
-	//load the jquery extension after tiny is loaded.
-	app.rq.push(['script',0,app.vars.baseURL+'admin/resources/tinymce-4.0.12/jquery.tinymce.min'])
-	}]);
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/tinymce.min.js']);
+app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/jquery.tinymce.min.js']);
 
 /* used for html editor.
 app.rq.push(['css',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
@@ -3080,27 +3078,6 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					'state' : state || ""
 					};
 				window.location = 'https://accounts.google.com/o/oauth2/auth?'+$.param(p);
-				},
-
-//used in ebay and campaign to generate toolbar for html editor.
-//buttons is optional. if passed, should be an array. [{'css':'','text':'','action':function(){}},{'css':'','text':'','action':function(){}}]
-			buildToolbarForEditor : function(buttons)	{
-				buttons = buttons || [];
-				var r = new Array(); //what is returned. an array that gets turned into buttons in the html editor.
-				r.push("html");
-				r.push("bold", "italic","strikethrough");
-				r.push("p","h1", "h2", "h3", "h4", "h5", "h6");
-				r.push("orderedList","unorderedList","|","indent","outdent");
-				r.push("horizontalrule");
-				r.push("justifyleft","justifycenter","justifyright");
-				r.push("link", "unlink");
-				var L = buttons.length;
-				if(L)	{
-					for(var i = 0; i < L; i += 1)	{
-						r.push(buttons[i])
-						}
-					}
-				return r;
 				},
 
 			

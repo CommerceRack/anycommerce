@@ -66,10 +66,10 @@ var admin_template = function() {
 
 //make sure that no previous template editor data is on the target.					
 							$target.removeData('profile campaignid domain mode');
-							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.u.guidGenerator()});  //title is added in case this is opened in a dialog.
+							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
 							
 							
-							vars.editor = 'inline'; //hard coded for now. may change later. support for dialog, fullscreen are also present.
+							vars.editor = 'inline'; //hard coded for now. may change later. 
 							
 							if(vars.editor)	{
 								
@@ -84,7 +84,10 @@ var admin_template = function() {
 									else	{
 										app.u.dump(' -> template contents obtained');
 							//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
-										$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template 
+										$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template
+
+										var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target), $textarea = $("textarea[data-app-role='templateEditorTextarea']:first",$target);
+										
 										$("[data-app-role='templateObjectInspectorContainer']",$target).anypanel({
 											'state' : 'persistent',
 											showClose : false, //set to false to disable close (X) button.
@@ -94,59 +97,33 @@ var admin_template = function() {
 											persistentStateDefault : 'collapse',
 											persistent : true
 											});
-							
-										var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target);
+											
+										$textarea.attr('id','textarea_'+app.ext.admin_template.u.buildTemplateEditorID(vars)).show();
+										$textarea.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']));
 										
-										var toolbarButtons = app.ext.admin.u.buildToolbarForEditor([
-											"|", 
-											app.ext.admin_template.u.getEditorButton_imageadd(vars,$target),
-											app.ext.admin_template.u.getEditorButton_image(vars,$target)
-											]);
-							
-							//handle some mode specifics.
-										$('.ebay, .campaign, .site').hide(); // hide all 'specifics' by default. show as needed.
-										if(vars.mode == 'EBAYProfile')	{
-											toolbarButtons.push("|");
-											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_prodattributeadd(vars,$target))
-											$(".ebay",$target).show();
-											}
-										if(vars.mode == 'Site')	{
-											toolbarButtons.push("|");
-											$(".site",$target).show();
-											}
-										else if(vars.mode == 'Campaign')	{
-											toolbarButtons.push("|");
-											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_style(vars,$target));
-											toolbarButtons.push("|");
-											toolbarButtons.push(app.ext.admin_template.u.getEditorButton_buyerattributeadd(vars,$target));
-											toolbarButtons.push("|");
-											toolbarButtons.push(app.ext.admin_template.u.getEditorButtonNativeApp(vars,$target));
-											$(".campaign",$target).show();
-											}
-										else	{}
-										
-										$("textarea:first",$target)
-											.show()
-											.width('100%')
-											.height($target.height() - 100)
-											.addClass('fullWidth')
-											.val(app.ext.admin_template.u.preprocessTemplate(vars.mode,vars,app.data[rd.datapointer]['body']))
-											.tinymce()
+										$textarea.tinymce({
+											valid_children : "head[style|meta|base],body[style|meta|base]",
+											esxtended_valid_elements : "@[class]",
+											menubar : 'edit insert view format table tools',
+											height : ($(document.body).height() - $('#mastHead').outerHeight() - 200),
+											visual: false, //turn off visual aids by default. menu choice will still show up.
+											keep_styles : true,
+											image_list: [ //if this is a string, it'll do an ajax request to the string.
+												{title: 'Dog', value: 'mydog.jpg'},
+												{title: 'Cat', value: 'mycat.gif'}
+												],
+											plugins: [
+												"_image advlist autolink lists link charmap print preview anchor",
+												"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
+												"media table contextmenu paste"
+												],
+											toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+											});
+											
+										var $iframe = $('iframe',$target);
+										var $iframeBody = $iframe.contents().find('body');
 
-/*											
-											.htmlarea({
-												// Override/Specify the Toolbar buttons to show
-												toolbar: toolbarButtons // 
-												});
-										
-*/									
-										// event needs to be delegated to the body so that toggling between html and design mode don't drop events and so that newly created events are eventful.
-//										$("div.jHtmlArea, div.ToolBar",$target).width('100%').css('box-sizing','border-box'); //having issue with toolbar collapsing.
-//										var $iframe = $('iframe',$target);
-//										$iframe.width('100%').height(($(document.body).innerHeight() - $('#mastHead').outerHeight() - 100)); //the 100 covers the various margins and paddings that occur
-//										var $iframeBody = $iframe.contents().find('body');
-//										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
-										
+										app.ext.admin_template.u.handleWizardObjects($iframeBody,$objectInspector);
 //										app.ext.admin_template.u.handleTemplateModeSpecifics(vars.mode,vars,$iframeBody,$target); //needs to be after iframe is added to the DOM.
 										
 										app.u.handleAppEvents($target); //TODO -> get rid of this.
@@ -1332,6 +1309,35 @@ var $input = $(app.u.jqSelector('#',ID));
 						app.u.dump("In admin_template.u.applyElementToTemplate, attObj was empty/missing vars. attObj requires data, attribute and data.object. attObj: "); app.u.dump(attObj);
 						r = false;
 						}
+					return r;
+					},
+				//vars should contain mode and any mode-specific vars (campaignid if mode is Campaign)
+				//will concatonate mode and mode specific vars.
+				buildTemplateEditorID : function(vars)	{
+					var r = "";
+					if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
+						r += vars.mode+"_";
+						switch(vars.mode)	{
+							case 'Campaign':
+								r += vars.campaignid;
+								break;
+							case 'EBAYProfile':
+								r += vars.profile;
+								break;
+							case 'Site':
+								r += vars.domain;
+								break;
+							default:
+								$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorID, vars passed 'missingParamsByMode' but failed to find a valid case in the switch statement.","gMessage":true});
+								//shouldn't get here. missingParamsByMode should validate mode.
+								r = false;
+								break;
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorID, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
+						}
+						
 					return r;
 					}
 
