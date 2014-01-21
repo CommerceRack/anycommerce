@@ -894,10 +894,9 @@ else	{
 //this is what 'was' in main.js for jquery file upload. but it was too specific and I needed one where I could set the selector.
 //JQFU = JQuery File Upload.
 //this turns the upload form into a jquery file upload.
-//currently supported modes are: mediaLibrary
 //the mode set will impact the success callback.
 
-			convertFormToJQFU : function(selector,mode)	{
+			convertFormToJQFU : function(selector,mode,vars)	{
 
 //app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
 //app.u.dump(" -> selector: "+selector);
@@ -910,7 +909,8 @@ if(selector && mode)	{
 	// *** 201324 -> selector can now be a jquery object OR a string of a selector.
 //	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
 	var $selector = (selector instanceof jQuery) ? selector : $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
-
+	vars = vars || {};
+	$selector.data('modeVars',vars); //mode specific variables. reset each time the media lib is opened. allows for some modes, such as template, to easily set some params for later use.
 //	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
 //	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
@@ -946,7 +946,7 @@ if(selector && mode)	{
 			app.model.dispatchThis('immutable');
 			},
 		'adminFileUpload' : function(data,textStatus)	{
-			app.u.dump("Got to adminEBAYProfileFileUpload success.");
+			app.u.dump("Got to adminFileUpload success.");
 			$selector.showLoading({"message":"uncompressing and distributing zip file. This may take a minute. You may safely close the 'eBay Template Zip File Upload' window (do not close the browser) and we will alert you when this has finished."});
 //			app.u.dump(" -> data: "); app.u.dump(data);
 			var
@@ -983,8 +983,8 @@ if(selector && mode)	{
 			
 			},
 		
-		'ebayTemplateMediaUpload' : function(data,textStatus)	{
-			app.u.dump("Got to ebayTemplateMediaUpload success.");
+		'templateMediaUpload' : function(data,textStatus)	{
+			app.u.dump("Got to templateMediaUpload success.");
 			var L = data.length;
 			var tagObj;
 			var folderName = "_ebay/"+$('#ebayTemplateEditor').data('profile');

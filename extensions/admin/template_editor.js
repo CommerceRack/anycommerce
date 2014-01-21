@@ -66,11 +66,12 @@ var admin_template = function() {
 
 //make sure that no previous template editor data is on the target.					
 							$target.removeData('profile campaignid domain mode');
-							$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEdtiorTitle(vars)+"<\/h1>");
+							$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEditorTitle(vars)+"<\/h1>");
+// ### TODO -> add an 'exit' button. should destroy the tinymce instance. should return to UI based on mode.
 							$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
 							
 							vars.editor = 'inline'; //hard coded for now. may change later. 
-							
+//## TODO -> check if editor already exists. if open on another tab, throw a warning. if not, see about destroying it. re-opening it doesn't play well.
 							if(vars.editor)	{
 								
 								$target.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
@@ -111,10 +112,7 @@ var admin_template = function() {
 											height : ($(document.body).height() - $('#mastHead').outerHeight() - 200),
 											visual: false, //turn off visual aids by default. menu choice will still show up.
 											keep_styles : true,
-											image_list: [ //if this is a string, it'll do an ajax request to the string.
-												{title: 'Dog', value: 'mydog.jpg'},
-												{title: 'Cat', value: 'mycat.gif'}
-												],
+											image_list: [],
 											plugins: [
 												"_image advlist autolink lists link charmap print preview anchor",
 												"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
@@ -657,9 +655,9 @@ var $input = $(app.u.jqSelector('#',ID));
 
 //delegates a click event on the template container which updates the object inspector w/ information about the clicked element.
 				handleWizardObjects : function($iframeBody,$objectInspector)	{
-					app.u.dump("$iframeBody.length: "+$iframeBody.length+" and $objectInspector.length: "+$objectInspector.length);
+//					app.u.dump("$iframeBody.length: "+$iframeBody.length+" and $objectInspector.length: "+$objectInspector.length);
 					if($iframeBody instanceof jQuery && $objectInspector instanceof jQuery)	{
-						$iframeBody.on('click',function(e){
+						$iframeBody.on('click.objectInspector',function(e){
 							var $target = $(e.target);
 	//						app.u.dump(" -> $target.id: "+$target.attr('id'));
 							app.ext.admin_template.u.showObjectInInspector($target,$objectInspector); //updates object inspector when any element is clicked.
@@ -1006,16 +1004,14 @@ var $input = $(app.u.jqSelector('#',ID));
 						css : 'imageadd',
 						'text' : 'Upload New Image to Profile',
 						action: function (btn) {
-							var $D = $("<div \/>");
-							$D.dialog({
-								'modal':true,
-								'width':500,
-								height : 500,
-								'autoOpen' : false
+							var $D = app.ext.admin.i.dialogCreate({
+								title : "Upload a file for this template",
+								'templateID' : 'ebayTemplateEditorImageUpload',
+								anycontent : true, //the dialogCreate params are passed into anycontent
+								handleAppEvents : false //defaults to true
 								});
-							$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
 							$D.dialog('open');
-							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'ebayTemplateMediaUpload');
+							app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'templateMediaUpload');
 							}
 						}
 					}, //getEditorButton_imageadd
@@ -1351,9 +1347,37 @@ var $input = $(app.u.jqSelector('#',ID));
 						
 					return r;
 					},
+
+				buildTemplateEditorMediaFolderName : function(vars)	{
+					var r = "";
+					if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
+						r += "_"+(vars.mode == 'EBAYProfile' ? 'ebay' : vars.mode.toLowerCase())+"/";
+						switch(vars.mode)	{
+							case 'Campaign':
+								r += vars.campaignid;
+								break;
+							case 'EBAYProfile':
+								r += vars.profile;
+								break;
+							case 'Site':
+								r += vars.domain;
+								break;
+							default:
+								$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorID, vars passed 'missingParamsByMode' but failed to find a valid case in the switch statement.","gMessage":true});
+								//shouldn't get here. missingParamsByMode should validate mode.
+								r = false;
+								break;
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorID, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
+						}
+						
+					return r;
+					},
 				//vars should contain mode and any mode-specific vars (campaignid if mode is Campaign)
 				//will concatonate mode and mode specific vars.
-				buildTemplateEdtiorTitle : function(vars)	{
+				buildTemplateEditorTitle : function(vars)	{
 					var r = '';
 					if(!app.ext.admin_template.u.missingParamsByMode(vars.mode,vars))	{
 						r += "Template Editor for ";
@@ -1368,14 +1392,14 @@ var $input = $(app.u.jqSelector('#',ID));
 								r += 'Site/Domain '+vars.domain;
 								break;
 							default:
-								$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEdtiorTitle, vars passed 'missingParamsByMode' but failed to find a valid case in the switch statement.","gMessage":true});
+								$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorTitle, vars passed 'missingParamsByMode' but failed to find a valid case in the switch statement.","gMessage":true});
 								//shouldn't get here. missingParamsByMode should validate mode.
 								r = false;
 								break;
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEdtiorTitle, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_templates.u.buildTemplateEditorTitle, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars),"gMessage":true});
 						}
 						
 					return r;
