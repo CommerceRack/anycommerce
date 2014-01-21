@@ -190,6 +190,7 @@ body {
 /***** Footer CSS Start *****/
 #footer {
 	background:#ffffff;
+    padding-top: 10px;
 }
 .zephyrHelpHeader{
 	background: #C7C7C7;
