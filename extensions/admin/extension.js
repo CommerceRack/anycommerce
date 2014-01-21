@@ -1471,30 +1471,25 @@ app.rq.push(['script',0,app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jHtm
 					$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
 					}
 
-
-//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
-//the code for handling the support login is in the thisisanadminsession function (looking at uri)
-if(app.u.thisIsAnAdminSession())	{
-	app.ext.admin.u.showHeader();
-	}
-else if(uriParams.show == 'acreate')	{
-	app.u.handleAppEvents($('#createAccountContainer'));
-	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-		$("#appPreView").hide();
-		$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-		});
-	}
-else	{
-	app.u.handleAppEvents($('#appLogin'));
-	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-		$("#appPreView").hide();
-		$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-		});
-	}
-
-
-
-
+				//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
+				//the code for handling the support login is in the thisisanadminsession function (looking at uri)
+				if(app.u.thisIsAnAdminSession())	{
+					app.ext.admin.u.showHeader();
+					}
+				else if(uriParams.show == 'acreate')	{
+					app.u.handleAppEvents($('#createAccountContainer'));
+					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+						$("#appPreView").hide();
+						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					}
+				else	{
+					app.u.handleAppEvents($('#appLogin'));
+					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+						$("#appPreView").hide();
+						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					}
 
 				}
 			}, //initExtension
@@ -1666,7 +1661,8 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 //account was just created, skip domain chooser.
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
 //					app.u.dump(" -> response contained a domain. use it to set the domain.");
-					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0,'#!dashboard');
+					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain);
+					navigateTo('#!dashboard');
 					}
 				app.ext.admin.u.showHeader();
 				},
@@ -1696,7 +1692,8 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					else	{
 						$ul = $("<ul \/>").attr('id','domainList').addClass('listStyleNone marginRight');
 						$ul.off('click.domain').on('click.domain','li',function(e){
-							app.ext.admin.a.changeDomain($(e.target).data('DOMAINNAME'),$(e.target).data('PRT'))
+							app.ext.admin.a.changeDomain($(e.target).data('DOMAINNAME'),$(e.target).data('PRT'));
+							navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
 							$target.dialog('close');
 							});
 						}
@@ -2563,22 +2560,22 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
-			changeDomain : function(domain,partition,path){
+			changeDomain : function(domain,partition){
+				var r = false;
 //				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain);
 //				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
 				if(domain)	{
 //if no partition available, get it. if partition is null, number() returns 0.		
-					if(partition == 0 || Number(partition) > 0){
-						//if partition is 'false' or undef, number(partition) will = 0. not good in this case.
-						}
+					if(partition == 0 || Number(partition) > 0){} 
 					else	{
-//(( 201338 -> previously used getDataForDomain, which was broken. changed to shared function.
+//if no partition was passed, get it from the domains list.
 						var domainData = app.ext.admin.u.getValueByKeyFromArray(app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain);
 						if(domainData && domainData.PRT)	{
 							partition = domainData.PRT; 
 							}
 						}
-// ** 201338 -> added this check to track down where partition isn't getting properly set.
+
+//if partition is null, number(partition) returns zero, so the zero case is handled separately.
 					if(domain && (partition == 0 || Number(partition) > 0))	{
 						app.vars.domain = domain;
 						app.vars.partition = partition;
@@ -2590,8 +2587,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
-
-						navigateTo(app.ext.admin.u.whatPageToShow(path || '#!dashboard'));
+						
+						r = true;
 
 						}
 					else	{
@@ -2599,9 +2596,9 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						}
 					}
 				else	{
-					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
+					$('#globalMessaging').anymessage({"message":"In admin.u.changeDomain, 'domain' not passed and it is required.","gMessage":true});
 					}
-
+				return r;
 				}, //changeDomain
 
 //used in the builder for when 'edit' is clicked on an element.
@@ -2827,7 +2824,6 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$("#closePanelButton",'#appView').button({icons: {primary: "ui-icon-triangle-1-n"},text: false});
 				$("#clearMessagesButton",'#appView').button({icons: {primary: "ui-icon-trash"},text:true});
 				
-				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
 //will add domain chooser to dom.
@@ -2839,7 +2835,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin_prodedit.a.showProductManager();
 
 				$('#messagesContent').anydelegate();
-//				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+//				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable'); // ### TODO -> commented out for testing.
 				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				$('.username','#appView').text(app.vars.userid);
@@ -2852,6 +2848,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 						app.ext.admin.a.showAmzRegisterModal();
 						}
 					else	{
+						app.u.dump(" -> execute navigateTo for linkFrom being set");
 						app.ext.admin.a.navigateTo('#!dashboard');
 						}
 					}
@@ -2860,6 +2857,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 					//the chooser will prompt the user to select a domain and execute a navigateTo.
 					}
 				else	{
+					app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
 					app.ext.admin.a.navigateTo(app.ext.admin.u.whatPageToShow('#!dashboard'));
 					}
 
@@ -2981,7 +2979,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.u.whatPageToShow, unable to determine 'page'"});
+					$('#globalMessaging').anymessage({"message":"In admin.u.whatPageToShow, unable to determine 'page' from hash and no default set."});
 					}
 //				app.u.dump(" -> page: "+page);
 				return page;

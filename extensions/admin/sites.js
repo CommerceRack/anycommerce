@@ -410,6 +410,7 @@ used, but not pre-loaded.
 //if(domain == app.vars.domain)	{$ele.addClass('ui-state-highlight')}
 			domainPutInFocus : function($ele,p)	{
 				app.ext.admin.a.changeDomain(domain,$ele.closest("[data-prt]").attr('data-prt'));
+				navigateTo(app.ext.admin.u.whatPageToShow(path || '#:sites'));
 				}, //domainPutInFocus
 
 //				if($ele.closest("[data-is_favorite]").data('is_favorite') == 1)	{$ele.addClass('ui-state-highlight')}
