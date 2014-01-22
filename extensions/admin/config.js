@@ -284,8 +284,6 @@ var admin_config = function() {
 						default:
 							$target.anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, unrecognized tender: '+tender+'.','gMessage':true});
 						}
-//					app.u.handleAppEvents($target);
-//					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 					$target.anydelegate({'trackEdits':true});
 					}
 				else	{
