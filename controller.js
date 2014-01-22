@@ -2765,7 +2765,7 @@ return $r;
 			tokens.pop(); //strip the last item from the array, which will be blank.
 			for(var token in tokens)	{
 				var tmp = {};
-				tmp[$.trim(token.substring(0,token.indexOf(':')))] = token.substring(token.indexOf(':') + 1)
+				tmp[$.trim(token.substring(0,token.indexOf(':')))] = token.substring(token.indexOf(':') + 1);
 				rules.push(tmp);
 				}
 			return rules;
@@ -2795,7 +2795,7 @@ return $r;
 //						app.u.dump(' -> value['+i+']: "'+value+'"');
 					if(property != "" && value != "" && !rule[property])	{ //only the first property wins. discard the rest. (var can't be set twice)
 //need to trim whitespace from values except pre and post text. having whitespace in the value causes things to not load. However, it's needed in pre and post text.
-						rule[property] = (property.charAt(0) == '_') ? value : jQuery.trim(value); 
+						rule[property] = (property == 'pretext' || property == 'posttext') ? value : jQuery.trim(value);
 						}
 					}
 				}
