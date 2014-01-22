@@ -2543,15 +2543,17 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 		<span>Text</span>
 		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" class='skipTrack' />
 	</label>
-	
+	<!--
+	the weight itself should be configured in the product, not here. this would be for display only and, in most cases, weight is not displayed.
 	<label class='displayNone nonInvOnly'>
 		<span>Weight modifier</span>
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
 	</label>
-	
+	-->
 	<label class='displayNone nonInvOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />
+		<span class='toolTip' title='This is a price for display purposes only. Actual price is configured in the product.'>(for display)</span>
 	</label>
 	
 	<label class='displayNone nonInvOnly'>
