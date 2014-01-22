@@ -132,6 +132,14 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
 					$('#contentArea').addClass('sideBarRightShow');
+					
+					if(P.show == "login" || P.show =="createaccount" || P.show == "recoverpassword"){
+						$('.sideline', $context).hide();
+						$('.mainColumn',$context).width("100%");
+					} else{
+						$('.sideline', $context).show();
+					}
+	
 				}]);	
 				
 				app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P) {
