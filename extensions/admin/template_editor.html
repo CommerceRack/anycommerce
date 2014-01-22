@@ -16,28 +16,15 @@
 	<div class='marginLeft'>
 	
 		<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
-	<!--		<button data-app-event="admin_template|adminTemplateCampaignExit">Exit</button> -->
-	
-			<button data-app-click="admin_template|adminTemplateCampaignTestShow" class='campaign applyButton' data-text='true' data-icon-primary='ui-icon-mail-closed'>Send Test</button>
-			<button data-app-click='admin_template|adminTemplateSaveExec' data-app-role='saveButton' class='ui-state-focus applyButton' data-text='true'>Save</button>
+			<button data-app-click="admin_template|adminTemplateEditorExit" title="Exit and do NOT save changes" class='applyButton' data-text='true' data-icon-primary='ui-icon-triangle-1-w'>Exit</button>
+			<button data-app-click="admin_template|adminTemplateCampaignTestShow" title="Save changes and send test." class='campaign applyButton' data-text='true' data-icon-primary='ui-icon-mail-closed'>Send Test</button>
+			<button data-app-click='admin_template|adminTemplateSaveExec' title="Save changes" data-app-role='saveButton' class='ui-state-focus applyButton' data-text='true'>Save</button>
 		</div>
 	
 	<section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
 		<h4>Object Inspector</h4> <!-- class='smallPadding ui-widget-header ui-corner-top' -->
 		<div class=' labelsAsBreaks small clearfix'><!-- ui-widget-content ui-corner-bottom stdPadding clearfix -->
-	
 			<div data-app-role='templateObjectInspectorContent'></div>
-	
-			<div class='ui-corner-none ui-widget-content marginTop marginBottom clearfix'></div>
-	
-			<h5>Highlight Elements</h5>
-			<!-- labels are in divs because the .show() applies a display:inline class. -->
-			<div class='marginTop clearfix ebay'><label data-app-role='highlightContainer_product'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightProductAttributes' data-objecttype='PRODUCT' />Product<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with product data. Any content added inside these areas is likely to be lost when the product data is added.">?</span></label></div>
-			
-			<div class='clearfix campaign'><label data-app-role='highlightContainer_buyer'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightBuyerAttributes' data-objecttype='BUYER' />Buyer<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that will be dynamically populated with buyer data. Any content added inside these areas is likely to be lost when the buyer data is added.">?</span></label></div>
-			
-			<div class='clearfix'><label data-app-role='highlightContainer_wizard'><input data-app-event="admin_template|templateHighlightToggle" type='checkbox' name='highlightKISSAttributes' data-objecttype='KISS' />Wizard<span class='toolTip' title="Toggle this on/off to enable/disable a highlight around the fields that are editable through the Wizard. To edit, you can use the wizard or edit them directly in the HTML. Editing them in the HTML may cause the wizard to not work properly or save over your changes next time it loads.">?</span></label></div>
-	
 		</div>
 	</section>
 	
