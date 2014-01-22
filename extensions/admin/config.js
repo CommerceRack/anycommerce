@@ -217,6 +217,9 @@ var admin_config = function() {
 					'callback' : 'anycontent',
 					'datapointer' : 'adminConfigDetail|payment|'+app.vars.partition,
 					'templateID' : 'paymentManagerPageTemplate',
+					'onComplete' : function(){
+						$("li[data-tender='CC']",$target).trigger('click');
+						},
 					jqObj : $target
 					},'mutable');
 				app.model.dispatchThis('mutable');
