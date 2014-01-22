@@ -2448,6 +2448,11 @@ elasticsearch.size = 50;
 				
 				
 				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
+					//ZEPHYR SPECIFIC INLINE LOGIN PAGE CODE
+					app.ext.myRIA.a.showContent('customer',{'show':'login','callback':function(){showContent(infoObj.pageType, {'show':infoObj.show});}});
+					
+/*					//OLD CODE FOR SHOW LOGIN MODAL
+
 					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
@@ -2456,6 +2461,7 @@ elasticsearch.size = 50;
 						$('#loginFormForModal').dialog('close');
 						app.ext.myRIA.u.showCustomer(infoObj) //binding this will reload this 'page' and show the appropriate content.
 						}).appendTo($('#loginSuccessContainer'));					
+*/
 					}
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{

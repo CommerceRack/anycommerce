@@ -176,7 +176,16 @@ var store_zephyrapp = function() {
 						$('.inventoryContainer',$context).empty().anycontent({"datapointer":"appProductGet|"+pid})
 						});
 					}]);
-					
+				
+				
+				app.rq.push(['templateFunction','customerTemplate','onCompletes',function(infoObj){
+					if(infoObj.show == 'login' && infoObj.callback){
+						$('#loginArticle form.loginForm').data('callback', infoObj.callback);
+						}
+					}]);
+				app.rq.push(['templateFunction','customerTemplate','onDeparts',function(infoObj){
+					$('#loginArticle form.loginForm').removeData('callback', infoObj.callback);
+					}]);
 				r = true;
 				
 				return r;
@@ -331,6 +340,29 @@ var store_zephyrapp = function() {
 					}
 				else {
 					app.ext.myRIA.u.addItemToCart($form, obj);
+					}
+				},
+			loginFormSubmit : function($form){
+				var formJSON = $form.serializeJSON();
+				app.u.dump(formJSON);
+				var errors = '';
+				var callback = $form.data('callback') || function(){showContent('customer',{'show':'myaccount'});};
+				if(app.u.isValidEmail(formJSON.login) == false){
+					errors += "Please provide a valid email address<br \/>";
+					}
+				if(!formJSON.password)	{
+					errors += "Please provide your password<br \/>";
+					}
+					
+				if(errors == ''){
+					app.calls.appBuyerLogin.init({"login":formJSON.login,"password":formJSON.password},{'callback':callback});
+					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
+					
+					app.model.dispatchThis('immutable');
+					}
+				else {
+					$form.anymessage({'message':errors});
 					}
 				}
 			}, //u [utilities]
