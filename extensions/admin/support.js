@@ -84,7 +84,9 @@ var admin_support = function() {
 					'className' : 'adminTicketList', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Status','Ticket #','Opened','Last Update','Subject','User','Date Closed',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:supportTicketRowTemplate;",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_support|adminTicketCreateShow' class='applyButton hideInDetailMode' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create A New Ticket</button>"],	
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_support|adminTicketCreateShow' class='applyButton hideInDetailMode' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create A New Ticket</button>"],	
 					'controls' : app.templates.supportManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminTicketList',
@@ -95,8 +97,7 @@ var admin_support = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target);
-				$DMI.closest("[data-app-role='dualModeContainer']").anydelegate();
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
 
@@ -420,7 +421,7 @@ var admin_support = function() {
 					'removeFunction':function(rd){
 						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
 						app.model.dispatchThis('immutable');
-						$ele.closest("[data-app-role='dualModeContainer']").find("button[data-app-event='admin|refreshDMI']:first").trigger('click');
+						$ele.closest("[data-app-role='dualModeContainer']").find("button[data-app-click='admin|refreshDMI']:first").trigger('click');
 						$D.dialog('close');
 						}
 					});

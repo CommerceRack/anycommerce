@@ -153,11 +153,11 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 		a : {
 			
 			showBatchJobManager : function($target){
-				$target.empty();
+
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Batch Jobs',
 					'className' : 'batchjobManager',
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button>"],
+					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",],
 					'thead' : ['ID','Job Name','Job Type','User','Create','Status',''],
 					'tbodyDatabind' : "var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;",
 					'cmdVars' : {
@@ -170,8 +170,8 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 							'datapointer' : 'adminBatchJobList'},
 							}
 						});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
-				$target.anydelegate();
 				},
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.

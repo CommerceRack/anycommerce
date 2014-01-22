@@ -151,14 +151,12 @@ var admin_tools = function() {
 				},
 			
 			showPrivateFiles : function($target)	{
-
-				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Private Files',
 					'className' : 'privatefiles', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Created','Filename','Type','Expiration','Creator',''],
 					'tbodyDatabind' : "var: users(@files); format:processList; loadsTemplate:privateFilesRowTemplate;",
-					'controls' : "<button data-app-event='admin_tools|adminPrivateFileRemoveConfirm' class='floatRight'>Delete Selected</button><form class='floatLeft'><label>Filter<\/label> <select name='type' class='marginLeft marginRight'><option value=''>none<\/option><option value='REPORT'>Report<\/option><option value='SYNDICATION'>Syndication<\/option><option value='CSV'>CSV<\/option><\/select><button data-app-event='admin|refreshDMI' data-serializeform='1'><\/button><\/form>",
+					'controls' : "<button data-app-event='admin_tools|adminPrivateFileRemoveConfirm' class='floatRight'>Delete Selected</button><form class='floatLeft'><label>Filter<\/label> <select name='type' class='marginLeft marginRight'><option value=''>none<\/option><option value='REPORT'>Report<\/option><option value='SYNDICATION'>Syndication<\/option><option value='CSV'>CSV<\/option><\/select><button data-app-click='admin|refreshDMI' data-serializeform='1' class='applyButton'>Filter<\/button><\/form>",
 					'cmdVars' : {
 						'_cmd' : 'adminPrivateFileList',
 						'limit' : '50',
@@ -167,62 +165,17 @@ var admin_tools = function() {
 							}
 						}
 					});
-				app.model.dispatchThis('mutable');
-				},
-			
-			showBillingHistory : function($target)	{
-				
-				$target.empty();
-
-				app.ext.admin.i.DMICreate($target,{
-					'header' : 'Billing History',
-					'className' : 'billingHistory', //applies a class on the DMI, which allows for css overriding for specific use cases.
-					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh List<\/button>",
-						"<button>Add Payment<\/button>"
-						],
-					'thead' : ['Invoice #','Created','Payment','Amount',''], //the blank at the end is for the th tag for the buttons.
-					'tbodyDatabind' : "var: users(@INVOICES); format:processList; loadsTemplate:billingHistoryInvoiceRowTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'billingInvoiceList',
-						'_tag' : {
-							'datapointer':'billingInvoiceList'
-							}
-						}
-					});
-
-$target.append("<br \/>");
-
-				app.ext.admin.i.DMICreate($target,{
-					'header' : 'Pending Transactions',
-					'className' : 'billingTransactions', //applies a class on the DMI, which allows for css overriding for specific use cases.
-					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh List<\/button>"
-						],
-					'thead' : ['Date','Class','Type','Description','amount',''], //the blank at the end is for the th tag for the buttons.
-					'tbodyDatabind' : "var: users(@TRANSACTIONS); format:processList; loadsTemplate:billingHistoryInvoiceRowTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'billingTransactions',
-						'_tag' : {
-							'datapointer':'billingTransactions'
-							}
-						}
-					});
-
-
-
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
 			
 			showciEngineAgentManager : function($target)	{
-				
-				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Agent Manager',
 					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
-						"<button data-app-event='admin_tools|agentCreateShow'>Add Agent<\/button>"
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_tools|agentCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-cicle-plus'>Add Agent<\/button>"
 						],
 					'thead' : ['ID','Revision#','Lines','Interface','Created',''], //the blank at the end is for the th tag for the buttons.
 					'tbodyDatabind' : "var: users(@AGENTS); format:processList; loadsTemplate:CIE_DSA_rowTemplate;",
@@ -233,6 +186,7 @@ $target.append("<br \/>");
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				}
 			
@@ -666,23 +620,18 @@ $target.append("<br \/>");
 					});
 				}, //agentDetailDMIPanel
 
-			agentCreateShow : function($btn)	{
-
-				$btn.button();
-				$btn.off('click.agentCreateShow').on('click.agentCreateShow',function(event){
-
-					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Agent',
-						'templateID':'CIE_DSA_AddUpdateTemplate',
-						'data' : {'GUID':app.u.guidGenerator()},
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$D.dialog('open');
-//These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminCIEngineAgentCreate' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your agent has been created.' />");
-
+			agentCreateShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Agent',
+					'templateID':'CIE_DSA_AddUpdateTemplate',
+					'data' : {'GUID':app.u.guidGenerator()},
+					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
+				$D.dialog('open');
+//These fields are used for processForm on save.
+				$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminCIEngineAgentCreate' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your agent has been created.' />");
+
 				}, //agentCreateShow
 
 			flexeditAttributesFullListShow : function($ele,P)	{
