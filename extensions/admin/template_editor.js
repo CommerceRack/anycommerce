@@ -89,12 +89,15 @@ var admin_template = function() {
 									var callback = function(rd){
 										$target.hideLoading();
 										if(app.model.responseHasErrors(rd)){
-											$target.anymessage({'message':rd})
+											$target.anymessage({'message':rd});
 											}
 										else	{
 											app.u.dump(' -> template contents obtained');
 								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
 											$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template
+											$target.anydelegate();
+											app.u.handleCommonPlugins($target);
+											app.u.handleButtons($target);
 	
 											var $objectInspector = $("[data-app-role='templateObjectInspectorContent']",$target), $textarea = $("textarea[data-app-role='templateEditorTextarea']:first",$target);
 
@@ -148,15 +151,7 @@ var admin_template = function() {
 													toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
 													});
 												}
-											
 
-											
-											
-											
-
-											$target.anydelegate();
-											app.u.handleCommonPlugins($target);
-											app.u.handleButtons($target);
 											}
 										} //ends callback.
 
