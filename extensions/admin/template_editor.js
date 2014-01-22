@@ -75,10 +75,13 @@ var admin_template = function() {
 									$target.anymessage({"message":"You are attempting to open an instance of a template which is already open ("+app.ext.admin_template.u.buildTemplateEditorTitle+") in "+($textarea.closest('.tabContent').data('section'))+". To reduce the likelyhood of inadvertantly saving over changes, only one copy of a template may be edited at a time.","errtype":"halt","persistent":true});
 									}
 								else	{
+									//check to see if this editor has already been opened and, if so, remove instance.
+									//if a tinymce instance is opened and not properly removed, opening it again will not work. the 'exit' button in the editor does properly remove.
+									if(app.u.thisNestedExists("tinymce.editors."+taID)){
+										delete tinymce.editors[taID];
+										};
 									$target.prepend("<h1>"+app.ext.admin_template.u.buildTemplateEditorTitle(vars)+"<\/h1>");
-// ### TODO -> add an 'exit' button. should destroy the tinymce instance. should return to UI based on mode.
-// 			also need to destroy any tinymce in memory for this template if it has already been opened once.
-									$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','title':'Edit '+vars.mode+' Template','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});  //title is added in case this is opened in a dialog.
+									$target.attr({'data-app-role':'templateEditor','data-templateeditor-role':'container','id':'TE_'+app.ext.admin_template.u.buildTemplateEditorID(vars)});
 
 									$target.data(vars); //vars.profile is used in the media lib to get the profile. don't change it.
 
@@ -138,7 +141,7 @@ var admin_template = function() {
 													keep_styles : true,
 													image_list: [],
 													plugins: [
-														"_image advlist autolink lists link charmap print preview anchor",
+														"_image _wizblocks advlist autolink lists link charmap print preview anchor",
 														"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
 														"media table contextmenu paste"
 														],
@@ -690,24 +693,11 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 					},
 
-//adds some classes to the template.  These classes are removed on save.
-				buildTemplateStyleSheet : function()	{
-					var r = "<div id='templateBuilderCSS'>\n<style type='text/css'>\n"
-						+ "	.showHighlights_PRODUCT .attributeContainer_PRODUCT {background-color:#efefef; border:1px dashed #cccccc;}\n" //used on all non-href product elements
-//						+ "	.showHighlights_PRODUCT .actbHref {background-color:#00cc00; border:1px solid #cccccc;}\n" //used on product href elements.
-						+ "	.showHighlights_BUYER .attributeContainer_BUYER {background-color:#cee1cc; border:1px dashed #abc2a8;}\n" //used on all non-href product elements
-//						+ "	.showHighlights_BUYER .actbHref {background-color:#abc2a8; border:1px solid #abc2a8;}\n" //used on product href elements.
-						+ "	.showHighlights_KISS .wizardificated {background-color:#e2eee1; border:1px dashed #bdd1bd;}\n"
-						+ "	.showHighlights_KISS .unwizardificated {background-color:#f0f5fb; border:1px dashed #b9d6fc;}\n"
-						+ "<\/style></div>"
-					return r;
-					}, //buildTemplateStyleSheet
 
 //removes the editor classes from the template. executed on save.
 				postprocessTemplate : function(template,mode)	{
 					var $template = $("<html>"); //need a parent container.
 					$template.append(template);
-					$('#templateBuilderCSS',$template).empty().remove(); //removes the stylesheet added in preProcessTemplate (for code block highlights)
 					var $head = $("head",$template);
 					//move all meta and style tags from the body to the head where they belong.
 					$("body meta, body style",$template).each(function(){
@@ -744,8 +734,7 @@ var $input = $(app.u.jqSelector('#',ID));
 							else	{} //class has already been added.
 							}
 						})
-	
-					$template.append(app.ext.admin_template.u.buildTemplateStyleSheet())
+
 					return $template;
 					}, //preprocessTemplate
 
@@ -764,7 +753,7 @@ var $input = $(app.u.jqSelector('#',ID));
 								var $textarea = $("<textarea \/>",{'id':taID+"_"+$wizele.data('wizard')}).attr({
 									'data-md5':Crypto.MD5($wizele.html()),
 									'data-elementid':$wizele.attr('id')
-									}).val($wizele.html());
+									}).addClass('isTinymceTextarea').val($wizele.html()); //isTinymceTextarea is used as selector in 'exit'.
 								$supp.append($("<div \/>").append($textarea));
 								});
 							
@@ -787,14 +776,14 @@ var $input = $(app.u.jqSelector('#',ID));
 										},
 //									setup : function(editor) {editor.on('focus', function(e) {});editor.on('change', function(e) {});},
 									valid_elements: "*[*]",
-									esxtended_valid_elements : "@[class]",
+//									extended_valid_elements : "@[class]",
 									menubar : 'edit insert view format table tools',
 									height : 200,
 									visual: false, //turn off visual aids by default. menu choice will still show up.
 									keep_styles : false, //for sites, no inline styles are allowed.
 									image_list: [],
 									plugins: [
-										"_image advlist autolink lists link charmap print preview anchor",
+										"_image _wizblocks advlist autolink lists link charmap print preview anchor",
 										"searchreplace visualblocks code fullscreen",
 										"media table contextmenu paste"
 										],
@@ -1068,38 +1057,10 @@ var $input = $(app.u.jqSelector('#',ID));
 						}
 
 					}, //handleTemplateSelect
-				
 
-				getEditorButton_style : function(vars,$templateEditor){
-					return {
-						css : 'styletagedit',
-						'text' : 'Style Tags',
-						action: function (btn) {
-							var jhtml = this; //the jhtml object.
-							var $D = app.ext.admin.i.dialogCreate({
-								'title' : 'Add/Update CSS Classes'
-								});
-							$D.attr('id','templateEditorCSSDialog');
-
-							$D.dialog('option','width','500');
-//							$D.dialog('option','modal',false); warning - toggling between css editor as a dialog caused template iframe body to empty. odd.
-							
-							var $style = $('.jHtmlArea iframe:first',$templateEditor).contents().find("style:first");
-//templatebuildercss is not editable. it's what the app adds for highlighting classes and it is nuked on save.
-//if that's the first style on the page, append a new style tag to the head of the template for future use.
-							if($style.parent().attr('id') == 'templateBuilderCSS')	{
-								app.u.dump("First style tag is the templateBuilderCSS. Don't use it.");
-								$style = $("<style \/>"); 
-								$('.jHtmlArea iframe:first',$templateEditor).contents().find("head").append($style);
-								}
-
-							$("<textarea \/>").width('100%').height('350px').on('blur',function(){
-								$style.text($(this).val())
-								}).val($style.html()).appendTo($D);
-							$D.dialog('open');
-							}
-						}
-					}, //getEditorButton_style
+/*
+### FUTURE -> 	these will need to be brought forward.
+				for the product one, consider some form of integration w/ flexedit.
 
 				getEditorButtonNativeApp : function(vars,$templateEditor){
 					return {
@@ -1219,7 +1180,16 @@ var $input = $(app.u.jqSelector('#',ID));
 							}
 						}
 					}, //getEditorButton_prodattributeadd
+
+				//only used in the now dead getEditorButton functions.
+				pluckObjectFromTemplate : function(selector,$templateEditor)	{
+					return $('.jHtmlArea iframe:first',$templateEditor).contents().find(selector);
+					},
 				
+
+
+*/
+
 				appendAttributeListTo : function($D,jhtml,attributes)	{
 					var r = true; //set to false if error occurs. Otherwise true. I used to determine what is returned.
 					if($D && jhtml && attributes)	{
@@ -1252,11 +1222,6 @@ var $input = $(app.u.jqSelector('#',ID));
 					return (r === true) ? $ul : false;
 					},
 
-//this function does NOT escape the selector, so any selector that is a variable and needs escaping should be escaped before it's dumped in.
-				pluckObjectFromTemplate : function(selector,$templateEditor)	{
-					return $('.jHtmlArea iframe:first',$templateEditor).contents().find(selector);
-					},
-				
 				applyElementToTemplate : function(jhtml,attObj){
 					var r = true; //what is returned. true or false if element inserted successfully.
 					if(jhtml && attObj && attObj.data && attObj.attribute && attObj.data.object && (attObj.data['input-type'] || attObj.data.format))	{
@@ -1599,27 +1564,23 @@ app.u.dump(" -> data: "); app.u.dump(data);
 						});
 					}, //containerZipDownloadExec
 
-				adminTemplateCampaignExit : function($btn)	{
-					$btn.button();
-					$btn.off('click.adminTemplateCampaignExit').on('click.adminTemplateCampaignExit',function(){
-var data = $btn.closest("[data-app-role='templateEditor']").data();
-if(data.editor='dialog')	{
-	//we're in a dialog, just close it.
-	$btn.closest('.ui-content-dialog').dialog('close');
-	}
-else	{
-	if(data.mode == 'Campaign')	{
-		app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),data.campaignid);
-		}
-	else if(data.mode == 'EBAYProfile')	{
-		app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),data.profile);
-		}
-	else	{
-		
-		}
-	}
-						})
-
+				adminTemplateEditorExit : function($ele,P)	{
+					var $templateEditor = $ele.closest("[data-app-role='templateEditor']"), data = $templateEditor.data();
+					if(data.mode == 'Campaign')	{
+						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
+						navigateTo('#!campaignManager',{'campaignid':data.campaignid});
+						}
+					else if(data.mode == 'EBAYProfile')	{
+						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
+						navigateTo('#!syndication',{'mkt':'EBF','profile':data.profile});
+						}
+					else if(data.mode == 'Site')	{
+						$(".isTinymceTextarea",$templateEditor).tinymce().remove();
+						navigateTo('#!domainConfigPanel',{'domain':data.domain});
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_template.e.adminTemplateEditorExit, unrecognize or missing mode ["+data.mode+"] set on template editor.","gMessage":true});
+						}
 					}, //adminTemplateCampaignExit
 
 				adminTemplateCampaignTestShow : function($ele,P)	{
@@ -1851,18 +1812,6 @@ The names for these delegated events are temporary. use the original names once 
 					else	{
 						$templateEditor.anymessage({"message":"In admin_template.e.startWizardExec, trigger element did not have data('wizardContent') set on it.","gMessage":true});
 						}
-					},
-
-				templateHighlightToggle : function($cb)	{
-					$cb.anycb();
-					$cb.on('change',function(){
-						if($cb.is(':checked'))	{
-							$('iframe',$cb.closest("[data-app-role='templateEditor']")).contents().find('body').addClass('showHighlights_'+$cb.data('objecttype'));
-							}
-						else	{
-							$('iframe',$cb.closest("[data-app-role='templateEditor']")).contents().find('body').removeClass('showHighlights_'+$cb.data('objecttype'));
-							}
-						});
 					},
 
 				adminTemplateSaveExec : function($ele,P)	{
