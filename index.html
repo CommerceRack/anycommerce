@@ -1723,7 +1723,48 @@ subscribeListsArticle is used for authenticated buyers
 
 
 		</div>
+		
+		<div id='loginArticle' class='displayNone textContentArea'>
+			<div id='loginFormContainer'>
+				<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("input[name=login]", $(this)).val(),$("input[name=password]", $(this)).val()); return false;'>
+					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+				<fieldset>
 
+					<div>
+						<label for='login'>Login/Email</label>
+						<input type='email' class='zform_textbox zform_email'  name='login' value='' size='25' />
+					</div>
+
+					<div>
+						<label for='password'>Password</label>
+						<input type='password' class='zform_textbox zform_password'   name='password' value='' size='25' />
+					</div>
+
+					<div>
+					<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
+					</div>
+				</fieldset>
+				</form>
+			</div>
+
+			<div id='recoverPasswordContainer'>
+				<h3 class='marginBottom'>Recover Password</h3>
+				<div id='recoverPasswordMessaging' class='appMessaging'></div>
+				<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
+				<fieldset>
+					<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
+
+					<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
+
+				</fieldset>
+				</form>
+			</div>
+
+		</div>
+		
+		<div id='createaccountArticle' class='displayNone textContentArea'>
+			<p>This is the create account article.</p>
+		</div>
 
 		<div id='ordersArticle' class='displayNone textContentArea'>
 			<h1>Order History</h1>
