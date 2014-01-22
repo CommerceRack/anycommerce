@@ -260,7 +260,7 @@ document.write = function(v){
 				var $cart = tagObj.jqObj || $(app.u.jqSelector('#',tagObj.parentID))
 				$cart.empty().append(app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,app.data[tagObj.datapointer]));
 				tagObj.state = 'onCompletes'; //needed for handleTemplateEvents.
-				app.ext.myRIA.u.handleTemplateEvents($cart,tagObj);
+				app.renderFunctions.handleTemplateEvents($cart,tagObj);
 				}
 			}, //updateMCLineItems
 
