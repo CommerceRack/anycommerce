@@ -293,31 +293,37 @@ used, but not pre-loaded.
 						}
 
 					if(mode == 'create')	{
-						cmdObj['@updates'].push("HOST-ADD?HOSTNAME="+sfo.HOSTNAME);
+						cmdObj['@updates'].push("HOST-ADD?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME));
 						}
 
 					var hostSet = "HOST-SET?"+$.param(app.u.getWhitelistedObject(sfo,['HOSTNAME','HOSTTYPE']));
+
+
+//update changes to the ssl cert.
+					if(sfo.ssl_certificate && sfo.ssl_key)	{
+						cmdObj['@updates'].push("HOST-SSL-UPDATE?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME));
+						}
 
 					if(sfo.HOSTTYPE == 'VSTORE')	{
 						$("[data-app-role='domainRewriteRulesTbody'] tr",$form).each(function(){
 							var $tr = $(this);
 							if($tr.hasClass('rowTaggedForRemove'))	{
-								cmdObj['@updates'].push("VSTORE-KILL-REWRITE?PATH="+$tr.data('path'));
+								cmdObj['@updates'].push("VSTORE-KILL-REWRITE?PATH="+encodeURIComponent($tr.data('path')));
 								}
 							else if($tr.hasClass('isNewRow'))	{
-								cmdObj['@updates'].push("VSTORE-ADD-REWRITE?PATH="+$tr.data('path')+"&TARGETURL="+$tr.data('targeturl'));
+								cmdObj['@updates'].push("VSTORE-ADD-REWRITE?PATH="+encodeURIComponent($tr.data('path'))+"&TARGETURL="+encodeURIComponent($tr.data('targeturl')));
 								}
 							else	{} //unchanged row. this is a non-destructive process, so existing rules don't need to be re-added.
 							})
 						}
 					else if(sfo.HOSTTYPE == 'SITE')	{
-						hostSet += "&force_https="+sfo.force_https;
+						hostSet += "&force_https="+encodeURIComponent(sfo.force_https);
 						}
 					else if(sfo.HOSTTYPE == 'SITEPTR')	{
-						hostSet += "&PROJECT="+sfo.PROJECT+"&force_https="+sfo.force_https;
+						hostSet += "&PROJECT="+encodeURIComponent(sfo.PROJECT)+"&force_https="+encodeURIComponent(sfo.force_https);
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
-						hostSet += "&URI="+sfo.URI+"&REDIR="+sfo.REDIR;
+						hostSet += "&URI="+encodeURIComponent(sfo.URI)+"&REDIR="+encodeURIComponent(sfo.REDIR);
 						}
 					else if(sfo.HOSTTYPE == 'CUSTOM')	{
 						//supported. no extra params needed.
@@ -333,8 +339,8 @@ used, but not pre-loaded.
 						$form.anymessage({'message':'The host type was not a recognized type. We are attempting to save the rest of your changes.'});
 						}
 
-					app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 
+					app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 //This will update the hosts tbody.
 					if($domainEditor instanceof jQuery)	{
 						var $tbody = $("tbody[data-app-role='domainsHostsTbody']",$domainEditor);
@@ -519,7 +525,8 @@ used, but not pre-loaded.
 						'templateID':'domainAddUpdateHostTemplate',
 						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
+						}).anydelegate();
+
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
 					var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
@@ -533,9 +540,9 @@ used, but not pre-loaded.
 //									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT);
 								$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
 								}
+							app.u.handleButtons($D);
+							app.u.handleCommonPlugins($D);
 							}
-					
-						
 						}};
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
@@ -551,12 +558,12 @@ used, but not pre-loaded.
 						}
 					
 					$("form",$D).append(
-						$("<button>Save<\/button>").button().on('click',function(event){
+						$("<button>Save<\/button>").button().addClass('floatRight').on('click',function(event){
 							event.preventDefault();
 							app.ext.admin_sites.u.domainAddUpdateHost($ele.data('mode'),$('form',$D),$ele.closest("[data-app-role='domainDetailContainer']"));
 							})
 						)
-					$D.anydelegate();
+
 					$D.dialog('open');
 					}
 				else	{
