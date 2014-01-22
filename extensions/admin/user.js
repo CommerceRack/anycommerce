@@ -56,14 +56,14 @@ var admin_user = function() {
 
 			showUserManager : function($target)	{
 				app.u.dump("BEGIN admin_user.a.showUserManager 2.0");
-
-				$target.intervaledEmpty();
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'User Manager',
 					'className' : 'userManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['id','Username','Name','Email','Roles','Created',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_user|bossUserCreateShow'>Create A New User</button>"],	
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_user|bossUserCreateShow'>Create A New User</button>"],	
 					'cmdVars' : {
 						'_cmd' : 'bossUserList',
 						'limit' : '50', //not supported for every call yet.
@@ -77,10 +77,8 @@ var admin_user = function() {
 				else	{
 					app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
 					}
+				app.u.handleButtons($target.anydelegate({'trackEdits':true}));
 				app.model.dispatchThis('mutable');
-				
-				app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate({'trackEdits':true}));
-
 				}			
 				
 			}, //Actions
@@ -233,7 +231,7 @@ var admin_user = function() {
 											}
 										else	{
 											$D.dialog('close');
-											$ele.closest("[data-app-role='dualModeContainer']").find("[data-app-event='admin|refreshDMI']").trigger('click');
+											$ele.closest("[data-app-role='dualModeContainer']").find("[data-app-click='admin|refreshDMI']").trigger('click');
 											}
 										}
 									}

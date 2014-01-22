@@ -2733,7 +2733,9 @@ once multiple instances of the finder can be opened at one time, this will get u
 					'header' : 'RSS Feeds',
 					'className' : 'rssFeeds',
 					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight applyButton' data-app-click='admin|adminRSSCreateShow' data-icon-primary='ui-icon-plus'>New RSS Feed</button>"],
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button class='applyButton' data-app-click='admin|adminRSSCreateShow' data-icon-primary='ui-icon-circle-plus'>New RSS Feed</button>"],
 					'thead' : ['ID','Title','Status','Profile','Schedule',''],
 					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;",
 					'cmdVars' : {
@@ -3242,10 +3244,6 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				else if(path == '#!globalSettings')	{
 					app.ext.admin_config.a.showGlobalSettings($target);
 					}
-				else if(path == '#!billingHistory')	{
-					app.ext.admin_tools.a.showBillingHistory($target);
-					}
-
 
 				else if(path == '#!showPlatformInfo')	{
 					app.ext.admin_support.a.showPlatformInfo($target);
@@ -4135,7 +4133,7 @@ else	{
 				$D = $("[data-app-role='dualModeDetail']",$parent), //detail column
 				numDetailPanels = $D.children().length,
 				oldMode = $parent.data('app-mode'),
-				$btn = $("[data-app-event='admin|toggleDualMode']",$parent);
+				$btn = $("[data-app-click='admin|toggleDMI']",$parent);
 
 				if(mode)	{}
 				else if($parent.data('app-mode') == 'list')	{mode = 'detail'}
@@ -4761,21 +4759,18 @@ dataAttribs -> an object that will be set as data- on the panel.
 //used for loading a simple dialog w/ no data translation.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
 //set data-templateid on the button to specify a template.
-			openDialog : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.openDialog').on('click.openDialog',function(){
-					vars = vars || {};
-					if($btn.data('templateid'))	{
-						vars.templateID = $btn.data('templateid');
-						vars.title = $btn.data('title');
-						vars.showLoading = false;
-						var $D = app.ext.admin.i.dialogCreate(vars);
-						$D.dialog('open');
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
-						}
-					});
+			openDialog : function($ele,P)	{
+				vars = vars || {};
+				if($ele.data('templateid'))	{
+					vars.templateID = $ele.data('templateid');
+					vars.title = $ele.data('title');
+					vars.showLoading = false;
+					var $D = app.ext.admin.i.dialogCreate(vars);
+					$D.dialog('open');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
+					}
 				}, //openDialog
 			
 //used in conjuction with the new interface (i) functions.
@@ -4834,41 +4829,32 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$DMI.data('listmode','list');
 					$DMI.data('cmdVars')[$ele.attr('name')] = $ele.val();
 					if($ele.data('trigger') == 'refresh')	{
-						$('button[data-app-event="admin|refreshDMI"]',$DMI).trigger('click');
+						$('button[data-app-click="admin|refreshDMI"]',$DMI).trigger('click');
 						}
 					}
 				},
 
-			refreshDMI : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-s"},text: false});
-				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
 
-				if($DMI.length && !$.isEmptyObject($DMI.data('cmdVars')) && $DMI.data('cmdVars')._cmd)	{
-					$btn.off('click.refreshDMI').on('click.refreshDMI',function(event){
-						event.preventDefault();
-						$DMI.showLoading({'message' : 'Refreshing list...' });
-						$("[data-app-role='dualModeListTbody']",$DMI).empty();
-						$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
-						var cmdVars = {};
-						if($btn.data('serializeform'))	{
-							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
-							}
-						else	{
-							cmdVars = $DMI.data('cmdVars');
-							}
-
-						cmdVars._tag = cmdVars._tag || {};
-						cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
-						cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
-						cmdVars._tag.jqObj = $DMI;
-						app.model.addDispatchToQ(cmdVars,'mutable');
-						app.model.dispatchThis('mutable');
-						});
+			refreshDMI : function($ele,P)	{
+				if(P && typeof P.preventDefault == 'function'){P.preventDefault();}
+				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+				$DMI.showLoading({'message' : 'Refreshing list...' });
+				$("[data-app-role='dualModeListTbody']",$DMI).empty();
+				$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
+				var cmdVars = {};
+				if($ele.data('serializeform'))	{
+					$.extend(true,cmdVars,$DMI.data('cmdVars'),$ele.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
 					}
 				else	{
-					$btn.hide(); //required params are not set.
-					app.u.dump("A refreshDMI app event was set, however either no parent DMI found [$DMI.length: "+$DMI.length+"] or $DMI.data.cmdVars was empty (these are required for this feature and should be set as part of DMICreate).",'warn');
+					cmdVars = $DMI.data('cmdVars');
 					}
+
+				cmdVars._tag = cmdVars._tag || {};
+				cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
+				cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
+				cmdVars._tag.jqObj = $DMI;
+				app.model.addDispatchToQ(cmdVars,'mutable');
+				app.model.dispatchThis('mutable');
 				},
 
 			lockAccordionIfChecked : function($cb)	{
@@ -4896,28 +4882,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					return app.u.alphaNumeric(event);
 					})
 				},
-/*
-not in use
-			achievementDetail : function($row)	{
-				$row.on('mouseover.achievementDetail',function(){
-					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
-					})
-					.on('mouseout.achievementDetail',function(){
-					$(this).removeClass('ui-state-highlight');
-					})
-					.on('click.achievementDetail',function(event){
-						event.preventDefault();
-						if($(this).data('app-contentid') && $(app.u.jqSelector('#',$(this).data('app-contentid'))).length)	{
-							app.u.dump(" -> $(this).data('app-contentid'): "+$(this).data('app-contentid'));
-							$(app.u.jqSelector('#',$(this).data('app-contentid'))).dialog({'modal':true});
-							}
-						else	{
-							app.u.throwGMessage("In admin.e.achievementDetail, no data-content-id specified on element.");
-							}
-						});
-				},
-*/
-/* app chooser */
+
 
 			dialogCloseExec : function($ele,p)	{
 				$ele.closest(".ui-dialog-content").dialog('close');
@@ -5112,16 +5077,10 @@ not in use
 					})
 				}, //orderEmailCustomChangeSource
 
-			
-			"toggleDualMode" : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
-				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
-				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
-					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"));
-					});
-				}, //toggleDualMode
-
+// add this to the button that this is applied to: class='applyButton' data-text='false' data-icon-primary='ui-icon-seek-next'
+			toggleDMI : function($ele,p)	{
+				app.ext.admin.u.toggleDualMode($ele.closest("[data-app-role='dualModeContainer']"));
+				},
 
 
 //use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.

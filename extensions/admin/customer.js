@@ -193,7 +193,9 @@ var admin_customer = function() {
 					'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['','ID','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton'>Add Ticket</button>"],	
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton' data-icon-primary='ui-icon-plus'>Add Ticket</button>"],	
 					'controls' : app.templates.crmManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminAppTicketList',
@@ -204,8 +206,8 @@ var admin_customer = function() {
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
-				app.u.handleButtons($DMI.closest("[data-app-role='dualModeContainer']").anydelegate());
 				},
 
 			showCampaignManager : function($target)	{
@@ -213,7 +215,9 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>","<button data-title='Create a New Campaign' data-app-event='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-title='Create a New Campaign' data-app-click='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
 					'thead' : ['ID','Subject','Status','Methods','Q Mode','Created','Expired',''],
 					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;",
 					'cmdVars' : {
@@ -221,6 +225,7 @@ var admin_customer = function() {
 						'_tag' : {'datapointer' : 'adminCampaignList'}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				app.model.dispatchThis();
 
@@ -273,7 +278,10 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>","<button data-app-event='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button><button data-app-event='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button>",
+						"<button data-app-click='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
 					'thead' : ['Code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;",
@@ -282,6 +290,7 @@ var admin_customer = function() {
 						'_tag' : {'datapointer' : 'adminGiftcardList'}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis();
 				},
 
@@ -292,7 +301,7 @@ var admin_customer = function() {
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Reviews List<\/button>",
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin|dataCSVExportExec' data-pointer='adminProductReviewList' data-listpointer='@REVIEWS' data-filename='product_reviews.csv' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>Export<\/button>",
 						"<button data-app-click='admin_customer|reviewApproveExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-check'>Approve<\/button>",
 						"<button data-app-click='admin_customer|reviewCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Add<\/button>"],
@@ -306,8 +315,7 @@ var admin_customer = function() {
 							}
 						}
 					});
-				$target.anydelegate();
-				app.u.handleButtons($target);
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				}, //showReviewsManager
 
@@ -703,11 +711,9 @@ $D is returned.
 
 		e : {
 //custom event instead of using openDialog because of html editor.
-			adminCampaignCreateShow : function($btn)	{
+			adminCampaignCreateShow : function($ele,P)	{
 //consider the 'create' just having the subject and ID, then creating and going right into the editor. probably a good idea.
-				$btn.button();
-				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
-					event.preventDefault();
+					P.preventDefault();
 					var $D = app.ext.admin.i.dialogCreate({'templateID':'campaignCreateTemplate','title':'Create a New Campaign','showLoading':false});
 					$D.dialog('open');
 					$D.showLoading({'message':'Fetching campaign template list'});
@@ -723,7 +729,6 @@ $D is returned.
 						},'mutable');
 					app.model.dispatchThis('mutable');
 //may need to add some for attributes for processForm or a custom app event button. That'll depend on how the file vs other changes get saved.
-					});
 				},
 			
 			adminCampaignCreateExec : function($btn)	{
@@ -1207,25 +1212,23 @@ app.model.dispatchThis('immutable');
 /*/////////////////////////////				GIFTCARDS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
-			giftcardCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.giftcardCreateShow').on('click.giftcardCreateShow',function(event){
-					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Giftcard',
-						'templateID':'giftcardCreateTemplate',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$D.dialog('open');
+			giftcardCreateShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Giftcard',
+					'templateID':'giftcardCreateTemplate',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
+					});
+				$D.dialog('open');
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
-					 $( ".applyDatepicker",$D).datepicker({
-						changeMonth: true,
-						changeYear: true,
-						dateFormat : 'yymmdd'
-						});
+				$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				 $( ".applyDatepicker",$D).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					dateFormat : 'yymmdd'
 					});
+
 				}, //giftcardCreateShow
 
 			adminGiftcardUpdateShow : function($ele,P)	{

@@ -131,14 +131,14 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 // later, we may add the ability to load directly into 'edit' mode and open a specific task. not supported just yet.
 			showTaskManager : function($target) {
 //				app.u.dump("BEGIN admin_task.a.showTaskManager");
-
-				$target.intervaledEmpty();
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Task Manager',
 					'className' : 'taskManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['','Created','Task','Due Date','Priority','Type','Assigned To',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tasks(@TASKS); format:processList; loadsTemplate:taskListRowTemplate;",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_task|adminTaskCreateShow'>Add Task<\/button>"],	
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_task|adminTaskCreateShow'>Add Task<\/button>"],	
 					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_task|adminTaskCompletedBulkExec'>Tag as Completed</button><button data-app-click='admin_task|adminTaskRemoveBulkConfirm'>Deleted</button><\/span>",
 					'cmdVars' : {
 						'_cmd' : 'adminTaskList',
@@ -150,9 +150,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						}
 					});
-				$("[data-app-role='dualModeContainer']:first",$target).anydelegate();
 				app.model.dispatchThis('mutable');
-				app.u.handleButtons($target);
+				app.u.handleButtons($target.anydelegate());
 				$('.applyButtonset',$target).buttonset().off('change.handleModifyTasks').on('change.handleModifyTasks',function(){
 					app.ext.admin_task.u.handleModifyTasks(this);
 					});

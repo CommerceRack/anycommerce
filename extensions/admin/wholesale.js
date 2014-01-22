@@ -88,15 +88,13 @@ var admin_wholesale = function() {
 		a : {
 			
 			showWarehouseManager : function($target)	{
-				$target.empty();
-
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Warehouse Manager',
 					'className' : 'warehouseManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
-						"<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Warehouse</button>"
 						],
 					'thead' : ['Code','Zone','Title','Zone Type','Preference','# Positions',''],
 					'tbodyDatabind' : "var: users(@ROWS); format:processList; loadsTemplate:warehouseResultsRowTemplate;",
@@ -108,6 +106,7 @@ var admin_wholesale = function() {
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				}, //showWarehouseManager
 
@@ -152,8 +151,8 @@ else	{
 					'className' : 'priceSchedules',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Coupon List<\/button>",
-						"<button data-app-event='admin_wholesale|priceScheduleCreateShow' data-title='Create a New Price Schedule'>Add New Schedule</button>"
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_wholesale|priceScheduleCreateShow' data-title='Create a New Price Schedule'  class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add New Schedule</button>"
 						],
 					'thead' : ['ID','Name','Currency','Discount',''],
 					'tbodyDatabind' : "var: users(@SCHEDULES); format:processList; loadsTemplate:priceScheduleResultsRowTemplate;",
@@ -164,6 +163,7 @@ else	{
 							}
 						}
 					});
+				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
 
@@ -231,9 +231,9 @@ else	{
 					'className' : 'supplierManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
-						"<button data-app-event='admin|refreshDMI'>Refresh Supplier List<\/button>",
-						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all'>Unordered Items</button>",
-						"<button class='marginLeft' data-app-event='admin_wholesale|adminSupplierCreateShow'>Add Supplier</button>"
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button class='marginLeft' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all'  class='applyButton' data-text='true'>Unordered Items</button>",
+						"<button class='marginLeft' data-app-click='admin_wholesale|adminSupplierCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Supplier</button>"
 						],
 					'thead' : ['','Name','ID','Type','Mode',''],
 					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_wholesale|supplierBatchExec' data-verb='INVENTORY'>Get Inventory</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='PROCESS' title='Will cause any pending orders to be set to a supplier'>Process Orders</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='TRACKING'>Update Tracking</button><\/span>",
@@ -245,7 +245,7 @@ else	{
 							}
 						}
 					});
-				app.u.handleButtons($DMI.closest('.dualModeContainer').anydelegate());
+				app.u.handleButtons($target.anydelegate());
 				
 				app.model.dispatchThis('mutable');
 				}, //showSupplierManager
@@ -510,21 +510,17 @@ else	{
 
 		e : {
 
-//can't use defualt createDialog app event because we need to add a few params to the form.
-			warehouseCreateShow : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.warehouseCreateShow').on('click.warehouseCreateShow',function(event){
-					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Warehouse',
-						'templateID':'warehouseAddUpdateTemplate',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$(".hideForCreate",$D).hide();
-					$D.dialog('open');
-//These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
+			warehouseCreateShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Warehouse',
+					'templateID':'warehouseAddUpdateTemplate',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
+				$(".hideForCreate",$D).hide();
+				$D.dialog('open');
+//These fields are used for processForm on save.
+				$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 				}, //warehouseCreateShow
 
 
@@ -921,22 +917,19 @@ else	{
 
 
 //applied to 'create user' button. just opens the modal.
-			adminSupplierCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
-					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Supplier',
-						'templateID':'supplierAddTemplate',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					$D.dialog('open');
+			adminSupplierCreateShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Supplier',
+					'templateID':'supplierAddTemplate',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
+					});
+				$D.dialog('open');
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
-					$('form',$D).first().append("<input type='hidden' name='DMIID' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
-					app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
-					app.u.handleAppEvents($D,{"$context":$btn.closest("[data-app-role='supplierManager']").parent()})
-					})
+				$('form',$D).first().append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+				app.u.handleAppEvents($D,{"$context":$ele.closest("[data-app-role='supplierManager']").parent()})
 				}, //showSupplierCreate
 
 
@@ -1213,15 +1206,11 @@ app.model.dispatchThis('immutable');
 					}
 				},
 	
-			adminSupplierUnorderedItemListShow : function($btn)	{
-				$btn.button();
-				
-				$btn.off('click.adminSupplierUnorderedItemListShow').on('click.adminSupplierUnorderedItemListShow',function(){
-
-					var VENDORID = $btn.closest("[data-code]").data('CODE');
+			adminSupplierUnorderedItemListShow : function($ele,P)	{
+					var VENDORID = $ele.closest("[data-code]").data('CODE');
 					var $D = app.ext.admin.i.dialogCreate({
 						'templateID': "supplierUnorderedItemsTemplate",
-						'title': $btn.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
+						'title': $ele.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
 						"showLoading" : false
 						});
 					
@@ -1245,12 +1234,12 @@ app.model.dispatchThis('immutable');
 							}
 						}
 
-					if($btn.data('mode') == 'vendor')	{
+					if($ele.data('mode') == 'vendor')	{
 						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList'});
 						cmdObj.VENDORID = VENDORID
 						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList|"+cmdObj.VENDORID;
 						}
-					else if	($btn.data('mode') == 'all'){
+					else if	($ele.data('mode') == 'all'){
 						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList','vendorid':''});
 						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList";
 						}
@@ -1261,8 +1250,7 @@ app.model.dispatchThis('immutable');
 						app.model.addDispatchToQ(cmdObj,'mutable');
 						app.model.dispatchThis('mutable');
 						}
-					
-					});
+
 				},
 
 //This code opens either the supplier specific inventory or order list.
@@ -1520,35 +1508,32 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 				}, //priceScheduleUpdateShow
 
 
-			priceScheduleCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.priceScheduleUpdateShow').on('click.priceScheduleUpdateShow',function(event){
-					event.preventDefault();
-					
-					var $D = app.ext.admin.i.dialogCreate({
-						'title':'Add New Schedule',
-						'showLoading':false //will get passed into anycontent and disable showLoading.
-						});
-					
-					$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
-					
-					$("<button>Create Schedule<\/button>").button().on('click',function(){
-						app.model.addDispatchToQ({
-							'_cmd':'adminPriceScheduleCreate',
-							'SID': $(this).parent().find("[name='SID']").val(),
-							'_tag':	{
-								'callback':'showMessaging',
-								'jqObj' : $D,
-								'jqObjEmpty' : true,
-								'message' : 'Your price schedule has been created.'
-								}
-							},'immutable');
-						app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
-						app.model.dispatchThis('immutable');
-						}).appendTo($D);
-					
-					$D.dialog('open');
+			priceScheduleCreateShow : function($ele,P)	{
+				P.preventDefault();
+				
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Schedule',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
+				
+				$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
+				
+				$("<button>Create Schedule<\/button>").button().on('click',function(){
+					app.model.addDispatchToQ({
+						'_cmd':'adminPriceScheduleCreate',
+						'SID': $(this).parent().find("[name='SID']").val(),
+						'_tag':	{
+							'callback':'showMessaging',
+							'jqObj' : $D,
+							'jqObjEmpty' : true,
+							'message' : 'Your price schedule has been created.'
+							}
+						},'immutable');
+					app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
+					app.model.dispatchThis('immutable');
+					}).appendTo($D);
+				
+				$D.dialog('open');
 				},
 
 			priceScheduleRemoveConfirm : function($btn)	{
