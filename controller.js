@@ -1775,6 +1775,8 @@ VALIDATION
 //also, you can pass a fieldset in instead of the entire form (or any other jquery object) to validate just a portion of a form.
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
 // if you do any validation outside of this and use anymessage to report those errors, you'll need to clear them yourself.
+// ## FUTURE -> if the field is required and no value is set and type != radio, add required to span and exit early. cuts out a big block of code for something fairly obvious. (need to take skipIfHidden into account)
+//				errors for each input should be an array. format-rules should return a string and not get passed span for an error.
 		validateForm : function($form)	{
 //			app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
@@ -1800,7 +1802,7 @@ VALIDATION
 //					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
-						//indexOf instead of == means validation-rules (notice the plural) can be a comma seperated list
+						//indexOf instead of == means validation-rules (notice the plural) can be a space seperated list
 						}
 					else if($input.prop('disabled')){} //do not validate disabled fields. if required and blank and disabled, form would never submit.
 					else if($input.prop('type') == 'radio'){
@@ -1900,9 +1902,17 @@ VALIDATION
 						
 						}
 					
+					
+					if($input.attr('data-format-rules'))	{
+						var rules = $input.attr('data-format-rules').split(' ');
+						app.u.processFormatRules(rules,$input,$span);
+						}
+					
+					
 					if($input.hasClass('ui-state-error'))	{
 						app.u.dump(" -> "+$input.attr('name')+" did not validate. ishidden: "+$input.is(':hidden'));
 						}
+					
 					});
 
 
@@ -1935,7 +1945,27 @@ VALIDATION
 //			app.u.dump(" -> r in validateForm: "+r);
 			return r;
 			},
-
+//accepts an array of 'rules'
+		processFormatRules : function(rules,$input,$span)	{
+			app.u.dump("BEGIN app.u.processFormatRules"); app.u.dump(rules);
+			var r = false;
+			if(typeof rules == 'object' && $input instanceof jQuery)	{
+				var L = rules.length;
+				for(var i = 0; i < L; i += 1)	{
+					app.u.dump(i+") is for rule: "+rules[i]+" and typeof formatRules: "+typeof app.formatRules[rules[i]]);
+					if(typeof app.formatRules[rules[i]] == 'function')	{
+						app.formatRules[rules[i]]($input,$span);
+						}
+					else	{
+						app.u.dump("A formatting rule ["+rules[i]+"] that does not exist was specified on an input: "+$input.attr('name'),"warn");
+						}
+					}
+				}
+			else	{
+				$('#globalMessaging').anymessage({"message":"In contoller.u.processFormatRules, either rules is not an array ["+(typeof rules)+"] or $input is not a valid jquery instance ["+($input instanceof jQuery)+"].","gMessage":true});
+				}
+			return r;
+			},
 
 
 
@@ -2369,7 +2399,7 @@ later, it will handle other third party plugins as well.
 
 
 
-		
+		// ### TODO -> update this for voice.
 		updatejQuerySupport : function()	{
 			if(jQuery && typeof jQuery.support == 'object')	{
 //If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.
@@ -3182,8 +3212,27 @@ $tmp.empty().remove();
 			
 		},
 
+//These rules should return true if the value is validated or false if not.
+//If the value does not validate, $err should be APPENDED to w/ a consise message for why it failed.  ex: CC number did not validate.
+	formatRules : {
 
-
+		'CC' : function($input,$err)	{
+			app.u.dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			var r = false;
+			if(app.u.isValidCC($input.val()))	{r = true;}
+			else	{$err.append('The credit card # provided is not valid')}
+			return r;
+			},
+		
+		'CV' : function($input,$err)	{
+			var r = false;
+			if(isNaN($input.val())){$err.append('The CVV/CID must be a #');}
+			else if($input.val().length <= 2)	{$err.append('The CVV/CID # must be at least three digits');}
+			else	{r = true;}
+			return r;
+			}
+		
+		},
 
 
 
