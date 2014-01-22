@@ -26,8 +26,7 @@
 
 
 
-<ul>
-	
+<ul>	
 	<li id='domainListFavoriteTemplate' class='ui-widget-content ui-corner-all domainPanel positionRelative smallButton'>
 		<div class='alignCenter'>
 		<img src='blank.gif' class='prodThumb' data-bind='useParentData:1; format:companyLogo; extension:admin;' width='160' height='160' />
@@ -41,7 +40,6 @@
 			<span data-bind="var: domain(DOMAINNAME); format:text;"></span>
 			<span data-bind="var: domain(PRT); format:text; pretext:(;posttext:);"></span>
 		</h4>
-	
 	</li>
 </ul>
 
@@ -182,26 +180,11 @@
 <!-- used in host type VSTORE for rewrite rules -->
 <tr id='domainManagerRewriteRowTemplate'>
 	<td data-bind="var: domain(PATH); format:text;"></td>
-	<td data-bind="var: domain(TXT); format:text;"></td>
+	<td data-bind="var: domain(TARGETURL); format:text;"></td>
 	<td>
 	<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
 	</td>
 </tr>
-
-<!--
-<tr id='domainManagerHostsRowTemplate'>
-	<td data-bind="var: domain(HOSTNAME); format:text;"></td>
-	<td data-bind="var: domain(HOSTTYPE); format:text;"></td>
-	<td>
-		<div data-bind="var: domain(PROJECT); format:text;"></div>
-		<div data-bind="var: domain(@REWRITES.length); format:text; posttext: rewrites;"></div>
-	</td>
-	<td class='alignRight'>
-	<button data-app-click="admin_sites|domainView" data-mode='host'>View Site</button>
-
-	</td>
-</tr>
--->
 
 
 <tr id='domainManagerDiagnosticsRowTemplate'>
@@ -225,7 +208,7 @@
 
 
 <div id='domainCreateTemplate'>
-<form action='#' onSubmit='return false'>
+<form action='#' onSubmit='return false' data-app-submit='admin|submitForm'>
 
 <input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroCreate' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -247,7 +230,7 @@
 	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
 	<label>
 		<span>Domain</span>
-		<input type='text' name='DOMAINNAME' value='' />
+		<input type='text' required="required" data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
 	</label>
 	</div>
 	
@@ -255,7 +238,7 @@
 </fieldset>
 
 <div class='buttonset alignRight'>
-	<button data-app-event='admin|processForm'>Save Domain</button>
+	<button class='applyButton'>Save Domain</button>
 </div>
 
 </form>
@@ -346,7 +329,19 @@
 
 
 	</fieldset>	
-	
+	<fieldset data-app-role='sslInputsContainer' class='alignedInputs'>
+		<legend>SSL Certificate</legend>
+		
+		<label>
+			<span>Certificate</span>
+			<textarea data-bind="var: host(ssl_certificate); format:popval;" name='ssl_certificate' rows='6'></textarea>
+		</label>
+		<label>
+			<span>Key</span>
+			<textarea data-bind="var: host(ssl_key); format:popval;" name='ssl_key' rows='6'></textarea>
+		</label>
+	</fieldset>
+
 	</div>
 
 
