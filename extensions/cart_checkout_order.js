@@ -340,6 +340,8 @@ left them be to provide guidance later.
 //this will make sure that specific fields are populated based on tender type.
 //rather than returning specific error messages (which may need to change based on where this is used, an array of which fields are missing is returned
 //plus, this allows for the attribute/fields to be modified w/ css, whereas returning messages wouldn't allow for that.
+//a 'false' returned means everything passed.
+// ## FUTURE -> get these migrated into validateForm.
 		validate : {
 			
 			CREDIT : function(vars)	{
@@ -352,8 +354,8 @@ left them be to provide guidance later.
 					return (errors.length) ? errors : false;
 					}
 				else	{
-					app.u.throwGMessage("in cco.u.validate.CREDIT, vars is empty or not an object.");
-					return false;
+					$('#globalMessaging').anymessage({"message":"in cco.u.validate.CREDIT, vars is empty or not an object.","gMessage":true});
+					return true;
 					}
 				
 				},
@@ -695,7 +697,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		//expiration is less of a concern
 						case 'CREDIT':
 	
-							tmp += "<div><label>Credit Card # <input type='text' size='30' name='payment/CC' data-input-format='numeric' data-app-keyup='input-format' class='creditCard' value='";
+							tmp += "<div><label>Credit Card # <input type='text' data-format-rules='CC' size='30' name='payment/CC' data-app-keyup='input-format' data-input-format='numeric' class='creditCard' value='";
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
@@ -704,7 +706,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<\/select>";
 							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
-							tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
+							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
 							tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							
