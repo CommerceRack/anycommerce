@@ -72,7 +72,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
-			app.u.dump(" -> zGlobals are an object")
+			app.u.dump(" -> zGlobals is an object")
 			app.vars.username = zGlobals.appSettings.username.toLowerCase(); //used w/ image URL's.
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			app.vars.secureURL = zGlobals.appSettings.https_app_url;
@@ -2399,18 +2399,23 @@ later, it will handle other third party plugins as well.
 
 
 
-		// ### TODO -> update this for voice.
+//By saving these to the $.support object, a quick lookup method is available.
+//In addition, it allows a developer to easily turn off features by setting the value to false.
 		updatejQuerySupport : function()	{
 			if(jQuery && typeof jQuery.support == 'object')	{
+
+				jQuery.support.speechRecognition = ('webkitSpeechRecognition' in window) || ('speechRecognition' in window);
+				jQuery.support.onpopstate = ('onpopstate' in window);
+				jQuery.support.onhashchange = ('onhashchange' in window);
+
+
 //If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.
 //So we first test to make sure the test doesn't cause an error. thanks ff.
-				jQuery.support.localStorage = false;
 				try{window.localStorage; jQuery.support.localStorage = true;}
-				catch(e){}
-
-				jQuery.support.sessionStorage = false;
+				catch(e){jQuery.support.localStorage = false;}
+				
 				try{window.sessionStorage; jQuery.support.sessionStorage = true;}
-				catch(e){}
+				catch(e){jQuery.support.sessionStorage = false;}
 
 //update jQuery.support with whether or not placeholder is supported.
 				jQuery.support.placeholder = false;
@@ -2809,7 +2814,7 @@ return $r;
 			handleTemplateEvents : function($ele,infoObj)	{
 				infoObj = infoObj || {};
 				if($ele instanceof jQuery && infoObj.state)	{
-					if($.inArray(infoObj.state,['init','complete','depart']))	{
+					if($.inArray(infoObj.state,['init','complete','depart']) >= 0)	{
 						if($ele.attr('data-app-'+infoObj.state))	{
 							//the following code is also in anydelegate. It was copied (tsk, tsk. i know) because the plugin should be as independant as possible.
 							var AEF = $ele.attr('data-app-'+infoObj.state).split('|');
@@ -2819,25 +2824,25 @@ return $r;
 									app.ext[AEF[0]].e[AEF[1]]($ele,infoObj);
 									}
 								else	{
-									$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+									$ele.anymessage({'message':"In app.templateFunctions.handleTemplateEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
 									}
 								}
 							else	{
-								$ele.anymessage({'message':"In myRIA.u.handleTemplateEvents, data-app-"+infoObj.state+" ["+$CT.attr('data-app-'+infoObj.state)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+								$ele.anymessage({'message':"In app.templateFunctions.handleTemplateEvents, data-app-"+infoObj.state+" ["+$CT.attr('data-app-'+infoObj.state)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
 								}						
 
 							}
 						$ele.trigger(infoObj.state,infoObj);
 						}
 					else	{
-						$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and leave are acceptable values.','gMessage':true});
+						$ele.anymessage({'message':'app.templateFunctions.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and depart are acceptable values.','gMessage':true});
 						}
 					}
 				else if($ele instanceof jQuery)	{
-					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, infoObj.state not set.','gMessage':true});
+					$ele.anymessage({'message':'In app.templateFunctions.handleTemplateEvents, infoObj.state not set.','gMessage':true});
 					}
 				else	{
-					$ele.anymessage({'message':'In myRIA.u.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
+					$ele.anymessage({'message':'In app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
 					}
 				} //handleTemplateEvents 
 
