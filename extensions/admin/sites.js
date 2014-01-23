@@ -167,12 +167,11 @@ used, but not pre-loaded.
 				appHostButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.value == 'SITEPTR')	{
+					if(data.value == 'APPTEMIZER')	{
 						$menu.append("<li><a href='#' data-app-click='admin_template|delTemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
 						$menu.append("<li><a href='#' data-app-click='admin_template|delTemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
 						$menu.append("<li data-app-click='admin_template|delContainerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
 						}
-					
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
 						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
 						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
@@ -304,7 +303,7 @@ used, but not pre-loaded.
 						cmdObj['@updates'].push("HOST-SSL-UPDATE?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME));
 						}
 
-					if(sfo.HOSTTYPE == 'VSTORE')	{
+					if(sfo.HOSTTYPE == 'VSTORE' || sfo.HOSTTYPE == 'VSTORE-APP')	{
 						$("[data-app-role='domainRewriteRulesTbody'] tr",$form).each(function(){
 							var $tr = $(this);
 							if($tr.hasClass('rowTaggedForRemove'))	{
@@ -316,11 +315,8 @@ used, but not pre-loaded.
 							else	{} //unchanged row. this is a non-destructive process, so existing rules don't need to be re-added.
 							})
 						}
-					else if(sfo.HOSTTYPE == 'SITE')	{
-						hostSet += "&force_https="+encodeURIComponent(sfo.force_https);
-						}
-					else if(sfo.HOSTTYPE == 'SITEPTR')	{
-						hostSet += "&PROJECT="+encodeURIComponent(sfo.PROJECT)+"&force_https="+encodeURIComponent(sfo.force_https);
+					else if(sfo.HOSTTYPE == 'APPTIMIZER')	{
+						hostSet += "&force_https="+encodeURIComponent(sfo.force_https)+"&PROJECT="+encodeURIComponent(sfo.PROJECT);
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
 						hostSet += "&URI="+encodeURIComponent(sfo.URI)+"&REDIR="+encodeURIComponent(sfo.REDIR);
@@ -658,7 +654,7 @@ used, but not pre-loaded.
 									else	{
 										$D.dialog('close');
 										$('#globalMessaging').anymessage(app.u.successMsgObject('Your project has been removed'));
-										navigateTo("#:sites");
+										$ele.closest('tr').hide().intervaledEmpty();
 										}
 									}
 								}
