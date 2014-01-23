@@ -260,14 +260,13 @@
 	<label>
 		<span>Host Type</span>
 		<select name='HOSTTYPE' data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
-			<option value='SITE' data-show-panel='domainForceHTTPS' data-bind="var:domain(DOMAINNAME); format:text; posttext: project;">Domain project</option>
-			<option value='SITEPTR' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Other project reference</option>
-<!--			<option value='ADMIN'>Admin</option> -->
+			<option value='APPTIMIZER' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>App</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
-			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE'>V-Store</option>
+			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store</option>
+			<option value='VSTORE-APP' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store/App</option>
 			<option value='CUSTOM'>Custom</option>
 		</select>
-		<span class='toolTip' title="brian will fill this in later. !!!">?</span>
+
 	</label>
 
 	</fieldset>
@@ -281,6 +280,9 @@
 			<option value=''></option>
 			</select>
 		</label>
+		
+		
+		
 	</div>
 
 	<div data-panel-id='domainForceHTTPS' class='displayNone domainNewHostSelectType'>

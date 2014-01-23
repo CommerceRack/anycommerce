@@ -53,6 +53,7 @@ var acreate = function() {
 				onSuccess : function()	{
 					app.u.dump('BEGIN lookup.initExtension.onSuccess ');
 					//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
+// ## TODO -> need a better way to handle Zoovy vs non-zoovy content.
 					if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
 						app.u.dump(" -> Treat as anycommerce");
 						$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
