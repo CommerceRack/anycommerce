@@ -79,7 +79,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 			}, //cartCouponAdd
 
 		cartGiftcardAdd : {
-			init : function(giftcard,_tag,Q)	{
+			init : function(giftcard,cartid,_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"cartGiftcardAdd","_cartid":cartid,"giftcard":giftcard,"_tag" : _tag},Q || 'immutable');
 				}			
 			}, //cartGiftcardAdd
@@ -464,7 +464,8 @@ left them be to provide guidance later.
 						r = true;
 						}
 					else	{
-						$form.anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
+						//it is valid for no payby to be set. This could happen for a zero balance order.
+//						$form.anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
 						}
 					}
 				else	{
