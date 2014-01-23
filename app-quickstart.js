@@ -115,6 +115,8 @@ var myRIA = function() {
 					app.u.dump(' -> cart id was specified on the URI');
 					}
 				else	{}
+				
+				if(app.vars.apptimizer === true) {$.support.onpopstate = false} //disable uri rewrite and rely on hashChange
 
 				if(cartID)	{
 					app.u.dump(" -> cartID is set, init messenger");
@@ -157,13 +159,13 @@ if(app.u.getParameterByName('debug'))	{
 	}
 
 //attach an event to the window that will execute code on 'back' some history has been added to the history.
-if(typeof window.onpopstate == 'object')	{
+if($.support.onpopstate)	{
 	window.onpopstate = function(event) { 
 		app.ext.myRIA.u.handlePopState(event.state);
 		}
 	}
 //if popstate isn't supporeted, hashchange will use the anchor.
-else if ("onhashchange" in window)	{ // does the browser support the hashchange event?
+else if ($.support.onhashchange)	{ // does the browser support the hashchange event?
 	_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
 	window.onhashchange = function () {
 		app.ext.myRIA.u.handleHashState();
@@ -173,7 +175,6 @@ else	{
 	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistent':true});
 	// wow. upgrade your browser. should only get here if older than:
 	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
-	//NOTE: does not trigger in IE9 running IE7 or IE8 standards mode
 	}
 
 
