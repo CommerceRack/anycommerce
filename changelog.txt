@@ -62,6 +62,7 @@ QUICKSTART (and store related updates)
 	fixed bug in add to buyer list.
 	fixed bug in remove from buyer list.
 	init,complete and depart events now handled through data-app-EVENTTYPE and/or on('complete').
+	set app.vars.apptimizer to true to disable popstate (required for pure-app environment)
 
 
 

@@ -707,7 +707,7 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(TXNCNT); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(TYPE); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: giftcard(SERIES); format:text;" class='hideInDetailMode'></td>
-	<td><button data-app-event='admin_customer|adminGiftcardUpdateShow' data-edit-mode='panel'>Details</button></td>
+	<td><button data-app-click='admin_customer|adminGiftcardUpdateShow' data-edit-mode='panel' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Details</button></td>
 </tr>
 
 <tr id='giftcardLogRowTemplate'>
@@ -735,7 +735,7 @@ The checkbox below does not work.
 
 <fieldset class='labelsAsBreaks alignedLabels'>
 	
-	<div class='buttonset alignRight ui-corner-all ui-widget-content smallPadding marginBottom'><button data-app-role='saveButton' disabled='disabled' data-app-event='admin|processForm'>Save <span class='numChanges'></span> </button></div>
+	<div class='buttonset alignRight ui-corner-all ui-widget-content smallPadding marginBottom'><button data-app-role='saveButton' disabled='disabled' data-app-click='admin|submitForm'>Save <span class='numChanges'></span> </button></div>
 
 	<div class='label' data-bind="var:giftcard(ID); format:text; pretext:ID: ;"></div>
 	<div class='label' data-bind="var:giftcard(SRC_SERIES); format:text; pretext: Series: ;"></div>
