@@ -278,12 +278,13 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
+					'handleAppEvents' : false,
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
-						"<button data-app-click='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button>",
-						"<button data-app-click='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
+						"<button data-app-click='admin|openDialog' class='applyButton' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button>",
+						"<button data-app-click='admin_customer|giftcardCreateShow'  class='applyButton' data-text='true' data-icon-primary='io-icon-circle-plus'>Add New Giftcard</button>"],
 					'thead' : ['Code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
-					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminGiftcardList',
@@ -299,7 +300,7 @@ var admin_customer = function() {
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
-					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin|dataCSVExportExec' data-pointer='adminProductReviewList' data-listpointer='@REVIEWS' data-filename='product_reviews.csv' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>Export<\/button>",

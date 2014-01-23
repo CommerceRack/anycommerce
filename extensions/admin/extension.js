@@ -4802,25 +4802,24 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 
-			controlFormSubmit : function($btn)	{
-				$btn.button();
-				$btn.off('click.controlFormSubmit').on('click.controlFormSubmit',function(){
-					var
-						sfo = $btn.closest('form').serializeJSON({"cb":true}),
-						$DMI = $btn.closest("[data-app-role='dualModeList']");
-					
-					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo);
-					sfo._tag.jqObj = $DMI;
-					if(sfo._cmd)	{
-						$DMI.showLoading();
-						app.model.addDispatchToQ(sfo,'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						$btn.closest('.appMessaging').first().anymessage({"message":"In admin.e.controlFormSubmit, serialized form object had no _cmd specified.",'gMessage':true});
-						}
-					});
+			controlFormSubmit : function($ele,P)	{
+				P.preventDefault();
+				var
+					sfo = $ele.closest('form').serializeJSON({"cb":true}),
+					$DMI = $ele.closest("[data-app-role='dualModeList']");
+				
+				sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo);
+				sfo._tag.jqObj = $DMI;
+				if(sfo._cmd)	{
+					$DMI.showLoading();
+					app.model.addDispatchToQ(sfo,'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.closest('.appMessaging').first().anymessage({"message":"In admin.e.controlFormSubmit, serialized form object had no _cmd specified.",'gMessage':true});
+					}
 				},
+
 //uses delegated events.
 //add to a select list and the cmd bars on the DMI will be updated with the key and the selected value. used in CRM and ticketing 
 			updateDMICmdVar : function($ele,p)	{
