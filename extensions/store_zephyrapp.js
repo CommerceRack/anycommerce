@@ -133,6 +133,8 @@ var store_zephyrapp = function() {
 					$('#contentArea').removeClass('sideBarRightHide');
 					$('#contentArea').addClass('sideBarRightShow');
 					
+					$('.responsiveDropdown').hide();
+					
 					if(P.show == "login" || P.show =="createaccount" || P.show == "recoverpassword"){
 						$('.sideline', $context).hide();
 						$('.mainColumn',$context).width("100%");
