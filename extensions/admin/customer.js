@@ -211,7 +211,6 @@ var admin_customer = function() {
 				},
 
 			showCampaignManager : function($target)	{
-				$target.empty();
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
@@ -229,7 +228,6 @@ var admin_customer = function() {
 				app.u.handleButtons($target.anydelegate());
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				app.model.dispatchThis();
-
 				}, //showCampaignManager
 			
 			showCampaignEditor : function($target,CAMPAIGNID)	{
@@ -300,6 +298,7 @@ var admin_customer = function() {
 				$target.empty();
 				app.ext.admin.i.DMICreate($target,{
 					'header' : 'Reviews Manager',
+					'handleAppEvents' : false,
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
 					'buttons' : [
@@ -329,7 +328,31 @@ var admin_customer = function() {
 				$modal.dialog('open');
 				if(obj && obj.CID)	{
 					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
-					app.u.handleAppEvents($modal,{'$context':$walletPanel});
+					var $form = $("form",$modal);
+					$form.append($("<button>").text('Save Wallet').button().on('click',function(){
+						if(app.u.validateForm($form))	{
+							$form.showLoading({'message':'Adding wallet to customer record '+CID+'.'});
+							app.ext.admin.calls.adminCustomerUpdate.init(CID,["WALLETCREATE?"+$.param($form.serialize())],{'callback':function(rd){
+								$form.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
+									$("tbody",$walletPanel).empty(); //clear wallets
+									$walletPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
+									app.u.handleButtons($walletPanel);
+									}
+								}},'immutable');
+						//do this after the update so the detail includes the changes from the update.
+							app.model.destroy('adminCustomerDetail|'+CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$form.anymessage({'message':'Please enter all the fields below.'});
+							}
+						}));
 					}
 				else	{
 					$modal.anymessage({'message':'In admin_customer.a.showAddWalletModal, no CID defined.',gMessage:true});
@@ -339,8 +362,8 @@ var admin_customer = function() {
 			showCustomerCreateModal : function(){
 				var $modal = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
-				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false});
-				app.u.handleAppEvents($modal);
+				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false}).anydelegate();
+				app.u.handleButtons($target);
 				$modal.dialog('open');
 				},
 
@@ -383,7 +406,7 @@ $D is returned.
 						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
 						}
 					
-					var $form = $('form:first',$D);
+					var $form = $('form:first',$D).data(vars);
 					
 					$("<button \/>").html("Save <span class='numChanges'></span> Changes").attr('data-app-role','saveButton').button().on('click',function(event){
 						event.preventDefault();
@@ -415,13 +438,10 @@ $D is returned.
 							}
 						else	{} //validateForm will handle error display
 						}).appendTo($form);
-					
 
-					$form.data(vars);
 					app.u.handleCommonPlugins($D);
 					app.u.handleButtons($D);
-					$D.anydelegate({'trackEdits' : (vars.mode == 'update' ? true : false)});
-					$D.dialog('open');
+					$D.anydelegate({'trackEdits' : (vars.mode == 'update' ? true : false)}).dialog('open');
 					return $D;
 					}
 				else	{
@@ -589,7 +609,7 @@ $D is returned.
 							app.u.dump(" -> $customerEditor.length: "+v.$customerEditor.length);
 							$("tbody",$panel).empty(); //clear address rows so new can be added.
 							$panel.anycontent({'data' : app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
-							app.u.handleAppEvents($panel);
+							app.u.handleButtons($panel);
 							}
 
 						$('.panel_ship',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
@@ -1087,7 +1107,7 @@ $D is returned.
 
 
 //uses the new delegated events model. when reviews is upgraded, remove the _DE and update all the templates.
-			adminProductReviewUpdateShow_DE : function($ele,p)	{
+			adminProductReviewUpdateShow : function($ele,p)	{
 				var
 					RID = $ele.closest('tr').data('id'),
 					PID = $ele.closest("[data-pid]").data('pid'),
@@ -1128,8 +1148,7 @@ $D is returned.
 
 /*/////////////////////////////				PRODUCT REVIEWS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-
-			reviewRemoveConfirm_DE : function($ele,p)	{
+			reviewRemoveConfirm : function($ele,p)	{
 				var 
 					$tr = $ele.closest('tr'),
 					data = $tr.data(),
@@ -1151,7 +1170,6 @@ $D is returned.
 				app.model.dispatchThis('immutable');
 					}});
 				}, //reviewRemoveConfirm
-
 			
 			reviewCreateShow : function($ele,p)	{
 					p.preventDefault();
@@ -1170,7 +1188,6 @@ $D is returned.
 						});
 
 				}, //reviewCreateShow
-
 
 			reviewApproveExec : function($ele,p)	{
 				var
@@ -1610,53 +1627,7 @@ app.model.dispatchThis('immutable');
 					}
 				}, //execNoteCreate
 
-// #### TODO -> update this when it can be tested. may want to tie the 'create' directly into the open.
-			execWalletCreate : function($btn,o)	{
-				$btn.button();
-				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
-					event.preventDefault();
-					var $panel = false; //if passed in o, will be the parent panel.
-					if(o && o['$context'])	{
-						$panel = o['$context']; //shortcut and and to identify what the context is.
-						}
-					var $form = $btn.closest('form'),
-					CID = $btn.closest("[data-cid]").data('cid');
-					
-					if(!CID)	{
-						$form.anymessage({'message':'in admin_customer.e.walletCreate, could not determine CID.','gMessage':true});
-						}
-					else if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding wallet to customer record '+CID+'.'});
 
-
-						app.ext.admin.calls.adminCustomerUpdate.init(CID,["WALLETCREATE?"+$form.serialize()],{'callback':function(rd){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd});
-								}
-							else	{
-								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
-								if($panel)	{
-									app.u.dump(" -> $panel IS set");
-									$("tbody",$panel).empty(); //clear wallets
-									$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
-									app.u.handleAppEvents($panel);
-									}
-								else	{
-									app.u.dump(" -> $panel is NOT set");
-									}
-								}
-							}},'immutable');
-//do this after the update so the detail includes the changes from the update.
-						app.model.destroy('adminCustomerDetail|'+CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						$form.anymessage({'message':'Please enter all the fields below.'});
-						}
-					});
-				}, //execWalletCreate
 
 //used in the wholesale ui
 			adminCustomerSearchShowUI : function($btn)	{
@@ -1731,17 +1702,32 @@ app.model.dispatchThis('immutable');
 
 			showOrgChooser : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin.u.dialogCreate({
-					title : "",
+				var $D = app.ext.admin.i.dialogCreate({
+					title : "Organization Chooser",
 					anycontent : true, //the dialogCreate params are passed into anycontent
 					'templateID':'organizationManagerPageTemplate',
 					'data':{},
 					handleAppEvents : false //defaults to true
 					});
-	
-				app.u.dump("Just a heads up.  The data-bind on the tbody in the org display (this instance only) was just overwritten in admin_customer.e.showOrgChooser");
-				$('.gridTable tbody',$D).attr('data-bind',"var: users(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerChooserRowTemplate;");
-				app.u.handleAppEvents($D);
+				var $DMI = app.ext.admin.i.DMICreate($D,{
+					'header' : 'Organization Chooser',
+					'className' : 'organizationChooser', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['','ID','Company','Domain','Email','Account Manager','Billing Phone','Billing Contact',''], //leave blank at end if last row is buttons.
+					'tbodyDatabind' : "var: tickets(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerChooserRowTemplate;",
+					'controls' : app.templates.orgManagerControls,
+					'cmdVars' : {
+						'_cmd' : 'adminCustomerOrganizationSearch',
+						'PHONE' : '', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminCustomerOrganizationSearch'
+							}
+						}
+					});
+				app.u.handleButtons($D.anydelegate());
+				$D.dialog('open');
+				// do not fetch templates at this point. That's a heavy call and they may not be used.
+				app.model.dispatchThis();
 				}, //showOrgChooser
 			
 

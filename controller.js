@@ -958,11 +958,11 @@ app.u.throwMessage(responseData); is the default error handler.
 //you can't restore AND empty. it's empty, there's nothing to restore.
 					else {
 						if(_rtag.restoreInputsFromTrackingState)	{
-							app.u.dump(" -> restoreInputsFromTrackingState.");
+//							app.u.dump(" -> restoreInputsFromTrackingState.");
 							app.ext.admin.u.restoreInputsFromTrackingState(_rtag.jqObj);
 							}
 						if(_rtag.removeFromDOMItemsTaggedForDelete)	{
-							app.u.dump(" -> removeFromDOMItemsTaggedForDelete.");
+//							app.u.dump(" -> removeFromDOMItemsTaggedForDelete.");
 							app.ext.admin.u.removeFromDOMItemsTaggedForDelete(_rtag.jqObj);
 							}
 						}
@@ -1249,13 +1249,15 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					}
 				},
 
-
-
 			handleCommonPlugins : function($context)	{
 				$('.applyAnycb',$context).anycb();
 				$('.applyAnytable',$context).anytable();
 				$('.toolTip',$context).tooltip();
 				$('.applyAnytabs',$context).anytabs();
+				//will set the title attribute to the placeholder value (if title not already set). useful for places w/ no label and content populated (covering the placeholder value).
+				$(":input[placeholder]",$context).not(['title']).each(function(){
+					$(this).attr('title',$(this).attr('placeholder'));
+					});
 				},
 
 // a utility for converting to jquery button()s.  use applyButton and optionally set some data attributes for text and icons.
@@ -1791,7 +1793,8 @@ VALIDATION
 				$(':input',$form).each(function(){
 					var
 						$input = $(this),
-						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
+						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError'),
+						required = ($input.attr('required') == 'required') ? true : false;
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 					
@@ -1809,7 +1812,7 @@ VALIDATION
 //keep a list of all required radios. only one entry per name.
 //app.u.dump(" -> $input.attr('name'): "+$input.attr('name')+' and required: '+$input.attr('required'));
 
-						if($input.attr('required') == 'required')	{
+						if(required)	{
 							radios[$input.attr('name')] = 1
 							}
 						}
@@ -1852,7 +1855,7 @@ VALIDATION
 
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						//only 'error' if field is required. otherwise, show warning
-						if($input.attr('required') == 'required')	{
+						if(required)	{
 							r = false;
 							$input.addClass('ui-state-error');
 							}
@@ -1892,7 +1895,7 @@ VALIDATION
 						removeClass($input);
 						}
 //Checking required is last so that the more specific error messages would be displayed earlier
-					else if($input.attr('required') == 'required' && !$input.val())	{
+					else if(required && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('required'));
@@ -2407,6 +2410,8 @@ later, it will handle other third party plugins as well.
 				jQuery.support.speechRecognition = ('webkitSpeechRecognition' in window) || ('speechRecognition' in window);
 				jQuery.support.onpopstate = ('onpopstate' in window);
 				jQuery.support.onhashchange = ('onhashchange' in window);
+				jQuery.support.WebSocket = ('WebSocket' in window);
+
 
 
 //If certain privacy settings are set in a browser, even detecting if localStorage is available causes a NS_ERROR_NOT_AVAIL.

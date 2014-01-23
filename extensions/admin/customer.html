@@ -370,7 +370,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<label><span>MM</span><input type='number' class='smallInput' required='required' size='2' maxlength="2" name='MM' value='' /></label>
 </fieldset>
 
-<button data-app-event='admin_customer|execWalletCreate'>Save Wallet</button>
+<!-- save button added w/ js -->
 
 </form>
 </div>
@@ -952,8 +952,8 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
 	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
 	<td class='alignRight'>
-	<button data-app-click='admin_customer|reviewRemoveConfirm_DE' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Review</button>
-	<button data-app-click='admin_customer|adminProductReviewUpdateShow_DE' class='applyButton' data-edit-mode='panel' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
+	<button data-app-click='admin_customer|reviewRemoveConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Review</button>
+	<button data-app-click='admin_customer|adminProductReviewUpdateShow' class='applyButton' data-edit-mode='panel' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
 	</td>
 </tr>
 

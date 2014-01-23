@@ -21,7 +21,7 @@
 
 var admin_wholesale = function() {
 	var theseTemplates = new Array(
-		'organizationManagerPageTemplate',
+		'orgManagerControls', //needs to be defined for orgManager DMI
 		'organizationManagerOrgCreateUpdateTemplate',
 		'organizationManagerOrgRowTemplate'
 /*		
@@ -58,13 +58,14 @@ var admin_wholesale = function() {
 				}
 			}, //INIT
 
-
+//used for WHIM
 		wholesaleSearchResults: {
 			onSuccess : function(_rtag)	{
 				if(_rtag.jqObj)	{
 					if(_rtag.datapointer && app.data[_rtag.datapointer])	{
 						if(app.data[_rtag.datapointer]['@ROWS'].length)	{
 							_rtag.jqObj.anycontent(_rtag);
+							app.u.handleButtons(_rtag.jqObj);
 							}
 						else	{
 							$('#globalMessaging').anymessage({"message":"There were zero items returns in your search of warehouse "+_rtag.jqObj.closest("[data-app-role='slimLeftContainer']").data("geo")+"."});
@@ -119,17 +120,17 @@ var admin_wholesale = function() {
 						'_tag' : {
 							'datapointer':'adminWarehouseList',
 							'callback': function(rd)	{
-if(app.model.responseHasErrors(rd)){
-	$target.anymessage({'message':rd});
-	}
-else	{
-	$target.anycontent(rd);
-	var whim = app.model.dpsGet('admin_wholesale','whim') || {};
-//	app.u.dump(" -> dps.whim: "); app.u.dump(whim);
-	if(whim.geo)	{
-		$("[data-geo='666']",$target).trigger('click',{'skipDPSUpdate':true})
-		}
-	}
+								if(app.model.responseHasErrors(rd)){
+									$target.anymessage({'message':rd});
+									}
+								else	{
+									$target.anycontent(rd);
+									var whim = app.model.dpsGet('admin_wholesale','whim') || {};
+								//	app.u.dump(" -> dps.whim: "); app.u.dump(whim);
+									if(whim.geo)	{
+										$("[data-geo='666']",$target).trigger('click',{'skipDPSUpdate':true})
+										}
+									}
 
 								},
 							'translateOnly' : true,
@@ -169,53 +170,47 @@ else	{
 
 			showOrganizationManager : function($target,vars)	{
 //				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
-				vars = vars || {};
 				app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for add and edit.
-				if($target && $target.length)	{
-					$target.empty();
-					$target.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
-					app.u.handleAppEvents($target);
-					if(vars.searchby && vars.keywords)	{
-						$("[name='searchby']",$target).val(vars.searchby);
-						$("[name='keywords']",$target).val(vars.keywords);
-						$("[data-app-event='admin_wholesale|execOrganizationSearch']",$target).trigger('click');
+				var $DMI = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Organization Manager',
+					'handleAppEvents' : false,
+					'className' : 'organizationManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['','ID','Company','Domain','Email','Account Manager','Billing Phone','Billing Contact',''], //leave blank at end if last row is buttons.
+					'tbodyDatabind' : "var: tickets(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerOrgRowTemplate;",
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-app-click='admin_wholesale|showOrganizationCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Organization</button>"],	
+					'controls' : app.templates.orgManagerControls,
+					'cmdVars' : {
+						'_cmd' : 'adminCustomerOrganizationSearch',
+						'PHONE' : '', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminCustomerOrganizationSearch'
+							}
 						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_wholesale.a.showOrganizationManager, $target either not specified or has not length.','gMessage':true});
-					}
-				
+					});
+				app.u.handleButtons($target.anydelegate());
+				// do not fetch templates at this point. That's a heavy call and they may not be used.
+				app.model.dispatchThis();
 				}, //showOrganizationManager
 
 			showOrganizationEditor : function($target,vars)	{
 				app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
 				if($target && vars && vars.orgID)	{
-					$target.empty();
-					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+
+					$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate'}).anydelegate({'trackEdits':true}); //.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+					$('.buttonset',$target).append("<button data-app-click='admin_wholesale|adminCustomerOrganizationUpdateExec' disabled='disabled' class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>");
+					$('form',$target).append("<input type='hidden' name='ORGID' value='"+vars.orgID+"' />");
+					app.u.handleButtons($target);
+					app.u.handleCommonPlugins($target);
 					app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
-
-					app.model.addDispatchToQ({
-						'_cmd':'adminCustomerOrganizationDetail',
-						'ORGID' : vars.orgID,
-						'_tag':	{
-							'datapointer' : 'adminCustomerOrganizationDetail|'+vars.orgID,
-							'callback':function(rd){
-								$target.hideLoading();
-								if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
-								else	{
-									$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate',datapointer:rd.datapointer});
-									$('form',$target).data('orgid',vars.orgID);
-									$(":input",$target).each(function(){
-										var $input = $(this);
-										$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
-										});
-									$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate' data-app-role='saveButton'>Save Changes</button>");
-									app.u.handleAppEvents($target);
-									}
-								}
-							}
-						},'mutable');
-
+					app.model.addDispatchToQ({'_cmd':'adminCustomerOrganizationDetail','ORGID' : vars.orgID,'_tag':	{
+						'datapointer' : 'adminCustomerOrganizationDetail|'+vars.orgID,
+						'callback': 'anycontent',
+						'translateOnly' : true,
+						'jqObj' : $target
+						}},'mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else	{
@@ -229,11 +224,12 @@ else	{
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Supplier Manager',
 					'className' : 'supplierManager',
+					'handleAppEvents' : false,
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
-						"<button class='marginLeft' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all'  class='applyButton' data-text='true'>Unordered Items</button>",
-						"<button class='marginLeft' data-app-click='admin_wholesale|adminSupplierCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Supplier</button>"
+						"<button data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all' class='applyButton' data-text='true'>Unordered Items</button>",
+						"<button data-app-click='admin_wholesale|adminSupplierCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Supplier</button>"
 						],
 					'thead' : ['','Name','ID','Type','Mode',''],
 					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_wholesale|supplierBatchExec' data-verb='INVENTORY'>Get Inventory</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='PROCESS' title='Will cause any pending orders to be set to a supplier'>Process Orders</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='TRACKING'>Update Tracking</button><\/span>",
@@ -268,7 +264,7 @@ else	{
 									}
 								else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
-									app.u.handleAppEvents($editorContainer);
+									app.u.handleButtons($editorContainer);
 									$editorContainer.anydelegate({'trackEdits':true});
 
 //for FBA, most panel inputs get 'locked'
@@ -518,7 +514,8 @@ else	{
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
 				$(".hideForCreate",$D).hide();
-				$D.dialog('open');
+				app.u.handleButtons($D);
+				$D.anydelegate().dialog('open');
 //These fields are used for processForm on save.
 				$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 				}, //warehouseCreateShow
@@ -665,27 +662,24 @@ else	{
 					});
 				}, //warehouseRemoveConfirm
 
-			warehouseZoneCreateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-				$btn.off('click.wholesaleZoneCreateShow').on('click.wholesaleZoneCreateShow',function(event){
-					event.preventDefault();
-					var GEO = $btn.closest('form').find("input[name='GEO']").val();
-					if(GEO)	{
-						var $D = app.ext.admin.i.dialogCreate({
-							'title' : 'Add a New Zone',
-							'templateID' : 'warehouseAddLocationTemplate',
-							'data' : {'GEO':GEO},
-							appendTo : $btn.closest('.ui-anypanel-content'), //This adds the dialog as a child to the anypanel content. That means the dialog can look up the DOM tree to 'find' things.
-							'showLoading' : false
-							});
-						$D.dialog('open');
-						
-						$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-						}
-					else	{
-						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
-						}
-					});
+			warehouseZoneCreateShow : function($ele,P)	{
+				P.preventDefault();
+				var GEO = $ele.closest('form').find("input[name='GEO']").val();
+				if(GEO)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Add a New Zone',
+						'templateID' : 'warehouseAddLocationTemplate',
+						'data' : {'GEO':GEO},
+						appendTo : $ele.closest('.ui-anypanel-content'), //This adds the dialog as a child to the anypanel content. That means the dialog can look up the DOM tree to 'find' things.
+						'showLoading' : false
+						});
+					$D.dialog('open');
+					
+					$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+					}
+				else	{
+					$ele.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneCreateShow, unable to ascertain the warehouse code.",'gMessage':true});
+					}
 				}, //warehouseZoneCreateShow
 
 
@@ -810,111 +804,88 @@ else	{
 //////////////////// SUPPLIERS
 
 
-			adminSupplierInventoryAddShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-				$btn.off('click.adminSupplierInventoryAddShow').on('click.adminSupplierInventoryAddShow',function(event){
-					event.preventDefault();
-					var vendor = $btn.closest('tr').data('code');
-					if(vendor)	{
-						var $D = app.ext.admin.i.dialogCreate({
-							'title':'Add Inventory for supplier '+vendor,
-							'templateID':'supplierInventoryAddTemplate',
-							'showLoading':false //will get passed into anycontent and disable showLoading.
-							});
-						$D.find('form').append("<input type='hidden' name='vendor' value='"+vendor+"' />")
-						$D.dialog('open');
-						$D.anydelegate();
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
-						}
-					
-					});
+			adminSupplierInventoryAddShow : function($ele,P)	{
+				P.preventDefault();
+				var vendor = $ele.closest('tr').data('code');
+				if(vendor)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add Inventory for supplier '+vendor,
+						'templateID':'supplierInventoryAddTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.find('form').append("<input type='hidden' name='vendor' value='"+vendor+"' />")
+					$D.dialog('open');
+					$D.anydelegate();
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
+					}
 				},
-
 
 // There is a function in WHIM that is VERY similar to this.  Once supplier is using delegated events instead of appevents, combine the two ###
-			adminSupplierInventoryAddExec : function($btn)	{
-				
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-				$btn.off('click.adminSupplierInventoryAddShow').on('click.adminSupplierInventoryAddShow',function(event){
-					event.preventDefault();
+			adminSupplierInventoryAddExec : function($ele,P)	{
+				P.preventDefault();
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					var
+						sfo = $form.serializeJSON(),
+						$li = $("<li \/>");
 
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
+					if(sfo.vendor)	{
+						sfo.UUID = app.u.guidGenerator();
+						$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY).prependTo($ele.closest("[data-app-role='supplierInventoryUpdateContainer']").find("[data-app-role='supplierInventoryUpdateLog']"));
 						
-						var
-							sfo = $form.serializeJSON(),
-							$li = $("<li \/>");
-
-						if(sfo.vendor)	{
-							sfo.UUID = app.u.guidGenerator();
-							$li.html("<span class='wait floatLeft marginRight'></span> "+ sfo.SKU + " + "+sfo.QTY).prependTo($btn.closest("[data-app-role='supplierInventoryUpdateContainer']").find("[data-app-role='supplierInventoryUpdateLog']"));
-							
-							app.model.addDispatchToQ({
-								'_cmd':'adminSupplierAction',
-								'VENDORID' : sfo.vendor,
-								'@updates' : ["SKU:LINK?"+$.param(sfo)],
-								'_tag':	{
-									'callback':function(rd)	{
-										$('.wait',$li).addClass('ui-icon').removeClass('wait')
-										if(app.model.responseHasErrors(rd)){
-											$('.ui-icon',$li).addClass('ui-state-error ui-icon-alert');
-											$li.anymessage({'message':rd,'persistant':true});
-											}
-										else	{
-											$(".resetMeOnComplete",$form).each(function(){$(this).val("")}); //clear inputs for next sku. only target class so hiddens et all don't get nuked.
-											$('.ui-icon',$li).addClass('ui-icon-check');
-											//success content goes here.
-											}
+						app.model.addDispatchToQ({
+							'_cmd':'adminSupplierAction',
+							'VENDORID' : sfo.vendor,
+							'@updates' : ["SKU:LINK?"+$.param(sfo)],
+							'_tag':	{
+								'callback':function(rd)	{
+									$('.wait',$li).addClass('ui-icon').removeClass('wait')
+									if(app.model.responseHasErrors(rd)){
+										$('.ui-icon',$li).addClass('ui-state-error ui-icon-alert');
+										$li.anymessage({'message':rd,'persistant':true});
+										}
+									else	{
+										$(".resetMeOnComplete",$form).each(function(){$(this).val("")}); //clear inputs for next sku. only target class so hiddens et all don't get nuked.
+										$('.ui-icon',$li).addClass('ui-icon-check');
+										//success content goes here.
 										}
 									}
-								},'immutable');
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							$form.anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddExec, unable to ascertain vendor (should be a hidden input in form)","gMessage":"true"})
-							}
-	
+								}
+							},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
-						//form validation 
-						}				
-					
-					});
-				
+						$form.anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddExec, unable to ascertain vendor (should be a hidden input in form)","gMessage":"true"})
+						}
+
+					}
+				else	{
+					//form validation 
+					}				
 				},
 
-
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
-			adminSupplierRemoveExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.adminSupplierRemoveExec').on('click.adminSupplierRemoveExec',function(event){
+			adminSupplierRemoveExec : function($ele,P)	{
+				P.preventDefault();
+				
+				var VENDORID = $ele.closest('tr').data('code');
+				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+				
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					'message':'Are you sure you want to delete vendor '+VENDORID+'? There is no undo for this action.',
+					'removeButtonText' : 'Delete Vendor',
+					'removeFunction':function(vars,$modal){
+						$DMI.showLoading({"message":"removing vendor "+VENDORID});
+						app.model.addDispatchToQ({'_cmd':'adminSupplierRemove','VENDORID':VENDORID,'_tag':{'callback':'showMessaging','message':'The vendor '+VENDORID+' has been deleted','jqObj':$DMI}},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':{'datapointer':'adminSupplierList','callback':'DMIUpdateResults','extension':'admin','jqObj':$DMI}},'immutable');
+						app.model.dispatchThis('immutable');
+						$modal.dialog('close');
+						}
+					});
 
-					event.preventDefault();
-					
-					var VENDORID = $btn.closest('tr').data('code');
-					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
-					
-					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'message':'Are you sure you want to delete vendor '+VENDORID+'? There is no undo for this action.',
-						'removeButtonText' : 'Delete Vendor',
-						'removeFunction':function(vars,$modal){
-							$DMI.showLoading({"message":"removing vendor "+VENDORID});
-							app.model.addDispatchToQ({'_cmd':'adminSupplierRemove','VENDORID':VENDORID,'_tag':{'callback':'showMessaging','message':'The vendor '+VENDORID+' has been deleted','jqObj':$DMI}},'immutable');
-							app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':{'datapointer':'adminSupplierList','callback':'DMIUpdateResults','extension':'admin','jqObj':$DMI}},'immutable');
-							app.model.dispatchThis('immutable');
-							$modal.dialog('close');
-							}
-						});
-
-					}); //$btn.on
 				}, //adminSupplierRemoveExec
-
-
-
-
-
 
 //applied to 'create user' button. just opens the modal.
 			adminSupplierCreateShow : function($ele,P)	{
@@ -927,58 +898,43 @@ else	{
 				$D.dialog('open');
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
-				$('form',$D).first().append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
-				app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
-				app.u.handleAppEvents($D,{"$context":$ele.closest("[data-app-role='supplierManager']").parent()})
+				$('form:first',$D).anydelegate({'trackEdits':true}).append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				app.u.handleButtons($D);
+				app.u.handleCommonPlugins($D);
 				}, //showSupplierCreate
 
-
 //applied to 'create user' button. just opens the modal.
-			adminSupplierCreateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
+			adminSupplierCreateExec : function($ele,P)	{
+				P.preventDefault();
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
 
-var sfo = $form.serializeJSON();
-sfo._cmd = 'adminSupplierCreate'
-
-if(sfo['INIT-DEFAULTS'])	{
-	sfo['@updates'] = ["INIT-DEFAULTS"];
-	delete sfo['INIT-DEFAULTS']
-	}
-
-if(sfo.FORMAT == 'FBA')	{sfo.VENDORID = 'FBA'}
-
-sfo._tag =	{
-	'callback':'showMessaging',
-	'jqObj' : $form,
-	'jqObjEmpty' : true,
-	'updateDMIList' : sfo.DMIID,
-	'message' : 'Thank you, the supplier has been added.'
-	}
-delete sfo.DMIID; //is no longer necessary.
-if(sfo.FORMAT == 'FBA')	{
-	sfo.NAME = "Fulfillment by Amazon"
-	}
-app.model.addDispatchToQ(sfo,'immutable');
-
-//after the initial dispatch so that the VENDOR is created by the time the macro is run.
-/*
-if(sfo.FORMAT == 'FBA')	{
-	app.model.addDispatchToQ({
-		'_cmd' : 'adminSupplierMacro',
-		'VENDOR' : 'FBA',
-		'@updates' : []
-		},'immutable');
-	}
-*/
-app.model.dispatchThis('immutable');	
-
+					var sfo = $form.serializeJSON();
+					sfo._cmd = 'adminSupplierCreate'
+					
+					if(sfo['INIT-DEFAULTS'])	{
+						sfo['@updates'] = ["INIT-DEFAULTS"];
+						delete sfo['INIT-DEFAULTS']
 						}
-					else	{}//validation handles display logic too
-					});
+					
+					if(sfo.FORMAT == 'FBA')	{sfo.VENDORID = 'FBA'}
+					
+					sfo._tag =	{
+						'callback':'showMessaging',
+						'jqObj' : $form,
+						'jqObjEmpty' : true,
+						'updateDMIList' : sfo.DMIID,
+						'message' : 'Thank you, the supplier has been added.'
+						}
+					delete sfo.DMIID; //is no longer necessary.
+					if(sfo.FORMAT == 'FBA')	{
+						sfo.NAME = "Fulfillment by Amazon"
+						}
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.dispatchThis('immutable');	
+
+					}
+				else	{}//validation handles display logic too
 				}, //showSupplierCreate
 
 
@@ -1071,10 +1027,10 @@ app.model.dispatchThis('immutable');
 				},
 
 
-			adminSupplierActionDeAssociate : function($btn)	{
+			adminSupplierActionDeAssociate : function($ele,P)	{
 				var
-					$form = $btn.closest('form'),
-					VENDORID = $btn.closest('.ui-dialog-content').data('vendorid'),
+					$form = $ele.closest('form'),
+					VENDORID = $ele.closest('.ui-dialog-content').data('vendorid'),
 					cmdObj = {
 					_cmd : 'adminSupplierAction',
 					'@updates' : new Array(),
@@ -1111,79 +1067,57 @@ app.model.dispatchThis('immutable');
 				},
 
 
-			adminSupplierAction : function($btn)	{
-				$btn.button();
-				if($btn.data('action'))	{
-					
-					if($btn.data('action') == 'INVENTORY:UPDATE')	{}
-					else	{
-						$btn.button('disable').attr('title','Invalid action specified on button.');
-						}
-					
-					$btn.off('click.adminSupplierAction').on('click.adminSupplierAction',function(event){
-						event.preventDefault();
-						if($btn.data('action') == 'INVENTORY:UPDATE')	{
-							var $fieldset = $btn.closest('fieldset');
-							
-							if(app.u.validateForm($fieldset))	{
-								$fieldset.showLoading({"message":"Fetching inventory from supplier"});
-								app.model.addDispatchToQ({'_cmd':'adminSupplierAction','@updates':["INVENTORY:UPDATE"],'VENDORID':$btn.closest("[data-code]").data('code'),'_tag':{'callback':function(rd){
-									$fieldset.hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										$fieldset.anymessage({'message':rd});
-										}
-									else	{
-										$fieldset.anymessage(app.u.successMsgObject('File imported'));
-										}
-								}}},'mutable');
-								app.model.dispatchThis('mutable');
+			adminSupplierAction : function($ele)	{
+				//the thought here is that someday more actions will be present.
+				if($ele.data('action') == 'INVENTORY:UPDATE')	{
+					var $fieldset = $ele.closest('fieldset');
+					if(app.u.validateForm($fieldset))	{
+						$fieldset.showLoading({"message":"Fetching inventory from supplier"});
+						app.model.addDispatchToQ({'_cmd':'adminSupplierAction','@updates':["INVENTORY:UPDATE"],'VENDORID':$ele.closest("[data-code]").data('code'),'_tag':{'callback':function(rd){
+							$fieldset.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$fieldset.anymessage({'message':rd});
 								}
-							else	{}
-							}
-						else	{} //shouldn't get here. actions have already been validated.
-						});
-					
-					
+							else	{
+								$fieldset.anymessage(app.u.successMsgObject('File imported'));
+								}
+						}}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{}
 					}
 				else	{
-					$btn.button('disable').attr('title','No action specified on button.');
+					$("#globalMessaging").anymessage({"message":"In admin_wholesale.e.adminSupplierAction, invalid data-action ["+$ele.data('action')+"] set on trigger element.","gMessage":true});
 					}
 				},
 
 //applied to 'edit user' button and the link in the list (name). opens the editor.
-			showSupplierEditor : function($ele)	{
-//event used both on the supplier 'name' and the edit button.
-				if($ele.is('button'))	{
-					$ele.button({icons: {primary: "ui-icon-pencil"},text: false});
-					}
-				$ele.off('click.showSupplierEditor').on('click.showSupplierEditor',function(){
-					var $row = $ele.closest('tr');
-					if($row.data('code'))	{
+			showSupplierEditor : function($ele,P)	{
+				var $row = $ele.closest('tr');
+				if($row.data('code'))	{
 
-						var $table = $ele.closest('table');
-						
-						$table.stickytab({'tabtext':'vendors','tabID':'batchJobsStickyTab'}).addClass('small');
-						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
-						$('button',$table).removeClass('ui-state-highlight');
-						$ele.addClass('ui-state-highlight');
+					var $table = $ele.closest('table');
+					
+					$table.stickytab({'tabtext':'vendors','tabID':'batchJobsStickyTab'}).addClass('small');
+					$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+					$('button',$table).removeClass('ui-state-highlight');
+					$ele.addClass('ui-state-highlight');
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-						$('button, a',$table).each(function(){
-							$(this).off('close.stickytab').on('click.closeStickytab',function(){
-								$table.stickytab('close');
-								})
+					$('button, a',$table).each(function(){
+						$(this).off('close.stickytab').on('click.closeStickytab',function(){
+							$table.stickytab('close');
 							})
+						})
 
 
-						var $editorContainer = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
-						$editorContainer.empty();
-						app.ext.admin_wholesale.a.showSupplierEditor($editorContainer,$row.data('code'));
-						}
-					else	{
-						$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
-						}
-					});
+					var $editorContainer = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
+					$editorContainer.empty();
+					app.ext.admin_wholesale.a.showSupplierEditor($editorContainer,$row.data('code'));
+					}
+				else	{
+					$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
+					}
 				}, //showSupplierEditor
-
 	
 			supplierBatchExec : function($ele,p)	{
 				app.u.dump(" -> BEGIN admin_wholesale.e.supplierBatchExec");
@@ -1207,49 +1141,49 @@ app.model.dispatchThis('immutable');
 				},
 	
 			adminSupplierUnorderedItemListShow : function($ele,P)	{
-					var VENDORID = $ele.closest("[data-code]").data('CODE');
-					var $D = app.ext.admin.i.dialogCreate({
-						'templateID': "supplierUnorderedItemsTemplate",
-						'title': $ele.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
-						"showLoading" : false
-						});
-					
-					$D.dialog('option','width','70%');
-					$D.dialog('option','modal',false);
+				var VENDORID = $ele.closest("[data-code]").data('CODE');
+				var $D = app.ext.admin.i.dialogCreate({
+					'templateID': "supplierUnorderedItemsTemplate",
+					'title': $ele.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
+					"showLoading" : false
+					});
+				
+				$D.dialog('option','width','70%');
+				$D.dialog('option','modal',false);
 
-					$D.dialog( "option", "appendTo", $btn.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
+				$D.dialog( "option", "appendTo", $ele.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
 //d.data is used by button on form submit. form template also used by order list
-					
-					$D.dialog('open');
-					
-					$('tbody',$D).showLoading({'message':'Fetching unordered item list...'});
+				
+				$D.dialog('open');
+				
+				$('tbody',$D).showLoading({'message':'Fetching unordered item list...'});
 
 
-					var cmdObj = {
-						_cmd : 'adminSupplierUnorderedItemList',
-						FILTER : 'OPEN',
-						_tag : {
-							callback : 'anycontent',
-							jqObj : $('tbody',$D)
-							}
+				var cmdObj = {
+					_cmd : 'adminSupplierUnorderedItemList',
+					FILTER : 'OPEN',
+					_tag : {
+						callback : 'anycontent',
+						jqObj : $('tbody',$D)
 						}
+					}
 
-					if($ele.data('mode') == 'vendor')	{
-						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList'});
-						cmdObj.VENDORID = VENDORID
-						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList|"+cmdObj.VENDORID;
-						}
-					else if	($ele.data('mode') == 'all'){
-						$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList','vendorid':''});
-						cmdObj._tag.datapointer = "adminSupplierUnorderedItemList";
-						}
-					else	{} //unrecognized mode.
-					//no datapointer will be set if invalid mode set.
+				if($ele.data('mode') == 'vendor')	{
+					$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList'});
+					cmdObj.VENDORID = VENDORID
+					cmdObj._tag.datapointer = "adminSupplierUnorderedItemList|"+cmdObj.VENDORID;
+					}
+				else if	($ele.data('mode') == 'all'){
+					$D.data({'vendorid':VENDORID,'mode':'adminSupplierUnorderedItemList','vendorid':''});
+					cmdObj._tag.datapointer = "adminSupplierUnorderedItemList";
+					}
+				else	{} //unrecognized mode.
+				//no datapointer will be set if invalid mode set.
 
-					if(cmdObj._tag.datapointer)	{
-						app.model.addDispatchToQ(cmdObj,'mutable');
-						app.model.dispatchThis('mutable');
-						}
+				if(cmdObj._tag.datapointer)	{
+					app.model.addDispatchToQ(cmdObj,'mutable');
+					app.model.dispatchThis('mutable');
+					}
 
 				},
 
@@ -1259,220 +1193,188 @@ app.model.dispatchThis('immutable');
 // and it uses closest data- instead of closest tr because in detail mode, the buttons aren't in a tr.
 //the code that uses this still uses app events. The dialog this opens uses delegated events.
 			adminSupplierProdOrderListShow : function($ele,P)	{
-				$ele.button();
-
+				P.preventDefault();
 				if($ele.data('mode') == 'product' || $ele.data('mode') == 'order')	{
-
-$ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrderListShow',function(event){
-	event.preventDefault();
-	var VENDORID = $ele.closest("[data-code]").data('code');
-	
-	if(VENDORID)	{
-
-		var $D = app.ext.admin.i.dialogCreate({
-			'templateID': ($ele.data('mode') == 'order') ? 'supplierOrderListTemplate' : 'supplierItemListTemplate',
-			'title': $ele.data('mode')+" list for vendor "+VENDORID,
-			'showLoading' : false
-			});
-		$D.data('vendorid',VENDORID);
-		$D.dialog('option','modal',false);
-		$D.dialog('option','width','70%');
-		$D.dialog('option','height',($(window).height() / 2));
-		$D.dialog( "option", "appendTo", $ele.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
-		$('form',$D).showLoading({'message':'Fetching '+$ele.data('mode')+' list...'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
-		$D.dialog('open');
-		
-		var cmdObj = {
-			'VENDORID':VENDORID,
-			'_tag':	{
-				'callback': 'anycontent',
-				'anydelegate' : true,
-				'jqObj' : $('form',$D)
-				}
-			}
-		
-		if($ele.data('mode') == 'order')	{
-			$D.data('mode','adminSupplierOrderList'); //used by button on form submit. form template also used by unordereditems
-			cmdObj._cmd = 'adminSupplierOrderList';
-			cmdObj.FILTER = 'RECENT';
-			cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
-			}
-		else if($ele.data('mode') == 'product')	{
-			cmdObj._cmd = 'adminSupplierInventoryList';
-//			cmdObj.FILTER = 'OPEN';
-			cmdObj._tag.datapointer = 'adminSupplierInventoryList|'+VENDORID;
-			}
-		else {} //should never get here. unrecognized mode.
-	
-		app.model.addDispatchToQ(cmdObj,'mutable');
-		app.model.dispatchThis('mutable');
-
-		}
-	else	{
-		$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.adminSupplierProdOrderListShow, unable to determine vendorID.','gMessage':true})
-		}
-	});
-
+					var VENDORID = $ele.closest("[data-code]").data('code');
 					
-					}
-				else	{
-					$ele.button('disable');
-					}
-				}, //adminSupplierOrderListShow
+					if(VENDORID)	{
 				
-
-			showMediaLib4OrganizationLogo : function($ele)	{
-				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
-					event.preventDefault();
-					var $context = $ele.closest('fieldset');
-					mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
-					});
-				}, //showMediaLib4OrganizationLogo
-
-
-			execOrganizationSearch : function($btn){
-				
-				$btn.button({icons: {primary: "ui-icon-search"},text: true});
-				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
-					event.preventDefault();
-					$('.dualModeListMessaging').empty(); //clear existing messaging.
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON(),
-						$dualModeContainer = $form.closest("[data-app-role='dualModeContainer']"),
-						$table = $("[data-app-role='dualModeListContents']",$dualModeContainer).closest('table');
-					
-					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
-					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
-/* keywords and searchby are NOT required. if empty, a list of recent orgs will be returned */
-					if(sfo)	{
-//						app.u.dump(" -> sfo: "); app.u.dump(sfo);
-						$('tbody',$table).empty(); //clear previous search results.
-						$dualModeContainer.showLoading("Searching organizations by "+sfo.searchby+" for "+sfo.keywords);
+						var $D = app.ext.admin.i.dialogCreate({
+							'templateID': ($ele.data('mode') == 'order') ? 'supplierOrderListTemplate' : 'supplierItemListTemplate',
+							'title': $ele.data('mode')+" list for vendor "+VENDORID,
+							'showLoading' : false
+							});
+						$D.data('vendorid',VENDORID);
+						$D.dialog('option','modal',false);
+						$D.dialog('option','width','70%');
+						$D.dialog('option','height',($(window).height() / 2));
+						$D.dialog( "option", "appendTo", $ele.closest("[data-app-role='dualModeContainer']")); //jq v 1.10. must be before open
+						$('form',$D).showLoading({'message':'Fetching '+$ele.data('mode')+' list...'}).append("<input type='hidden' name='VENDORID' value='"+VENDORID+"' \/>");
+						$D.dialog('open');
 						
-						sfo[sfo.searchby] = sfo.keywords;
-						delete sfo.keywords; delete sfo.searchby; //sanitize before sending to API.
-						
-						sfo._cmd = 'adminCustomerOrganizationSearch';
-						sfo._tag = {
-							'datapointer' : 'adminCustomerOrganizationSearch',
-							'callback' : function(rd){
-								$dualModeContainer.hideLoading();
-	
-								if(app.model.responseHasErrors(rd)){
-									$form.anymessage({'message':rd})
-									}
-								else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
-									$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
-									}
-								else	{
-									$table.show();
-									$table.anycontent({'datapointer':rd.datapointer});
-									$table.anytable();
-									app.u.handleAppEvents($table,{'$context':$dualModeContainer});
-									}
-								
+						var cmdObj = {
+							'VENDORID':VENDORID,
+							'_tag':	{
+								'callback': 'anycontent',
+								'anydelegate' : true,
+								'jqObj' : $('form',$D)
 								}
-							};
-						app.model.addDispatchToQ(sfo,'mutable');
+							}
+						
+						if($ele.data('mode') == 'order')	{
+							$D.data('mode','adminSupplierOrderList'); //used by button on form submit. form template also used by unordereditems
+							cmdObj._cmd = 'adminSupplierOrderList';
+							cmdObj.FILTER = 'RECENT';
+							cmdObj._tag.datapointer = 'adminSupplierOrderList|'+VENDORID;
+							}
+						else if($ele.data('mode') == 'product')	{
+							cmdObj._cmd = 'adminSupplierInventoryList';
+				//			cmdObj.FILTER = 'OPEN';
+							cmdObj._tag.datapointer = 'adminSupplierInventoryList|'+VENDORID;
+							}
+						else {} //should never get here. unrecognized mode.
+					
+						app.model.addDispatchToQ(cmdObj,'mutable');
 						app.model.dispatchThis('mutable');
-						}
-					else if (!sfo)	{
-						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execOrganizationSearch, unable to find form OR to serialize as JSON.','gMessage':true});
+				
 						}
 					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.adminSupplierProdOrderListShow, unable to determine vendorID.','gMessage':true})
+						}					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierProdOrderListShow, no data-mode set on trigger element.","gMessage":true})
+					}
+				}, //adminSupplierOrderListShow
+
+
+
+
+			showMediaLib4OrganizationLogo : function($ele)	{
+				var $context = $ele.closest('fieldset');
+				mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
+				}, //showMediaLib4OrganizationLogo
+
+			execOrganizationSearch : function($ele,P){
+				P.preventDefault();
+				$('.dualModeListMessaging').empty(); //clear existing messaging.
+				var
+					$form = $ele.closest('form'),
+					sfo = $form.serializeJSON(),
+					$dualModeContainer = $form.closest("[data-app-role='dualModeContainer']"),
+					$table = $("[data-app-role='dualModeListContents']",$dualModeContainer).closest('table');
+				
+				$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
+				$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
+/* keywords and searchby are NOT required. if empty, a list of recent orgs will be returned */
+				if(sfo)	{
+//						app.u.dump(" -> sfo: "); app.u.dump(sfo);
+					$('tbody',$table).empty(); //clear previous search results.
+					$dualModeContainer.showLoading("Searching organizations by "+sfo.searchby+" for "+sfo.keywords);
+					
+					sfo[sfo.searchby] = sfo.keywords;
+					delete sfo.keywords; delete sfo.searchby; //sanitize before sending to API.
+					
+					sfo._cmd = 'adminCustomerOrganizationSearch';
+					sfo._tag = {
+						'datapointer' : 'adminCustomerOrganizationSearch',
+						'callback' : function(rd){
+							$dualModeContainer.hideLoading();
+
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd})
+								}
+							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
+								$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
+								}
+							else	{
+								$table.show();
+								$table.anycontent({'datapointer':rd.datapointer});
+								$table.anytable();
+								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
+								}
+							
+							}
+						};
+					app.model.addDispatchToQ(sfo,'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else if (!sfo)	{
+					$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execOrganizationSearch, unable to find form OR to serialize as JSON.','gMessage':true});
+					}
+				else	{
 // never reached, blank search shows last 50 results 
-						$('#globalMessaging').anymessage({'message':'Either keywords ['+sfo.keywords+'] or searchby ['+sfo.searchby+'] left blank.'});
-						}
-					
-					
-					});
+					$('#globalMessaging').anymessage({'message':'Either keywords ['+sfo.keywords+'] or searchby ['+sfo.searchby+'] left blank.'});
+					}
 				}, //execOrganizationSearch
 
-			execOrganizationRemove : function($btn)	{
-				
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.execOrganizationRemove').on('click.execOrganizationRemove',function(event){
-					event.preventDefault();
-					var
-						$D = $("<div \/>").attr('title',"Permanently Remove Organization"),
-						orgID = $btn.closest('tr').data('orgid');
+			execOrganizationRemove : function($ele,P)	{
 
-					$D.append("<P>Are you sure you want to delete this organization? There is no undo for this action.<\/P>");
-					$D.addClass('displayNone').appendTo('body'); 
-					$D.dialog({
-						modal: true,
-						autoOpen: false,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
-							},
-						buttons: [ 
-							{text: 'Cancel', click: function(){$D.dialog('close')}},
-							{text: 'Delete Organization', click: function(){
-								$D.parent().showLoading({"message":"Deleting Organization..."});
-								app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
-								app.model.addDispatchToQ({
-									'_cmd':'adminCustomerOrganizationRemove',
-									'ORGID' : orgID,
-									'_tag':	{
-										'datapointer' : 'adminCustomerOrganizationRemove',
-										'callback':function(rd){
-											$D.parent().hideLoading();
-											if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
-											else	{
-												$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
-												$btn.closest('tr').empty().remove(); //remove row in results list.
-												$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
-												}
+				P.preventDefault();
+				var
+					$D = $("<div \/>").attr('title',"Permanently Remove Organization"),
+					orgID = $ele.closest('tr').data('orgid');
+
+				$D.append("<P>Are you sure you want to delete this organization? There is no undo for this action.<\/P>");
+				$D.addClass('displayNone').appendTo('body'); 
+				$D.dialog({
+					modal: true,
+					autoOpen: false,
+					close: function(event, ui)	{
+						$(this).dialog('destroy').remove();
+						},
+					buttons: [ 
+						{text: 'Cancel', click: function(){$D.dialog('close')}},
+						{text: 'Delete Organization', click: function(){
+							$D.parent().showLoading({"message":"Deleting Organization..."});
+							app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
+							app.model.addDispatchToQ({
+								'_cmd':'adminCustomerOrganizationRemove',
+								'ORGID' : orgID,
+								'_tag':	{
+									'datapointer' : 'adminCustomerOrganizationRemove',
+									'callback':function(rd){
+										$D.parent().hideLoading();
+										if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+										else	{
+											$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
+											$ele.closest('tr').empty().remove(); //remove row in results list.
+											$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
 											}
 										}
-									},'i,mutable');
-								app.model.dispatchThis('immutable');
-								}}	
-							]
-						});
-					$D.dialog('open');
-					})
+									}
+								},'i,mutable');
+							app.model.dispatchThis('immutable');
+							}}	
+						]
+					});
+				$D.dialog('open');
+
 				}, //execOrganizationRemove
 
-			execOrganizationUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.execOrganizationUpdate').on('click.execOrganizationUpdate',function(event){
-					event.preventDefault();
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON();
-					
+			adminCustomerOrganizationUpdateExec : function($ele,P)	{
+				P.preventDefault();
+				var	$form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					var sfo = $form.serializeJSON({cb:true})
 					$form.showLoading({'message':'Saving Changes'});
-					sfo.ORGID = $form.data('orgid');
 					if(sfo.DOMAIN)	{
 						sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
 						}
-//checkbox values need to be set as 1/0, not ON/OFF
-					$(':checkbox',$form).each(function(){
-						var $CB = $(this);
-						sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
-						});
-
-
 					app.model.destroy('adminCustomerOrganizationDetail|'+sfo.ORGID);
-
 					sfo._cmd = 'adminCustomerOrganizationUpdate';
 					sfo._tag = {
-						'datapointer' : 'adminCustomerOrganizationUpdate',
-						'callback' : function(rd){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
-							else	{
-								$form.empty().anymessage(app.u.successMsgObject('Your changes have been saved.'));
-								}
-							}
+						'callback' : 'showMessaging',
+						'jqObj' : $form,
+						'message' : 'Your changes have been saved.'
 						};
 					app.model.addDispatchToQ(sfo,'immutable');
-
-					});
-				}, //execOrganizationUpdate
-
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					//validateForm handles error display
+					}
+				}, //adminCustomerOrganizationUpdateExec
 
 			adminOrganizationSearchShowUI : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-contact"},text: false});
@@ -1561,104 +1463,68 @@ $ele.off('click.adminSupplierProdOrderListShow').on('click.adminSupplierProdOrde
 				}, //execTicketClose
 
 
-			showOrganizationUpdate : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showOrganizationUpdate').on('click.showOrganizationUpdate',function(event){
-					event.preventDefault();
-					app.u.dump('showOrganizationUpdate has been triggered.');
-					var
-						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-						orgID = $btn.closest('tr').data('orgid');
-					
-					app.u.dump('vars have been defined');
-
-					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
-					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
-					app.u.dump('results/content area display changes have occured.');
-					app.ext.admin_wholesale.a.showOrganizationEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'orgID':orgID});
-					app.u.dump('showOrganizationEditor has executed.');
-					});
+			showOrganizationUpdate : function($ele,P)	{
+				P.preventDefault();
+				var orgID = $ele.closest('tr').data('orgid');
+				if(orgID)	{
+					navigateTo("#!organizationEditor",{'orgID':orgID});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.showOrganizationUpdate, unable to ascertain orgID.","gMessage":true});
+					}
 				}, //showOrganizationUpdate
 
 //triggered within the organization create modal when save is pushed.
-			execOrganizationCreate : function($btn){
-				$btn.button();
-				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
-					event.preventDefault();
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON();
-					
-					if(app.u.validateForm($form))	{
-
-						$form.showLoading({'message':'Creating New Organization'});
-
-						if(sfo.DOMAIN)	{
-							sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
-							}
-							
-//checkbox values need to be set as 1/0, not ON/OFF
-						$(':checkbox',$form).each(function(){
-							var $CB = $(this);
-							sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
-							});
-						sfo._cmd = 'adminCustomerOrganizationCreate';
-						sfo._tag = {
-							'datapointer' : 'adminCustomerOrganizationCreate',
-							'callback' : function(rd){
-								$form.hideLoading();
-								if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
-								else	{
-									$form.empty().anymessage(app.u.successMsgObject('The organization has been created.'));
-						//								$form.append("<button>Close Window<\/button><button>Edit Organization<\/button><button>Add New Organization<\/button>");
-									}
-								}
-							};
-						app.model.addDispatchToQ(sfo,'immutable');
-
-
-						app.ext.admin.calls.adminCustomerOrganizationCreate.init(sfo,{callback : function(rd){
-
-							}},'immutable');
-						app.model.dispatchThis('immutable');
+			execOrganizationCreate : function($ele,P){
+				P.preventDefault();
+				var
+					$form = $btn.closest('form'),
+					sfo = $form.serializeJSON({'cb':true});
+				
+				if(app.u.validateForm($form))	{
+					$form.showLoading({'message':'Creating New Organization'});
+					if(sfo.DOMAIN)	{
+						sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
 						}
-					else	{} //form validation handles error display.
-					});
+					sfo._cmd = 'adminCustomerOrganizationCreate';
+					sfo._tag = {
+						'datapointer' : 'adminCustomerOrganizationCreate',
+						'callback' : function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd});
+								}
+							else	{
+								$form.empty().anymessage(app.u.successMsgObject('The organization has been edited.'));
+								$form.append("<h2>What would you like to do next?<\/h2>");
+								//sample action. success would go here.
+								$form.append($("<button>").text('Edit Org').on('click',function(){
+									navigateTo("#!organizationEditor",{'orgID':app.data[rd.datapointer].ORGID});
+									}));
+								$form.append($("<button>").text('Back to Org Manager').on('click',function(){
+									$(this).closest('.ui-dialog-content').dialog('close');
+									}));
+								}
+							}
+						};
+					app.model.addDispatchToQ(sfo,'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //form validation handles error display.
 				}, //execOrganizationCreate
 
 //triggered in the editor to show the organiation create form/modal.
-			showOrganizationCreate : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
-				$btn.off('click.showOrganizationCreate').on('click.showOrganizationCreate',function(event){
-					event.preventDefault();
-
-//by now, we know we have a valid mode and if that mode is edit, uuid is set.
-					var $D = $("<div \/>").attr('title',"Add a New Organization");
-//guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
-					$D.addClass('displayNone').appendTo('body'); 
-//add the content prior to turning it into a dialog so that width is properly calculated
-					$D.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate','data':{}});
-					$D.dialog({
-						modal: true,
-						width:  '90%',
-						autoOpen: false,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
-							}
-						});
-					$D.dialog('open');
-
-					$("input",$D).each(function(){
-						var $input = $(this);
-						$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
-						if($input.is(':checkbox'))	{
-							$input.anycb({text : {'on':'yes','off':'no'}});
-							}
-						});
-					$('.buttonset',$D).append("<button data-app-event='admin_wholesale|execOrganizationCreate'>Create Organization</button>");
-					app.u.handleAppEvents($D);
-					
+			showOrganizationCreate : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					title : "Add a New Organization",
+					anycontent : true, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
 					});
+				$D.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate','data':{}}).anydelegate();
+				$('.buttonset',$D).append("<button data-app-click='admin_wholesale|execOrganizationCreate' class='applyButton'>Create Organization</button>");
+				$D.dialog('open');
+				app.u.handleCommonPlugins($D);
+				app.u.handleButtons($D);
 				} //showOrganizationCreate
 			}, //e [app Events]
 
