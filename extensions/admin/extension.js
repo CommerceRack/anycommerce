@@ -1528,6 +1528,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 						//no errors have occured and results are present.
 						$tbody.anycontent({'data':data});
 						app.u.handleAppEvents($tbody);
+						app.u.handleButtons($tbody);
 						if(_rtag.message)	{
 							$('.dualModeListMessaging',$DMI).anymessage(app.u.successMsgObject(_rtag.message));
 							}
@@ -3228,6 +3229,9 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				else if(path == '#!trainer')	{
 					app.ext.admin_trainer.a.showTrainer($target);
 					}
+				else if(path == '#!organizationEditor')	{
+					app.ext.admin_wholesale.a.showOrganizationEditor($target,opts);
+					}
 				else if(path == '#!categoriesAndLists')	{
 					app.ext.admin_navcats.a.showCategoriesAndLists($target);
 					}
@@ -4513,6 +4517,7 @@ vars:
 						}// thead loop
 
 					if(vars.handleAppEvents)	{
+						app.u.dump(" -> executing app events for DMI.");
 						app.u.handleAppEvents($DM,{'$context':$DM.children().first()}); //
 						}
 

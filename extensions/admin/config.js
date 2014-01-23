@@ -901,20 +901,17 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$('#globalMessaging').anymessage({"message":"In admin_config.e.payMethodEditorShow, data-tender not set on trigger element.","gMessage":true});
 					}
 				},
-
-			shipMeterDetailInModal : function($btn)	{
-				$btn.button();
-				$btn.off('click.shipMeterDetailInModal').on('click.shipMeterDetailInModal',function(event){
-					if($btn.data('provider') == 'UPS'){
-						app.ext.admin_config.a.showUPSOnlineToolsRegInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
-						}
-					else if($btn.data('provider') == 'FEDEX'){
-						app.ext.admin_config.a.showFedExMeterInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
-						}
-					else	{
-						$btn.closest('.ui-widget-anypanel').anymessage({'message':'In admin_wholesale.e.shipMeterDetailInModal, no/invalid provider ['+$btn.data('provider')+'] on button','gMessage':true})
-						}
-					});
+//used in supllier interface.
+			shipMeterDetailInModal : function($ele,P)	{
+				if($ele.data('provider') == 'UPS'){
+					app.ext.admin_config.a.showUPSOnlineToolsRegInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+					}
+				else if($ele.data('provider') == 'FEDEX'){
+					app.ext.admin_config.a.showFedExMeterInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+					}
+				else	{
+					$ele.closest('.ui-widget-anypanel').anymessage({'message':'In admin_wholesale.e.shipMeterDetailInModal, no/invalid provider ['+$ele.data('provider')+'] on button','gMessage':true})
+					}
 				}, //shipMeterDetailInModal
 		
 			couponDetailDMIPanel : function($ele)	{

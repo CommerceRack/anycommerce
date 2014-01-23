@@ -2,66 +2,25 @@
 <!--
 ////////////////  ORGANIZATION  \\\\\\\\\\\\\\\\\\
 -->
+<div id='orgManagerControls' class='floatRight'>
+<form action='#' onSubmit='return false' data-app-submit='admin_wholesale|execOrganizationSearch'>
+	<select name='searchby'>
+		<option value='CONTACT'>contact</option>
+		<option value='DOMAIN'>domain</option>
+		<option value='COMPANY'>company</option>
+		<option value='EMAIL'>email</option>
+		<option value='ORGID'>organization id</option>
+		<option value='PHONE' selected="selected">phone</option>
+		<option value='SCHEDULE'>schedule</option>
+		<option value='ACCOUNT_MANAGER'>account manager</option>
+		<option value='ACCOUNT_TYPE'>account type</option>
 
-
-<div id='organizationManagerPageTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='buttonSet'>
-				<button data-app-event='admin_wholesale|showOrganizationCreate' class='floatRight'>New Organization</button>
-			</div>
-			<h3 class='heading'>Organization Manager</h3>
-		</div>
-		<div class='ui-state-default smallPadding alignRight'>
-		<form action='#' onSubmit='return false'>
-			<select name='searchby'>
-				<option value='CONTACT'>contact</option>
-				<option value='DOMAIN'>domain</option>
-				<option value='COMPANY'>company</option>
-				<option value='EMAIL'>email</option>
-				<option value='ORGID'>organization id</option>
-				<option value='PHONE' selected="selected">phone</option>
-				<option value='SCHEDULE'>schedule</option>
-				<option value='ACCOUNT_MANAGER'>account manager</option>
-				<option value='ACCOUNT_TYPE'>account type</option>
-
-			</select>
-			<input type='search' name='keywords' size='20' />
-			<label class='marginRight'><input type='checkbox' name="IS_LOCKED" />locked only</label>
-			<button data-app-event='admin_wholesale|execOrganizationSearch'>Search</button>
-		</form>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		<div class="dualModeListMessaging marginBottom">Please use the search above to find the organization(s) you are looking for.</div>
-		<table class='gridTable fullWidth displayNone marginBottom' data-app-role='dualModeResultsTable'>
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th data-anytable-nosort='true'></th>
-			<th class='alignLeft'>ID</th>
-			<th class='alignLeft'>Company</th>
-			<th class='alignLeft'>Domain</th>
-			<th class='alignLeft'>Email</th>
-			<th class='alignLeft'>Account Manager</th>
-			<th class='alignLeft'>Billing Phone</th>
-			<th class='alignLeft'>Billing Contact</th>
-			<th data-anytable-nosort='true'></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerOrgRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		
-		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
-		
-		</div>
-	</section>
+	</select>
+	<input type='search' name='keywords' size='20' />
+	<label class='marginRight'><input type='checkbox' name="IS_LOCKED" />locked only</label>
+	<button class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search</button>
+</form>
 </div>
-
-
 
 <table>
 <tr id='organizationManagerOrgRowTemplate'>
@@ -74,8 +33,8 @@
 	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
 	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
 	<td class='alignRight'>
-		<button data-app-event="admin_wholesale|execOrganizationRemove">remove</button>
-		<button data-app-event="admin_wholesale|showOrganizationUpdate">edit</button>
+		<button data-app-click="admin_wholesale|execOrganizationRemove" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>remove</button>
+		<button data-app-click="admin_wholesale|showOrganizationUpdate" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>edit</button>
 	</td>
 </tr>
 
@@ -87,69 +46,69 @@
 
 
 
-<div id='organizationManagerOrgCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer'>
-
-<form action='#' onSubmit='return false'>
-
-<fieldset class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
-	<legend>Organization Information</legend>
-	
-	<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
-	<div class='label'><input type='text' placeholder='last name' name='lastname' value='' data-bind='var: org(ORG.lastname); format:popVal;'  /></div>
-
-	<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(ORG.company); format:popVal;'  /></div>
-	<div class='label'><input type='text' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div><!-- do NOT use url as input type, only the domain is desired -->
-	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;' onKeyPress='return app.u.numbersOnly(event);'  /></div><!-- phone is numbers only -->
-	<div class='label'><input type='text' name='address1' placeholder='address'  value='' data-bind='var: org(ORG.address1); format:popVal;'  /></div>
-	<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(ORG.address2); format:popVal;' /></div>
-	<div class='label'><input type='text' name='city' placeholder='city'  value='' data-bind='var: org(ORG.city); format:popVal;' /></div>
-	<div class='label'><input type='text' name='region' placeholder='state/region'  size='5' value='' data-bind='var: org(ORG.region); format:popVal;' maxlength='20' /></div>
-
-	<!-- postal not required for international. don't add it. -->
-	<div class='label'><input type='text'  name='postal' placeholder='zip/postal code'  size='14' value='' data-bind='var: org(ORG.postal); format:popVal;' maxlength='10' /></div>
-
-	<div class='label'><input name='countrycode' size='9' maxlength="9" data-minlength='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;' /></div>
-
-</fieldset>
-
-<fieldset class='alignedInputs floatLeft labelsAsBreaks threeColumn'>
-	<legend>Billing</legend>
-	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
-	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return app.u.numbersOnly(event);' /></div>
-	<div class='label'>
-		<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+<div id='organizationManagerOrgCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer ui-widget'>
+	<div class='ui-widget-content stdPadding'>
+		<form action='#' onSubmit='return false'>
+		
+		<fieldset class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
+			<legend>Organization Information</legend>
+			
+			<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
+			<div class='label'><input type='text' placeholder='last name' name='lastname' value='' data-bind='var: org(ORG.lastname); format:popVal;'  /></div>
+		
+			<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(ORG.company); format:popVal;'  /></div>
+			<div class='label'><input type='text' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div><!-- do NOT use url as input type, only the domain is desired -->
+			<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;' onKeyPress='return app.u.numbersOnly(event);'  /></div><!-- phone is numbers only -->
+			<div class='label'><input type='text' name='address1' placeholder='address'  value='' data-bind='var: org(ORG.address1); format:popVal;'  /></div>
+			<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(ORG.address2); format:popVal;' /></div>
+			<div class='label'><input type='text' name='city' placeholder='city'  value='' data-bind='var: org(ORG.city); format:popVal;' /></div>
+			<div class='label'><input type='text' name='region' placeholder='state/region'  size='5' value='' data-bind='var: org(ORG.region); format:popVal;' maxlength='20' /></div>
+		
+			<!-- postal not required for international. don't add it. -->
+			<div class='label'><input type='text'  name='postal' placeholder='zip/postal code'  size='14' value='' data-bind='var: org(ORG.postal); format:popVal;' maxlength='10' /></div>
+		
+			<div class='label'><input name='countrycode' size='9' maxlength="9" data-minlength='2' placeholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;' /></div>
+		
+		</fieldset>
+		
+		<fieldset class='alignedInputs floatLeft labelsAsBreaks threeColumn'>
+			<legend>Billing</legend>
+			<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
+			<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return app.u.numbersOnly(event);' /></div>
+			<div class='label'>
+				<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+			</div>
+			<label><input class='applyAnycb' type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popVal;' />Allow Purchase Orders</label>
+			<label><input class='applyAnycb' type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popVal;' />Allow Resale/Tax Exempt</label>
+			<label><input class='applyAnycb' type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popVal;' />Is Locked</label>
+			<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
+			<div class='label'><input type='number' class='smallInput' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
+			<div class='label'><input type='number' class='smallInput' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
+			<div class='label'><input type='number' class='smallInput' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
+		</fieldset>
+		
+		<div class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
+			<fieldset class='marginBottom'>
+				<legend>Company Logo</legend>
+				<img width="160" height="70" src="app-admin/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+				<a data-app-click="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
+				<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+			</fieldset>
+			
+			<fieldset class='marginTop'>
+				<legend>Account Information</legend>
+				<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
+				<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
+				<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
+			</fieldset>
+		</div>
+		
+		<div class='clearfix'></div>
+		
+		<div class='buttonset clearfix marginTop alignRight'></div><!-- buttons will be automatically added to this thru the buttonset class -->
+		
+		</form>
 	</div>
-	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popVal;' />Allow Purchase Orders</label>
-	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popVal;' />Allow Resale/Tax Exempt</label>
-	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popVal;' />Is Locked</label>
-	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' class='smallInput' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' class='smallInput' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
-	<div class='label'><input type='number' class='smallInput' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
-</fieldset>
-
-<div class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
-	<fieldset class='marginBottom'>
-		<legend>Company Logo</legend>
-		<img width="160" height="70" src="app-admin/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
-		<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
-		<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
-	</fieldset>
-	
-	<fieldset class='marginTop'>
-		<legend>Account Information</legend>
-		<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
-		<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
-		<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
-	</fieldset>
-</div>
-
-<div class='clearfix'></div>
-
-<div class='buttonset clearfix marginTop alignRight'></div><!-- buttons will be automatically added to this by buttonset class -->
-
-</form>
-
 </div>
 
 
@@ -175,24 +134,23 @@
 <table>
 <tr id='supplierListItemTemplate'>
 	<td class='hideInMinifyMode'><input class='allowBulkCheck' type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
-	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
+	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-click='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
 	<td data-bind="var:supplier(FORMAT); format:text;"></td>
 	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
-	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierRemoveExec'>Remove this Supplier</button>
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</button>
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierInventoryAddShow'>Add Inventory</button>
-<!--	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Products</button> -->
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
-	<button class='marginLeft hideInMinimalMode' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
-	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
+	<button class='marginRight hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierRemoveExec' data-text='false' data-icon-primary='ui-icon-trash'>Remove this Supplier</button>
+	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</button>
+	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierInventoryAddShow' data-icon-primary='ui-icon-plus' data-text='true'>Add Inventory</button>
+	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
+	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
+	<button class='marginLeft applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-app-click='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	</td>
 </tr>
 
 <tr id='supplierOrderListItemTemplate'>
 	<td><input type='checkbox' data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:name; valuePretext:orderid_;' /></td>
-	<td data-app-event='admin_orders|showOrderEditorInDialog'  data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
+	<td data-app-click='admin_orders|showOrderEditorInDialog' data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
 	<span data-bind="var:supplier(OUR_ORDERID); format:text;"></span>
 	</td>
 	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
@@ -238,7 +196,7 @@
 		<input type='number' step='1' min='0' name='QTY' value='0' class='number resetMeOnComplete smallInput' />
 	</label>
 
-	<button data-app-event="admin_wholesale|adminSupplierInventoryAddExec">Add</button>
+	<button class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click="admin_wholesale|adminSupplierInventoryAddExec">Add</button>
 </fieldset>
 </form>
 
@@ -281,7 +239,7 @@
 <tr id='supplierUnorderedItemRowTemplate'>
 	<td data-bind="var:supplier(CREATED_TS); format:text;"></td>
 	<td data-bind="var:supplier(ID); format:text;"></td>
-	<td data-app-event='admin_orders|showOrderEditorInDialog'  data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
+	<td data-app-click='admin_orders|showOrderEditorInDialog' data-bind='var:order(OUR_ORDERID);format:assignAttribute; attribute:data-orderid;'>
 	<span data-bind="var:supplier(OUR_ORDERID); format:text;"></span>
 	</td>
 	<td data-bind="var:supplier(QTY); format:text;"></td>
@@ -389,12 +347,12 @@
 	
 	<label class='label displayNone supplierFormatPanel' data-panel-id='supplierFormatVendorID' >
 		<span>Supplier ID</span>
-		<input type="text" name="VENDORID" value="" maxlength="6" data-minlength='6' size="6" required='required' data-input-format="alphanumeric,uppercase" data-validation-rules='skipIfHidden' />
+		<input type="text" name="VENDORID" value="" maxlength="6" data-minlength='6' size="6" required='required' data-input-keyup='input-format' data-input-format="alphanumeric,uppercase" data-validation-rules='skipIfHidden' />
 		<span class='toolTip' title="A unique 6 character alphanumeric code used for this supplier.">?</span>
 	</label>
 
 	
-	<div class='alignCenter'><button data-app-event='admin_wholesale|adminSupplierCreateExec'>Add Supplier</button></div>
+	<div class='alignCenter'><button data-app-click='admin_wholesale|adminSupplierCreateExec' class='applyButton'>Save Supplier</button></div>
 </fieldset>
 </form>
 
@@ -424,12 +382,11 @@
 
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
-		<button class='floatRight marginLeft' data-app-event='admin|processForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight marginRight marginLeft' data-app-event='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
-		<button class='floatRight marginLeft' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
-		<button class='floatRight' data-app-event='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
-<!--		<button class='floatRight'>Add Product</button> add when time permits. -->
-		
+		<button class='floatRight marginLeft applyButton' data-app-click='admin|submitForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight marginRight marginLeft applyButton' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
+		<button class='floatRight marginLeft applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
+		<button class='floatRight applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
+	
 		<h2 class='floatLeft ui-widget-header-padding'>
 		Supplier: <span data-bind="var:supplier(CODE); format:text;"></span>
 		(created on <span data-bind="var:supplier(CREATED_GMT); format:epoch2mdy;"></span>)
@@ -625,8 +582,8 @@
 	<input type="text" name="%SHIP.origstate" value="" size="2" data-bind="var:vendor(%SHIP.origstate); format:popVal;" />
 </label>
 
-<button data-app-event='admin_config|shipMeterDetailInModal' data-provider='FEDEX'>Configure FedEx Meter</button>
-<button data-app-event='admin_config|shipMeterDetailInModal' data-provider='UPS'>Configure UPS Meter</button>
+<button class='applyButton' data-app-click='admin_config|shipMeterDetailInModal' data-provider='FEDEX'>Configure FedEx Meter</button>
+<button class='applyButton' data-app-click='admin_config|shipMeterDetailInModal' data-provider='UPS'>Configure UPS Meter</button>
 
 				</div>
 				
@@ -738,7 +695,7 @@
 						<textarea name='header' data-bind="var:vendor(%INVENTORY.header); format:popVal;"  required='required'  data-validation-rules='skipIfHidden'></textarea>
 					</label>
 					
-					<button data-app-event='admin_wholesale|adminSupplierAction' data-action="INVENTORY:UPDATE">Start Import</button>
+					<button data-app-click='admin_wholesale|adminSupplierAction' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowreturnthick-1-s' data-action="INVENTORY:UPDATE">Start Import</button>
 				
 				</div>
 			</fieldset>
@@ -925,7 +882,7 @@
 	</label>
 	<label>
 		<span>Warehouse Code:</span>
-		<input type="text" value="" name="GEO" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' data-bind='var:warehouse(GEO); format:popVal;' />
+		<input type="text" value="" name="GEO" size="3" maxlength="3" data-minlength='3' data-input-keyup='input-format' data-input-format="alphanumeric,uppercase" data-bind='var:warehouse(GEO); format:popVal;' />
 		<span class='toolTip' title="A 3 digit code consisting of letters A-Z and 0-9. Warehouse code will usually be the three digit code for the nearest airport.">?</span>
 	</label>
 	
@@ -960,8 +917,8 @@
 
 
 <div class='buttonset '>
-	<button data-app-event='admin_wholesale|warehouseZoneCreateShow' class='hideForCreate'>Add New Zone</button><!-- hidden in 'create' mode -->
-	<button class='floatRight' data-app-event="admin|processForm">Save</button>
+	<button data-app-click='admin_wholesale|warehouseZoneCreateShow' class='hideForCreate applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Add New Zone</button><!-- hidden in 'create' mode -->
+	<button class='floatRight applyButton' data-app-click="admin|submitForm">Save</button>
 </div>
 
 </form>
