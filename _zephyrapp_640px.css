@@ -8,6 +8,7 @@
 #appPreView{width:280px;}
 
 /**** Content Area CSS****/
+body{background:#ffffff;}
 #appView{width:100%;}
 #container {padding:0px 5px;}
 #contentArea{width:98%; padding:1%;}
