@@ -363,7 +363,11 @@ var store_zephyrapp = function() {
 					}
 					
 				if(errors == ''){
-					app.calls.appBuyerLogin.init({"login":formJSON.login,"password":formJSON.password},{'callback':callback});
+					app.calls.appBuyerLogin.init({"login":formJSON.login,"password":formJSON.password},{'callback':function(tagObj){
+						app.vars.cid = app.data[tagObj.datapointer].cid;
+						app.ext.myRIA.u.handleLoginActions();
+						callback();
+					}});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					

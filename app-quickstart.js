@@ -2446,12 +2446,17 @@ elasticsearch.size = 50;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
 				
-				
+				//ZEPHYR SPECIFIC INLINE LOGIN PAGE CODE
 				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
-					//ZEPHYR SPECIFIC INLINE LOGIN PAGE CODE
-					app.ext.myRIA.a.showContent('customer',{'show':'login','callback':function(){showContent(infoObj.pageType, {'show':infoObj.show});}});
-					
+					var show = infoObj.show;
+					infoObj.callback = function(){showContent('customer', {'show':show});};
+					infoObj.show = 'login';
+					infoObj.back = -1;
+					//app.ext.myRIA.a.showContent('customer',{'show':'login','callback':function(){showContent(infoObj.pageType, {'show':infoObj.show});}});
+					}
 /*					//OLD CODE FOR SHOW LOGIN MODAL
+				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
+					
 
 					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
@@ -2461,10 +2466,10 @@ elasticsearch.size = 50;
 						$('#loginFormForModal').dialog('close');
 						app.ext.myRIA.u.showCustomer(infoObj) //binding this will reload this 'page' and show the appropriate content.
 						}).appendTo($('#loginSuccessContainer'));					
-*/
 					}
+*/
 //should only get here if the page does not require authentication or the user is logged in.
-				else	{
+//ZEPHYR NO ELSE				else	{
 					$('#newsletterArticle').hide(); //hide the default.
 					var $article = $('#'+infoObj.show+'Article')
 					$article.show(); //only show content if page doesn't require authentication.
@@ -2545,7 +2550,7 @@ elasticsearch.size = 50;
 							}
 						app.model.dispatchThis();
 						}
-					}
+//ZEPHYR NO ELSE					}
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				return r;
