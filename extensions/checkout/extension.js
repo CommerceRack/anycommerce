@@ -339,8 +339,6 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 
 	validate : {
-			
- 
 
 //runs individual panel/fieldset validation and returns whether or not all checkout fields are populated/valid.
 //the individual fieldset validator returns a 1/0 depending on whether it passes/fails the validation.
@@ -461,11 +459,16 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 //in addition to selecting a pay option, certain extra fields may be present and must be checked for.
 			chkoutMethodsPay : function($fieldset,formObj)	{
 				var valid = 0;
+				var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				if($fieldset && formObj)	{
 					if(app.ext.cco.u.thisSessionIsPayPal() && app.ext.cco.u.aValidPaypalTenderIsPresent())	{valid = 1;} //if paypal
 //should only get match here for expired paypal payments or some unexpected paypal related issue.
 					else if(app.ext.cco.u.thisSessionIsPayPal()){
 						$fieldset.anymessage({'message':"It appears something has gone wrong with your paypal authorization. Perhaps it expired. Please click the 'choose alternate payment method' link and either re-authorize through paypal or choose an alternate payment method. We apologize for the inconvenience. "})
+						}
+					//if the balance is zero, no payment method is necessary.
+					else if(app.u.thisNestedExists("app.data.cartDetail|"+cartID+".sum.balance_due_total") && Number(app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
+						valid = 1;
 						}
 					else if($('[name="want/payby"]:checked',$fieldset).length)	{
 						if(app.u.validateForm($fieldset))	{valid = 1;}
@@ -879,8 +882,10 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			chkoutMethodsPay : function(formObj,$fieldset)	{
 //the renderformat will handle the checked=checked. however some additional payment inputs may need to be added. that happens here.
-				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
-				isAuthenticated = app.u.buyerIsAuthenticated();
+				var
+					checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+					isAuthenticated = app.u.buyerIsAuthenticated(),
+					cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
@@ -902,33 +907,35 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='giftcardHint']",$fieldset).show();
 						}
 					else {} //user is not logged in.
-				
-//detect # of wallets and behave accordingly.
-					if($("[data-app-role='storedPaymentsContent']",$fieldset).children().length >= 1)	{
-						var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
-						$("[data-app-role='storedPaymentsHeader']",$fieldset).show();
-						$("[data-app-role='storedPaymentsContent']",$fieldset).show();
-						$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).show();
-						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
-						
-						$("[data-app-role='paymentOptionsContainer']",$fieldset).accordion({
-							heightStyle: "content",
-						    active: (app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].want && app.data['cartDetail|'+cartID].want.payby && app.data['cartDetail|'+cartID].want.payby.indexOf('WALLET') == -1) ? 0 : 1 //unless a buyer has already selected a non-wallet payment method, show stores payments as open.
-							});
+				//if the balance is zero, hide the payment inputs to avoid confusion.
+					if(app.u.thisNestedExists("app.data.cartDetail|"+cartID+".sum.balance_due_total") && Number(app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
+						$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
 						}
 					else	{
-						$("[data-app-role='storedPaymentsHeader']",$fieldset).hide();
-						$("[data-app-role='storedPaymentsContent']",$fieldset).hide();
-						$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).hide(); //header only needed if stored payments are present.
-						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
+//detect # of wallets and behave accordingly.
+						if($("[data-app-role='storedPaymentsContent']",$fieldset).children().length >= 1)	{
+							var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+							$("[data-app-role='storedPaymentsHeader']",$fieldset).show();
+							$("[data-app-role='storedPaymentsContent']",$fieldset).show();
+							$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).show();
+							$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
+							
+							$("[data-app-role='paymentOptionsContainer']",$fieldset).accordion({
+								heightStyle: "content",
+								active: (app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].want && app.data['cartDetail|'+cartID].want.payby && app.data['cartDetail|'+cartID].want.payby.indexOf('WALLET') == -1) ? 0 : 1 //unless a buyer has already selected a non-wallet payment method, show stores payments as open.
+								});
+							}
+						else	{
+							$("[data-app-role='storedPaymentsHeader']",$fieldset).hide();
+							$("[data-app-role='storedPaymentsContent']",$fieldset).hide();
+							$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).hide(); //header only needed if stored payments are present.
+							$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
+							}
 						}
-
-
-//data-app-role='giftcardHint'
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
-// !!! this doesn't work because want/payby is no longer a valid field. Either need a field to temporarily store this in OR need to start using localStorage for this.
+// ### TODO -> this doesn't work because want/payby is no longer a valid field. Either need a field to temporarily store this in OR need to start using localStorage for this.
 					if(formObj['want/payby'])	{
 						var
 							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),

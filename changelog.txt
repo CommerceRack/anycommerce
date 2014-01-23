@@ -8,10 +8,10 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201401
 
 GLOBAL
-	The default storage for data was changed from 'local' to 'session'. This means a refresh will clear most data from storage.
-	store_cart and store_checkout removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
+	The default storage for data was changed from 'local' to 'session'. This means a browser close/open will clear most data from storage.
+	store_cart and store_checkout extensions removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
 	reduce # of domains used for remotely loaded files (more friendly w/ some ff security plugins)
-	clean up of non-used plugins
+	clean up of non-used plugins/libraries.
 
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
@@ -47,6 +47,8 @@ ADMIN
 	new - cart manager (interact w/ client carts)
 	new - interface for order create received overhaul. supports multiple carts (order in progress).
 
+Checkout/1PC
+	payment methods now hidden if balance is zero.
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)
