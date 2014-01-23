@@ -215,9 +215,10 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
+					'handleAppEvents' : false,
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
-						"<button data-title='Create a New Campaign' data-app-click='admin_customer|adminCampaignCreateShow'>Create New Campaign</button>"],
+						"<button data-title='Create a New Campaign' data-app-click='admin_customer|adminCampaignCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create New Campaign</button>"],
 					'thead' : ['ID','Subject','Status','Methods','Q Mode','Created','Expired',''],
 					'tbodyDatabind' : "var: campaign(@CAMPAIGNS); format:processList; loadsTemplate:campaignResultsRowTemplate;",
 					'cmdVars' : {
@@ -798,25 +799,17 @@ $D is returned.
 				}, //showTemplateEditorInModal
 
 //clicked from campaign list row.
-			adminCampaignUpdateShow : function($ele)	{
-				if($ele.is('button'))	{
-					$ele.button({icons: {primary: "ui-icon-pencil"},text: false});
-					}
-				else	{
-					$ele.addClass('lookLikeLink');
-					}
-				$ele.off('click.adminCampaignUpdateShow').on('click.adminCampaignUpdateShow',function(){
-					var $table = $ele.closest('table');
-					$table.stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
+			adminCampaignUpdateShow : function($ele,P)	{
+				var $table = $ele.closest('table');
+				$table.stickytab({'tabtext':'campaigns','tabID':'campaignStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-					$('button, a, .lookLikeLink',$table).each(function(){
-						$(this).off('close.stickytab').on('click.closeStickytab',function(){
-							$table.stickytab('close');
-							})
+				$('button, a, .lookLikeLink',$table).each(function(){
+					$(this).off('close.stickytab').on('click.closeStickytab',function(){
+						$table.stickytab('close');
 						})
-
-					app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 					})
+
+				app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 				},
 
 //clicked within the campaign editor.
@@ -913,41 +906,38 @@ $D is returned.
 				
 				}, //adminCampaignSendConfirm
 
-			adminCampaignRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.adminCampaignRemoveConfirm').on('click.adminCampaignRemoveConfirm',function(event){
-					event.preventDefault();
-					var 
-						$tr = $btn.closest('tr'),
-						data = $tr.data();
+			adminCampaignRemoveConfirm : function($ele,P)	{
+				P.preventDefault();
+				var 
+					$tr = $ele.closest('tr'),
+					data = $tr.data();
 
-					app.ext.admin.i.dialogConfirmRemove({
-						"title" : "Delete Campaign: "+data.campaignid,
-						"removeButtonText" : "Delete Campaign",
-						"message" : "Please confirm that you want to delete the campaign: "+data.title+" ["+data.campaignid+"] . There is no undo for this action.",
+				app.ext.admin.i.dialogConfirmRemove({
+					"title" : "Delete Campaign: "+data.campaignid,
+					"removeButtonText" : "Delete Campaign",
+					"message" : "Please confirm that you want to delete the campaign: "+data.title+" ["+data.campaignid+"] . There is no undo for this action.",
 
-						'removeFunction':function(vars,$D){
-							$D.showLoading({"message":"Deleting Campaign "+data.campaignid});
-							app.model.addDispatchToQ({
-								'_cmd':'adminCampaignRemove',
-								'CAMPAIGNID': data.campaignid,
-								'_tag':	{
-									'callback':function(rd){
-									$D.hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										$('#globalMessaging').anymessage({'message':rd});
-										}
-									else	{
-										$D.dialog('close');
-										$('#globalMessaging').anymessage(app.u.successMsgObject('The campaign has been removed.'));
-										$tr.empty().remove(); //removes row for list.
-										}
+					'removeFunction':function(vars,$D){
+						$D.showLoading({"message":"Deleting Campaign "+data.campaignid});
+						app.model.addDispatchToQ({
+							'_cmd':'adminCampaignRemove',
+							'CAMPAIGNID': data.campaignid,
+							'_tag':	{
+								'callback':function(rd){
+								$D.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									$D.dialog('close');
+									$('#globalMessaging').anymessage(app.u.successMsgObject('The campaign has been removed.'));
+									$tr.empty().remove(); //removes row for list.
 									}
 								}
-							},'immutable');
-							app.model.dispatchThis('immutable');
 							}
-						});
+						},'immutable');
+						app.model.dispatchThis('immutable');
+						}
 					});
 				}, //adminCampaignRemoveConfirm
 
