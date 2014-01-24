@@ -1755,14 +1755,19 @@ subscribeListsArticle is used for authenticated buyers
 
 		<div id='recoverpasswordArticle' class='displayNone textContentArea'>
 			<div>
-				<h3 class='marginBottom'>Recover Password</h3>
 				<div class='appMessaging'></div>
-				<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this)).val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
+				<form action='#' class="loginForm" onSubmit="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this)).val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
 				<fieldset>
-					<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required'size='25' /></div>
+					<h1 class='marginBottom'>Recover Password</h1>
+					<div class='marginBottom'><label for='passwordRecoveryLogin'>What is your e-mail address?</label> 
+					<input type='text' name='login' required='required'size='25' /></div>
 
-					<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
-
+					<div class="marginTop"><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all loginBtn' value='Email Password to Me' /></div>
+					
+					<div class="marginTop">
+						<a href="#" onClick="return showContent('customer',{'show':'login'});">Sign In</a>
+						<a href="#" onClick="return showContent('customer',{'show':'createaccount'});">New to Zephyr?</a>
+					</div>
 				</fieldset>
 				</form>
 			</div>
