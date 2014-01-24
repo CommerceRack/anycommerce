@@ -3066,6 +3066,12 @@ else	{
 							if(obj.action === "modal"){
 								showContent('cart',obj);
 								}
+							else if(obj.action === 'inline'){
+								showContent('cart',{'show':'inline'});
+								}
+							else if(obj.action === 'message'){
+								app.u.throwMessage('Your item has been added to the cart!');
+								}
 							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}
