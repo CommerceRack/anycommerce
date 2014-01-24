@@ -76,14 +76,7 @@ var store_zephyrapp = function() {
 					var topNavcat = "."+breadcrumb[1];
 					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').hide();
 					}]);	
-			
-				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
-
-					$('.randomList', $context).each(function(){
-							app.ext.store_zephyrapp.u.randomizeList($(this));
-							});
-					}]);
+		
 					
 				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
@@ -91,6 +84,8 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').hide();
 					$('#contentArea').removeClass('sideBarRightShow');
 					$('#contentArea').addClass('sideBarRightHide');
+					
+					$('.responsiveDropdown').hide();
 				}]);
 				
 				
@@ -100,6 +95,8 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').hide();
 					$('#contentArea').removeClass('sideBarRightShow');
 					$('#contentArea').addClass('sideBarRightHide');
+					
+					$('.responsiveDropdown').hide();
 				}]);
 				
 				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
@@ -108,6 +105,12 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
 					$('#contentArea').addClass('sideBarRightShow');
+					
+					$('.responsiveDropdown').show();
+					
+					$('.randomList', $context).each(function(){
+						app.ext.store_zephyrapp.u.randomizeList($(this));
+						});
 				}]);	
 				
 				app.rq.push(['templateFunction', 'categoryTemplate','onCompletes',function(P) {
@@ -116,6 +119,8 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
 					$('#contentArea').addClass('sideBarRightShow');
+					
+					$('.responsiveDropdown').show();
 				}]);
 				
 				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P) {
@@ -124,6 +129,8 @@ var store_zephyrapp = function() {
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
 					$('#contentArea').addClass('sideBarRightShow');
+					
+					$('.responsiveDropdown').show();
 				}]);
 				
 				app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P) {
