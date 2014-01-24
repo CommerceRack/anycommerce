@@ -1730,7 +1730,7 @@ subscribeListsArticle is used for authenticated buyers
 					<fieldset>
 
 						<h1>Sign In</h1>
-						<div>
+						<div class="marginTopLogin">
 							<label for='login'>What is your e-mail address?</label>
 							<input type='email' class='zform_textbox zform_email'  name='login' value='' size='25' />
 						</div>
@@ -1758,8 +1758,8 @@ subscribeListsArticle is used for authenticated buyers
 				<div class='appMessaging'></div>
 				<form action='#' class="loginForm" onSubmit="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this)).val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
 				<fieldset>
-					<h1 class='marginBottom'>Recover Password</h1>
-					<div class='marginBottom'><label for='passwordRecoveryLogin'>What is your e-mail address?</label> 
+					<h1>Recover Password</h1>
+					<div class='marginBottom marginTopLogin'><label for='passwordRecoveryLogin'>What is your e-mail address?</label> 
 					<input type='text' name='login' required='required'size='25' /></div>
 
 					<div class="marginTop"><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all loginBtn' value='Email Password to Me' /></div>
@@ -1778,7 +1778,7 @@ subscribeListsArticle is used for authenticated buyers
 			<fieldset class='userInfo borderNone'>
 				<h1>New To Zephyr?</h1>
 				<h2>Create An Account Below</h2>
-				<div class="marginTop">
+				<div class="marginTopLogin">
 					<label>Full Name:</label> 
 					<input type='text' maxlength='50' size='30' required='required' name='fullname' value='' />
 				</div>

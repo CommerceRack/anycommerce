@@ -124,7 +124,7 @@ body{background:#ffffff;}
 .loginForm input { border:1px solid #000000; height:28px; font-size:15px; width:100%; padding:0px; margin-top:3px;}
 .loginBtn{background:url("images/loginbtn_bg.jpg") no-repeat scroll center top #FF6E01; border-radius: 0; color:#ffffff; font-size:15px; font-weight:bold;}
 .loginForm a {color: #0878da; display:block; font-size:13px;}
-
+.marginTopLogin {margin-top:5px;}
 
 }
 /***** Responsiv Css Close *****/
