@@ -925,10 +925,9 @@
 </div>
 
 
-
 <div id='warehouseZoneStandardTemplate'>
 
-<form action='#' onSubmit='return false'>
+<form action='#' onSubmit='return false' data-table-role='container'>
 <input type='hidden' name='_macrobuilder' value='admin_wholesale|ZONE-POSITIONS' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='true' />
 <input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='true' />
@@ -950,18 +949,18 @@
 		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@POSITIONS); format:processList; loadsTemplate:zonePositionRowTemplate_STANDARD;"></tbody>
+	<tbody data-table-role='content' data-bind="var: shipment(@POSITIONS); format:processList; loadsTemplate:zonePositionRowTemplate_STANDARD;"></tbody>
 	</table>
 	</div>
 
-	<div class='twoColumn column2 labelsAsBreaks alignedLabels'>
+	<div class='twoColumn column2 labelsAsBreaks alignedLabels' data-table-role='inputs'>
 		<input type='hidden' name='uuid' value='' /><!-- if an editor is introduced, populate this field w/ the rest of the form -->
 		<label><span>Row</span><input type='number' name='row' value='' size='5' data-bind="var: location(row); format:popVal;" class='skipTrack smallInput' /></label>
 		<label><span>Shelf begin</span><input type='text' name='shelf' value='' size='5' data-bind="var: location(shelf); format:popVal;" class='skipTrack smallInput' /></label>
 		<label><span>Shelf end</span><input type='text' name='shelf_end' value='' size='5' data-bind="var: location(shelf_end); format:popVal;" class='skipTrack smallInput' /></label>
 		<label><span>Slot begin</span><input type='text' name='slot' value='' size='5' data-bind="var: location(slot); format:popVal;" class='skipTrack smallInput' /></label>
 		<label><span>Slot end</span><input type='text' name='slot_end' value='' size='5' data-bind="var: location(slot_end); format:popVal;" class='skipTrack smallInput' /></label>
-		<button data-app-event="admin_config|dataTableAddExec">Apply Position</button>
+		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton' data-icon-primary='ui-icon-plus'>Apply</button>
 	</div>
 </fieldset>
 
@@ -984,7 +983,7 @@
 	<td data-bind="var: location(shelf_end); format:text;"></td>
 	<td data-bind="var: location(slot); format:text;"></td>
 	<td data-bind="var: location(slot_end); format:text;"></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Zone</button></td>
+	<td><button data-app-event="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Zone</button></td>
 </tr>
 
 
@@ -998,8 +997,8 @@
 	<td data-bind="var: warehouse(ZONE_PREFERENCE); format:text;"></td>
 	<td data-bind="var: warehouse(@POSITIONS.length); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_wholesale|warehouseRemoveConfirm">Remove</button>
-<button data-app-event="admin_wholesale|warehouseDetailDMIPanel">Edit</button>
+<button data-app-click="admin_wholesale|warehouseRemoveConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove</button>
+<button data-app-click="admin_wholesale|warehouseDetailDMIPanel" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
 	</td>
 </tr>
 
@@ -1008,7 +1007,7 @@
 	<td data-bind="var: location(ZONE); format:text;"></td>
 	<td data-bind="var: location(ZONE_TITLE); format:text;" /></td>
 	<td data-bind="var: location(ZONE_TYPE); format:text;" /></td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Zone</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Zone</button></td>
 </tr>
 
 
@@ -1089,10 +1088,10 @@
 	<td data-bind="var: schedule(currency); format:text;"></td>
 	<td data-bind="var: schedule(discount_amount); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm">Remove Schedule</button>
+<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove Schedule</button>
 <button data-app-event="admin_customer|adminCustomerSearchShowUI" data-scope='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-searchfor;'>Customers</button>
-<button data-app-event="admin_wholesale|adminOrganizationSearchShowUI" data-searchby='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-keywords;'>Organizations</button>
-<button data-app-event="admin_wholesale|priceScheduleUpdateShow">Edit Schedule</button>
+<button data-app-click="admin_wholesale|adminOrganizationSearchShowUI" class='applyButton' data-text='false' data-icon-primary='ui-icon-contact' data-searchby='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-keywords;'>Organizations</button>
+<button data-app-click="admin_wholesale|priceScheduleUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Schedule</button>
 	</td>
 </tr>
 
@@ -1126,12 +1125,8 @@
 	</fieldset>
 	
 	<fieldset class='marginBottom'>
-		<legend>Price</legend>
-		<p class='hint'>
-		You will have the opportunity to enter a unique price and/or discount for each product that will affect the base price (but not options) - if you leave this field blank then the base price will be used.
-		</p>
-		
-		<label>DEFAULT PRICING FORMULA</label>
+		<legend>Price <span class='toolTip' title="You will have the opportunity to enter a unique price and/or discount for each product that will affect the base price (but not options) - if you leave this field blank then the base price will be used.">?</span></legend>
+		<label>Default Pricing Formula</label>
 <!--
 <input type="checkbox" name="chk_discount_default"> Default Pricing Formula: <input type="text" name="discount_amount" value="" size="20"> (only used if no unique formula is set)<br>
 <font color="red">Warning: Without a default pricing formula, the price of each item must be set individually. HINT: You probably don't want to do this. Try using "BASE"</font><br>
@@ -1151,22 +1146,17 @@
 
 
 	<fieldset class='marginBottom'>
-		<legend>Promotions</legend>
-		
+		<legend>Promotions <span class='toolTip' title="Promotions can selectively have different behaviors per schedule, based on the the rules logic within them. Promotions and Coupons are DIFFERENT merchandising strategies. If you do not want a coupon to be enabled for one or more wholesale schedules you must Disable each coupon individually.">?</span></legend>
 		<div class='label'><input type="radio" value="1" name="promotion_mode" data-bind="var: schedule(promotion_mode); format:popVal; hideZero:false; defaultVal: 1;" /> Use default store promotions. (RECOMMENDED)</div>
 		<div class='label'><input type="radio" value="0" name="promotion_mode" data-bind="var: schedule(promotion_mode); format:popVal;" /> Disable Promotions</div>
-		<p class='hint'>
-Promotions can selectively have different behaviors per schedule, based on the the rules logic within them.<br />
-Promotions and Coupons are DIFFERENT merchandising strategies. If you do not want a coupon to be enabled for one or more wholesale schedules you must Disable each coupon individually.
-		</p>
 	</fieldset>
 
 	<fieldset class='marginBottom'>
-		<legend>Shipping</legend>
+		<legend>Shipping <span class='toolTip' title='You can configure shipping rules so they only apply to certain schedules.'>?</span></legend>
 
 		<div class='label'><input type="radio" value="1" name="shiprule_mode"  data-bind="var: schedule(shiprule_mode); format:popVal; hideZero:false; defaultVal: 1;" /> Apply rules based on how they are configured. (RECOMMENDED)</div>
 		<div class='label'><input type="radio" value="0" name="shiprule_mode" data-bind="var: schedule(shiprule_mode); format:popVal;" /> Disable/Skip all shipping rules.</div>
-		<p class='hint'>You can configure shipping rules so they only apply to certain schedules.</p>
+
 		
 	</fieldset>
 
@@ -1189,14 +1179,14 @@ Promotions and Coupons are DIFFERENT merchandising strategies. If you do not wan
 		<legend>Internationalization</legend>
 		
 		<label>
-			<span>Currency</span>
+			<span>Currency <span class='toolTip' title="This feature allows you to specify an alternate price list in another currency. Not compatible with pricing formulas, fixed price promotions, or option based price modifiers.  We recommend naming these schedules CXXX where XXX is the currency code. for example CEUR (currency euro) or CCAD (currency canadian dollars).
+">?</span></span>
 			<select name="currency">
 				<option value="">-</option>
 				<option value="USD">USD: US Dollars</option>
 				<option value="EUR">EUR: Euro</option>
 			</select>
-			<span class='toolTip' title="This feature allows you to specify an alternate price list in another currency. Not compatible with pricing formulas, fixed price promotions, or option based price modifiers.  We recommend naming these schedules CXXX where XXX is the currency code. for example CEUR (currency euro) or CCAD (currency canadian dollars).
-">?</span>
+			
 		</label>
 		
 	</fieldset>

@@ -520,145 +520,114 @@ var admin_wholesale = function() {
 				$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 				}, //warehouseCreateShow
 
+			warehouseDetailDMIPanel : function($ele,P)	{
+				P.preventDefault();
+				var data = $ele.closest('tr').data();			
+			
+				if(data._object == 'GEO' || (data._object == 'ZONE' && (data.zone_type == 'RECEIVING' || data.zone_type == 'UNSTRUCTURED' || data.zone_type == 'STANDARD')))	{
+//these are the shared values for the DMI panel.
+					var panelObj = {
+						'handleAppEvents' : true
+						}
 
-
-			wholesaleZoneAddRow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-				$btn.off('click.wholesaleZoneAddRow').on('click.wholesaleZoneAddRow',function(event){
-					event.preventDefault();
-					if($btn.data('loadstemplate'))	{
-						var $tr = app.renderFunctions.createTemplateInstance($btn.data('loadstemplate'));
-						$btn.closest('table').find('tbody:first').append($tr);
-						app.u.handleAppEvents($tr);
+					if(data._object == 'ZONE')	{
+						panelObj.templateID = 'warehouseZoneStandardTemplate';
+						panelObj.panelID = 'warehouse_'+data.geo+'_'+data.id;
+						panelObj.header = 'Edit Zone: '+data.zone;
 						}
 					else	{
-						$btn.closest('form').anymessage({"message":"In admin_wholesale.e.wholesaleZoneAddRow, no data-loadstemplate specified on trigger element.",'gMessage':true})
+						panelObj.panelID = 'warehouse_'+data.geo;
+						panelObj.templateID = 'warehouseAddUpdateTemplate';
+						panelObj.header = 'Edit Warehouse: '+data.geo;
 						}
-					});
-				}, //wholesaleZoneAddRow
+					panelObj.showLoading = false;
+					var $panel = app.ext.admin.i.DMIPanelOpen($ele,panelObj);
 
-			warehouseDetailDMIPanel : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				
-				if($btn.closest('tr').data('zone_type') == 'RECEIVING' || $btn.closest('tr').data('zone_type') == 'UNSTRUCTURED')	{
-					$btn.hide();
+					if(data._object == 'GEO')	{
+						$("[name='GEO']",$panel).closest('label').hide().val(data.geo); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+						$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+						}
+					else	{
+						$('form',$panel).append("<input type='hidden' name='GEO' value='"+data.geo+"' />");
+						$('form',$panel).append("<input type='hidden' name='ZONE' value='"+data.zone+"' />");
+						}
+					$panel.showLoading({'message':'Fetching warehouse details'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminWarehouseDetail',
+						'GEO' : data.geo,
+						'_tag':	{
+							'datapointer' : 'adminWarehouseDetail|'+data.geo,
+							'callback':function(rd)	{
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//success content goes here.
+									if(data._object == 'GEO')	{
+										$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
+										}
+									else	{
+										$panel.anycontent({
+											'translateOnly':true,
+											'data':app.data[rd.datapointer]['%ZONES'][data.zone]
+											});
+										}
+									app.u.handleButtons($panel);
+									app.u.handleCommonPlugins($panel);
+									}
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
-						event.preventDefault();
-						var data = $btn.closest('tr').data();
-					
-						if(data._object == 'GEO' || data._object == 'ZONE')	{
-	//these are the shared values for the DMI panel.
-							var panelObj = {
-								'panelID' : 'warehouse_'+data.geo,
-								'handleAppEvents' : true
-								}
-	
-							if(data._object == 'ZONE')	{
-								panelObj.templateID = 'warehouseZoneStandardTemplate';
-								panelObj.header = 'Edit Zone: '+data.zone;
-								}
-							else	{
-								panelObj.templateID = 'warehouseAddUpdateTemplate';
-								panelObj.header = 'Edit Warehouse: '+data.geo;
-								}
-							panelObj.showLoading = false;
-							var $panel = app.ext.admin.i.DMIPanelOpen($btn,panelObj);
-	
-							if(data._object == 'GEO')	{
-								$("[name='GEO']",$panel).closest('label').hide().val(data.geo); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-								$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
-								}
-							else	{
-								$('form',$panel).append("<input type='hidden' name='GEO' value='"+data.geo+"' />");
-								$('form',$panel).append("<input type='hidden' name='ZONE' value='"+data.zone+"' />");
-								}
-							$panel.showLoading({'message':'Fetching warehouse details'});
-							app.model.addDispatchToQ({
-								'_cmd':'adminWarehouseDetail',
-								'GEO' : data.geo,
-								'_tag':	{
-									'datapointer' : 'adminWarehouseDetail|'+data.geo,
-									'callback':function(rd)	{
-										if(app.model.responseHasErrors(rd)){
-											$('#globalMessaging').anymessage({'message':rd});
-											}
-										else	{
-											//success content goes here.
-											if(data._object == 'GEO')	{
-												$panel.anycontent({'translateOnly':true,'datapointer':rd.datapointer});
-												}
-											else	{
-												$panel.anycontent({
-													'translateOnly':true,
-													'data':app.data[rd.datapointer]['%ZONES'][data.zone]
-													});
-												app.u.handleAppEvents($panel);
-												}
-											}
-										}
-									}
-								},'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						else	{
-							$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseDetailDMIPanel, unrecognized data._object ["+data._object+"]. Must be GEO or ZONE.","gMessage":true});
-							}
-	
-	
-						});
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.warehouseDetailDMIPanel, either unrecognized data._object ["+data._object+"] (must be GEO or ZONE) or _object is set to zone and data.zone_type is unrecognized ["+data.zone_type+"] (must be RECEIVING, STANDARD or UNSTRUCTURED).","gMessage":true});
 					}
 				}, //warehouseDetailDMIPanel
 
-			warehouseRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.warehouseRemoveExec').on('click.warehouseRemoveExec',function(event){
-					event.preventDefault();
-					
-					var $tr = $btn.closest('tr');
-					var GEO = $tr.data('geo');
-					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'message':'Are you sure you want to delete '+($tr.data('_object') == 'GEO' ? (" warehouse "+GEO) : (" zone "+$tr.data('zone')))+'? There is no undo for this action.',
-						'removeButtonText' : 'Delete',
-						'removeFunction':function(vars,$modal){
-							var $panel = $(app.u.jqSelector('#','warehouse_'+GEO));
-							if($panel.length)	{
-								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
-								}
-							
-							if($tr.data('_object') == 'ZONE')	{
-								app.model.addDispatchToQ({
-									'_cmd':'adminWarehouseMacro',
-									'GEO' : GEO,
-									'_tag': {
-										'callback' : 'showMessaging',
-										'jqObj' : $('#globalMessaging'),
-										'message' : 'Zone '+$tr.data('zone')+' has been deleted.'
-										},
-									'@updates':["ZONE-DELETE?ZONE="+$tr.data('zone')]
-									},'immutable');
-								}
-							else	{
-								app.model.addDispatchToQ({
-									'_cmd':'adminWarehouseMacro',
-									'GEO':GEO,
-									'_tag': {
-										'callback' : 'showMessaging',
-										'jqObj' : $('#globalMessaging'),
-										'message' : 'Warehouse '+GEO+' has been deleted.'
-										},
-									'@updates':["WAREHOUSE-DELETE"]},'immutable');
-								}
-							
-							
-							app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
-							app.model.dispatchThis('immutable');
-							$modal.dialog('close');
+			warehouseRemoveConfirm : function($ele,P)	{
+				P.preventDefault();
+				
+				var $tr = $ele.closest('tr');
+				var GEO = $tr.data('geo');
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					'message':'Are you sure you want to delete '+($tr.data('_object') == 'GEO' ? (" warehouse "+GEO) : (" zone "+$tr.data('zone')))+'? There is no undo for this action.',
+					'removeButtonText' : 'Delete',
+					'removeFunction':function(vars,$modal){
+						var $panel = $(app.u.jqSelector('#','warehouse_'+GEO));
+						if($panel.length)	{
+							$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
 							}
-						});
-					
-
+						
+						if($tr.data('_object') == 'ZONE')	{
+							app.model.addDispatchToQ({
+								'_cmd':'adminWarehouseMacro',
+								'GEO' : GEO,
+								'_tag': {
+									'callback' : 'showMessaging',
+									'jqObj' : $('#globalMessaging'),
+									'message' : 'Zone '+$tr.data('zone')+' has been deleted.'
+									},
+								'@updates':["ZONE-DELETE?ZONE="+$tr.data('zone')]
+								},'immutable');
+							}
+						else	{
+							app.model.addDispatchToQ({
+								'_cmd':'adminWarehouseMacro',
+								'GEO':GEO,
+								'_tag': {
+									'callback' : 'showMessaging',
+									'jqObj' : $('#globalMessaging'),
+									'message' : 'Warehouse '+GEO+' has been deleted.'
+									},
+								'@updates':["WAREHOUSE-DELETE"]},'immutable');
+							}
+						
+						
+						app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
+						app.model.dispatchThis('immutable');
+						$modal.dialog('close');
+						}
 					});
 				}, //warehouseRemoveConfirm
 
@@ -1067,7 +1036,7 @@ var admin_wholesale = function() {
 				},
 
 
-			adminSupplierAction : function($ele)	{
+			adminSupplierAction : function($ele,P)	{
 				//the thought here is that someday more actions will be present.
 				if($ele.data('action') == 'INVENTORY:UPDATE')	{
 					var $fieldset = $ele.closest('fieldset');
@@ -1120,7 +1089,7 @@ var admin_wholesale = function() {
 				}, //showSupplierEditor
 	
 			supplierBatchExec : function($ele,p)	{
-				app.u.dump(" -> BEGIN admin_wholesale.e.supplierBatchExec");
+//				app.u.dump(" -> BEGIN admin_wholesale.e.supplierBatchExec");
 				if($ele.data('verb'))	{
 					app.u.dump(" -> verb: "+$ele.data('verb'));
 					$ele.closest('.dualModeContainer').find(":checked").each(function(){
@@ -1250,6 +1219,76 @@ var admin_wholesale = function() {
 
 
 
+//////////////////// SCHEDULES
+
+
+			priceScheduleUpdateShow : function($ele,P)	{
+				var SID = $ele.closest('tr').data('sid'); //schedule id
+				
+				var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+					'templateID' : 'priceScheduleUpdateTemplate',
+					'panelID' : 'schedule_'+SID,
+					'header' : 'Edit Price Schedule: '+SID,
+					'data' : $ele.closest('tr').data()
+					});
+				app.u.handleAppEvents($panel);
+				app.model.dispatchThis('mutable');
+				}, //priceScheduleUpdateShow
+
+
+			priceScheduleCreateShow : function($ele,P)	{
+				P.preventDefault();
+				
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Schedule',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
+					});
+				
+				$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
+				
+				$("<button>Create Schedule<\/button>").button().on('click',function(){
+					app.model.addDispatchToQ({
+						'_cmd':'adminPriceScheduleCreate',
+						'SID': $(this).parent().find("[name='SID']").val(),
+						'_tag':	{
+							'callback':'showMessaging',
+							'jqObj' : $D,
+							'jqObjEmpty' : true,
+							'message' : 'Your price schedule has been created.'
+							}
+						},'immutable');
+					app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
+					app.model.dispatchThis('immutable');
+					}).appendTo($D);
+				
+				$D.dialog('open');
+				},
+
+			priceScheduleRemoveConfirm : function($ele,P)	{
+				var SID = $ele.closest('tr').data('sid');
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					'message':'Are you sure you want to delete schedule '+SID+'? There is no undo for this action.',
+					'removeButtonText' : 'Delete Price Schedule',
+					'removeFunction':function(vars,$modal){
+						var $panel = $(app.u.jqSelector('#','schedule_'+SID));
+						if($panel.length)	{
+							$panel.anypanel('destroy'); //make sure there is no editor for this schedule still open.
+							}
+						$ele.closest("[data-app-role='dualModeContainer']").showLoading({"message":"Removing price schedule "+SID});
+						app.model.addDispatchToQ({'_cmd':'adminPriceScheduleRemove','SID':SID},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
+						app.model.dispatchThis('immutable');
+						$modal.dialog('close');
+						}
+					});
+				}, //execTicketClose
+
+
+
+
+//////////////////// ORGANIZATIONS
+
+
 			showMediaLib4OrganizationLogo : function($ele)	{
 				var $context = $ele.closest('fieldset');
 				mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
@@ -1290,7 +1329,8 @@ var admin_wholesale = function() {
 							else	{
 								$table.show();
 								$table.anycontent({'datapointer':rd.datapointer});
-								$table.anytable();
+								app.u.handleCommonPlugins($form);
+
 								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
 								}
 							
@@ -1376,91 +1416,15 @@ var admin_wholesale = function() {
 					}
 				}, //adminCustomerOrganizationUpdateExec
 
-			adminOrganizationSearchShowUI : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-contact"},text: false});
-				if($btn.data('searchby') && $btn.data('keywords'))	{
-					$btn.attr('title','Search organizations by '+$btn.data('searchby').toLowerCase()+" for '"+$btn.data('keywords').toLowerCase()+"'");
-					$btn.off('click.adminOrganizationSearchShowUI').on('click.adminOrganizationSearchShowUI',function(event){
-						//later, maybe we add a data-stickytab to the button and, if true, closest table gets sticky.
-						app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'searchby':$btn.data('searchby'),'keywords':$btn.data('keywords')});
-						});
+			adminOrganizationSearchShowUI : function($ele,P)	{
+				if($ele.data('searchby') && $ele.data('keywords'))	{
+					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'searchby':$ele.data('searchby'),'keywords':$ele.data('keywords')});
 					}
 				else	{
-					$btn.button('disable');
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminOrganizationSearchShowUI, either searchby ["+$ele.data('searchby')+"] or keywords  ["+$ele.data('keywords')+"] not set on trigger element.","gMessage":true});
 					}
 				},
 
-
-
-			priceScheduleUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.priceScheduleUpdateShow').on('click.priceScheduleUpdateShow',function(event){
-					event.preventDefault();
-					var SID = $btn.closest('tr').data('sid'); //schedule id
-					
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'priceScheduleUpdateTemplate',
-						'panelID' : 'schedule_'+SID,
-						'header' : 'Edit Price Schedule: '+SID,
-						'data' : $btn.closest('tr').data()
-						});
-					app.u.handleAppEvents($panel);
-					app.model.dispatchThis('mutable');
-					});
-				}, //priceScheduleUpdateShow
-
-
-			priceScheduleCreateShow : function($ele,P)	{
-				P.preventDefault();
-				
-				var $D = app.ext.admin.i.dialogCreate({
-					'title':'Add New Schedule',
-					'showLoading':false //will get passed into anycontent and disable showLoading.
-					});
-				
-				$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
-				
-				$("<button>Create Schedule<\/button>").button().on('click',function(){
-					app.model.addDispatchToQ({
-						'_cmd':'adminPriceScheduleCreate',
-						'SID': $(this).parent().find("[name='SID']").val(),
-						'_tag':	{
-							'callback':'showMessaging',
-							'jqObj' : $D,
-							'jqObjEmpty' : true,
-							'message' : 'Your price schedule has been created.'
-							}
-						},'immutable');
-					app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
-					app.model.dispatchThis('immutable');
-					}).appendTo($D);
-				
-				$D.dialog('open');
-				},
-
-			priceScheduleRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.priceScheduleRemoveConfirm').on('click.priceScheduleRemoveConfirm',function(event){
-					event.preventDefault();
-					
-					var SID = $btn.closest('tr').data('sid');
-					var $D = app.ext.admin.i.dialogConfirmRemove({
-						'message':'Are you sure you want to delete schedule '+SID+'? There is no undo for this action.',
-						'removeButtonText' : 'Delete Price Schedule',
-						'removeFunction':function(vars,$modal){
-							var $panel = $(app.u.jqSelector('#','schedule_'+SID));
-							if($panel.length)	{
-								$panel.anypanel('destroy'); //make sure there is no editor for this schedule still open.
-								}
-							$btn.closest("[data-app-role='dualModeContainer']").showLoading({"message":"Removing price schedule "+SID});
-							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleRemove','SID':SID},'immutable');
-							app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
-							app.model.dispatchThis('immutable');
-							$modal.dialog('close');
-							}
-						});
-					});
-				}, //execTicketClose
 
 
 			showOrganizationUpdate : function($ele,P)	{
@@ -1526,6 +1490,7 @@ var admin_wholesale = function() {
 				app.u.handleCommonPlugins($D);
 				app.u.handleButtons($D);
 				} //showOrganizationCreate
+
 			}, //e [app Events]
 
 
