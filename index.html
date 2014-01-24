@@ -106,7 +106,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 		</div>
 		<div class="mobileTopNav displayNone displayBlockMobile marginAuto">
 			<img onClick="showContent('homepage');" class="pointer" width="148" height="48" src="images/zephyr_logo_small.png"/>
-			<img class="mobileTopNavSearch" src="images/topbar_searchicon.png"/>
+			<img onClick="app.ext.store_zephyrapp.a.showSearchBar($(this));" class="mobileTopNavSearch pointer" src="images/topbar_searchicon.png"/>
 			<a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img height="42" src="images/topbar_customericon.png"/></a>
 			<a class="pointer"  onClick="return showContent('cart',{});"><img class="mobileTopNavCart" src="images/topbar_carticon.png"/></a>
 		</div>
@@ -142,7 +142,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 			<a class="pointer" onClick="return showContent('checkout',{});"><img class="headerCheckoutBtn"src="images/zs_topnavchecko-188x18.gif"/></a>
 		</div>
 	</div>
-	<div class="searchSection">
+	<div class="searchSection displayNoneMobile">
 		<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
 			<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault searchBar" placeholder="Search" id="searchBar"/>
 			<input class="search searchBtn pointer" type="submit" value="" src="images/zs_btn_search-48x18.gif" id="searchButton" />

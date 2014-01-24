@@ -289,7 +289,16 @@ var store_zephyrapp = function() {
 					return true;
 					}
 				return false;
+				},
+			showSearchBar: function ($container){
+				if (!$('.searchSection').hasClass('searchShow')){
+					$('.searchSection').addClass('searchShow').show();
+					}
+				else{
+					$('.searchSection').removeClass('searchShow').hide();
+					}
 				}
+			
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
