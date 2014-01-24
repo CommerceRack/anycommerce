@@ -1111,6 +1111,9 @@ this will likely become more flexible in the future. ###
 
 
 <div id='productTemplate' class='productPage'>
+	<div class="displayNone" data-bind='var: session(session.recentCategories.0); format:showIfSet;'>
+		<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	</div>
 	<div class="prodPageNameContainer">
 		<div class="prodPageName">
 			<div class="floatRight displayNoneMobile">

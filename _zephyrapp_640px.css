@@ -75,6 +75,7 @@ body{background:#ffffff;}
 .searchList > li {width:100%; height:auto; position:relative; padding:4px 0px; margin: 0px; border-bottom:3px solid #e5e5e5;}
 
 /**** Product Page CSS****/
+.productPage .breadcrumb {margin-bottom:3px;}
 .prodPageNameContainer{padding:0px; background:none; border:0px;}
 .prodPageName {padding:0px 5px 5px; background:none;}
 .prodPageName h1 {min-height:40px; font-size:18px; color:#000000;}
