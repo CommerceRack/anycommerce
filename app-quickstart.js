@@ -930,6 +930,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					case 'homepage':
 						infoObj.pageType = 'homepage';
 						infoObj.navcat = zGlobals.appSettings.rootcat;
+						if(app.ext.myRIA.vars.session.recentCategories[0] != infoObj.navcat)	{
+							app.ext.myRIA.vars.session.recentCategories.unshift(infoObj.navcat);
+							}
 						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj);
 						break;
 
