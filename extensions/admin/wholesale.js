@@ -1231,7 +1231,7 @@ var admin_wholesale = function() {
 					'header' : 'Edit Price Schedule: '+SID,
 					'data' : $ele.closest('tr').data()
 					});
-				app.u.handleAppEvents($panel);
+				app.u.handleButtons($panel);
 				app.model.dispatchThis('mutable');
 				}, //priceScheduleUpdateShow
 
@@ -1301,7 +1301,10 @@ var admin_wholesale = function() {
 					$form = $ele.closest('form'),
 					sfo = $form.serializeJSON(),
 					$dualModeContainer = $form.closest("[data-app-role='dualModeContainer']"),
-					$table = $("[data-app-role='dualModeListContents']",$dualModeContainer).closest('table');
+					$table = $("[data-app-role='dualModeListTable']",$dualModeContainer);
+				
+				app.u.dump(" -> $dualModeContainer.length: "+$dualModeContainer.length);
+				app.u.dump(" -> $table.length: "+$table.length);
 				
 				$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
 				$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
@@ -1330,10 +1333,8 @@ var admin_wholesale = function() {
 								$table.show();
 								$table.anycontent({'datapointer':rd.datapointer});
 								app.u.handleCommonPlugins($form);
-
-								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
+								app.u.handleButtons($form);
 								}
-							
 							}
 						};
 					app.model.addDispatchToQ(sfo,'mutable');
