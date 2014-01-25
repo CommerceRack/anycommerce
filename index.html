@@ -1963,11 +1963,19 @@ sticky, so they're fixed. Makes it easier on the designer and the developer.
 So the cart template should contain these two elements and the extension should contain these two templates.
 -->
 
-<div id='cartTemplate' class='loadingBG'>
+<div id='cartTemplate' class='loadingBG cartTemplate'>
 
 <form id='cartTemplateForm' action='#' onSubmit='return false'>
 
+<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+<img class="freeShipCart" src="images/freeshipping_cart.jpg"/>
 <div class='cartStuffContainer'>
+	<div class="cartHeaderText">
+		<h1>Shopping Cart</h1>
+		<h2 class="floatLeft">Items in Cart</h2>
+		<h2 class="floatRight">Quantity</h2>
+		<div class="clear"></div>
+	</div>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
 </div>
 
@@ -2019,7 +2027,7 @@ So the cart template should contain these two elements and the extension should 
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
 			<span class='continueShoppingSpan'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
 	
-			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton displayNoneMobile' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
 	
 			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 	

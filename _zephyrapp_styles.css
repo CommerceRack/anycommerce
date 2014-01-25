@@ -862,3 +862,47 @@ a:hover {
 .review_9	{background-position: 0px -112px;}
 .review_10	{background-position: 0px -112px;}
 /***** Review Section CSS End *****/
+
+
+/***** Cart CSS Start *****/
+.cartTemplate{
+	font-style:'Nunito',sans-serif;
+}
+.checkoutButton {
+    background: url("images/loginbtn_bg.jpg") no-repeat scroll center top #FF6E01;
+    border: 1px solid #000000;
+    border-radius: 0;
+    color: #FFFFFF;
+    display: block;
+    font-size: 16px;
+    height: 34px;
+    margin: 0 auto 5px;
+    width: 290px;
+}
+.checkoutButton .ui-button-text{
+	padding:0px;
+}
+.freeShipCart{
+	margin:5px auto 10px;
+	display:block;
+}
+.cartStuffContainer {
+    border-top: 3px solid #E5E5E5;
+}
+.cartHeaderText{
+	border-top:1px solid #000000;
+	padding:3px 0px 1px;
+}
+.cartHeaderText h1 {
+	color:#ff6e01;
+	font-weight:bold;
+	font-size:16px;
+}
+.cartHeaderText h2 {
+	color:#4f4f4f;
+	padding:0px 6px 0px 2px;
+}
+#cartStuffList {
+    border-top: 1px solid #000000;
+}
+/***** Cart CSS End *****/
