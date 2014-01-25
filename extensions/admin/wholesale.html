@@ -1088,8 +1088,8 @@
 	<td data-bind="var: schedule(currency); format:text;"></td>
 	<td data-bind="var: schedule(discount_amount); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_wholesale|priceScheduleRemoveConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove Schedule</button>
-<button data-app-event="admin_customer|adminCustomerSearchShowUI" data-scope='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-searchfor;'>Customers</button>
+<button data-app-click="admin_wholesale|priceScheduleRemoveConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove Schedule</button>
+<button data-app-click="admin_customer|adminCustomerSearchShowUI" class='applyButton' data-text='false' data-icon-primary='ui-icon-person' data-scope='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-searchfor;'>Customers</button>
 <button data-app-click="admin_wholesale|adminOrganizationSearchShowUI" class='applyButton' data-text='false' data-icon-primary='ui-icon-contact' data-searchby='SCHEDULE' data-bind='var:schedule(SID);format:assignAttribute; attribute:data-keywords;'>Organizations</button>
 <button data-app-click="admin_wholesale|priceScheduleUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Schedule</button>
 	</td>

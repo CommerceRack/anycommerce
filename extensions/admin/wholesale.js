@@ -624,7 +624,7 @@ var admin_wholesale = function() {
 							}
 						
 						
-						app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
 						app.model.dispatchThis('immutable');
 						$modal.dialog('close');
 						}
@@ -1225,7 +1225,7 @@ var admin_wholesale = function() {
 			priceScheduleUpdateShow : function($ele,P)	{
 				var SID = $ele.closest('tr').data('sid'); //schedule id
 				
-				var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+				var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
 					'templateID' : 'priceScheduleUpdateTemplate',
 					'panelID' : 'schedule_'+SID,
 					'header' : 'Edit Price Schedule: '+SID,
@@ -1442,7 +1442,7 @@ var admin_wholesale = function() {
 			execOrganizationCreate : function($ele,P){
 				P.preventDefault();
 				var
-					$form = $btn.closest('form'),
+					$form = $ele.closest('form'),
 					sfo = $form.serializeJSON({'cb':true});
 				
 				if(app.u.validateForm($form))	{
