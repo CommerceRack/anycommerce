@@ -1128,18 +1128,18 @@
 		<legend>Price <span class='toolTip' title="You will have the opportunity to enter a unique price and/or discount for each product that will affect the base price (but not options) - if you leave this field blank then the base price will be used.">?</span></legend>
 		<label>Default Pricing Formula</label>
 <!--
-<input type="checkbox" name="chk_discount_default"> Default Pricing Formula: <input type="text" name="discount_amount" value="" size="20"> (only used if no unique formula is set)<br>
+<input type="checkbox" name="discount_default"> Default Pricing Formula: <input type="text" name="discount_amount" value="" size="20"> (only used if no unique formula is set)<br>
 <font color="red">Warning: Without a default pricing formula, the price of each item must be set individually. HINT: You probably don't want to do this. Try using "BASE"</font><br>
 -->
 		
 		
 		<label>
-			<input type="checkbox" name="chk_incomplete" data-bind="var: schedule(chk_incomplete); format:popVal; hideZero:false; defaultVal: 1;" />
+			<input type="checkbox" name="incomplete" data-bind="var: schedule(incomplete); format:popVal; hideZero:false; defaultVal: 1;" />
 			Ignore/Disable Special pricing for incomplete items.
 		</label>
 		
 		<label>
-			<input type="checkbox" name="chk_rewards" data-bind="var: schedule(chk_rewards); format:popVal;" /> Allow participation in rewards program.
+			<input type="checkbox" name="rewards" data-bind="var: schedule(rewards); format:popVal;" /> Allow participation in rewards program.
 		</label>
 		
 	</fieldset>
@@ -1164,12 +1164,12 @@
 	<fieldset class='marginBottom'>
 		<legend>Customer Access</legend>
 
-<label><input type="checkbox" name="chk_realtime_orders" data-bind="var: schedule(chk_realtime_orders); format:popVal; hideZero:false; defaultVal: 1;" /> Accept EDI/XML Orders from customers.</label>
-<label><input type="checkbox" name="chk_realtime_products" data-bind="var: schedule(chk_realtime_products); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML product download access.</label>
-<label><input type="checkbox" name="chk_realtime_inventory" data-bind="var: schedule(chk_realtime_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML inventory download access.</label>
-<label><input type="checkbox" name="chk_dropship_invoice" data-bind="var: schedule(chk_dropship_invoice); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to provide their own packing slip/invoice and logo information for dropship orders.</label>
-<label><input type="checkbox" name="chk_export_inventory" data-bind="var: schedule(chk_export_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to export/print out a complete inventory list.</label>
-<label><input type="checkbox" name="chk_inventory_ignore" data-bind="var: schedule(chk_inventory_ignore); format:popVal;" /> Ignore Inventory: Allow customers to purchase unlimited quantities.</label>
+<label><input type="checkbox" name="realtime_orders" data-bind="var: schedule(realtime_orders); format:popVal; hideZero:false; defaultVal: 1;" /> Accept EDI/XML Orders from customers.</label>
+<label><input type="checkbox" name="realtime_products" data-bind="var: schedule(realtime_products); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML product download access.</label>
+<label><input type="checkbox" name="realtime_inventory" data-bind="var: schedule(realtime_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Give customers EDI/XML inventory download access.</label>
+<label><input type="checkbox" name="dropship_invoice" data-bind="var: schedule(dropship_invoice); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to provide their own packing slip/invoice and logo information for dropship orders.</label>
+<label><input type="checkbox" name="export_inventory" data-bind="var: schedule(export_inventory); format:popVal; hideZero:false; defaultVal: 1;" /> Allow customers to export/print out a complete inventory list.</label>
+<label><input type="checkbox" name="inventory_ignore" data-bind="var: schedule(inventory_ignore); format:popVal;" /> Ignore Inventory: Allow customers to purchase unlimited quantities.</label>
 		
 	
 	</fieldset>
