@@ -521,7 +521,7 @@ used, but not pre-loaded.
 						'templateID':'domainAddUpdateHostTemplate',
 						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
-						}).anydelegate();
+						});
 
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
 					var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
@@ -560,7 +560,7 @@ used, but not pre-loaded.
 							})
 						)
 
-					$D.dialog('open');
+					$D.anydelegate().dialog('open');
 					}
 				else	{
 					$ele.closest('.ui-widget-content').anymessage({'message':'In admin_sites.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});

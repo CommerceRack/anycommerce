@@ -1110,6 +1110,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.addDispatchToQ({
 							'_cmd':'adminCartMacro',
 							'_cartid' : cartid,
+							'_tag' : {
+								'callback' : 'showMessaging',
+								'jqObj' : $('#globalMessaging'),
+								'message' : 'Customer '+customer.EMAIL+' assigned to this cart'
+								},
 							"@updates" : ["LINK-CUSTOMER-ID?CID="+customer.CID]
 							},'immutable');
 						app.model.destroy('cartDetail|'+cartid);

@@ -1851,22 +1851,23 @@ lookup table to determine the next highest handling fee.">?</span></legend>
 </div>
 
 
+
 <div id='shippingFlex_local_canada'>
-<fieldset class='clearfix'>
+<fieldset class='clearfix' data-table-role='container'>
 	<legend>Canadian Local Pickup Configuration</legend>
 <p class='hint'>
 	Delivery/Pickup filters by geography, allowing clients to visit to your store, or opt for delivery rather than using a standard carrier.<br />
 	If you plan to deliver to a small geographic area, or are able to accept customer walk-ins then this can be a great way to give customers the convience of purchasing online without the expense of shipping.
 </p>
 
-	<div class='floatRight'>
+	<div class='floatRight' data-table-role='inputs'>
 	<label><span>Zip code pattern</span><input size='6' type='text' name='postal' class='skipTrack' /></label>
 	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack smallInput' step='0.01' min='0' /></label>
 	<label>
 		<span>Pickup instructions</span>
 		<textarea name='text' class='skipTrack'></textarea>
 	</label>
-	<button data-app-click="admin_config|dataTableAddExec">Add</button>
+	<button data-app-click="admin_config|dataTableAddUpdate" class='apply button'>Add</button>
 	</div>
 	
 	<table class='floatLeft gridTable' data-app-role='dataTable'>
@@ -1875,9 +1876,10 @@ lookup table to determine the next highest handling fee.">?</span></legend>
 		<th>Postal</th>
 		<th>Fee</th>
 		<th>Text</th>
+		<th></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalCanadaRowTemplate;">
+	<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalCanadaRowTemplate;" data-table-role='content'>
 	</tbody>
 	</table>
 
@@ -2966,11 +2968,10 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 	<div class='buttonset marginBottom'>
 	<h1>Notifications</h1>
-	<button class='floatRight' data-app-event='admin|processForm' data-skipvalidation='true' >Save Changes</button><!-- skip validation cuz we're only using the data-table -->
+	<button class='floatRight applyButton' data-app-click='admin|submitForm' data-skipvalidation='true' >Save Changes</button><!-- skip validation cuz we're only using the data-table -->
 	</div>
 
-
-	<fieldset class='borderNone'>
+	<fieldset class='borderNone' data-table-role='container'>
 		<section class='floatLeft marginRight'>
 		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
 		<thead>
@@ -2981,13 +2982,13 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var:notifications(@NOTIFICATIONS); format:processList; loadsTemplate:notificationsListTemplate;">
+		<tbody data-bind="var:notifications(@NOTIFICATIONS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
 		
 		</tbody>
 		</table>
 		</section>
 			
-		<section class='floatLeft marginLeft notificationDatatableInputs'>
+		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
 
 <!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
 	
@@ -3035,7 +3036,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 				</label>
 			</div>
 	
-			<button data-app-event="admin_config|dataTableAddExec" onClick='return false'>Add</button>
+			<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Add</button>
 	
 		
 		
@@ -3060,7 +3061,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<span data-bind="var: notification(email); format:text;"></span>
 		<span data-bind="var: notification(url); format:text;"></span>
 	</td>
-	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 </table>
 

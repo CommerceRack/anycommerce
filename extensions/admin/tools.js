@@ -136,8 +136,7 @@ var admin_tools = function() {
 				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false,'datapointer':'info'});
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
-				app.u.handleAppEvents($target);
-				$target.anydelegate();
+				app.u.handleButtons($target.anydelegate());
 
 				app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogList',
@@ -155,8 +154,9 @@ var admin_tools = function() {
 					'header' : 'Private Files',
 					'className' : 'privatefiles', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Created','Filename','Type','Expiration','Creator',''],
+					'handleAppEvents' : false,
 					'tbodyDatabind' : "var: users(@files); format:processList; loadsTemplate:privateFilesRowTemplate;",
-					'controls' : "<button data-app-event='admin_tools|adminPrivateFileRemoveConfirm' class='floatRight'>Delete Selected</button><form class='floatLeft'><label>Filter<\/label> <select name='type' class='marginLeft marginRight'><option value=''>none<\/option><option value='REPORT'>Report<\/option><option value='SYNDICATION'>Syndication<\/option><option value='CSV'>CSV<\/option><\/select><button data-app-click='admin|refreshDMI' data-serializeform='1' class='applyButton'>Filter<\/button><\/form>",
+					'controls' : "<button data-app-click='admin_tools|adminPrivateFileRemoveConfirm' class='floatRight applyButton' data-icon-primary='ui-icon-trash'>Delete Selected</button><form class='floatLeft'><label>Filter<\/label> <select name='type' class='marginLeft marginRight'><option value=''>none<\/option><option value='REPORT'>Report<\/option><option value='SYNDICATION'>Syndication<\/option><option value='CSV'>CSV<\/option><\/select><button data-app-click='admin|refreshDMI' data-serializeform='1' class='applyButton'>Filter<\/button><\/form>",
 					'cmdVars' : {
 						'_cmd' : 'adminPrivateFileList',
 						'limit' : '50',
@@ -372,115 +372,110 @@ var admin_tools = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 
-			rawJSONRequestExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.rawJSONRequestExec').on('click.rawJSONRequestExec',function(event){
-					event.preventDefault();
-					var JSONString = $btn.closest('form').find("[name='JSON']").val();
-					app.u.dump(" -> myJSON: "+JSONString);
-					var validJSON = false;
-					try	{
+			rawJSONRequestExec : function($ele,P)	{
+				P.preventDefault();
+				var JSONString = $ele.closest('form').find("[name='JSON']").val();
+				app.u.dump(" -> myJSON: "+JSONString);
+				var validJSON = false;
+				try	{
 //						app.u.dump(" -> attempting to validate json");
-						app.u.dump(" -> JSON.parse(JSONString): "+JSON.parse(JSONString));
-					//Run some code here
-						validJSON = JSON.parse(JSONString);
-						}
-					catch(err) {
-					//Handle errors here
-						}
+					app.u.dump(" -> JSON.parse(JSONString): "+JSON.parse(JSONString));
+				//Run some code here
+					validJSON = JSON.parse(JSONString);
+					}
+				catch(err) {
+				//Handle errors here
+					}
 //					app.u.dump(" -> jsonParse(myJSON): "); app.u.dump(validJSON);
-					if(typeof validJSON === 'object')	{
-						// ### TODO -> this should set a callback of showMessaging and pass a message of 'success' and put it into the parent form but ONLY if no callback is set. got interupted.
-						validJSON._tag = validJSON._tag || {};
-						if(validJSON._tag.callback)	{}
-						else	{
-							validJSON._tag.callback = 'showMessaging';
-							validJSON._tag.message = "API request was successful.";
-							validJSON._tag.jqObj = $btn.closest('form');
-							}
-	
-						if(app.model.addDispatchToQ(validJSON,'mutable'))	{
-							app.model.dispatchThis('mutable');
-							}
-						else	{
-							$btn.closest('form').anymessage({"message":"The query could not be dispatched. Be sure you have a _cmd set in your query."})
-							}
-						
+				if(typeof validJSON === 'object')	{
+					// ### TODO -> this should set a callback of showMessaging and pass a message of 'success' and put it into the parent form but ONLY if no callback is set. got interupted.
+					validJSON._tag = validJSON._tag || {};
+					if(validJSON._tag.callback)	{}
+					else	{
+						validJSON._tag.callback = 'showMessaging';
+						validJSON._tag.message = "API request was successful.";
+						validJSON._tag.jqObj = $ele.closest('form');
+						}
+
+					if(app.model.addDispatchToQ(validJSON,'mutable'))	{
+						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$btn.closest('form').anymessage({"message":"The query is not a valid json object. Use a service like jsonLint to validate your JSON if necessary.<br>hint: You must use double quotes around your values."})
+						$ele.closest('form').anymessage({"message":"The query could not be dispatched. Be sure you have a _cmd set in your query."})
 						}
-				});
+					
+					}
+				else	{
+					$ele.closest('form').anymessage({"message":"The query is not a valid json object. Use a service like jsonLint to validate your JSON if necessary.<br>hint: You must use double quotes around your values."})
+					}
 			},
 
-			inspectorExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.inspectorExec').on('click.inspectorExec',function(event){
-					event.preventDefault();
-					if(app.u.validateForm($btn.closest('form')))	{
-						var
-							cmdObj = $btn.closest('form').serializeJSON({'cb':true}),
-							valid = true;
-							
-							cmdObj._tag = {};
-							
-						if($btn.data('inspect') == 'order' && cmdObj.orderid)	{
-							cmdObj._cmd = "adminOrderDetail";
-							cmdObj._tag.datapointer = "adminOrderDetail|"+cmdObj.orderid;
-							}
-						else if($btn.data('inspect') == 'product' && cmdObj.pid)	{
-							cmdObj._cmd = "appProductGet";
-							cmdObj.withVariations = 1;
-							cmdObj.withInventory = 1;
-							cmdObj._tag.datapointer = "appProductGet|"+cmdObj.pid;
-							}
-						else if($btn.data('inspect') == 'shipmethods')	{
-							cmdObj._cmd = "adminConfigDetail";
-							cmdObj.shipmethods = true;
-							cmdObj._tag.datapointer = "adminConfigDetail|shipmethods|"+app.vars.partition;
-							}
-						else if($btn.data('inspect') == 'cart' && cmdObj.cartid)	{
-							cmdObj._cmd = "cartDetail";
-							cmdObj._tag.datapointer = "cartDetail|"+cmdObj.cartid;
-							}
-						else	{
-							valid = false;
-							$('#globalMessaging').anymessage({"message":"In admin_tools.e.inspectExec, either inspect ["+$btn.data('inspect')+"] was invalid (only product, order and cart are valid) or inspect was valid, but was missing corresponding data (ex: inspect=order but no orderid specified in form);","gMessage":true});
-							}
+			inspectorExec : function($ele,P)	{
+				P.preventDefault();
+				if(app.u.validateForm($ele.closest('form')))	{
+					var
+						cmdObj = $ele.closest('form').serializeJSON({'cb':true}),
+						valid = true;
 						
+						cmdObj._tag = {};
 						
-						if(valid)	{
-							var $D = app.ext.admin.i.dialogCreate({
-								'title':'Inspector'
-								})
-							$D.dialog('open');
-							cmdObj._tag.callback = function(rd)	{
-								$D.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$D.anymessage({'message':rd});
-									}
-								else	{
-									//sanitize a little...
-									delete app.data[rd.datapointer]._rcmd;
-									delete app.data[rd.datapointer]._msgs;
-									delete app.data[rd.datapointer]._msg_1_id;
-									delete app.data[rd.datapointer]._msg_1_txt;
-									delete app.data[rd.datapointer]._msg_1_type;
-									delete app.data[rd.datapointer]._rtag;
-									delete app.data[rd.datapointer]._uuid;
-									delete app.data[rd.datapointer].ts
-									
-									$D.append(app.ext.admin_tools.u.objExplore(app.data[rd.datapointer]));
-									}
-								}
-							app.model.addDispatchToQ(cmdObj,'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						else	{} //error messaging already handled.
-						
+					if($ele.data('inspect') == 'order' && cmdObj.orderid)	{
+						cmdObj._cmd = "adminOrderDetail";
+						cmdObj._tag.datapointer = "adminOrderDetail|"+cmdObj.orderid;
 						}
-					else	{}
-					});
+					else if($ele.data('inspect') == 'product' && cmdObj.pid)	{
+						cmdObj._cmd = "appProductGet";
+						cmdObj.withVariations = 1;
+						cmdObj.withInventory = 1;
+						cmdObj._tag.datapointer = "appProductGet|"+cmdObj.pid;
+						}
+					else if($ele.data('inspect') == 'shipmethods')	{
+						cmdObj._cmd = "adminConfigDetail";
+						cmdObj.shipmethods = true;
+						cmdObj._tag.datapointer = "adminConfigDetail|shipmethods|"+app.vars.partition;
+						}
+					else if($ele.data('inspect') == 'cart' && cmdObj.cartid)	{
+						cmdObj._cmd = "cartDetail";
+						cmdObj._tag.datapointer = "cartDetail|"+cmdObj.cartid;
+						}
+					else	{
+						valid = false;
+						$('#globalMessaging').anymessage({"message":"In admin_tools.e.inspectExec, either inspect ["+$ele.data('inspect')+"] was invalid (only product, order and cart are valid) or inspect was valid, but was missing corresponding data (ex: inspect=order but no orderid specified in form);","gMessage":true});
+						}
+					
+					
+					if(valid)	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title':'Inspector'
+							})
+						$D.dialog('open');
+						cmdObj._tag.callback = function(rd)	{
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd});
+								}
+							else	{
+								//sanitize a little...
+								delete app.data[rd.datapointer]._rcmd;
+								delete app.data[rd.datapointer]._msgs;
+								delete app.data[rd.datapointer]._msg_1_id;
+								delete app.data[rd.datapointer]._msg_1_txt;
+								delete app.data[rd.datapointer]._msg_1_type;
+								delete app.data[rd.datapointer]._rtag;
+								delete app.data[rd.datapointer]._uuid;
+								delete app.data[rd.datapointer].ts
+								
+								$D.append(app.ext.admin_tools.u.objExplore(app.data[rd.datapointer]));
+								}
+							}
+						app.model.addDispatchToQ(cmdObj,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{} //error messaging already handled.
+					
+					}
+				else	{}
+
 				},
 
 			powerToolBatchJobExec : function($btn)	{
@@ -665,19 +660,13 @@ var admin_tools = function() {
 				$tr.attr('data-id',$tr.attr('data-obj_index'));
 				app.u.handleButtons($tr);
 				},
-/*
-till events support multiple actions, can't implement this.
-need the 'apply' button to run both the apply code AND this code.
-uncomment this, the two lines in flexeditAttributeCreateUpdateShow for button(disable) and the cancel button to proceed w/ this.
-OR, since old app events are still in play, could use data-app-click to trigger this and the app event code to trigger the data-table save. could be good temporary work around.
-			flexDataTableAddEditCancel : function($btn)	{
-				$btn.button().off('click.flexDataTableAddEditCancel').on('click.flexDataTableAddEditCancel',function(event){
-					event.preventDefault();
-					$btn.closest('[data-app-role="flexeditManager"]').find("[data-app-event='admin_tools|flexeditAttributeCreateUpdateShow'], [data-app-event='admin_tools|flexeditAttributeCreateUpdateShow']").button('enable');
-					$btn.closest("[data-app-role='flexeditAttributeAddUpdateContainer']").slideUp();
-					})
+
+			flexDataTableAddEditCancel : function($ele,P)	{
+				$ele.closest("[data-table-role='container']").find(":input").val("");
+				$ele.closest("[data-table-role='inputs']").slideUp();
 				},
-*/			flexeditAttributeCreateUpdateShow : function($ele,p)	{
+
+			flexeditAttributeCreateUpdateShow : function($ele,p)	{
 				var $inputContainer = $ele.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
 //disable the add and edit buttons so as to not accidentally lose data while it's being entered (form would clear or populate w/ 'edit' contents )
 //					$btn.button('disable');
@@ -686,7 +675,7 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 //need to make sure form input area is 'on screen'. scroll to it.
 				$('html, body').animate({scrollTop: $inputContainer.offset().top}, 1000);
 				$(':input',$inputContainer).val(''); //clear all the inputs. important even if in 'edit' cuz anycontent will NOT clear and if a field is not set for this item, it'll leave the previously edited attributes content.
-				$inputContainer.show();
+				$inputContainer.slideDown();
 
 				if($ele.data('mode') == 'update')	{
 					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
@@ -728,101 +717,91 @@ OR, since old app events are still in play, could use data-app-click to trigger 
 				app.model.dispatchThis('immutable');
 				},
 			
-			adminPrivateFileDownloadExec : function($btn)	{
-				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
-				$btn.off('click.adminPrivateFileDownloadExec').on('click.adminPrivateFileDownloadExec',function(event){
-					event.preventDefault();
-					app.model.addDispatchToQ({
-						'_cmd':'adminPrivateFileDownload',
-						'GUID':$btn.closest('tr').data('guid'),
-						'_tag':	{
-							'datapointer' : 'adminPrivateFileDownload', //big dataset returned. only keep on in memory.
-							'callback' : 'fileDownloadInModal',
-							'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-					});
+			adminPrivateFileDownloadExec : function($ele,P)	{
+				P.preventDefault();
+				app.model.addDispatchToQ({
+					'_cmd':'adminPrivateFileDownload',
+					'GUID':$ele.closest('tr').data('guid'),
+					'_tag':	{
+						'datapointer' : 'adminPrivateFileDownload', //big dataset returned. only keep on in memory.
+						'callback' : 'fileDownloadInModal',
+						'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				}, //adminPrivateFileDownloadExec
 			
-			adminPlatformLogDownloadExec : function($btn)	{
-				$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}});
-				$btn.off('click.adminPlatformLogDownloadExec').on('click.adminPlatformLogDownloadExec',function(event){
-					event.preventDefault();
-					app.model.addDispatchToQ({
-						'_cmd':'adminPlatformLogDownload',
-						'GUID':$btn.closest('tr').data('guid'),
-						'_tag':	{
-							'datapointer' : 'adminPlatformLogDownload', //big dataset returned. only keep on in memory.
-							'callback' : 'fileDownloadInModal',
-							'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-					});
+			adminPlatformLogDownloadExec : function($ele,P)	{
+				P.preventDefault();
+				app.model.addDispatchToQ({
+					'_cmd':'adminPlatformLogDownload',
+					'GUID':$btn.closest('tr').data('guid'),
+					'_tag':	{
+						'datapointer' : 'adminPlatformLogDownload', //big dataset returned. only keep on in memory.
+						'callback' : 'fileDownloadInModal',
+						'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				}, //adminPlatformLogDownloadExec
 
+			adminPrivateFileRemoveConfirm : function($ele,P)	{
+				P.preventDefault();
+				var $rows = $ele.closest('.dualModeContainer').find("[data-app-role='dualModeListTbody'] tr.rowTaggedForRemove");
+				if($rows.length)	{
 
-			adminPrivateFileRemoveConfirm : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
-				$btn.off('click.adminPrivateFileRemoveConfirm').on('click.adminPrivateFileRemoveConfirm',function(event){
-					event.preventDefault();
-					var $rows = $btn.closest('.dualModeContainer').find("[data-app-role='dualModeListTbody'] tr.rowTaggedForRemove");
-					if($rows.length)	{
-
-						var $D = app.ext.admin.i.dialogConfirmRemove({
-							'message':'Are you sure you want to remove '+$rows.length+' file(s)? There is no undo for this action.',
-							'removeButtonText' : 'Remove',
-							'removeFunction':function(rd){
-								$D.parent().showLoading({"message":"Deleting "+$rows.length+" file(s)"});
-								$rows.each(function(){
-									app.model.addDispatchToQ({
-										'_cmd':'adminPrivateFileRemove',
-										'GUID':$(this).data('guid'),
-										'_tag':	{
-											'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
-											'callback' : function(rd){
-												if(app.model.responseHasErrors(rd)){
-													$D.anymessage({'message':rd});
-													}
-												else	{
-													//only report failures.
-													}
-												}
-											}
-										},'immutable');	
-										$(this).empty().remove(); //at the end so the dispatch can use data off of <tr>.							
-									});
-
+					var $D = app.ext.admin.i.dialogConfirmRemove({
+						'message':'Are you sure you want to remove '+$rows.length+' file(s)? There is no undo for this action.',
+						'removeButtonText' : 'Remove',
+						'removeFunction':function(rd){
+							$D.parent().showLoading({"message":"Deleting "+$rows.length+" file(s)"});
+							$rows.each(function(){
 								app.model.addDispatchToQ({
-									'_cmd':'ping',
+									'_cmd':'adminPrivateFileRemove',
+									'GUID':$(this).data('guid'),
 									'_tag':	{
 										'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
 										'callback' : function(rd){
-											$D.parent().hideLoading();
-											$D.empty();
-											$D.dialog({ buttons: [ { text: "Close", click: function() { $( this ).dialog( "close" ); } } ] });
 											if(app.model.responseHasErrors(rd)){
 												$D.anymessage({'message':rd});
 												}
 											else	{
-												$D.anymessage({"message":"Removal process completed."});
 												//only report failures.
 												}
 											}
 										}
 									},'immutable');	
-		
-								app.model.dispatchThis('immutable');
-								
-								}
-							});	
+									$(this).empty().remove(); //at the end so the dispatch can use data off of <tr>.							
+								});
 
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"Please tag at least one file for removal (click the trash can icon)."});
-						}
-					})
+							app.model.addDispatchToQ({
+								'_cmd':'ping',
+								'_tag':	{
+									'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
+									'callback' : function(rd){
+										$D.parent().hideLoading();
+										$D.empty();
+										$D.dialog({ buttons: [ { text: "Close", click: function() { $( this ).dialog( "close" ); } } ] });
+										if(app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											$D.anymessage({"message":"Removal process completed."});
+											//only report failures.
+											}
+										}
+									}
+								},'immutable');	
+	
+							app.model.dispatchThis('immutable');
+							
+							}
+						});	
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"Please tag at least one file for removal (click the trash can icon)."});
+					}
 				}, //adminPrivateFileRemoveConfirm
 
 

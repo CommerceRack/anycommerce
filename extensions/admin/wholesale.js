@@ -527,7 +527,7 @@ var admin_wholesale = function() {
 				if(data._object == 'GEO' || (data._object == 'ZONE' && (data.zone_type == 'RECEIVING' || data.zone_type == 'UNSTRUCTURED' || data.zone_type == 'STANDARD')))	{
 //these are the shared values for the DMI panel.
 					var panelObj = {
-						'handleAppEvents' : true
+						'handleAppEvents' : false
 						}
 
 					if(data._object == 'ZONE')	{

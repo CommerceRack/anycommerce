@@ -460,8 +460,8 @@ has to be within the fieldset to for data-table to work right.
 	<td data-bind="var: file(EXPIRES); format:text;" class='hideInDetailMode'></td>
 	<td data-bind="var: file(CREATEDBY); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-	<button data-app-event="admin|tagRowForRemove">Delete</button>
-	<button data-app-event="admin_tools|adminPrivateFileDownloadExec">Download</button>
+	<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete</button>
+	<button data-app-click="admin_tools|adminPrivateFileDownloadExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download</button>
 	</td>
 </tr>
 </table>
@@ -624,61 +624,61 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_RESUMMARIZE','%vars':{}}); return false;">Inventory Resummarize</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_RESUMMARIZE','%vars':{}}); return false;">Inventory Resummarize</button></td>
 			<td class='valignTop small'>
 			Forces the system to recompute the summary inventory for all SKU's. 
 			This should not be necessary unless you have encountered a bug which caused inventory summaries to not match inventory detail.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_CLEANUP','%vars':{}}); return false;">Product Cleanup</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_CLEANUP','%vars':{}}); return false;">Product Cleanup</button></td>
 			<td class='valignTop small'>
 			Resets/Rebuilds Product Index, clears out deleted items, and source pid from zoovy:related_products, and zoovy:accessory_products. Removes unicode characters. 
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_CLEANUP','%vars':{}}); return false; ">Inventory Cleanup</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_CLEANUP','%vars':{}}); return false; ">Inventory Cleanup</button></td>
 			<td class='valignTop small'>
 			Removes orphan inventory records which are not associated with a sku, creates records w/0 qty for pids which don't have inv. records.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_UPDATE_RESERVES','%vars':{}}); return false; ">Inventory Update Reserves</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_UPDATE_RESERVES','%vars':{}}); return false; ">Inventory Update Reserves</button></td>
 			<td class='valignTop small'>
 			Removes orphaned inventory reservations / verifies reserves.
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/IMAGE_REINDEX','%vars':{}}); return false; ">Image Reindex</button></td>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/IMAGE_REINDEX','%vars':{}}); return false; ">Image Reindex</button></td>
 			<td class='valignTop small'>
 			Image Reindex
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'public'}}); return false; ">Elastic Rebuild (Public)</button></td>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'public'}}); return false; ">Elastic Rebuild (Public)</button></td>
 			<td class='valignTop small'>
 			Elastic Product Search Rebuild (note: will be offline/unavailable during rebuild)
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'private'}}); return false; ">Elastic Rebuild (Private)</button></td>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'private'}}); return false; ">Elastic Rebuild (Private)</button></td>
 			<td class='valignTop small'>
 			Elastic Private Search Rebuild (note: will be offline/unavailable during rebuild)
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_LISTING_DOWNLOAD','%vars':{}}); return false; ">eBay Listing Download</button></td>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_LISTING_DOWNLOAD','%vars':{}}); return false; ">eBay Listing Download</button></td>
 			<td class='valignTop small'>
 			eBay Listing Complete Download (note: do not launch any new listings while this is running, eBay limits this to once per day per token)
 			</td>
 		</tr>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_SALESRANK','%vars':{}}); return false; ">Update SalesRanks</button></td>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_SALESRANK','%vars':{}}); return false; ">Update SalesRanks</button></td>
 			<td class='valignTop small'>
 			Goes through all products which have customer reviews and updates zoovy:prod_salesrank
 			<p class="warning ui-corner-all stdPadding">Notice about Sales Rank:<br />
@@ -698,23 +698,23 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onClick="navigateTo('#!showPlatformInfo'); return false;">App/Server Details</button></td>
+			<td class='valignTop'><button class='applyButton' onClick="navigateTo('#!showPlatformInfo'); return false;">App/Server Details</button></td>
 			<td>Some details about the server you are on, app version, etc.</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some Localstorage</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some Localstorage</button></td>
 			<td class='valignTop small'>
 			This will selectively clear local storage for the admin interface. It will clear data such as product, category ,etc, but leave preferences such as panel sequence , panel state (open/closed) etc. It will not impact local storage for other domains. This action is browser-specific.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button onclick="localStorage.clear();">Clear Localstorage</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="localStorage.clear();">Clear Localstorage</button></td>
 			<td class='valignTop small'>
 			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button data-app-event='admin_support|ping'>Ping!</button></td>
+			<td class='valignTop'><button class='applyButton' data-app-click='admin_support|ping'>Ping!</button></td>
 			<td>The simplest of calls on our API. Hit this and get a report of how long it took to make. For accurate results, make sure entire page is done loading prior to running this.</td>
 		</tr>
 		</tbody>
@@ -730,7 +730,7 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_UPDATE','%vars':{'f':'end-all'}}); return false; ">Close All Listings</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_UPDATE','%vars':{'f':'end-all'}}); return false; ">Close All Listings</button></td>
 			<td class='valignTop small'>
 			Ends all active listings on eBay.
 			</td>
@@ -747,7 +747,7 @@ has to be within the fieldset to for data-table to work right.
 		<tbody>
 		<tr>
 			<td class='valignTop'>
-			<button onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/KPIBI_RESET','%vars':{}}); return false; ">Reset KPIBI</button>
+			<button class='applyButton' onclick="app.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/KPIBI_RESET','%vars':{}}); return false; ">Reset KPIBI</button>
 			</td>
 			<td class='valignTop'>
 			Rebuilds all KPIBI data for the last year
@@ -760,14 +760,14 @@ has to be within the fieldset to for data-table to work right.
 
 	<section class='marginTop marginBottom'>
 		<h2>Inspectors &amp; More</h2>
-		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-event='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
+		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-click='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
 		
 		<form action='#' onSubmit='return false'><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label>
-			<button data-app-event='admin_tools|inspectorExec' data-inspect='product'>Inspect</button>
+			<button data-app-click='admin_tools|inspectorExec' data-inspect='product'>Inspect</button>
 			<button data-app-click='admin_tools|forcePIDIntoPTL' class='applyButton' title="This will add the sku in question to the product task list">Force into Product Task</button>
 			</form>
 		
-		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-event='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
+		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-click='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
 		<!--
 		started, but not done yet.
 		<form><label><span>Site Debug</span><span class='toolTip' title="A variety of site debuggging tools (shipping, tax, promotions, etc)">?</span></label><button class='marginLeft' onClick='app.ext.admin_tools.a.siteDebugger(); return false;'>Go</button></form> -->
@@ -779,9 +779,9 @@ has to be within the fieldset to for data-table to work right.
 		<form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginTop'>
 		<label>
 			<span>Query</span>
-			<textarea name='JSON' rows='10'></textarea>
+			<textarea name='JSON' rows='10' class='fullWidth'></textarea>
 		</label>
-		<button data-app-event="admin_tools|rawJSONRequestExec">Make Request</button>
+		<button data-app-click="admin_tools|rawJSONRequestExec" class='applyButton'>Make Request</button>
 		<ul>
 			<li>There is no 'undo' for this. Use with extreme caution.</li>
 			<li>https://github.com/zoovy/AnyCommerce-Development/wiki/API_Call_Reference</li>
@@ -806,7 +806,7 @@ has to be within the fieldset to for data-table to work right.
 <table>
 <tr id='accountUtilityLogRowTemplate'>
 	<td data-bind="var: log(TITLE); format:text;" class='isSearchable'></td>
-	<td><button data-app-event='admin_tools|adminPlatformLogDownloadExec'>download</button></td>
+	<td><button data-app-click='admin_tools|adminPlatformLogDownloadExec' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>download</button></td>
 </tr>
 </table>
 
@@ -818,12 +818,10 @@ has to be within the fieldset to for data-table to work right.
 	<div class='ui-widget twoColumn'>
 		<h3  class='stdPadding ui-widget-header ui-corner-top'>Enabled Attributes</h3>
 		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
-			
-			<fieldset>
+		
+			<fieldset data-table-role='container'>
 			<table data-app-role='dataTable' class=' fullWidth gridTable flexeditEnabledListContainer'>
-			<tbody data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' data-app-role='flexeditEnabledListTbody' >
-			
-			</tbody>
+				<tbody data-table-role='content' data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' data-app-role='flexeditEnabledListTbody' ></tbody>
 			</table>
 			
 			<div class='buttonset marginTop alignRight'>
@@ -832,7 +830,7 @@ has to be within the fieldset to for data-table to work right.
 			</div>
 
 <!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
-			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer'>
+			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer' data-table-role='inputs'>
 				<label><span>Attribute ID </span><input name='id' value='' type='text' data-bind='var: flexedit(id); format:popVal;' /></label>
 				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
 				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
@@ -865,8 +863,8 @@ has to be within the fieldset to for data-table to work right.
 					<textarea data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
 				</label>
 				</div>
-<!--				<button data-app-event="admin_tools|flexDataTableAddEditCancel">Cancel</button> -->
-				<button data-app-event="admin_config|dataTableAddExec">Apply Attribute</button>
+				<button data-app-click="admin_tools|flexDataTableAddEditCancel" class='applyButton'>Cancel</button>
+				<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Attribute</button>
 			</div>
 			</fieldset>
 		</form>

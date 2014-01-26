@@ -1096,20 +1096,24 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesAsOptions : function($tag,data)	{
-				var r = '', cartid = data.value.cart.cartid;
-				if(app.data['appCheckoutDestinations|'+cartid] && app.data['cartDetail|'+cartid] && data.bindData.shiptype)	{
-					var destinations = app.data['appCheckoutDestinations|'+cartid]['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+cartid];
-					for(var i = 0; i < L; i += 1)	{
-						r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
+				var r = '';
+				if(data.value.cart && data.value.cart.cartid){
+					var cartid = data.value.cart.cartid;
+					if(app.data['appCheckoutDestinations|'+cartid] && app.data['cartDetail|'+cartid] && data.bindData.shiptype)	{
+						var destinations = app.data['appCheckoutDestinations|'+cartid]['@destinations'], L = destinations.length, cartData = app.data['cartDetail|'+cartid];
+						for(var i = 0; i < L; i += 1)	{
+							r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
+							}
+						$tag.append(r);
+						$tag.val(app.u.thisNestedExists("app.data.cartDetail|"+cartid+"."+data.bindData.shiptype+".countrycode") ? cartData[data.bindData.shiptype].countrycode : 'US');
 						}
-					$tag.append(r);
-					$tag.val(app.u.thisNestedExists("app.data.cartDetail|"+cartid+"."+data.bindData.shiptype+".countrycode") ? cartData[data.bindData.shiptype].countrycode : 'US');
-					}
-				else if(!data.bindData.shiptype)	{
-					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'In cco.renderFormats.countriesAsOptions, data-bind rules must have a shiptype set.','gMessage':true}));
-					}
-				else	{
-					$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+cartid+'] or app.data.cartDetail|'+cartid+' and both are required. is not available in memory.','gMessage':true}));
+					else if(!data.bindData.shiptype)	{
+						$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'In cco.renderFormats.countriesAsOptions, data-bind rules must have a shiptype set.','gMessage':true}));
+						}
+					else	{
+						$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesAsOptions, app.data[appCheckoutDestinations|'+cartid+'] or app.data.cartDetail|'+cartid+' and both are required. is not available in memory.','gMessage':true}));
+						}
+
 					}
 				},
 
