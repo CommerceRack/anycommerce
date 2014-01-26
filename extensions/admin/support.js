@@ -536,26 +536,23 @@ app.model.dispatchThis('mutable');
 
 
 //used in the support utilites.
-			ping : function($btn)	{
-				$btn.button();
-				$btn.off('click.ping').on('click.ping',function(){
-					var start = new Date().getTime();
-app.model.addDispatchToQ({
-	'_cmd':'ping',
-	'_tag':	{
-		'callback':function(rd){
-if(app.model.responseHasErrors(rd)){
-	$('#platformInformation').anymessage({'message':rd});
-	}
-else	{
-	var end = new Date().getTime();
-	alert("Pong! took "+(end - start) / 1000+" seconds")
-	}
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-					});
+			ping : function($ele,P)	{
+				var start = new Date().getTime();
+				app.model.addDispatchToQ({
+					'_cmd':'ping',
+					'_tag':	{
+						'callback':function(rd){
+				if(app.model.responseHasErrors(rd)){
+					$('#platformInformation').anymessage({'message':rd});
+					}
+				else	{
+					var end = new Date().getTime();
+					alert("Pong! took "+(end - start) / 1000+" seconds")
+					}
+							}
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 				},
 
 
