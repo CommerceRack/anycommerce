@@ -2180,12 +2180,14 @@ time.
 
 		<label>
 			<span>Thumbnail width</span>
-			<input type='number' class='smallInput' min='25' step='1' value="" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
+			<input type='number' class='smallInput' min='25' step='1' value="75" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
+			<span class='toolTip' title='In pixels, the width of the image. In this case, bigger is not always better. Between 75 and 125 is a good place to start.'>?</span>
 		</label>
 		
 		<label>
 			<span>Thumbnail height</span>
-			<input type='number' class='smallInput' min='25' step='1' value="" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
+			<input type='number' class='smallInput' min='25' step='1' value="75" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
+			<span class='toolTip' title='In pixels, the height of the image. In this case, bigger is not always better.  Between 75 and 125 is a good place to start.'>?</span>
 		</label>
 		
 		<label>
@@ -2550,7 +2552,7 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
 	</label>
 	-->
-	<label class='displayNone nonInvOnly'>
+	<label class='displayNone nonInvOnly showForZoovyOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />
 		<span class='toolTip' title='This is a price for display purposes only. Actual price is configured in the product.'>(for display)</span>
