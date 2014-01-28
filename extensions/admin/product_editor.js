@@ -3330,7 +3330,7 @@ function type2class(type)	{
 								}
 							else	{
 								app.ext.admin.u.restoreInputsFromTrackingState($form);
-								$('#productTabMainContent').empty().append(app.ext.admin_prodedit.a.getVariationEditor('store',app.data.adminSOGComplete['%SOGS'][variationID])).anydelegate({'trackEdits':true}).anymessage(app.u.successMsgObject('Your changes have been saved'));
+								app.ext.admin.u.removeFromDOMItemsTaggedForDelete($form);
 								}
 							}
 						}
