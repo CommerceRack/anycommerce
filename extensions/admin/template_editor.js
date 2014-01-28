@@ -1641,7 +1641,7 @@ else	{
 							app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Site","domain":hostname.toLowerCase()+'.'+domainname});
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
+							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateChooserShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});
 							}
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
