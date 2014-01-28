@@ -323,7 +323,7 @@ var admin_marketplace = function() {
 				app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
 					$target.hideLoading();
 					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd})
+						$target.anymessage({'message':rd});
 						}
 					else	{
 						if(app.data[rd.datapointer]['@ACCOUNTS'].length)	{
@@ -335,6 +335,7 @@ var admin_marketplace = function() {
 								});
 							app.u.handleAppEvents($target);
 							app.u.handleCommonPlugins($target);
+							app.u.handleCommonButtons($target.anydelegate());
 							app.ext.admin.u.applyEditTrackingToInputs($target);
 
 							$('.applyAnytabs:first',$slimLeftContent).find("li[data-app-role='extrasTab']:first").trigger('click'); //make tokens and profiles tab active.
