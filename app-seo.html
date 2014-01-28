@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>SEO Generator</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript">
+		/***************
+		CONFIG
+		***************/
+		//trailing slash is assumed.  Don't forget it!
+		var domain = "http://app.speedaddictcycles.com/"
+		var pages = [
+			"product?pid=64-7027",
+			"product?pid=LV-AV-1006P"
+			
+		]
+		/***************
+		SETUP
+		***************/
+		var apiDomain = domain + "jsonapi/"
+		
+		//readable log, for informing the user without opening the console.  Used to list all the escaped fragment urls indexed.
+		function rLog(msg){
+			$('#output').append(msg+"<br/>");
+		};
+		function request(obj, callback){
+			$.extend(obj, {
+				"_clientid" : "zmvc",
+				"_uuid" : 1234,
+				"_version" : "201401"
+				});
+			$.ajax({
+				type: "POST",
+				url: apiDomain,
+				async: true,
+				contentType : "application/json",
+				dataType:"json",
+				data : JSON.stringify(obj)
+			}, callback);
+			
+		};
+		function generateSEO(token){
+			if(!window.lock){
+				window.lock = true;
+				window.token = token;
+				/*
+				//Temporarily bypassing this until we have a domain on 201401 to test
+				var obj = {
+					"_cmd" : "appSEOFetch",
+					"token" : token
+				}
+				request(obj, function(objects){
+					for(var i in objects){
+						var o = objects[i];
+						buildPage(o);
+					}
+					indexNextPage();
+				});
+				*/
+				indexNextPage();
+			}
+		};
+		//adds a page object to pages
+		function buildPage(pageInfo){
+			
+		}
+		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
+		function indexNextPage(){
+			if(pages.length){
+				console.log("indexing next page");
+				window.currPage = pages.splice(0,1)[0];
+				var iframe = $('#appContainer').get(0);
+				rLog("Indexing "+domain+currPage);
+				iframe.src = domain+"?v="+(new Date().getTime())+"&quiet=1"+"#!"+currPage;
+				addEventListener('message', messageHandler);
+			} else {
+				console.log("no more pages")
+				//Temporarily bypassing this until we have a domain on 201401 to test
+				//finishSEO();
+				window.lock = false;
+			}
+		}
+		
+		function messageHandler(event){
+			if(event.data == "renderFinished"){
+				rLog('Index finished for '+domain+currPage);
+				removeEventListener('message', messageHandler);
+				
+				var doctype = "<!DOCTYPE html>";
+				var dochtml = $('#appContainer').get(0).contentWindow.document.documentElement.outerHTML;
+				
+				var html = doctype + dochtml;
+				
+				storeSEO(currPage, html);
+				indexNextPage();
+			}
+		}
+		function storeSEO(page, html){
+			var obj = {
+				"_cmd" : "appSEOStore",
+				"#!" : page,
+				"html" : html,
+				"token" : token
+			}
+			request(obj);
+		}
+		function finishSEO(){
+			var obj = {
+				"_cmd" : "appSEOFinish",
+				"token" : token
+			}
+			request(obj);
+		};
+	</script>
+</head>
+<body>
+	<p>
+		Open this file in a text editor to change the domain used for generation, and to add any custom pages that should be indexed.
+	</p>
+	<form id="seoTokenForm" onSubmit="generateSEO($('input[name=seoToken]',$(this)).val()); return false;">
+		<div>
+			<label>Enter SEO Token</label>
+			<input type="text" required="required" name="seoToken"/>
+		</div>
+		<input type="submit" value="generate seo"></input>
+	</form>
+	<iframe id="appContainer" width="100%" height="300"></iframe>
+	<code id="output">
+	
+	</code>
+</body>
+</html>
