@@ -46,6 +46,7 @@ ADMIN
 	enhancement - new html editor for templates (campaign, ebay and site). site editor got UI update.
 	new - cart manager (interact w/ client carts)
 	new - interface for order create received overhaul. supports multiple carts (order in progress).
+	new - all new help doc. click 'help' in header.
 
 Checkout/1PC
 	payment methods now hidden if balance is zero.

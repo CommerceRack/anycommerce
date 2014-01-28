@@ -18,7 +18,7 @@
 
 
 var admin_support = function() {
-	var theseTemplates = new Array('supportFileUploadTemplate','supportManagerControls','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpPageTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
+	var theseTemplates = new Array('supportFileUploadTemplate','supportManagerControls','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -148,14 +148,25 @@ var admin_support = function() {
 				},
 
 //will open help interface within $target.
-			showHelpInterface : function($target){
-				if($("[data-app-role='dualModeContainer']",$target).length)	{
-					$target.show();
-					} //already an instance of help open in this target. leave as is.
-				else	{
-					$target.anycontent({'templateID':'helpPageTemplate','showLoading':false}); //clear contents and add help interface
-					app.u.handleAppEvents($target);
-					$('.gridTable',$target).anytable();
+// ### FUTURE -> vars.title support started but not finished/tested. add support for vars.title to be passed in and have a search performed.
+			showHelpInterface : function($target,vars){
+				var $DMI = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Help Documentation', //left off because the interface is in a tab.
+					'className' : 'helpDocumentation',
+					'buttons' : [],
+					'controls' : "<form class='searchBar' data-app-submit='admin_support|execHelpSearch' data-app-role='helpSearch'><input type='text' name='srsearch' value='"+( vars.title ? vars.title : '' )+"' class='hideInDetailMode'  /><button class='hideInDetailMode applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search</button></form>",
+					'thead' : ['title','Snippet',''],
+					'tbodyDatabind' : "var: users(query.search); format:processList; loadsTemplate:helpSearchResultsTemplate;",
+					'skipInitialDispatch' : true,
+					'showLoading' : false,
+					'cmdVars' : {
+						'_cmd' : 'helpSearch',
+						'_tag' : {'datapointer' : 'adminConfigDetail|prts'}
+						}
+					});
+				app.u.handleButtons($target.anydelegate());
+				if(vars.title)	{
+					$('form:first',$DMI).trigger('submit');
 					}
 				},
 
@@ -165,10 +176,13 @@ var admin_support = function() {
 				if(title)	{
 					var $D = app.ext.admin.i.dialogCreate({
 						title : title,
+						'templateID' : 'helpDocumentTemplate',
+						'showLoading' : false,
 						anycontent : true, //the dialogCreate params are passed into anycontent
 						handleAppEvents : false //defaults to true
 						});
 					$D.dialog('option','modal',false);
+					$D.prepend("<div class='hint alignRight marginBottom'>you can resize this window (drag a corner) or move it (drag the title bar).</div>");
 					$D.dialog('open');
 					app.ext.admin_support.u.loadHelpDocInto($D,title);
 					}
@@ -306,13 +320,15 @@ var admin_support = function() {
 
 			loadHelpDocInto : function($target,title)	{
 				if($target instanceof jQuery && title)	{
-
-app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","action":"parse","page":title,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
-app.model.dispatchThis('mutable');
-
+					$target.showLoading({"message":"Fetching help doc "+title});
+					app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","action":"parse","page":title,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$target}},"mutable");
+					app.model.dispatchThis('mutable');
+					}
+				else if($target instanceof jQuery)	{
+					$target.anymessage({"message":"In admin_support.u.loadHelpDocInto, no title specified.","gMessage":true})
 					}
 				else	{
-					
+					$("#globalMessaging").anymessage({"message":"In admin_support.u.loadHelpDocInto, $target is not a valid jQuery instance.","gMessage":true});
 					}
 //action='parse','page':'title'				
 				
@@ -570,38 +586,9 @@ app.model.dispatchThis('mutable');
 /***************			WEBDOC 			******************/
 
 
-
-			execHelpDetailEdit : function($btn)	{
-				$btn.button();
-				$btn.off('click.execHelpDetailEdit').on('click.execHelpDetailEdit',function(){
-					var docID = $btn.closest("[data-docid]").data('docid');
-					if(docID)	{
-						window.open('https://github.com/zoovy/documentation/blob/master/'+docID+'.html');
-						}
-					else	{
-						$btn.parent().after().anymessage({'message':'In admin_support.e.execHelpDetailHistory, unable to determine docid','gMessage':true});
-						}
-					});
-				}, //execHelpDetailEdit
-				
-			execHelpDetailHistory : function($btn)	{
-				$btn.button();
-				$btn.off('click.execHelpDetailHistory').on('click.execHelpDetailHistory',function(){
-					var docID = $btn.closest("[data-docid]").data('docid');
-					if(docID)	{
-						window.open('https://github.com/zoovy/documentation/commits/master/'+docID+'.html');
-						}
-					else	{
-						$btn.parent().after().anymessage({'message':'In admin_support.e.execHelpDetailHistory, unable to determine docid','gMessage':true});
-						}
-					});
-				}, //execHelpDetailHistory
-
-			execHelpSearch : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-					
-					var $parent = $btn.closest("[data-app-role='dualModeContainer']"),
+			execHelpSearch : function($ele,P)	{
+		
+					var $parent = $ele.closest("[data-app-role='dualModeContainer']"),
 					$form = $("[data-app-role='helpSearch']",$parent).first(),
 					srsearch = $("[name='srsearch']",$parent).val();
 
@@ -618,12 +605,12 @@ app.model.dispatchThis('mutable');
 						$('.dualModeListMessaging',$parent).first().empty().show().anymessage({'message':'Please enter some keywords into the form input above to search for.'});
 						$("[data-app-role='dualModeListContents']",$parent).first().hide();
 						}
-					event.preventDefault();
-					});
+					P.preventDefault();
+
 				}, //execHelpSearch
 
 
-
+//<button data-app-click="admin_support|showHelpDocInDialog" class='applyButton' data-title='some_helpdoc_id' data-icon-primary='ui-icon-lightbulb'>Help</button>
 //uses new delegated events model.
 			showHelpDocInDialog : function($ele,p)	{
 				var title = $ele.closest('[data-title]').data('title');
@@ -635,69 +622,26 @@ app.model.dispatchThis('mutable');
 					}
 				},
 
-//in this case, the event may be applied to a btn OR some text.
+//used in the DMI help interface to open a panel and popupate it w/ contents.
 			showHelpDetail : function($ele,P)	{
-				
-					P.preventDefault();
-					var title = $ele.closest('tr').data('title');
-					if(docID)	{
-// ### TODO -> finish this up using the new help search 
-var $dualModeDetail = $ele.closest("[data-app-role='dualModeContainer']").find("[data-app-role='dualModeDetail']").first(),
-panelID = app.u.jqSelector('','helpDetail_'+docID),
-$panel = $("<div\/>").data('docid',docID).hide().anypanel({
-	'header':'Help file: '+docID,
-	'templateID':'helpDocumentTemplate',
-	'dataAttribs': {'id':panelID,'docid':docID}
-	}).prependTo($dualModeDetail);
-
-app.ext.admin.u.toggleDualMode($dualModeDetail.closest("[data-app-role='dualModeContainer']"),'detail');
-
-app.ext.admin.calls.helpDocumentGet.init(docID,{
-	'callback':function(rd){
-		if(app.model.responseHasErrors(rd)){
-			app.u.throwMessage(rd);
-			}
-		else	{
-			$panel.anycontent({'datapointer':rd.datapointer});
-			app.u.handleAppEvents($panel);
-			app.ext.admin_support.u.handleHelpDocOverwrites($panel);
-			}
-		}
-	},'mutable');
-
-$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Help Document.'});});
-app.model.dispatchThis('mutable');
-
-
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetail, unable to determine docID.','gMessage':true});
-						}
-				
-				}
-
-
-
-
-
-/*
-not needed in support 2
-			tagAsPriority : function($ele)	{
-
-				$ele.off('change.tagAsPriorityHigh').on('change.tagAsPriorityHigh',function(){
-					var $phoneFieldset = $ele.closest('form').find("[data-app-role='phoneFieldset']");
+				P.preventDefault();
+				var title = $ele.closest('tr').data('title');
+				if(title)	{
+					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'helpDocumentTemplate',
+						'panelID' : 'helpdoc_'+title,
+						'showLoading' : false,
+						'header' : title
+						});
 					
-					app.u.dump(" -> got into change code");
-
-					if($ele.val() == 'HIGH')	{
-						$phoneFieldset.show();
-						}
-					else	{
-						$phoneFieldset.hide();
-						}
-					});
-				} //tagAsPriority
-*/			
+					app.ext.admin_support.u.loadHelpDocInto($(".ui-anypanel-content",$panel),title);
+					app.u.handleButtons($panel);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetail, unable to determine title.','gMessage':true});
+					}
+				}
+		
 			}
 
 		} //r object.

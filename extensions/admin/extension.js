@@ -4439,7 +4439,9 @@ vars:
 						vars.cmdVars._tag = vars.cmdVars._tag || {};
 						vars.cmdVars._tag.callback = vars.cmdVars._tag.callback || 'anycontent';
 						vars.cmdVars._tag.jqObj = $table;
-						app.model.addDispatchToQ(vars.cmdVars,'mutable');
+						if(!vars.skipInitialDispatch)	{
+							app.model.addDispatchToQ(vars.cmdVars,'mutable');
+							}
 						}
 
 						
