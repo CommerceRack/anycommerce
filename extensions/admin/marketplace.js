@@ -691,8 +691,8 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 
 
 			ebayShowTreeByChild : function(categoryid)	{
-					app.u.dump("BEGIN admin_marketplace.u.ebayShowTreeByChild");
-					app.u.dump(' -> categoryid: '+categoryid);
+//					app.u.dump("BEGIN admin_marketplace.u.ebayShowTreeByChild");
+//					app.u.dump(' -> categoryid: '+categoryid);
 					//app.u.dump(vars);
 					$('#APIForm').show(); //make sure form is visible.
 					var $chooser = $('#ebayCategoryChooser');
@@ -780,39 +780,6 @@ else	{
 						}
 					}, //ebayShowTreeByChild
 
-
-// !!! delete this once the templateEditor code is all refactored.
-			handleEBAYTemplateSelect : function(vars)	{
-				vars = vars || {};
-				var $ETC = $('#ebayTemplateChooser'); 
-				if(vars.SUBDIR && vars.PROJECTID && vars.PROFILE)	{
-					$ETC.showLoading({'message':'One moment please. Copying files into profile directory.'});
-					vars._cmd = 'adminEBAYTemplateInstall';
-					vars._tag = {
-						'callback' : function(rd)	{
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd})
-								}
-							else	{
-								$ETC.dialog('close');
-								$('#globalMessaging').anymessage(app.u.successMsgObject("Thank you, the eBay template "+vars.SUBDIR+" has been copied into the profile "+vars.PROFILE+"."));
-								$('.pageSyndication:first').find("[data-app-role='templateOrigin']:first").text(vars.SUBDIR);
-								}
-							}
-						}
-					app.model.addDispatchToQ(vars,'immutable'); //app.model.dispatchThis('immutable');
-					app.model.addDispatchToQ({
-						'_cmd':'adminEBAYProfileUpdate',
-						'template_origin':vars.SUBDIR,
-						'PROFILE' : vars.PROFILE
-						},'immutable');
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					$ETC.anymessage({"message":"","gMessage":true});
-					}
-				}, //handleEBAYTemplateSelect
-
 			ebayKISSInspectObject : function($object,$objectInspector)	{
 				if($object instanceof jQuery && $objectInspector instanceof jQuery)	{
 
@@ -843,114 +810,7 @@ else	{
 					}
 				},
 
-			getEBAYToolbarButtons : function()	{
 
-return [{
-			css : 'imageadd',
-			'text' : 'Upload New Image to Profile',
-			action: function (btn) {
-				var $D = $("<div \/>");
-				$D.dialog({
-					'modal':true,
-					'width':500,
-					height : 500,
-					'autoOpen' : false
-					});
-				$D.anycontent({'templateID':'ebayTemplateEditorImageUpload',data : {}});
-				$D.dialog('open');
-				app.ext.admin_medialib.u.convertFormToJQFU($('form',$D),'templateMediaUpload');
-				}
-			}	,	{
-			css: 'image',
-			text: 'Place Image',
-			action: function (btn) {
-				var 
-					$D = $('#ebayTemplateEditorImageListModal'),
-					profile = $('#ebayTemplateEditor').data('profile'),
-					jhtmlobject = this; //'this' is set by jhtmlarea to the iframe.
-				if($D.length)	{
-					$D.empty(); //clear contents
-					}
-				else	{
-					$D = $("<div \/>",{'id':'ebayTemplateEditorImageListModal'});
-					$D.dialog({
-						'title' : 'Select Media',
-						'modal':true,
-						'width':'60%',
-						'autoOpen' : false
-						});
-					}
-				$D.append("<ul class='listStyleNone' data-bind='var: media(@images); format:processList; loadsTemplate:ebayTemplateEditorMediaFileTemplate;' \/>");
-				$D.dialog('open');
-				$D.showLoading({'message':'Updating File List'});
-				app.ext.admin_medialib.calls.adminImageFolderDetail.init('_ebay/'+profile,{'callback' : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						//success content goes here.
-						var L = app.data[rd.datapointer]['@images'].length;
-//need a 'path' set for the data-bind to render.
-						for(var i = 0; i < L; i += 1)	{
-							app.data[rd.datapointer]['@images'][i]['path'] = "_ebay/"+profile+"/"+app.data[rd.datapointer]['@images'][i]['Name']
-							}
-						$D.anycontent({'datapointer':rd.datapointer});
-						app.u.handleAppEvents($D,{'btn':btn,'jhtmlobject':jhtmlobject});
-						$D.imagegallery({
-							selector: 'a[data-gallery="gallery"]',
-							show: 'fade',
-							hide: 'fade',
-							fullscreen: false,
-							slideshow: false
-							});
-						$D.dialog("option", "position", "center");
-						}
-					}},'mutable');
-				app.model.dispatchThis('mutable');
-				}
-			},{
-			css : 'prodattributeadd',
-			'text' : 'Add a Product Attribute',
-			action: function (btn) {
-				var jhtml = this; //the jhtml object.
-				var $D = app.ext.admin.i.dialogCreate({
-					'title' : 'Add Product Attribute'
-					});
-				$D.dialog('open');
-				$ul = $("<ul class='lookLikeLink' \/>");
-
-//eww.  but it got me here quick for a practical demo.  Probably want to do this as a json object. could we load flexedit? may be suicidal.
-
-$("<li \/>").text('Product Name').on('click',function(){
-	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_name' data-input-cols='100' data-input-data='product:zoovy:prod_name' data-input-type='TEXTBOX' data-label='Product Name' data-object='PRODUCT' id='PROD_NAME'>Product name</span>");
-	$D.dialog('close');
-	}).appendTo($ul);
-
-$("<li \/>").text('Product Manufacturer').on('click',function(){
-	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_mfg' data-input-cols='100' data-input-data='product:zoovy:prod_mfg' data-input-type='TEXTBOX' data-label='Product Manufacturer' data-object='PRODUCT' id='PROD_MFG'>Product Manufacturer</span>");
-	$D.dialog('close');
-	}).appendTo($ul);
-
-$("<li \/>").text('Product Description').on('click',function(){
-	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_desc' data-input-cols='80' data-input-data='product:zoovy:prod_desc' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Description (shared)' data-object='PRODUCT' id='PROD_DESC'>Product Description</span>");
-	$D.dialog('close');
-	}).appendTo($ul);
-
-$("<li \/>").text('Product Features').on('click',function(){
-	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_features' data-input-cols='80' data-input-data='product:zoovy:prod_features' data-input-rows='5' data-input-type='TEXTAREA' data-label='Product Features (shared)' data-object='PRODUCT' id='PROD_FEATURES'>Product Features</span>");
-	$D.dialog('close');
-	}).appendTo($ul);
-
-$("<li \/>").text('Product Image 5').on('click',function(){
-	jhtml.pasteHTML("<span class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-if='BLANK' data-object='PRODUCT' data-then='REMOVE' id='IMAGE5'><a class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-height='' data-img-width='200' data-img-zoom='1' data-label='Image5' data-object='PRODUCT' id='IMAGE5' width='200'><img class='actbProductAttribute' data-attrib='zoovy:prod_image5' data-format='img' data-img-bgcolor='ffffff' data-img-border='0' data-img-data='product:zoovy:prod_image5' data-img-zoom='1' data-label='Image5 (200 by X)' data-object='PRODUCT' id='IMAGE5' src='placeholder-2.png' width='200'></a></span>");
-	$D.dialog('close');
-	}).appendTo($ul);
-$ul.appendTo($D);
-
-				}
-			}]
-				},
-			
 			
 //executed when 'save' or 'test' is pushed in the ebay launch profile editor.
 //loads all the data from the form into a json object, including proper formatting of the data-tables for shipping services.
