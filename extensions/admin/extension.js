@@ -1272,59 +1272,9 @@ if giftcard is on there, no paypal will appear.
 				obj._tag.datapointer = 'bossUserUpdate|'+obj.luser;
 				app.model.addDispatchToQ(obj,Q);
 				}
-			},
+			}
 
 
-		
-		helpSearch : {
-			init : function(keywords,_tag,Q)	{
-				app.u.dump("BEGIN admin.calls.helpSearch");
-				app.u.dump(" -> keywords: "+keywords);
-				var r = 0;
-				if(keywords)	{
-					_tag = _tag || {};
-					_tag.datapointer = 'helpSearch|'+keywords;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						this.dispatch(keywords,_tag,Q);
-						r = 1;
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.helpSearch, keywords not specified.");
-					}
-				return 1;
-				},
-			dispatch : function(keywords,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd:'helpSearch','keywords':keywords,'_tag':_tag},Q || 'mutable');
-				}
-			}, //helpSearch
-
-		helpDocumentGet : {
-			init : function(docid,_tag,Q)	{
-				if(docid)	{
-					var r = 0;
-					_tag = _tag || {};
-					_tag.datapointer = 'helpDocumentGet|'+docid;
-//					if(app.model.fetchData(_tag.datapointer) == false)	{
-						this.dispatch(docid,_tag,Q);
-//						r = 1;
-//						}
-//					else	{
-//						app.u.handleCallback(_tag);
-//						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.helpDocumentGet, docid not specified.");
-					}
-				return r;
-				},
-			dispatch : function(docid,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : 'helpDocumentGet','_tag':_tag,'docid':docid},Q || 'immutable');
-				}
-			} //helpDocumentGet
 		}, //calls
 
 
