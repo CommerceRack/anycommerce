@@ -84,6 +84,7 @@ var admin_support = function() {
 					'className' : 'adminTicketList', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Status','Ticket #','Opened','Last Update','Subject','User','Date Closed',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:supportTicketRowTemplate;",
+					"handleAppEvents" : false,
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin_support|adminTicketCreateShow' class='applyButton hideInDetailMode' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create A New Ticket</button>"],	
@@ -100,8 +101,6 @@ var admin_support = function() {
 				app.u.handleButtons($target.anydelegate());
 				app.model.dispatchThis('mutable');
 				},
-
-
 
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
@@ -160,9 +159,6 @@ var admin_support = function() {
 					}
 				},
 
-
-
-
 //does everything. pass in a docid and this 'll handle the call, request and display.
 //will check to see if a dom element already exists and , if so, just open that and make it flash. 
 			showHelpDocInDialog : function(docid)	{
@@ -198,9 +194,7 @@ var admin_support = function() {
 					app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
 					}
 				},
-
-
-			
+		
 			showFileUploadInModal : function(ticketid,uuid){
 				if((ticketid === 0 || ticketid) && uuid)	{
 					var $target = $('#ticketFileUploadModal');
@@ -481,32 +475,32 @@ var admin_support = function() {
 
 			adminTicketLastUpdateShow : function($ele,p)	{
 
-var
-	$tr = $ele.closest('tr'),
-	ticketID = $tr.data('id');
-
-$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
-app.model.addDispatchToQ({
-	'_cmd':'adminTicketDetail',
-	'ticketid':ticketID,
-	'_tag':	{
-		'datapointer' : 'adminTicketDetail|'+ticketID,
-		'callback':function(rd){
-			$tr.closest('tbody').hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$('#globalMessaging').anymessage({'message':rd});
-				}
-			else	{
-				$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
-				if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
-					$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
-					}
-				else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
-				}
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+				var
+					$tr = $ele.closest('tr'),
+					ticketID = $tr.data('id');
+				
+				$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
+				app.model.addDispatchToQ({
+					'_cmd':'adminTicketDetail',
+					'ticketid':ticketID,
+					'_tag':	{
+						'datapointer' : 'adminTicketDetail|'+ticketID,
+						'callback':function(rd){
+							$tr.closest('tbody').hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
+								if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
+									$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
+									}
+								else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
+								}
+							}
+						}
+					},'mutable');
+				app.model.dispatchThis('mutable');
 
 				
 				},
@@ -526,6 +520,26 @@ app.model.dispatchThis('mutable');
 						});
 
 					app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
+					$("[data-app-role='supportFileUploadContainer']",$panel).anyupload({
+						autoUpload : false,
+						encode : 'base64', //if this is disabled, change enctype in the dispatch to null.
+						ajaxRequest : function(vars,$ele)	{
+//							app.u.dump(vars);
+							app.model.addDispatchToQ({
+								"_cmd":"adminTicketFileAttach",
+								"filename" : vars.filename,
+								"enctype" : "base64", //must be set if data passed as base64.
+								"ticketid" : ticketID,
+								"body" : vars.filecontents,
+								"_tag":{
+									"callback":"showMessaging",
+									"jqObj" : $panel,
+									"message":"File "+vars.filename+" attached to ticket "+ticketID
+									}
+								},"mutable");
+							app.model.dispatchThis("mutable");
+							}
+						});
 					app.model.dispatchThis('mutable');
 
 					}
@@ -596,17 +610,13 @@ app.model.dispatchThis('mutable');
 					$form = $("[data-app-role='helpSearch']",$parent).first(),
 					keywords = $("[name='keywords']",$parent).val();
 
-//					app.u.dump(" -> $parent.length: "+$parent.length);
-//					app.u.dump(" -> $form.length: "+$form.length);
-//					app.u.dump(" -> formObj: "); app.u.dump(formObj);
-//					app.u.dump(" -> keywords: "+keywords);
-
 					if(keywords)	{
 						$('.dualModeListMessaging',$parent).first().empty().hide();
 						var $contentArea = $('.gridTable',$parent).first();
 						$contentArea.show().find('tbody').empty(); //empty any previous search results.
 						$contentArea.showLoading({"message":"Searching for help files"});
-						app.ext.admin.calls.helpSearch.init(keywords,{'callback':'anycontent','jqObj':$contentArea},'mutable');
+
+						app.model.addDispatchToQ({"_cmd":"helpWiki","action":"query","srwhat":"text","srsearch":keywords,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
 						app.model.dispatchThis('mutable');
 						}
 					else	{
