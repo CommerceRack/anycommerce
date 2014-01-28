@@ -1079,8 +1079,11 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				else	{
 					app.u.dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
-
-
+					
+				//Used by the SEO generation utility to signal that a page has finished loading. 
+				//DOES NOT ACCOUNT FOR ASYNCHRONOUS BEHAVIOR! 
+				parent.postMessage("renderFinished","*");
+				
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
