@@ -161,34 +161,16 @@ var admin_support = function() {
 
 //does everything. pass in a docid and this 'll handle the call, request and display.
 //will check to see if a dom element already exists and , if so, just open that and make it flash. 
-			showHelpDocInDialog : function(docid)	{
-				if(docid)	{
-					var targetID = 'helpfile_'+docid
-					var $target = $(app.u.jqSelector('#',targetID));
-//already on the dom. just open it.
-					if($target.length)	{
-						$target.dialog('open')
-						$target.effect("highlight", {}, 1500);
-						}
-					else	{
-						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr('docid',docid).addClass('helpDoc').appendTo('body');
-						$target.dialog({width:500, height:500});
-						$target.showLoading({'message':'Fetching help documentation...'});
-
-						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':function(rd){
-							app.u.dump(" -> RD: "); app.u.dump(rd);
-							$target.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$target.anymessage({'message':rd});
-								}
-							else	{
-								$target.anycontent({'templateID':'helpDocumentTemplate','datapointer':rd.datapointer});
-								app.u.handleAppEvents($target);
-								app.ext.admin_support.u.handleHelpDocOverwrites($target);
-								}
-							}},'mutable');
-						app.model.dispatchThis('mutable');
-						}
+			showHelpDocInDialog : function(title)	{
+				if(title)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						title : title,
+						anycontent : true, //the dialogCreate params are passed into anycontent
+						handleAppEvents : false //defaults to true
+						});
+					$D.dialog('option','modal',false);
+					$D.dialog('open');
+					app.ext.admin_support.u.loadHelpDocInto($D,title);
 					}
 				else	{
 					app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
@@ -322,6 +304,19 @@ var admin_support = function() {
 
 				},
 
+			loadHelpDocInto : function($target,title)	{
+				if($target instanceof jQuery && title)	{
+
+app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","action":"parse","page":title,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
+app.model.dispatchThis('mutable');
+
+					}
+				else	{
+					
+					}
+//action='parse','page':'title'				
+				
+				}
 			
 			}, //u
 
@@ -608,15 +603,15 @@ var admin_support = function() {
 					
 					var $parent = $btn.closest("[data-app-role='dualModeContainer']"),
 					$form = $("[data-app-role='helpSearch']",$parent).first(),
-					keywords = $("[name='keywords']",$parent).val();
+					srsearch = $("[name='srsearch']",$parent).val();
 
-					if(keywords)	{
+					if(srsearch)	{
 						$('.dualModeListMessaging',$parent).first().empty().hide();
 						var $contentArea = $('.gridTable',$parent).first();
 						$contentArea.show().find('tbody').empty(); //empty any previous search results.
 						$contentArea.showLoading({"message":"Searching for help files"});
-
-						app.model.addDispatchToQ({"_cmd":"helpWiki","action":"query","srwhat":"text","srsearch":keywords,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
+//docs on the media wiki API can be found here:  http://wiki.commercerack.com/wiki/api.php
+						app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","list":"search","action":"query","srwhat":"text","srsearch":srsearch,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
 						app.model.dispatchThis('mutable');
 						}
 					else	{
@@ -631,41 +626,22 @@ var admin_support = function() {
 
 //uses new delegated events model.
 			showHelpDocInDialog : function($ele,p)	{
-				var docID = $ele.data('docid');
-				if(docID)	{
-					app.ext.admin_support.a.showHelpDocInDialog(docID);
+				var title = $ele.closest('[data-title]').data('title');
+				if(title)	{
+					app.ext.admin_support.a.showHelpDocInDialog(title);
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetailInDialog, unable to determine docID.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDocInDialog, unable to determine data-title from trigger element.','gMessage':true});
 					}
 				},
 
-
-//used on a button in the search interface. allows merchant to open the doc in a dialog, for portability.
-//button should be hidden when webdoc itself opened in dialog.
-			showHelpDetailInDialog : function($ele)	{
-				if($ele.is('button'))	{$ele.button({icons: {primary: "ui-icon-newwin"}});}
-				$ele.off('click.showHelpDetailInDialog').on('click.showHelpDetailInDialog',function(event){
-					event.preventDefault();
-					var docID = $ele.closest('tr').data('docid');
-					if(docID)	{
-						app.ext.admin_support.a.showHelpDocInDialog(docID);
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetailInDialog, unable to determine docID.','gMessage':true});
-						}
-					});
-				}, //showHelpDetailInDialog
-
 //in this case, the event may be applied to a btn OR some text.
-			showHelpDetail : function($ele)	{
+			showHelpDetail : function($ele,P)	{
 				
-				if($ele.is('button'))	{$ele.button({icons: {primary: "ui-icon-circle-arrow-e"}});}
-				$ele.off('click.showHelpDetail').on('click.showHelpDetail',function(event){
-					event.preventDefault();
-					var docID = $ele.closest('tr').data('docid');
+					P.preventDefault();
+					var title = $ele.closest('tr').data('title');
 					if(docID)	{
-
+// ### TODO -> finish this up using the new help search 
 var $dualModeDetail = $ele.closest("[data-app-role='dualModeContainer']").find("[data-app-role='dualModeDetail']").first(),
 panelID = app.u.jqSelector('','helpDetail_'+docID),
 $panel = $("<div\/>").data('docid',docID).hide().anypanel({
@@ -697,7 +673,6 @@ app.model.dispatchThis('mutable');
 					else	{
 						$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetail, unable to determine docID.','gMessage':true});
 						}
-					});
 				
 				}
 

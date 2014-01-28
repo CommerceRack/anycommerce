@@ -103,12 +103,12 @@ fieldset.ui-widget-anypanel	{border:none; padding:0; margin:0;} /* get rid of so
 
 
 /* ANYFILEUPLOAD */
-  .fileUpload_default {
+.fileUpload_default {
     height: 45px;
     border: 1px solid #ccc;
-    margin: 0px 5px 0 0;
-	float: left;
-  }
+    margin: 0px 0 5px 0;
+	}
+
 .fileUpload_file {
     height: 45px;
 	width:45px;
@@ -117,9 +117,7 @@ fieldset.ui-widget-anypanel	{border:none; padding:0; margin:0;} /* get rid of so
   }
   
 .ui-widget-anyupload-buttonset	{
-	position:absolute;
-	top:0;
-	right:0;
+	float:right;
 	}
 /*
 .ui-widget-anyupload-buttonset button.ui-button	{
