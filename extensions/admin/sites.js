@@ -167,14 +167,11 @@ used, but not pre-loaded.
 				appHostButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
+
 					if(data.value.HOSTTYPE == 'APPTIMIZER')	{
-						}
-//if a PROJECT value does NOT have the domain in it, it's a github project and can be imported or have files exported to it.
-					var domain = $tag.closest("[data-domainname]").data('domainname');
-					if(domain && data.value.HOSTTYPE == 'APPTIMIZER')	{
 						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
 
-						if(data.value.PROJECT.indexOf(domain) >= 0)	{
+						if(data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
 // * 201352 -> currently, 'choose template' is in the host editor.
 //							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
 							$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
