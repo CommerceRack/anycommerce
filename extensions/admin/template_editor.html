@@ -160,7 +160,7 @@
 <div id='templateChooserDetailTemplate'>
 	<div class='marginBottom clearfix'>
 		<div class='floatRight alignRight'>
-			<button class='smallButton'  data-app-event='admin_template|templateChooserExec'>Choose</button><!--
+			<button class='smallButton'  data-app-click='admin_template|templateChooserExec' class='applyButton' >Choose</button><!--
 			<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
 			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>-->
 		</div>
@@ -199,7 +199,7 @@
 
 
 <ul>
-	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-event='admin_template|templateChooserPreview'>
+	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-click='admin_template|templateChooserPreview'>
 	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_template;'  />
 	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink'></div>
 	</li>

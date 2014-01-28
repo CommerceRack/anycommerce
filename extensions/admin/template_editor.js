@@ -221,8 +221,7 @@ var admin_template = function() {
 					else	{} //shouldn't get here.
 
 					var $D = app.ext.admin.i.dialogCreate(dialogObject); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
-					$D.attr('id','templateChooser').data(vars);
-					$D.dialog('open');
+					$D.attr('id','templateChooser').data(vars).anydelegate().dialog('open');
 					$D.showLoading();
 					
 					vars._tag = {
@@ -241,16 +240,8 @@ var admin_template = function() {
 						app.model.dispatchThis('mutable');
 						}
 					
-/*					$D.imagegallery({
-						selector: 'a[data-gallery="gallery"]',
-						show: 'fade',
-						hide: 'fade',
-						fullscreen: false,
-						slideshow: false
-						});
-*/
-//					app.u.dump(" -> $D.data()"); app.u.dump($D.data());
-					app.u.handleAppEvents($D);
+					
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_marketplace.a.showTemplateChooserInModal, "+app.ext.admin_template.u.missingParamsByMode(vars.mode,vars)+".","gMessage":true});
@@ -1418,77 +1409,65 @@ var $input = $(app.u.jqSelector('#',ID));
 					},
 					
 //executed when a template is selected.
-				templateChooserExec : function($ele)	{
-					if($ele.is('button'))	{$ele.button();}
-					$ele.off('click.templateChooserExec').on('click.templateChooserExec',function(event){
-						event.preventDefault();
-						app.ext.admin_template.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
-						});
+				templateChooserExec : function($ele,P)	{
+					P.preventDefault();
+					app.ext.admin_template.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
 					},
-
 
 
 //$ele is probably an li.  This is exectued when a template preview is clicked. It'll open a detail template.
 //a 'choose' button will be present within the detail pane.
-				templateChooserPreview : function($ele)	{
-					$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
-						
-						event.preventDefault();
-						app.u.dump("BEGIN admin_template.e.templateChooserPreview");
-						var $chooser = $("#templateChooser");
-						var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
-						var mode = $chooser.data('mode');
-						
-						if(mode)	{
-							app.u.dump(" --> mode is set ("+mode+")");
-							var listDP = (mode == 'EBAYProfile') ? 'adminEBAYTemplateList' : 'admin'+mode+'TemplateList'; //ebay is ebayprofile most of the time, but sometimes just ebay. handy.
-							if(app.data[listDP] && app.data[listDP]['@TEMPLATES'] && app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')])	{
-								var templateData = app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')];
-								var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
-								
-	//							app.u.dump(" -> $chooser.length: "+$chooser.length);
-	//							app.u.dump(" -> $panelContainer.length: "+$panelContainer.length);
-	//							app.u.dump(" -> $panel already exists: "+$panel.length);
-								
-								if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
-								else	{
-									app.u.dump(" --> panel is NOT generated (first time click). build new panel");
-									$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
-									$panel.attr('data-subdir',templateData.SUBDIR);
-									$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
-									$panel.appendTo($panelContainer);
-									app.u.handleAppEvents($panel);
-									}
-	
-								//set all preview li's to default state then the new active one to active.
-								$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
-								$ele.addClass('ui-state-active').removeClass('ui-state-default');
-								if($panel.is(':visible'))	{} //panel already in focus. do nothing.
-								else if($panelContainer.children().length > 1)	{
-									app.u.dump(" --> more than 1 child. transition between them");
-	//hide the current preview and show the new one.					
-									$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
-										$panel.show('scale');
-										});
-									}
-								else	{
-									app.u.dump(" --> only 1 panel. just expand.");
-									$panel.show('scale',function(){
-										app.u.dump(' --> now recenter the dialog');
-										//after the first preview is displayed, resize and recenter the modal.
-										$chooser.dialog("option", "position", "center");
-										$chooser.dialog('option','height',($('body').height() - 100));
-										});
-									}
+				templateChooserPreview : function($ele,P)	{
+					P.preventDefault();
+//					app.u.dump("BEGIN admin_template.e.templateChooserPreview");
+					var $chooser = $("#templateChooser");
+					var $panelContainer = $("[data-app-role='appPreviewPanel']",$chooser);
+					var mode = $chooser.data('mode');
+					
+					if(mode)	{
+//						app.u.dump(" --> mode is set ("+mode+")");
+						var listDP = (mode == 'EBAYProfile') ? 'adminEBAYTemplateList' : 'admin'+mode+'TemplateList'; //ebay is ebayprofile most of the time, but sometimes just ebay. handy.
+						if(app.data[listDP] && app.data[listDP]['@TEMPLATES'] && app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')])	{
+							var templateData = app.data[listDP]['@TEMPLATES'][$ele.data('obj_index')];
+							var $panel = $("[data-subdir='"+templateData.SUBDIR+"']",$panelContainer);
+							if($panel.length)	{} //panel is already on the dom (li already clicked once). do nothing just yet.
+							else	{
+//								app.u.dump(" --> panel is NOT generated (first time click). build new panel");
+								$panel = $("<div \/>").hide().attr('data-app-role','templateDetail').anycontent({'templateID':'templateChooserDetailTemplate','data':templateData});
+								$panel.attr('data-subdir',templateData.SUBDIR);
+								$panel.data(app.u.getBlacklistedObject(templateData,['@PREVIEWS','%info','MID']));
+								$panel.appendTo($panelContainer);
+								app.u.handleButtons($panel);
+								}
+
+							//set all preview li's to default state then the new active one to active.
+							$ele.parent().find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
+							$ele.addClass('ui-state-active').removeClass('ui-state-default');
+							if($panel.is(':visible'))	{} //panel already in focus. do nothing.
+							else if($panelContainer.children().length > 1)	{
+								app.u.dump(" --> more than 1 child. transition between them");
+//hide the current preview and show the new one.					
+								$("[data-app-role='templateDetail']:visible",$panelContainer).first().hide('scale',function(){
+									$panel.show('scale');
+									});
 								}
 							else	{
-								$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
+								app.u.dump(" --> only 1 panel. just expand.");
+								$panel.show('scale',function(){
+									app.u.dump(' --> now recenter the dialog');
+									//after the first preview is displayed, resize and recenter the modal.
+									$chooser.dialog("option", "position", "center");
+									$chooser.dialog('option','height',($('body').height() - 100));
+									});
 								}
 							}
 						else	{
-							$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
+							$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, could not obtain data (app.data.admin'+mode+'TemplateList or @TEMPLATES within that or ['+$ele.data('obj_index')+'] within that was unavailable.','gMessage':true})
 							}
-						});
+						}
+					else	{
+						$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
+						}
 					},
 
 //used to upload a file (img, zip, .html, etc) into a profile or campaign.				
