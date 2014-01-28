@@ -160,9 +160,7 @@
 <div id='templateChooserDetailTemplate'>
 	<div class='marginBottom clearfix'>
 		<div class='floatRight alignRight'>
-			<button class='smallButton'  data-app-click='admin_template|templateChooserExec' class='applyButton' >Choose</button><!--
-			<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>-->
+			<button class='smallButton'  data-app-click='admin_template|templateChooserExec' class='applyButton' >Choose</button>
 		</div>
 		<h2 data-bind="var:template(SUBDIR); format:text;"></h2>
 	</div>
@@ -285,34 +283,6 @@
 
 
 
-
-<!--
-
-EBAY SPECIFIC TEMPLATES
-
-
--->
-
-
-<!-- used in the ebay template editor -->
-<div id='ebayTemplateEditorImageUpload'>
-<form id="ebayTemplateEditorImageUpload" class='clearfix marginBottom'  name="ebayTemplateEditorImageUpload" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='filetype' value='IMAGES'>
-<!-- adds the file upload area, which is in the media library templates  -->
-<h1 class='floatLeft'>Upload images for use in this template</h1>
-<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='marginTop'></div>
-</form>
-</div>
-
-
-
-
-<ul>
-	<li id='ebayTemplateEditorMediaFileTemplate' class='lookLikeLink small floatLeft stdMargin'>
-	<img src='blank.gif' data-bind='var: media(path); format:publicURL; extension:admin;' width='75' height='75' alt='' /><br />
-	<span data-bind="var:media(Name); format:text;" class='small' data-app-event="admin_marketplace|ebayHTMLEditorAddImage"></span>
-	</li>
-</ul>
 
 
 
