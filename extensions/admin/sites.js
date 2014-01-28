@@ -168,6 +168,7 @@ used, but not pre-loaded.
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value == 'APPTEMIZER')	{
+						$menu.append("<li><a href='#' data-app-click='admin_template|adminSEOInitExec'>Get SEO Token</a></li>");
 						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
 						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
 						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
@@ -396,6 +397,31 @@ used, but not pre-loaded.
 
 		e : {
 
+			adminSEOInitExec : function($ele,P)	{
+				var host = $ele.closest('tr').data('hostname'), domain = $ele.closest("[data-domain]").data('domain');
+				if(host && domain)	{
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Get SEO Token',
+						'showLoading':true //will get passed into anycontent and disable showLoading.
+						});
+					
+					$D.dialog('open');
+					app.model.addDispatchToQ({"_cmd":"adminSEOInit","hostdomain":host+"."+domain,"_tag":{"datapointer":"adminSEOInit","callback":function(rd){
+						$D.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$D.anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$D.append("Your token is: "+app.data[rd.datapointer].token);
+							}
+						}}},"mutable");
+					app.model.dispatchThis("mutable");
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_sites.e.adminSEOInitExec, unable to determine either the host ["+host+"] and/or the domain ["+domain+"].","gMessage":true});
+					}
+				},
 
 			adminDomainCreateShow : function($ele,p)	{
 				var $D = app.ext.admin.i.dialogCreate({
