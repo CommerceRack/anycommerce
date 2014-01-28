@@ -140,10 +140,10 @@ used, but not pre-loaded.
 				projectButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('projectMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.GITHUB_REPO)	{
+					if(data.value.GITHUB_REPO)	{
 						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
 						}
-					if(data.LINK)	{
+					if(data.value.LINK)	{
 						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.LINK+"'>Visit GitHub Repository<\/a><\/li>");
 						}
 					$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
@@ -167,16 +167,24 @@ used, but not pre-loaded.
 				appHostButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.value == 'APPTIMIZER')	{
-						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+					if(data.value.HOSTTYPE == 'APPTIMIZER')	{
 						}
-					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
-						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+//if a PROJECT value does NOT have the domain in it, it's a github project and can be imported or have files exported to it.
+					var domain = $tag.closest("[data-domainname]").data('domainname');
+					if(domain && data.value.HOSTTYPE == 'APPTIMIZER')	{
+						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+
+						if(data.value.PROJECT.indexOf(domain) >= 0)	{
+// * 201352 -> currently, 'choose template' is in the host editor.
+//							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+							$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
+							$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+							}
+						else	{
+							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+							}
 						}
 					if($menu.children().length)	{
 						$menu.menu();
@@ -317,7 +325,22 @@ used, but not pre-loaded.
 							})
 						}
 					else if(sfo.HOSTTYPE == 'APPTIMIZER')	{
-						hostSet += "&force_https="+encodeURIComponent(sfo.force_https)+"&PROJECT="+encodeURIComponent(sfo.PROJECT);
+						hostSet += "&force_https="+encodeURIComponent(sfo.force_https);
+						if(sfo.project_source == 'template')	{
+							hostSet += "&PROJECT="+encodeURIComponent(sfo.HOSTNAME.toLowerCase()+"."+sfo.DOMAINNAME);
+							app.model.addDispatchToQ({
+								"_cmd":"adminSiteTemplateInstall",
+								"SUBDIR" : sfo.TEMPLATE,
+								"PROJECTID" : "$SYSTEM",
+								"HOSTDOMAIN":sfo.HOSTNAME.toLowerCase()+"."+sfo.DOMAINNAME
+								},"immutable");
+							}
+						else if(sfo.project_source == 'project')	{
+							hostSet += "&PROJECT="+encodeURIComponent(sfo.PROJECT);
+							}
+						else	{
+							
+							}
 						}
 					else if(sfo.HOSTTYPE == 'REDIR')	{
 						hostSet += "&URI="+encodeURIComponent(sfo.URI)+"&REDIR="+encodeURIComponent(sfo.REDIR);
@@ -558,14 +581,13 @@ used, but not pre-loaded.
 							//success content goes here.
 							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
 							if($ele.data('mode') == 'update')	{
-//									app.u.dump(" -> $('input[name='PROJECT']',$D): "+$("input[name='PROJECT']",$D).length);
-//									app.u.dump(" -> Should select this id: "+app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT);
 								$("input[name='PROJECT']",$D).val(app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
 								}
 							app.u.handleButtons($D);
 							app.u.handleCommonPlugins($D);
 							}
 						}};
+
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
 						app.model.dispatchThis();
@@ -573,6 +595,21 @@ used, but not pre-loaded.
 					else	{
 						app.u.handleCallback(_tag);
 						}
+
+					if(app.model.fetchData('adminSiteTemplateList') == false)	{
+						app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{
+							'datapointer' : 'adminSiteTemplateList',
+							'callback' : 'anycontent',
+							'jqObj' : $("[data-app-role='hostTemplateListContainer']",$D)
+							}},'mutable'); //necessary for projects list in app based hosttypes.
+						app.model.dispatchThis();
+						}
+					else	{
+						$("[data-app-role='hostTemplateListContainer']",$D).anycontent({'datapointer' : 'adminSiteTemplateList'});
+						}
+						
+					app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
+
 
 //hostname isn't editable once set.					
 					if($ele.data('mode') == 'update')	{

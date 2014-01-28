@@ -157,7 +157,7 @@
 	<td data-bind="var: domain(HOSTTYPE); format:text; hideZero:false;"></td>
 	<td data-bind="var: domain(PROJECT); format:projectID2Pretty; extension:admin_sites;"></td>
 	<td class='alignRight width50'>
-	<span data-bind="var: host(HOSTTYPE); format:appHostButtons; extension:admin_sites;"></span>
+	<span data-bind="useParentData:true; format:appHostButtons; extension:admin_sites;"></span>
 	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this Host</button>
 	<button class='applyButton' data-app-click='admin_sites|adminDomainCreateUpdateHostShow' data-mode='update' data-icon-primary='ui-icon-pencil' data-text='false'>Edit Host</button>
 	<button class='applyButton' data-app-click="admin_sites|domainView" data-mode='host' data-text='false' data-icon-primary='ui-icon-newwin'>View Site</button><!-- buttons that always show up should be on the right so they don't move -->
@@ -274,13 +274,34 @@
 
 <!-- these are the 'panels' for the host type select list -->
 	<div data-panel-id='domainNewHostTypeSITEPTR' class='displayNone domainNewHostSelectType'>
+
+
+
 		<label>
+			<span>Project Source: </span>
+			<select name='project_source' data-input-change="panel-selector" data-panel-selector=".domainNewHostProjectSource">
+				<option value='project' data-show-panel='domainNewHostProjectSource_project'>Project</option>
+				<option value='template' data-show-panel='domainNewHostProjectSource_template'>From Template</option>
+			</select>
+		
+		</label>
+		
+	
+		<label class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_project'>
 			<span>Project Reference</span>
 			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsFromList; value:UUID; text:TITLE;">
 			<option value=''></option>
 			</select>
 		</label>
 		
+		<label data-app-role='hostTemplateListContainer'  class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_template'>
+			<span>Template List</span>
+			<select name='TEMPLATE' data-bind="var: project(@TEMPLATES); format: optionsFromList; value:SUBDIR; text:SUBDIR;">
+			<option value=''></option>
+			</select>
+		</label>
+
+
 		
 		
 	</div>
