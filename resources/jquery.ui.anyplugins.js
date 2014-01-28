@@ -1039,7 +1039,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			filetypes : [], //pass in an array of file types supported. ex ['csv','xls']
 			templateID : null, // will be used to generate the preview.
 			encode : null, // supports base64 or null
-			autoUpload : true, //will upload the file as soon as it's dragged/selected.
+			autoUpload : true, //will upload the file as soon as it's dragged/selected. // ### TODO -> this is not working if set to true.
 			stripExtension : false, //used within media library where the file extension should be stripped prior to non-alphanumeric character removal. (or .png becomes _png)
 			maxSelectableFiles : null, //if a # is set, only that # of files will be allowed.
 //			maxConcurrentUploads : 4, //if X, only X requests will run simultaneously and when one finishes, the next one fires.
@@ -1137,7 +1137,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 		_buildPreviews : function(files,event,self){
 			var self = self || this;
 			var filteredFiles = self._filteredFiles(files);
-app.u.dump(" -> self.options.autoUpload: "+self.options.autoUpload);
+//			app.u.dump(" -> self.options.autoUpload: "+self.options.autoUpload);
 			if(self.options.autoUpload === false && filteredFiles.length)	{
 				$('.ui-widget-anyfile-uploadbutton',self.element).button('enable');
 				}
@@ -1156,12 +1156,14 @@ app.u.dump(" -> self.options.autoUpload: "+self.options.autoUpload);
 					$ele.anycontent({
 						data : {'name':file.name,'Name':file.name,'path':'i/imagenotfound','type':file.type,'size':file.size,'lastModifiedData':file.lastModifiedData},
 						translateOnly : true
-						})
+						});
+					$ele.addClass('anyuploadFileLineitem');
 					}
 				else	{
 					//may not support this once deployed, but anycontent is not here for development testing.
 				// Render thumbnail.
 					var $ele = (fileType == 'image' ? $('<img>') : $('<span>')).addClass('fileUpload_default fileUpload_'+fileType);
+					$ele.wrap($("<div>").addClass('anyuploadFileLineitem'));
 					$ele.appendTo(self.element);
 					}
 
