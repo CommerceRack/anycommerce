@@ -1703,10 +1703,10 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 				<div class='buttonset marginTop'  data-bind='var:profile(%PROFILE.PROFILE); format:assignAttribute; attribute:data-profile;'>
 			
-					<button data-app-role='ebayTemplateChooseButton' data-app-event='admin_template|templateChooserShow' data-mode='EBAYProfile'>Choose</button>
-					<button data-app-role='ebayTemplateEditButton' data-app-event='admin_template|templateEditorShow' data-mode='EBAYProfile'>Edit</button>
-					<button data-app-event='admin_template|containerZipDownloadExec' data-mode='EBAYProfile'>Download Zip</button>
-					<button data-app-event='admin_template|containerFileUploadShow' data-mode='EBAYProfile'>Upload</button>
+					<button data-app-role='ebayTemplateChooseButton' data-app-click='admin_template|templateChooserShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-power' data-mode='EBAYProfile'>Choose</button>
+					<button data-app-role='ebayTemplateEditButton' data-app-click='admin_template|templateEditorShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-wrench' data-mode='EBAYProfile'>Edit</button>
+					<button data-app-click='admin_template|containerZipDownloadExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-s' data-mode='EBAYProfile'>Download Zip</button>
+					<button data-app-click='admin_template|containerFileUploadShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-mode='EBAYProfile'>Upload</button>
 				
 				<span class='warn conditionalHide'><b>Needs Review!</b> <span class='toolTip' title="Not every template upgrade goes smoothly. Take a look and see how your's went. There are tools available to assist you in making further changes to your template(s).">?</span></span>
 				</div>
@@ -2738,10 +2738,6 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 
 
-
-
-
-
 <div id='syndication_ebf'>
 
 	<div class='clearfix marginBottom'>
@@ -2762,10 +2758,6 @@ The sandbox can be useful for developers who want to create test listings or pre
 		Is active
 	</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-
-
-
-
 
 </div>
 

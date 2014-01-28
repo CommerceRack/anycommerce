@@ -168,9 +168,9 @@ used, but not pre-loaded.
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value == 'APPTEMIZER')	{
-						$menu.append("<li><a href='#' data-app-click='admin_template|delTemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_template|delTemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
-						$menu.append("<li data-app-click='admin_template|delContainerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
 						}
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
 						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");

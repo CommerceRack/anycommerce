@@ -185,7 +185,6 @@ var admin_customer = function() {
 					}
 				}, //showCustomerEditor
 
-
 			showCRMManager : function($target)	{
 				$target.intervaledEmpty();
 				var $DMI = app.ext.admin.i.DMICreate($target,{
@@ -231,12 +230,12 @@ var admin_customer = function() {
 				}, //showCampaignManager
 			
 			showCampaignEditor : function($target,CAMPAIGNID)	{
-				app.u.dump("BEGING admin_customer.a.showCampaignEditor");
+//				app.u.dump("BEGING admin_customer.a.showCampaignEditor");
 				if($target && $target instanceof jQuery && CAMPAIGNID)	{
 
 					$target.empty()
 					var data = app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
-					//app.u.dump(" -> campaign data:"); app.u.dump(data);
+
 					if(data)	{
 					
 					//generate template instance and get some content in front of user. will be blocked by loading till template data available.
@@ -252,14 +251,13 @@ var admin_customer = function() {
 							showMinute : false,
 							separator : '' //get rid of space between date and time.
 							});
-//						$('.ui_tpicker_second',$target).hide(); //don't show minute or second chooser, but have it so they're added to the input.
-//						$('.ui_tpicker_minute_label',$target).hide();
 					
-					var $picker = $("[data-app-role='pickerContainer']:first",$target);
-					$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));
-					$picker.anycontent({data:data});
-					
-					app.u.handleAppEvents($target);
+						var $picker = $("[data-app-role='pickerContainer']:first",$target);
+						$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));
+						$picker.anycontent({data:data});
+						
+						app.u.handleAppEvents($target);
+						app.u.handleButtons($target.anydelegate());
 						}
 					else if(data === false)	{
 						$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});

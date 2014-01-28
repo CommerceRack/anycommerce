@@ -347,6 +347,7 @@ app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 				$tag.attr('src',"data:"+data.value[0].type+";base64,"+data.value[0].base64);
 				$tag.wrap("<a href='data:"+data.value[0].type+";base64,"+data.value[0].base64+"' >"); //data-gallery='gallery'
 				}
+			
 			}, //renderFormats
 
 
@@ -1414,7 +1415,6 @@ var $input = $(app.u.jqSelector('#',ID));
 					app.ext.admin_template.u.handleTemplateSelect($.extend(true,{},$('#templateChooser').data(),$ele.closest("[data-app-role='templateDetail']").data()));
 					},
 
-
 //$ele is probably an li.  This is exectued when a template preview is clicked. It'll open a detail template.
 //a 'choose' button will be present within the detail pane.
 				templateChooserPreview : function($ele,P)	{
@@ -1469,73 +1469,40 @@ var $input = $(app.u.jqSelector('#',ID));
 						$chooser.anymessage({'message':'In admin_template.e.templateChooserPreview, unable to ascertain mode from templateChooser.','gMessage':true})
 						}
 					},
-
-//used to upload a file (img, zip, .html, etc) into a profile or campaign.				
-				containerFileUploadShow : function($btn){
-					if($btn.is('button'))	{
-						$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: ($btn.data('hidebuttontext')) ? false : true});
-						}
-					$btn.off('click.containerFileUploadShow').on('click.containerFileUploadShow',function(){
-						app.ext.admin_template.e.delContainerFileUploadShow($btn);
-						});
-					}, //containerFileUploadShow
-				
+			
 // used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
-				containerZipDownloadExec : function($btn)	{
-					$btn.button({icons: {primary: "ui-icon-arrowthickstop-1-s"},text: ($btn.data('hidebuttontext')) ? false : true});
-//lock button for 'site' if no projectid is set or it's unavailable.
-					if($btn.data('mode') == 'Site')	{
-						var domainname = $btn.closest(".buttonset").data('domain');
-						if(app.data['adminDomainDetail|'+domainname])	{
-							if(app.data['adminDomainDetail|'+domainname].PROJECTID)	{
-								//this domain has a project. do nothing to the button.
-								}
-							else	{
-								$btn.button('disable').attr('title','Download not available because no project exists for this domain.');
+				containerZipDownloadExec : function($ele,P)	{
+					var mode = $ele.data('mode'), data = $ele.closest('.buttonset').data();
+					if(!app.ext.admin_template.u.missingParamsByMode(mode,data))	{
+						$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
+						var dObj = {
+							'_cmd' : 'admin'+mode+'ZipDownload',
+							'base64' : true,
+							'_tag' : {
+								'callback':'fileDownloadInModal',
+								'datapointer':'templateZipDownload',
+								'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
 								}
 							}
-						else 	{
-							$btn.button('disable').attr('title','Download not available because domain ['+domainname+'] data not in memory.');
-							}	
+						
+						if(mode == 'EBAYProfile')	{
+							dObj.PROFILE = data.profile;
+							}
+						else if(mode == 'Campaign')	{
+							dObj.CAMPAIGNID = data.campaignid;
+							}
+						else if(mode == 'Site')	{
+							dObj.DOMAIN = data.domain;
+							}
+						else	{} //shouldn't get here.
+						
+						app.model.addDispatchToQ(dObj,'immutable');
+						app.model.dispatchThis('immutable');							
+						
 						}
-
-
-					$btn.off('click.containerZipDownloadExec').on('click.containerZipDownloadExec',function(){
-
-						var mode = $btn.data('mode');
-						var data = $btn.closest('.buttonset').data();
-app.u.dump(" -> data: "); app.u.dump(data);
-						if(!app.ext.admin_template.u.missingParamsByMode(mode,data))	{
-							$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
-							var dObj = {
-								'_cmd' : 'admin'+mode+'ZipDownload',
-								'base64' : true,
-								'_tag' : {
-									'callback':'fileDownloadInModal',
-									'datapointer':'templateZipDownload',
-									'jqObj' : $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'))
-									}
-								}
-							
-							if(mode == 'EBAYProfile')	{
-								dObj.PROFILE = data.profile;
-								}
-							else if(mode == 'Campaign')	{
-								dObj.CAMPAIGNID = data.campaignid;
-								}
-							else if(mode == 'Site')	{
-								dObj.DOMAIN = data.domain;
-								}
-							else	{} //shouldn't get here.
-							
-							app.model.addDispatchToQ(dObj,'immutable');
-							app.model.dispatchThis('immutable');							
-							
-							}
-						else	{
-							$('#globalMessaging').anymessage({'message':"In admin_template.e.containerZipDownloadExec, "+app.ext.admin_template.u.missingParamsByMode(mode,data)+". The required params should be on the .buttonset around the download button"});
-							}
-						});
+					else	{
+						$('#globalMessaging').anymessage({'message':"In admin_template.e.containerZipDownloadExec, "+app.ext.admin_template.u.missingParamsByMode(mode,data)+". The required params should be on the .buttonset around the download button"});
+						}
 					}, //containerZipDownloadExec
 
 				adminTemplateEditorExit : function($ele,P)	{
@@ -1593,7 +1560,6 @@ app.u.dump(" -> data: "); app.u.dump(data);
 					$D.dialog('open');
 					},
 
-//USES DELEGATED EVENTS
 				adminEBAYProfilePreviewShow : function($ele,p)	{
 						var $D = app.ext.admin.i.dialogCreate({"title":"HTML Listing Preview"});
 						$D.dialog('open');
@@ -1656,22 +1622,15 @@ else	{
 						});
 					},
 
-				templateEditorIframeRotateExec : function($btn)	{
-					$btn.button();
-					var $templateEditor = $btn.closest("[data-templateeditor-role='container']");
+				templateEditorIframeRotateExec : function($ele,P)	{
+					var $templateEditor = $ele.closest("[data-templateeditor-role='container']");
 					var $iframe = $('.jHtmlArea iframe:first',$templateEditor);
-					$btn.off('click.templateEditorIframeResizeExec').on('click.templateEditorIframeResizeExec',function(){
-//						app.u.dump("rotate click event triggered. iframe.length: "+$iframe.length);
-						var W = $iframe.width();
-						$iframe.width($iframe.height()).height(W);
-						$iframe.parent().find('.device ,iframe').toggleClass('portrait landscape');
-						});
+					var W = $iframe.width();
+					$iframe.width($iframe.height()).height(W);
+					$iframe.parent().find('.device ,iframe').toggleClass('portrait landscape');
 					},
-/*
-The names for these delegated events are temporary. use the original names once all interfaces are updated
-*/
 
-				delTemplateChooserShow : function($ele,p)	{
+				templateChooserShow : function($ele,p)	{
 					if($ele.data('mode') == 'Campaign')	{
 						app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
 						}
@@ -1692,9 +1651,9 @@ The names for these delegated events are temporary. use the original names once 
 						//invalid mode set.
 						$('#globalMessaging').anymessage({"message":"In admin_template.e.templateChooserShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
 						}
-					}, //delTemplateChooserShow
+					}, //templateChooserShow
 
-				delTemplateEditorShow : function($ele,p)	{
+				templateEditorShow : function($ele,p)	{
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
 						navigateTo('#!templateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
@@ -1718,9 +1677,9 @@ The names for these delegated events are temporary. use the original names once 
 						//invalid mode set.
 						$('#globalMessaging').anymessage({"message":"In admin_template.e.templateEditorShow, invalid mode ["+$ele.data('mode')+"] set on button.","gMessage":true});
 						}
-					}, //delTemplateEditorShow
+					}, //templateEditorShow
 					
-				delContainerFileUploadShow : function($ele,p)	{
+				containerFileUploadShow : function($ele,p)	{
 					var mode = $ele.data('mode');
 					var data = $ele.closest('.buttonset').data();
 					
@@ -1750,28 +1709,7 @@ The names for these delegated events are temporary. use the original names once 
 					else	{
 						$D.anymessage({'message':app.ext.admin_template.u.missingParamsByMode(mode,data)});
 						}
-					}, //delContainerFileUploadShow
-
-//opens the template chooser interface.
-				templateChooserShow : function($btn)	{
-					if($btn.is('button'))	{
-						$btn.button({icons: {primary: "ui-icon-power"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
-						}
-					$btn.off('click.templateChooserShow').on('click.templateChooserShow',function(){
-						app.ext.admin_template.e.delTemplateChooserShow($btn);
-						});
-					}, //templateChooserShow
-
-				templateEditorShow : function($btn)	{
-//					app.u.dump(" -> $btn.data('buttontext'): "+$btn.data('buttontext'));
-					if($btn.is('button'))	{
-						$btn.button({icons: {primary: "ui-icon-wrench"},text: ($btn.data('hidebuttontext')) ? false : true}); //text defaults to on.
-						}
-				
-					$btn.off('click.templateEditorShow').on('click.templateEditorShow',function(){
-						app.ext.admin_template.e.delTemplateEditorShow($btn);
-						});
-					}, //templateEditorShow
+					}, //containerFileUploadShow
 
 				startWizardExec : function($ele,P)	{
 					P.preventDefault();
@@ -1780,7 +1718,7 @@ The names for these delegated events are temporary. use the original names once 
 						editorData = $templateEditor.data(); 
 
 					if($ele.data('wizardContent'))	{
-						app.u.dump(" -> $btn.data()"); app.u.dump($ele.data());
+						app.u.dump(" -> $ele.data()"); app.u.dump($ele.data());
 						app.ext.admin_template.u.summonWizard($ele.closest("[data-templateeditor-role='container']"),$ele.data('wizardContent'));
 						}
 					else	{
