@@ -1162,8 +1162,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				else	{
 					//may not support this once deployed, but anycontent is not here for development testing.
 				// Render thumbnail.
-					var $ele = (fileType == 'image' ? $('<img>') : $('<span>')).addClass('fileUpload_default fileUpload_'+fileType);
-					$ele.wrap($("<div>").addClass('anyuploadFileLineitem'));
+					var $ele = (fileType == 'image' ? $('<img>').css('display','block') : $('<span>')).addClass('fileUpload_default fileUpload_'+fileType);
 					$ele.appendTo(self.element);
 					}
 

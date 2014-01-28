@@ -259,7 +259,7 @@ WEBDOC
 		
 			<div class='buttonSet'>
 			<form class='searchBar floatRight' action='#' data-app-role='helpSearch'>
-				<input type='text' name='keywords' class='hideInDetailMode'  />
+				<input type='text' name='srsearch' class='hideInDetailMode'  />
 				<button data-app-event='admin_support|execHelpSearch' class='hideInDetailMode'>Search</button>
 				<button data-app-click='admin|toggleDMI' class='applyButton displayNone' data-text='false' data-icon-primary='ui-icon-seek-next'>Toggle between list and detail view</button>
 			</form>
@@ -282,7 +282,7 @@ WEBDOC
 			<th ></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		<tbody data-bind="var: users(query.search); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 		</table>
 		</div>
 	</section>
@@ -293,12 +293,12 @@ WEBDOC
 <table>
 <tr id='helpSearchResultsTemplate' >
 	<td data-bind='var: help(title); format:text;' class='lookLikeLink' data-app-event="admin_support|showHelpDetail"></td>
-	<td class='hideInDetailMode' data-bind='var: help(summary); format:text;'></td>
+	<td class='hideInDetailMode' data-bind='var: help(snippet); format:text;'></td>
 	<td class='hideInDetailMode' data-bind='var: help(score); format:text;'></td>
 	<td class='alignRight'>
 <!-- showHelpInDialog only displayed when help opened within a tabContent -->
-	<span class='hideInDetailMode'><button data-app-event="admin_support|showHelpDetailInDialog" class='showInTabContent'>Open In Dialog</button></span>
-	<button data-app-event="admin_support|showHelpDetail">View</button>
+	<span class='hideInDetailMode'><button data-app-click="admin_support|showHelpDocInDialog" class='showInTabContent applyButton' data-text='false' data-icon-primary='ui-icon-newwin'>Open In Dialog</button></span>
+	<button data-app-click="admin_support|showHelpDetail" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthick-1-e'>View</button>
 	</td>
 </tr>
 </table>
