@@ -59,7 +59,7 @@
                     .find('.progress-extended').each(function () {
 //						app.u.dump(" -> $this.data(): "); app.u.dump($this.data());
                         $(this).html(
-                            ($this.data('blueimpFileupload')) ? $this.data('blueimpFileupload')._renderExtendedProgress(data) : ""
+                            ($this.data('blueimp-fileupload')) ? $this.data('blueimp-fileupload')._renderExtendedProgress(data) : ""
                         );
                     });
             }
