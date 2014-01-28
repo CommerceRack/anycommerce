@@ -167,10 +167,10 @@ used, but not pre-loaded.
 				appHostButtons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.value == 'APPTEMIZER')	{
-						$menu.append("<li><a href='#' data-app-click='admin_template|adminSEOInitExec'>Get SEO Token</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-click='admin_template|TemplateEditorShow' data-mode='Site'>Edit Project</a></li>");
+					if(data.value == 'APPTIMIZER')	{
+						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
 						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
 						}
 					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
@@ -402,10 +402,10 @@ used, but not pre-loaded.
 				if(host && domain)	{
 					var $D = app.ext.admin.i.dialogCreate({
 						'title':'Get SEO Token',
-						'showLoading':true //will get passed into anycontent and disable showLoading.
+						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
 					
-					$D.dialog('open');
+					$D.dialog('open').showLoading({"message":"Fetching SEO token"});
 					app.model.addDispatchToQ({"_cmd":"adminSEOInit","hostdomain":host+"."+domain,"_tag":{"datapointer":"adminSEOInit","callback":function(rd){
 						$D.hideLoading();
 						if(app.model.responseHasErrors(rd)){
