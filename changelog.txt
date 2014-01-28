@@ -36,7 +36,7 @@ ADMIN
 		- uses most recent 1PC extension
 		- better support for existing customers, including re-order.
 		- an order can be started, abandoned, and returned to later (from same computer)
-	
+	bug - usps was saving, but UI not updating properly for international ship methods.
 	enhancement - utilities > support utilities > logs now supports 'filtering'.
 	enhancement - utitilies and setup pages are now responsive.
 	enhancement - new ui 'theme'.
