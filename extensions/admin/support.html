@@ -181,28 +181,25 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 	</table>
 	
 	<div class='labelsAsBreaks alignedLabels alignedInputs'>
-		
-		<div data-app-role='supportFileUploadContainer'></div><!-- this will be used w/ anyupload -->
-		
-	<button data-app-click="admin_support|fileAttach2TicketShow" class='marginBottom applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n'>Add File(s) To Ticket</button><!-- intentionally outside the form. form is emptied on update -->
-	<table class='gridTable fullWidth marginBottom'>
-	<thead>
-	<tr>
-		<th>Filename</th>
-		<th>Added</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
-	</table>
+		<div data-app-role='supportFileUploadContainer' class='clearfix marginBottom'></div><!-- intentionally outside the form. form is emptied on update -->
+		<table class='gridTable fullWidth marginBottom'>
+		<thead>
+		<tr>
+			<th>Filename</th>
+			<th>Added</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
+		</table>
 
-	<form class='marginTop'>
-	<fieldset>
-		<legend>Provide Additional Information:</legend>
-		<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
-	</fieldset>
-	<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
-	</form>
+		<form class='marginTop'>
+		<fieldset>
+			<legend>Provide Additional Information:</legend>
+			<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
+		</fieldset>
+		<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
+		</form>
 	</div>
 
 
