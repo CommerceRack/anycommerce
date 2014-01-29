@@ -82,7 +82,6 @@ additionally, will apply some conditional form logic.
 				app.u.dump("anydelegate was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
-
 				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
 //make sure there are no children w/ delegated events.
 				$('.eventDelegation',$t).each(function(){
@@ -90,7 +89,7 @@ additionally, will apply some conditional form logic.
 					});
 				for(var i = 0; i < self._supportedEvents.length; i += 1)	{
 					$t.on(self._supportedEvents[i]+".app","[data-app-"+self._supportedEvents[i]+"], [data-input-"+self._supportedEvents[i]+"]",function(e,p){
-//						app.u.dump(" -> delegated click triggered");
+//						app.u.dump(" -> delegated "+self._supportedEvents[i]+" triggered");
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
 					}
@@ -375,22 +374,24 @@ pass in an event name and a function and it will be added as an eventAction.
 		_handleAppEvents : function($CT,ep)	{
 //by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
 			ep = ep || {};
-			var r;
-			var	AEF = $CT.data('app-'+ep.normalizedType).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
+			var r, actionsArray = $CT.data('app-'+ep.normalizedType).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 
-			if(AEF[0] && AEF[1])	{
-				if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
-					//execute the app event.
-					r = app.ext[AEF[0]].e[AEF[1]]($CT,ep);
+			for(var i = 0; i < L; i += 1)	{
+				var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
+				app.u.dump(i+") AEF: "); app.u.dump(AEF);
+				if(AEF[0] && AEF[1])	{
+					if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
+						//execute the app event.
+						r = app.ext[AEF[0]].e[AEF[1]]($CT,ep);
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-					}
+					$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+					}				
 				}
-			else	{
-				$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
-				}						
-
 			return r;
 			},
 
@@ -1935,9 +1936,11 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
 			for(var index in sm)	{
-				$("<li \/>").addClass('ui-state-default').on('click',sm[index]).on('click.closeMenu',function(){
-					$ul.menu( "collapse" ); //close the menu.
+				var $li = $("<li \/>");
+				$li.addClass('ui-state-default').on('click.closeMenu',function(){
+					$ul.hide(); //close the menu.
 					}).hover(function(){$(this).addClass('ui-state-hover')},function(){$(this).removeClass('ui-state-hover')}).text(index).appendTo($ul);
+				typeof sm[index] == 'function' ? $li.on('click',sm[index]) : $li.attr('data-app-click',sm[index]);
 				}
 			if($ul.children().length)	{
 				$ul.menu();
