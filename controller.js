@@ -1560,7 +1560,7 @@ AUTHENTICATION/USER
 	//uses the supported methods for determining if a buyer is logged in/session is authenticated.
 	//neither whoAmI or appBuyerLogin are in localStorage to ensure data from a past session isn't used.
 			buyerIsAuthenticated : function()	{
-				r = false;
+				var r = false;
 				if(app.data.whoAmI && app.data.whoAmI.cid)	{r = true}
 				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = true}
 				return r;
