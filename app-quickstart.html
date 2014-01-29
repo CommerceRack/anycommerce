@@ -39,34 +39,6 @@ document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 </script>
 
 
-<script language="Javascript">
-//https://github.com/unbit/uwsgi/blob/master/tests/websockets_chat.pl
-var s = new WebSocket("ws://www.sporks.zoovy.com/jsonapi/");
-s.onopen = function() {
-	alert("connected !!!");
-	s.send("ciao");
-	};
-s.onmessage = function(e) {
-	var bb = document.getElementById('blackboard')
-	var html = bb.innerHTML;
-	bb.innerHTML = html + '<br/>' + e.data;
-	};
-
-s.onerror = function(e) {
-	console.dir(e);
-	}
-
-s.onclose = function(e) {
-	alert("connection closed");
-	}
-
-function invia() {
-	var value = document.getElementById('testo').value;
-	s.send(value);
-	}
-</script>
-
-
 
 <!--
 all css includes need to be after the js that changes the base url.
@@ -1092,10 +1064,10 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div class='cartZipCodeContainer marginBottom'>
 		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' data-app-blur='cco|cartZipUpdateExec' />
+		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10' data-app-blur='cco|cartZipUpdateExec' />
 	</div>
 
-	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;' ></ul>
+	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;' data-app-role='shipMethodsUL' ></ul>
 </section>
 
 <section class='marginBottom'>
@@ -1141,7 +1113,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput numberInput' data-app-change="cco|cartItemUpdateExec"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' />
+		qty: <input type='number' class='qtyInput numberInput' data-app-change="cco|cartItemUpdateExec"  data-bind='format:cartItemQty;extension:cco;useParentData:true;' name='quantity' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>

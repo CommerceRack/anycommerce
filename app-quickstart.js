@@ -260,7 +260,7 @@ document.write = function(v){
 				//empty is to get rid of loading gfx.
 				var $cart = tagObj.jqObj || $(app.u.jqSelector('#',tagObj.parentID))
 				$cart.empty().append(app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,app.data[tagObj.datapointer]));
-				tagObj.state = 'onCompletes'; //needed for handleTemplateEvents.
+				tagObj.state = 'complete'; //needed for handleTemplateEvents.
 				app.renderFunctions.handleTemplateEvents($cart,tagObj);
 				}
 			}, //updateMCLineItems
@@ -400,7 +400,7 @@ document.write = function(v){
 					var $parent = $(app.u.jqSelector('#',tagObj.searchArray[i].split('|')[1]));
 					app.ext.myRIA.renderFormats.productSearch($parent,{value:app.data[tagObj.searchArray[i]]});
 					}
-				tagObj.state = 'onCompletes'; //needed for handleTemplateEvents.
+				tagObj.state = 'complete'; //needed for handleTemplateEvents.
 
 				app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(app.u.jqSelector('#',tagObj.parentID))),tagObj);
 
@@ -2181,7 +2181,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						}
 					else	{
 						infoObj.datapointer = 'appProductGet|'+infoObj.pid; //here so datapoitner is available in renderFunctions.
-//typically, the onCompletes get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
+//typically, the onComplete get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						app.renderFunctions.handleTemplateEvents($product,infoObj);
 						}
@@ -2329,6 +2329,11 @@ elasticsearch.size = 50;
 					else	{
 						infoObj.cartid = app.model.fetchCartID();
 						$cart = app.ext.cco.a.getCartAsJqObj(infoObj);
+						$cart.on('complete',function(){
+							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
+								$(this).attr('data-app-change','myRIA|cartShipMethodSelect');
+								});
+							});
 						$cart.attr({'id':infoObj.parentID});
 						$cart.appendTo("#mainContentArea");
 						}
@@ -2366,6 +2371,11 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					else	{
 						P.cartid = app.model.fetchCartID();
 						$modal = app.ext.cco.a.getCartAsJqObj(P).attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.on('complete',function(){
+							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
+								$(this).attr('data-app-change','myRIA|cartShipMethodSelect');
+								});
+							});
 						$modal.dialog({modal: true,width:'80%'});  //browser doesn't like percentage for height
 						}
 
@@ -2738,7 +2748,7 @@ buyer to 'take with them' as they move between  pages.
 					var $parent = $(app.u.jqSelector('#',parentID));
 					infoObj.parentID = parentID;
 					app.renderFunctions.handleTemplateEvents($parent,infoObj);
-//only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
+//only have to create the template instance once. showContent takes care of making it visible again. but the onComplete are handled in the callback, so they get executed here.
 					if($parent.length > 0){
 //set datapointer OR it won't be present on an oncomplete for a page already rendered.
 						infoObj.datapointer = infoObj.datapointer || "appNavcatDetail|"+catSafeID; 
@@ -3091,6 +3101,13 @@ else	{
 				$('.username').empty();
 				app.u.logBuyerOut();
 				showContent('homepage',{});
+				},
+			
+			cartShipMethodSelect : function($ele,P)	{
+				var $cart = $ele.closest("[data-template-role='cart']");
+				app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
+				$cart.trigger('fetch',{'Q':'immutable'});
+				app.model.dispatchThis('immutable');
 				},
 			
 			cartMessagePageSend : function($ele,p)	{
