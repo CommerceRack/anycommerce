@@ -1805,6 +1805,8 @@ VALIDATION
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 					
+					app.u.dump(" -> $input.data('minlength'): "+$input.data('minlength'));
+					
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}

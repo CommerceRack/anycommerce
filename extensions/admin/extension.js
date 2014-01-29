@@ -2337,9 +2337,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showMailTool : function(vars)	{
 				vars = vars || {};
-				
-				
-				
 				if(vars.listType && Number(vars.partition) >= 0)	{
 				//listType must match one of these. an array is used because there will be more types:
 				//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
@@ -3130,7 +3127,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				else if(path == '#!batchManager')	{
 					app.ext.admin_batchjob.a.showBatchJobManager($target);
 					}
-				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target);}
+				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($target,opts);}
 				else if(path == '#!variationsManager')	{
 //					app.u.dump("$target: "); app.u.dump($target);
 					app.ext.admin_prodedit.a.showStoreVariationsManager($target || $target);

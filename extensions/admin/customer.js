@@ -91,15 +91,15 @@ var admin_customer = function() {
 				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
 				
+				app.u.handleCommonPlugins($target);
+				app.u.handleButtons($target);
+				$target.anydelegate();
+				//must be after anydelegate or the 'trigger' won't do much.
 				if(vars.scope && vars.searchfor)	{
 					$("[name='scope']",$target).val(vars.scope);
 					$("[name='searchfor']",$target).val(vars.searchfor);
 					$("button[data-app-role='customerSearchButton']:first",$target).trigger('click');
 					}
-				
-				app.u.handleCommonPlugins($target);
-				app.u.handleButtons($target);
-				$target.anydelegate();
 				
 				}, //showCustomerManager
 
@@ -320,17 +320,19 @@ var admin_customer = function() {
 
 
 //obj should contain CID. likely will include partition soon too.
+// ### FUTURE -> this works, but should probably be updated to use submitForm and refreshCustomerPanel as submit/click events.
 			showAddWalletModal : function(obj,$walletPanel)	{
-				var $modal = $('#customerUpdateModal').empty();
+				var $modal = $('#customerUpdateModal').empty().anydelegate();
 				$('.ui-dialog-title',$modal.parent()).text('Add a new wallet');
 				$modal.dialog('open');
 				if(obj && obj.CID)	{
 					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
 					var $form = $("form",$modal);
-					$form.append($("<button>").text('Save Wallet').button().on('click',function(){
+					$form.append($("<button>").text('Save Wallet').button().on('click',function(event){
+						event.preventDefault();
 						if(app.u.validateForm($form))	{
-							$form.showLoading({'message':'Adding wallet to customer record '+CID+'.'});
-							app.ext.admin.calls.adminCustomerUpdate.init(CID,["WALLETCREATE?"+$.param($form.serialize())],{'callback':function(rd){
+							$form.showLoading({'message':'Adding wallet to customer record '+obj.CID+'.'});
+							app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,["WALLETCREATE?"+$.param($form.serializeJSON())],{'callback':function(rd){
 								$form.hideLoading();
 								if(app.model.responseHasErrors(rd)){
 									$form.anymessage({'message':rd});
@@ -338,13 +340,13 @@ var admin_customer = function() {
 								else	{
 									$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
 									$("tbody",$walletPanel).empty(); //clear wallets
-									$walletPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
+									$walletPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+obj.CID}); //re-translate panel, which will update wallet list.
 									app.u.handleButtons($walletPanel);
 									}
 								}},'immutable');
 						//do this after the update so the detail includes the changes from the update.
-							app.model.destroy('adminCustomerDetail|'+CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+							app.model.destroy('adminCustomerDetail|'+obj.CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{
@@ -595,6 +597,23 @@ $D is returned.
 					}
 				}, //handleChanges
 			
+			getGiftcardCreateDialog : function(data)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Add New Giftcard',
+					'data' : data || {},
+					'templateID':'giftcardCreateTemplate',
+					'showLoading':false //will get passed into anycontent and disable showLoading.
+					});
+				app.u.handleButtons($D.anydelegate());
+				$D.dialog('open');
+				$( ".applyDatepicker",$D).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					dateFormat : 'yymmdd'
+					});
+				return $D;
+				},
+			
 //adds the extra buttons to each of the panels.
 //obj should include obj.CID
 			handleAnypanelButtons : function($customerEditor,obj){
@@ -635,11 +654,41 @@ $D is returned.
 							}});
 
 						$("[data-app-role='giftcards']",$customerEditor).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
-							navigateTo('/biz/manage/giftcard/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+
+							var $D = app.ext.admin_customer.u.getGiftcardCreateDialog(app.data['adminCustomerDetail|'+obj.CID]);
+							
+							//These fields are used for processForm on save.
+							//They're here instead of in the form directly so that the form/template can be recycled for other 'creates'.				
+							$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/message' value='The giftcard has been created.' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' />");
+							
+							if(app.u.thisNestedExists("app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+								$("input[name='email']",$D).prop('disabled',true);
+								//quantity and series are only useful when creating a series/bulk group of giftcards. In this instance, a GC is being created for a specific customer, so the values are forced and the inputs are hidden.
+								$("input[name='quantity']",$D).prop('disabled',true).val('1').closest('label').hide(); //force quantity to 1 or the email will get dropped. The field isn't applicable in this instance (assigning to a specific customer).
+								$("input[name='series']",$D).prop('disabled',true).val('').closest('label').hide();
+								}
+							
+							var $saveButton = $("button[data-app-role='saveButton']:first",$D)
+							$saveButton.attr('data-app-click',$saveButton.attr('data-app-click')+",admin_customer|refreshCustomerPanel").data('panel','giftcards');
+
 							}});
 
 						$("[data-app-role='tickets']",$customerEditor).anypanel('option','settingsMenu',{'Start a New Ticket':function(){
-							navigateTo('/biz/crm/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+							var $D = app.ext.admin.i.dialogCreate({
+								'title' : 'Create CRM Ticket for customer '+obj.CID,
+								'templateID':'crmManagerTicketCreateTemplate',
+								'data': app.data['adminCustomerDetail|'+obj.CID]
+								});
+							if(app.u.thisNestedExists("app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+								$("input[name='email']",$customerEditor).prop('disabled',true);
+								$("input[name='create']",$customerEditor).prop('disabled',true).closest('label').hide();
+								}
+							var $saveButton = $("button[data-app-role='saveButton']:first",$D)
+							$saveButton.attr('data-app-click',$saveButton.attr('data-app-click')+",admin_customer|refreshCustomerPanel").data('panel','tickets');
+							$D.anydelegate();
+							app.u.handleButtons($D);
+							$D.dialog('open');
+							//crmAdminTicketCreateShow
 							}});					
 
 						}
@@ -1080,26 +1129,23 @@ $D is returned.
 					});
 				}, //appAdminTicketCreateShow
 
-			appAdminTicketCreateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.appAdminTicketCreateExec').on('click.appAdminTicketCreateExec',function(event){
-					event.preventDefault();
-					var	$form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						var sfo = $form.serializeJSON();
-						if(sfo.phone || sfo.email || sfo.orderid)	{
-							$form.showLoading({'message':'Creating CRM Ticket'});
-							app.ext.admin.a.processForm($form,'immutable');
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							$form.anymessage({'message':'Either email, phone or order ID is required for a ticket to be created','errtype':'youerr'});
-							}
+			appAdminTicketCreateExec : function($ele,P)	{
+				P.preventDefault();
+				var	$form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					var sfo = $form.serializeJSON();
+					if(sfo.phone || sfo.email || sfo.orderid)	{
+						$form.showLoading({'message':'Creating CRM Ticket'});
+						app.ext.admin.a.processForm($form,'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
-//validateForm will handle error display.						
+						$form.anymessage({'message':'Either email, phone or order ID is required for a ticket to be created','errtype':'youerr'});
 						}
-					});
+					}
+				else	{
+//validateForm will handle error display.						
+					}
 				}, //appAdminTicketCreateExec
 
 
@@ -1217,24 +1263,14 @@ app.model.dispatchThis('immutable');
 
 /*/////////////////////////////				GIFTCARDS				\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-
 			giftcardCreateShow : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin.i.dialogCreate({
-					'title':'Add New Giftcard',
-					'templateID':'giftcardCreateTemplate',
-					'showLoading':false //will get passed into anycontent and disable showLoading.
-					});
-				$D.dialog('open');
-//These fields are used for processForm on save.
-//They're here instead of in the form directly so that the form/template can be recycled for edit.
-				$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
-				 $( ".applyDatepicker",$D).datepicker({
-					changeMonth: true,
-					changeYear: true,
-					dateFormat : 'yymmdd'
-					});
+				var $D = app.ext.admin_customer.u.getGiftcardCreateDialog();
 
+//These fields are used for processForm on save.
+//They're here instead of in the form directly so that the form/template can be recycled for edit.				
+				$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				
 				}, //giftcardCreateShow
 
 			adminGiftcardUpdateShow : function($ele,P)	{
@@ -1465,6 +1501,28 @@ app.model.dispatchThis('immutable');
 					$ele.closest('form').anymessage({'message':'In admin_customer.e.execCustomerEditorSave, unable to ascertain CID.','gMessage':true});
 					}
 				}, //customerEditorSave
+				
+			refreshCustomerPanel : function($ele,p){
+				var panel = $ele.data('panel');
+				if(panel)	{
+					var $editor = $("[data-app-role='customerManager']",$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+//					app.u.dump(" -> $editor.length: "+$editor.length); app.u.dump($editor.data());
+					var $panel = $("[data-app-role='"+panel+"']:first",$editor);
+					app.u.dump("$panel.length: "+$panel.length);
+					//clear any table body contents. they're generated w/ lists and if not cleared, they'll double up.
+					$("tbody:first",$panel).empty();
+
+					app.model.destroy('adminCustomerDetail|'+$editor.data('cid'));
+					app.ext.admin.calls.adminCustomerDetail.init({'CID':$editor.data('cid'),'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{
+						'callback' : 'anycontent',
+						'jqObj' : $panel
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_customer.e.refreshCustomerPanel, data('panel') not set on trigger element.","gMessage":true});
+					}
+				},
 
 
 			execCustomerRemove : function($ele,P)	{
@@ -1481,6 +1539,7 @@ app.model.dispatchThis('immutable');
 							app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
 							app.model.addDispatchToQ({
 								'_cmd':'adminCustomerRemove',
+								'cid' : CID,
 								'_tag':	{
 									'datapointer' : 'adminCustomerRemove',
 									'callback':function(rd){
@@ -1564,7 +1623,7 @@ app.model.dispatchThis('immutable');
 
 				P.preventDefault();
 				var $modal = $("#customerUpdateModal").empty().dialog('open'),
-				CID = $btn.closest("[data-cid]").data('cid');
+				CID = $ele.closest("[data-cid]").data('cid');
 				
 				$modal.html("<p class='clearfix marginBottom'>Please confirm that you want to reset this customers password hint. There is no undo.<\/p>");
 				
@@ -1625,12 +1684,10 @@ app.model.dispatchThis('immutable');
 					}
 				}, //execNoteCreate
 
-
-
 //used in the wholesale ui
 			adminCustomerSearchShowUI : function($ele,p)	{
 				if($ele.data('scope') && $ele.data('searchfor'))	{
-					app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'scope':$ele.data('scope'),'searchfor':$ele.data('searchfor')});
+					navigateTo("#!customerManager",{'scope':$ele.data('scope'),'searchfor':$ele.data('searchfor')});
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_customer.e.adminCustomerSearchShowUI, no data-scope ["+$ele.data('scope')+"] and/or data-searchfor  ["+$ele.data('searchfor')+"] set on trigger element.","gMessage":true});
@@ -1670,8 +1727,6 @@ app.model.dispatchThis('immutable');
 				$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
 				app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //adminCustomerUpdateShow
-
-
 
 
 			saveOrgToField : function($cb)	{

@@ -378,7 +378,7 @@ pass in an event name and a function and it will be added as an eventAction.
 
 			for(var i = 0; i < L; i += 1)	{
 				var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
-				app.u.dump(i+") AEF: "); app.u.dump(AEF);
+//				app.u.dump(i+") AEF: "); app.u.dump(AEF);
 				if(AEF[0] && AEF[1])	{
 					if(app.ext[AEF[0]] && app.ext[AEF[0]].e[AEF[1]] && typeof app.ext[AEF[0]].e[AEF[1]] === 'function')	{
 						//execute the app event.
