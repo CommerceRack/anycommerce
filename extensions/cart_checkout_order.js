@@ -380,13 +380,14 @@ left them be to provide guidance later.
 
 
 		a : {
-			
+			//for a 'complete' event, add it to the $cart object returned by this function. It'll be executed after a fetch or a refresh.
 			getCartAsJqObj : function(vars)	{
 				vars = vars || {};
 				var r; //what is returned.
 				if(vars.templateID && vars.cartid)	{
-					$cart = $(app.renderFunctions.createTemplateInstance(vars.templateID,vars));
+					var $cart = $(app.renderFunctions.createTemplateInstance(vars.templateID,vars));
 					$cart.attr('data-template-role','cart');
+
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
@@ -395,7 +396,9 @@ left them be to provide guidance later.
 						app.model.destroy('cartDetail|'+$c.data('cartid'));
 						app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'anycontent',
-							'onComplete' : P.onComplete,
+							'onComplete' : function(){
+								$cart.trigger('complete',$.extend(true,{},P,event));
+								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
 							},P.Q);
@@ -405,10 +408,16 @@ left them be to provide guidance later.
 						var $c = $(this);
 						$c.intervaledEmpty();
 						if($c.data('anycontent'))	{$c.anycontent('destroy')}
-						$c.anycontent({
-							'datapointer':'cartDetail|'+$c.data('cartid'),
-							'templateID' : $c.data('templateid')
-							})
+						//w/ no destroy here, refresh will use what's in memory IF it's available. If not, it will fetch the cart.
+						app.calls.cartDetail.init($c.data('cartid'),{
+							'callback':'anycontent',
+							'onComplete' : function(){
+								$cart.trigger('complete',$.extend(true,{},P,event));
+								},
+							'templateID' : $c.data('templateid'),
+							'jqObj' : $c
+							},'mutable');
+						app.model.dispatchThis('mutable');
 						});
 					r = $cart;
 					}
@@ -1025,9 +1034,9 @@ in a reorder, that data needs to be converted to the variations format required 
 					else	{
 						if(vars.quantity && vars.stid)	{
 							r = true;
-							cmdObj.stid = $container.data('stid');
-							cmdObj.quantity = $("input[name='qty']",$container).val();
-							cmdObj.uuid = $container.data('uuid');
+							cmdObj.stid = vars.stid;
+							cmdObj.quantity = vars.quantity;
+							cmdObj.uuid = vars.uuid;
 							cmdObj._cmd = 'cartItemUpdate';							
 							}
 						else	{
@@ -1310,14 +1319,13 @@ in a reorder, that data needs to be converted to the variations format required 
 			cartItemUpdateExec : function($ele,p){
 				var
 					$container = $ele.closest('[data-stid]'),
-					cartid = $ele.closest(":data(cartid)").data('cartid'),
+					cartid = $ele.closest("[data-template-role='cart']").data('cartid'),
 					vars = {
 						stid : $container.data('stid'),
 						uuid : $container.data('uuid'),
-						qty : $("input[name='qty']",$container).val(), //admin wants qty.
-						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
+						qty : $ele.val(), //admin wants qty.
+						quantity : $ele.val() //cartItemUpdate wants quantity
 						}
-				
 				if($("input[name='price']",$container).val() && app.u.thisIsAnAdminSession())	{
 					vars.price = $("input[name='price']",$container).val();
 					}
@@ -1333,8 +1341,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				}, //cartItemUpdateExec
 
 			cartZipUpdateExec : function($ele,p)	{
-				
-				app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("form").find("input[name='_cartid']").val()},{},'immutable');
+				app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				app.model.dispatchThis('immutable');
 				}, //cartZipUpdateExec
