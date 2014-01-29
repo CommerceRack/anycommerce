@@ -821,7 +821,7 @@ else	{
 				'orderid':data.value.our.orderid,
 				'customerid':data.value.customer.cid,
 				'ordertotal':data.value.sum.order_total,
-				'countrycode':data.value.ship.countrycode || orderData.bill.countrycode
+				'countrycode':data.value.ship.countrycode || data.value.bill.countrycode
 				},{
 				'callback':function(rd){
 					$tag.hideLoading();
@@ -2070,6 +2070,7 @@ $('.editable',$container).each(function(){
 
 					if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].customer && app.data['adminOrderDetail|'+orderID].customer.cid)	{
 						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer: '+app.data['adminOrderDetail|'+orderID].customer.cid});
+						$D.dialog('option','height',($(document.body).height() > 500 ? 500 : ($(document.body).height() - 100)));
 						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':app.data['adminOrderDetail|'+orderID].customer.cid});
 						$D.dialog('open');
 						}
