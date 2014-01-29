@@ -47,6 +47,7 @@ ADMIN
 	new - cart manager (interact w/ client carts)
 	new - interface for order create received overhaul. supports multiple carts (order in progress).
 	new - all new help doc. click 'help' in header.
+	new - file attachment for ticket is new. This method will replace what is used elsewhere (csv, media lib, etc).
 
 Checkout/1PC
 	payment methods now hidden if balance is zero.
