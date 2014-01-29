@@ -2109,8 +2109,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 							app.ext.admin.u.loadNativeApp(path,opts);
 							}
 						else if($target instanceof jQuery)	{
-						
-							
 							if(opts.dialog)	{
 								app.model.fetchAdminResource(path,opts);
 								}
@@ -3133,6 +3131,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					app.ext.admin_prodedit.a.showStoreVariationsManager($target || $target);
 					}
 				else if(path == '#!help')	{
+//for now, let's keep help in the support tab. That way users can toggle between help and another tab/interface, if desired.
 					$('#supportContent').empty();
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));

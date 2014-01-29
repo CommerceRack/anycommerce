@@ -128,16 +128,6 @@
 	<img height="40" width="150"  src="app-admin/images/marketplaces/linkshare.png" />
 	</div>
 		
-<!--
-	<div class='pointer market' data-mkt="" data-app-event="admin_marketplace|showDSTDetail">
-	<img height="40" width="150"  src="app-admin/images/marketplaces/custom.png" />
-	</div>
--->	<div class='pointer market' data-mkt="GSM" data-app-event="admin_marketplace|showDSTDetail">
-	<img height="40" width="150"  src="app-admin/images/marketplaces/google.png" /><br />Site Map
-	</div>
-
-
-
 
 </div>
 
@@ -311,42 +301,36 @@
 </table>
 
 
-
-
-
-<div id='syndication_gsm'>
-
-<h1 class='marginBottom'>Google Sitemap</h1>
-
-<input type='hidden' name='DST' value='GSM' />
-<fieldset>
-	<legend>General Settings</legend>
-
-	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
+<!-- shared across all CPC destinations -->
+<div id='globalCPCInputs' class='marginBottom'>
+	<label>
+		<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
+		Is active
+	</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
 
-<p class="hint">
-HINT: The username, password, etc. are provided by Google Sitemap.
-</p>
-
-
-</fieldset>
+	<label class='showForZoovyOnly'>
+		<span>Link Syntax</span>
+		<select name='linkstyle' data-bind="var: mkt(linkstyle); format:popVal;">
+			<option value='vstore'>Vstore</option>
+			<option value='app' selected='selected'>App</option>
+		</select>
+		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is #! syntax.'>?</span>
+	</label>
 
 </div>
+
 
 
 <div id='syndication_goo'>
 <h1 class='marginBottom'>Google Shopping Submission Manager</h1>
 
-
-
 <input type='hidden' name='DST' value='GOO' />
 <fieldset>
 	<legend>General Settings</legend>
 
-	<label><input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
+	<label><input type="checkbox" class='applyAnycb'  name='ENABLE' data-bind="var: mkt(enable); format:popVal;" /> Is active</label>
 	<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
-		
 	
 	<label><input type="checkbox" class='applyAnycb'  name="upc_exempt" data-bind="var: mkt(upc_exempt); format:popVal;" /> Google Shopping Account has unique identifer exemption</label>
 
@@ -384,7 +368,7 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 		<span>Pricing Schedule</span>		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
 		</select>
-		<span class='hint'>Requires Wholesale Bundle</span>
+		
 	</label>
 
 </fieldset>
@@ -403,15 +387,15 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 
 <input type='hidden' name='DST' value='NXT' />
 
+
+	<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 	<div class='label'>
 	Output File Format:
 	<label><input type="radio" value="0" checked="" name="format" data-bind='var: mkt(format); format:popVal;' /> Soft Goods (RECOMMENDED)</label>
 	<label><input type="radio" value="1" name="format" data-bind='var: mkt(format); format:popVal;' /> Tech Feed (Electronics Only)</label>
 	</div>
-	
-	<label><input type="checkbox" name='ENABLE' data-bind='var: mkt(enable); format:popVal;' class='applyAnycb' /> Is Active</label>
-	<p class='zhint'>Checkbox must be selected or syndication will not be attempted.</p>
-	
+
 	<label>
 		<span>Nextag.com FTP Username</span>
 		<input type="text" value="" name="ftp_user" required='required' data-bind='var: mkt(ftp_user); format:popVal;' />
@@ -431,7 +415,7 @@ HINT: The username, password, etc. are provided by Google Sitemap.
 		<span>Pricing Schedule</span>		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
 		</select>
-		<span class='hint'>Requires Wholesale Bundle</span>
+		
 	</label>
 
 
@@ -484,7 +468,7 @@ HINT: The username, password, etc. are provided by Google Sitemap.
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i></td>
+		</select> </td>
    </tr>
 	<tr>
 		<td colspan="2">
@@ -558,7 +542,7 @@ These settings *MUST* match the settings in your Buy.com account.
 			<option value=''>none</option>
 		</select>
 </label>
-<p class='hint'>Requires Wholesale Bundle</p>
+
 
 <p class="hint">
 HINT: The username, password, etc. are provided by HSN.com. These settings *MUST* match the settings in your HSN.com account.
@@ -577,10 +561,9 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
 <input type='hidden' name='DST' value='CJ' />
 
 
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
 
 <table>
-<tr>
-	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 <tr>
   <td>CJ Account #:</td>
   <td><input type="text" name="cjcid" value="" required='required' data-bind="var: mkt(cjcid); format:popVal;" /></td>
@@ -609,7 +592,7 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
   <td>Pricing Schedule:</td>
   <td><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i></td>
+		</select> </td>
 </tr>
 <tr>
   <td colspan='2'>
@@ -658,7 +641,7 @@ CommissionJunction.</p>
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i></td>
+		</select> </td>
    </tr>
 	<tr>
 		<td colspan="2">
@@ -683,10 +666,14 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
 
 <input type='hidden' name='DST' value='PGR' />
 
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
+
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE' data-bind="var: mkt(enable); format:popVal;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody>
 	<tr>
 		<td valign="top">PriceGrabber.com FTP/Web Username</td>
 		<td valign="top"><input type="text" value="" name="user" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
@@ -702,7 +689,7 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i><br></td>
+		</select> <br></td>
    </tr>
 	<tr>
 		<td colspan="2">
@@ -725,11 +712,10 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
 <h1 class='marginBottom'>Amazon Product Ads</h1>
 
 <input type='hidden' name='DST' value='APA' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <table>
 <tbody>
 <tr>
@@ -752,7 +738,7 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i><br></td>
+		</select> <br></td>
    </tr>
 	<tr>
 		<td colspan="2">
@@ -1019,11 +1005,10 @@ ASDF
 
 
 <input type='hidden' name='DST' value='WSH' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>Pricing Schedule</span>
 	<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
@@ -1044,11 +1029,9 @@ Once the file has been generated you can download it from the URL below:<br>
 
 </p>
 <input type='hidden' name='DST' value='SAS' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
 
 <label>
 	<span>ShareASale.com Merchant ID</span>
@@ -1071,11 +1054,12 @@ Once the file has been generated you can download it from the URL below:<br>
 
 
 <input type='hidden' name='DST' value='SHO' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
+
 
 <label>
 	<span>FTP User</span>
@@ -1096,7 +1080,7 @@ Once the file has been generated you can download it from the URL below:<br>
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1115,11 +1099,10 @@ These settings *MUST* match the settings in your Shopping.com account.
 
 
 <input type='hidden' name='DST' value='FND' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1139,7 +1122,7 @@ These settings *MUST* match the settings in your Shopping.com account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1157,11 +1140,10 @@ These settings *MUST* match the settings in your TheFind.com account.
 
 
 <input type='hidden' name='DST' value='BIN' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1181,7 +1163,7 @@ These settings *MUST* match the settings in your TheFind.com account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1199,11 +1181,9 @@ These settings *MUST* match the settings in your bing.com account.
 
 
 <input type='hidden' name='DST' value='BZR' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
 
 <table>
 <tbody>
@@ -1235,7 +1215,7 @@ These settings *MUST* match the settings in your bing.com account.
   <td valign="top">Pricing Schedule:</td>
   <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 	<option value=''>none</option>
-</select> <i>(Requires Wholesale Bundle)</i><br></td>
+</select> <br></td>
 </tr>
 	<tr>
 		<td colspan="2">
@@ -1257,11 +1237,10 @@ These settings *MUST* match the settings in your Shopzilla account.
 
 
 <input type='hidden' name='DST' value='PTO' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1281,7 +1260,7 @@ These settings *MUST* match the settings in your Shopzilla account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1299,11 +1278,10 @@ These settings *MUST* match the settings in your pronto.com account.
 
 
 <input type='hidden' name='DST' value='BCM' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1323,7 +1301,7 @@ These settings *MUST* match the settings in your pronto.com account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1339,11 +1317,10 @@ These settings *MUST* match the settings in your become.com account.
 
 
 <input type='hidden' name='DST' value='SMT' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1363,7 +1340,7 @@ These settings *MUST* match the settings in your become.com account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class="hint">
@@ -1380,11 +1357,10 @@ These settings *MUST* match the settings in your smarter.com account.
 
 
 <input type='hidden' name='DST' value='DIJ' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
+
 <label>
 	<span>FTP User</span>
 	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
@@ -1404,7 +1380,7 @@ These settings *MUST* match the settings in your smarter.com account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class='hint'>
@@ -1421,11 +1397,8 @@ HINT: The username, password, etc. are provided by Dijipop.com. These settings *
 
 
 <input type='hidden' name='DST' value='LNK' />
-<label>
-	<input type="checkbox" class='applyAnycb'  name='ENABLE'  data-bind="var: mkt(enable); format:popVal;" />
-	Is active
-</label>
-<p class="hint">Checkbox must be selected or syndication will not be attempted.</p>
+
+<div data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:globalCPCInputs;"></div>
 
 <label>
 	<span>FTP User</span>
@@ -1461,7 +1434,7 @@ HINT: The username, password, etc. are provided by Dijipop.com. These settings *
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 <p class='hint'>
 HINT: The username, password, etc. are provided by LinkShare.com. These settings *MUST* match the settings in your LinkShare.com account. 
@@ -1533,7 +1506,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
   <td valign="top">Pricing Schedule:</td>
   <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
 	<option value=''>none</option>
-</select> <i>(Requires Wholesale Bundle)</i></td>
+</select> </td>
 </tr>
 <tr>
 	<td colspan="2">
@@ -1580,7 +1553,7 @@ These settings *MUST* match the settings in your Sears account.
 <label>
   Pricing Schedule:		<select name='SCHEDULE' data-bind="var: mkt(schedule); format:wholesaleScheduleSelect; extension:admin; forceRender:1;">
 			<option value=''>none</option>
-		</select> <i>(Requires Wholesale Bundle)</i>
+		</select> 
 </label>
 
 <p class='hint'>

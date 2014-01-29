@@ -72,6 +72,7 @@ class can also be applied to a 1 item per row list.
 .minimalMode .hideInMinimalMode 	{display:none;}
 
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+.isZoovy option.showForZoovyOnly	{display:bloock;} /* otherwise the options go inline */
 .conditionMet .conditionalHide	{display:block;}
 .conditionMet span.conditionalHide	{display:inline-block;}
 

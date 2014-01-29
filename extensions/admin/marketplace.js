@@ -22,7 +22,8 @@ var admin_marketplace = function() {
 	'pageSyndicationTemplate',
 	'syndicationDetailTemplate',
 	'syndicationFilesRowTemplate',
-	'syndicationErrorsRowTemplate'
+	'syndicationErrorsRowTemplate',
+	'globalCPCInputs'
 	//all the DST specific templates are intentionally NOT included here. They'll get loaded as needed.
 	);
 	var r = {
@@ -335,7 +336,7 @@ var admin_marketplace = function() {
 								});
 							app.u.handleAppEvents($target);
 							app.u.handleCommonPlugins($target);
-							app.u.handleCommonButtons($target.anydelegate());
+							app.u.handleButtons($target.anydelegate());
 							app.ext.admin.u.applyEditTrackingToInputs($target);
 
 							$('.applyAnytabs:first',$slimLeftContent).find("li[data-app-role='extrasTab']:first").trigger('click'); //make tokens and profiles tab active.
