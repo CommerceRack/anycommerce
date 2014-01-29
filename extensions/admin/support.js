@@ -79,6 +79,7 @@ var admin_support = function() {
 			
 			showTicketManager : function($target)	{
 //				app.u.dump("BEGIN admin_support.a.showTicketManager");
+				$target.intervaledEmpty();
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Ticket Manager',
 					'className' : 'adminTicketList', //applies a class on the DMI, which allows for css overriding for specific use cases.
@@ -150,6 +151,8 @@ var admin_support = function() {
 //will open help interface within $target.
 // ### FUTURE -> vars.title support started but not finished/tested. add support for vars.title to be passed in and have a search performed.
 			showHelpInterface : function($target,vars){
+				vars = vars || {};
+				
 				var $DMI = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Help Documentation', //left off because the interface is in a tab.
 					'className' : 'helpDocumentation',
