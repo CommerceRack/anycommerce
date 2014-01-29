@@ -2025,8 +2025,8 @@ app.model.dispatchThis('passive');
 
 //ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
 					if(pMethods[0].id == 'ZERO')	{
-						$tag.hide(); //hide payment options.
-						$r.append("<div ><input type='radio' name='want/payby' value='ZERO' checked='checked' \/>"+pMethods[i].pretty+"<\/div>");
+						$r.hide(); //hide payment options.
+						$r.append("<div ><input type='radio' name='want/payby' value='ZERO' checked='checked' \/>"+pMethods[0].pretty+"<\/div>");
 						}
 					else if(L > 0)	{
 						for(var i = 0; i < L; i += 1)	{
