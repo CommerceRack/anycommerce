@@ -485,7 +485,6 @@ var admin_support = function() {
 				},
 
 			adminTicketLastUpdateShow : function($ele,p)	{
-
 				var
 					$tr = $ele.closest('tr'),
 					ticketID = $tr.data('id');
@@ -512,8 +511,6 @@ var admin_support = function() {
 						}
 					},'mutable');
 				app.model.dispatchThis('mutable');
-
-				
 				},
 
 			adminTicketDetailShow : function($ele,p)	{
@@ -536,6 +533,8 @@ var admin_support = function() {
 						encode : 'base64', //if this is disabled, change enctype in the dispatch to null.
 						ajaxRequest : function(vars,$ele)	{
 //							app.u.dump(vars);
+							var $fUpload =  $("[data-app-role='supportFileUploadContainer']",$panel);
+							$fUpload.showLoading({"message":"uploading files"});
 							app.model.addDispatchToQ({
 								"_cmd":"adminTicketFileAttach",
 								"filename" : vars.filename,
@@ -544,10 +543,15 @@ var admin_support = function() {
 								"body" : vars.filecontents,
 								"_tag":{
 									"callback":"showMessaging",
-									"jqObj" : $panel,
+									"jqObj" : $fUpload,
+									"onComplete" : function(){
+										$(".fileUpload_default",$fUpload).slideUp(); //hide the items that were just uploaded. They'll be in the newly generated filename table.
+										app.model.dispatchThis('mutable');
+										},
 									"message":"File "+vars.filename+" attached to ticket "+ticketID
 									}
 								},"mutable");
+							app.model.addDispatchToQ({'_cmd':'adminTicketDetail','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID,'callback':'anycontent','jqObj':$("[data-app-role='ticketAttatchmentList']",$panel).empty()}},'mutable');
 							app.model.dispatchThis("mutable");
 							}
 						});

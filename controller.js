@@ -879,8 +879,9 @@ app.u.throwMessage(responseData); is the default error handler.
 					
 					
 // use either delegated events OR app events, not both.
+//avoid using this. ### FUTURE -> get rid of these. the delegation should occur before here.
 					if(_rtag.anydelegate)	{
-						app.u.dump(" ------> using delegated events in anycontent, not app events ");
+//						app.u.dump(" ------> using delegated events in anycontent, not app events ");
 						$target.anydelegate();
 						}
 					else if(_rtag.skipAppEvents)	{}
@@ -894,6 +895,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					if(_rtag.handleFormConditionalDelegation)	{
 						app.ext.admin.u.handleFormConditionalDelegation($('form',$target)); //enables some form conditional logic 'presets' (ex: data-panel show/hide feature)
 						}
+//allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
 					if(typeof _rtag.onComplete == 'function')	{
 						_rtag.onComplete(_rtag);
 						}
@@ -978,6 +980,11 @@ app.u.throwMessage(responseData); is the default error handler.
 					msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
 					app.u.throwMessage(msg);
 					}
+//allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
+				if(typeof _rtag.onComplete == 'function')	{
+					_rtag.onComplete(_rtag);
+					}
+
 				}
 			}, //showMessaging
 		
