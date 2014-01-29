@@ -303,10 +303,12 @@ used, but not pre-loaded.
 
 					var hostSet = "HOST-SET?"+$.param(app.u.getWhitelistedObject(sfo,['HOSTNAME','HOSTTYPE']));
 
-
-//update changes to the ssl cert.
-					if(sfo.ssl_certificate && sfo.ssl_key)	{
-						cmdObj['@updates'].push("HOST-SSL-UPDATE?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME));
+//The key and the CRT should only get updated if they've changed.
+					if($("textarea[name='KEY']",$form).hasClass('edited'))	{
+						cmdObj['@updates'].push("HOST-SSL-UPDATE-KEY?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME)+"&KEY="+encodeURIComponent(sfo.KEY));
+						}
+					if($("textarea[name='CRT']",$form).hasClass('edited'))	{
+						cmdObj['@updates'].push("HOST-SSL-UPDATE-CRT?HOSTNAME="+encodeURIComponent(sfo.HOSTNAME)+"&CRT="+encodeURIComponent(sfo.CRT));
 						}
 
 					if(sfo.HOSTTYPE == 'VSTORE' || sfo.HOSTTYPE == 'VSTORE-APP')	{
@@ -607,7 +609,6 @@ used, but not pre-loaded.
 						
 					app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
 
-
 //hostname isn't editable once set.					
 					if($ele.data('mode') == 'update')	{
 						$("input[name='HOSTNAME']",$D).attr('disabled','disabled');
@@ -620,7 +621,7 @@ used, but not pre-loaded.
 							})
 						)
 
-					$D.anydelegate().dialog('open');
+					$D.anydelegate({'trackEdits':true}).dialog('open');
 					}
 				else	{
 					$ele.closest('.ui-widget-content').anymessage({'message':'In admin_sites.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});
