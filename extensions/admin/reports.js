@@ -92,7 +92,7 @@ var admin_reports = function() {
 			
 		
 			showReportsPage : function($target)	{
-				$target.empty();
+				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}}).anydelegate();
 				app.u.handleButtons($target);				
 				app.u.handleCommonPlugins($target);
