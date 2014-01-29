@@ -1359,21 +1359,13 @@ var admin_wholesale = function() {
 			execOrganizationRemove : function($ele,P)	{
 
 				P.preventDefault();
-				var
-					$D = $("<div \/>").attr('title',"Permanently Remove Organization"),
+				var 
 					orgID = $ele.closest('tr').data('orgid');
-
-				$D.append("<P>Are you sure you want to delete this organization? There is no undo for this action.<\/P>");
-				$D.addClass('displayNone').appendTo('body'); 
-				$D.dialog({
-					modal: true,
-					autoOpen: false,
-					close: function(event, ui)	{
-						$(this).dialog('destroy').remove();
-						},
-					buttons: [ 
-						{text: 'Cancel', click: function(){$D.dialog('close')}},
-						{text: 'Delete Organization', click: function(){
+					$D = app.ext.admin.i.dialogConfirmRemove({
+						message : "Are you sure you want to delete this organization? There is no undo for this action.",
+						title : "Permanently Remove Organization",
+						removeButtonText : "Remove",
+						removeFunction : function()	{
 							$D.parent().showLoading({"message":"Deleting Organization..."});
 							app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
 							app.model.addDispatchToQ({
@@ -1385,17 +1377,18 @@ var admin_wholesale = function() {
 										$D.parent().hideLoading();
 										if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
 										else	{
+											$D.empty();
 											$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
 											$ele.closest('tr').empty().remove(); //remove row in results list.
 											$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
 											}
 										}
 									}
-								},'i,mutable');
+								},'immutable');
 							app.model.dispatchThis('immutable');
-							}}	
-						]
-					});
+				
+							}
+						});
 				$D.dialog('open');
 
 				}, //execOrganizationRemove
@@ -1466,13 +1459,14 @@ var admin_wholesale = function() {
 								$form.anymessage({'message':rd});
 								}
 							else	{
-								$form.empty().anymessage(app.u.successMsgObject('The organization has been edited.'));
+								$form.empty().anymessage(app.u.successMsgObject('The organization has been saved.'));
 								$form.append("<h2>What would you like to do next?<\/h2>");
 								//sample action. success would go here.
-								$form.append($("<button>").text('Edit Org').on('click',function(){
+								$form.append($("<button>").text('Edit Org').button().on('click',function(){
+									$(this).closest('.ui-dialog-content').dialog('close');
 									navigateTo("#!organizationEditor",{'orgID':app.data[rd.datapointer].ORGID});
 									}));
-								$form.append($("<button>").text('Back to Org Manager').on('click',function(){
+								$form.append($("<button>").text('Back to Org Manager').button().on('click',function(){
 									$(this).closest('.ui-dialog-content').dialog('close');
 									}));
 								}
