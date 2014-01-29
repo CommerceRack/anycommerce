@@ -1011,7 +1011,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'cart':
-						infoObj.performJumpToTop = false; //dont jump to top.
+						infoObj.performJumpToTop = (infoObj.show === 'inline' ? true : false); //dont jump to top.
 						app.ext.myRIA.u.showCart(infoObj);
 						break;
 
@@ -2319,17 +2319,17 @@ elasticsearch.size = 50;
 
 				if(infoObj.show == 'inline')	{
 //only create instance once.
-					var $cart = $('#mainContentArea_cart')
+					$cart = $('#mainContentArea_cart');
 					if($cart.length)	{
 						//show cart
-						$cart.trigger('refresh');
+						$cart.hide().trigger('refresh');
 						infoObj.state = 'complete';
 						app.renderFunctions.handleTemplateEvents($cart,infoObj);
 						}
 					else	{
 						infoObj.cartid = app.model.fetchCartID();
 						$cart = app.ext.cco.a.getCartAsJqObj(infoObj);
-						$cart.on('complete',function(){
+						$cart.hide().on('complete',function(){
 							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
 								$(this).attr('data-app-change','myRIA|cartShipMethodSelect');
 								});
@@ -3161,11 +3161,17 @@ else	{
 
 			productAdd2Cart : function($ele,p)	{
 				p.preventDefault();
-				$ele.append("<input type='hidden' name='_cartid' value='"+app.model.fetchCartID()+"' \/>");
+				//the buildCartItemAppendObj needs a _cartid param in the form.
+				if($("input[name='_cartid']",$ele).length)	{}
+				else	{
+					$ele.append("<input type='hidden' name='_cartid' value='"+app.model.fetchCartID()+"' \/>");
+					}
+
 				var cartObj = app.ext.store_product.u.buildCartItemAppendObj($ele);
 				if(cartObj)	{
 					app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');
-					app.calls.refreshCart.init({'callback':function(rd){
+					app.model.destroy('cartDetail|'+cartObj._cartid);
+					app.calls.cartDetail.init(cartObj._cartid,{'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}

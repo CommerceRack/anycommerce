@@ -1319,7 +1319,8 @@ in a reorder, that data needs to be converted to the variations format required 
 			cartItemUpdateExec : function($ele,p){
 				var
 					$container = $ele.closest('[data-stid]'),
-					cartid = $ele.closest("[data-template-role='cart']").data('cartid'),
+					$cart = $ele.closest("[data-template-role='cart']"),
+					cartid = $cart.data('cartid'),
 					vars = {
 						stid : $container.data('stid'),
 						uuid : $container.data('uuid'),
@@ -1330,9 +1331,9 @@ in a reorder, that data needs to be converted to the variations format required 
 					vars.price = $("input[name='price']",$container).val();
 					}
 
-				
-				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'showMessaging','message' : 'Item '+$container.data('stid')+ ' updated.','jqObj' : $ele.closest('form')}))	{
-					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+				//globalMessaging is used for message display so the 'fetch' for the cart doesn't nuke the messaging.
+				if(app.ext.cco.u.cartItemUpdate(cartid,vars,{'callback' : 'showMessaging','message' : 'Item '+$container.data('stid')+ ' updated.','jqObj' : $cart}))	{
+					$cart.trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					app.model.dispatchThis('immutable');
 					}
 				else	{
