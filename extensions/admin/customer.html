@@ -851,43 +851,42 @@ The checkbox below does not work.
 
 <div id='giftcardAddProductTemplate'>
 
-<p>This will create a product in your store, which when purchased will create a gift card for the customer. The product will be assigned a SKU, but have unlimited inventory.</p>
 
 
 
 <form action='#' onsubmit="return false;">
+<p>This will create a product in your store, which when purchased will create a gift card for the customer. The product will be assigned a SKU, but have unlimited inventory.</p>
+
 <input type='hidden' name='_cmd' value='adminGiftcardSetupProduct' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
 
 
 <fieldset class='labelsAsBreaks'>
 	<label>
 		<span>SKU</span>
-		<input type="text" name="SKU" required='required' />
+		<input type="text" name="SKU" required='required' data-input-keyup="format" data-input-format='pid,uppercase' />
 	</label>
 	
 	<label>
 		<span>Amount</span>
-		<input type='number' class='smallInput' min='0' step='.01' name="PRICE" size="5" required='required' />
+		<input type='number' class='smallInput' min='0' step='.01' name="PRICE" size="5" required='required'  data-input-keyup="format" data-input-format='number' />
+		<span class='toolTip' title='Set an amount of 0 to create an "amount" option that lets the user select an amount.'>?</span>
 	</label>
-	<p class='hint'>HINT: set an amount of 0 to create an "amount" option that lets the user select an amount. </p>
 
 	<label>
-	<input type="checkbox" name="ALLOW_NOTE" class='applyAnycb' checked="checked" /> Allow buyer to put note on card.
+	<input type="checkbox" name="ALLOW_NOTE" class='applyAnycb' checked="checked" /> Allow buyer to put note on card. <span class='toolTip' title='This will let the user specify a text note that will be sent to the recipient.'>?</span>
 	</label>
 	<p class="hint">
-	This will let the user specify a text note that will be sent to the recipient.
+	
 	</p>	
 
 	<label>
-	<input type="checkbox" name="ALLOW_RECIPIENT" checked="checked" /> Allow buyer to specify electronic recipient
+	<input type="checkbox" name="ALLOW_RECIPIENT" checked="checked" class='applyAnycb' /> Allow buyer to specify electronic recipient <span class='toolTip' title='This will automatically create an account for a recipient.'>?</span>
 	</label>
-	<p class="hint">
-	This will automatically create an account for a recipient.
-	</p>
 
-	<button data-app-event="admin|processForm">Save</button>
+	<button data-app-click="admin|submitForm" class='applyButton'>Save</button>
 
 </fieldset>
 </form>
