@@ -702,15 +702,23 @@ has to be within the fieldset to for data-table to work right.
 			<td>Some details about the server you are on, app version, etc.</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some Localstorage</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="app.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some localStorage</button></td>
 			<td class='valignTop small'>
-			This will selectively clear local storage for the admin interface. It will clear data such as product, category ,etc, but leave preferences such as panel sequence , panel state (open/closed) etc. It will not impact local storage for other domains. This action is browser-specific.
+			This will selectively clear local storage for the admin interface. Clear all data but login and device specific preferences from localStorage.
 			</td>
 		</tr>
 		<tr>
-			<td class='valignTop'><button class='applyButton' onclick="localStorage.clear();">Clear Localstorage</button></td>
+			<td class='valignTop'><button class='applyButton' onclick="localStorage.clear(); location.reload(); ">Clear localStorage</button></td>
 			<td class='valignTop small'>
-			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific.
+			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific. You will need to log in again. All device specific preferences (what panels are open/closed by default) will reset.<br />
+			<b>This action will refresh your browser</b>.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="sessionStorage.clear(); location.reload(); ">Clear sessionStorage</button></td>
+			<td class='valignTop small'>
+			This will clear all session storage for the admin interface/domain. Some data, such as customer or product, is only retrieved once per session. Session storage is where it's kept. This action will not impact session storage for other domains. This action is browser-specific.<br />
+			<b>This action will refresh your browser</b>.
 			</td>
 		</tr>
 		<tr>
