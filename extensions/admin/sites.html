@@ -260,6 +260,7 @@
 	<label>
 		<span>Host Type</span>
 		<select name='HOSTTYPE' data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
+			<option value=''>Please choose</option>
 			<option value='APPTIMIZER' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>App</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
 			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store</option>
@@ -308,7 +309,7 @@
 
 	<div data-panel-id='domainForceHTTPS' class='displayNone domainNewHostSelectType'>
 	<label>
-		<input type='checkbox' name='force_https' class='applyAnycb' data-bind="var: host(force_https); format:popval;" />
+		<input type='checkbox' name='force_https' class='applyAnycb' data-bind="var: host(force_https); format:popVal;" />
 		Force https
 	</label>
 	
@@ -318,7 +319,7 @@
 	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
 		<label>
 			<span>Redirect</span>
-			<input type='url' name='REDIR' value='' />
+			<input type='url' name='REDIR' value='' data-bind="var:host(REDIR); format:popVal;" />
 		</label>
 	</div>
 
@@ -364,11 +365,11 @@ There are five components to ssl.
 -->
 		<label>
 			<span>Certificate</span>
-			<textarea data-bind="var: host(CRT); format:popval;" name='CRT' rows='6'></textarea>
+			<textarea data-bind="var: host(CRT); format:popVal;" name='CRT' rows='6'></textarea>
 		</label>
 		<label>
 			<span>Key</span>
-			<textarea data-bind="var: host(KEY); format:popval;" name='KEY' rows='6'></textarea>
+			<textarea data-bind="var: host(KEY); format:popVal;" name='KEY' rows='6'></textarea>
 		</label>
 	</fieldset>
 
