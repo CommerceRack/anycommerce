@@ -1823,6 +1823,16 @@ VALIDATION
 							radios[$input.attr('name')] = 1
 							}
 						}
+					else if($input.attr('data-format-rules') && (required || $input.val()))	{
+						var rules = $input.attr('data-format-rules').split(' ');
+						if(app.u.processFormatRules(rules,$input,$span))	{}
+						else	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.after($span);
+							}
+						
+						}
 //only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
 					else if($input.attr('type') == 'url' && $input.val())	{
 						var urlregex = new RegExp("^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
@@ -1911,13 +1921,7 @@ VALIDATION
 					else	{
 						
 						}
-					
-					
-					if($input.attr('data-format-rules'))	{
-						var rules = $input.attr('data-format-rules').split(' ');
-						app.u.processFormatRules(rules,$input,$span);
-						}
-					
+
 					
 					if($input.hasClass('ui-state-error'))	{
 						app.u.dump(" -> "+$input.attr('name')+" did not validate. ishidden: "+$input.is(':hidden'));
@@ -1957,14 +1961,17 @@ VALIDATION
 			},
 //accepts an array of 'rules'
 		processFormatRules : function(rules,$input,$span)	{
-			app.u.dump("BEGIN app.u.processFormatRules"); app.u.dump(rules);
-			var r = false;
+//			app.u.dump("BEGIN app.u.processFormatRules"); app.u.dump(rules);
+			var r = true; //defaults to true. one err in rules and it'll be set to false.
 			if(typeof rules == 'object' && $input instanceof jQuery)	{
 				var L = rules.length;
 				for(var i = 0; i < L; i += 1)	{
 					app.u.dump(i+") is for rule: "+rules[i]+" and typeof formatRules: "+typeof app.formatRules[rules[i]]);
 					if(typeof app.formatRules[rules[i]] == 'function')	{
-						app.formatRules[rules[i]]($input,$span);
+						if(app.formatRules[rules[i]]($input,$span))	{app.u.dump("passed rule validation")}
+						else	{
+							r = false;
+							}
 						}
 					else	{
 						app.u.dump("A formatting rule ["+rules[i]+"] that does not exist was specified on an input: "+$input.attr('name'),"warn");
@@ -3234,10 +3241,9 @@ $tmp.empty().remove();
 	formatRules : {
 
 		'CC' : function($input,$err)	{
-			app.u.dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-			var r = false;
-			if(app.u.isValidCC($input.val()))	{r = true;}
-			else	{$err.append('The credit card # provided is not valid')}
+			app.u.dump(" got here. is valid cc:  "+app.u.isValidCC($input.val()));
+			var r = app.u.isValidCC($input.val());
+			if(!r)	{$err.append('The credit card # provided is not valid')}
 			return r;
 			},
 		
