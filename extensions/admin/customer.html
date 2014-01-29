@@ -58,8 +58,8 @@
 
 
 <table>
-<tr id='customerManagerResultsRowTemplate' class='pointer'>
-	<td data-bind='var: customer(CID); format:text;'></td>
+<tr id='customerManagerResultsRowTemplate'>
+	<td data-bind='var: customer(CID); format:text;' class='pointer'></td>
 	<td data-bind='var: customer(LASTNAME); format:text;'></td>
 	<td data-bind='var: customer(FIRSTNAME); format:text;'></td>
 	<td data-bind='var: customer(EMAIL); format:text;'></td>
@@ -108,7 +108,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
 		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
 		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /></label>
-		<label><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popVal;"> Lock customer account</label>
+		<label data-bind="var:customer(INFO.IS_LOCKED); format:addClass;className:ui-state-error;"><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popVal;"> Lock customer account</label>
 	</fieldset>
 	</div>
 </div>
@@ -127,7 +127,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></tbody>
+	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;" data-app-role='customerEditorGCtbody'></tbody>
 	</table>
 
 	</div>
@@ -365,9 +365,37 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 <div id='customerWalletAddTemplate'>
 <form action='#'>
 <fieldset class='labelsAsBreaks'>
-	<label><span>CC</span><input type='number' required='required' size='20' maxlength="16" name='CC' value='' /></label>
-	<label><span>YY</span><input type='number' class='smallInput' required='required' size='2' maxlength="2" name='YY' value='' /></label>
-	<label><span>MM</span><input type='number' class='smallInput' required='required' size='2' maxlength="2" name='MM' value='' /></label>
+	<label><span>CC</span><input type='number' required='required' size='20' maxlength="16" name='CC' value='' data-format-rules='CC' /></label>
+	<label><span>YY</span><select required='required' name='YY'>
+		<option></option>
+		<option value='14'>2014</option>
+		<option value='15'>2015</option>
+		<option value='16'>2013</option>
+		<option value='17'>2017</option>
+		<option value='18'>2018</option>
+		<option value='19'>2019</option>
+		<option value='20'>2020</option>
+		<option value='21'>2021</option>
+		<option value='22'>2022</option>
+		<option value='23'>2023</option>
+		<option value='24'>2024</option>
+		<option value='25'>2025</option>
+	</select></label>
+	<label><span>MM</span><select required='required' name='MM'>
+		<option></option>
+		<option value='01'>01</option>
+		<option value='02'>02</option>
+		<option value='03'>03</option>
+		<option value='04'>04</option>
+		<option value='05'>05</option>
+		<option value='06'>06</option>
+		<option value='07'>07</option>
+		<option value='08'>08</option>
+		<option value='09'>09</option>
+		<option value='10'>10</option>
+		<option value='11'>11</option>
+		<option value='12'>12</option>
+	</select></label>
 </fieldset>
 
 <!-- save button added w/ js -->
@@ -616,12 +644,12 @@ The checkbox below does not work.
 
 <label>
 	<span>Phone</span>
-	<input type="tel" value="" name="phone" size="12" /> ###-###-####
+	<input type="tel" value="" name="phone" size="12" data-bind="var: customer(@BILL.0.bill_phone); format:popVal;" /> ###-###-####
 </label>
 
 <label>
 	<span>Email</span>
-	<input type="email" value="" name="email" size="45" />
+	<input type="email" value="" name="email" size="45" data-bind="var: customer(_EMAIL); format:popVal;" />
 </label>
 
 <label class='marginLeft'>
@@ -651,7 +679,7 @@ The checkbox below does not work.
 	</select>
 </label>
 
-<button data-app-event="admin_customer|appAdminTicketCreateExec">Create Ticket</button>
+<button data-app-click="admin_customer|appAdminTicketCreateExec" class='applyButton' data-app-role='saveButton'>Create Ticket</button>
 </form>
 </div>
 
@@ -874,7 +902,7 @@ The checkbox below does not work.
 <fieldset class='labelsAsBreaks alignedLabels'>
 	<label>
 		<span>Customer Email </span>
-		<input type="email" name="email" value="" />
+		<input type="email" name="email" value="" data-bind="var: customer(_EMAIL); format:popVal;" />
 		<span class='toolTip' title="Email is optional, but allows your customer to lookup a giftcard online if lost.">?</span>
 	</label>
 	
@@ -911,7 +939,7 @@ The checkbox below does not work.
 		<li>Promotional cards are not a liability and are treated as a coupon.</li>
 		<li>Exclusive cards are the same as promotional cards, however only one card may be used per order.</li>
 	</ul>
-	
+	<!-- the inputs for quantity and series are hidden in the 'add giftcard' from the customer editor. If the input name changes, update customer editor -->
 	<label>
 		<span>Quantity</span>
 		<input type='number' class='smallInput' min='1' step='1' value="1" name="quantity" size="4" required='required' />
@@ -929,7 +957,7 @@ The checkbox below does not work.
 	</label>
 
 
-<button data-app-event="admin|processForm">Save</button>
+<button data-app-click="admin|submitForm" class='applyButton' data-app-role='saveButton'>Save</button>
 
 </fieldset>
 </form>

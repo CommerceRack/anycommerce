@@ -1231,6 +1231,7 @@ var admin_wholesale = function() {
 					'header' : 'Edit Price Schedule: '+SID,
 					'data' : $ele.closest('tr').data()
 					});
+				$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
 				app.u.handleButtons($panel);
 				app.model.dispatchThis('mutable');
 				}, //priceScheduleUpdateShow
@@ -1243,22 +1244,28 @@ var admin_wholesale = function() {
 					'title':'Add New Schedule',
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
+			
+				$D.anydelegate().append("<label>Schedule ID <input type='text' size='3' data-minlength='3' maxlength='3' name='SID' value='' data-input-keyup='input-format' data-input-format='alphanumeric uppercase' \/><\/label><br />");
 				
-				$D.append("<label>Schedule ID <input type='text' name='SID' value='' \/><\/label><br />");
-				
-				$("<button>Create Schedule<\/button>").button().on('click',function(){
-					app.model.addDispatchToQ({
-						'_cmd':'adminPriceScheduleCreate',
-						'SID': $(this).parent().find("[name='SID']").val(),
-						'_tag':	{
-							'callback':'showMessaging',
-							'jqObj' : $D,
-							'jqObjEmpty' : true,
-							'message' : 'Your price schedule has been created.'
-							}
-						},'immutable');
-					app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
-					app.model.dispatchThis('immutable');
+				$("<button>Create Schedule<\/button>").button().on('click',function(event){
+					event.preventDefault();
+					if(app.u.validateForm($D))	{
+						app.model.addDispatchToQ({
+							'_cmd':'adminPriceScheduleCreate',
+							'SID': $(this).parent().find("[name='SID']").val(),
+							'_tag':	{
+								'callback':'showMessaging',
+								'jqObj' : $D,
+								'jqObjEmpty' : true,
+								'message' : 'Your price schedule has been created.'
+								}
+							},'immutable');
+						app.model.addDispatchToQ({'_cmd':'adminPriceScheduleList','_tag':{'datapointer':'adminPriceScheduleList','callback':'DMIUpdateResults','extension':'admin','jqObj':$ele.closest("[data-app-role='dualModeContainer']")}},'immutable');
+						app.model.dispatchThis('immutable');						
+						}
+					else	{
+						
+						}
 					}).appendTo($D);
 				
 				$D.dialog('open');
@@ -1419,7 +1426,7 @@ var admin_wholesale = function() {
 
 			adminOrganizationSearchShowUI : function($ele,P)	{
 				if($ele.data('searchby') && $ele.data('keywords'))	{
-					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'searchby':$ele.data('searchby'),'keywords':$ele.data('keywords')});
+					navigateTo("#!organizationManager",{'searchby':$ele.data('searchby'),'keywords':$ele.data('keywords')});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminOrganizationSearchShowUI, either searchby ["+$ele.data('searchby')+"] or keywords  ["+$ele.data('keywords')+"] not set on trigger element.","gMessage":true});
