@@ -4713,13 +4713,14 @@ dataAttribs -> an object that will be set as data- on the panel.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
 //set data-templateid on the button to specify a template.
 			openDialog : function($ele,P)	{
-				vars = vars || {};
+				vars = {};
 				if($ele.data('templateid'))	{
 					vars.templateID = $ele.data('templateid');
 					vars.title = $ele.data('title');
 					vars.showLoading = false;
 					var $D = app.ext.admin.i.dialogCreate(vars);
-					$D.dialog('open');
+					app.u.handleButtons($D);
+					$D.anydelegate().dialog('open');
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
