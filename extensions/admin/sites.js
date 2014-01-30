@@ -726,7 +726,7 @@ used, but not pre-loaded.
 				return false;
 				}, //projectRemove
 			
-			cryptToolMakeKeyShow : function($ele,P)	{
+			cryptoToolMakeKeyShow : function($ele,P)	{
 				P.preventDefault();
 				var $D = app.ext.admin.i.dialogCreate({
 					title : "Generate an SSL key",
@@ -741,15 +741,15 @@ used, but not pre-loaded.
 
 				},
 			
-			cryptToolMakeKeyExec : function($ele,P)	{
+			cryptoToolMakeKeyExec : function($ele,P)	{
 				P.preventDefault();
 				var $D = $ele.closest('.ui-dialog-content'); //used for context.
-				app.model.addDispatchToQ({"_cmd":"cryptTool","verb":"make-key","length" : $("select[name='length']",$D).val(),"_tag":{"datapointer":"cryptTool|make-key","callback":function(rd){
+				app.model.addDispatchToQ({"_cmd":"cryptoTool","verb":"make-key","length" : $("select[name='length']",$D).val(),"_tag":{"datapointer":"cryptoTool|make-key","callback":function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$D.anymessage({'message':rd});
 						}
 					else	{
-						$ele.closest('fieldset').find("textarea[name='KEY']").val(app.data[rd.datapointer].key);
+						$ele.closest('fieldset').find("textarea[name='KEY']").val(app.data[rd.datapointer].key).trigger('change');
 						$D.dialog('close');
 						//app.model.destroy("cryptTool|make-key"); // ### TODO -> uncomment this after testing.
 						}
