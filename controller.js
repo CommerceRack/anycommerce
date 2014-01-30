@@ -116,7 +116,7 @@ app.templates holds a copy of each of the templates declared in an extension but
 			app.handleAdminVars(); //needs to be late because it'll use some vars set above.
 			}
 		app.model.addExtensions(app.vars.extensions);
-		app.u.handleThirdPartyInits();
+		
 		}, //initialize
 
 //will load _session from localStorage or create a new one.
@@ -725,7 +725,7 @@ see jquery/api webdoc for required/optional param
 			}, //canIUse
 
 //WILL look in local
-// ### TODO -> this call needs to support a 'create'. should default to zero. if one (would be used on a storefront probably), if no cart exists, it will be created.
+// ### FUTURE -> this call needs to support a 'create' or need a new call for it. should default to zero. if one (would be used on a storefront probably), if no cart exists, it will be created.
 		cartDetail : {
 			init : function(cartID,_tag,Q)	{
 				var r = 0;
@@ -1580,7 +1580,7 @@ AUTHENTICATION/USER
 	//and all third parties would get 'guest'
 				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
 					r = 'thirdPartyGuest';
-	//					app.thirdParty.fb.saveUserDataToSession();
+	//					app.ext.myRIA.thirdParty.fb.saveUserDataToSession();
 					}
 				else if(app.model.fetchData('cartDetail|'+cartID) && app.data['cartDetail|'+cartID] && app.data['cartDetail|'+cartID].bill && app.data['cartDetail|'+cartID].bill.email)	{
 					r = 'guest';
@@ -2360,61 +2360,7 @@ name Mod 10 or Modulus 10. */
 			return postalCodeRegex.test(postalCode);
 			}, //isValidPostalCode
 
-/*
-executed during control init. 
-for now, all it does is save the facebook user data as needed, if the user is authenticated.
-later, it will handle other third party plugins as well.
-*/
-		handleThirdPartyInits : function()	{
-			app.u.dump("BEGIN app.u.handleThirdPartyInits");
 
-			var uriParams = app.u.kvp2Array(location.hash.substring(1));
-			//landing on the admin app, having been redirected after logging in to google.
-			if(uriParams.trigger == 'googleAuth')	{
-				app.calls.authAdminLogin.init({
-					'authtype' : 'google:id_token',
-					'id_token' : uriParams.id_token
-					},{'datapointer' : 'authAdminLogin','callback':'showHeader','extension':'admin'},'immutable');
-				app.model.dispatchThis('immutable');
-				}
-			//just returned from google
-			else if(uriParams.id_token && uriParams.state)	{
-
-				if(uriParams.state)	{
-					
-					app.u.dump(" -> state was defined as a uri param");
-					var state = jQuery.parseJSON(atob(uriParams.state));
-					app.u.dump(" -> post decode/parse state:");	app.u.dump(state);
-//to keep the DOM as clean as possible, only declare this function if it's needed.					
-					if(state.onReturn == 'return2Domain')	{
-						window.return2Domain = function(s,uP){
-							document.location = s.domain+"#trigger=googleAuth&access_token="+uP.access_token+"&id_token="+uP.id_token
-							}
-						}
-					
-					if(state.onReturn && typeof window[state.onReturn] == 'function')	{
-						window[state.onReturn](state,uriParams);
-						}
-					else	{
-						app.u.dump(" -> state was defined but either onReturn ["+state.onReturn+"] was not set or not a function [typeof: "+typeof window[state.onReturn]+"].");
-						}
-					}
-
-				}
-
-//initial init of fb app.
-			if(typeof zGlobals !== 'undefined' && zGlobals.thirdParty.facebook.appId && typeof FB !== 'undefined')	{
-//				app.u.dump(" -> facebook appid set. load user data.");
-				FB.init({appId:zGlobals.thirdParty.facebook.appId, cookie:true, status:true, xfbml:true});
-				app.thirdParty.fb.saveUserDataToSession();
-				}
-			else	{
-//				app.u.dump(" -> did not init FB app because either appid isn't set or FB is undefined ("+typeof FB+").");
-				}
-//			app.u.dump("END app.u.handleThirdPartyInits");
-			}, //handleThirdPartyInits
-
-//executed inside handleTHirdPartyInits as well as after a facebook login.
 
 
 
@@ -3257,61 +3203,6 @@ $tmp.empty().remove();
 			return r;
 			}
 		
-		},
-
-
-
-
-
-////////////////////////////////////   			thirdPartyFunctions		    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-
-	thirdParty : {
-// ### TODO -> move out of here and either into a FB extension or quickstart.		
-		fb : {
-			
-			postToWall : function(msg)	{
-				app.u.dump('BEGIN thirdpartyfunctions.facebook.posttowall. msg = '+msg);
-				FB.ui({ method : "feed", message : msg}); // name: 'Facebook Dialogs', 
-				},
-			
-			share : function(a)	{
-				a.method = 'send';
-				FB.ui(a);
-				},
-				
-		
-			saveUserDataToSession : function()	{
-//				app.u.dump("BEGIN app.thirdParty.fb.saveUserDataToSession");
-				
-				FB.Event.subscribe('auth.statusChange', function(response) {
-//					app.u.dump(" -> FB response changed. status = "+response.status);
-					if(response.status == 'connected')	{
-	//save the fb user data elsewhere for easy access.
-						FB.api('/me',function(user) {
-							if(user != null) {
-//								app.u.dump(" -> FB.user is defined.");
-								app.vars.fbUser = user;
-								app.ext.cco.calls.cartSet.init({"bill/email":user.email,"_cartid":app.model.fetchCartID()});
-
-//								app.u.dump(" -> user.gender = "+user.gender);
-
-if(_gaq.push(['_setCustomVar',1,'gender',user.gender,1]))
-	app.u.dump(" -> fired a custom GA var for gender.");
-else
-	app.u.dump(" -> ARGH! GA custom var NOT fired. WHY!!!");
-
-
-								}
-							});
-						}
-					});
-//				app.u.dump("END app.thirdParty.fb.saveUserDataToSession");
-				}
-			}
 		}
-
-
 
 	});

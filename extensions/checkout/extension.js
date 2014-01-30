@@ -226,20 +226,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 					var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks(oldCartID));
 	
-					if(zGlobals)	{
-						$('.ocmTwitterComment').click(function(){
-							window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
-							_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
-							});
-	//the fb code only works if an appID is set, so don't show banner if not present.				
-						if(app.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
-							$('.ocmFacebookComment').click(function(){
-								app.thirdParty.fb.postToWall(cartContentsAsLinks);
-								_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
-								});
-							}
-						else	{$('.ocmFacebookComment').hide()}
-						}
+
 
 //cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
@@ -268,7 +255,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				if(app.ext.order_create.checkoutCompletes)	{
 					var L = app.ext.order_create.checkoutCompletes.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer});
+						app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
 						}
 					}
 
