@@ -305,7 +305,7 @@ document.write = function(v){
 			onSuccess : function(_tag)	{
 				var $myAccountPage = $('#myaccountArticle');
 				$myAccountPage.anycontent({'data':app.data.buyerAddressList});
-				app.u.handleAppEvents($myAccountPage);
+				app.u.handleButtons($myAccountPage);
 				}
 			}, //showAddresses
 
@@ -2432,7 +2432,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 										}
 									else	{
 										$article.anycontent({'datapointer':rd.datapointer});
-										app.u.handleAppEvents($article);
+										app.u.handleButtons($article);
 										app.u.handleCommonPlugins($article);
 										}									
 									}},'mutable'); app.model.dispatchThis();
@@ -2447,7 +2447,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 										}
 									else	{
 										$article.anycontent({'datapointer':rd.datapointer});
-										app.u.handleAppEvents($article);
+										app.u.handleButtons($article);
 										app.u.handleCommonPlugins($article);
 										}									
 									}},'mutable'); app.model.dispatchThis();
@@ -2465,7 +2465,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 											}
 										else	{
 											$article.anycontent({'datapointer':rd.datapointer});
-											app.u.handleAppEvents($article);
+											app.u.handleButtons($article);
 											}
 										}},'mutable');
 									app.model.dispatchThis('mutable');
@@ -2950,7 +2950,7 @@ app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 							}
 						else	{
 							$orderContents.anycontent({'templateID':'invoiceTemplate','datapointer':rd.datapointer});
-							app.u.handleAppEvents($orderContents);
+							app.u.handleButtons($orderContents);
 							}
 						}})
 					app.model.dispatchThis();

@@ -872,7 +872,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
 	<div class='marginBottom'>
-		<button class='floatRight' data-app-click='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<button class='floatRight applyButton' data-icon-primary='ui-icon-plus' data-app-click='myRIA|showBuyerAddressAdd'>New Billing Address</button>
 		<h2>Billing Address(es)</h2>
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
@@ -880,7 +880,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
 	<div class='marginBottom'>
-		<button class='floatRight' data-app-click='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<button class='floatRight applyButton' data-icon-primary='ui-icon-plus' data-app-click='myRIA|showBuyerAddressAdd'>New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
@@ -1313,7 +1313,7 @@ The 'data-action' attribute is used to assign an onclick.
 -->
 
 <address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-click="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-click="myRIA|showBuyerAddressUpdate" class='floatRight applyButton'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(bill/firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(bill/lastname);format:text;"  title='last name'></span>
@@ -1334,7 +1334,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- used in the my account area -->
 <address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-click="myRIA|showBuyerAddressUpdate" class='floatRight applyButton'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(ship/firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(ship/lastname);format:text;"  title='last name'></span>
@@ -1359,8 +1359,8 @@ The 'data-action' attribute is used to assign an onclick.
 <tr>
 	<td colspan='2'>
 <div class='floatRight'>
-<button data-app-click="myRIA|execOrder2Cart">Re-order</button>
-<button data-app-click="order_create|execInvoicePrint">Print Invoice</button>
+<button data-app-click="myRIA|execOrder2Cart" class='applyButton' data-icon-primary='ui-icon-refresh-1-w'>Re-order</button>
+<button data-app-click="order_create|execInvoicePrint" class='applyButton' data-icon-primary='ui-icon-print'>Print Invoice</button>
 </div>
 
 <h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
@@ -1480,7 +1480,7 @@ The 'data-action' attribute is used to assign an onclick.
 			<fieldset>
 			<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' size='25' /></div>
 			
-			<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
+			<div><input type='submit' class='applyButton' value='Email Password to Me' /></div>
 			
 			</fieldset>
 			</form>
@@ -1489,13 +1489,13 @@ The 'data-action' attribute is used to assign an onclick.
 
 		<div>
 		<hr />
-		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+		<button class='applyButton' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
 		</div>
 	</div>
 
 <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
 	<div id='loginSuccessContainer' class='center displayNone'>
-		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' data-app-click="myRIA|dialogCloseExec">Continue</button>
+		<button class='applyButton' id='modalLoginContinueButton' data-app-click="myRIA|dialogCloseExec">Continue</button>
 	</div>
 
 </div>
