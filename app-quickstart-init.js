@@ -138,6 +138,26 @@ app.u.loadApp = function() {
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
+	
+	app.ext.order_create.checkoutCompletes.push(function(vars,$checkout){
+//append this to 
+		$("[data-app-role='thirdPartyContainer']",$checkout).append("<h2>What next?</h2><div class='ocm ocmFacebookComment pointer zlink marginBottom checkoutSprite  '></div><div class='ocm ocmTwitterComment pointer zlink marginBottom checkoutSprit ' ></div><div class='ocm ocmContinue pointer zlink marginBottom checkoutSprite'></div>");
+		$('.ocmTwitterComment',$checkout).click(function(){
+			window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
+			_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
+			});
+		//the fb code only works if an appID is set, so don't show banner if not present.				
+		if(app.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
+			$('.ocmFacebookComment',$checkout).click(function(){
+				app.ext.myRIA.thirdParty.fb.postToWall(cartContentsAsLinks);
+				_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+				});
+			}
+		else	{$('.ocmFacebookComment').hide()}
+		
+		
+		})
+	
 	}
 
 //don't execute script till both jquery AND the dom are ready.
@@ -149,9 +169,5 @@ $(document).ready(function(){
 	//if you wish to add init, complete or depart events to your templates w/ JS, this is a good place to do it.
 	// ex:  $("#productTemplate").on('complete.someIndicator',function($ele,infoObj){doSomethingWonderful();})
 	});
-
-
-
-
 
 
