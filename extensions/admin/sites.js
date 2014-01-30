@@ -724,8 +724,38 @@ used, but not pre-loaded.
 						}
 					});
 				return false;
-				} //projectRemove
+				}, //projectRemove
 			
+			cryptToolMakeKeyShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = app.ext.admin.i.dialogCreate({
+					title : "Generate an SSL key",
+					templateID : "sslMakeKeyTemplate",
+					appendTo : $ele.closest('fieldset'),
+					showLoading : false,
+					anycontent : true, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				app.u.handleButtons($D);
+				$D.dialog('open');
+
+				},
+			
+			cryptToolMakeKeyExec : function($ele,P)	{
+				P.preventDefault();
+				var $D = $ele.closest('.ui-dialog-content'); //used for context.
+				app.model.addDispatchToQ({"_cmd":"cryptTool","verb":"make-key","length" : $("select[name='length']",$D).val(),"_tag":{"datapointer":"cryptTool|make-key","callback":function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$D.anymessage({'message':rd});
+						}
+					else	{
+						$ele.closest('fieldset').find("textarea[name='KEY']").val(app.data[rd.datapointer].key);
+						$D.dialog('close');
+						//app.model.destroy("cryptTool|make-key"); // ### TODO -> uncomment this after testing.
+						}
+					}}},"immutable");
+				app.model.dispatchThis("immutable");
+				}
 
 			} //e [app Events]
 		} //r object.
