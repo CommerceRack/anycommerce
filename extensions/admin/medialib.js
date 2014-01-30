@@ -1143,8 +1143,7 @@ else	{
 					}
 				else	{
 					//required params missing.
-					app.u.throwGMessage("WARNING! some required params for admin_medialib.a.showMediaFor were missing. selector and FName are required. Params follow:");
-					app.u.dump(P);
+					$('#mediaLibFileList').anymessage({"message":"In admin_medialib.u.showMediaFor, either selector ["+P.selector+"] or fname ["+P.FName+"] were left blank and both are required.","gMessage":true})
 					}
 				}, //showMediaFor
 
