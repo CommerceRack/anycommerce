@@ -340,7 +340,7 @@ container ul should have lineItemProdlist class on it instead of productList
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
 	
-			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+			<input type='submit' value='Add to Cart' class='applyButton addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 		</form>
 
 	</div>
@@ -511,7 +511,7 @@ this will likely become more flexible in the future. ###
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 	
-			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+			<input type='submit' value='Add to Cart' class='applyButton addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 		</form>
 	
 		<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
@@ -566,7 +566,7 @@ this will likely become more flexible in the future. ###
 		<div  class='tabContent' data-anytab-content='prodReviews'>
 	
 			<div class='clearfix alignRight'>
-				<button class='ui-button-text ui-button ui-state-default ui-corner-all' data-app-click="store_crm|productReviewShow" >Write Review</button>
+				<button class='applyButton' data-app-click="store_crm|productReviewShow" >Write Review</button>
 			</div>
 	
 			<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
@@ -741,7 +741,7 @@ if you change these, you should move them above this comment so that when you (o
 				<div><label>Subject: <input type='text' name='subject' required='required' /></label></div>
 				<div><label>Order ID: <input type='text' name='OID' /></label></div>
 				<div><label>Message: <textarea name='body' required='required' ></textarea></label></div>
-				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
+				<div class='alignRight'><input type='submit' class='applyButton' value='Send Message' />
 				</div>
 			</fieldset>
 			</form>
@@ -914,7 +914,7 @@ subscribeListsArticle is used for authenticated buyers
 				<div class="messaging"></div>
 				<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' size='35' required='required' /></div>
 				<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' required='required' size='35' /></div>
-				<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+				<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton applyButton'></div>
 				
 				</fieldset>
 				</form>
@@ -1079,9 +1079,9 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		</div>
 		<div class='ui-state-default cartButtons stdPadding clearfix'>
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class='continueShoppingSpan thisButton'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' data-app-click='myRIA|dialogClose'><span class="ui-button-text">Continue Shopping</span></button></span>
+			<span class='continueShoppingSpan thisButton'><button class='applyButton continueShoppingButton' data-app-click='myRIA|dialogClose'>Continue Shopping</button></span>
 	
-			<span id='inStoreCheckoutButton thisButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+			<span id='inStoreCheckoutButton thisButton' title='proceed to secure checkout'><button class='applyButton ui-state-highlight checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
 	
 			<span id='paypalECButton' class='thisButton' data-bind='var: cart(cart/cartid); format:paypalECButton; extension:cco;'></span>
 	
@@ -1142,7 +1142,7 @@ used on a product layout. Some product have 'children' which may represent the s
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
 
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+		<input type='submit' value='Add to Cart' class='applyButton addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 	</td>
 </tr>
@@ -1230,7 +1230,7 @@ used for store_crm.js
 	</select>
 </label>
 
-<input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
+<input type="submit" value="Submit Review" class='applyButton' />
 
 </form>
 </div>
@@ -1254,7 +1254,7 @@ used for store_crm.js
 
 <fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
 
-<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
+<input type='submit' class='applyButton' value='Subscribe' />
 
 </form>
 </div>
@@ -1466,7 +1466,7 @@ The 'data-action' attribute is used to assign an onclick.
 			</div>
 		
 			<div>
-			<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
+			<input type='submit' value='log in' class='applyButton ' />
 			</div>
 			</fieldset>
 		</form>
