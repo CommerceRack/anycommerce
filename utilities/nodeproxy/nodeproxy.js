@@ -250,7 +250,7 @@ var proxyWebServer = http.createServer(function (req, res) {
 //		port: 9000		
 //		});
 	regularProxy.web(req,res,{
-		target : uri.protocol+'127.0.0.1:9000'
+		target : uri.protocol+'//127.0.0.1:9000'
 		});
 	}
   else {
