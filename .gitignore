@@ -9,6 +9,7 @@ bin/
 /utilities/nodeproxy/node_modules/
 /utilities/nodeproxy/jt.key
 /utilities/nodeproxy/www-spork*
+/utilities/nodeproxy/www.spork*
 tmp/
 proxy/
 *extensions/_notes/
