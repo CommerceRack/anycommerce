@@ -8,27 +8,31 @@
 		/***************
 		CONFIG
 		***************/
-		//trailing slash is assumed.  Don't forget it!
-		var domain = "http://app.speedaddictcycles.com"
-		var pages = [
-			"product?pid=64-7027",
-			"product?pid=LV-AV-1006P"
-			
-		]
+		var domain = window.location.origin;
+		var pages = [];
+		var prodBlacklist = [
+			'WIKITEST'
+			];
+		var navcatBlacklist = [
+			'.michael'
+			];
 		/***************
 		SETUP
 		***************/
 		var apiDomain = domain + "/jsonapi/"
-		
+		var session = new Date().getTime();
+		var requestNum = 0;
 		//readable log, for informing the user without opening the console.  Used to list all the escaped fragment urls indexed.
 		function rLog(msg){
 			$('#output').append(msg+"<br/>");
 		};
 		function request(obj, callback){
+			console.log(apiDomain);
 			$.extend(obj, {
 				"_clientid" : "zmvc",
-				"_uuid" : 1234,
-				"_version" : "201401"
+				"_uuid" : requestNum,
+				"_version" : "201352",
+				"_session" : session
 				});
 			$.ajax({
 				type: "POST",
@@ -37,34 +41,76 @@
 				contentType : "application/json",
 				dataType:"json",
 				data : JSON.stringify(obj)
-			}, callback);
+			}).success(callback);
+			requestNum++;
 			
 		};
-		function generateSEO(token){
+		function fetchSEO(token){
 			if(!window.lock){
 				window.lock = true;
 				window.token = token;
-				/*
+				
 				//Temporarily bypassing this until we have a domain on 201401 to test
 				var obj = {
 					"_cmd" : "appSEOFetch",
 					"token" : token
 				}
-				request(obj, function(objects){
+				request(obj, function(response){
+					var objects = response['@OBJECTS'];
 					for(var i in objects){
 						var o = objects[i];
-						buildPage(o);
+						var p = buildPage(o);
+						if(p){
+							pages.push(p);
+						} else {
+							rLog("ERROR");
+						}
 					}
-					indexNextPage();
-				});
-				*/
-				indexNextPage();
+					promptPages();
+				});				
 			}
 		};
 		//adds a page object to pages
 		function buildPage(pageInfo){
-			
+			var page = false;
+			switch(pageInfo.type){
+				case "pid":
+					if($.inArray(pageInfo.id, prodBlacklist) < 0){
+						page = "product?pid="+pageInfo.id;
+						}
+					else {
+						console.log("SKIPPING BLACKLISTED PRODUCT: "+pageInfo.id);
+						}
+					break;
+				case "navcat" : 
+					if($.inArray(pageInfo.id, navcatBlacklist) < 0){
+						page = "category?navcat="+pageInfo.id;
+						}
+					else {
+						console.log("SKIPPING BLACKLISTED CATEGORY: "+pageInfo.id);
+						}
+					break;
+			}
+			return page;
 		}
+		
+		function promptPages(){
+			var $pageTable = $('<table id="pageTable"><tbody></tbody></table>');
+			for(var i in pages){
+				var p = pages[i];
+				$('tbody',$pageTable).append('<tr><td>'+p+'</td><td><input data-page="'+p+'" type="checkbox" checked="checked"/></td></tr>');
+			}
+			$('#output').append($pageTable).append('<button onClick="generateSEO();"></button>');
+		}
+		
+		function generateSEO(){
+			$('#pageTable input[type=checkbox]:not(:checked)').each(function(){
+				console.log("REMOVING SKIPPED PAGE: "+$(this).attr('data-page'));
+				pages.splice($.inArray($(this).attr('data-page'), pages), 1);
+			})
+			indexNextPage();
+		}
+		
 		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
 		function indexNextPage(){
 			if(pages.length){
@@ -116,16 +162,16 @@
 </head>
 <body>
 	<p>
-		Open this file in a text editor to change the domain used for generation, and to add any custom pages that should be indexed.
+		Open this file in a text editor to add custom pages or update the product and/or category blacklists
 	</p>
-	<form id="seoTokenForm" onSubmit="generateSEO($('input[name=seoToken]',$(this)).val()); return false;">
+	<form id="seoTokenForm" onSubmit="fetchSEO($('input[name=seoToken]',$(this)).val()); return false;">
 		<div>
 			<label>Enter SEO Token</label>
 			<input type="text" required="required" name="seoToken"/>
 		</div>
 		<input type="submit" value="generate seo"></input>
 	</form>
-	<iframe id="appContainer" width="100%" height="300"></iframe>
+	<iframe id="appContainer" style="display:none;"></iframe>
 	<code id="output">
 	
 	</code>
