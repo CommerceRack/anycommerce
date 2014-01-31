@@ -21,6 +21,7 @@
 
 
 var zController = function(params) {
+	
 	this.u.dump('Welcome fellow developer!\nThis project was built with an open-source MVC which can be found here:\nhttps://github.com/zoovy/AnyCommerce-Development','greet');
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
@@ -64,6 +65,9 @@ jQuery.extend(zController.prototype, {
 				window.localStorage.clear();
 				}
 			}
+		if(app.u.getParameterByName('quiet') == 1){
+			app.u.dump = function(){};
+		}
 		//needs to be after the 'flush' above, or there's no way to flush the cart/session.
 		app.vars.carts = app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
 
