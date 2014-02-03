@@ -1121,6 +1121,10 @@ this will likely become more flexible in the future. ###
 				<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 			</div>
 			<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+			<section class='floatLeft prodPageReviewCount'>
+				<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+				<div class="numReviews">(<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews;'></span>)</div>
+			</section>
 		</div>
 	</div>
 	<table class='prodViewerContainer'>
@@ -1268,10 +1272,7 @@ this will likely become more flexible in the future. ###
 		<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
 		<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 
-		<section class='marginBottom'>
-			<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-			<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
-		</section>
+
 
 		<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 
