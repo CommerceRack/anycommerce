@@ -28,7 +28,7 @@ body{background:#ffffff;}
 
 /**** Footer CSS****/
 .zephyrHelpBox {width:98%; height:auto;}
-.zephyrHelpBox ul { margin: 0; padding: 1%; width: 98%;}
+.zephyrHelpBox ul { margin: 0; padding: 1%; width: 47%; text-align:center; float:left;}
 .zephyrHelpBox li {list-style: none;}
 .infoFooter {min-height:15px; padding:10px 0px;}
 
