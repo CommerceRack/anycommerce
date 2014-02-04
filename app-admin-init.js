@@ -1,4 +1,3 @@
-console.log(" ->>>> admin init file has been loaded");
 adminApp.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 adminApp.rq.push(['extension',0,'admin_prodedit','extensions/admin/product_editor.js']);
 adminApp.rq.push(['extension',0,'admin_orders','extensions/admin/orders.js']);
@@ -90,13 +89,15 @@ adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.image-galle
 //gets executed from app-admin.html as part of controller init process.
 //t is this instance of the app (adminApp).
 
-adminApp.u.showProgress = function(t)	{
-//	adminApp.u.dump("adminApp.u.initMVC activated ["+attempts+"]");
+adminApp.u.showProgress = function(t,attempts)	{
 	var includesAreDone = true;
-	if(typeof t.vars.rq == 'object')	{
+	attempts = attempts || 0;
+	dump("adminApp.u.showProgress [attempt: "+attempts+"]");
+	if(typeof t.vars.rq == 'object' && t.vars.rq !=  null)	{
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
 		var percentPerInclude = (100 / t.vars.rq.length);  
 		var resourcesLoaded = t.u.numberOfLoadedResourcesFromPass(0);
+		dump(" -> resourcesLoaded: "+resourcesLoaded);
 		if(resourcesLoaded >= 0)	{
 			var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
 		
@@ -107,7 +108,8 @@ adminApp.u.showProgress = function(t)	{
 				//the app will handle hiding the loading screen.
 				}
 			else	{
-				setTimeout(function(){adminApp.u.showProgress(t)},250);
+				attempts++;
+				setTimeout(function(){adminApp.u.showProgress(t,attempts)},250);
 				}
 			}
 		else	{
@@ -122,58 +124,57 @@ adminApp.u.showProgress = function(t)	{
 
 //don't execute script till both jquery AND the dom are ready.
 
-	adminApp.cmr.push(["view",function(message,$context){
-//		adminApp.u.dump(" -> executing cmr.view");
-		var $history = $("[data-app-role='messageHistory']",$context);
-		var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>sent page view:<br \/>";
-		if(message.vars && message.vars.pageType)	{
-//			adminApp.u.dump(' -> pageType is set to: '+message.vars.pageType);
-			switch(message.vars.pageType)	{
-				case 'product':
-					if(message.vars.pid)	{
-						$o += 'product: '+message.vars.pid+' has been added to the product task list.'
-						adminApp.ext.admin_prodedit.u.addProductAsTask({'pid':message.vars.pid,'tab':'product','mode':'add'});
-						}
-					else	{$o += 'Page type set to product but no pid specified.'}
-					break;
-				case 'homepage':
-					$o += 'homepage';
-					break;
-				case 'category':
-					if(message.vars.navcat)	{
-						$o += 'category: '+message.vars.navcat;
-						if(message.vars.domain)	{$o.addClass('lookLikeLink').on('click',function(){
-							window.open(message.vars.domain+"/category/"+message.vars.navcat+"/");
-							})}
-						}
-					else	{$o += 'Page type set to category but no navcat specified.'}
-					break;
-				
-				case 'search':
-					if(message.vars.keywords)	{}
-					else	{$o += 'Page type set to search but no keywords specified.'}
-					break;
-				
-				case 'company':
-					if(message.vars.show)	{}
-					else	{$o += 'Page type set to company but show not specified.'}
-					break;
-				
-				case 'customer':
-					if(message.vars.show)	{}
-					else	{$o += 'Page type set to customer but show not specified.'}
-					break;
-				
-				default:
-					$o += 'unknown page type: '+message.vars.pageType+' (console contains more detail)';
-					adminApp.u.dump("Unrecognized pageType in cart message.vars. vars follow:"); adminApp.u.dump(message.vars);
-				}
+adminApp.cmr.push(["view",function(message,$context){
+	var $history = $("[data-app-role='messageHistory']",$context);
+	var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>sent page view:<br \/>";
+	if(message.vars && message.vars.pageType)	{
+//			dump(' -> pageType is set to: '+message.vars.pageType);
+		switch(message.vars.pageType)	{
+			case 'product':
+				if(message.vars.pid)	{
+					$o += 'product: '+message.vars.pid+' has been added to the product task list.'
+					adminApp.ext.admin_prodedit.u.addProductAsTask({'pid':message.vars.pid,'tab':'product','mode':'add'});
+					}
+				else	{$o += 'Page type set to product but no pid specified.'}
+				break;
+			case 'homepage':
+				$o += 'homepage';
+				break;
+			case 'category':
+				if(message.vars.navcat)	{
+					$o += 'category: '+message.vars.navcat;
+					if(message.vars.domain)	{$o.addClass('lookLikeLink').on('click',function(){
+						window.open(message.vars.domain+"/category/"+message.vars.navcat+"/");
+						})}
+					}
+				else	{$o += 'Page type set to category but no navcat specified.'}
+				break;
+			
+			case 'search':
+				if(message.vars.keywords)	{}
+				else	{$o += 'Page type set to search but no keywords specified.'}
+				break;
+			
+			case 'company':
+				if(message.vars.show)	{}
+				else	{$o += 'Page type set to company but show not specified.'}
+				break;
+			
+			case 'customer':
+				if(message.vars.show)	{}
+				else	{$o += 'Page type set to customer but show not specified.'}
+				break;
+			
+			default:
+				$o += 'unknown page type: '+message.vars.pageType+' (console contains more detail)';
+				dump("Unrecognized pageType in cart message.vars. vars follow:"); dump(message.vars);
 			}
-		else	{
-			$o += 'unspecified page type or no vars set in message. (console contains more detail)';
-			adminApp.u.dump("Unspecified pageType in cart message.vars. vars follow:"); adminApp.u.dump(message.vars);
-			}
-		$o += "</span><\/p>";
-		$history.append($o);
-		$history.parent().scrollTop($history.height());
-		}]);
+		}
+	else	{
+		$o += 'unspecified page type or no vars set in message. (console contains more detail)';
+		dump("Unspecified pageType in cart message.vars. vars follow:"); dump(message.vars);
+		}
+	$o += "</span><\/p>";
+	$history.append($o);
+	$history.parent().scrollTop($history.height());
+	}]);
