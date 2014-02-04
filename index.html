@@ -1123,7 +1123,9 @@ this will likely become more flexible in the future. ###
 			<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 			<section class='floatLeft prodPageReviewCount'>
 				<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-				<div class="numReviews">(<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews;'></span>)</div>
+				<div class="displayNone"data-bind='var: reviews(reviews.total); format:showIfSet;'>
+					<div class="numReviews" >(<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews;'></span>)</div>
+				</div>
 			</section>
 		</div>
 	</div>
