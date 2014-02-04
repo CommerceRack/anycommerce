@@ -1272,6 +1272,11 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 	//		app.u.dump(" -> templates: "+templates);
 			var ajaxRequest = $.ajax({
 					type: "GET",
+					statusCode: {
+						404: function() {
+							app.u.dump("An attempt was made to fetch templates from "+templateURL+" but that URL returned a 404 error (file does not exist).","error");
+							}
+						},
 					url: templateURL+"?_v="+app.vars.release,
 					async: false,
 					dataType:"html"
@@ -1421,6 +1426,11 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 				url: url,
 ///				async: 0, //testing... 
 				dataType: 'script',
+				statusCode: {
+					404: function() {
+						app.u.dump("An attempt was made to fetch an extension from "+url+" but that URL returned a 404 error (file does not exist).","error");
+						}
+					},
 				success: function(data) {
 	//The 'success' can be executed prior to the script finishing loading so the heavy lifting happens in 'complete'.
 //					app.u.dump(" -> EXTCONTROL Got to success");
