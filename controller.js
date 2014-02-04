@@ -1420,8 +1420,62 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				},
 //at one point, this was a plugin, but w/ the introduction of multiple app instantiations, that changed.
 //What was the plugin was split into two pieces, the app-event based delegation is here.  The form based is in anyForm
-			handleDelegation : function($target)	{
+			addEventDelegation : function($t,vars)	{
+				vars = vars || vars;
+				var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
 
+				function destroyEvents($ele)	{
+					for(var i = 0; i < supportedEvents.length; i += 1)	{
+						$ele.off(supportedEvents[i]+".app");
+						}
+					$ele.removeClass('hasDelegatedEvents').addClass('delegationDestroyed'); //here for troubleshooting purposes.
+					}
+
+				if(vars.destroyEvents || vars == 'destroyEvents')	{
+					destroyEvents($t);
+					}
+				else	{
+					if($target.closest('.hasDelegatedEvents').length >= 1)	{
+						//this element or one of it's parents already has events delegated. don't double up.
+						}
+					else	{
+						//this class is used both to determine if events have already been added AND for some form actions to use in closest.
+						$t.addClass('hasDelegatedEvents'); 
+
+						for(var i = 0; i < supportedEvents.length; i += 1)	{
+							$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"]",function(e,p){
+								return _app.u._executeEvent($(e.currentTarget),$.extend(p,e));
+								});
+							}	
+
+						//make sure there are no children w/ delegated events so that event actions are not doubled up.
+						$('.hasDelegatedEvents',$t).each(function(){
+							destroyEvents($(this));
+							});
+						}
+					}
+				}, //addEventDelegation
+
+			_executeEvent : function($CT,ep)	{
+				ep = ep || {};
+				var r, actionsArray = $CT.data('app-'+ep.type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
+				for(var i = 0; i < L; i += 1)	{
+					var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
+	//				dump(i+") AEF: "); dump(AEF);
+					if(AEF[0] && AEF[1])	{
+						if(_app.ext[AEF[0]] && _app.ext[AEF[0]].e[AEF[1]] && typeof _app.ext[AEF[0]].e[AEF[1]] === 'function')	{
+							//execute the app event.
+							r = _app.ext[AEF[0]].e[AEF[1]]($CT,ep);
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+						}				
+					}
+				return r;
 				},
 
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
