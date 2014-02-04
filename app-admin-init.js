@@ -93,26 +93,29 @@ adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.image-galle
 adminApp.u.showProgress = function(t)	{
 //	adminApp.u.dump("adminApp.u.initMVC activated ["+attempts+"]");
 	var includesAreDone = true;
-
+	if(typeof t.vars.rq == 'object')	{
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	var percentPerInclude = (100 / t.vars.rq.length);  
-	var resourcesLoaded = t.u.numberOfLoadedResourcesFromPass(0);
-	if(resourcesLoaded >= 0)	{
-		var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
-	
-		$('#appPreViewProgressBar').val(percentComplete);
-		$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
-	
-	
-		if(resourcesLoaded == t.vars.rq.length)	{
-			//the app will handle hiding the loading screen.
+		var percentPerInclude = (100 / t.vars.rq.length);  
+		var resourcesLoaded = t.u.numberOfLoadedResourcesFromPass(0);
+		if(resourcesLoaded >= 0)	{
+			var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
+		
+			$('#appPreViewProgressBar').val(percentComplete);
+			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+		
+			if(resourcesLoaded == t.vars.rq.length)	{
+				//the app will handle hiding the loading screen.
+				}
+			else	{
+				setTimeout(function(){adminApp.u.showProgress(t)},250);
+				}
 			}
 		else	{
-			setTimeout(function(){adminApp.u.showProgress(t)},250);
+			//to get here, rq was empty. either everything was loaded (and the app will take it from here) or an error occured at some point.
 			}
 		}
 	else	{
-		//to get here, rq was empty. either everything was loaded (and the app will take it from here) or an error occured at some point.
+		//rq is set to null once all the resources are loaded. to get here, the resources have been loaded.
 		}
 
 	}
