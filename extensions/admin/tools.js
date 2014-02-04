@@ -76,14 +76,15 @@ var admin_tools = function(_app) {
 					$SD = $("<div \/>").attr('title','Site Debug Tools').anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
 					_app.u.handleButtons($SD);
 					_app.u.handleCommonPlugins($SD);
-					$SD.anydelegate();
+					_app.u.addEventDelegation($SD);
+					$SD.anyform();
 					_app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
 					}
 				},
-			
+
 			showManageFlexedit : function($target)	{
-				$target.anycontent({'templateID':'manageFlexeditTemplate',data:{}}).anydelegate();
-				
+				$target.anycontent({'templateID':'manageFlexeditTemplate',data:{}}).anyform();
+				_app.u.addEventDelegation($target);
 				var $enabled = $("[data-app-role='flexeditEnabledListContainer']",$target);
 				$enabled.showLoading({'message':'Fetching your list of enabled fields'})
 				
@@ -136,7 +137,8 @@ var admin_tools = function(_app) {
 				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false,'datapointer':'info'});
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.addEventDelegation($target);
+				_app.u.handleButtons($target.anyform());
 
 				_app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogList',
@@ -165,7 +167,7 @@ var admin_tools = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				_app.model.dispatchThis('mutable');
 				},
 			
@@ -186,7 +188,7 @@ var admin_tools = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				_app.model.dispatchThis('mutable');
 				}
 			

@@ -93,7 +93,8 @@ var admin_reports = function(_app) {
 		
 			showReportsPage : function($target)	{
 				$target.intervaledEmpty();
-				$target.anycontent({'templateID':'reportsPageTemplate',data:{}}).anydelegate();
+				$target.anycontent({'templateID':'reportsPageTemplate',data:{}}).anyform();
+				_app.u.addEventDelegation($target);
 				_app.u.handleButtons($target);				
 				_app.u.handleCommonPlugins($target);
 				$('.datepicker',$target).datepicker({
@@ -1446,7 +1447,7 @@ _app.model.dispatchThis('immutable');
 
 					_app.u.handleButtons($D);
 					_app.u.handleCommonPlugins($D);
-					$D.anydelegate();
+					$D.anyform();
 //					_app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
 
 					$('.datepicker',$D).datepicker({

@@ -107,14 +107,14 @@ var admin_wholesale = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				_app.model.dispatchThis('mutable');
 				}, //showWarehouseManager
 
 			showWarehouseUtilities : function($target){
 				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'whimInterfaceTemplate','data':{}});
-				$target.showLoading({'message':'Fetching list of warehouses'})
+				$target.showLoading({'message':'Fetching list of warehouses'});
 				_app.model.addDispatchToQ({
 						'_cmd' : 'adminWarehouseList',
 						'_tag' : {
@@ -141,8 +141,8 @@ var admin_wholesale = function(_app) {
 				
 				$("[data-app-role='slimLeftNav']",$target).accordion();
 				//target is likely a tab and I don't want to delegate to a tab at this time.
-				$("[data-app-role='slimLeftNav']",$target).anydelegate();
-				$("[data-app-role='slimLeftContentSection']",$target).anydelegate();
+				_app.u.addEventDelegation($("[data-app-role='slimLeftNav']",$target).anyform());
+				_app.u.addEventDelegation($("[data-app-role='slimLeftContentSection']",$target).anyform());
 				},
 
 			showPriceSchedules : function($target)	{
@@ -164,7 +164,7 @@ var admin_wholesale = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				_app.model.dispatchThis('mutable');
 				},
 
@@ -190,7 +190,7 @@ var admin_wholesale = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				_app.model.dispatchThis();
 				}, //showOrganizationManager
@@ -199,7 +199,8 @@ var admin_wholesale = function(_app) {
 				_app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
 				if($target && vars && vars.orgID)	{
 
-					$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate'}).anydelegate({'trackEdits':true}); //.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+					$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate'}).anyform({'trackEdits':true}); //.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+					_app.u.addEventDelegation($target);
 					$('.buttonset',$target).append("<button data-app-click='admin_wholesale|adminCustomerOrganizationUpdateExec' disabled='disabled' class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>");
 					$('form',$target).append("<input type='hidden' name='ORGID' value='"+vars.orgID+"' />");
 					_app.u.handleButtons($target);
@@ -241,7 +242,7 @@ var admin_wholesale = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				
 				_app.model.dispatchThis('mutable');
 				}, //showSupplierManager
@@ -265,7 +266,8 @@ var admin_wholesale = function(_app) {
 								else	{
 									$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'showLoading':false,'dataAttribs':{'vendorid':VENDORID}});
 									_app.u.handleButtons($editorContainer);
-									$editorContainer.anydelegate({'trackEdits':true});
+									_app.u.addEventDelegation($editorContainer);
+									$editorContainer.anyform({'trackEdits':true});
 
 //for FBA, most panel inputs get 'locked'
 									if(_app.data[rd.datapointer].FORMAT == 'FBA' || _app.data[rd.datapointer].CODE == 'FBA')	{
@@ -515,7 +517,7 @@ var admin_wholesale = function(_app) {
 					});
 				$(".hideForCreate",$D).hide();
 				_app.u.handleButtons($D);
-				$D.anydelegate().dialog('open');
+				$D.anyform().dialog('open');
 //These fields are used for processForm on save.
 				$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 				}, //warehouseCreateShow
@@ -784,7 +786,7 @@ var admin_wholesale = function(_app) {
 						});
 					$D.find('form').append("<input type='hidden' name='vendor' value='"+vendor+"' />")
 					$D.dialog('open');
-					$D.anydelegate();
+					$D.anyform();
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
@@ -867,7 +869,7 @@ var admin_wholesale = function(_app) {
 				$D.dialog('open');
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.
-				$('form:first',$D).anydelegate({'trackEdits':true}).append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				$('form:first',$D).anyform({'trackEdits':true}).append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
 				_app.u.handleButtons($D);
 				_app.u.handleCommonPlugins($D);
 				}, //showSupplierCreate
@@ -1185,7 +1187,7 @@ var admin_wholesale = function(_app) {
 							'VENDORID':VENDORID,
 							'_tag':	{
 								'callback': 'anycontent',
-								'anydelegate' : true,
+								'addEventDelegation' : true,
 								'jqObj' : $('form',$D)
 								}
 							}
@@ -1245,7 +1247,7 @@ var admin_wholesale = function(_app) {
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
 			
-				$D.anydelegate().append("<label>Schedule ID <input type='text' size='3' data-minlength='3' maxlength='3' name='SID' value='' data-input-keyup='input-format' data-input-format='alphanumeric uppercase' \/><\/label><br />");
+				$D.anyform().append("<label>Schedule ID <input type='text' size='3' data-minlength='3' maxlength='3' name='SID' value='' data-input-keyup='input-format' data-input-format='alphanumeric uppercase' \/><\/label><br />");
 				
 				$("<button>Create Schedule<\/button>").button().on('click',function(event){
 					event.preventDefault();
@@ -1486,7 +1488,7 @@ var admin_wholesale = function(_app) {
 					anycontent : true, //the dialogCreate params are passed into anycontent
 					handleAppEvents : false //defaults to true
 					});
-				$D.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate','data':{}}).anydelegate();
+				$D.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate','data':{}}).anyform();
 				$('.buttonset',$D).append("<button data-app-click='admin_wholesale|execOrganizationCreate' class='applyButton'>Create Organization</button>");
 				$D.dialog('open');
 				_app.u.handleCommonPlugins($D);

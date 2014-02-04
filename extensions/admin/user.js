@@ -77,7 +77,7 @@ var admin_user = function(_app) {
 				else	{
 					_app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
 					}
-				_app.u.handleButtons($target.anydelegate({'trackEdits':true}));
+				_app.u.handleButtons($target.anyform({'trackEdits':true}));
 				_app.model.dispatchThis('mutable');
 				}			
 				
@@ -144,7 +144,7 @@ var admin_user = function(_app) {
 
 				$('form',$D).append("<div class='buttonset alignRight'><button data-app-click='admin|submitForm' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create User</button></div>");
 
-				_app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anyform());
 				$D.dialog('open');
 				$("[data-app-role='roleListTbody']",$D).sortable();
 				},
@@ -189,8 +189,8 @@ var admin_user = function(_app) {
 								$("[data-app-role='roleListTbody']",$panel).sortable({
 									stop : function(event,ui)	{
 										$(":checkbox",ui.item).addClass('edited');
-										_app.u.dump(" -> ui.item.closest('.eventDelegation').length: "+ui.item.closest('.eventDelegation').length);
-										ui.item.closest('.eventDelegation').anydelegate('updateChangeCounts');
+										_app.u.dump(" -> ui.item.closest('.anyformEnabled').length: "+ui.item.closest('.anyformEnabled').length);
+										ui.item.closest('.anyformEnabled').anyform('updateChangeCounts');
 										}
 									});
 			

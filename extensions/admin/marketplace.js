@@ -335,8 +335,9 @@ var admin_marketplace = function(_app) {
 								'dataAttribs':{'dst':'EBF'}
 								});
 							_app.u.handleAppEvents($target);
+							_app.u.addEventDelegation($target);
 							_app.u.handleCommonPlugins($target);
-							_app.u.handleButtons($target.anydelegate());
+							_app.u.handleButtons($target.anyform());
 							_app.ext.admin.u.applyEditTrackingToInputs($target);
 
 							$('.applyAnytabs:first',$slimLeftContent).find("li[data-app-role='extrasTab']:first").trigger('click'); //make tokens and profiles tab active.

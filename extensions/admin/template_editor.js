@@ -95,7 +95,8 @@ var admin_template = function(_app) {
 											_app.u.dump(' -> template contents obtained');
 								//this is in the callback so that if the call fails, a blank/broken editor doesn't show up.
 											$target.anycontent({'templateID':'templateEditorTemplate','showLoading':false,'data':{}}); //pass in a blank data so that translation occurs for loads-template
-											$target.anydelegate();
+											$target.anyform();
+											_app.u.addEventDelegation($target);
 											_app.u.handleCommonPlugins($target);
 											_app.u.handleButtons($target);
 	
@@ -221,7 +222,7 @@ var admin_template = function(_app) {
 					else	{} //shouldn't get here.
 
 					var $D = _app.ext.admin.i.dialogCreate(dialogObject); //using dialogCreate ensures that the div is 'removed' on close, clearing all previously set data().
-					$D.attr('id','templateChooser').data(vars).anydelegate().dialog('open');
+					$D.attr('id','templateChooser').data(vars).anyform().dialog('open');
 					$D.showLoading();
 					
 					vars._tag = {

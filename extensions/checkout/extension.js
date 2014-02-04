@@ -988,7 +988,8 @@ note - the order object is available at _app.data['order|'+P.orderID]
 				if($chkContainer && $chkContainer.length && cartID)	{
 					_app.u.dump(" -> startCheckout cartid: "+cartID);
 					$chkContainer.empty();
-					$chkContainer.anydelegate({
+					_app.u.addEventDelegation($chkContainer);
+					$chkContainer.anyform({
 						trackEdits : _app.u.thisIsAnAdminSession() //edits are only tracked in the admin interface
 						});
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.

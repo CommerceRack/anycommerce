@@ -66,7 +66,7 @@ apply to a selector to handle app events.
 additionally, will apply some conditional form logic.
 */
 
-	$.widget("ui.anydelegate",{
+	$.widget("ui.anyform",{
 		options : {
 //			trackFormEvents : true, //set to false to turn off the form event actions (panel code et all)
 			trackEdits : false, //boolean.  if true, as an input/select is changed, an 'edited' class is added to the input.
@@ -76,23 +76,23 @@ additionally, will apply some conditional form logic.
 			},
 		_supportedEvents : ["click","change","focus","blur","submit","keyup"], //a function so they're easily 
 		_init : function(){
-//			dump("BEGIN anydelegate");
+//			dump("BEGIN anyform");
 			var
 				self = this,
-				$t = self.element; //this is the targeted element (ex: $('#bob').anydelegate() then $t is bob)
+				$t = self.element; //this is the targeted element (ex: $('#bob').anyform() then $t is bob)
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
-			if($t.hasClass('eventDelegation') || $t.closest('.eventDelegation').length >= 1)	{
-//				dump("anydelegate was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
+			if($t.closest('.anyformEnabled').length >= 1)	{
+				dump("anyform was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
 				}
 			else	{
-				$t.addClass('eventDelegation'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
+				$t.addClass('anyformEnabled'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
 //make sure there are no children w/ delegated events.
-				$('.eventDelegation',$t).each(function(){
-					$(this).anydelegate('destroy');
+				$('.anyformEnabled',$t).each(function(){
+					$(this).anyform('destroy');
 					});
 				for(var i = 0; i < self._supportedEvents.length; i += 1)	{
-					$t.on(self._supportedEvents[i]+".app","[data-app-"+self._supportedEvents[i]+"], [data-input-"+self._supportedEvents[i]+"]",function(e,p){
+					$t.on(self._supportedEvents[i]+".anyform","[data-input-"+self._supportedEvents[i]+"]",function(e,p){
 //						dump(" -> delegated "+self._supportedEvents[i]+" triggered");
 						return self._executeEvent($(e.currentTarget),$.extend(p,e));
 						});
@@ -102,7 +102,7 @@ additionally, will apply some conditional form logic.
 
 //go through and trigger the form based events, so that if any content/classes should be on, they are.
 //do this before edit tracking is added so the edited class is not added.
-//this block is executed outside the  if/else above so that if anydelegate has already been added to a parent, new content still gets default actions.
+//this block is executed outside the  if/else above so that if anyform has already been added to a parent, new content still gets default actions.
 				self.triggerFormEvents();
 
 
@@ -127,7 +127,7 @@ additionally, will apply some conditional form logic.
 //$CT = $(e.currentTarget)
 //ep = event + parameters (params may get added if the event is triggered programatically)
 		_executeEvent : function($CT,ep)	{
-//			dump(" -> ui.anydelegate._executeEvent being run");
+//			dump(" -> ui.anyform._executeEvent being run");
 			ep = ep || {};
 			var r = true; //what is returned.
 			ep.normalizedType = this._normalizeEventType(ep.type);
@@ -135,14 +135,9 @@ additionally, will apply some conditional form logic.
 				if($CT.attr('data-input-'+ep.normalizedType))	{
 					r = this._handleFormEvents($CT,ep);
 					}
-				
-				if($CT.attr('data-app-'+ep.normalizedType))	{
-					r = this._handleAppEvents($CT,ep);
-					}
-				
 				}
 			else	{
-				$('#globalMessaging').anymessage({'message':"In ui.anydelegate._executeEvent, $CT is empty or not a valid jquery instance [isValid: "+($CT instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
+				$('#globalMessaging').anymessage({'message':"In ui.anyform._executeEvent, $CT is empty or not a valid jquery instance [isValid: "+($CT instanceof jQuery)+"] or p.type ["+ep.normalizedType+"] is not set.",'gMessage':true})
 				}
 //			dump("_executeEvent r: "+r);
 			return r;
@@ -173,7 +168,7 @@ additionally, will apply some conditional form logic.
 				},
 //allows an input to specify a button to get triggered if 'enter' is pushed while the input is in focus.
 			"trigger-button-id" : function($CT,$t,ep)	{
-				if(ep.keyCode==13){$CT.closest(".eventDelegation").find("button[data-button-id='"+$CT.attr('data-trigger-button-id')+"']").first().trigger('click')}
+				if(ep.keyCode==13){$CT.closest(".anyformEnabled").find("button[data-button-id='"+$CT.attr('data-trigger-button-id')+"']").first().trigger('click')}
 				},
 			
 //allows one form input to set the value of another.
@@ -240,27 +235,27 @@ additionally, will apply some conditional form logic.
 //					dump(index+") for form events.");
 					var $i = $(this);
 					if($i.is('select'))	{
-						$('option:selected',$i).trigger(self._supportedEvents[i]+'.app');
+						$('option:selected',$i).trigger(self._supportedEvents[i]+'.anyform');
 						}
 					else if($i.is(':checkbox'))	{
-						$i.trigger(self._supportedEvents[i]+'.app');
+						$i.trigger(self._supportedEvents[i]+'.anyform');
 						}
 					else if($i.is(':radio'))	{
 						if($i.is(':checked'))	{
-							$i.trigger(self._supportedEvents[i]+'.app');
+							$i.trigger(self._supportedEvents[i]+'.anyform');
 							}
 						else	{} //is a radio but isn't selected.
 						}
 					else	{
-						$i.trigger(self._supportedEvents[i]+'.app');
+						$i.trigger(self._supportedEvents[i]+'.anyform');
 						}
 					});
 				}
 			},
 
-//a method that can be triggered by $('selector').anydelegate('updateChangeCounts')
+//a method that can be triggered by $('selector').anyform('updateChangeCounts')
 		updateChangeCounts : function()	{
-//			dump(" -> anydelegate('updateChangeCounts') has been run");
+//			dump(" -> anyform('updateChangeCounts') has been run");
 			var self = this;
 			if(self.options.trackSelector)	{
 				$(self.options.trackSelector,self.element).each(function(){
@@ -268,10 +263,10 @@ additionally, will apply some conditional form logic.
 //if a changes container has been specified, update with the number of edits or hide if there are no edits.
 					if($ele.data('changes-container'))	{
 						if($('.edited',$ele).length)	{
-							$("[data-anydelegate-changes='"+$ele.data('changes-container')+"']",self.element).show().find('.numChanges').text($('.edited',$ele).length)
+							$("[data-anyform-changes='"+$ele.data('changes-container')+"']",self.element).show().find('.numChanges').text($('.edited',$ele).length)
 							}
 						else	{
-							$("[data-anydelegate-changes='"+$ele.data('changes-container')+"']",self.element).hide();
+							$("[data-anyform-changes='"+$ele.data('changes-container')+"']",self.element).hide();
 							}
 						
 						}
@@ -294,7 +289,7 @@ pass in an event name and a function and it will be added as an eventAction.
 
 //used to update the save buttons, both the master and the individuals.
 		_updateSaveButtonInContext : function($context,selector)	{
-//			dump(" -> running anydelegate._handleSaveButtonByEditedClass.");
+//			dump(" -> running anyform._handleSaveButtonByEditedClass.");
 //run over EACH button individually.  some may have had button() run on them, some may not.
 			$(selector,$context).each(function(){
 				var $button = $(this);
@@ -375,44 +370,6 @@ pass in an event name and a function and it will be added as an eventAction.
 			this._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']"); //intentionaly not using $context because master could be outside it. This way the master buttons count still updates.
 			},
 
-		_handleAppEvents : function($CT,ep)	{
-//by now, $CT has already been verified as a valid jquery object and that is has some data-app-EVENTTYPE on it.
-			ep = ep || {};
-			var r, actionsArray = $CT.data('app-'+ep.normalizedType).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
-
-			for(var i = 0; i < L; i += 1)	{
-				var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
-//				dump(i+") AEF: "); dump(AEF);
-				if(AEF[0] && AEF[1])	{
-					if(adminApp.ext[AEF[0]] && adminApp.ext[AEF[0]].e[AEF[1]] && typeof adminApp.ext[AEF[0]].e[AEF[1]] === 'function')	{
-						//execute the app event.
-						r = adminApp.ext[AEF[0]].e[AEF[1]]($CT,ep);
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
-					}				
-				}
-			return r;
-			},
-
-
-/*
-want to avoid double-delegation. so mutation watches to see if this element is moved.
-suppose events were delegated but not applied because the parent already had delegated events, then this element moved into a new parent (a sticky tab, perhaps). suddenly, delegation is gone.
- -> in this case, apply the events.
-alternatively, this could get moved into another parent that already has event delegation on it.
- -> in this case, remove the events.
-
-In both cases, keep watching for further changes.
-
-		_watchMutation : function()	{
-			
-			},
-*/
 //The actual event type and the name used on the dom (focus, blur, etc) do not always match. Plus, I have a sneaking feeling we'll end up with differences between browsers.
 //This function can be used to regularize the event type. Wherever possible, we'll map to the jquery event type name.
 		_normalizeEventType : function(type)	{
@@ -432,9 +389,9 @@ In both cases, keep watching for further changes.
 			this.element.off('change.trackform').off('keyup.trackform');
 			var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
 			for(var i = 0; i < supportedEvents.length; i += 1)	{
-				this.element.off(supportedEvents[i]+".app");
+				this.element.off(supportedEvents[i]+".anyform");
 				}
-			this.element.removeClass('eventDelegation').addClass('delegationRemoved'); //here for troubleshooting purposes.
+			this.element.removeClass('anyformEnabled').addClass('anyformRemoved'); //here for troubleshooting purposes.
 			}
 		}); // create the widget
 
@@ -636,7 +593,7 @@ In both cases, keep watching for further changes.
 				
 				}
 			else	{
-				dump(" -> adminApp.u.formatResponsethis.span 'else' hit. Should not have gotten to this point");
+				dump(" -> anymessage._getFormattedMessage 'else' hit. Should not have gotten to this point");
 				$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured'); //don't want to have our error handler generate an error on screen.
 				}
 //gMessage is generic message, used for 'soft' errors. and ISEERR should have messaging this is a little less generic (or more severe)
@@ -1186,8 +1143,8 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 						//filetype is image, but no image was found within the preview (could be an image was selected for a file based upload and no filter was enabled
 						}
 					}
-				if(self.element.closest('eventDelegation').length)	{
-					self.element.closest('eventDelegation').anydelegate('updateChangeCounts'); // updates the save button change count.
+				if(self.element.closest('.anyformEnabled').length)	{
+					self.element.closest('.anyformEnabled').anyform('updateChangeCounts'); // updates the save button change count.
 					}
 				}
 			},
@@ -1986,7 +1943,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 	$.widget("ui.stickytab",{
 		options : {
 			tabID : '',
-			anydelegate : false, //if enabled, will apply event delegation to table.
+			anyform : false, //if enabled, will apply form delegation to table. Delegated events should be applied by the app.
 			tabtext : 'unnamed tab', //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
 			tabclass : 'ui-state-default' //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			},
@@ -2015,8 +1972,8 @@ supported options include tabID (given to the container), tabtext (what appears 
 					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
 	
 				this.sticky = $sticky; //global reference to container for easy access.
-				if(o.anydelegate)	{
-					$sticky.anydelegate();
+				if(o.anyform)	{
+					$sticky.anyform();
 					}
 //* 202324  -> tabid wasn't getting applied to tab.
 				$sticky.attr({'id':(o.tabID) ? o.tabID : 'stickytab_'+guid});

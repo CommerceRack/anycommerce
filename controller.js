@@ -889,9 +889,9 @@ _app.u.throwMessage(responseData); is the default error handler.
 					
 // use either delegated events OR app events, not both.
 //avoid using this. ### FUTURE -> get rid of these. the delegation should occur before here.
-					if(_rtag.anydelegate)	{
+					if(_rtag.addEventDelegation)	{
 //						_app.u.dump(" ------> using delegated events in anycontent, not app events ");
-						$target.anydelegate();
+						_app.u.addEventDelegation($target);
 						}
 					else if(_rtag.skipAppEvents)	{}
 					else	{
@@ -1339,41 +1339,6 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				return r;
 				},
 
-// ### FUTURE -> this is currently used in anytabs. when anytabs is upgraded, make sure it's more anydelegate friendly and this can be removed.
-			executeEvent : function($target,p){
-				p = p || {};
-				var newEventType = _app.u.normalizeEventType(p.type);
-				_app.u.dump(" ----> handle eventExecution ["+newEventType+"]");
-
-				if($target && $target instanceof jQuery && newEventType)	{
-//					_app.u.dump(" -> $target.data()"); _app.u.dump($target.data());
-					if($target.data('app-'+newEventType))	{
-						var
-							actionExtension = $target.data('app-'+newEventType).split('|')[0],
-							actionFunction =  $target.data('app-'+newEventType).split('|')[1];
-		
-						if(actionExtension && actionFunction)	{
-							if(_app.ext[actionExtension] && _app.ext[actionExtension].e[actionFunction] && typeof _app.ext[actionExtension].e[actionFunction] === 'function')	{
-					//execute the app event.
-								_app.ext[actionExtension].e[actionFunction]($target,p);
-								}
-							else	{
-								$('#globalMessaging').anymessage({'message':"In _app.u.executeEvent, extension ["+actionExtension+"] and function["+actionFunction+"] both passed, but the function does not exist within that extension.",'gMessage':true})
-								}
-							}
-						else	{
-							$('#globalMessaging').anymessage({'message':"In _app.u.executeEvent, app-click ["+$target.data('app-click')+"] is invalid.",'gMessage':true});
-							}						
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':"In _app.u.executeEvent, $target doesn't have data-app-["+newEventType+"] set["+$target.data('app-'+newEventType)+"].",'gMessage':true})
-						//
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In _app.u.executeEvent, $target is empty or not a valid jquery instance [isValid: "+($target instanceof jQuery)+"] or p.type ["+newEventType+"] is not set.",'gMessage':true})
-					}
-				},
 
 			handleCommonPlugins : function($context)	{
 				$('.applyAnycb',$context).anycb();
@@ -1421,7 +1386,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //at one point, this was a plugin, but w/ the introduction of multiple app instantiations, that changed.
 //What was the plugin was split into two pieces, the app-event based delegation is here.  The form based is in anyForm
 			addEventDelegation : function($t,vars)	{
-				vars = vars || vars;
+				vars = vars || {};
 				var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
 
 				function destroyEvents($ele)	{
@@ -1435,7 +1400,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					destroyEvents($t);
 					}
 				else	{
-					if($target.closest('.hasDelegatedEvents').length >= 1)	{
+					if($t.closest('.hasDelegatedEvents').length >= 1)	{
 						//this element or one of it's parents already has events delegated. don't double up.
 						}
 					else	{
@@ -1468,11 +1433,11 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 							r = _app.ext[AEF[0]].e[AEF[1]]($CT,ep);
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
+							$('#globalMessaging').anymessage({'message':"In _app.u._executeEvent, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In ui.anydelegate._handleAppEvents, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
+						$('#globalMessaging').anymessage({'message':"In _app.u._executeEvent, data-app-"+ep.normalizedType+" ["+$CT.attr('data-app-'+ep.normalizedType)+"] is invalid. Unable to ascertain Extension and/or Function",'gMessage':true});
 						}				
 					}
 				return r;
@@ -2961,7 +2926,8 @@ return $r;
 				if($ele instanceof jQuery && infoObj.state)	{
 					if($.inArray(infoObj.state,['init','complete','depart']) >= 0)	{
 						if($ele.attr('data-app-'+infoObj.state))	{
-							//the following code is also in anydelegate. It was copied (tsk, tsk. i know) because the plugin should be as independant as possible.
+							//the following code is also in _app.u.addEventDelegation(). It was copied (tsk, tsk. i know) because at the time, DE was in a plugin.
+							// ### FUTURE -> since delegated events are back in the controller, see about getting these code bases unified.
 							var AEF = $ele.attr('data-app-'+infoObj.state).split('|');
 							if(AEF[0] && AEF[1])	{
 								if(_app.ext[AEF[0]] && _app.ext[AEF[0]].e[AEF[1]] && typeof _app.ext[AEF[0]].e[AEF[1]] === 'function')	{
@@ -3275,7 +3241,8 @@ $tmp.empty().remove();
 // use 'key' and 'value' in the data-binds of the template.
 // pass template to apply per row as loadsTemplate: on the databind.
 // there's an example of this in admin_marketplace (ebay category chooser)
-		wikiHash2Template : function($tag,data)	{
+// * 201401 -> not used anywhere. removed per BH by JT.
+/*		wikiHash2Template : function($tag,data)	{
 			var
 				rows = data.value.split("\n"),
 				L = rows.length;
@@ -3286,7 +3253,7 @@ $tmp.empty().remove();
 				}
 			
 			},
-
+*/
 
 
 //This should be used for all lists going forward that don't require special handling (such as stufflist, prodlist, etc).
@@ -3360,7 +3327,7 @@ $tmp.empty().remove();
 				}
 			}
 			
-		},
+		}, //renderFormats
 
 //These rules should return true if the value is validated or false if not.
 //If the value does not validate, $err should be APPENDED to w/ a consise message for why it failed.  ex: CC number did not validate.

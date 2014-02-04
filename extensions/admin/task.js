@@ -151,7 +151,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 						}
 					});
 				_app.model.dispatchThis('mutable');
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				$('.applyButtonset',$target).buttonset().off('change.handleModifyTasks').on('change.handleModifyTasks',function(){
 					_app.ext.admin_task.u.handleModifyTasks(this);
 					});
@@ -199,7 +199,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					'data' : {}, //pass empty data set so translation occurs and the loadsTemplate within this template gets run.
 					'showLoading' : false
 					});
-				$('form',$target).anydelegate({'trackEdits':true}).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				_app.u.addEventDelegation($target);
+				$('form',$target).anyform({'trackEdits':true}).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				$('.datepicker',$target).datepicker({
 					'dateFormat':'@',
 					'onClose' : function(dateText,object)	{
@@ -315,7 +316,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					'data' : $ele.closest("[data-id]").data(),
 					'showLoading':false
 					});
-				$('form',$panel).anydelegate({'trackEdits':true}).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$('form',$panel).anyform({'trackEdits':true}).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				$('.datepicker',$panel).datepicker({
 					'dateFormat':'@',
 					'onClose' : function(dateText,object)	{
@@ -325,7 +326,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						else	{
 							this.value = (parseInt(this.value) / 1000);
-							$(this).addClass('edited').closest('form').anydelegate('updateChangeCounts');
+							$(this).addClass('edited').closest('form').anyform('updateChangeCounts');
 							}
 						}
 					}); //@ sets the format to epoch.

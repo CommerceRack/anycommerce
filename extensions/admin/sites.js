@@ -67,8 +67,8 @@ used, but not pre-loaded.
 			
 //The sites interface should always be opened in the sites tab.
 			showSitesTab : function()	{
-				var $target = $("#sitesContent").intervaledEmpty().showLoading({'message':'Fetching List of Domains'}).anydelegate();
-				
+				var $target = $("#sitesContent").intervaledEmpty().showLoading({'message':'Fetching List of Domains'}).anyform();
+				_app.u.addEventDelegation($target);
 				if(_app.ext.admin.vars.tab != 'sites')	{
 					_app.ext.admin.u.bringTabIntoFocus('sites');
 					_app.ext.admin.u.bringTabContentIntoFocus($target);
@@ -107,8 +107,8 @@ used, but not pre-loaded.
 			
 			
 			showDomainConfig : function($target)	{
-				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anydelegate();
-
+				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anyform();
+				_app.u.addEventDelegation($target);
 				_app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
 
 				_app.u.handleButtons($target);
@@ -453,7 +453,7 @@ used, but not pre-loaded.
 					});
 				_app.u.handleButtons($D);
 				$D.dialog('open');
-				$D.anydelegate();
+				$D.anyform();
 				}, //adminDomainCreateShow
 
 
@@ -527,7 +527,7 @@ used, but not pre-loaded.
 								'jqObj' : $detail,
 								'callback' : 'anycontent',
 								onComplete : function(rd)	{
-									$('form',$detail).anydelegate({'trackEdits':true}); //enable form 'tracking' so save button counts number of changes
+									$('form',$detail).anyform({'trackEdits':true}); //enable form 'tracking' so save button counts number of changes
 									$("select[name='PRT']",$detail).val(_app.data[rd.datapointer].PRT); //select the partition
 									}
 								}
@@ -620,8 +620,8 @@ used, but not pre-loaded.
 							_app.ext.admin_sites.u.domainAddUpdateHost($ele.data('mode'),$('form',$D),$ele.closest("[data-app-role='domainDetailContainer']"));
 							})
 						)
-
-					$D.anydelegate({'trackEdits':true}).dialog('open');
+					_app.u.addEventDelegation($D);
+					$D.anyform({'trackEdits':true}).dialog('open');
 					}
 				else	{
 					$ele.closest('.ui-widget-content').anymessage({'message':'In admin_sites.e.adminDomainCreateUpdateHostShow, unable to ascertain domain.','gMessage':true});
@@ -665,7 +665,7 @@ used, but not pre-loaded.
 					showLoading : false
 					});
 				$D.dialog('open');
-				$D.anydelegate();
+				$D.anyform();
 				_app.u.handleButtons($D);
 				return false;
 				}, //projectCreateShow

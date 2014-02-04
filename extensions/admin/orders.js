@@ -444,8 +444,8 @@ else	{
 //go get the list of orders and any other necessary data
 				_app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
 				_app.ext.admin_orders.a.showOrderList(P.filters);
-
-				$target.anydelegate();
+				_app.u.addEventDelegation($target);
+				$target.anyform();
 				_app.u.handleButtons($target);
 				}
 			else	{
@@ -1113,7 +1113,8 @@ else	{
 				//tab already exists. don't create a duplicate.
 				}
 			else	{
-				$table.stickytab({'tabtext':'order results','tabID':'productListTab','anydelegate':true});
+				$table.stickytab({'tabtext':'order results','tabID':'productListTab'});
+				_app.u.addEventDelegation($table);
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 				$('button, a',$table).each(function(){
 					$(this).off('close.stickytab').on('click.closeStickytab',function(){
@@ -2766,7 +2767,7 @@ else	{
 							});
 						$D.append("<table data-orderid='"+orderID+"'><tbody data-bind='var: routes(@ROUTES); format:macros2Buttons; extension:admin; _cmd:adminOrderMacro;'></tbody></table>");
 						$D.dialog('open');
-						$D.anydelegate();
+						$D.anyform();
 						_app.model.addDispatchToQ({
 							'_cmd':'adminOrderRouteList',
 							'orderid' : orderID,

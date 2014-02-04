@@ -2327,8 +2327,8 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					showClose:false,
 					wholeHeaderToggle:false
 					});
-				$target.anydelegate();
-				_app.ext.admin.u.applyEditTrackingToInputs($target);
+				_app.u.addEventDelegation($target);
+				$target.anyform();
 				_app.u.handleCommonPlugins($target);
 				_app.u.handleButtons($target);
 				},
@@ -2692,7 +2692,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				},
 
@@ -2779,8 +2779,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 //It's necessary to get the product task list elements on to the dom asap so they can be utilized.
 				_app.ext.admin_prodedit.a.showProductManager();
-
-				$('#messagesContent').anydelegate();
+				_app.u.addEventDelegation($('#messagesContent'));
 //				_app.ext.admin.calls.adminMessagesList.init(_app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable'); // ### TODO -> commented out for testing.
 				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
@@ -3040,24 +3039,22 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 //ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
 			handleSaveButtonByEditedClass : function($context)	{
 //				_app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
-//*** 201344 -> code moved into anydelegate.
-				if($context.hasClass('eventDelegation'))	{
-					$context.anydelegate('updateChangeCounts');
+				if($context.hasClass('anyformEnabled'))	{
+					$context.anyform('updateChangeCounts');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('updateChangeCounts');
+					$context.closest('.anyformEnabled').anyform('updateChangeCounts');
 					}
 				},
 			
 		
 //run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
 			restoreInputsFromTrackingState : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				if($context.hasClass('eventDelegation'))	{
-					$context.anydelegate('resetTracking');
+				if($context.hasClass('anyformEnabled'))	{
+					$context.anyform('resetTracking');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('resetTracking',$context);
+					$context.closest('.anyformEnabled').anyform('resetTracking',$context);
 					}
 				},
 			
@@ -3066,8 +3063,8 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 //will also 'enable' the parent button of that class.
 // ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				$context.anydelegate({trackEdits : true});
+//code moved into anyform.
+				$context.anyform({trackEdits : true});
 				$context.attr('data-applied-inputtracking',true); //is attribute so we can easily inspect on the dom.
 				}, //applyEditTrackingToInputs
 
@@ -3076,8 +3073,8 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 
 			handleFormConditionalDelegation : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				$context.anydelegate({trackEdits : true});
+//*** 201344 -> code moved into anyform.
+				$context.anyform({trackEdits : true});
 				},
 
 
@@ -4478,6 +4475,7 @@ vars:
 					if(vars.anytable)	{
 						$table.anytable();
 						}
+					_app.u.addEventDelegation($DMI);
 
 					r = $table //the table gets returned
 
@@ -4602,7 +4600,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				if(vars.handleAppEvents)	{
 					_app.u.handleAppEvents($D,vars);
 					}
-
+				_app.u.addEventDelegation($D);
 				_app.u.handleCommonPlugins($D);
 				return $D;
 				} //dialogCreate
@@ -4720,7 +4718,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 					vars.showLoading = false;
 					var $D = _app.ext.admin.i.dialogCreate(vars);
 					_app.u.handleButtons($D);
-					$D.anydelegate().dialog('open');
+					_app.u.addEventDelegation($D);
+					$D.dialog('open');
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
@@ -5206,7 +5205,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					'templateID':'rssAddUpdateTemplate',
 					'showLoading':false
 					});
-				$D.dialog('open').anydelegate();
+				$D.dialog('open');
 				$("form",$D).append("<input type='hidden' name='_cmd' value='adminRSSCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				
 				$('.buttonbar:first',$D).append("<button data-app-click='admin|submitForm' class='applyButton'>Save Feed</button>");

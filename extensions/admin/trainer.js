@@ -63,7 +63,8 @@ var admin_trainer = function(_app) {
 							}).appendTo($trainer);
 						}
 					_app.ext.admin_trainer.u.handleTrainerArticles($trainer);
-					$trainer.anydelegate();
+					_app.u.addEventDelegation($target);
+					$trainer.anyform();
 					_app.u.handleButtons($trainer);
 
 					if(slidesArr.length == 1)	{

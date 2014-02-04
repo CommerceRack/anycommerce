@@ -101,15 +101,16 @@ var admin_config = function(_app) {
 
 			showEmailAuth : function($target)	{
 				//app vars is passed in so the email input can be prepopulated w/ the domain in focus.
-				$target.empty().append($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':_app.vars}).anydelegate());
+				$target.empty().append(_app.u.addEventDelegation($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':_app.vars})));
 				_app.u.handleButtons($target);
 				},
 
 			showNotifications : function($target)	{
 				$target.intervaledEmpty();
+				_app.u.addEventDelegation($target);
 				$target.anycontent({
 					'templateID' : 'notificationPageTemplate'
-					}).anydelegate({'trackEdits':true});
+					}).anyform({'trackEdits':true});
 				_app.u.handleButtons($target);
 				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
@@ -128,7 +129,8 @@ var admin_config = function(_app) {
 			showBillingHistory : function($target)	{
 				$target.empty();
 				$target.anycontent({'templateID':'billingHistoryTemplate','showLoading':false});
-				$("[data-app-role='billingHistory']",$target).anydelegate({'trackEdits':true});
+				_app.u.addEventDelegation($target);
+				$("[data-app-role='billingHistory']",$target).anyform({'trackEdits':true});
 				_app.u.handleCommonPlugins($target);
 				_app.u.handleButtons($target);
 				var $tabContent = $("[data-anytab-content='invoices']",$target);
@@ -159,7 +161,7 @@ var admin_config = function(_app) {
 								}
 							else	{
 								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
-								$target.anydelegate();
+								_app.u.addEventDelegation($target);
 								_app.u.handleButtons($target);
 								$("[data-app-role='slimLeftNav']",$target).accordion();
 								}
@@ -191,7 +193,8 @@ var admin_config = function(_app) {
 				$target.empty();
 				var $div = $("<div \/>").appendTo($target);
 				$div.showLoading({"message":"Fetching Global Settings"});
-				$div.anydelegate({
+				_app.u.addEventDelegation($div);
+				$div.anyform({
 					'trackEdits':true,
 					trackSelector:'form'
 					})
@@ -212,7 +215,8 @@ var admin_config = function(_app) {
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching your payment method settings'});
 				_app.model.destroy('adminConfigDetail|payment|'+_app.vars.partition);
-				$target.anydelegate({'trackEdits':true});
+				_app.u.addEventDelegation($target);
+				$target.anyform({'trackEdits':true});
 				_app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
 					'callback' : 'anycontent',
 					'datapointer' : 'adminConfigDetail|payment|'+_app.vars.partition,
@@ -287,7 +291,8 @@ var admin_config = function(_app) {
 						default:
 							$target.anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, unrecognized tender: '+tender+'.','gMessage':true});
 						}
-					$target.anydelegate({'trackEdits':true});
+					_app.u.addEventDelegation($target);
+					$target.anyform({'trackEdits':true});
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
@@ -308,8 +313,8 @@ var admin_config = function(_app) {
 				$target.anycontent({
 					'templateID':'taxConfigTemplate',
 					'showLoadingMessage' : 'Fetching tax details'
-					}).anydelegate();
-
+					}).anyform();
+				_app.u.addEventDelegation($target);
 				$("[name='expires']",$target).datepicker({
 					changeMonth: true,
 					changeYear: true,
@@ -375,7 +380,8 @@ var admin_config = function(_app) {
 						
 						
 						_app.u.handleButtons($target);
-						$target.anydelegate();
+						_app.u.addEventDelegation($target);
+						$target.anyform();
 						var
 							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
 							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
@@ -484,13 +490,12 @@ var admin_config = function(_app) {
 						}
 					});
 				_app.u.handleButtons($target);
-				$target.anydelegate();
+				$target.anyform();
 				_app.model.dispatchThis();
 
 				},//showCouponManager
 				
 			showPartitionManager : function($target)	{
-				$target.empty().anydelegate();
 				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Partition Manager', //left off because the interface is in a tab.
 					'className' : 'partitionManager',
@@ -507,6 +512,7 @@ var admin_config = function(_app) {
 						}
 					});
 				_app.u.handleButtons($target);
+				$target.anyform();
 				_app.model.dispatchThis();
 
 				},//showCouponManager
@@ -535,7 +541,7 @@ var admin_config = function(_app) {
 								}
 							}}	
 						]);
-					$D.dialog('open').anydelegate();
+					$D.dialog('open').anyform();
 					
 					//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
 					var DMIVars = {
@@ -629,7 +635,8 @@ var admin_config = function(_app) {
 						}
 					});
 				_app.u.handleButtons($D); _app.u.handleCommonPlugins($D);
-				$D.anydelegate();
+				_app.u.addEventDelegation($target);
+				$D.anyform();
 				$D.dialog('open');	
 				}, //showUPSOnlineToolsRegInModal
 			
@@ -637,7 +644,7 @@ var admin_config = function(_app) {
 				vars = vars || {}; //may include supplier
 				var $D = _app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':(vars.vendorid) ? {} : _app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
 				$D.data(vars);
-				$D.anydelegate();
+				$D.anyform();
 				_app.u.handleButtons($D);
 				$D.addClass('labelsAsBreaks alignedLabels');
 				$D.dialog('open');	
@@ -967,7 +974,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						});
 				_app.u.handleCommonPlugins($D);
 				_app.u.handleButtons($D);
-				$D.anydelegate();
+				$D.anyform();
 				},	//couponCreateShow
 
 			couponRemoveConfirm : function($ele)	{

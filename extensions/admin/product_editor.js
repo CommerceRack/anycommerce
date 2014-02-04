@@ -149,7 +149,8 @@ if(_rtag.jqObj)	{
 //hidden pid input is used by save. must come after the 'anycontent' above or form won't be set.
 	_rtag.jqObj.find('form').append("<input type='hidden' name='pid' value='"+pid+"' \/>");
 
-	_rtag.jqObj.anydelegate({'trackEdits':true});
+
+	_app.u.addEventDelegation(_rtag.jqObj.anyform({'trackEdits':true}));
 	_app.u.handleCommonPlugins(_rtag.jqObj);
 	_app.u.handleButtons(_rtag.jqObj);
 	
@@ -198,7 +199,9 @@ $('form',_rtag.jqObj).each(function(){
 _app.ext.admin_prodedit.u.handleImagesInterface($("[data-app-role='productImages']",_rtag.jqObj),pid);
 _app.u.handleCommonPlugins(_rtag.jqObj);
 _app.u.handleButtons(_rtag.jqObj);
-_rtag.jqObj.anydelegate({
+_app.u.addEventDelegation(_rtag.jqObj);
+
+_rtag.jqObj.anyform({
 	trackEdits:true,
 	trackSelector:'form'
 	});
@@ -229,7 +232,7 @@ _rtag.jqObj.anydelegate({
 				if($target.children().length)	{} //product manager only gets rendered once and ONLY within the product tab.
 				else	{
 					$target.anycontent({'templateID':'productManagerLandingContentTemplate','showLoading':false});
-					$("[data-app-role='productManagerResultsContent']",$target).anydelegate(); //this delegate is just on the results. each product get's it's own in quickview.
+					_app.u.addEventDelegation($("[data-app-role='productManagerResultsContent']",$target)); //this delegate is just on the results. each product get's it's own in quickview.
 					}
 				}, //showProductManager
 
@@ -305,7 +308,7 @@ _rtag.jqObj.anydelegate({
 					}
 				$modal.empty().append(_app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'));
 				_app.u.handleButtons($modal);
-				$modal.anydelegate();
+				_app.u.addEventDelegation($modal); 
 				$modal.dialog('open');
 				}, //showCreateProductDialog
 	
@@ -319,7 +322,7 @@ $target.anycontent({'templateID':P.templateID,'showLoading':false}).attr('data-p
 
 _app.u.handleCommonPlugins($target);
 _app.u.handleButtons($target);
-$target.anydelegate();
+_app.u.addEventDelegation($target);
 					}
 				else if($target instanceof jQuery)	{
 					$target.anymessage({"message":"In admin_prodedit.a.showProductDebugger, either no pid ["+P.pid+"] and/or no templateid ["+P.templateID+"] passed. both are required.","gMessage":true});
@@ -340,7 +343,7 @@ $target.anydelegate();
 						'templateID' : 'variationsManagerTemplate'
 						}
 					
-					$target.anydelegate();
+					_app.u.addEventDelegation($target);
 					//use local copy, if available
 					if(_app.model.fetchData('adminSOGComplete'))	{
 						_app.u.handleCallback(_tag)
@@ -833,7 +836,7 @@ $target.anydelegate();
 						}
 					});
 				$( "[data-app-role='priceFilterRange']" ).val( "$" + $( ".sliderRange" ).slider( "values", 0 ) + " - $" + $( ".sliderRange" ).slider( "values", 1 ) );
-				$div.anydelegate();
+				_app.u.addEventDelegation($div);
 				},
 
 //Used in product manager interface.
@@ -1541,7 +1544,7 @@ Required params include:
 							var $li = _app.renderFunctions.createTemplateInstance($taskList.data('loadstemplate'));
 							$li.hide();
 							$li.attr('data-pid',P.pid);
-							$li.anydelegate();
+							_app.u.addEventDelegation($li);
 							}
 						$taskList.prepend($li); //always put at top of the list.
 
@@ -2090,7 +2093,7 @@ Required params include:
 								else	{
 									$form.anymessage(_app.u.successMsgObject('Variations have been updated.'));
 									_app.ext.admin_prodedit.a.showProductVariationManager($("[data-app-role='productVariations']",$form).empty(),cmdObj.pid);
-									$form.closest('.eventDelegation').anydelegate('updateChangeCounts'); //execute AFTER showPordVarMan above or the counts will be off (cuz old variation data still on DOM).
+									$form.closest('.anyformEnabled').anyform('updateChangeCounts'); //execute AFTER showPordVarMan above or the counts will be off (cuz old variation data still on DOM).
 									}
 								}
 							},
@@ -3313,12 +3316,12 @@ function type2class(type)	{
 					_app.u.dump(" -> tr w/ data-id of sog.length: "+ $ele.closest("[data-app-role='productVariations']").find("tr["+(variationData.variationguid ? "data-guid='"+variationData.variationguid+"'" : "data-id='"+variationID+"'")+"']:first").length);
 					//for a new sog/pog, a guid is present but no ID.
 					
-					var $EDParent = $ele.closest('.eventDelegation'); //find the parent before the modal is closed/destroyed (or it won't be found).
+					var $EDParent = $ele.closest('.anyformEnabled'); //find the parent before the modal is closed/destroyed (or it won't be found).
 					$ele.closest('.ui-dialog-content').dialog('close').empty();
 //update change counts AFTER dialog is destroyed or the changes to the variation itself will be in the count.
 //This may sound like a good idea, but it isn't because the dialog is destroyed and if another variation is edited, the count change could be misleading .
 //so ALL changes to one variation count as 1 edit.
-					$EDParent.anydelegate('updateChangeCounts');
+					$EDParent.anyform('updateChangeCounts');
 					}
 				else	{
 					$form.showLoading({"message":"Saving changes to variations"});
@@ -3523,7 +3526,10 @@ function type2class(type)	{
 			
 				p = p || {};
 				if($ele.data('variationmode') == 'store')	{
-					$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')).empty().append(_app.ext.admin_prodedit.a.getVariationEditor('store',_app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anydelegate({'trackEdits':true}));
+					// ### FUTURE -> update this to use a naviagteTo
+					var $tab = $(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content'));
+					_app.u.addEventDelegation($tab);
+					$tab.empty().append(_app.ext.admin_prodedit.a.getVariationEditor('store',_app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anyform({'trackEdits':true}));
 					$("[data-app-role='variationsHeaderContainer']:first","#"+_app.ext.admin.vars.tab+'Content').addClass('smallButton').prepend($("<button \/>").addClass('floatRight').text('Global Variations').button({icons: {primary: "ui-icon-arrowthick-1-w"},text: true}).on('click',function(){
 						navigateTo("#!globalVariations");
 						}));
@@ -3555,7 +3561,8 @@ function type2class(type)	{
 							});
 	
 						$D.append(_app.ext.admin_prodedit.a.getVariationEditor('product',data,pid));
-						$D.anydelegate({'trackEdits':true}); //add after $D is on the dom so anydlegate can look up the tree to see if events are already delegated.
+						_app.u.addEventDelegation($D);
+						$D.anyform({'trackEdits':true}); //add after $D is on the dom so anydlegate can look up the tree to see if events are already delegated.
 						$D.dialog('option','height',($(document.body).height() - 100));
 //a little css tuning to make this shared content look better in a modal.
 						$('hgroup',$D).hide();
@@ -3623,7 +3630,8 @@ function type2class(type)	{
 					'templateID' : 'variationsManagerCreateTemplate',
 					'showLoading' : false
 					});
-				$D.data('variationmode',mode).anydelegate();
+				_app.u.addEventDelegation($D);
+				$D.data('variationmode',mode).anyform();
 				_app.u.handleButtons($D);
 				if(mode == 'store')	{
 					//a store variation group can be edited from the product editor. need to set a PID when this happens.
@@ -3752,7 +3760,7 @@ function type2class(type)	{
 						_app.u.handleButtons($tbody);
 						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).addClass('edited').appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
 						$ele.closest('.ui-dialog-content').dialog('close').empty();
-						$tbody.closest('.eventDelegation').anydelegate('updateChangeCounts');
+						$tbody.closest('.anyformEnabled').anyform('updateChangeCounts');
 						}
 					else	{
 						//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.

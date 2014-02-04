@@ -170,8 +170,8 @@ some defaults are present, but they can be overwritten by the app easily enough.
 
 				showCartManager : function($target)	{
 					$target.anycontent({'templateID':'adminCartManagementTemplate','data':{'carts':_app.vars.carts}});
-
-					$target.anydelegate();
+					_app.u.addEventDelegation($target);
+					$target.anyform();
 					_app.u.handleButtons($target);
 					_app.u.handleCommonPlugins($target);
 					
@@ -258,7 +258,8 @@ some defaults are present, but they can be overwritten by the app easily enough.
 							});
 						_app.model.addCart2Session(cartID); //update _app.vars.carts
 						_app.u.handleButtons($UI);
-						$UI.anydelegate();
+						_app.u.addEventDelegation($UI);
+						$UI.anyform();
 						_app.model.destroy('cartDetail|'+cartID);
 						_app.calls.cartDetail.init(cartID,{'callback':'anycontent','translateOnly':true,'jqObj':$UI,'onComplete':function(rd){
 							//if no CID is set, lock the edit buyer button.
@@ -400,7 +401,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 //				$("<button \/>").text('Add to Cart').attr('data-app-click','order_create|cartItemAddWithChooser').button().appendTo($buttons);
 
 				_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
-				$buttons.anydelegate();
+				_app.u.addEventDelegation($buttons);
 				},
 			
 			gotoProductExec : function($ele,p)	{

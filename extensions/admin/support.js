@@ -99,7 +99,7 @@ var admin_support = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				_app.model.dispatchThis('mutable');
 				},
 
@@ -132,7 +132,7 @@ var admin_support = function(_app) {
 					}}},'mutable');
 				_app.model.dispatchThis('mutable');
 				$D.dialog('option','modal',false);
-				$D.anydelegate();
+				$D.anyform();
 				$D.dialog('open');
 				},
 
@@ -167,7 +167,7 @@ var admin_support = function(_app) {
 						'_tag' : {'datapointer' : 'adminConfigDetail|prts'}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				if(vars.title)	{
 					$('form:first',$DMI).trigger('submit');
 					}
@@ -376,7 +376,7 @@ var admin_support = function(_app) {
 				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				$D.dialog('open');
 				$D.data({'ticketid':'0','uuid':_app.u.guidGenerator()}); //necessary for file attachment.
-				$D.anydelegate();
+				$D.anyform();
 				_app.u.handleButtons($D);
 				},
 

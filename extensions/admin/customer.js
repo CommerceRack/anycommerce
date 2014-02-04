@@ -93,8 +93,8 @@ var admin_customer = function(_app) {
 				
 				_app.u.handleCommonPlugins($target);
 				_app.u.handleButtons($target);
-				$target.anydelegate();
-				//must be after anydelegate or the 'trigger' won't do much.
+				_app.u.addEventDelegation($target.anyform());
+				//must be after anyform or the 'trigger' won't do much.
 				if(vars.scope && vars.searchfor)	{
 					$("[name='scope']",$target).val(vars.scope);
 					$("[name='searchfor']",$target).val(vars.searchfor);
@@ -170,8 +170,9 @@ var admin_customer = function(_app) {
 //							  _app.u.handleAppEvents($custEditorTarget);
 							  _app.u.handleCommonPlugins($custEditorTarget);
 							  _app.u.handleButtons($custEditorTarget);
+							  _app.u.addEventDelegation($custEditorTarget);
 							  _app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj); //adds buttons to/for the various panels
-							  $custEditorTarget.anydelegate({'trackEdits':true});
+							  $custEditorTarget.anyform({'trackEdits':true});
 	
 							}},'mutable');
 						_app.model.dispatchThis('mutable');
@@ -205,7 +206,7 @@ var admin_customer = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				},
 
@@ -224,7 +225,7 @@ var admin_customer = function(_app) {
 						'_tag' : {'datapointer' : 'adminCampaignList'}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anyform());
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				_app.model.dispatchThis();
 				}, //showCampaignManager
@@ -257,7 +258,8 @@ var admin_customer = function(_app) {
 						$picker.anycontent({data:data});
 						
 						_app.u.handleAppEvents($target);
-						_app.u.handleButtons($target.anydelegate());
+						_app.u.addEventDelegation($target);
+						_app.u.handleButtons($target.anyform());
 						}
 					else if(data === false)	{
 						$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});
@@ -288,7 +290,7 @@ var admin_customer = function(_app) {
 						'_tag' : {'datapointer' : 'adminGiftcardList'}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target);
 				_app.model.dispatchThis();
 				},
 
@@ -314,7 +316,7 @@ var admin_customer = function(_app) {
 							}
 						}
 					});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				}, //showReviewsManager
 
@@ -322,11 +324,13 @@ var admin_customer = function(_app) {
 //obj should contain CID. likely will include partition soon too.
 // ### FUTURE -> this works, but should probably be updated to use submitForm and refreshCustomerPanel as submit/click events.
 			showAddWalletModal : function(obj,$walletPanel)	{
-				var $modal = $('#customerUpdateModal').empty().anydelegate();
+				var $modal = $('#customerUpdateModal').empty()
+				_app.u.addEventDelegation($modal);
 				$('.ui-dialog-title',$modal.parent()).text('Add a new wallet');
 				$modal.dialog('open');
 				if(obj && obj.CID)	{
 					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
+					$modal.anyform();
 					var $form = $("form",$modal);
 					$form.append($("<button>").text('Save Wallet').button().on('click',function(event){
 						event.preventDefault();
@@ -362,7 +366,8 @@ var admin_customer = function(_app) {
 			showCustomerCreateModal : function(){
 				var $modal = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
-				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false}).anydelegate();
+				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false}).anyform();
+				_app.u.addEventDelegation($modal);
 				_app.u.handleButtons($target);
 				$modal.dialog('open');
 				},
@@ -441,7 +446,7 @@ $D is returned.
 
 					_app.u.handleCommonPlugins($D);
 					_app.u.handleButtons($D);
-					$D.anydelegate({'trackEdits' : (vars.mode == 'update' ? true : false)}).dialog('open');
+					$D.anyform({'trackEdits' : (vars.mode == 'update' ? true : false)}).dialog('open');
 					return $D;
 					}
 				else	{
@@ -604,7 +609,7 @@ $D is returned.
 					'templateID':'giftcardCreateTemplate',
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
-				_app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anyform());
 				$D.dialog('open');
 				$( ".applyDatepicker",$D).datepicker({
 					changeMonth: true,
@@ -685,7 +690,8 @@ $D is returned.
 								}
 							var $saveButton = $("button[data-app-role='saveButton']:first",$D)
 							$saveButton.attr('data-app-click',$saveButton.attr('data-app-click')+",admin_customer|refreshCustomerPanel").data('panel','tickets');
-							$D.anydelegate();
+							$D.anyform();
+							_app.u.addEventDelegation($D);
 							_app.u.handleButtons($D);
 							$D.dialog('open');
 							//crmAdminTicketCreateShow
@@ -1113,7 +1119,7 @@ $D is returned.
 					$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					}
 				
-				$D.anydelegate();
+				$D.anyform();
 				_app.u.handleButtons($D);
 				$D.dialog('open');
 
@@ -1772,7 +1778,7 @@ _app.model.dispatchThis('immutable');
 							}
 						}
 					});
-				_app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anyform());
 				$D.dialog('open');
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				_app.model.dispatchThis();

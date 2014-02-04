@@ -146,7 +146,7 @@ var myRIA = function() {
 //	window.sessionStorage.clear();
 //	}
 
-$(document.body).anydelegate(); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
+_app.u.addEventDelegation($(document.body)); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
 
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
@@ -1089,7 +1089,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 					// SANITY -> do not run a destroyCartMessenger on dialog close.  It will kill the polling.
 					app.u.handleButtons($ui);
 					app.u.handleCommonPlugins($ui);
-					$ui.anydelegate();
+					_app.u.addEventDelegation($ui);
 					}
 				$ui.dialog('open');
 				return $ui;

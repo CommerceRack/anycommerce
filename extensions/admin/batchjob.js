@@ -170,7 +170,7 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 							'datapointer' : 'adminBatchJobList'},
 							}
 						});
-				_app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				},
 

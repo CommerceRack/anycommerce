@@ -470,8 +470,8 @@ setTimeout(function(){
 
 //handles the buttons in the media lib header, such as add folder, delete selected, etc.
 					_app.ext.admin_medialib.u.handleMediaLibButtons($target);
-					$("#mediaLibInfiniteScroller").anydelegate(); //media list of files (within each folder or search results)
-					$("#mediaLibraryFocusMediaDetails").anydelegate(); //currently selected file.
+					_app.u.addEventDelegation($("#mediaLibInfiniteScroller")); //media list of files (within each folder or search results)
+					_app.u.addEventDelegation($("#mediaLibraryFocusMediaDetails")); //currently selected file.
 					
 					_app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');
 
@@ -709,8 +709,8 @@ setTimeout(function(){
 				$target.anycontent({
 					'templateID' : 'pageFileImportTemplate',
 					'showLoading' : false
-					}).anydelegate();
-					
+					}).anyform();
+				_app.u.addEventDelegation($target);
 				$("[data-app-role='fileImportMenu']",$target).menu();
 
 				vars = vars || {};

@@ -73,8 +73,8 @@ var admin_navcats = function(_app) {
 					'templateID' : 'catTreeNavcatItemTemplate',
 					'path' : path
 					}))
-				
-				$target.anydelegate();
+				_app.u.addEventDelegation($target);
+				$target.anyform();
 				}
 
 			}, //Actions
