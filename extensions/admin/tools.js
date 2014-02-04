@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var admin_tools = function() {
+var admin_tools = function(_app) {
 	var theseTemplates = new Array('productPowerToolTemplate');
 	var r = {
 
@@ -31,7 +31,7 @@ var admin_tools = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -40,7 +40,7 @@ var admin_tools = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -56,14 +56,14 @@ var admin_tools = function() {
 				$target.empty().anycontent({'templateID':'productPowerToolTemplate','showLoading':false,data:{}}); //empty data passed to ensure translate occurs (for includes et all)
 				$('.toolTip',$target).tooltip();
 				var $picker = $("[data-app-role='pickerContainer']:first",$target);
-				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+				$picker.append(_app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
 				$('.applyDatepicker',$picker).datepicker({
 					changeMonth: true,
 					changeYear: true,
 					maxDate : 0,
 					dateFormat : 'yymmdd'
 					});
-				app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
+				_app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
 //				$("input",$picker).each(function(){});
 				},
 			
@@ -74,10 +74,10 @@ var admin_tools = function() {
 					}
 				else	{
 					$SD = $("<div \/>").attr('title','Site Debug Tools').anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
-					app.u.handleButtons($SD);
-					app.u.handleCommonPlugins($SD);
+					_app.u.handleButtons($SD);
+					_app.u.handleCommonPlugins($SD);
 					$SD.anydelegate();
-					app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
+					_app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
 					}
 				},
 			
@@ -98,47 +98,47 @@ var admin_tools = function() {
 					stop : function(event,ui)	{
 						//if the item ends up in the enabled list, change from left/right arrows to up/down. also tag row to denote it's new (for save later).
 						if($(ui.item).closest('tbody').hasClass('connectMe'))	{
-							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')});
-							app.u.handleButtons($(ui.item));
+							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':_app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')});
+							_app.u.handleButtons($(ui.item));
 							}
 						}
 					});
 
-				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
-				app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor. ### TODO -> don't call these till necessary
-				app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
+				_app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor. ### TODO -> don't call these till necessary
+				_app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
 					$master.hideLoading();
-					$('tr',$enabled).each(function(){$(this).attr('data-guid',app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
-					if(app.model.responseHasErrors(rd)){
+					$('tr',$enabled).each(function(){$(this).attr('data-guid',_app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
+					if(_app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
 					else	{
 						$master.anycontent({'datapointer':rd.datapointer});
-						app.u.handleButtons($master);
+						_app.u.handleButtons($master);
 						}
 					},'datapointer':'appResource|product_attribs_popular.json'}},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //showManageFlexedit
 			
 			showProductExport : function($target)	{
 				$target.empty().anycontent({'templateID':'productExportToolTemplate','showLoading':false});
-				app.u.handleCommonPlugins($target);  //run before picker added to dom so that picker isn't affected by anycb.
+				_app.u.handleCommonPlugins($target);  //run before picker added to dom so that picker isn't affected by anycb.
 
 				var $picker = $("[data-app-role='pickerContainer']:first",$target);
-				$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+				$picker.append(_app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
 				
 				
 				$('.toolTip',$target).tooltip();
-				app.u.handleAppEvents($target);
+				_app.u.handleAppEvents($target);
 				},
 
 			showAccountUtilities : function($target)	{
 				$target.empty().anycontent({'templateID':'accountUtilitiesTemplate','showLoading':false,'datapointer':'info'});
 //need to apply datepicker to date inputs.
 				$('button',$target).button();
-				app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anydelegate());
 
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogList',
 					'_tag' : {
 						'callback':'anycontent',
@@ -146,11 +146,11 @@ var admin_tools = function() {
 						'jqObj' : $("[data-app-role='accountUtilityLogContainer']:first",$target)
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 			
 			showPrivateFiles : function($target)	{
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Private Files',
 					'className' : 'privatefiles', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Created','Filename','Type','Expiration','Creator',''],
@@ -165,12 +165,12 @@ var admin_tools = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
 				},
 			
 			showciEngineAgentManager : function($target)	{
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Agent Manager',
 					'className' : 'agentsManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'buttons' : [
@@ -186,8 +186,8 @@ var admin_tools = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
 				}
 			
 			}, //Actions
@@ -200,7 +200,7 @@ var admin_tools = function() {
 		renderFormats : {
 
 			objExplore : function($tag,data)	{
-				$tag.append(app.ext.admin_tools.u.objExplore(objExplore));
+				$tag.append(_app.ext.admin_tools.u.objExplore(objExplore));
 				}
 
 
@@ -212,7 +212,7 @@ var admin_tools = function() {
 		u : {
 
 			objExplore : function(obj)	{
-// 				app.u.dump("BEGIN analyzer.u.objExplore");
+// 				_app.u.dump("BEGIN analyzer.u.objExplore");
 				var keys = new Array();
 				for (var n in obj) {
 					keys.push(n);
@@ -227,7 +227,7 @@ var admin_tools = function() {
 					$('<span>').addClass('prompt').text(keys[i]).appendTo($li);
 					
 					if(typeof obj[keys[i]] == 'object')	{
-						$value = app.ext.admin_tools.u.objExplore(obj[keys[i]]);
+						$value = _app.ext.admin_tools.u.objExplore(obj[keys[i]]);
 						}
 					else	{
 						$value = $('<span>').addClass('value').text(obj[keys[i]]);
@@ -240,16 +240,16 @@ var admin_tools = function() {
 				},
 			
 			pickerSelection2KVP : function($context)	{
-//				app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
+//				_app.u.dump("BEGIN admin_tools.u.pickerSelection2KVP");
 				var r = ""; //what is returned. line separated w/ each line as  'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
-//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+//				_app.u.dump(" -> sfo: "); _app.u.dump(sfo);
 				if(Number(sfo.SELECTALL) === 1)	{
 					r = 'all'
 					}
 				else	{
 					function handleIt(type)	{
-//						app.u.dump(" -> handle it for "+type);
+//						_app.u.dump(" -> handle it for "+type);
 						if(Number(sfo[index]) === 1)	{
 							r += index.replace('+','=')+"\n"; // input name is navcat+.something, so simply changing + to = makes it macroesque-ready.
 							}
@@ -274,21 +274,21 @@ var admin_tools = function() {
 
 					if(sfo.csv)	{
 						r += "csv="+sfo.csv.replace(/[\s\t\r\n]+/g,",")+"\n"; //strip out all whitespace of any kind and replace with a comma. adjacent whitespace will only get 1 comma
-//						app.u.dump(" -> r: "); app.u.dump(r);
+//						_app.u.dump(" -> r: "); _app.u.dump(r);
 						}
 					}
-//				app.u.dump(" -> r: "+r);
+//				_app.u.dump(" -> r: "+r);
 				return r;
 				},
 
 //will return an array of macro-esque values
 //context could be the fieldset or the parent form.
 			pickerSelection2Array : function($context)	{
-				app.u.dump("BEGIN admin_tools.u.pickerSelection2Array");
+				_app.u.dump("BEGIN admin_tools.u.pickerSelection2Array");
 				var r = new Array(); //what is returned. array w/ each entry formatted as: 'navcat=.safe.name' or 'vendor=XYZ'
 				var sfo = $context.serializeJSON({'cb':true});
 				
-//				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+//				_app.u.dump(" -> sfo: "); _app.u.dump(sfo);
 				function handleIt(type)	{
 					if(Number(sfo[index]) === 1)	{
 						r.push(index.replace('+','=')); // input name is navcat+.something, so simply changing + to = makes it macroesque-ready.
@@ -303,7 +303,7 @@ var admin_tools = function() {
 					for(index in sfo)	{
 						if(index.indexOf('navcat') === 0)	{handleIt('navcat');}
 						else if(index.indexOf('supplier') === 0)	{handleIt('supplier');}
-						else if(index.indexOf('managecat') === 0)	{app.u.dump(" -> managecat");handleIt('managecat');}
+						else if(index.indexOf('managecat') === 0)	{_app.u.dump(" -> managecat");handleIt('managecat');}
 						else if(index.indexOf('launchprofile') === 0)	{handleIt('mancat');}
 						else	{} //do nada. isn't a checkbox list.
 						}
@@ -340,7 +340,7 @@ var admin_tools = function() {
 						data['when-attrib-contains'] = data.whenAttribContains;
 						}
 					
-					r += verb+"?"+$.param(app.u.getWhitelistedObject(data,['attrib','when','when-attrib','when-attrib-operator','when-attrib-contains'])); //verb not passed because it is macro
+					r += verb+"?"+$.param(_app.u.getWhitelistedObject(data,['attrib','when','when-attrib','when-attrib-operator','when-attrib-contains'])); //verb not passed because it is macro
 					switch(verb)
 						{
 						case 'replace':
@@ -375,18 +375,18 @@ var admin_tools = function() {
 			rawJSONRequestExec : function($ele,P)	{
 				P.preventDefault();
 				var JSONString = $ele.closest('form').find("[name='JSON']").val();
-				app.u.dump(" -> myJSON: "+JSONString);
+				_app.u.dump(" -> myJSON: "+JSONString);
 				var validJSON = false;
 				try	{
-//						app.u.dump(" -> attempting to validate json");
-					app.u.dump(" -> JSON.parse(JSONString): "+JSON.parse(JSONString));
+//						_app.u.dump(" -> attempting to validate json");
+					_app.u.dump(" -> JSON.parse(JSONString): "+JSON.parse(JSONString));
 				//Run some code here
 					validJSON = JSON.parse(JSONString);
 					}
 				catch(err) {
 				//Handle errors here
 					}
-//					app.u.dump(" -> jsonParse(myJSON): "); app.u.dump(validJSON);
+//					_app.u.dump(" -> jsonParse(myJSON): "); _app.u.dump(validJSON);
 				if(typeof validJSON === 'object')	{
 					// ### TODO -> this should set a callback of showMessaging and pass a message of 'success' and put it into the parent form but ONLY if no callback is set. got interupted.
 					validJSON._tag = validJSON._tag || {};
@@ -397,8 +397,8 @@ var admin_tools = function() {
 						validJSON._tag.jqObj = $ele.closest('form');
 						}
 
-					if(app.model.addDispatchToQ(validJSON,'mutable'))	{
-						app.model.dispatchThis('mutable');
+					if(_app.model.addDispatchToQ(validJSON,'mutable'))	{
+						_app.model.dispatchThis('mutable');
 						}
 					else	{
 						$ele.closest('form').anymessage({"message":"The query could not be dispatched. Be sure you have a _cmd set in your query."})
@@ -412,7 +412,7 @@ var admin_tools = function() {
 
 			inspectorExec : function($ele,P)	{
 				P.preventDefault();
-				if(app.u.validateForm($ele.closest('form')))	{
+				if(_app.u.validateForm($ele.closest('form')))	{
 					var
 						cmdObj = $ele.closest('form').serializeJSON({'cb':true}),
 						valid = true;
@@ -432,7 +432,7 @@ var admin_tools = function() {
 					else if($ele.data('inspect') == 'shipmethods')	{
 						cmdObj._cmd = "adminConfigDetail";
 						cmdObj.shipmethods = true;
-						cmdObj._tag.datapointer = "adminConfigDetail|shipmethods|"+app.vars.partition;
+						cmdObj._tag.datapointer = "adminConfigDetail|shipmethods|"+_app.vars.partition;
 						}
 					else if($ele.data('inspect') == 'cart' && cmdObj.cartid)	{
 						cmdObj._cmd = "cartDetail";
@@ -445,31 +445,31 @@ var admin_tools = function() {
 					
 					
 					if(valid)	{
-						var $D = app.ext.admin.i.dialogCreate({
+						var $D = _app.ext.admin.i.dialogCreate({
 							'title':'Inspector'
 							})
 						$D.dialog('open');
 						cmdObj._tag.callback = function(rd)	{
 							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd});
 								}
 							else	{
 								//sanitize a little...
-								delete app.data[rd.datapointer]._rcmd;
-								delete app.data[rd.datapointer]._msgs;
-								delete app.data[rd.datapointer]._msg_1_id;
-								delete app.data[rd.datapointer]._msg_1_txt;
-								delete app.data[rd.datapointer]._msg_1_type;
-								delete app.data[rd.datapointer]._rtag;
-								delete app.data[rd.datapointer]._uuid;
-								delete app.data[rd.datapointer].ts
+								delete _app.data[rd.datapointer]._rcmd;
+								delete _app.data[rd.datapointer]._msgs;
+								delete _app.data[rd.datapointer]._msg_1_id;
+								delete _app.data[rd.datapointer]._msg_1_txt;
+								delete _app.data[rd.datapointer]._msg_1_type;
+								delete _app.data[rd.datapointer]._rtag;
+								delete _app.data[rd.datapointer]._uuid;
+								delete _app.data[rd.datapointer].ts
 								
-								$D.append(app.ext.admin_tools.u.objExplore(app.data[rd.datapointer]));
+								$D.append(_app.ext.admin_tools.u.objExplore(_app.data[rd.datapointer]));
 								}
 							}
-						app.model.addDispatchToQ(cmdObj,'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.addDispatchToQ(cmdObj,'mutable');
+						_app.model.dispatchThis('mutable');
 						}
 					else	{} //error messaging already handled.
 					
@@ -482,22 +482,22 @@ var admin_tools = function() {
 				$btn.button();
 				$btn.off('click.powerToolAttribChange').on('click.powerToolAttribChange',function(event){
 					event.preventDefault();
-//					app.u.dump("BEGIN powerToolBatchJobExec click event.");
+//					_app.u.dump("BEGIN powerToolBatchJobExec click event.");
 					var	$form = $btn.closest('form');
 					
-					if(app.ext.admin.u.validatePicker($form))	{
+					if(_app.ext.admin.u.validatePicker($form))	{
 						if($('#powerToolActionListTbody tr').not('.rowTaggedForRemove').length)	{
 							obj = {
 								'%vars' : {
-									'GUID' : app.u.guidGenerator(),
-									'product_selectors' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
-									'actions' : app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
+									'GUID' : _app.u.guidGenerator(),
+									'product_selectors' : _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
+									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
 									},
 								'type' : 'UTILITY/PRODUCT_POWERTOOL'
 								}
 //						console.clear();
-//						app.u.dump(" -> actions: "+obj['%vars'].actions);
-//						app.u.dump(" -> obj: "); app.u.dump(obj); 
+//						_app.u.dump(" -> actions: "+obj['%vars'].actions);
+//						_app.u.dump(" -> obj: "); _app.u.dump(obj); 
 							var batchOptions = {};
 							if($("[name='jobtitle']",$form).val())	{
 								batchOptions = {
@@ -508,7 +508,7 @@ var admin_tools = function() {
 									}
 								}
 
-							app.ext.admin_batchjob.a.adminBatchJobCreate(obj,batchOptions);
+							_app.ext.admin_batchjob.a.adminBatchJobCreate(obj,batchOptions);
 							}
 						else	{
 							$form.anymessage({'message':'Please specify at least one attribute/action in step 2.'})
@@ -560,14 +560,14 @@ var admin_tools = function() {
 				$btn.button();
 				$btn.off('click.productExportBatchJobCreateExec').on('click.productExportBatchJobCreateExec',function(){
 					var $form = $btn.closest('form');
-					if(app.ext.admin.u.validatePicker($form))	{
+					if(_app.ext.admin.u.validatePicker($form))	{
 						var sfo = $("[data-app-role='exportConfiguration']",$form).serializeJSON();
-						sfo.product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
+						sfo.product_selectors = _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
 						if(sfo.attributes == 'specify' && !sfo.fields)	{
 							$form.anymessage({"message":"For attributes, you selected 'specify', which requires at least one attribute in the attribute list textarea."});
 							}
 						else	{
-							app.ext.admin_batchjob.a.adminBatchJobCreate({'%vars':sfo,'guid':app.u.guidGenerator(),'type':'EXPORT/PRODUCTS'});
+							_app.ext.admin_batchjob.a.adminBatchJobCreate({'%vars':sfo,'guid':_app.u.guidGenerator(),'type':'EXPORT/PRODUCTS'});
 							}
 						}
 					else	{
@@ -596,7 +596,7 @@ var admin_tools = function() {
 					var
 						data = $btn.closest('tr').data()
 
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+					var $panel = _app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'CIE_DSA_AddUpdateTemplate',
 						'panelID' : 'agent_'+data.agentid,
 						'showLoading' : false,
@@ -610,17 +610,17 @@ var admin_tools = function() {
 						.find("[name='AGENTID']")
 						.closest('label').hide(); //agent id is not editable, once set.
 					
-					app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentDetail','_tag':{'callback':'anycontent','jqObj':$panel,'datapointer':'adminCIEngineAgentDetail|'+data.agentid}},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentDetail','_tag':{'callback':'anycontent','jqObj':$panel,'datapointer':'adminCIEngineAgentDetail|'+data.agentid}},'mutable');
+					_app.model.dispatchThis('mutable');
 					});
 				}, //agentDetailDMIPanel
 
 			agentCreateShow : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title':'Add New Agent',
 					'templateID':'CIE_DSA_AddUpdateTemplate',
-					'data' : {'GUID':app.u.guidGenerator()},
+					'data' : {'GUID':_app.u.guidGenerator()},
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
 				$D.dialog('open');
@@ -634,31 +634,31 @@ var admin_tools = function() {
 				$tbody.empty()
 				$tbody.parent().showLoading({'message':'Fetching full attribute list'});
 
-				app.ext.admin.calls.appResource.init('product_attribs_all.json',{
+				_app.ext.admin.calls.appResource.init('product_attribs_all.json',{
 					'callback' : function(rd){
 						$tbody.parent().hideLoading();
 						
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
 							$tbody.anycontent({'datapointer':rd.datapointer});
 							$('tr',$tbody).each(function(){
-								$(this).attr('data-guid',app.u.guidGenerator());
+								$(this).attr('data-guid',_app.u.guidGenerator());
 								//this list is too big for running the handleButton script. 
 								}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
 							}
 						},
 					'datapointer':'appResource|product_attribs_all.json'
 					},'mutable'); //total sales
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 
 			flexeditAttributeAdd2EnabledList : function($ele,P)	{
 				var $tr = $ele.closest('tr');
 				$ele.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr);
 				$tr.attr('data-id',$tr.attr('data-obj_index'));
-				app.u.handleButtons($tr);
+				_app.u.handleButtons($tr);
 				},
 
 			flexDataTableAddEditCancel : function($ele,P)	{
@@ -678,7 +678,7 @@ var admin_tools = function() {
 				$inputContainer.slideDown();
 
 				if($ele.data('mode') == 'update')	{
-					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
+					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),_app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
 					$("[name='type']",$inputContainer).trigger('change'); //will conditionally show 'options' input if necessary.
 					}
 				else if($ele.data('mode') == 'create')	{
@@ -699,10 +699,10 @@ var admin_tools = function() {
 						}
 					else	{
 						keys.push($(this).data('id'));
-						json.push(app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
 						}
 					})
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigMacro',
 					'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
 					'_tag':	{
@@ -713,13 +713,13 @@ var admin_tools = function() {
 						'message':'Your changes have been saved'
 						}
 					},'immutable');
-				app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+				_app.model.dispatchThis('immutable');
 				},
 			
 			adminPrivateFileDownloadExec : function($ele,P)	{
 				P.preventDefault();
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminPrivateFileDownload',
 					'GUID':$ele.closest('tr').data('guid'),
 					'_tag':	{
@@ -728,12 +728,12 @@ var admin_tools = function() {
 						'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //adminPrivateFileDownloadExec
 			
 			adminPlatformLogDownloadExec : function($ele,P)	{
 				P.preventDefault();
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogDownload',
 					'GUID':$btn.closest('tr').data('guid'),
 					'_tag':	{
@@ -742,7 +742,7 @@ var admin_tools = function() {
 						'skipDecode' : true //contents are not base64 encoded (feature not supported on this call)
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //adminPlatformLogDownloadExec
 
 			adminPrivateFileRemoveConfirm : function($ele,P)	{
@@ -750,19 +750,19 @@ var admin_tools = function() {
 				var $rows = $ele.closest('.dualModeContainer').find("[data-app-role='dualModeListTbody'] tr.rowTaggedForRemove");
 				if($rows.length)	{
 
-					var $D = app.ext.admin.i.dialogConfirmRemove({
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
 						'message':'Are you sure you want to remove '+$rows.length+' file(s)? There is no undo for this action.',
 						'removeButtonText' : 'Remove',
 						'removeFunction':function(rd){
 							$D.parent().showLoading({"message":"Deleting "+$rows.length+" file(s)"});
 							$rows.each(function(){
-								app.model.addDispatchToQ({
+								_app.model.addDispatchToQ({
 									'_cmd':'adminPrivateFileRemove',
 									'GUID':$(this).data('guid'),
 									'_tag':	{
 										'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
 										'callback' : function(rd){
-											if(app.model.responseHasErrors(rd)){
+											if(_app.model.responseHasErrors(rd)){
 												$D.anymessage({'message':rd});
 												}
 											else	{
@@ -774,7 +774,7 @@ var admin_tools = function() {
 									$(this).empty().remove(); //at the end so the dispatch can use data off of <tr>.							
 								});
 
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'_cmd':'ping',
 								'_tag':	{
 									'datapointer' : 'adminPrivateFileRemove', //big dataset returned. only keep on in memory.
@@ -782,7 +782,7 @@ var admin_tools = function() {
 										$D.parent().hideLoading();
 										$D.empty();
 										$D.dialog({ buttons: [ { text: "Close", click: function() { $( this ).dialog( "close" ); } } ] });
-										if(app.model.responseHasErrors(rd)){
+										if(_app.model.responseHasErrors(rd)){
 											$D.anymessage({'message':rd});
 											}
 										else	{
@@ -793,7 +793,7 @@ var admin_tools = function() {
 									}
 								},'immutable');	
 	
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							
 							}
 						});	
@@ -814,26 +814,26 @@ var admin_tools = function() {
 						data = $tr.data(),
 						$D;
 
-					$D = app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(){
+					$D = _app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(){
 						$D.showLoading({"message":"Deleting Agent"});
-						app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentRemove','_tag':{'callback':function(rd){
+						_app.model.addDispatchToQ({'AGENTID':data.agentid,'_cmd':'adminCIEngineAgentRemove','_tag':{'callback':function(rd){
 							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
 								$D.dialog('close');
-								$('#globalMessaging').anymessage(app.u.successMsgObject('Agent '+data.agentid+' has been removed.'));
+								$('#globalMessaging').anymessage(_app.u.successMsgObject('Agent '+data.agentid+' has been removed.'));
 								$tr.empty().remove(); //removes row from list. no need to refetch entire list.
 								
-								var $panel = $(app.u.jqSelector('#','agent_'+data.agentid));
+								var $panel = $(_app.u.jqSelector('#','agent_'+data.agentid));
 								
 								if($panel.length)	{
 									$panel.anypanel('destroy');
 									}
 								}
 							}}},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}});
 					})
 				}, //agentRemoveConfirm
@@ -843,14 +843,14 @@ var admin_tools = function() {
 				cmdObj._tag = {
 					'datapointer' : cmdObj.siteDebug
 					};
-				app.u.dump(cmdObj);
-				app.model.addDispatchToQ(cmdObj,'mutable');
-				app.model.dispatchThis('mutable');
+				_app.u.dump(cmdObj);
+				_app.model.addDispatchToQ(cmdObj,'mutable');
+				_app.model.dispatchThis('mutable');
 				},
 
 			//for forcing a product into the product task list
 			forcePIDIntoPTL : function($ele,p)	{
-				app.ext.admin_prodedit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
+				_app.ext.admin_prodedit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
 				}
 				
 			} //e [app Events]

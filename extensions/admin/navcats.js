@@ -24,7 +24,7 @@ also, add a button for 'show all the checked categories'.
 
 */
 
-var admin_navcats = function() {
+var admin_navcats = function(_app) {
 	var theseTemplates = new Array('catTreeItemTemplate');
 	var r = {
 
@@ -38,7 +38,7 @@ var admin_navcats = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/navcats.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/navcats.html',theseTemplates);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -47,7 +47,7 @@ var admin_navcats = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -63,13 +63,13 @@ var admin_navcats = function() {
 			showCategoriesAndLists : function($target)	{
 				var path = '.'; //eventually, this could be something other than ., like the root path of the domain in focus.
 				$target.empty().anycontent({'templateID':'categoriesAndListsTemplate','showLoading':false});
-				app.u.handleButtons($target); //run early before content populated cuz getTree code will execute per list item. this is for the more global buttons (add, refresh, etc).
-				$("[data-app-role='navcatsContainer']:first",$target).append(app.ext.admin_navcats.u.getTree('navcats',{
+				_app.u.handleButtons($target); //run early before content populated cuz getTree code will execute per list item. this is for the more global buttons (add, refresh, etc).
+				$("[data-app-role='navcatsContainer']:first",$target).append(_app.ext.admin_navcats.u.getTree('navcats',{
 					'templateID' : 'catTreeNavcatItemTemplate',
 					'path' : path
 					}))
 
-				$("[data-app-role='listsContainer']:first",$target).append(app.ext.admin_navcats.u.getTree('lists',{
+				$("[data-app-role='listsContainer']:first",$target).append(_app.ext.admin_navcats.u.getTree('lists',{
 					'templateID' : 'catTreeNavcatItemTemplate',
 					'path' : path
 					}))
@@ -100,78 +100,78 @@ var admin_navcats = function() {
 //vars MUST contain templateID.
 //vars.fetchonly allows for getTree to 'get' all the data, but not display it right away. used when tree initially loads.
 			getSubcats : function(subcats,$container,vars)	{
-//				app.u.dump("BEGIN admin_navcats.u.getSubcats. $container.length: "+$container.length);
-//				app.u.dump(" -> subcats:"); app.u.dump(subcats);
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				_app.u.dump("BEGIN admin_navcats.u.getSubcats. $container.length: "+$container.length);
+//				_app.u.dump(" -> subcats:"); _app.u.dump(subcats);
+//				_app.u.dump(" -> vars: "); _app.u.dump(vars);
 
 				var r = 0; //what is returned. will be # of dispatches added to Q.
 				vars = vars || {};
 				if(subcats && (($container instanceof jQuery  && vars.templateID) || vars.fetchOnly)) {
-//app.u.dump(" => typeof dpsGet: "+typeof app.model.dpsGet('navcat','tree4prt'+app.vars.partition)); app.u.dump(app.model.dpsGet('navcat','tree4prt'+app.vars.partition));
+//_app.u.dump(" => typeof dpsGet: "+typeof _app.model.dpsGet('navcat','tree4prt'+_app.vars.partition)); _app.u.dump(_app.model.dpsGet('navcat','tree4prt'+_app.vars.partition));
 					var
 						L = subcats.length,
-						navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || [], //list of 'open' categories from localStorage.
+						navcatObj = _app.model.dpsGet('navcat','tree4prt'+_app.vars.partition) || [], //list of 'open' categories from localStorage.
 						NOL = navcatObj.length;
 						
 
-//					app.u.dump(' -> navcatObj: '); app.u.dump(navcatObj);
+//					_app.u.dump(' -> navcatObj: '); _app.u.dump(navcatObj);
 //go through list of subcats and get detail for each.
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
+//						_app.u.dump(" -> subcats[i]: "+subcats[i]+" and fetchonly: "+vars.fetchOnly);
 						var
-							$cat = vars.fetchOnly ? '' : app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
-							datapointer = 'adminNavcatDetail|'+app.vars.partition+'|'+subcats[i]
+							$cat = vars.fetchOnly ? '' : _app.renderFunctions.createTemplateInstance(vars.templateID,{"catsafeid":subcats[i]}),
+							datapointer = 'adminNavcatDetail|'+_app.vars.partition+'|'+subcats[i]
 						
 						if(vars.fetchOnly)	{}
 						else	{
 							$container.append($cat);
 							var paths = $container.closest("[data-app-role='categoryTree']").data('paths') || []; //set from getTree. The list of 'paths' to be checked (such as a list of categories a product is in)
-//							app.u.dump(" -> safeID's has a length"); app.u.dump(paths);
+//							_app.u.dump(" -> safeID's has a length"); _app.u.dump(paths);
 							}
 
 						var _tag = {
 							'path' : subcats[i],
 							'callback': vars.fetchOnly ? false : function(rd){
 								$('.wait',$container).hide();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									app.callbacks.anycontent.onSuccess(rd); //translate the tree.
+									_app.callbacks.anycontent.onSuccess(rd); //translate the tree.
 //if the category is 'open' in DPS, trigger the click to show the subcats (which will already have been loaded in memory by now)
 									if($.inArray(rd.path,navcatObj) >= 0)	{
 										$("[data-catsafeid='"+rd.path+"']",$container).find("[data-app-click='admin_navcats|navcatSubsShow']").first().trigger('click',{'skipDPSset':vars.skipDPSset});
 										}
 //if the category is present in the paths array, that means it should be 'checked'.
 									if($.inArray(rd.path,paths) >= 0)	{
-//										app.u.dump("Match! "+rd.path);	app.u.dump(" -> cb.length: "+$(":checkbox[name='"+rd.path+"']",$container).length);
+//										_app.u.dump("Match! "+rd.path);	_app.u.dump(" -> cb.length: "+$(":checkbox[name='"+rd.path+"']",$container).length);
 										$(":checkbox[name='"+rd.path+"']",$container).prop('checked','checked'); //don't use $cat for context, it isn't set if loading from api (vs local storage)
 										}
-									app.u.handleButtons($cat);
+									_app.u.handleButtons($cat);
 									}
 								},
 							'datapointer':datapointer,
 							'jqObj':vars.fetchOnly ? '' : $cat}
 						
-//						app.u.dump(" -> typeof callback: "+typeof _tag.callback);
+//						_app.u.dump(" -> typeof callback: "+typeof _tag.callback);
 					//hhhmmm....  if this is going to be used a lot, we may want to do a 'call' for it to reduce if/else
-						if(app.model.fetchData(datapointer))	{
-							app.u.handleCallback(_tag);
+						if(_app.model.fetchData(datapointer))	{
+							_app.u.handleCallback(_tag);
 							}
 						else	{
 							r++;
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'path':subcats[i],
 								'detail':'more',
-								'navtree' : 'PRT00'+app.vars.partition,
+								'navtree' : 'PRT00'+_app.vars.partition,
 								'_cmd': 'adminNavcatDetail',
 								'_tag' : _tag
 								},'mutable');
 							}
 							
-//						app.calls.appNavcatDetail.init({'path':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
+//						_app.calls.appNavcatDetail.init({'path':subcats[i],'detail':'more'},{'callback':'anycontent','jqObj':$cat},'mutable');
 						}
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 						$('#globalMessaging').anymessage({'message':"In admin_navcats.u.getSubcats, either subcats ["+typeof subcats+"], $container ["+($container instanceof jQuery)+"] or vars.templateID ["+vars.templateID+"] was not set and all three are required. (fetchonly: "+vars.fetchOnly+")",'gMessage':true});
@@ -190,8 +190,8 @@ Params:
 	
 */
 			getTree : function(mode,vars){
-//				app.u.dump("BEGIN admin_navcats.u.getTree");
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				_app.u.dump("BEGIN admin_navcats.u.getTree");
+//				_app.u.dump(" -> vars: "); _app.u.dump(vars);
 				var $tree = $("<div \/>").attr('data-app-role','categoryTree').data(vars).data('mode',mode);
 				vars = vars || {};
 
@@ -205,57 +205,57 @@ Params:
 						$ul.appendTo($tree);
 						
 						if(mode == 'lists')	{
-							app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{'callback':function(rd){
+							_app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{'callback':function(rd){
 								$tree.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									if(app.data[rd.datapointer] && app.data[rd.datapointer]['@paths'] && app.data[rd.datapointer]['@paths'].length)	{
-										var L = app.data[rd.datapointer]['@paths'].length
+									if(_app.data[rd.datapointer] && _app.data[rd.datapointer]['@paths'] && _app.data[rd.datapointer]['@paths'].length)	{
+										var L = _app.data[rd.datapointer]['@paths'].length
 										for(var i = 0; i < L; i+= 1)	{
-											$ul.anycontent({'templateID':vars.templateID, 'dataAttribs' : {'catsafeid':app.data[rd.datapointer]['@paths'][i]},'data' : {'pretty':app.data[rd.datapointer]['@paths'][i],'catsafeid':app.data[rd.datapointer]['@paths'][i]}})
+											$ul.anycontent({'templateID':vars.templateID, 'dataAttribs' : {'catsafeid':_app.data[rd.datapointer]['@paths'][i]},'data' : {'pretty':_app.data[rd.datapointer]['@paths'][i],'catsafeid':_app.data[rd.datapointer]['@paths'][i]}})
 											}
-										app.u.handleButtons($ul);
+										_app.u.handleButtons($ul);
 										}
 									else	{} //no lists
 									}
 								}},'mutable');
-							app.model.dispatchThis('mutable');
+							_app.model.dispatchThis('mutable');
 							}
 						else	{
 						
-							var navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || {};
-	//						app.u.dump(' -> navcatObj (list of cats that should be "open": '); app.u.dump(navcatObj);
+							var navcatObj = _app.model.dpsGet('navcat','tree4prt'+_app.vars.partition) || {};
+	//						_app.u.dump(' -> navcatObj (list of cats that should be "open": '); _app.u.dump(navcatObj);
 	
-							app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
+							_app.ext.admin_navcats.u.getSubcats(navcatObj,"",{fetchOnly:true}); //get all the 'open' category data handy.
 							//all required params are present/set. proceed.
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'detail':'more',
 								'_cmd': 'adminNavcatDetail',
 								'path' : vars.path,
-								'navtree' : 'PRT00'+app.vars.partition,
+								'navtree' : 'PRT00'+_app.vars.partition,
 								'_tag' : {
 									'callback':function(rd){
 										$tree.hideLoading();
-										if(app.model.responseHasErrors(rd)){
+										if(_app.model.responseHasErrors(rd)){
 											$tree.anymessage({'message':rd});
 											}
 										else	{
-											if(app.data[rd.datapointer]._msg_1_type == 'warning')	{
+											if(_app.data[rd.datapointer]._msg_1_type == 'warning')	{
 												$tree.anymessage({'message':rd});
 												}
-											app.ext.admin_navcats.u.getSubcats(["."],$ul,vars); //show the homepage.
-//											app.ext.admin_navcats.u.getSubcats(app.data[rd.datapointer]['@subcategories'],$("[data-app-role='categories']:first",$ul),vars);
+											_app.ext.admin_navcats.u.getSubcats(["."],$ul,vars); //show the homepage.
+//											_app.ext.admin_navcats.u.getSubcats(_app.data[rd.datapointer]['@subcategories'],$("[data-app-role='categories']:first",$ul),vars);
 	// SANITY-> if applyEditTrackingToInputs is desired, add it outside this to the parent container.
-	//										app.ext.admin.u.applyEditTrackingToInputs($tree); 
+	//										_app.ext.admin.u.applyEditTrackingToInputs($tree); 
 											}
 										},
-									'datapointer':'adminNavList|'+app.vars.partition+"|"+vars.path
+									'datapointer':'adminNavList|'+_app.vars.partition+"|"+vars.path
 									}
 								},'mutable');
 	
-							app.model.dispatchThis('mutable');
+							_app.model.dispatchThis('mutable');
 							}
 //SANITY	-> if event delegation occurs here, before $tree is added to the dom, the event delegation script can't look up the DOM to see if events have already been added. thus, dual-delegation could occur (bad).
 //			-> handle delegation by whatever calls getTree. Which is probably the right way to do it anyway since the delegation should occur at a high level. 
@@ -293,18 +293,18 @@ Params:
 				if(paths && paths.length)	{
 					var L = paths.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.model.destroy("adminNavcatDetail|"+app.vars.partition+"|"+paths[i]);
-						app.model.addDispatchToQ({
+						_app.model.destroy("adminNavcatDetail|"+_app.vars.partition+"|"+paths[i]);
+						_app.model.addDispatchToQ({
 							'path':paths[i],
 							'detail':'more',
-							'navtree' : 'PRT00'+app.vars.partition,
+							'navtree' : 'PRT00'+_app.vars.partition,
 							'_cmd': 'adminNavcatDetail',
 							'_tag' : {
-								'datapointer' : "adminNavcatDetail|"+app.vars.partition+"|"+paths[i]
+								'datapointer' : "adminNavcatDetail|"+_app.vars.partition+"|"+paths[i]
 								}
 							},'mutable');
 						}
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				},
 
@@ -313,28 +313,28 @@ Params:
 // a function for adding or removing a category from the list of what's open by default.
 // On the initial load, p.skipDPSset will be true. In this case, DPS modification does NOT occur because the click is triggered automatically, not by a user interaction.
 			handleNavcatDPS : function (cmd,path)	{
-				var navcatObj = app.model.dpsGet('navcat','tree4prt'+app.vars.partition) || new Array();
+				var navcatObj = _app.model.dpsGet('navcat','tree4prt'+_app.vars.partition) || new Array();
 				
 				var index = $.inArray(path,navcatObj);
-			//	app.u.dump(" -> cmd: "+cmd);
-			//	app.u.dump(" -> index: "+index);
+			//	_app.u.dump(" -> cmd: "+cmd);
+			//	_app.u.dump(" -> index: "+index);
 				if((cmd == 'remove' && index < 0) || (cmd == 'add' && index >= 0))	{
 					//do nothing. array already reflects cmd.
-			//		app.u.dump("NO ACTION NECESSARY FOR "+path);
+			//		_app.u.dump("NO ACTION NECESSARY FOR "+path);
 					} 
 				else if(cmd == 'remove')	{
-			//		app.u.dump("REMOVE "+path);
+			//		_app.u.dump("REMOVE "+path);
 					navcatObj.splice(index,1);
-					app.model.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					_app.model.dpsSet('navcat','tree4prt'+_app.vars.partition,navcatObj);
 					}
 				else if(cmd == 'add' && index < 0){
 					navcatObj.push(path);
-					app.model.dpsSet('navcat','tree4prt'+app.vars.partition,navcatObj);
+					_app.model.dpsSet('navcat','tree4prt'+_app.vars.partition,navcatObj);
 					}
 				else	{
-					app.u.dump("handleNavcatDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
+					_app.u.dump("handleNavcatDPS in navcatSubsShow had an invalid CMD passed or some unexpected condition was met.",'warn');
 					}
-			//	app.u.dump(" -> navcatObj: "); app.u.dump(navcatObj);
+			//	_app.u.dump(" -> navcatObj: "); _app.u.dump(navcatObj);
 				}
 
 
@@ -356,7 +356,7 @@ Params:
 			categoryProductFinderExec : function($ele,p)	{
 				var catSafeID = $ele.closest('li').data('catsafeid');
 				if(catSafeID)	{
-					app.ext.admin.a.showFinderInModal('NAVCAT',catSafeID);
+					_app.ext.admin.a.showFinderInModal('NAVCAT',catSafeID);
 					}
 				else	{
 					$ele.closest('li').anymessage({'message':'In admin_navcats.e.categoryProductFinderExec, unable to ascertain category safe id.'});
@@ -365,32 +365,32 @@ Params:
 
 			adminNavcatMacroDeleteShow : function($ele,p)	{
 				var catSafeID = $ele.closest('li').data('catsafeid');
-				app.ext.admin.i.dialogConfirmRemove({
+				_app.ext.admin.i.dialogConfirmRemove({
 					"message" : "Are you sure you wish to remove this category? There is no undo for this action.",
 					"removeButtonText" : "Remove Category", 
 					"title" : "Remove Category "+catSafeID, 
 					"removeFunction" : function(vars,$D){
 						$D.showLoading({"message":"Deleting category "+catSafeID});
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':'adminNavcatMacro',
 							'@updates' : ["DELETE?path="+catSafeID],
 							'_tag':	{
 								'datapointer' : 'adminNavcatMacro',
 								'callback':function(rd)	{
 									$D.hideLoading();
-									if(app.model.responseHasErrors(rd)){
+									if(_app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
 										}
 									else	{
 										$D.dialog('close');
 										$ele.closest('li').empty().remove();
-										app.ext.admin_navcats.u.handleNavcatDPS('remove',catSafeID);
-										app.ext.admin_navcats.u.destroyPathsModified(app.data[rd.datapointer]['@PATHS_MODIFIED']);
+										_app.ext.admin_navcats.u.handleNavcatDPS('remove',catSafeID);
+										_app.ext.admin_navcats.u.destroyPathsModified(_app.data[rd.datapointer]['@PATHS_MODIFIED']);
 										}
 									}
 								}
 							},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					})
 				
@@ -419,26 +419,26 @@ Params:
 							'_tag':	{
 								'datapointer' : 'adminNavcatMacro',
 								'callback':function(rd){
-if(app.model.responseHasErrors(rd)){
+if(_app.model.responseHasErrors(rd)){
 	$('#globalMessaging').anymessage({'message':rd});
 	}
 else	{
 	//clear everything out of memory and local storage that was just updated.
-	app.ext.admin_navcats.u.destroyPathsModified(app.data[rd.datapointer]['@PATHS_MODIFIED']);
+	_app.ext.admin_navcats.u.destroyPathsModified(_app.data[rd.datapointer]['@PATHS_MODIFIED']);
 	if(verb == 'RENAME')	{
 		$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
 		}
 	else if(verb == 'CREATE')	{
-		$ele.closest("[data-app-role='navcatsContainer']").empty().append(app.ext.admin_navcats.u.getTree('navcats',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
+		$ele.closest("[data-app-role='navcatsContainer']").empty().append(_app.ext.admin_navcats.u.getTree('navcats',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
 		}
 	else if(verb == 'LISTCREATE')	{
 		var $container = $ele.closest("[data-app-role='navcatsSection']");
-		$("[data-app-role='listsContainer']",$container).empty().append(app.ext.admin_navcats.u.getTree('lists',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
+		$("[data-app-role='listsContainer']",$container).empty().append(_app.ext.admin_navcats.u.getTree('lists',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
 		}
 	else	{}
 
 	}
-//Need to run app.model.destroy on everything in the @paths_modified array.									
+//Need to run _app.model.destroy on everything in the @paths_modified array.									
 	
 									}
 								}
@@ -446,14 +446,14 @@ else	{
 		
 						if(verb == 'CREATE' || verb == 'RENAME' || verb == 'LISTCREATE')	{
 							cmdObj['@updates'].push((verb == 'RENAME' ? verb : 'CREATE')+"?path="+catSafeID+"&"+$.param($ele.closest('div').serializeJSON()));
-//							app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-							app.model.addDispatchToQ(cmdObj,'immutable');
+//							_app.u.dump(" -> cmdObj: "); _app.u.dump(cmdObj);
+							_app.model.addDispatchToQ(cmdObj,'immutable');
 							
 							if(verb == 'LISTCREATE')	{
-								app.model.destroy("appCategoryList|"+app.vars.partition+"|lists|.");
+								_app.model.destroy("appCategoryList|"+_app.vars.partition+"|lists|.");
 								}
 							
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
 							$ele.closest('div').anymessage({"message":"In admin_navcats.e.adminNavcatsMacro, unrecognized verb ["+verb+"] on trigger element..","gMessage":true});
@@ -473,8 +473,8 @@ else	{
 //anything that was open will auto-open in the current session.
 //p.skipDPSset is passed in on the initial load in order to skip the DPS update, which isn't needed because the click is triggered by the app (to reopen open cats)
 			navcatSubsShow : function($ele,p)	{
-				app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
-//				app.u.dump(" -> p: "); app.u.dump(p);
+				_app.u.dump("BEGIN admin_navcats.e.navcatSubsShow");
+//				_app.u.dump(" -> p: "); _app.u.dump(p);
 					p = p || {};
 					var
 						$subcats = $ele.closest('li').find("[data-app-role='categories']"),
@@ -483,54 +483,54 @@ else	{
 					
 					if(path)	{
 						
-//						app.u.dump(' -> path: '+path);
+//						_app.u.dump(' -> path: '+path);
 
 						if($subcats.length)	{
 							if($subcats.children().length)	{
 								//subcats have already been rendered. not an error, just handled differently.
 								if($subcats.is(':visible'))	{
 									$icon.removeClass('ui-icon-circle-triangle-s').addClass('ui-icon-circle-triangle-e');
-									if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('remove',path);}
+									if(!p.skipDPSset)	{_app.ext.admin_navcats.u.handleNavcatDPS('remove',path);}
 									}
 								else	{
 									$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s')
-									if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
+									if(!p.skipDPSset)	{_app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
 									}
 								$subcats.toggle('fast'); //putting the handleDPS code in the toggle oncomplete was causing it to be executed multiple times
 								
 								}
 							else	{
-								var dp = 'adminNavcatDetail|'+app.vars.partition+'|'+path
-//								app.u.dump(' -> datapointer: '+dp);
+								var dp = 'adminNavcatDetail|'+_app.vars.partition+'|'+path
+//								_app.u.dump(' -> datapointer: '+dp);
 //ok. can't rely on this data being in memory because navcat mode needs to be able to flip sections off then on to refresh them.
 var navCallback = function(rd){
-	if(app.model.responseHasErrors(rd)){
+	if(_app.model.responseHasErrors(rd)){
 //8001 error would be a category that no longer exists. If we hit this, remove the safeid from local storage.
 		if(rd._msg_1_id == '8001')	{
-			app.u.dump(" ---------------------> got to 8001 error.");
-			app.ext.admin_navcats.u.handleNavcatDPS('remove',path)
+			_app.u.dump(" ---------------------> got to 8001 error.");
+			_app.ext.admin_navcats.u.handleNavcatDPS('remove',path)
 			}
 		$('#globalMessaging').anymessage({'message':rd});
 		}
 	else	{
 		$icon.removeClass('ui-icon-circle-triangle-e').addClass('ui-icon-circle-triangle-s');
-		if(!p.skipDPSset)	{app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
-		app.ext.admin_navcats.u.getSubcats(app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
+		if(!p.skipDPSset)	{_app.ext.admin_navcats.u.handleNavcatDPS('add',path)};
+		_app.ext.admin_navcats.u.getSubcats(_app.data[dp]['@subcategories'],$subcats,{'templateID':$subcats.data('loadstemplate')});
 		}	
 	}
-								if(app.data[dp])	{
+								if(_app.data[dp])	{
 									navCallback({datapointer:dp});
 									}
 								else	{
-									app.model.addDispatchToQ({
+									_app.model.addDispatchToQ({
 										'_cmd':'adminNavcatDetail',
 										'_tag':	{
 											'datapointer' : dp,
 											'callback':navCallback
 											}
 										},'mutable');
-									app.model.dispatchThis('mutable');
-//									$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, attempted to load app.data["+dp+"], which is not in memory.",'gMessage':true})
+									_app.model.dispatchThis('mutable');
+//									$('#globalMessaging').anymessage({'message':"In admin_navcats.e.navcatSubsShow, attempted to load _app.data["+dp+"], which is not in memory.",'gMessage':true})
 									}
 								}
 							}
@@ -545,11 +545,11 @@ var navCallback = function(rd){
 				//will open all the categories that are checked.
 var $tree = $btn.closest("[data-app-role='categoryTree']");
 var paths = $tree.data('paths') || []; //used to 'precheck' items in list.
-var numDispatches = app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:true}); //get all the 'open' category data handy.
+var numDispatches = _app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:true}); //get all the 'open' category data handy.
 setTimeout(function(){
-	 app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:false}); //get all the 'open' category data handy.
+	 _app.ext.admin_navcats.u.getSubcats(paths,"",{fetchOnly:false}); //get all the 'open' category data handy.
 	},3000);
-app.model.dispatchThis('mutable');
+_app.model.dispatchThis('mutable');
 				}
 			
 			

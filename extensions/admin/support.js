@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var admin_support = function() {
+var admin_support = function(_app) {
 	var theseTemplates = new Array('supportFileUploadTemplate','supportManagerControls','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
 	var r = {
 
@@ -34,7 +34,7 @@ var admin_support = function() {
 				obj['_tag'] = tagObj || {};
 				obj._tag.datapointer = "adminTicketFileAttach|"+obj.ticket;
 				obj['_cmd'] = "adminTicketFileAttach";
-				app.model.addDispatchToQ(obj,'immutable');	
+				_app.model.addDispatchToQ(obj,'immutable');	
 				}
 			} //adminNavcatProductDelete
 		
@@ -53,14 +53,14 @@ var admin_support = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/support.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/support.html',theseTemplates);
 
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}, //init
 		
@@ -78,9 +78,9 @@ var admin_support = function() {
 		a : {
 			
 			showTicketManager : function($target)	{
-//				app.u.dump("BEGIN admin_support.a.showTicketManager");
+//				_app.u.dump("BEGIN admin_support.a.showTicketManager");
 				$target.intervaledEmpty();
-				var $DMI = app.ext.admin.i.DMICreate($target,{
+				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Ticket Manager',
 					'className' : 'adminTicketList', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['Status','Ticket #','Opened','Last Update','Subject','User','Date Closed',''], //leave blank at end if last row is buttons.
@@ -89,7 +89,7 @@ var admin_support = function() {
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin_support|adminTicketCreateShow' class='applyButton hideInDetailMode' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create A New Ticket</button>"],	
-					'controls' : app.templates.supportManagerControls,
+					'controls' : _app.templates.supportManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminTicketList',
 						'disposition' : 'open',
@@ -99,38 +99,38 @@ var admin_support = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
 				},
 
 			showPlatformInfo : function()	{
 				//if the current release has a video, give it a special pointer so that it can be loaded inline.
 				
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title':'Platform Information',
 					'templateID':'platformInfoTemplate',
-					'data' : app.ext.admin.vars.versionData
+					'data' : _app.ext.admin.vars.versionData
 					}).addClass('objectInspector');
 				$D.attr('id','platformInformation');
 //populate the video section w/ the current release data.
 				$("[data-app-role='platformInfoVideoContainer']").anycontent({
-					data : app.ext.admin.vars.versionData[0]
+					data : _app.ext.admin.vars.versionData[0]
 					})
 				
 				var $platInfo = $("[data-app-role='platformInfoContainer']",$D);
 				$platInfo.showLoading({'message':'Fetching platform data'});
-				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
+				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
 					$platInfo.hideLoading();
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$D.anymessage({'message':rd});
 						}
 					else	{
 						//add platform info to the top of the section.
-						$("[data-app-role='platformInfoDetailsContainer']",$platInfo).prepend(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release}))).prepend("<h3>Platform Information<\/h3>");
+						$("[data-app-role='platformInfoDetailsContainer']",$platInfo).prepend(_app.ext.admin_tools.u.objExplore($.extend({},_app.u.getBlacklistedObject(_app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':_app.vars.release}))).prepend("<h3>Platform Information<\/h3>");
 						
 						}
 					}}},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				$D.dialog('option','modal',false);
 				$D.anydelegate();
 				$D.dialog('open');
@@ -153,7 +153,7 @@ var admin_support = function() {
 			showHelpInterface : function($target,vars){
 				vars = vars || {};
 				
-				var $DMI = app.ext.admin.i.DMICreate($target,{
+				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Help Documentation', //left off because the interface is in a tab.
 					'className' : 'helpDocumentation',
 					'buttons' : [],
@@ -167,7 +167,7 @@ var admin_support = function() {
 						'_tag' : {'datapointer' : 'adminConfigDetail|prts'}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anydelegate());
 				if(vars.title)	{
 					$('form:first',$DMI).trigger('submit');
 					}
@@ -177,7 +177,7 @@ var admin_support = function() {
 //will check to see if a dom element already exists and , if so, just open that and make it flash. 
 			showHelpDocInDialog : function(title)	{
 				if(title)	{
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						title : title,
 						'templateID' : 'helpDocumentTemplate',
 						'showLoading' : false,
@@ -187,10 +187,10 @@ var admin_support = function() {
 					$D.dialog('option','modal',false);
 					$D.prepend("<div class='hint alignRight marginBottom'>you can resize this window (drag a corner) or move it (drag the title bar).</div>");
 					$D.dialog('open');
-					app.ext.admin_support.u.loadHelpDocInto($D,title);
+					_app.ext.admin_support.u.loadHelpDocInto($D,title);
 					}
 				else	{
-					app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
+					_app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
 					}
 				},
 		
@@ -205,15 +205,15 @@ var admin_support = function() {
 						}
 					$target.attr('data-ticketid',ticketid);
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
-					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid})).dialog('open');
-					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
+					$target.append(_app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid})).dialog('open');
+					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+_app.vars.domain+"' \/>"); //file upload wants domain specified.
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
-					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
+					_app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! Either ticketid ["+ticketid+"] or uuid ["+uuid+"] not specified in admin_support.a.showFileUploadInModal. Both are required.");
+					_app.u.throwGMessage("Warning! Either ticketid ["+ticketid+"] or uuid ["+uuid+"] not specified in admin_support.a.showFileUploadInModal. Both are required.");
 					}
 				
 				}
@@ -244,20 +244,20 @@ var admin_support = function() {
 			gatherIntel : function()	{
 				var r = "" //what is returned.
 				r += "\n\n ##### The following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
-				r += "MVC version: "+app.model.version;
-				r += "\nMVC release: "+app.vars.release;
-				r += "\ndevice id: "+app.vars.deviceid;
-				r += "\nuser id: "+app.vars.userid;
-				r += "\nlogged in to: "+app.vars.domain;
+				r += "MVC version: "+_app.model.version;
+				r += "\nMVC release: "+_app.vars.release;
+				r += "\ndevice id: "+_app.vars.deviceid;
+				r += "\nuser id: "+_app.vars.userid;
+				r += "\nlogged in to: "+_app.vars.domain;
 				r += "\ndomain: "+location.domain;
-				r += "\nbrowser and OS: "+app.vars.passInDispatchV;
+				r += "\nbrowser and OS: "+_app.vars.passInDispatchV;
 				r += "\n\nuserAgent: "+navigator.userAgent;
 				r += "\nappVersion: "+navigator.appVersion;
 				r += "\noscpu: "+navigator.oscpu;
 				r += "\nscreen size: "+screen.width+" X "+screen.height;
 				r += "\nbrowser size: "+$('body').width()+" X "+$('body').height();
 				
-				var info = app.u.getBlacklistedObject(app.data.info,['server-time','ts','_uuid','_rtag','_rcmd']);
+				var info = _app.u.getBlacklistedObject(_app.data.info,['server-time','ts','_uuid','_rtag','_rcmd']);
 				for(var index in info)	{r+= index+": "+info[index]}
 				
 				return r;
@@ -265,8 +265,8 @@ var admin_support = function() {
 
 //overwrite the linkdoc links.  In the future, this will probably do more.
 			handleHelpDocOverwrites : function($target)	{
-				app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
-				app.u.dump("$('.linkdoc',$target).length: "+$('.linkdoc',$target).length);
+				_app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
+				_app.u.dump("$('.linkdoc',$target).length: "+$('.linkdoc',$target).length);
 				//syllabus_product_basics -> good place to test linkdoc
 				// !!! link this to a search, not an individual docs.  build in support for passing keywords in navigateTo obj var. set as val of keywords in put and submit form.
 				$('.linkdoc',$target).each(function(){
@@ -274,8 +274,8 @@ var admin_support = function() {
 					docID = $a.attr('href').split('=')[1];
 					$a.on('click',function(event){
 						event.preventDefault();
-						app.u.dump(" -> Click got registered.");
-						app.ext.admin_support.a.showHelpDocInDialog(docID);
+						_app.u.dump(" -> Click got registered.");
+						_app.ext.admin_support.a.showHelpDocInDialog(docID);
 						});
 					});
 				},
@@ -293,8 +293,8 @@ var admin_support = function() {
 						$("[data-app-role='ticketAttatchmentList']",$context).empty();
 						$("[data-app-role='ticketFollowupList']",$context).empty();
 						
-						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+						_app.model.addDispatchToQ({
 							'_cmd':'adminTicketDetail',
 							'ticketid':ticketID,
 							'_tag':	{
@@ -307,7 +307,7 @@ var admin_support = function() {
 							},q);
 						
 //						$("[data-app-role='supportFileUploadContainer']",$context).anyupload({'filesChange' : function(files,ui)	{
-//							app.u.dump(" >>>>>>>");
+//							_app.u.dump(" >>>>>>>");
 //							}});
 						
 						}
@@ -324,8 +324,8 @@ var admin_support = function() {
 			loadHelpDocInto : function($target,title)	{
 				if($target instanceof jQuery && title)	{
 					$target.showLoading({"message":"Fetching help doc "+title});
-					app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","action":"parse","page":title,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$target}},"mutable");
-					app.model.dispatchThis('mutable');
+					_app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","action":"parse","page":title,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$target}},"mutable");
+					_app.model.dispatchThis('mutable');
 					}
 				else if($target instanceof jQuery)	{
 					$target.anymessage({"message":"In admin_support.u.loadHelpDocInto, no title specified.","gMessage":true})
@@ -365,24 +365,24 @@ var admin_support = function() {
 				},
 
 			adminTicketCreateShow : function($ele,p)	{
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title' : 'Create a New Ticket',
 					'templateID' : 'supportTicketCreateTemplate',
 					'data' : {
-						'domain' : 'http://'+app.vars.domain
+						'domain' : 'http://'+_app.vars.domain
 						},
 					});
 				
 				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				$D.dialog('open');
-				$D.data({'ticketid':'0','uuid':app.u.guidGenerator()}); //necessary for file attachment.
+				$D.data({'ticketid':'0','uuid':_app.u.guidGenerator()}); //necessary for file attachment.
 				$D.anydelegate();
-				app.u.handleButtons($D);
+				_app.u.handleButtons($D);
 				},
 
 			adminTicketCreateExec : function($ele,p)	{
 				var $form = $ele.closest('form');
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Creating a new ticket'});
 					var sfo = $form.serializeJSON();
 					$form.append("<input type='hidden' name='UUID' value='"+$ele.closest('.ui-dialog-content').data('uuid')+"' \/>");
@@ -393,12 +393,12 @@ var admin_support = function() {
 						//only pass populated fields and don't pass description again (see above).
 						if(sfo[index] && index != 'description' && index.indexOf('_tag') < 0){messagebody += "\n"+index+": "+sfo[index]}
 						}
-					messagebody += app.ext.admin_support.u.gatherIntel();
+					messagebody += _app.ext.admin_support.u.gatherIntel();
 // ** 201346 -> w/ a hidden input, if an apostrophe is in messagebody, everything after it gets dropped.
 //					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
 					$form.append($("<textarea \/>").attr('name','body').val(messagebody).hide());
-					app.ext.admin.a.processForm($form,'immutable');
-					app.model.dispatchThis('immutable');
+					_app.ext.admin.a.processForm($form,'immutable');
+					_app.model.dispatchThis('immutable');
 
 					}
 				else	{} //validation handles error display				
@@ -410,7 +410,7 @@ var admin_support = function() {
 				p.preventDefault();
 				var $panelContents = $ele.closest('.ui-widget-anypanel'); //in create, the dialog body get this same class, so the selector works in both places.
 				if($panelContents instanceof jQuery && $panelContents.length && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
-					app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
+					_app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
 					}
 				else if($panelContents)	{
 					$ele.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to determine ticketid ["+$panelContents.data('ticketid')+"] and/or uuid ["+$panelContents.data('uuid')+"]",'gMessage':true});
@@ -423,12 +423,12 @@ var admin_support = function() {
 			adminTicketMacroCloseShow : function($ele,p){
 				var ticketID = $ele.closest("[data-id]").data('id');
 				p.preventDefault();
-				var $D = app.ext.admin.i.dialogConfirmRemove({
+				var $D = _app.ext.admin.i.dialogConfirmRemove({
 					'message':'Are you sure you want to close this ticket?',
 					'removeButtonText' : 'Close Ticket',
 					'removeFunction':function(rd){
-						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
+						_app.model.dispatchThis('immutable');
 						$ele.closest("[data-app-role='dualModeContainer']").find("button[data-app-click='admin|refreshDMI']:first").trigger('click');
 						$D.dialog('close');
 						}
@@ -441,21 +441,21 @@ var admin_support = function() {
 					$form = $ele.closest('form'),
 					$panel = $ele.closest('.ui-widget-anypanel');
 				
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					$panel.showLoading({'message':'Updating ticket'});
-					app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
+					_app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
 						$panel.hideLoading();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd});
 							}
 						else	{
-							$form.anymessage({'message':app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
+							$form.anymessage({'message':_app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
 							$("textarea",$form).val(''); //clear the values from the text areas.
 							}
 						}},'immutable');
 					//refresh the ticket.
-					app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
-					app.model.dispatchThis('immutable');
+					_app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles displaying errors.
 				
@@ -468,7 +468,7 @@ var admin_support = function() {
 				$ele.button('disable');
 				if(ticketID)	{
 					$(document.body).showLoading({'message':'Fetching file contents'});
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd':'adminTicketFileGet',
 						'ticketid' : ticketID,
 						'remote' : $ele.closest('tr').data('remote'),
@@ -480,7 +480,7 @@ var admin_support = function() {
 							'button' : $ele //used to re-enable the download button
 							}
 						},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$ele.parent().anymessage({"message":'In admin_support.e.admiNTicketFileGetExec, unable to ascertain ticket ID.','gMessage':true});
@@ -493,27 +493,27 @@ var admin_support = function() {
 					ticketID = $tr.data('id');
 				
 				$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminTicketDetail',
 					'ticketid':ticketID,
 					'_tag':	{
 						'datapointer' : 'adminTicketDetail|'+ticketID,
 						'callback':function(rd){
 							$tr.closest('tbody').hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
 								$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
-								if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
-									$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
+								if(_app.data[rd.datapointer] && _app.data[rd.datapointer]['@FOLLOWUPS'] && _app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
+									$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+_app.data[rd.datapointer]['@FOLLOWUPS'][(_app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
 									}
 								else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
 								}
 							}
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 
 			adminTicketDetailShow : function($ele,p)	{
@@ -523,22 +523,22 @@ var admin_support = function() {
 					uuid = $ele.closest("[data-id]").data('uuid');
 				if(ticketID && uuid)	{
 
-					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'supportTicketDetailTemplate',
 						'panelID' : 'ticket_'+ticketID,
 						'showLoading' : false,
 						'header' : 'Edit Ticket: '+ticketID
 						});
 
-					app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
+					_app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
 					$("[data-app-role='supportFileUploadContainer']",$panel).anyupload({
 						autoUpload : false,
 						encode : 'base64', //if this is disabled, change enctype in the dispatch to null.
 						ajaxRequest : function(vars,$ele)	{
-//							app.u.dump(vars);
+//							_app.u.dump(vars);
 							var $fUpload =  $("[data-app-role='supportFileUploadContainer']",$panel);
 							$fUpload.showLoading({"message":"uploading files"});
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								"_cmd":"adminTicketFileAttach",
 								"filename" : vars.filename,
 								"enctype" : "base64", //must be set if data passed as base64.
@@ -549,16 +549,16 @@ var admin_support = function() {
 									"jqObj" : $fUpload,
 									"onComplete" : function(){
 										$(".fileUpload_default",$fUpload).slideUp(); //hide the items that were just uploaded. They'll be in the newly generated filename table.
-										app.model.dispatchThis('mutable');
+										_app.model.dispatchThis('mutable');
 										},
 									"message":"File "+vars.filename+" attached to ticket "+ticketID
 									}
 								},"mutable");
-							app.model.addDispatchToQ({'_cmd':'adminTicketDetail','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID,'callback':'anycontent','jqObj':$("[data-app-role='ticketAttatchmentList']",$panel).empty()}},'mutable');
-							app.model.dispatchThis("mutable");
+							_app.model.addDispatchToQ({'_cmd':'adminTicketDetail','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID,'callback':'anycontent','jqObj':$("[data-app-role='ticketAttatchmentList']",$panel).empty()}},'mutable');
+							_app.model.dispatchThis("mutable");
 							}
 						});
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 
 					}
 				else	{
@@ -570,11 +570,11 @@ var admin_support = function() {
 //used in the support utilites.
 			ping : function($ele,P)	{
 				var start = new Date().getTime();
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'ping',
 					'_tag':	{
 						'callback':function(rd){
-				if(app.model.responseHasErrors(rd)){
+				if(_app.model.responseHasErrors(rd)){
 					$('#platformInformation').anymessage({'message':rd});
 					}
 				else	{
@@ -584,7 +584,7 @@ var admin_support = function() {
 							}
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 
 
@@ -605,8 +605,8 @@ var admin_support = function() {
 						$contentArea.show().find('tbody').empty(); //empty any previous search results.
 						$contentArea.showLoading({"message":"Searching for help files"});
 //docs on the media wiki API can be found here:  http://wiki.commercerack.com/wiki/api.php
-						app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","list":"search","action":"query","srwhat":"text","srsearch":srsearch,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
-						app.model.dispatchThis('mutable');
+						_app.model.addDispatchToQ({"_cmd":"helpWiki","format":"json","list":"search","action":"query","srwhat":"text","srsearch":srsearch,"_tag":{"datapointer":"helpWikiSearch",'callback':'anycontent','jqObj':$contentArea}},"mutable");
+						_app.model.dispatchThis('mutable');
 						}
 					else	{
 						$('.dualModeListMessaging',$parent).first().empty().show().anymessage({'message':'Please enter some keywords into the form input above to search for.'});
@@ -622,7 +622,7 @@ var admin_support = function() {
 			showHelpDocInDialog : function($ele,p)	{
 				var title = $ele.closest('[data-title]').data('title');
 				if(title)	{
-					app.ext.admin_support.a.showHelpDocInDialog(title);
+					_app.ext.admin_support.a.showHelpDocInDialog(title);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDocInDialog, unable to determine data-title from trigger element.','gMessage':true});
@@ -634,15 +634,15 @@ var admin_support = function() {
 				P.preventDefault();
 				var title = $ele.closest('tr').data('title');
 				if(title)	{
-					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'helpDocumentTemplate',
 						'panelID' : 'helpdoc_'+title,
 						'showLoading' : false,
 						'header' : title
 						});
 					
-					app.ext.admin_support.u.loadHelpDocInto($(".ui-anypanel-content",$panel),title);
-					app.u.handleButtons($panel);
+					_app.ext.admin_support.u.loadHelpDocInto($(".ui-anypanel-content",$panel),title);
+					_app.u.handleButtons($panel);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetail, unable to determine title.','gMessage':true});

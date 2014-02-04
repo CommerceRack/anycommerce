@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var admin_config = function() {
+var admin_config = function(_app) {
 	var theseTemplates = new Array(
 		'paymentManagerPageTemplate',
 /*		
@@ -81,7 +81,7 @@ var admin_config = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/config.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/config.html',theseTemplates);
 				r = true;
 
 				return r;
@@ -89,7 +89,7 @@ var admin_config = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -101,8 +101,8 @@ var admin_config = function() {
 
 			showEmailAuth : function($target)	{
 				//app vars is passed in so the email input can be prepopulated w/ the domain in focus.
-				$target.empty().append($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':app.vars}).anydelegate());
-				app.u.handleButtons($target);
+				$target.empty().append($("<div \/>").anycontent({'templateID':'emailAuthenticationPageTemplate','data':_app.vars}).anydelegate());
+				_app.u.handleButtons($target);
 				},
 
 			showNotifications : function($target)	{
@@ -110,8 +110,8 @@ var admin_config = function() {
 				$target.anycontent({
 					'templateID' : 'notificationPageTemplate'
 					}).anydelegate({'trackEdits':true});
-				app.u.handleButtons($target);
-				app.model.addDispatchToQ({
+				_app.u.handleButtons($target);
+				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'notifications' : true,
 					'_tag':	{
@@ -121,7 +121,7 @@ var admin_config = function() {
 						'jqObj' : $target
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 
 				},
 
@@ -129,12 +129,12 @@ var admin_config = function() {
 				$target.empty();
 				$target.anycontent({'templateID':'billingHistoryTemplate','showLoading':false});
 				$("[data-app-role='billingHistory']",$target).anydelegate({'trackEdits':true});
-				app.u.handleCommonPlugins($target);
-				app.u.handleButtons($target);
+				_app.u.handleCommonPlugins($target);
+				_app.u.handleButtons($target);
 				var $tabContent = $("[data-anytab-content='invoices']",$target);
 				$tabContent.showLoading({'message':'Fetching invoice list'});
 
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'billingInvoiceList',
 					'_tag':{
 						'callback': 'anycontent',
@@ -143,31 +143,31 @@ var admin_config = function() {
 						'datapointer':'billingTransactions'
 					}
 				},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 		
 			showPluginManager : function($target)	{
 				$target.showLoading({'message':'Fetching Your Integration Data'});
 
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'plugins':1,
 					'_tag':{
 						'callback': function(rd)	{
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$target.anymessage({'message':rd});
 								}
 							else	{
 								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
 								$target.anydelegate();
-								app.u.handleButtons($target);
+								_app.u.handleButtons($target);
 								$("[data-app-role='slimLeftNav']",$target).accordion();
 								}
 							},
 						'datapointer':'adminConfigDetail|plugins'
 					}
 				},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 
 				},
 			
@@ -175,12 +175,12 @@ var admin_config = function() {
 				vars = vars || {};
 				
 				if($target instanceof jQuery && vars.plugin)	{
-//					app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
-					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':app.ext.admin_config.u.getPluginData(vars.plugin)});
-					app.u.handleCommonPlugins($target);
+//					_app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
+					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':_app.ext.admin_config.u.getPluginData(vars.plugin)});
+					_app.u.handleCommonPlugins($target);
 					$target.parent().find('.buttonset').show();
-//					app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
-					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+//					_app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
+					_app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set.","gMessage":true});
@@ -195,7 +195,7 @@ var admin_config = function() {
 					'trackEdits':true,
 					trackSelector:'form'
 					})
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'order' : true, 'wms' : true, 'erp' : true, 'inventory' : true,
 					'_tag':	{
@@ -206,32 +206,32 @@ var admin_config = function() {
 						'jqObj' : $div
 						}
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				},
 			
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching your payment method settings'});
-				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
+				_app.model.destroy('adminConfigDetail|payment|'+_app.vars.partition);
 				$target.anydelegate({'trackEdits':true});
-				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
+				_app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
 					'callback' : 'anycontent',
-					'datapointer' : 'adminConfigDetail|payment|'+app.vars.partition,
+					'datapointer' : 'adminConfigDetail|payment|'+_app.vars.partition,
 					'templateID' : 'paymentManagerPageTemplate',
 					'onComplete' : function(){
 						$("li[data-tender='CC']",$target).trigger('click');
 						},
 					jqObj : $target
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //showPaymentManager
 			
 			showPaymentTypeEditorByTender : function(tender,$target){
-//				app.u.dump("BEGIN showPaymentTypeEditorByTender ["+tender+"]");
+//				_app.u.dump("BEGIN showPaymentTypeEditorByTender ["+tender+"]");
 				if(tender && $target)	{
 					$target.empty();
 					$target.closest('form').find('.buttonset:first').show().find('button').button('disable').find('.numChanges').text("");
-					var payData = app.ext.admin_config.u.getPaymentByTender(tender);
-//					app.u.dump(" -> payData: "); app.u.dump(payData);
+					var payData = _app.ext.admin_config.u.getPaymentByTender(tender);
+//					_app.u.dump(" -> payData: "); _app.u.dump(payData);
 					$target.append($("<input \/>",{'name':'tender','type':'hidden'}).val(tender));
 					switch(tender){
 /* offline payment types */
@@ -297,14 +297,14 @@ var admin_config = function() {
 
 			showContactInformation : function($target)	{
 				$target.showLoading({'message':'Fetching Contact Details'});
-				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
-				app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.destroy('adminConfigDetail|account|'+_app.vars.partition);
+				_app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+_app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
+				_app.model.dispatchThis('mutable');
 				}, //showContactInformation
 
 
 			showTaxConfig : function($target)	{
-//				app.u.dump("BEGIN admin_config.a.showTaxConfig");
+//				_app.u.dump("BEGIN admin_config.a.showTaxConfig");
 				$target.anycontent({
 					'templateID':'taxConfigTemplate',
 					'showLoadingMessage' : 'Fetching tax details'
@@ -317,29 +317,29 @@ var admin_config = function() {
 					dateFormat : "yymmdd"
 					});
 
-				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
-				app.model.destroy(datapointer);
-				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{
+				var datapointer = 'adminConfigDetail|taxes|'+_app.vars.partition
+				_app.model.destroy(datapointer);
+				_app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{
 					'datapointer' : datapointer,
 					'callback' : 'anycontent',
 					'translateOnly' : true,
 					'skipAppEvents' : true,
 					'jqObj' : $target
 					},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //showTaxConfig
 
 
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your active shipping methods'});
 				
-				app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
-				app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+				_app.model.destroy('adminConfigDetail|shipping|'+_app.vars.partition);
+				_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
 				
-				app.ext.admin.calls.appResource.init('shipcountries.json',{},'mutable');
-				app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'mutable');
-				app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
-					if(app.model.responseHasErrors(rd)){
+				_app.ext.admin.calls.appResource.init('shipcountries.json',{},'mutable');
+				_app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+_app.vars.partition},'mutable');
+				_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition,callback : function(rd){
+					if(_app.model.responseHasErrors(rd)){
 						$target.hideLoading();
 						$('#globalMessaging').anymessage({'message':rd});
 						}
@@ -347,12 +347,12 @@ var admin_config = function() {
 						
 						$target.anycontent({
 							'templateID':'shippingManagerPageTemplate',
-							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
+							'data':$.extend(true,{},_app.data['adminConfigDetail|shipping|'+_app.vars.partition],_app.data['adminConfigDetail|shipmethods|'+_app.vars.partition])
 							});
 
 						var shipmethods = new Array();
-						if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
-							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'];
+						if(_app.data['adminConfigDetail|shipmethods|'+_app.vars.partition] && _app.data['adminConfigDetail|shipmethods|'+_app.vars.partition]['@SHIPMETHODS'])	{
+							shipmethods = _app.data['adminConfigDetail|shipmethods|'+_app.vars.partition]['@SHIPMETHODS'];
 							}
 
 						var
@@ -362,7 +362,7 @@ var admin_config = function() {
 //disabled methods will get a class to help indicate they're disabled.
 						for(var i = 0; i < L; i += 1)	{
 							if(shipmethods[i].provider.indexOf('FLEX:') === 0)	{
-//								app.u.dump("shipmethods[i].enabled: "+shipmethods[i].enable);
+//								_app.u.dump("shipmethods[i].enabled: "+shipmethods[i].enable);
 								var $li = $("<li \/>");
 								$li.data('provider',shipmethods[i].provider)
 								$li.text(shipmethods[i].name);
@@ -374,7 +374,7 @@ var admin_config = function() {
 						
 						
 						
-						app.u.handleButtons($target);
+						_app.u.handleButtons($target);
 						$target.anydelegate();
 						var
 							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
@@ -386,7 +386,7 @@ var admin_config = function() {
 						$("li[data-provider='GENERAL']",$leftColumn).trigger('click');
 						}
 					}},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}, //showShippingManager
 
 
@@ -398,8 +398,8 @@ var admin_config = function() {
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
 					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
 					$target.append("<button data-app-click='admin_config|shipmethodAddUpdateExec' data-mode='insert' data-handler='"+shipmethod+"' class='applyButton'>Save<\/button>");
-					app.u.handleButtons($target);
-					app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
+					_app.u.handleCommonPlugins($target);
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod not passed.','gMessage':true});
@@ -419,13 +419,13 @@ var admin_config = function() {
 					if(provider == 'GENERAL')	{
 						$target.anycontent({
 							'templateID':'shippingGeneralTemplate',
-							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition],app.data['appResource|shipcountries.json'])
+							'data':$.extend(true,{},_app.data['adminConfigDetail|shipping|'+_app.vars.partition],_app.data['adminConfigDetail|shipmethods|'+_app.vars.partition],_app.data['appResource|shipcountries.json'])
 							});
 						}
 					else	{
-						var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
+						var shipData = _app.ext.admin_config.u.getShipMethodByProvider(provider);
 						
-						app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
+						_app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
 						
 						if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
 							$target.closest('form').find('.buttonset').show();
@@ -455,9 +455,9 @@ var admin_config = function() {
 						
 						}
 
-					app.u.handleCommonPlugins($target);
-					app.u.handleButtons($target);
-					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+					_app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
+					_app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 
 
 					}
@@ -468,7 +468,7 @@ var admin_config = function() {
 				}, //showShipMethodEditorByProvider
 				
 			showCouponManager : function($target)	{
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Coupon Manager', //left off because the interface is in a tab.
 					'className' : 'couponManager',
 					'buttons' : [
@@ -480,18 +480,18 @@ var admin_config = function() {
 					'cmdVars' : {
 						'_cmd' : 'adminConfigDetail',
 						'coupons' : true,
-						'_tag' : {'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}
+						'_tag' : {'datapointer' : 'adminConfigDetail|coupons|'+_app.vars.partition}
 						}
 					});
-				app.u.handleButtons($target);
+				_app.u.handleButtons($target);
 				$target.anydelegate();
-				app.model.dispatchThis();
+				_app.model.dispatchThis();
 
 				},//showCouponManager
 				
 			showPartitionManager : function($target)	{
 				$target.empty().anydelegate();
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Partition Manager', //left off because the interface is in a tab.
 					'className' : 'partitionManager',
 					'buttons' : [
@@ -506,8 +506,8 @@ var admin_config = function() {
 						'_tag' : {'datapointer' : 'adminConfigDetail|prts'}
 						}
 					});
-				app.u.handleButtons($target);
-				app.model.dispatchThis();
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis();
 
 				},//showCouponManager
 
@@ -517,13 +517,13 @@ var admin_config = function() {
 //vars will be passed as param 2 (vars) into handleAppEvents so that the button events will know what mode to use.
 
 			showRulesBuilderInModal : function(vars)	{
-//				app.u.dump("BEGIN admin_config.a.showRulesBuilderInModal");
-//				app.u.dump("vars: "); app.u.dump(vars);
+//				_app.u.dump("BEGIN admin_config.a.showRulesBuilderInModal");
+//				_app.u.dump("vars: "); _app.u.dump(vars);
 				vars = vars || {};
 
 				if(vars.table && ((vars.rulesmode == 'shipping' && vars.provider) || (vars.rulesmode == 'coupons' && vars.couponCode)))	{
 
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						'title' : 'Rules Builder',
 						});
 					
@@ -546,7 +546,7 @@ var admin_config = function() {
 							"<button data-app-click='admin_config|ruleBuilderAddShow' data-rulesmode='"+vars.rulesmode+"' class='applyButton'>Add Rule<\/button>",
 							"<button disabled='disabled' data-app-click='admin_config|ruleBuilderUpdateExec' class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
 						}; 
-//					app.u.dump(" -> vars.TABLE: "+vars.table);
+//					_app.u.dump(" -> vars.TABLE: "+vars.table);
 					//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 					if(vars.rulesmode == 'shipping')	{
 						DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
@@ -560,14 +560,14 @@ var admin_config = function() {
 						DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
 						}
 					else	{}
-					var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
+					var $DMI = _app.ext.admin.i.DMICreate($D,DMIVars);
 					//rules are nearly entirely updated to delegated events. this is here for the DMI toggle button. DMI is not entirely updated yet.
-					app.u.handleAppEvents($D); //for toggle and save button.  ### FUTURE -> get rid of this once toggle
+					_app.u.handleAppEvents($D); //for toggle and save button.  ### FUTURE -> get rid of this once toggle
 					$DMI.closest("[data-app-role='dualModeContainer']").data({'dataTable':vars});
 					
 					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
 						ui.item.addClass('edited');
-						app.ext.admin.u.handleSaveButtonByEditedClass($D);
+						_app.ext.admin.u.handleSaveButtonByEditedClass($D);
 						});
 				
 //add data-table attributes.
@@ -577,28 +577,28 @@ var admin_config = function() {
 					
 					if(vars.rulesmode == 'shipping')	{
 					//need pricing schedules. This is for shipping.
-						var numDispatches = app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
+						var numDispatches = _app.ext.admin.calls.adminPriceScheduleList.init({},'mutable');
 					//if making a request for the wholesale list, re-request shipmethods too. callback is on shipmethods
 						if(numDispatches)	{
-							app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+							_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
 							}
-						app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
+						_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition,callback : function(rd){
 							$DMI.hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd});
 								}
 							else	{
-								$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
-								app.u.handleButtons($D);
+								$D.anycontent({'data':_app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
+								_app.u.handleButtons($D);
 								}
 							}},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						}
 					else if(vars.rulesmode == 'coupons')	{
-						var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
+						var data = _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|coupons|'+_app.vars.partition]['@COUPONS'],'id',vars.couponCode);
 						if(data)	{
 							$D.anycontent({'data': data});
-							app.u.handleButtons($D);
+							_app.u.handleButtons($D);
 							}
 						else	{} //getValueByKeyFromArray (used to set the data) will return false and display an error message.
 						}
@@ -610,7 +610,7 @@ var admin_config = function() {
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.rulesmode+'] was passed or a required param based on mode was not set. see console for vars.','gMessage':true});
-					app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); app.u.dump(vars);
+					_app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); _app.u.dump(vars);
 					}
 
 				}, //showRulesBuilderInModal
@@ -628,17 +628,17 @@ var admin_config = function() {
 						$(this).dialog('destroy').remove();
 						}
 					});
-				app.u.handleButtons($D); app.u.handleCommonPlugins($D);
+				_app.u.handleButtons($D); _app.u.handleCommonPlugins($D);
 				$D.anydelegate();
 				$D.dialog('open');	
 				}, //showUPSOnlineToolsRegInModal
 			
 			showFedExMeterInModal : function(vars)	{
 				vars = vars || {}; //may include supplier
-				var $D = app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':(vars.vendorid) ? {} : app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
+				var $D = _app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':(vars.vendorid) ? {} : _app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
 				$D.data(vars);
 				$D.anydelegate();
-				app.u.handleButtons($D);
+				_app.u.handleButtons($D);
 				$D.addClass('labelsAsBreaks alignedLabels');
 				$D.dialog('open');	
 				} //showFedExMeterInModal
@@ -650,7 +650,7 @@ var admin_config = function() {
 			blacklistedCountries : function($tag,data)	{
 				if(data.bindData.loadsTemplate)	{
 					for(var i in data.value)	{
-						$tag.append(app.renderFunctions.transmogrify({'country':data.value[i]},data.bindData.loadsTemplate,{'country':data.value[i]}));
+						$tag.append(_app.renderFunctions.transmogrify({'country':data.value[i]},data.bindData.loadsTemplate,{'country':data.value[i]}));
 						}
 					}
 				else	{
@@ -681,36 +681,36 @@ var admin_config = function() {
 		u : {
 
 			getPluginData : function(plugin)	{
-//				app.u.dump("BEGIN admin_config.u.getPluginData");
+//				_app.u.dump("BEGIN admin_config.u.getPluginData");
 				var r = {}; //what is returned.
 				if(plugin)	{
-//					app.u.dump(" -> plugin: "+plugin);
-					if(app.data['adminConfigDetail|plugins'] && app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
-						var L = app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
+//					_app.u.dump(" -> plugin: "+plugin);
+					if(_app.data['adminConfigDetail|plugins'] && _app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
+						var L = _app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
 						for(var i = 0; i < L; i += 1)	{
-							if(app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugin)	{
-								r = app.data['adminConfigDetail|plugins']['@PLUGINS'][i];
+							if(_app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugin)	{
+								r = _app.data['adminConfigDetail|plugins']['@PLUGINS'][i];
 								break; //match! exit early.
 								}
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, app.data['adminConfigDetail|plugins'] or app.data['adminConfigDetail|plugins']['@PLUGINS'] are empty and are required.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, _app.data['adminConfigDetail|plugins'] or _app.data['adminConfigDetail|plugins']['@PLUGINS'] are empty and are required.","gMessage":true});
 						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.u.getPluginData, plugin ["+plugin+"] not set.","gMessage":true});
 					}
-//				app.u.dump(" -> r: "); app.u.dump(r);
+//				_app.u.dump(" -> r: "); _app.u.dump(r);
 				return r;
 				}, //getPluginData
 
 			getPaymentByTender : function(tender)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(tender)	{
-					if(app.data['adminConfigDetail|payment|'+app.vars.partition] && app.data['adminConfigDetail|payment|'+app.vars.partition]['@PAYMENTS'])	{
+					if(_app.data['adminConfigDetail|payment|'+_app.vars.partition] && _app.data['adminConfigDetail|payment|'+_app.vars.partition]['@PAYMENTS'])	{
 						r = {};
-						var payments = app.data['adminConfigDetail|payment|'+app.vars.partition]['@PAYMENTS'], //shortcut
+						var payments = _app.data['adminConfigDetail|payment|'+_app.vars.partition]['@PAYMENTS'], //shortcut
 						L = payments.length;
 						
 						for(var i = 0; i < L; i += 1)	{
@@ -721,7 +721,7 @@ var admin_config = function() {
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_config.u.getPaymentByTender, adminConfigDetail|payment|'+app.vars.partition+' not in memory and is required.','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_config.u.getPaymentByTender, adminConfigDetail|payment|'+_app.vars.partition+' not in memory and is required.','gMessage':true});
 						}
 					}
 				else	{
@@ -733,10 +733,10 @@ var admin_config = function() {
 			getShipMethodByProvider : function(provider)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(provider)	{
-					if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
+					if(_app.data['adminConfigDetail|shipmethods|'+_app.vars.partition] && _app.data['adminConfigDetail|shipmethods|'+_app.vars.partition]['@SHIPMETHODS'])	{
 						r = {};
 						var
-							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'], //shortcut
+							shipmethods = _app.data['adminConfigDetail|shipmethods|'+_app.vars.partition]['@SHIPMETHODS'], //shortcut
 							L = shipmethods.length;
 						
 						for(var i = 0; i < L; i += 1)	{
@@ -784,7 +784,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				var updatedEvents = new Array(); //each time an event type is updated, add it here. This'll be used to make sure duplicate updates don't occur. one edit from an 'event type' updates all
 				var $tbody = $("[data-app-role='dataTable'] tbody",$form);
 				$("[data-app-role='dataTable'] tbody tr.edited",$form).each(function(index){
-//					app.u.dump(" -> index: "+index);
+//					_app.u.dump(" -> index: "+index);
 					var $tr = $(this);
 					var eventType = $tr.data('event');
 					if(eventType)	{
@@ -796,7 +796,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								var $updateTR = $(this);
 								if($updateTR.hasClass('rowTaggedForRemove'))	{} //ignore this row, it's being deleted.
 								else	{
-									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(app.u.getWhitelistedObject($updateTR.data(),['event','verb','url','email'])));
+									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(_app.u.getWhitelistedObject($updateTR.data(),['event','verb','url','email'])));
 									}
 								});
 							
@@ -826,7 +826,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
 				delete sfo._macrobuilder;
 				newSfo['@updates'].push(newSfo._tag.macrocmd+"?"+$.param(sfo));
-//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+//				_app.u.dump(" -> newSfo:"); _app.u.dump(newSfo);
 				return newSfo;
 				}, //adminConfigMacro
 			
@@ -842,8 +842,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 					}
 */
 				var $tBody = $("tbody[data-app-role='paymentMethodTbody']:first",$form);
-//				app.u.dump(" -> $tBody.length: "+$tBody.length);
-//				app.u.dump(" -> $tBody.children().length: "+$tBody.children().length);
+//				_app.u.dump(" -> $tBody.length: "+$tBody.length);
+//				_app.u.dump(" -> $tBody.children().length: "+$tBody.children().length);
 				if($tBody.length && $tBody.children().length)	{
 					$("tr.edited",$tBody).each(function(){
 						var $tr = $(this);
@@ -851,13 +851,13 @@ when an event type is changed, all the event types are dropped, then re-added.
 							//is new and tagged for delete. do nothing.
 							}
 						else if($tr.hasClass('isNewRow'))	{
-//							app.u.dump(" -> $tr.data(): "); app.u.dump($tr.data());
+//							_app.u.dump(" -> $tr.data(): "); _app.u.dump($tr.data());
 							if($tr.data('paymethod') == 'CREDIT')	{
 								//cant just whitelist data cuz the params are UC and data-table applies them as attributes which get lowercased.
 								newSfo['@updates'].push("METHOD-CREDITCARD-ADD?CC="+$tr.data('cc')+"&YY="+$tr.data('yy')+"&MM="+$tr.data('mm'));
 								}
 							else if($tr.data('paymethod') == 'ECHECK')	{
-								newSfo['@updates'].push("METHOD-ECHECK-ADD?EB="+$tr.data('eb')+"&EA="+$tr.data('ea')+"&ER="+$tr.data('er')); //"+$.param(app.u.getWhitelistedObject($tr.data(),['EB','EA','ER'])));
+								newSfo['@updates'].push("METHOD-ECHECK-ADD?EB="+$tr.data('eb')+"&EA="+$tr.data('ea')+"&ER="+$tr.data('er')); //"+$.param(_app.u.getWhitelistedObject($tr.data(),['EB','EA','ER'])));
 								}
 							else	{
 								//unsupported payment type
@@ -873,7 +873,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							}
 						})
 					}
-//				app.u.dump(" -> billingPayments newSFO: "); app.u.dump(newSfo);
+//				_app.u.dump(" -> billingPayments newSFO: "); _app.u.dump(newSfo);
 				return newSfo;
 				}
 			
@@ -895,7 +895,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
 					$ele.addClass('ui-state-focus');
 					$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$ele.text());
-					app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
+					_app.ext.admin_config.a.showPaymentTypeEditorByTender($ele.data('tender'),$contentColumn);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.e.payMethodEditorShow, data-tender not set on trigger element.","gMessage":true});
@@ -904,10 +904,10 @@ when an event type is changed, all the event types are dropped, then re-added.
 //used in supllier interface.
 			shipMeterDetailInModal : function($ele,P)	{
 				if($ele.data('provider') == 'UPS'){
-					app.ext.admin_config.a.showUPSOnlineToolsRegInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+					_app.ext.admin_config.a.showUPSOnlineToolsRegInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
 					}
 				else if($ele.data('provider') == 'FEDEX'){
-					app.ext.admin_config.a.showFedExMeterInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
+					_app.ext.admin_config.a.showFedExMeterInModal({'vendorid':$(this).closest('.ui-widget-anypanel').data('vendorid')});
 					}
 				else	{
 					$ele.closest('.ui-widget-anypanel').anymessage({'message':'In admin_wholesale.e.shipMeterDetailInModal, no/invalid provider ['+$ele.data('provider')+'] on button','gMessage':true})
@@ -917,12 +917,12 @@ when an event type is changed, all the event types are dropped, then re-added.
 			couponDetailDMIPanel : function($ele)	{
 				var couponCode = $ele.closest('tr').data('coupon');
 				if(couponCode)	{
-					var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'couponAddUpdateContentTemplate',
 						'panelID' : 'coupon_'+couponCode,
 						'header' : 'Edit Coupon: '+couponCode,
 						'handleAppEvents' : false,
-						'data' : app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',couponCode)
+						'data' : _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|coupons|'+_app.vars.partition]['@COUPONS'],'id',couponCode)
 						});
 						
 					$panel.attr('data-couponcode',couponCode);
@@ -937,8 +937,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 							})
 						.end()
 						.find("[name='coupon']").closest('label').hide(); //code is only editable at create.
-					app.u.handleCommonPlugins($panel);
-					app.u.handleButtons($panel);
+					_app.u.handleCommonPlugins($panel);
+					_app.u.handleButtons($panel);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.e.couponDetailDMIPanel, unable to ascertain coupon code.','gMessage':true});
@@ -947,7 +947,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 			couponCreateShow : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title':'Add New Coupon',
 					'handleAppEvents' : false,
 					'templateID':'couponAddUpdateContentTemplate',
@@ -965,8 +965,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 						changeYear: true,
 						separator : '' //get rid of space between date and time.
 						});
-				app.u.handleCommonPlugins($D);
-				app.u.handleButtons($D);
+				_app.u.handleCommonPlugins($D);
+				_app.u.handleButtons($D);
 				$D.anydelegate();
 				},	//couponCreateShow
 
@@ -976,36 +976,36 @@ when an event type is changed, all the event types are dropped, then re-added.
 					data = $tr.data(),
 					$D = $ele.closest('.ui-dialog-content');
 
-				app.ext.admin.i.dialogConfirmRemove({
+				_app.ext.admin.i.dialogConfirmRemove({
 					'removeFunction':function(vars,$D){
 						$D.showLoading({"message":"Deleting Coupon"});
-						app.model.addDispatchToQ({'_cmd':'adminConfigMacro','@updates':["COUPON/REMOVE?coupon="+data.coupon],'_tag':{'callback':function(rd){
+						_app.model.addDispatchToQ({'_cmd':'adminConfigMacro','@updates':["COUPON/REMOVE?coupon="+data.coupon],'_tag':{'callback':function(rd){
 							$D.hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
 								$D.dialog('close');
-								$('#globalMessaging').anymessage(app.u.successMsgObject('The coupon has been removed.'));
+								$('#globalMessaging').anymessage(_app.u.successMsgObject('The coupon has been removed.'));
 								$tr.empty().remove(); //removes row for list.
 								}
 							}
 						}
 					},'immutable');
-					app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable'); //update coupon list in memory.
-					app.model.dispatchThis('immutable');
+					_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+_app.vars.partition}},'immutable'); //update coupon list in memory.
+					_app.model.dispatchThis('immutable');
 					}});
 				},
 
 			shippingProviderCreateShow : function($ele,p)	{
 				var $pageContainer = $ele.closest("[data-app-role='slimLeftContainer']");
 				$("h3.heading:first",$pageContainer).text("Add New Flex Shipmethod: "+$ele.text());
-				app.ext.admin_config.a.showAddFlexShipment($ele.data('shipmethod'),$("[data-app-role='slimLeftContent']:first",$pageContainer));				
+				_app.ext.admin_config.a.showAddFlexShipment($ele.data('shipmethod'),$("[data-app-role='slimLeftContent']:first",$pageContainer));				
 				}, //shippingProviderCreateShow
 
 			shippingPartnerRegExec : function($ele,P)	{
 				var $form = $ele.closest('form');
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					
 					var sfo = $form.serializeJSON({'cb':true});
 				//supplier 'may' be set on the parent container. This is used in supply chain.
@@ -1021,9 +1021,9 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$form.showLoading({'message':'Registering account. This may take a few moments.'});
 						var macroCmd = (sfo.provider == 'FEDEX') ? "FEDEX-REGISTER" : "UPSAPI-REGISTER";
 
-						app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/"+macroCmd+"?"+$.param(sfo)],{'callback':function(rd){
+						_app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/"+macroCmd+"?"+$.param(sfo)],{'callback':function(rd){
 							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$form.anymessage({'message':rd});
 								}
 							else	{
@@ -1034,12 +1034,12 @@ when an event type is changed, all the event types are dropped, then re-added.
 									$form.parent().empty();
 									}
 //* 201324 -> made parent empty, not just form, so all the 'you are about...' text goes away too. editor now opens as well.
-								app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$("[data-app-role='slimLeftContent']",$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"))));
-								$('#globalMessaging').anymessage(app.u.successMsgObject('Activation successful!'));
+								_app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$("[data-app-role='slimLeftContent']",$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content"))));
+								$('#globalMessaging').anymessage(_app.u.successMsgObject('Activation successful!'));
 								}
 							}},'immutable');
-						app.model.addDispatchToQ({'_cmd':'adminConfigDetail','shipmethods':true,'_tag':{'datapointer' : 'adminConfigDetail|shipmethods|'+app.vars.partition}},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','shipmethods':true,'_tag':{'datapointer' : 'adminConfigDetail|shipmethods|'+_app.vars.partition}},'immutable');
+						_app.model.dispatchThis('immutable');
 
 						}
 					else	{
@@ -1051,7 +1051,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 			shippingGeneralUpdateExec : function($ele,P)	{
 				var $form = $ele.closest('form');
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					$form.showLoading({"message":"Updating shipping settings"});
 					var macros = new Array();
 					macros.push("SHIPPING/CONFIG?"+$.param($form.serializeJSON({'cb':true})));
@@ -1086,11 +1086,11 @@ when an event type is changed, all the event types are dropped, then re-added.
 							});
 						macros.push(blacklistMacro);
 						}
-//						app.u.dump("macros: "); app.u.dump(macros);
-					app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.','restoreInputsFromTrackingState':true,'removeFromDOMItemsTaggedForDelete':true},'immutable');
-					app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
-					app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'immutable');
-					app.model.dispatchThis('immutable');
+//						_app.u.dump("macros: "); _app.u.dump(macros);
+					_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.','restoreInputsFromTrackingState':true,'removeFromDOMItemsTaggedForDelete':true},'immutable');
+					_app.model.destroy('adminConfigDetail|shipping|'+_app.vars.partition);
+					_app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+_app.vars.partition},'immutable');
+					_app.model.dispatchThis('immutable');
 
 
 					}
@@ -1105,7 +1105,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$("h3.heading:first",$ele.closest("[data-app-role='slimLeftContainer']")).text("Edit: "+$ele.text());
 					$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
 					$ele.addClass('ui-state-focus');
-					app.ext.admin_config.a.showShipMethodEditorByProvider($ele.data('provider'),$contentColumn)
+					_app.ext.admin_config.a.showShipMethodEditorByProvider($ele.data('provider'),$contentColumn)
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.e.shipMethodUpdateShow, trigger element did not specify data-provider, which is required.","gMessage":true});
@@ -1121,24 +1121,24 @@ when an event type is changed, all the event types are dropped, then re-added.
 					provider = $("[name='provider']",$form).val();
 
 				if(provider)	{
-					var $D = app.ext.admin.i.dialogConfirmRemove({
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
 						"message" : "Are you sure you want to delete Shipping Method "+provider+"? There is no undo for this action.",
 						"removeButtonText" : "Remove", //will default if blank
 						"title" : "Remove Shipping Method", //will default if blank
 						"removeFunction" : function(vars,$D){
 							$D.parent().showLoading({"message":"Deleting Ship Method "+provider});
-							app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-							app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/REMOVE?provider="+provider],{'callback':function(rd){
+							_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+							_app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/REMOVE?provider="+provider],{'callback':function(rd){
 								$D.parent().hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$D.anymessage({'message':rd});
 									}
 								else	{
 									$D.dialog('close');
-									app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+									_app.ext.admin_config.a.showShippingManager($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).empty());
 									}
 								}},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						})
 //					$D.dialog('open');
@@ -1160,11 +1160,11 @@ when an event type is changed, all the event types are dropped, then re-added.
 					macros = new Array(),
 					callback = 'handleMacroUpdate'; //will be changed if in insert mode.
 					
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					
 					if($ele.data('mode') == 'insert')	{
 						callback = function(rd){
-							app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$ele.closest("[data-app-role='slimLeftContent']"))
+							_app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$ele.closest("[data-app-role='slimLeftContent']"))
 							}; //when a new method is added, the callback gets changed slightly to refect the update to the list of flex methods.
 						macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider+"&handler="+$ele.data('handler'));
 						}
@@ -1183,7 +1183,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							$('tbody',$(this)).find('tr').each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
-									macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['weight','fee','subtotal','guid'])));
+									macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['weight','fee','subtotal','guid'])));
 									}
 								});
 							});
@@ -1194,7 +1194,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$('tr',$dataTableTbody).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 							else	{
-								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['country','type','match','guid'])));
+								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid'])));
 								}
 							});
 						}
@@ -1203,13 +1203,13 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					else	{} //perfectlynormal to not have a data table.
 				
-					app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
+					_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
 				//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
-					app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-					app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+					_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+					_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
 				
-				//	app.u.dump(" -> macros"); app.u.dump(macros);
-					app.model.dispatchThis('immutable');
+				//	_app.u.dump(" -> macros"); _app.u.dump(macros);
+					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					//validateForm handles error display
@@ -1225,7 +1225,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				$btn.off('click.couponCreateShow').on('click.couponCreateShow',function(event){
 
 					event.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						'title':'Add New Partition',
 						'templateID':'partitionCreateTemplate',
 						'showLoading':false //will get passed into anycontent and disable showLoading.
@@ -1235,7 +1235,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				},	//couponCreateShow
 
 			paymentMethodUpdateExec : function($ele)	{
-				app.u.dump(" -> BEGIN admin_config.e.paymentMethodUpdateExec (click!).");
+				_app.u.dump(" -> BEGIN admin_config.e.paymentMethodUpdateExec (click!).");
 				var
 					$form = $ele.closest('form'),
 					sfo = $form.serializeJSON({'cb':true}) || {},
@@ -1243,24 +1243,24 @@ when an event type is changed, all the event types are dropped, then re-added.
 				
 				if(sfo.tender && sfo.tenderGroup)	{
 					$form.showLoading({'message':'Updating payment information'});
-//						app.u.dump(" -> tender: "+sfo.tender);
-//						app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
+//						_app.u.dump(" -> tender: "+sfo.tender);
+//						_app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
 					
-					if(app.u.validateForm($form))	{
+					if(_app.u.validateForm($form))	{
 						if(sfo.tenderGroup == 'WALLET')	{
 							macroCmd = "PAYMENT/WALLET-"+sfo.tender;
 							}
 						else	{
 							macroCmd = "PAYMENT/"+sfo.tenderGroup;
 							}
-//							app.u.dump(" -> macroCmd: "+macroCmd);
-						app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.','jqObj':$form,'restoreInputsFromTrackingState':true},'immutable');
+//							_app.u.dump(" -> macroCmd: "+macroCmd);
+						_app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.','jqObj':$form,'restoreInputsFromTrackingState':true},'immutable');
 				
-						app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
-						app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.destroy('adminConfigDetail|payment|'+_app.vars.partition);
+						_app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+_app.vars.partition},'immutable');
+						_app.model.dispatchThis('immutable');
 						}
-					else	{app.u.dump("Did not pass validation in admin_config.e.paymentMethodUpdateExec");} //validateForm will display the error logic.
+					else	{_app.u.dump("Did not pass validation in admin_config.e.paymentMethodUpdateExec");} //validateForm will display the error logic.
 					}
 				else	{
 					$form.anymessage({"message":"In admin_config.e.paymentMethodUpdateExec, either tender ["+sfo.tender+"] or tenderGroup ["+sfo.tenderGroup+"] not set. Expecting these within the form/sfo.","gMessage":true});
@@ -1271,7 +1271,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 //requires the data-table-role syntax. 
 			dataTableAddUpdate : function($ele,P)	{
 				var r = false; //what is returned. will be true if data-table passes muster.
-				app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
+				_app.u.dump("BEGIN admin_config.e.dataTableAddUpdate (Click!)");
 				var
 					$DTC = $ele.closest("[data-table-role='container']");// Data Table Container. This element should encompass the inputs AND the table itself.
 // SANITY -> 201352 changed this from $("[data-table-role='inputs']",$DTC) to closest. that requires that $ele is INSIDE the inputs. If this causes issues (required from shipping/coupons rules), then add a data attribute on $ele to allow for $ele to be outside and use $("[data-table-role='inputs']",$DTC).
@@ -1279,28 +1279,28 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$dataTbody = $("tbody[data-table-role='content']",$DTC);
 				
 				if($inputContainer.length && $dataTbody.length)	{
-//					app.u.dump(" -> all necessary jquery objects found.");
+//					_app.u.dump(" -> all necessary jquery objects found.");
 					if($dataTbody.data('bind'))	{
-//						app.u.dump(" -> $dataTbody has data-bind.");
+//						_app.u.dump(" -> $dataTbody has data-bind.");
 	
-						if(app.u.validateForm($inputContainer))	{
-							app.u.dump(" -> form is validated.");
+						if(_app.u.validateForm($inputContainer))	{
+							_app.u.dump(" -> form is validated.");
 							var 
-								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+								bindData = _app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
 								sfo = $inputContainer.serializeJSON({'cb':true}),
-								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+								$tr = _app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 							
 							$tr.anycontent({data:sfo});
 							$tr.addClass('edited');
 							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-							app.u.handleButtons($tr);
+							_app.u.handleButtons($tr);
 //here for backwards compatibility. enabled when dataTableAddUpdate is executed by the older dataTableAddExec
 							if(P.handleAppEvents)	{
-								app.u.handleAppEvents($tr);
+								_app.u.handleAppEvents($tr);
 								}
 					
 	//if a row already exists with this guid, this is an UPDATE, not an ADD.
-	//						app.u.dump(" -> sfo.guid: "+sfo.guid); app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
+	//						_app.u.dump(" -> sfo.guid: "+sfo.guid); _app.u.dump(" -> tr w/ guid length: "+$("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)
 							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
 								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
 								}
@@ -1315,12 +1315,12 @@ when an event type is changed, all the event types are dropped, then re-added.
 								$(':radio',$inputContainer).prop('checked',false);
 								$(':checkbox',$inputContainer).prop('checked',false);
 								}
-							app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
+							_app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest('form'));
 
 							r = true;
 							}
 						else	{
-							app.u.dump("form did not validate");
+							_app.u.dump("form did not validate");
 							//validateForm handles error display.
 							}
 						}
@@ -1332,9 +1332,9 @@ when an event type is changed, all the event types are dropped, then re-added.
 					}
 				else	{
 					$ele.closest('form').anymessage({"message":"In admin_config.e.dataTableAddUpdate, either table-role='container' ["+$DTC.length+"] or table-role='content' ["+$dataTbody.length+"] and/or  table-role='inputs' ["+$inputContainer.length+"] not found and all three are required.","gMessage":true});
-					app.u.dump(" -> $DTC.length: "+$DTC.length);
-					app.u.dump(" -> $inputContainer.length: "+$inputContainer.length);
-					app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+					_app.u.dump(" -> $DTC.length: "+$DTC.length);
+					_app.u.dump(" -> $inputContainer.length: "+$inputContainer.length);
+					_app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
 					}	
 				return r;
 				},
@@ -1362,7 +1362,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
 					event.preventDefault();
 					event.handleAppEvents = true;
-					app.ext.admin_config.e.dataTableAddUpdate($btn,event);
+					_app.ext.admin_config.e.dataTableAddUpdate($btn,event);
 					return false;
 					});
 				}, //dataTableAddExec
@@ -1390,12 +1390,12 @@ when an event type is changed, all the event types are dropped, then re-added.
 					if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 					else	{
 						if(!$tr.data('guid'))	{$tr.data('guid',index)} //a newly added rule
-						macros.push("TAXRULES/INSERT?"+$.param(app.u.getWhitelistedObject($tr.data(),whitelist)));
+						macros.push("TAXRULES/INSERT?"+$.param(_app.u.getWhitelistedObject($tr.data(),whitelist)));
 						}
 					});
 
-				app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'restoreInputsFromTrackingState':true,'jqObj':$container},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'restoreInputsFromTrackingState':true,'jqObj':$container},'immutable');
+				_app.model.dispatchThis('immutable');
 
 				},
 
@@ -1409,14 +1409,14 @@ when an event type is changed, all the event types are dropped, then re-added.
 					if(rulesMode == 'shipping')	{
 						var provider = $ele.closest('form').find("[name='provider']").val();
 						if(provider)	{
-							app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'provider':provider,'table':$ele.data('table')});
+							_app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'provider':provider,'table':$ele.data('table')});
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, unable to ascertain provider ['+provider+'] and/or table ['+$ele.data('table')+'].','gMessage':true});
 							}
 						}
 					else if(rulesMode == 'coupons')	{
-						app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'table':$ele.data('table'),'couponCode':$ele.closest("[data-couponcode]").data('couponcode')});
+						_app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'table':$ele.data('table'),'couponCode':$ele.closest("[data-couponcode]").data('couponcode')});
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
@@ -1430,16 +1430,16 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 
 			ruleBuilderAddShow : function($ele,p)	{
-				var rulesmode = $ele.data('rulesmode'), $DMI = $ele.closest("[data-app-role='dualModeContainer']"), guid = app.u.guidGenerator();
-				$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+				var rulesmode = $ele.data('rulesmode'), $DMI = $ele.closest("[data-app-role='dualModeContainer']"), guid = _app.u.guidGenerator();
+				$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 					'templateID' : 'rulesInputsTemplate_'+rulesmode,
 					'panelID' : 'newrule_'+guid,
 					'header' : 'New rule',
-					'data' : ((rulesmode == 'shipping') ? $.extend(true,{'guid':guid},app.data['adminPriceScheduleList']) : {'guid':guid}),
+					'data' : ((rulesmode == 'shipping') ? $.extend(true,{'guid':guid},_app.data['adminPriceScheduleList']) : {'guid':guid}),
 					'showLoading':false
 					});
-				app.u.handleButtons($panel);
-				app.u.handleCommonPlugins($panel);
+				_app.u.handleButtons($panel);
+				_app.u.handleCommonPlugins($panel);
 				},
 
 
@@ -1450,7 +1450,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				P.preventDefault();
 				
 				var vars = $ele.closest("[data-app-role='dualModeContainer']").data('dataTable');
-				//app.u.dump(" -> vars: "); app.u.dump(vars);
+				//_app.u.dump(" -> vars: "); _app.u.dump(vars);
 				
 				var
 					$dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']"),
@@ -1469,7 +1469,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							$('tr',$tbody).each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 								else	{
-									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
+									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
 									}
 								});
 							
@@ -1484,7 +1484,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 									//these are being removed. since the entire table was emptied, just don't pass and they'll be nuked.
 									}
 								else	{
-									macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+$.param(app.u.getWhitelistedObject($(this).data(),['guid','created','hint','match','matchvalue','filter','exec','value'])));
+									macros.push("COUPON/RULESTABLE-INSERT?coupon="+vars.couponCode+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['guid','created','hint','match','matchvalue','filter','exec','value'])));
 									}
 								});
 				
@@ -1492,31 +1492,31 @@ when an event type is changed, all the event types are dropped, then re-added.
 							}
 						else	{} //catch all. shouldn't get here.
 				
-//						app.u.dump(' -> macros: '); app.u.dump(macros);
+//						_app.u.dump(' -> macros: '); _app.u.dump(macros);
 				
-						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
+						_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
+							if(_app.model.responseHasErrors(rd)){
 								$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':rd});
 								}
 							else	{
 								$btn.closest('.ui-dialog-content').dialog('close');
-								$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
+								$('#globalMessaging').anymessage(_app.u.successMsgObject('Your rules have been saved.'));
 								}
 							}},'immutable');
 				
 				//These subsequents requests need to take place AFTER the configMacro so that the changes set there are reflected in the detail updates below.
 						if(vars.rulesmode == 'shipping')	{
 							//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
-							app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-							app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+							_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+							_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
 							}
 						else if(vars.rulesmode == 'coupons')	{
 							//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
-							app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+app.vars.partition}},'immutable');
+							_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','coupons':true,'_tag':{'datapointer' : 'adminConfigDetail|coupons|'+_app.vars.partition}},'immutable');
 							}
 						else	{} //coupons and shipping are the only two valid modes, so far.
 						
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':'In admin_config.e.ruleBuilderUpdateExec, unable to locate tbody for building rules macro.','gMesage':true})
@@ -1536,11 +1536,11 @@ when an event type is changed, all the event types are dropped, then re-added.
 //						var provider = $ele.closest("[data-provider]").data('provider');
 //						}
 					
-					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'rulesInputsTemplate_'+rulesmode,
 						'panelID' : 'ruleBuilder_'+ruleData.guid,
 						'header' : ((rulesmode == 'shipping') ? 'Edit: '+ruleData.name : 'Edit: '+ruleData.hint),
-						'data' : ((rulesmode == 'shipping') ? $.extend(true,{},app.data['adminPriceScheduleList'],ruleData) : ruleData),
+						'data' : ((rulesmode == 'shipping') ? $.extend(true,{},_app.data['adminPriceScheduleList'],ruleData) : ruleData),
 						'showLoading':false
 						});
 					if(ruleData.schedule)	{
@@ -1556,7 +1556,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 			pluginUpdateExec : function($ele,p)	{
 				var $form = $ele.closest('form');
 				$form.showLoading({'message':'Saving Changes'});
-				app.model.addDispatchToQ({
+				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigMacro',
 					'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
 					'_tag':	{
@@ -1566,11 +1566,11 @@ when an event type is changed, all the event types are dropped, then re-added.
 						'jqObj' : $form
 						}
 					},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.model.dispatchThis('immutable');
 				},
 
 			pluginUpdateShow : function($ele,p)	{
-				app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
+				_app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
 				},
 
 //delegated events
@@ -1595,7 +1595,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						cmdObj._tag.filename = 'invoice_'+invoice+'.html';
 						}
 					else	{
-						var $D = app.ext.admin.i.dialogCreate({
+						var $D = _app.ext.admin.i.dialogCreate({
 							'title' : 'Invoice '+invoice
 							});
 						cmdObj._tag.callback = 'anycontent';
@@ -1606,8 +1606,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$D.dialog('open');
 						$D.showLoading({'message':'Fetching invoice details'});
 						}
-					app.model.addDispatchToQ(cmdObj,'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.addDispatchToQ(cmdObj,'mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.e.billingInvoiceViewDownload, unable to ascertain invoice #.","gMessage":true});
@@ -1631,7 +1631,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					
 					if(cmd)	{
 						$tabContent.showLoading({'message':'Fetching details'});
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':cmd,
 							'_tag':{
 								'callback': 'anycontent',
@@ -1640,7 +1640,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								'datapointer':cmd
 							}
 						},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						}
 					else	{}
 					}

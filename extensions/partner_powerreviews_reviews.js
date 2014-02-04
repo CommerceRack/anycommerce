@@ -23,7 +23,7 @@ NOTE - requires powerReviews service.
 To add powerReviews, do the following:
 
 #1) add extension to extensions object.
-ex: app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
+ex: _app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
 #2) update the vars object with merchant and group id. all are required and will be provided by the merchant or project manager.
 
 #3) update templates to use the following databind databind:
@@ -56,7 +56,7 @@ This file is included in an iFrame for 'write review'
 */
 
 
-var powerReviews_reviews = function() {
+var powerReviews_reviews = function(_app) {
 	return {
 		
 
@@ -79,35 +79,35 @@ var powerReviews_reviews = function() {
 
 			init : {
 				onSuccess : function()	{
-//					app.u.dump('BEGIN app.ext.store_crm.init.onSuccess ');
+//					_app.u.dump('BEGIN _app.ext.store_crm.init.onSuccess ');
 					var r;
-					if(app.ext.powerReviews_reviews.vars.merchantID && app.ext.powerReviews_reviews.vars.groupID)	{
+					if(_app.ext.powerReviews_reviews.vars.merchantID && _app.ext.powerReviews_reviews.vars.groupID)	{
 						r = true;
 						}
 					else	{
-						var msg = app.u.errMsgObject("Uh Oh! It seems an error occured on our app. PowerReviews may not load properly. We apologize for the inconvenience.");
+						var msg = _app.u.errMsgObject("Uh Oh! It seems an error occured on our _app. PowerReviews may not load properly. We apologize for the inconvenience.");
 						msg.persistent = true;
-						app.u.throwMessage(msg);
-						app.u.dump("ERROR! powerReviews_reviews did not pass init. The following variables are all required:");
-						app.u.dump(" -> app.ext.powerReviews_reviews.vars.merchantID: "+app.ext.powerReviews_reviews.vars.merchantID);
-						app.u.dump(" -> app.ext.powerReviews_reviews.vars.groupID: "+app.ext.powerReviews_reviews.vars.groupID);
-						app.u.dump(" -> app.ext.powerReviews_reviews.vars.hash: "+app.ext.powerReviews_reviews.vars.hash);
+						_app.u.throwMessage(msg);
+						_app.u.dump("ERROR! powerReviews_reviews did not pass init. The following variables are all required:");
+						_app.u.dump(" -> _app.ext.powerReviews_reviews.vars.merchantID: "+_app.ext.powerReviews_reviews.vars.merchantID);
+						_app.u.dump(" -> _app.ext.powerReviews_reviews.vars.groupID: "+_app.ext.powerReviews_reviews.vars.groupID);
+						_app.u.dump(" -> _app.ext.powerReviews_reviews.vars.hash: "+_app.ext.powerReviews_reviews.vars.hash);
 						r = false;
 						}
 					return r;
-	//				app.u.dump('END app.ext.store_crm.init.onSuccess');
+	//				_app.u.dump('END _app.ext.store_crm.init.onSuccess');
 					},
 				onError : function(d)	{
-					app.u.dump('BEGIN app.ext.store_crm.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.store_crm.callbacks.init.onError');
 					}
 				},
 
 			startExtension : {
 				onSuccess : function(){
-					app.u.dump("BEGIN powerReviews_reviews.callbacks.startExtension");
-					app.rq.push(['script',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/js/full.js']);
-					app.rq.push(['css',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/pr_styles_review.css','prBaseStylesheet']);
-					app.rq.push(['css',0,'http://cdn.powerreviews.com/aux/'+app.ext.powerReviews_reviews.vars.merchantID+'/'+app.ext.powerReviews_reviews.vars.groupID+'/css/powerreviews_express.css','prMerchantOverrideStylesheet']);
+					_app.u.dump("BEGIN powerReviews_reviews.callbacks.startExtension");
+					_app.rq.push(['script',0,'http://cdn.powerreviews.com/repos/'+_app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/js/full.js']);
+					_app.rq.push(['css',0,'http://cdn.powerreviews.com/repos/'+_app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/pr_styles_review.css','prBaseStylesheet']);
+					_app.rq.push(['css',0,'http://cdn.powerreviews.com/aux/'+_app.ext.powerReviews_reviews.vars.merchantID+'/'+_app.ext.powerReviews_reviews.vars.groupID+'/css/powerreviews_express.css','prMerchantOverrideStylesheet']);
 					},
 				onError : function(d){}
 				}
@@ -125,21 +125,21 @@ var powerReviews_reviews = function() {
 				if(document.location.protocol != 'https:')	{
 					POWERREVIEWS.display.snippet({ write : function(content) { $tag.append(content); } }, {
 						pr_page_id : data.value,
-						pr_write_review : "javascript:app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
+						pr_write_review : "javascript:_app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
 						})
 					}
 				}, //reviewSnippet
 			
 			reviewEngine : function ($tag,data)	{
-//				app.u.dump("BEGIN powerreviews.renderFormats.reviewEngine ["+data.value+"]");
+//				_app.u.dump("BEGIN powerreviews.renderFormats.reviewEngine ["+data.value+"]");
 				if(document.location.protocol != 'https:')	{
 					POWERREVIEWS.display.engine({
 						write : function(content) { 
 							$tag.append(content);
-	//						app.u.dump(content);
+	//						_app.u.dump(content);
 							}},{
 						pr_page_id : data.value,
-						pr_write_review : "javascript:app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
+						pr_write_review : "javascript:_app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
 						});
 					}
 				}
@@ -166,7 +166,7 @@ var powerReviews_reviews = function() {
 					$div.dialog('open');
 */					}
 				else	{
-					app.u.dump("WARNING! - no pid was specified for powerReviews_reviews.a.writeReview");
+					_app.u.dump("WARNING! - no pid was specified for powerReviews_reviews.a.writeReview");
 					}
 				} //writeReview
 			}, //action

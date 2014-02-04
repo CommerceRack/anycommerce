@@ -242,7 +242,7 @@ not in use yet.
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
-	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
+	<a href='#' onClick="adminApp.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
 		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
 		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/; hideZero:false;"></span>
 		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
@@ -708,7 +708,7 @@ Columns headers are as follows:<br />
 <!--
 <section>
 <h2>Exporting rules</h2>
-<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+adminApp.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
 
 </section>
 -->

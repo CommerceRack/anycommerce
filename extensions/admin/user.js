@@ -20,7 +20,7 @@
 
 
 
-var admin_user = function() {
+var admin_user = function(_app) {
 	var theseTemplates = new Array('userManagerUserRowTemplate','userManagerRoleRowTemplate','userManagerUserCreateUpdateTemplate');
 	var r = {
 
@@ -35,15 +35,15 @@ var admin_user = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/user.html',theseTemplates);
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/user.css','user_styles']);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/user.html',theseTemplates);
+				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/user.css','user_styles']);
 
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -55,8 +55,8 @@ var admin_user = function() {
 		a : {
 
 			showUserManager : function($target)	{
-				app.u.dump("BEGIN admin_user.a.showUserManager 2.0");
-				var $DMI = app.ext.admin.i.DMICreate($target,{
+				_app.u.dump("BEGIN admin_user.a.showUserManager 2.0");
+				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'User Manager',
 					'className' : 'userManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['id','Username','Name','Email','Roles','Created',''], //leave blank at end if last row is buttons.
@@ -73,12 +73,12 @@ var admin_user = function() {
 						}
 					});
 				//only need to fetch the boss role list once. Doesn't change much.
-				if(app.data.bossRoleList)	{}
+				if(_app.data.bossRoleList)	{}
 				else	{
-					app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
+					_app.model.addDispatchToQ({'_cmd':'bossRoleList','_tag':	{'datapointer' : 'bossRoleList'}},'mutable'); //have this handy.
 					}
-				app.u.handleButtons($target.anydelegate({'trackEdits':true}));
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate({'trackEdits':true}));
+				_app.model.dispatchThis('mutable');
 				}			
 				
 			}, //Actions
@@ -104,7 +104,7 @@ var admin_user = function() {
 					}
 				else	{
 					roles = false;
-					app.u.throwGMessage("In admin_users,u.getRoleCheckboxesAsArray, $parent not specified or does not exist on the DOM.");					
+					_app.u.throwGMessage("In admin_users,u.getRoleCheckboxesAsArray, $parent not specified or does not exist on the DOM.");					
 					}
 				return roles;
 				}
@@ -114,14 +114,14 @@ var admin_user = function() {
 		macrobuilders : {
 
 			'bossUserCreateUpdate' : function(sfo,$form)	{
-				app.u.dump("BEGIN admin_support.macrobuilders.bossUserCreate");
-				sfo['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
+				_app.u.dump("BEGIN admin_support.macrobuilders.bossUserCreate");
+				sfo['@roles'] = _app.ext.admin_user.u.getRoleCheckboxesAsArray($form);
 //asdf				sfo._cmd = "bossUserCreate"
 //clean up sfo to minimize the request.
 				$(":checkbox",$form).each(function(){
 					delete sfo[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
 					});
-				app.u.dump(" -> sfo: "); app.u.dump(sfo);
+				_app.u.dump(" -> sfo: "); _app.u.dump(sfo);
 				return sfo;
 				} //adminGiftcardMacro			
 			
@@ -133,7 +133,7 @@ var admin_user = function() {
 
 			bossUserCreateShow : function($ele,p){
 
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title' : 'Create New User',
 					'templateID':'userManagerUserCreateUpdateTemplate',
 					'data':$ele.data(),
@@ -144,7 +144,7 @@ var admin_user = function() {
 
 				$('form',$D).append("<div class='buttonset alignRight'><button data-app-click='admin|submitForm' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create User</button></div>");
 
-				app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anydelegate());
 				$D.dialog('open');
 				$("[data-app-role='roleListTbody']",$D).sortable();
 				},
@@ -158,7 +158,7 @@ var admin_user = function() {
 					
 				if(userID && luser)	{
 
-					var $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'userManagerUserCreateUpdateTemplate',
 						'showLoading' : false,
 						'panelID' : 'user_'+userID,
@@ -168,7 +168,7 @@ var admin_user = function() {
 
 					$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_cmd' value='bossUserUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' /><input type='hidden' name='_tag/message' value='The user has been updated.' /><input type='hidden' name='_macrobuilder' value='admin_user|bossUserCreateUpdate' />");
 
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd':'bossUserDetail',
 						'login':luser,
 						'_tag':	{
@@ -176,7 +176,7 @@ var admin_user = function() {
 							'datapointer' : 'bossUserDetail|'+userID,
 							'onComplete': function(rd){
 								//now handle role checkboxes.
-								var userData = app.data[rd.datapointer];
+								var userData = _app.data[rd.datapointer];
 								var L = userData['@roles'].length;
 							//loop backwards so that each row can be moved to the top but the original order will be preserved.
 								for(var i = (L-1); i >= 0; i -= 1)	{
@@ -189,7 +189,7 @@ var admin_user = function() {
 								$("[data-app-role='roleListTbody']",$panel).sortable({
 									stop : function(event,ui)	{
 										$(":checkbox",ui.item).addClass('edited');
-										app.u.dump(" -> ui.item.closest('.eventDelegation').length: "+ui.item.closest('.eventDelegation').length);
+										_app.u.dump(" -> ui.item.closest('.eventDelegation').length: "+ui.item.closest('.eventDelegation').length);
 										ui.item.closest('.eventDelegation').anydelegate('updateChangeCounts');
 										}
 									});
@@ -203,7 +203,7 @@ var admin_user = function() {
 							'extendByDatapointers' : ['bossRoleList']
 							}
 						},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					//missing some required params. throw error.
@@ -214,19 +214,19 @@ var admin_user = function() {
 			bossUserDeleteConfirm : function($ele,p)	{
 				var luser = $ele.closest("[data-luser]").data('luser');
 				if(luser)	{
-					var $D = app.ext.admin.i.dialogConfirmRemove({
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
 						"message" : "Are you sure you wish to delete user "+luser+"? There is no undo for this action.",
 						"removeButtonText" : "Remove User", //will default if blank
 						"title" : "Remove user: "+luser, //will default if blank
 						"removeFunction" : function(vars,$D){
 							$D.showLoading({"message":"Deleting user "+luser});
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'_cmd':'bossUserDelete',
 								'login' : luser,
 								'_tag':	{
 									'callback':function(rd){
 										$D.hideLoading();
-										if(app.model.responseHasErrors(rd)){
+										if(_app.model.responseHasErrors(rd)){
 											$D.anymessage({'message':rd});
 											}
 										else	{
@@ -236,7 +236,7 @@ var admin_user = function() {
 										}
 									}
 								},'mutable');
-							app.model.dispatchThis('mutable');
+							_app.model.dispatchThis('mutable');
 							}
 						})
 					}

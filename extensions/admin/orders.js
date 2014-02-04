@@ -27,7 +27,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 
-var admin_orders = function() {
+var admin_orders = function(_app) {
 	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
 	var r = {
 
@@ -76,18 +76,18 @@ var admin_orders = function() {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.store_navcats.init.onSuccess ');
+//				_app.u.dump('BEGIN _app.ext.store_navcats.init.onSuccess ');
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
-//				app.u.dump("DEBUG - template url is changed for local testing. add: ");
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
-				app.ext.admin_orders.u.handleOrderListTab('init');
+//				_app.u.dump("DEBUG - template url is changed for local testing. add: ");
+				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+				_app.ext.admin_orders.u.handleOrderListTab('init');
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}, //init
 
@@ -99,12 +99,12 @@ var admin_orders = function() {
 				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
 				//this is because a template only wants to be parsed once.
 				if(tagObj.merge)	{
-					tmpData = $.extend(app.data[tagObj.datapointer],app.data[tagObj.merge]);
+					tmpData = $.extend(_app.data[tagObj.datapointer],_app.data[tagObj.merge]);
 					}
 				else	{
-					tmpData =app.data[tagObj.datapointer];
+					tmpData =_app.data[tagObj.datapointer];
 					}
-				var $print = app.renderFunctions.transmogrify({},tagObj.templateID,tmpData);
+				var $print = _app.renderFunctions.transmogrify({},tagObj.templateID,tmpData);
 				$print.addClass('pageBreak'); //ensures template is on it's own page.
 				$('#printContainer').append($print);
 				}
@@ -113,16 +113,16 @@ var admin_orders = function() {
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump(" -> targetID: "+targetID);
-				$(app.u.jqSelector('#',tagObj.targetID)).empty().remove(); //delete the row. the order list isn't re-requested to reflect the change.
+//				_app.u.dump(" -> targetID: "+targetID);
+				$(_app.u.jqSelector('#',tagObj.targetID)).empty().remove(); //delete the row. the order list isn't re-requested to reflect the change.
 				},
 			onError : function(responseData)	{
-//				app.u.dump("BEGIN admin_orders.callbacks.orderPoolChanged.onError. responseData: "); app.u.dump(responseData);
-				var $row = $(app.u.jqSelector('#',tagObj.targetID));
+//				_app.u.dump("BEGIN admin_orders.callbacks.orderPoolChanged.onError. responseData: "); _app.u.dump(responseData);
+				var $row = $(_app.u.jqSelector('#',tagObj.targetID));
 				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
-				app.ext.admin_orders.u.unSelectRow($row);
+				_app.ext.admin_orders.u.unSelectRow($row);
 				delete responseData._rtag.targetID; //don't want the message here.
-				app.u.throwMessage(responseData);
+				_app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
 
@@ -131,52 +131,52 @@ var admin_orders = function() {
 //on error, show an error icon in the first column, but suppress the error message from being loaded in THAT column, which is a small spot to put a message.
 		handleSendEmail : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin_orders.callsbacks.handleSendEmail.onSuccess"); app.u.dump(tagObj);
-				var $td = $(app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)');
+//				_app.u.dump("BEGIN admin_orders.callsbacks.handleSendEmail.onSuccess"); _app.u.dump(tagObj);
+				var $td = $(_app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)');
 //restore selected icon IF row is still selected.
 				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
 				else	{$td.html("")}
 				$td.parent().attr('data-status',''); //reset status.
 				},
 			onError : function(responseData)	{
-//				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
+//				_app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); _app.u.dump(responseData);
 //change the status icon to notify user something went wrong on this update.
 //also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
-				var $row = $(app.u.jqSelector('#',responseData._rtag.targetID));
+				var $row = $(_app.u.jqSelector('#',responseData._rtag.targetID));
 				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
-				app.ext.admin_orders.u.unSelectRow($row);
+				_app.ext.admin_orders.u.unSelectRow($row);
 				delete responseData._rtag.targetID; //don't want the message here.
-				app.u.throwMessage(responseData);
+				_app.u.throwMessage(responseData);
 				}		
 			}, //handleSendEmail
 
 		handleSendEmailFromEdit : {
 			onSuccess : function(tagObj)	{
 				$('body').hideLoading();
-				app.u.throwMessage(app.u.successMsgObject("Your email has been sent."));
+				_app.u.throwMessage(_app.u.successMsgObject("Your email has been sent."));
 				}
 			}, //handleSendEmail
 
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
-				$(app.u.jqSelector('#',tagObj.targetID)).find('td:eq('+app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS')+')').text('Paid');
-				var $td = $(app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)')
+				$(_app.u.jqSelector('#',tagObj.targetID)).find('td:eq('+_app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS')+')').text('Paid');
+				var $td = $(_app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)')
 //restore selected icon IF row is still selected.
 				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
 				else	{$td.html("")}
 				$td.parent().attr('data-status',''); //reset status.
 				},
 			onError : function(responseData)	{
-//				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
+//				_app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); _app.u.dump(responseData);
 //change the status icon to notify user something went wrong on this update.
 //also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
-				var $row = $(app.u.jqSelector('#',responseData._rtag.targetID));
+				var $row = $(_app.u.jqSelector('#',responseData._rtag.targetID));
 				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
-				app.ext.admin_orders.u.unSelectRow($row);
+				_app.ext.admin_orders.u.unSelectRow($row);
 
 				delete responseData._rtag.targetID; //don't want the message here.
-				app.u.throwMessage(responseData);
+				_app.u.throwMessage(responseData);
 				}		
 			}, //orderFlagAsPaid
 			
@@ -203,8 +203,8 @@ var admin_orders = function() {
 		listOrders : {
 			onSuccess : function(tagObj)	{
 
-//app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
-//app.u.dump(' -> tagObj: '); app.u.dump(tagObj);
+//_app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+//_app.u.dump(' -> tagObj: '); _app.u.dump(tagObj);
 
 
 
@@ -213,9 +213,9 @@ $('#ordersInterfaceMainColumn','#ordersContent').hideLoading().removeData('activ
 
 //ucomment this in button instead of auto-submit mode. button class changed once filter changes occur (but before button is pressed). this resets button.
 //$("[data-app-event='admin_orders|orderListFiltersUpdateButton']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
-//app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
+//_app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
 
-var ordersData = app.data[tagObj.datapointer]['@orders'];
+var ordersData = _app.data[tagObj.datapointer]['@orders'];
 
 var L = ordersData.length;
 var $cmenu; //recyled. stors the context menu for an order.
@@ -226,22 +226,22 @@ var $tbody = $("<tbody \/>"); //used to store all the rows so the dom only gets 
 
 
 if(L)	{
-//	app.u.dump(" -> ordersData.length (L): "+L);
+//	_app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
 		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerDetail call.
-		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
-		app.u.handleButtons($row);
+		var $row = _app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
+		_app.u.handleButtons($row);
 		$tbody.append($row);
 		}
 // didn't use a replace because I didn't want to lose the properties already on target maintain them in two locations.
 	$target.append($tbody.children());
 
-var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS'); //index of payment status column. used in flagOrderAsPaid. here so lookup only occurs once.
+var statusColID = _app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS'); //index of payment status column. used in flagOrderAsPaid. here so lookup only occurs once.
 
 function pools2Object()	{
 	var r = {};
-	var pools = app.ext.admin_orders.vars.pools;
+	var pools = _app.ext.admin_orders.vars.pools;
 	var L = pools.length;
 	for(var i = 0; i < L; i += 1)	{
 		r["order_pool_change|"+pools[i]] = {"name": pools[i]};
@@ -251,8 +251,8 @@ function pools2Object()	{
 
 function messages2Object()	{
 	var r = {};
-	for(var key in app.ext.admin_orders.vars.emailMessages)	{
-		r["customer_email|"+key] = {'name' : app.ext.admin_orders.vars.emailMessages[key]}
+	for(var key in _app.ext.admin_orders.vars.emailMessages)	{
+		r["customer_email|"+key] = {'name' : _app.ext.admin_orders.vars.emailMessages[key]}
 		}
 	return r;
 	}
@@ -262,9 +262,9 @@ $.contextMenu({
 	'selector' : '.adminOrderLineItem',
 	'callback' : function(key,options)	{
 		//executed when a menu option is clicked.
-//		app.u.dump(" -> contextMenu key: "+key);
-//		app.u.dump(" -> ID: "+$(this).attr('id'));
-		app.ext.admin_orders.u.handleOrderListCMenu(key,$(this),{'statusColID':statusColID});
+//		_app.u.dump(" -> contextMenu key: "+key);
+//		_app.u.dump(" -> ID: "+$(this).attr('id'));
+		_app.ext.admin_orders.u.handleOrderListCMenu(key,$(this),{'statusColID':statusColID});
 		},
 	'events' : {
 		'hide' : function()	{
@@ -297,11 +297,11 @@ else	{
 
 	var regex = /^20\d\d-[01]\d-[\d]+$/;
 	if(tagObj.keyword && regex.test(tagObj.keyword))	{
-		app.u.dump("The search was for an order ID.");
+		_app.u.dump("The search was for an order ID.");
 		$('#orderListTableContainer').append($("<div \/>").addClass('lookLikeLink').on('click',function(){
 			$('#ordersContent').empty();
-			app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
-			app.model.dispatchThis();
+			_app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
+			_app.model.dispatchThis();
 			}).append("<b>Click here</b> to load order "+tagObj.keyword));
 		}
 	}
@@ -322,21 +322,21 @@ else	{
 		
 		initOrderManager : function($target,P)	{
 			P = P || {};
-			app.u.dump("BEGIN admin_orders.a.initOrderManager.");
+			_app.u.dump("BEGIN admin_orders.a.initOrderManager.");
 //			var $target = $('#ordersContent');
 			
 			
-//			app.u.dump(P);
-			app.ext.admin_orders.u.handleOrderListTab('deactivate');
-			var oldFilters = app.model.dpsGet('admin_orders');
-			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
+//			_app.u.dump(P);
+			_app.ext.admin_orders.u.handleOrderListTab('deactivate');
+			var oldFilters = _app.model.dpsGet('admin_orders');
+			if(P.filters){_app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
-//				app.u.dump(" -> use old filters.");
+//				_app.u.dump(" -> use old filters.");
 				P.filters = oldFilters.managerFilters || {};
 				}
-			else{P.filters = {}; app.u.dump(" -> no filters at all. will use a default.");}
+			else{P.filters = {}; _app.u.dump(" -> no filters at all. will use a default.");}
 
-//			app.u.dump(" -> oldFilters: "); app.u.dump(oldFilters);
+//			_app.u.dump(" -> oldFilters: "); _app.u.dump(oldFilters);
 
 //if no filters are passed in and no 'last filter' is present, set some defaults.
 			if($.isEmptyObject(P.filters))	{
@@ -350,7 +350,7 @@ else	{
 
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_orderManager'},'orderManagerTemplate',app.ext.admin_orders.vars));
+				$target.empty().append(_app.renderFunctions.transmogrify({'id':'OM_orderManager'},'orderManagerTemplate',_app.ext.admin_orders.vars));
 // SANITY: the template is now on the DOM in target. you can now safely affect it.
 
 				$("[data-app-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
@@ -367,7 +367,7 @@ else	{
 	$("table[data-app-role='orderListTable']:first, table[data-app-role='itemListTable']:first",$target).selectable({
 		filter: 'tr',
 		stop: function(){
-			app.u.dump(" -> selectable 'stop' has been triggered");
+			_app.u.dump(" -> selectable 'stop' has been triggered");
 			// in this context, 'this' is the table selectable was applied to.
 			var $table = $(this);
 			$( "tr", $table ).each(function() {
@@ -411,14 +411,14 @@ else	{
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
 
 //check to see which index in accordian was open last.
-				var settings = app.model.dpsGet('admin_orders','accordion') || {};
+				var settings = _app.model.dpsGet('admin_orders','accordion') || {};
 				settings.active = settings.active || 0; //default to search.
 				$(".searchAndFilterContainer",$target).accordion({
 					heightStyle: "content",
 					collapsible: true,
 					active : settings.active,
 					change : function(e,ui)	{
-						app.model.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.
+						_app.model.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.
 						}
 					});
 				
@@ -442,16 +442,16 @@ else	{
 					});
 					
 //go get the list of orders and any other necessary data
-				app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
-				app.ext.admin_orders.a.showOrderList(P.filters);
+				_app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
+				_app.ext.admin_orders.a.showOrderList(P.filters);
 
 				$target.anydelegate();
-				app.u.handleButtons($target);
+				_app.u.handleButtons($target);
 				}
 			else	{
 				$('#globalMessaging').anymessage({"message":"In admin_orders.a.initOrderManager, pool ["+P.pool+"] not passed into initOrderManager.","gMessage":true});
 				}
-//			app.u.dump("END initOrderManager");
+//			_app.u.dump("END initOrderManager");
 			}, //initOrderManager
 
 //will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
@@ -468,24 +468,24 @@ else	{
 				$target.dialog('open');
 				$target.showLoading({'message':'Fetching list of email messages/content'});
 	
-				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
+				_app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
 					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						if(rd._rtag && rd._rtag.selector)	{
-							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+							$(_app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
 							}
-						app.u.throwMessage(rd);
+						_app.u.throwMessage(rd);
 						}
 					else	{
-						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-						app.u.handleAppEvents($target);
+						$target.append(_app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',_app.data[rd.datapointer]));
+						_app.u.handleAppEvents($target);
 						}
 		
 					}},'mutable');
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				}
 			else	{
-				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
+				_app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
 				}
 			},
 
@@ -494,25 +494,25 @@ else	{
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
 //otherwise, it could be possible to load new content into the tab but NOT have the data attributes cleaned out.
 		showOrderView : function(orderID,CID,targetID,Q)	{
-//			app.u.dump("BEGIN orders.a.showOrderView");
-//			app.u.dump(" -> cid: "+CID);
+//			_app.u.dump("BEGIN orders.a.showOrderView");
+//			_app.u.dump(" -> cid: "+CID);
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
-//app.u.dump(" -> targetID: "+targetID);
+//_app.u.dump(" -> targetID: "+targetID);
 //if you are reusing a targetID, do your own empty before running this.
-				var	$target = $(app.u.jqSelector('#',targetID));
+				var	$target = $(_app.u.jqSelector('#',targetID));
 				$target.showLoading({'message':'Fetching order data'});
 
 //go fetch order data. callback handles data population.
-				app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
-				app.model.destroy('adminOrderPaymentMethods'); //though not stored in local, be sure the last orders methods aren't by accident.
+				_app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+				_app.model.destroy('adminOrderPaymentMethods'); //though not stored in local, be sure the last orders methods aren't by accident.
 
-				app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
-//	app.u.dump("Executing callback for adminOrderDetail");
+				_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
+//	_app.u.dump("Executing callback for adminOrderDetail");
 	
 					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({"message":rd,"gMessage":true});
 						}
 					else	{
@@ -520,7 +520,7 @@ else	{
 						$target.append($order);
 						$order.anycontent({
 							templateID : 'orderDetailsTemplate',
-							data : $.extend({},app.ext.admin_orders.vars,app.data[rd.datapointer])
+							data : $.extend({},_app.ext.admin_orders.vars,_app.data[rd.datapointer])
 							});
 
 						$order.attr({'data-order-view-parent':orderID,'id':targetID+"_order",'orderid':orderID,'cid':CID}); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
@@ -529,13 +529,13 @@ else	{
 						
 
 						var
-							orderData = app.data[rd.datapointer];
-							orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
+							orderData = _app.data[rd.datapointer];
+							orderData.emailMessages = _app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 
 //trigger the editable regions
-						app.ext.admin_orders.u.makeEditable($("[data-app-role='orderUpdateNotesContainer']",$order),{'inputType':'textarea'});
-						app.ext.admin_orders.u.makeEditable($('.billAddress',$order),{});
-						app.ext.admin_orders.u.makeEditable($('.shipAddress',$order),{});
+						_app.ext.admin_orders.u.makeEditable($("[data-app-role='orderUpdateNotesContainer']",$order),{'inputType':'textarea'});
+						_app.ext.admin_orders.u.makeEditable($('.billAddress',$order),{});
+						_app.ext.admin_orders.u.makeEditable($('.shipAddress',$order),{});
 		
 						$("[data-role='adminOrders|orderSummary'] :input",$order).off('change.trackChange').on('change.trackChange',function(){
 							$(this).addClass('edited');
@@ -549,8 +549,8 @@ else	{
 							}
 
 
-						app.u.handleCommonPlugins($order);
-						app.u.handleAppEvents($order);
+						_app.u.handleCommonPlugins($order);
+						_app.u.handleAppEvents($order);
 
 //now is the time on sprockets when we enhance.
 
@@ -615,15 +615,15 @@ else	{
 					},'extension':'admin_orders'},Q);
 //zero isn't a valid cid.  cid must also be a number.
 				if(Number(CID) > 0)	{
-				//	app.u.dump("fetch customer record");
-					r += app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
+				//	_app.u.dump("fetch customer record");
+					r += _app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 					}
 				else	{
-					app.u.dump("WARNING! - no CID set. not critical, but CID is preferred.");
+					_app.u.dump("WARNING! - no CID set. not critical, but CID is preferred.");
 					}
 				}
 			else	{
-				app.u.throwGMessage("In admin_orders.a.showOrderDetails, either orderID ["+orderID+"] or targetID ["+targetID+"] were left blank");
+				_app.u.throwGMessage("In admin_orders.a.showOrderDetails, either orderID ["+orderID+"] or targetID ["+targetID+"] were left blank");
 				}
 			return r; //1 dispatch occurs
 			},
@@ -632,16 +632,16 @@ else	{
 
 
 		showOrderEditorInDialog : function(orderID,CID)	{
-app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
-app.u.dump(" -> orderID : "+orderID);
-app.u.dump(" -> CID : "+CID);
+_app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
+_app.u.dump(" -> orderID : "+orderID);
+_app.u.dump(" -> CID : "+CID);
 
 if(orderID)	{
 
 
 	//when a modal may be opened more than once, set autoOpen to false then execute a dialog('open'). Otherwise it won't open after the first time.
 	safeID = 'viewOrderDialog_'+orderID;
-	var $ordersModal = $(app.u.jqSelector('#',safeID)); //global so it can be easily closed.
+	var $ordersModal = $(_app.u.jqSelector('#',safeID)); //global so it can be easily closed.
 
 	if($ordersModal.length == 0)	{
 		$ordersModal = $("<div />").attr({'id':safeID,'title':'Edit Order '+orderID}).data('orderid',orderID).appendTo('body');
@@ -650,10 +650,10 @@ if(orderID)	{
 	else	{$ordersModal.empty()} //dialog already exists, empty it to always populate w/ up to date content.
 	$ordersModal.dialog('open');
 	this.showOrderView(orderID,CID,safeID);
-	app.model.dispatchThis();
+	_app.model.dispatchThis();
 	}
 else	{
-	app.u.throwGMessage("WARNING! - no orderID passed into admin_orders.u.showOrderEditorInDialog.");
+	_app.u.throwGMessage("WARNING! - no orderID passed into admin_orders.u.showOrderEditorInDialog.");
 	}
 			}, //showOrderEditorInDialog
 
@@ -662,11 +662,11 @@ else	{
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
 			//
-//			app.u.dump("BEGIN orders.a.showOrderList");
+//			_app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
 				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
 				if($mainCol.data('activeRequestUUID'))	{
-					app.model.abortRequest('mutable',$mainCol.data('activeRequestUUID'))
+					_app.model.abortRequest('mutable',$mainCol.data('activeRequestUUID'))
 					}
 				else	{
 					//if an active request was in progress, showLoading is already running.
@@ -674,12 +674,12 @@ else	{
 					}
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
-				app.model.destroy('adminOrderList'); //always refresh list.
-				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'});
-					$mainCol.data('activeRequestUUID',app.model.dispatchThis('mutable'));
+				_app.model.destroy('adminOrderList'); //always refresh list.
+				_app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'});
+					$mainCol.data('activeRequestUUID',_app.model.dispatchThis('mutable'));
 				}
 			else	{
-				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
+				_app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); _app.u.dump(filterObj);
 				}
 	
 			}, //showOrderList
@@ -713,20 +713,20 @@ else	{
 				else	{}
 
 				if(err)	{
-					var msgObj = app.u.errMsgObject(err);
+					var msgObj = _app.u.errMsgObject(err);
 					msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
-					app.u.throwMessage(msgObj);
+					_app.u.throwMessage(msgObj);
 					}
 				else	{
 					formJSON.orderid = orderID; //needed in obj for dispatch
 					$parent.empty();
-					app.ext.admin.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
-					app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable'); 
-					app.model.dispatchThis('immutable');
+					_app.ext.admin.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
+					_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable'); 
+					_app.model.dispatchThis('immutable');
 					}
 				}
 			else	{
-				app.u.throwGMessage("In admin_orders.a.handlePaymentAction, unabled to ascertain orderID.");
+				_app.u.throwGMessage("In admin_orders.a.handlePaymentAction, unabled to ascertain orderID.");
 				}
 			return false;
 			}
@@ -739,24 +739,24 @@ else	{
 	renderFormats : {
 		
 		etypeAsClass : function($tag,data)	{
-//			app.u.dump("BEGIN admin_orders.renderformats.etypeAsClass. ");
-//			app.u.dump(" -> this bit ["+data.value+"] is on: "+app.u.isThisBitOn(2,data.value));
-			if(data.value == 8 || app.u.isThisBitOn(8,data.value))	{$tag.addClass('red')}
-			else if(data.value == 2 || app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
+//			_app.u.dump("BEGIN admin_orders.renderformats.etypeAsClass. ");
+//			_app.u.dump(" -> this bit ["+data.value+"] is on: "+_app.u.isThisBitOn(2,data.value));
+			if(data.value == 8 || _app.u.isThisBitOn(8,data.value))	{$tag.addClass('red')}
+			else if(data.value == 2 || _app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
 			else	{} //do nothing.
 			},
 		
 		orderFlagsAsSpans : function($tag,data)	{
-			var flags = app.ext.admin_orders.u.getOrderFlagsAsArray(data.value),
+			var flags = _app.ext.admin_orders.u.getOrderFlagsAsArray(data.value),
 			L = flags.length;
-//			app.u.dump(" -> flags: "); app.u.dump(flags);
+//			_app.u.dump(" -> flags: "); _app.u.dump(flags);
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append($("<span \/>").addClass(flags[i].toLowerCase()));
 				}
 			}, //orderFlagsAsSpans
 		orderPoolSelect : function($tag,data)	{
 			var $opt;
-			var pools = app.ext.admin_orders.vars.pools;
+			var pools = _app.ext.admin_orders.vars.pools;
 			var L = pools.length;
 			
 			for(var i = 0; i < L; i += 1)	{
@@ -771,24 +771,24 @@ else	{
 			}, //orderPoolSelect
 		
 		paymentActions : function($tag,data)	{
-//			app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
+//			_app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
 			if(data.value.puuid)	{
 				$tag.append("[chained]"); //chained items get no actions.
 				}
 			else	{
-				var actions = app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
+				var actions = _app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
 				L = actions.length;
 				if(L > 0)	{
 					var $select = $("<select \/>").attr('name','action').data(data.value);
 					$select.off('change.showActionInputs').on('change.showActionInputs',function(){
 						var $tr = $(this).closest('tr');
 						if($(this).val())	{
-		//					app.u.dump("$tr.next().attr('data-app-role'): "+$tr.next().attr('data-app-role'));
+		//					_app.u.dump("$tr.next().attr('data-app-role'): "+$tr.next().attr('data-app-role'));
 		//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
 							if($tr.next().data('app-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
 							else	{} //content hasn't been generated already, so do nothing.
 
-							$tr.after("<tr data-app-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
+							$tr.after("<tr data-app-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='_app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+_app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
 							$tr.next().find('button').button(); //buttonify the button
 							}
 						else	{
@@ -817,7 +817,7 @@ else	{
 		fetchAndDisplayPayMethods : function($tag,data)	{
 			$tag.showLoading({'message':'Fetching payment methods for order'});
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
-			app.ext.admin.calls.adminOrderPaymentMethods.init({
+			_app.ext.admin.calls.adminOrderPaymentMethods.init({
 				'orderid':data.value.our.orderid,
 				'customerid':data.value.customer.cid,
 				'ordertotal':data.value.sum.order_total,
@@ -825,25 +825,25 @@ else	{
 				},{
 				'callback':function(rd){
 					$tag.hideLoading();
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$tag.anymessage({"message":"In admin_orders.renderFormats.fetchAndDisplayPayMethods, the request for payment methods has failed.",'gMessage':true});
 						}
 					else {
-	//						app.u.dump("rd: "); app.u.dump(rd);
+	//						_app.u.dump("rd: "); _app.u.dump(rd);
 	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
-	//					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",app.data[rd.datapointer]);
-						$tag.append(app.ext.order_create.u.buildPaymentOptionsAsRadios(app.data[rd.datapointer]['@methods']));
+	//					_app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",_app.data[rd.datapointer]);
+						$tag.append(_app.ext.order_create.u.buildPaymentOptionsAsRadios(_app.data[rd.datapointer]['@methods']));
 						$(':radio',$tag).each(function(){
 							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
 	//generates the bulk of the inputs. shared with store. these are admin only inputs.
 	//eventually, these should be moved into updatePayDetails and an admin param should be supported.
-								app.ext.cco.u.updatePayDetails($(this).closest('fieldset')); 
+								_app.ext.cco.u.updatePayDetails($(this).closest('fieldset')); 
 								});
 							});
 						}
 					}
 				},'immutable');
-			app.model.dispatchThis('immutable');
+			_app.model.dispatchThis('immutable');
 
 			},
 
@@ -868,34 +868,34 @@ else	{
 			else if(c == 'D')	{$tag.attr('title','Declined').addClass('red').text('D')}
 			else if(c == '')	{} //supported, but no action/output.
 			else	{
-				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
+				_app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
 				}
 			}, //reviewStatus
 
 //pass in the entire shipments line/object (@SHIPMENTS[0])
 		trackingAsLink : function($tag,data)	{
-//			app.u.dump(" -> data.value: "); app.u.dump(data.value);
+//			_app.u.dump(" -> data.value: "); _app.u.dump(data.value);
 			if(data.value.track)	{			
 				$tag.text(data.value.track);
 //can only link up the tracking number if we can convert the ship code to a carrier, which requires appResource|shipcodes.json
 //don't fail if it's not available (it should be by now), just output the tracking number without a link.
-				if(app.model.fetchData("appResource|shipcodes.json"))	{
-					var carrier = app.ext.admin_orders.u.getCarrierByShipCode(data.value.carrier);
-//					app.u.dump(" -> carrier: "+carrier);
+				if(_app.model.fetchData("appResource|shipcodes.json"))	{
+					var carrier = _app.ext.admin_orders.u.getCarrierByShipCode(data.value.carrier);
+//					_app.u.dump(" -> carrier: "+carrier);
 					if(carrier == "UPS" || carrier == "FDX" || carrier == "DHL" || carrier == "USPS")	{
 						$tag.addClass('lookLikeLink');
 						$tag.off('click.tracking').on('click.tracking',function(){
 							if(carrier == "UPS")	{
-								app.ext.admin.u.linkOffSite("http://wwwapps.ups.com/WebTracking/track?HTMLVersion=5.0&loc=en_US&Requester=UPSHome&WBPM_lid=homepage%2Fct1.html_pnl_trk&trackNums="+data.value.track+"&track.x=Track");
+								_app.ext.admin.u.linkOffSite("http://wwwapps.ups.com/WebTracking/track?HTMLVersion=5.0&loc=en_US&Requester=UPSHome&WBPM_lid=homepage%2Fct1.html_pnl_trk&trackNums="+data.value.track+"&track.x=Track");
 								}
 							else if(carrier == "DHL")	{
-								app.ext.admin.u.linkOffSite("http://webtrack.dhlglobalmail.com/?mobile=&trackingnumber="+data.value.track);
+								_app.ext.admin.u.linkOffSite("http://webtrack.dhlglobalmail.com/?mobile=&trackingnumber="+data.value.track);
 								}
 							else if(carrier == "USPS")	{
-								app.ext.admin.u.linkOffSite("https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1="+data.value.track);
+								_app.ext.admin.u.linkOffSite("https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1="+data.value.track);
 								}
 							else if(carrier == "FDX")	{
-								app.ext.admin.u.linkOffSite("https://www.fedex.com/fedextrack/index.html?tracknumbers="+data.value.track+"&cntry_code=us");
+								_app.ext.admin.u.linkOffSite("https://www.fedex.com/fedextrack/index.html?tracknumbers="+data.value.track+"&cntry_code=us");
 								}
 							else	{} //should never get here.
 							});
@@ -903,14 +903,14 @@ else	{
 					else	{} //no direct link for this carrier.
 					}
 				else	{
-					app.u.dump("WARNING! non critical issue: admin_orders.renderFormat.trackingAsLink could not display the tracking # as a link because appResource|shipcodes.json was not available.");
+					_app.u.dump("WARNING! non critical issue: admin_orders.renderFormat.trackingAsLink could not display the tracking # as a link because appResource|shipcodes.json was not available.");
 					}
 				}
 			else	{} //no tracking number. do nothing.
 			},
 		
 		paystatus : function($tag,data){
-//			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
+//			_app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
 			var ps = data.value.substr(0,1), //first characer of pay status.
 			pretty,
 			className = '';
@@ -946,8 +946,8 @@ else	{
 
 		
 		paystatusDetailed : function($tag,data){
-//			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
-//			app.u.dump(data.value);
+//			_app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
+//			_app.u.dump(data.value);
 			var pref = data.value, //shortcut. used the common name so dev's would know exactly what data type we're dealing with.
 			ps = pref.ps ? pref.ps.substr(0,1) : null, //first characer of pay status.
 			output,
@@ -965,11 +965,11 @@ else	{
 				default: output = 'unknown'; break;
 				}
 // ??? status '5' is not handled in this logic, which came directly from payment.cgi line 461
-			if(app.ext.admin_orders.u.ispsa(ps,[2,6,9]))	{className = 'lineThrough'}
-			else if	(app.ext.admin_orders.u.ispsa(ps,[3]))	{className = 'red'}
-			else if	(app.ext.admin_orders.u.ispsa(ps,[4]))	{className = 'orange'}
-			else if(app.ext.admin_orders.u.ispsa(ps,[0]))	{className = 'green'}
-			else if (app.ext.admin_orders.u.ispsa(ps,[1]))	{className = 'blue'}
+			if(_app.ext.admin_orders.u.ispsa(ps,[2,6,9]))	{className = 'lineThrough'}
+			else if	(_app.ext.admin_orders.u.ispsa(ps,[3]))	{className = 'red'}
+			else if	(_app.ext.admin_orders.u.ispsa(ps,[4]))	{className = 'orange'}
+			else if(_app.ext.admin_orders.u.ispsa(ps,[0]))	{className = 'green'}
+			else if (_app.ext.admin_orders.u.ispsa(ps,[1]))	{className = 'blue'}
 			else	{} //
 			output = "<div class='"+className+"'><b>"+output+"<\/b> ("+pref.ps+")<\/div>"; //add the class just to the pretty payment status.
 			if (pref.tender == 'PAYPALEC') {
@@ -1059,18 +1059,18 @@ else	{
 		u : {
 
 		handleOrderListCMenu : function(action,$row,vars)	{
-			app.u.dump("BEGIN handleOrderListCMenu. action: "+action);
+			_app.u.dump("BEGIN handleOrderListCMenu. action: "+action);
 			if(action)	{
 				var verb = action.split("|")[0];
 				switch(verb)	{
 					case 'customer_edit':
-						var $D = app.ext.admin.i.dialogCreate({'title':'Edit Customer','showLoading':false});
+						var $D = _app.ext.admin.i.dialogCreate({'title':'Edit Customer','showLoading':false});
 						$D.dialog('open');
-						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':$row.data("cid")});
+						_app.ext.admin_customer.a.showCustomerEditor($D,{'CID':$row.data("cid")});
 						break;
 					
 					case 'ticket_create':
-						app.ext.admin_customer.a.showCRMTicketCreateInDialog({
+						_app.ext.admin_customer.a.showCRMTicketCreateInDialog({
 							'orderid':$row.data('orderid')
 							});
 						break;
@@ -1078,22 +1078,22 @@ else	{
 					case 'customer_email':
 						var MSG = action.split('|')[1];
 						if(MSG == 'CUSTOMMESSAGE')	{
-							app.ext.admin_orders.a.showCustomMailEditor($row.data('orderid'),$row.data('prt'));
+							_app.ext.admin_orders.a.showCustomMailEditor($row.data('orderid'),$row.data('prt'));
 							}
 						else	{
-							app.ext.admin_orders.u.sendOrderMail($row.data('orderid'),MSG,$row);
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.u.sendOrderMail($row.data('orderid'),MSG,$row);
+							_app.model.dispatchThis('immutable');
 							}
 						break;
 					
 					case 'order_flagaspaid':
-						app.ext.admin_orders.u.flagOrderAsPaid($row,vars.statusColID);
-						app.model.dispatchThis('immutable');
+						_app.ext.admin_orders.u.flagOrderAsPaid($row,vars.statusColID);
+						_app.model.dispatchThis('immutable');
 						break;
 					
 					case 'order_pool_change':
-						app.ext.admin_orders.u.changeOrderPool($row,action.split('|')[1],vars.statusColID);
-						app.model.dispatchThis('immutable');
+						_app.ext.admin_orders.u.changeOrderPool($row,action.split('|')[1],vars.statusColID);
+						_app.model.dispatchThis('immutable');
 						break;
 					
 					default:
@@ -1106,7 +1106,7 @@ else	{
 			},
 
 		handleOrderListTab : function(process)	{
-//			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
+//			_app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
 			var $target = $('#orderListTab');
 			var $table = $('#orderListTable');
 			if($target.length)	{
@@ -1133,7 +1133,7 @@ else	{
 		submitFilter : function()	{
 //* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
 			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
-			app.ext.admin_orders.u.changeOMMode('order');
+			_app.ext.admin_orders.u.changeOMMode('order');
 
 			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
 			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
@@ -1146,14 +1146,14 @@ else	{
 					}
 				});
 			if($.isEmptyObject(obj))	{
-				app.u.throwMessage('Please select at least one filter criteria');
+				_app.u.throwMessage('Please select at least one filter criteria');
 				}
 			else	{
-//						app.u.dump(" -> filter change is getting set locally.");
-				app.model.dpsSet('admin_orders','managerFilters',obj);
-//						app.u.dump("Filter Obj: "); app.u.dump(obj);
-				app.model.destroy('adminOrderList'); //clear local storage to ensure request
-				app.ext.admin_orders.a.showOrderList(obj);
+//						_app.u.dump(" -> filter change is getting set locally.");
+				_app.model.dpsSet('admin_orders','managerFilters',obj);
+//						_app.u.dump("Filter Obj: "); _app.u.dump(obj);
+				_app.model.destroy('adminOrderList'); //clear local storage to ensure request
+				_app.ext.admin_orders.a.showOrderList(obj);
 				}
 
 			},
@@ -1164,7 +1164,7 @@ else	{
 		getOrderFlagsAsArray : function(flagint)	{
 			var flags = new Array(),
 			B = Number(flagint).toString(2).split('').reverse().join(''); //binary
-//			app.u.dump(" -> Binary of flags: "+B);
+//			_app.u.dump(" -> Binary of flags: "+B);
 			B.charAt(0) == 1 ? flags.push('SINGLE_ITEM') : flags.push('MULTI_ITEM'); //1
 			B.charAt(1) == 1 ? flags.push('SHIP_EXPEDITED') : flags.push('SHIP_GROUND'); //2
 			B.charAt(2) == 1 ? flags.push('CUSTOMER_NEW') : flags.push('CUSTOMER_REPEAT'); //4
@@ -1184,20 +1184,20 @@ else	{
 //pass in a code such as FXHD and the carrier (FDX) will be returned.
 //handy when setting up links on tracking codes.
 		getCarrierByShipCode : function(code)	{
-//			app.u.dump("BEGIN admin_orders.u.getCarrierByShipCode");
-//			app.u.dump(" -> code: "+code);
+//			_app.u.dump("BEGIN admin_orders.u.getCarrierByShipCode");
+//			_app.u.dump(" -> code: "+code);
 			var r; //what is returned. either a carrier OR false if no carrier available.
-			if(app.model.fetchData("appResource|shipcodes.json") && code)	{
-				app.u.dump(" -> appResource is availble. ");
-				if(app.data["appResource|shipcodes.json"].contents[code])	{
-					r = app.data["appResource|shipcodes.json"].contents[code].carrier;
+			if(_app.model.fetchData("appResource|shipcodes.json") && code)	{
+				_app.u.dump(" -> appResource is availble. ");
+				if(_app.data["appResource|shipcodes.json"].contents[code])	{
+					r = _app.data["appResource|shipcodes.json"].contents[code].carrier;
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, app.data['appResource|shipcodes.json'].contents["+code+"] was not set. most likely an unrecognized ship code");
+					_app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, _app.data['appResource|shipcodes.json'].contents["+code+"] was not set. most likely an unrecognized ship code");
 					}
 				}
 			else	{
-				app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, either appResource|shipcodes.json ["+typeof app.data["appResource|shipcodes.json"]+"] not available or no shipping code was passed ["+code+"]");
+				_app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, either appResource|shipcodes.json ["+typeof _app.data["appResource|shipcodes.json"]+"] not available or no shipping code was passed ["+code+"]");
 				r = false;
 				}
 			return r;
@@ -1214,14 +1214,14 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 
 //pref is PaymentReference. It's an object, like what would be returned in @payments per line
 			determinePaymentActions : function(pref)	{
-//				app.u.dump("BEGIN admin_orders.u.determinePaymentActions");
-//				app.u.dump(" -> pref:"); app.u.dump(pref);
+//				_app.u.dump("BEGIN admin_orders.u.determinePaymentActions");
+//				_app.u.dump(" -> pref:"); _app.u.dump(pref);
 				var actions = new Array(); //what is returned. an array of actions.
 
-//				app.u.dump(" -> pref.match: ["+pref.tender.match(/CASH|CHECK|PO|MO/)+"]");
+//				_app.u.dump(" -> pref.match: ["+pref.tender.match(/CASH|CHECK|PO|MO/)+"]");
 				
 				if (Number(pref['voided'])) {
-					app.u.dump(" -> transaction VOIDED. no actions.");
+					_app.u.dump(" -> transaction VOIDED. no actions.");
 					// if a transaction has been voided, nothing else can be done.
 					}
 				else if(!pref['tender'])	{} //if no tender is set, no reason to do all these checks.
@@ -1288,8 +1288,8 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 						}
 					}
 				else if (pref['tender'] == pref.tender.match(/CASH|CHECK|PO|MO/)) {
-//					app.u.dump(" -> into tender regex else if");
-					if (app.ext.admin_orders.u.ispsa(pref['ps'],[3])) {
+//					_app.u.dump(" -> into tender regex else if");
+					if (_app.ext.admin_orders.u.ispsa(pref['ps'],[3])) {
 						// top level payment is a credit, so we can only perform voids.
 						actions.push('void') 
 						}
@@ -1303,30 +1303,30 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					actions.push('void')
 					}
 				else{
-					app.u.dump(" -> no tender conditions met.");
+					_app.u.dump(" -> no tender conditions met.");
 					}
 				
 				actions.push('override');
 				
-				if(app.ext.admin_orders.u.ispsa(pref['ps'],[9,2]))	{
+				if(_app.ext.admin_orders.u.ispsa(pref['ps'],[9,2]))	{
 					actions.push('void');
 					}
 				else{}
 
-//				app.u.dump(" -> actions: ");
-//				app.u.dump(actions);
+//				_app.u.dump(" -> actions: ");
+//				_app.u.dump(actions);
 				return actions;
 				},
 //IS Payment Status A...  pass in the ps and an array of ints to check for a match.
 //use this function instead of a direct check ONLY when the match/mismatch is going to have an impact on the view.
 			ispsa : function(ps,intArr)	{
-//				app.u.dump("BEGIN admin_orders.u.ispsa");
-//				app.u.dump(" -> ps = "+ps);
+//				_app.u.dump("BEGIN admin_orders.u.ispsa");
+//				_app.u.dump(" -> ps = "+ps);
 				var r = false, //what is returned. t or f
 				L = intArr.length;
 				if(ps)	{
 					for(var i = 0; i < L; i += 1)	{
-	//					app.u.dump(i+") -> "+intArr[i]);
+	//					_app.u.dump(i+") -> "+intArr[i]);
 						if(Number(ps.substring(0)) === intArr[i])	{r = true; break;} //once a match is made, end the loop and return a true.
 						else {}
 						}
@@ -1375,8 +1375,8 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							break;
 						case 'override':
 							output += "<h4 class='clearfix'>Override: "+pref.uuid+"<\/h4>";
-							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin_support.a.showHelpDocInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
-							output += "<br \/>New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
+							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='_app.ext.admin_support.a.showHelpDocInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
+							output += "<br \/>New payment status: <input type='textbox' size='3' onKeyPress='return _app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
 							output += reasonInput;
 							output += "<button>Override</button>";
 							break;
@@ -1410,7 +1410,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					}
 				else	{
 					output = false;
-					app.u.throwGMessage("in admin_orders.u.getActionInputs, no action specified");
+					_app.u.throwGMessage("in admin_orders.u.getActionInputs, no action specified");
 					}
 				return output;
 				},
@@ -1424,7 +1424,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 
 //when an indivdual row needs to be unselected, execute this.
 //don't recycle this in the unselect all action, don't want the mouseStop triggered for each row.
-// app.ext.admin_orders.u.unSelectRow()
+// _app.ext.admin_orders.u.unSelectRow()
 			unSelectRow : function($row){
 				$row.removeClass("ui-selected").addClass("ui-unselecting");
 				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
@@ -1437,10 +1437,10 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if(msgID && orderID && $row.length){
 					if($row)	{$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>")}
 					else	{}// see how this is used outside the list. may want to use this to trigger a showLoading.
-					app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
+					_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
+					_app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
 					}
 				},
 
@@ -1448,17 +1448,17 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				var $orders = $('.ui-selected','#orderListTableBody');
 				var msgID = CMD.substring(5);
 				if(!$orders.length)	{
-					app.u.throwMessage("Please select at least 1 order");
+					_app.u.throwMessage("Please select at least 1 order");
 					}
 //msgID is set and exists.
-				else if(msgID && app.ext.admin_orders.vars.emailMessages[msgID])	{
+				else if(msgID && _app.ext.admin_orders.vars.emailMessages[msgID])	{
 					$orders.each(function(){
-						app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID,$(this));
+						_app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID,$(this));
 						});
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.bulkSendOrderMail, unable to ascertain msg type. command = "+command+" and msgID = "+msgID);
+					_app.u.throwGMessage("In admin_orders.u.bulkSendOrderMail, unable to ascertain msg type. command = "+command+" and msgID = "+msgID);
 					}
 				},
 
@@ -1477,13 +1477,13 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					else if(CMD == 'PRNT|PACKSLIP')	{
 						templateID = "packslipTemplate"
 						}
-					else	{app.u.throwGMessage("In admin_orders.u.bulkOrdersPrint, CMD value is unsupported.")} //unsupported CMD.
+					else	{_app.u.throwGMessage("In admin_orders.u.bulkOrdersPrint, CMD value is unsupported.")} //unsupported CMD.
 					
 					if(templateID)	{
 						$('#printContainer').empty(); //clean out any previously printed content.
 						$('body').showLoading({'message':'Generating file for print'});
 						
-						app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
+						_app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
 						
 						$orders.each(function(){
 							var $order = $(this);
@@ -1491,30 +1491,30 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
 							else if(sdomain)	{
 								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
+								_app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
 								}
 							else	{
 								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
 								}
-							app.model.destroy('adminOrderDetail|'+$order.data('orderid')); //get a clean copy of the order.
-							app.ext.admin.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
+							_app.model.destroy('adminOrderDetail|'+$order.data('orderid')); //get a clean copy of the order.
+							_app.ext.admin.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
 							})
-						app.calls.ping.init({'callback':function(responseData){
+						_app.calls.ping.init({'callback':function(responseData){
 							$('body').hideLoading();
-							if(app.model.responseHasErrors(responseData)){
-								app.u.throwMessage(responseData);
+							if(_app.model.responseHasErrors(responseData)){
+								_app.u.throwMessage(responseData);
 								}
 							else	{
 //							$('#printContainer').show(); //here for troubleshooting.
-								app.u.printByElementID('printContainer');
+								_app.u.printByElementID('printContainer');
 								}
 							}},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{} //error occured. no templateID defined. error message already displayed.
 					}
 				else	{
-					app.u.throwMessage('Please select at least one row.');
+					_app.u.throwMessage('Please select at least one row.');
 					}
 				}, //bulkOrdersPrint
 
@@ -1526,9 +1526,9 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if($row.length && pool)	{
 					$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 					$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
-					app.ext.admin.calls.adminOrderMacro.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
+					_app.ext.admin.calls.adminOrderMacro.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
 					}
-				else	{app.u.throwGMessage("In admin_orders.u.changeOrderPool, either $row.length ["+$row.length+"] is empty or pool ["+pool+"] is blank")}
+				else	{_app.u.throwGMessage("In admin_orders.u.changeOrderPool, either $row.length ["+$row.length+"] is empty or pool ["+pool+"] is blank")}
 				}, //changeOrderPool
 
 
@@ -1539,11 +1539,11 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if($selectedRows.length)	{
 					var pool = CMD.substr(5);
 					$selectedRows.each(function() {
-						app.ext.admin_orders.u.changeOrderPool($(this),pool);
+						_app.ext.admin_orders.u.changeOrderPool($(this),pool);
 						});
 					}
 				else	{
-					app.u.throwMessage('Please select at least one row.');
+					_app.u.throwMessage('Please select at least one row.');
 					}
 				}, //bulkChangeOrderPool
 
@@ -1551,20 +1551,20 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 			flagOrderAsPaid : function($row,statusColID){
 				if($row.length && statusColID)	{
 					if($row.find('td:eq('+statusColID+')').text().toLowerCase() != 'pending')	{
-						app.u.throwMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending.');
-						app.ext.admin_orders.u.unSelectRow($row);
+						_app.u.throwMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending.');
+						_app.ext.admin_orders.u.unSelectRow($row);
 						$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
 						}
 					else	{
 						$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 						$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
 
-						app.ext.admin.calls.adminOrderMacro.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
+						_app.ext.admin.calls.adminOrderMacro.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
 						}
 					}
 				else	{
-					app.u.throwGMessage("$row not passed/has no length OR statusColID not set in admin_orders.u.flagOrderAsPaid.<br \/>Dev: see console for details.");
-					app.u.dump("WARNING! admin_orders.u.flagOrderAsPaid statusColID not set ["+statusColID+"] OR $row has no length. $row:"); app.u.dump($row);
+					_app.u.throwGMessage("$row not passed/has no length OR statusColID not set in admin_orders.u.flagOrderAsPaid.<br \/>Dev: see console for details.");
+					_app.u.dump("WARNING! admin_orders.u.flagOrderAsPaid statusColID not set ["+statusColID+"] OR $row has no length. $row:"); _app.u.dump($row);
 					}
 				}, //flagOrderAsPaid
 
@@ -1572,13 +1572,13 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 var $selectedRows = $('#orderListTable tr.ui-selected');
 //if no rows are selected, let the user know to select some rows.
 if($selectedRows.length)	{
-	var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
+	var statusColID = _app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
 	$selectedRows.each(function() {
-		app.ext.admin_orders.u.flagOrderAsPaid($(this),statusColID);
+		_app.ext.admin_orders.u.flagOrderAsPaid($(this),statusColID);
 		});
 	}
 else	{
-	app.u.throwMessage('Please select at least one row.');
+	_app.u.throwMessage('Please select at least one row.');
 	}
 
 				}, //bulkFlagOrdersAsPaid
@@ -1586,12 +1586,12 @@ else	{
 
 //used in the order editor. executed whenever a change is made to update the number of changes in the 'save' button.
 			updateOrderChangeCount : function($t)	{
-				app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
+				_app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
 				var $dialog = $t.closest("[data-orderid]"); //container dialog.
 				if($dialog.length)	{
-					app.u.dump(" -> FOUND PARENT!");
+					_app.u.dump(" -> FOUND PARENT!");
 					var numEdits = $('.edited',$dialog).length;
-					app.u.dump(" -> numEdits: "+numEdits);
+					_app.u.dump(" -> numEdits: "+numEdits);
 					var $count = $('.changeCount',$dialog);
 					$count.text(numEdits);
 					//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
@@ -1599,21 +1599,21 @@ else	{
 					else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
+					_app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
 					}
 				
 				return numEdits;
 				},
 
 			getTableColIndexByDataName : function(name)	{
-//				app.u.dump("BEGIN admin_orders.u.getTableColIndexByDataName");
-//				app.u.dump(" -> name = "+name);
+//				_app.u.dump("BEGIN admin_orders.u.getTableColIndexByDataName");
+//				_app.u.dump(" -> name = "+name);
 				var colIndex = false; //what is returned. the column index.
 //SANITY - flexigrid creates a separate table for the header columns.
 				$('#orderListTable thead th').each(function(index){
 					if($(this).attr('data-name') == name)	{ colIndex = index;} 
 					});
-//				app.u.dump(" -> colIndex = "+colIndex);
+//				_app.u.dump(" -> colIndex = "+colIndex);
 				return colIndex; //should only get here if there was no match
 				},
 
@@ -1622,26 +1622,26 @@ else	{
 //this way, a specific section of the page can be made editable (instead of just changing all editable elements).
 //using the .editable class inside allows for editing all elements on a page at one time. may be suicide tho.
 			makeEditable : function($container,P)	{
-//app.u.dump("BEGIN admin_orders.u.makeEditable");
+//_app.u.dump("BEGIN admin_orders.u.makeEditable");
 if(!P.inputType)	{P.inputType == 'text'}
 //info on editable can be found here: https://github.com/tuupola/jquery_jeditable
 $('.editable',$container).each(function(){
 	var $text = $(this);
-//	app.u.dump(" -> making editable: "+$text.data('bind'));
+//	_app.u.dump(" -> making editable: "+$text.data('bind'));
 	if($text.attr('title'))	{
 		$text.before("<label>"+$text.attr('title')+": </label>");
 		$text.after("<br />");
 		}
 	var defaultValue = $text.text(); //saved to data.defaultValue and used to compare the post-editing value to the original so that if no change occurs, .edited class not added.
-//	app.u.dump(" -> defaultValue: "+defaultValue);
+//	_app.u.dump(" -> defaultValue: "+defaultValue);
 	$text.addClass('editEnabled').data('defaultValue',defaultValue).editable(function(value,settings){
 //onSubmit code:
 		if(value == $(this).data('defaultValue'))	{
-			app.u.dump("field edited. no change.")
+			_app.u.dump("field edited. no change.")
 			}
 		else	{
 			$(this).addClass('edited');
-			app.ext.admin_orders.u.updateOrderChangeCount($(this));
+			_app.ext.admin_orders.u.updateOrderChangeCount($(this));
 			}
 		return value;
 		}, {
@@ -1678,13 +1678,13 @@ $('.editable',$container).each(function(){
 						} //defaults for dialog.
 					}
 				else	{}
-					var $content = $("<div \/>",{'title':obj.title,'id':'qv_'+obj.templateID+'_'+app.u.guidGenerator()}).addClass('orderQuickviewContent').appendTo('body');
-					$content.append(app.renderFunctions.createTemplateInstance(obj.templateID,{'orderid':obj.orderID}));
+					var $content = $("<div \/>",{'title':obj.title,'id':'qv_'+obj.templateID+'_'+_app.u.guidGenerator()}).addClass('orderQuickviewContent').appendTo('body');
+					$content.append(_app.renderFunctions.createTemplateInstance(obj.templateID,{'orderid':obj.orderID}));
 
 					$content.dialog(dialogParams);
 					$content.showLoading({'message':'Loading order information'});
-					app.ext.admin.calls.adminOrderDetail.init(obj.orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.ext.admin.calls.adminOrderDetail.init(obj.orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
+					_app.model.dispatchThis('mutable');
 				
 				},
 
@@ -1720,13 +1720,13 @@ $('.editable',$container).each(function(){
 					else	{$ele.addClass('lookLikeLink')} //make sure element looks clickable.
 					
 					$ele.off('click.showOrderEditorInDialog').on('click.showOrderEditorInDialog',function(){
-						app.ext.admin_orders.a.showOrderEditorInDialog(orderID,0);
+						_app.ext.admin_orders.a.showOrderEditorInDialog(orderID,0);
 						});
 					}
 				},
 			
 			"itemListFilterUpdate" : function($ele,P){
-				app.ext.admin_orders.u.changeOMMode('item');
+				_app.ext.admin_orders.u.changeOMMode('item');
 
 				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
 				var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
@@ -1742,21 +1742,21 @@ $('.editable',$container).each(function(){
 							'limit' : 100,
 							'callback':function(rd){
 								$mainCol.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									//success content goes here.
 									$tbody.anycontent(rd);
-									app.u.handleButtons($tbody);
+									_app.u.handleButtons($tbody);
 									}
 								}
 							}
 						}
 					
 					cmdObj[$ele.data('filtervalue')] = 1;
-					app.model.addDispatchToQ(cmdObj,'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.addDispatchToQ(cmdObj,'mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_orders.e.itemListFilterUpdate, data-filtervalue not set on trigger element.","gMessage":true});
@@ -1764,7 +1764,7 @@ $('.editable',$container).each(function(){
 				},
 			
 			"orderListFiltersUpdate" : function($ele,P)	{
-				app.ext.admin_orders.u.submitFilter();
+				_app.ext.admin_orders.u.submitFilter();
 				},
 
 			"orderListUpdateSelectAll" : function($ele,P)	{
@@ -1792,31 +1792,31 @@ $('.editable',$container).each(function(){
 
 				if($ele.attr('href') == '#')	{
 				//if the li has a child list, do nothing on click, the children contain the actions.
-					app.u.dump(" -> selected command has children.");
+					_app.u.dump(" -> selected command has children.");
 					}
 				else	{
 					var command = $ele.attr('href').substring(1), //substring drops the #. will = POOL|PENDING or  PRNT|INVOICE
 					actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
-				//		app.u.dump(" -> actionType: "+actionType);
-				//		app.u.dump(" -> command: "+command);
+				//		_app.u.dump(" -> actionType: "+actionType);
+				//		_app.u.dump(" -> command: "+command);
 					if(actionType)	{
 						switch(actionType)	{
 							case 'POOL':
-								app.ext.admin_orders.u.bulkChangeOrderPool(command);
-								app.model.dispatchThis('immutable');
+								_app.ext.admin_orders.u.bulkChangeOrderPool(command);
+								_app.model.dispatchThis('immutable');
 								break;
 							
 							case 'PMNT':
-								app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
-								app.model.dispatchThis('immutable');
+								_app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
+								_app.model.dispatchThis('immutable');
 								break;
 							
 							case 'MAIL':
-								app.ext.admin_orders.u.bulkSendOrderMail(command);
+								_app.ext.admin_orders.u.bulkSendOrderMail(command);
 								break;
 
 							case 'PRNT':
-								app.ext.admin_orders.u.bulkOrdersPrint(command);
+								_app.ext.admin_orders.u.bulkOrdersPrint(command);
 								break;
 				
 							case 'BTCH':
@@ -1824,7 +1824,7 @@ $('.editable',$container).each(function(){
 								break;
 				
 							default:
-								app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
+								_app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
 							}
 						}
 					}
@@ -1845,23 +1845,23 @@ $('.editable',$container).each(function(){
 					}
 				
 				if(orderID)	{
-					app.ext.admin_orders.u.handleOrderListTab('activate');
-					$(app.u.jqSelector('#',"ordersContent")).empty();
-					app.ext.admin_orders.a.showOrderView(orderID,CID,"ordersContent"); //adds a showLoading
-					app.model.dispatchThis();
+					_app.ext.admin_orders.u.handleOrderListTab('activate');
+					$(_app.u.jqSelector('#',"ordersContent")).empty();
+					_app.ext.admin_orders.a.showOrderView(orderID,CID,"ordersContent"); //adds a showLoading
+					_app.model.dispatchThis();
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateShowEditor, unable to determine order id.");
+					_app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateShowEditor, unable to determine order id.");
 					}
 				}, //orderUpdateShowEditor
 
 //Triggered when the quickview button is clicked. shows the dropdown menu.
 			"orderQuickviewShow" : function($ele,P)	{
-				app.u.dump("BEGIN admin_orders.e.orderQuickviewShow (click!)");
+				_app.u.dump("BEGIN admin_orders.e.orderQuickviewShow (click!)");
 				var $menu = $ele.parent().find('menu');
 				if($menu.hasClass('ui-menu'))	{} //already been opened once, just show it.
 				else	{
-					$menu.menu().data(app.u.getWhitelistedObject($ele.closest('tr').data(),['orderid','sdomain']));
+					$menu.menu().data(_app.u.getWhitelistedObject($ele.closest('tr').data(),['orderid','sdomain']));
 					$menu.css({'position':'absolute','width':'200px','z-index':'10000'});
 					}
 				$menu.show().position({
@@ -1875,29 +1875,29 @@ $('.editable',$container).each(function(){
 
 //triggered when a menu item within quickview is clicked.
 			"orderQuickviewExec" : function($ele,P)	{
-				app.u.dump("BEGIN admin_orders.e.orderQuickviewExec (click!)");
+				_app.u.dump("BEGIN admin_orders.e.orderQuickviewExec (click!)");
 				var verb = $ele.data('verb');
 				var orderID = $ele.closest('menu').data('orderid');
-//				app.u.dump(" -> verb: "+verb+"\n -> orderID: "+orderID);
+//				_app.u.dump(" -> verb: "+verb+"\n -> orderID: "+orderID);
 				if(verb && orderID)	{
 					$ele.closest('menu').hide();
 					switch(verb)	{
 						case 'trackingHistory':
-							app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'orderTrackingHistoryContainerTemplate','title':'Tracking History: '+orderID});
+							_app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'orderTrackingHistoryContainerTemplate','title':'Tracking History: '+orderID});
 							break;
 
 						case 'eventHistory':
-							app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'orderEventsHistoryContainerTemplate','title':'Event History: '+orderID});
+							_app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'orderEventsHistoryContainerTemplate','title':'Event History: '+orderID});
 							break;
 
 						case 'orderNotes':
-							app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'qvOrderNotes','title':'Order Notes: '+orderID});
+							_app.ext.admin_orders.u.quickview({'orderID':orderID,'templateID':'qvOrderNotes','title':'Order Notes: '+orderID});
 							break;
 
 						case 'invoice':
 
 							var sdomain = $ele.closest('menu').data('sdomain'); //stored AS data, not data- attribute.
-							var $D = app.ext.admin.i.dialogCreate({
+							var $D = _app.ext.admin.i.dialogCreate({
 								title : 'View invoice for '+orderID,
 								templateID : 'invoiceTemplate',
 								showLoading : false,
@@ -1908,9 +1908,9 @@ $('.editable',$container).each(function(){
 							$D.dialog('open');
 							$D.showLoading({'message':'Fetching order details'});
 
-							if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
-							app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'anycontent','translateOnly':true,'jqObj':$D,'extendByDatapointers':['appProfileInfo|'+sdomain]},'mutable');
-							app.model.dispatchThis('mutable');
+							if(sdomain)	{_app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
+							_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'anycontent','translateOnly':true,'jqObj':$D,'extendByDatapointers':['appProfileInfo|'+sdomain]},'mutable');
+							_app.model.dispatchThis('mutable');
 
 							break;
 		
@@ -1928,7 +1928,7 @@ $('.editable',$container).each(function(){
 			
 			inProgressOrderEditExec : function($ele,p)	{
 				p.preventDefault();
-				app.ext.order_create.a.startCheckout($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$ele.data('cartid'));
+				_app.ext.order_create.a.startCheckout($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')),$ele.data('cartid'));
 				},
 //This was intentionally set up to generate the carts each time the dropdown was clicked so that if the orders tab is open, then elsewhere in the ui a new cart is created, it will seamlessly show up here.
 //the cartDetail call WILL use a session/local copy of the cart if it's available.
@@ -1936,24 +1936,24 @@ $('.editable',$container).each(function(){
 				p.preventDefault();
 				var $menu = $ele.parent().find("[data-app-role='inProgressOrderList']:first");
 				$menu.empty();
-				for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
+				for(var i = 0, L = _app.vars.carts.length; i < L; i += 1)	{
 					
-					var cartID = app.vars.carts[i], $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em','line-height':'16px'}); //font weight set cuz this is inside the header, which is bold.
+					var cartID = _app.vars.carts[i], $li = $("<li><\/li>").css({'font-weight':'normal','font-size':'.85em','line-height':'16px'}); //font weight set cuz this is inside the header, which is bold.
 					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+cartID+"'><span class='wait marginRight'><\/span>"+cartID+"<\/a>");
 					$menu.append($li);
-					app.calls.cartDetail.init(cartID,{'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
+					_app.calls.cartDetail.init(cartID,{'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
-						else if(app.model.responseIsMissing(rd)){
+						else if(_app.model.responseIsMissing(rd)){
 							//this point would be reached if the cart had expired. It's a 'success' in that the API call worked, but a special case in the handling. how it's handled would be app-specific.
 							$li.hide();
-							app.model.removeCartFromSession(cartID);
+							_app.model.removeCartFromSession(cartID);
 							}
 						else	{
 							$('.wait',$li).hide();
-							if(app.u.thisNestedExists("app.data."+rd.datapointer+".bill") && (app.data[rd.datapointer].bill['firstname'] || app.data[rd.datapointer].bill['lastname']))	{
-								$('a',$li).text((app.data[rd.datapointer].bill['firstname']+" " || "")+(app.data[rd.datapointer].bill['lastname'] || ""));
+							if(_app.u.thisNestedExists("_app.data."+rd.datapointer+".bill") && (_app.data[rd.datapointer].bill['firstname'] || _app.data[rd.datapointer].bill['lastname']))	{
+								$('a',$li).text((_app.data[rd.datapointer].bill['firstname']+" " || "")+(_app.data[rd.datapointer].bill['lastname'] || ""));
 								}
 							else	{} //neither first or last name set in cart. show cart id.
 							}
@@ -1961,7 +1961,7 @@ $('.editable',$container).each(function(){
 					}
 				if($menu.children().length)	{}
 				else	{$menu.append("<li>no in progress orders exist<\/li>")}
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				$menu.menu().css({
 					'position':'absolute',
 					'z-index':100,
@@ -1988,35 +1988,35 @@ $('.editable',$container).each(function(){
 					if(popup)	{
 						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
 						var sdomain, $pop = $(popup.document);
-						if(app.data['adminOrderDetail|'+orderID])	{
-							sdomain = app.data['adminOrderDetail|'+orderID].our.sdomain;
+						if(_app.data['adminOrderDetail|'+orderID])	{
+							sdomain = _app.data['adminOrderDetail|'+orderID].our.sdomain;
 							}
 						else if(sdomain = $ele.closest("[data-sdomain]").data('sdomain'))	{}
 						else	{} //hhhmm.. no sdomain available. that means no branding.
 						
 						if(sdomain)	{
-							app.calls.appProfileInfo.init({'domain':sdomain},{},'mutable'); //have this handy for any orders with no sdomain.
+							_app.calls.appProfileInfo.init({'domain':sdomain},{},'mutable'); //have this handy for any orders with no sdomain.
 							}
-						app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
-						app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
-							if(app.model.responseHasErrors(rd)){
+						_app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+						_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
+							if(_app.model.responseHasErrors(rd)){
 								$('body',$pop).html("").anymessage({'message':rd});
 								}
 							else	{
 								var tmpData = {};
 								if(sdomain)        {
-									tmpData = $.extend(true,{},app.data[rd.datapointer],app.data['appProfileInfo|'+sdomain]);
+									tmpData = $.extend(true,{},_app.data[rd.datapointer],_app.data['appProfileInfo|'+sdomain]);
 									}
 								else        {
-									tmpData = app.data[rd.datapointer];
+									tmpData = _app.data[rd.datapointer];
 									}
-								$('body',$pop).html(app.renderFunctions.transmogrify({},$ele.data('loadstemplate'),tmpData));
+								$('body',$pop).html(_app.renderFunctions.transmogrify({},$ele.data('loadstemplate'),tmpData));
 								popup.focus();
 								popup.print();
 								popup.close();
 								}
 							}},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						
 						}
 					else	{
@@ -2038,19 +2038,19 @@ $('.editable',$container).each(function(){
 						$parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent');
 
-					if(orderID && app.data['adminOrderDetail|'+orderID])	{
-						app.ext.admin_customer.a.customerSearch({'searchfor':app.data['adminOrderDetail|'+orderID].bill.email,'scope':'EMAIL'},function(customer){
+					if(orderID && _app.data['adminOrderDetail|'+orderID])	{
+						_app.ext.admin_customer.a.customerSearch({'searchfor':_app.data['adminOrderDetail|'+orderID].bill.email,'scope':'EMAIL'},function(customer){
 							// ### TODO -> This does NOT work yet. link-customer-id not supported in order macro at this time.
-							app.ext.admin.calls.adminOrderMacro.init(orderID,["LINK-CUSTOMER-ID?CID="+customer.CID],{'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,["LINK-CUSTOMER-ID?CID="+customer.CID],{'callback':function(rd){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									app.ext.admin_orders.a.showOrderView(orderID,customer.CID,'#ordersContent','mutable');
-									app.model.dispatchThis('mutable');
+									_app.ext.admin_orders.a.showOrderView(orderID,customer.CID,'#ordersContent','mutable');
+									_app.model.dispatchThis('mutable');
 									}
 								}});
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							
 							});
 						}
@@ -2068,14 +2068,14 @@ $('.editable',$container).each(function(){
 						$parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent');
 
-					if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].customer && app.data['adminOrderDetail|'+orderID].customer.cid)	{
-						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer: '+app.data['adminOrderDetail|'+orderID].customer.cid});
+					if(orderID && _app.data['adminOrderDetail|'+orderID] && _app.data['adminOrderDetail|'+orderID].customer && _app.data['adminOrderDetail|'+orderID].customer.cid)	{
+						var $D = _app.ext.admin.i.dialogCreate({title:'Edit Customer: '+_app.data['adminOrderDetail|'+orderID].customer.cid});
 						$D.dialog('option','height',($(document.body).height() > 500 ? 500 : ($(document.body).height() - 100)));
-						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':app.data['adminOrderDetail|'+orderID].customer.cid});
+						_app.ext.admin_customer.a.showCustomerEditor($D,{'CID':_app.data['adminOrderDetail|'+orderID].customer.cid});
 						$D.dialog('open');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderCustomerEdit, unable to determine orderID ["+orderID+"]");
+						_app.u.throwGMessage("in admin_orders.buttonActions.orderCustomerEdit, unable to determine orderID ["+orderID+"]");
 						}
 					});
 				}, //orderCustomerEdit
@@ -2093,13 +2093,13 @@ $('.editable',$container).each(function(){
 						qty = $("[name='qty']",$row).val(),
 						price = $("[name='price']",$row).val();
 						if(uuid && orderID && qty && price)	{
-							app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
 							$parent.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
-							app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+							_app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
 							}
 						});
 					}
@@ -2116,13 +2116,13 @@ $('.editable',$container).each(function(){
 						orderID = $parent.data('order-view-parent'),
 						stid = $row.data('stid');
 						if(stid && orderID)	{
-							app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMREMOVE?stid="+stid]);
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMREMOVE?stid="+stid]);
 							$parent.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
-							app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+							_app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
 							}
 						});
 					}
@@ -2142,34 +2142,34 @@ $('.editable',$container).each(function(){
 						formJSON.product_id = formJSON.sku;
 	
 						if(formJSON.sku && orderID)	{
-							if(app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
-									app.u.dump("formJSON"); app.u.dump(formJSON);
+							if(_app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
+									_app.u.dump("formJSON"); _app.u.dump(formJSON);
 								for(var index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
 //if the value is more than two characters and not all uppercase, it's likely a text based sog. add a tildae to the front of the value.
 //this is used on the API side to help distinguish what key value pairs are options.
-//									app.u.dump(" -> index.substr(4): "+index.substr(4));
+//									_app.u.dump(" -> index.substr(4): "+index.substr(4));
 									if(index.length == 2 && index.toUpperCase() == index && formJSON[index].length > 2 && formJSON[index].toUpperCase != formJSON[index])	{
-										app.u.dump(" -> index: "+index+" is most likely a non-inventory-able blob option");
+										_app.u.dump(" -> index: "+index+" is most likely a non-inventory-able blob option");
 										formJSON[index.substr(4)] = "~"+formJSON[index]
 										}
 //strip pog_ but no tildae, which is ONLY needed for text based sogs.
 									else if(index.length == 2 && index.toUpperCase() == index)	{
-										app.u.dump(" -> index: "+index+" is most likely a sog");
+										_app.u.dump(" -> index: "+index+" is most likely a sog");
 										var pogID = index.substr(4);
 //special handling for checkboxes. If NOT optional and blank, needs to be set to NO.
 //on a checkbox sog, an extra param is passed pog_ID_cb which is set to 1. this is to 'know' that the cb was present so if the value is blank, we can handle accordingly.
 										if(pogID.indexOf('_cb') > -1)	{
 											var cbPogID = pogID.substring(0,(pogID.length-3)); //strip __cb off end.
-//											app.u.dump(" -> cbPogID: "+cbPogID);
+//											_app.u.dump(" -> cbPogID: "+cbPogID);
 											if(formJSON[cbPogID])	{
-//												app.u.dump(" -> formJSON[cbPogID] already set: "+formJSON[cbPogID]);
+//												_app.u.dump(" -> formJSON[cbPogID] already set: "+formJSON[cbPogID]);
 												} //already set, use that value and do nothing else.
 											else	{
 //check to see if the sog is optional. if so, do nothing. If not, set to NO
 												var sog = pogs.getOptionByID(cbPogID); //pogs. is instantiated in the chooser as part of the template.
 												if(sog.optional)	{
-//													app.u.dump(" -> sog.optional set: "+sog.optional);
+//													_app.u.dump(" -> sog.optional set: "+sog.optional);
 													} //do nothing if optional. will go up as blank.
 												else	{
 													formJSON[cbPogID] = "NO";
@@ -2179,7 +2179,7 @@ $('.editable',$container).each(function(){
 											}
 										else	{
 // pog indices used to have a pog_ prefix. They no longer do so no sanitization necessary anymore.
-//											app.u.dump(" -> index: "+index+" is not a sog");
+//											_app.u.dump(" -> index: "+index+" is not a sog");
 //											formJSON[pogID] = formJSON[index]
 //											delete formJSON[index];
 											}
@@ -2188,10 +2188,10 @@ $('.editable',$container).each(function(){
 									
 									
 									}
-								app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
+								_app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
 								$parent.empty();
-								app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-								app.model.dispatchThis('immutable');
+								_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+								_app.model.dispatchThis('immutable');
 								
 								}
 							else	{
@@ -2199,10 +2199,10 @@ $('.editable',$container).each(function(){
 								}
 							}
 						else	{
-							app.u.throwGMessage("in admin_orders.buttonActions.orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
+							_app.u.throwGMessage("in admin_orders.buttonActions.orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
 							}
 						});
-					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+					_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
 					});
 				}, //orderItemAddStructured
 
@@ -2210,7 +2210,7 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderItemAddBasic').on('click.orderItemAddBasic',function(event){
 					event.preventDefault();
-					app.u.dump("BEGIN admin_orders.buttonActions.orderItemAddBasic.click");
+					_app.u.dump("BEGIN admin_orders.buttonActions.orderItemAddBasic.click");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
 					$parent = $btn.closest("[data-order-view-parent]"),
 					$form = $("<form>").append("<label><span>sku:</span><input type='text' name='stid' value='' required='required' /></label><label><span>name:</span><input type='text' name='title' value='' required='required'  /></label><label><span>qty:</span><input type='number' class='smallInput' size='3' name='qty' value='1' required='required'  /></label><label><span>price:</span><input type='number' class='smallInput' size='7' name='price' value=''  step='0.01' min='0' required='required'  /></label>"),
@@ -2220,14 +2220,14 @@ $('.editable',$container).each(function(){
 					$form.on('submit',function(event){
 						event.preventDefault();
 						if(orderID)	{
-							app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMADDBASIC?"+$(this).serialize()],{},'immutable');
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,["ITEMADDBASIC?"+$(this).serialize()],{},'immutable');
 							$modal.dialog('close');
 							$parent.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
-							app.u.throwGMessage("In admin_orders.buttonActions.orderItemAddBasic, unable to determine order id.");
+							_app.u.throwGMessage("In admin_orders.buttonActions.orderItemAddBasic, unable to determine order id.");
 							}
 						})
 					$modal.dialog({'modal':true,'width':500});
@@ -2252,7 +2252,7 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
 					event.preventDefault();
-					app.ext.admin_orders.e.orderPrint($btn,event);
+					_app.ext.admin_orders.e.orderPrint($btn,event);
 					});
 				}, //orderPrintInvoice
 
@@ -2260,8 +2260,8 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
-//					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
-					app.ext.admin_orders.e.orderPrint($btn,event);
+//					_app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
+					_app.ext.admin_orders.e.orderPrint($btn,event);
 					});
 				}, //orderPrintPackSlip
 
@@ -2269,10 +2269,10 @@ $('.editable',$container).each(function(){
 				$btn.button();
 //simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
-					app.u.dump(" -> orderEmailSend clicked.");
+					_app.u.dump(" -> orderEmailSend clicked.");
 					event.preventDefault();
 					$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").trigger('click');
-					app.u.dump(" -> $btn.parent().find('[data-app-event='orderEmailShowMessageList']').length: "+$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").length);
+					_app.u.dump(" -> $btn.parent().find('[data-app-event='orderEmailShowMessageList']').length: "+$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").length);
 					});
 
 
@@ -2290,45 +2290,45 @@ $('.editable',$container).each(function(){
 					$('body').showLoading({'message':'Sending custom message for order '+orderID});
 					
 					if(!$.isEmptyObject(frmObj) && orderID && frmObj.SUBJECT && frmObj.BODY && frmObj.BODY.length > 1)	{
-						app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?body="+encodeURIComponent(frmObj.BODY)+"&subject="+encodeURIComponent(frmObj.SUBJECT)],{'callback':function(rd){
+						_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?body="+encodeURIComponent(frmObj.BODY)+"&subject="+encodeURIComponent(frmObj.SUBJECT)],{'callback':function(rd){
 $('body').hideLoading();
-if(app.model.responseHasErrors(rd)){
+if(_app.model.responseHasErrors(rd)){
 	rd.parentID = 'orderEmailCustomMessage';
-	app.u.throwMessage(rd);
+	_app.u.throwMessage(rd);
 	}
 else	{
-	var msgObj = app.u.successMsgObject("Thank you, your message has been sent.");
+	var msgObj = _app.u.successMsgObject("Thank you, your message has been sent.");
 	$('#orderEmailCustomMessage').empty();
 	msgObj.parentID = 'orderEmailCustomMessage';
-	app.u.throwMessage(msgObj);
+	_app.u.throwMessage(msgObj);
 	}
 							}});
-//						app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
+//						_app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
 						if(frmObj.updateSystemMessage && frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
-//							app.u.dump(" -> updating default system messaging");
+//							_app.u.dump(" -> updating default system messaging");
 							frmObj.PRT = partition;
 							frmObj.TYPE = 'ORDER'; //Don't pass a blank FORMAT, must be set to correct type.
 							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-//							app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
-							app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-if(app.model.responseHasErrors(rd)){
+//							_app.u.dump(" -> frmObj: "); _app.u.dump(frmObj);
+							_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
+if(_app.model.responseHasErrors(rd)){
 	rd.parentID = 'orderEmailCustomMessage';
-	app.u.throwMessage(rd);
+	_app.u.throwMessage(rd);
 	}
 else	{
-	var msgObj = app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
+	var msgObj = _app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
 	msgObj.parentID = 'orderEmailCustomMessage';
 	
-	app.u.throwMessage(msgObj);
+	_app.u.throwMessage(msgObj);
 	}
 								}},'immutable');
 							}
 						
-						app.model.dispatchThis('immutable')
+						_app.model.dispatchThis('immutable')
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.e.orderEmailCustomSend, both subject ["+frmObj.subject+"] and body are required and one was empty OR app was unable to ascertain the order id ["+orderID+"]");
-						app.u.dump("In the following object, body param MUST be present and have a length > 1"); app.u.dump(frmObj);
+						_app.u.throwGMessage("In admin_orders.e.orderEmailCustomSend, both subject ["+frmObj.subject+"] and body are required and one was empty OR app was unable to ascertain the order id ["+orderID+"]");
+						_app.u.dump("In the following object, body param MUST be present and have a length > 1"); _app.u.dump(frmObj);
 						}
 					
 					})
@@ -2336,7 +2336,7 @@ else	{
 
 //applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
 			"orderEmailCustomChangeSource" : function($select)	{
-				app.ext.admin.e.toggleEmailInputValuesBySource($select);
+				_app.ext.admin.e.toggleEmailInputValuesBySource($select);
 				}, //orderEmailCustomChangeSource
 
 //
@@ -2352,13 +2352,13 @@ else	{
 					$(this).off('click.sendmail').on('click.sendmail',function(event){
 						event.preventDefault();
 						if($(this).attr('href') == '#MAIL|CUSTOMMESSAGE')	{
-							app.ext.admin_orders.a.showCustomMailEditor(orderID,app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
+							_app.ext.admin_orders.a.showCustomMailEditor(orderID,_app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
 							}
 						else	{
 							$('body').showLoading({'message':'Emailing customer [message: '+$(this).attr('href').substring(6)+']'});
 //substring(6) on the link below strips #MAIL| from the url
-							app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
-							app.model.dispatchThis('immutable');
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
+							_app.model.dispatchThis('immutable');
 							}
 						});
 					});
@@ -2366,7 +2366,7 @@ else	{
 
 //simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){
-					app.u.dump(" -> orderEmailShowMessageList clicked.");
+					_app.u.dump(" -> orderEmailShowMessageList clicked.");
 					$btn.button();
 					event.preventDefault();
                     menu.show().position({
@@ -2387,14 +2387,14 @@ else	{
 			"orderSearch" : function($ele,P)	{
 
 				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
-				app.ext.admin_orders.u.changeOMMode('order');
+				_app.ext.admin_orders.u.changeOMMode('order');
 				
 				var
 					frmObj = $ele.closest('form').serializeJSON(),
 					query;
 				
 				if(frmObj.keyword)	{
-//						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
+//						_app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 					$('#orderListTableBody').empty();
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					$mainCol.showLoading({'message':'Searching orders...'});
@@ -2418,9 +2418,9 @@ else	{
 						  }}
 						}
 					
-					app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':frmObj.keyword},'immutable');
+					_app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':frmObj.keyword},'immutable');
 
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"Please add a keyword (order id, email, etc) into the search form"});
@@ -2454,12 +2454,12 @@ else	{
 
 					if(macros.length)	{
 						$parent.empty();
-						app.ext.admin.calls.adminOrderMacro.init(orderID,macros,{});
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
+						_app.ext.admin.calls.adminOrderMacro.init(orderID,macros,{});
+						_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.e.orderSummarySave, macros is empty. no tax or shipping update recognized.");
+						_app.u.throwGMessage("in admin_orders.e.orderSummarySave, macros is empty. no tax or shipping update recognized.");
 						}
 
 					
@@ -2472,11 +2472,11 @@ else	{
 				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
 					event.preventDefault();
 //this item may be in the order list which would make that list innacurate. this triggers a data reload next time order view is displayed.
-					app.model.destroy('adminOrderList');
+					_app.model.destroy('adminOrderList');
 
 					var $target = $btn.closest("[data-order-view-parent]"),
 					orderID = $target.data('order-view-parent'),
-					cid = app.data['adminOrderDetail|'+orderID].customer.cid;
+					cid = _app.data['adminOrderDetail|'+orderID].customer.cid;
 					
 					if(orderID)	{
 
@@ -2485,7 +2485,7 @@ else	{
 
 //poolSelect is the dropdown for changing the pool.
 						var $poolSelect = $("[data-app-role='orderUpdatePool']",$target);
-						app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
+						_app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
 						if($poolSelect.hasClass('edited'))	{
 							changeArray.push('SETPOOL?pool='+$poolSelect.val());
 							}
@@ -2512,8 +2512,8 @@ else	{
 		
 						if($('.edited',$address).length)	{
 							$('[data-bind]',$address).each(function(){
-								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
-								var attribute = app.renderFunctions.parseDataVar(bindData['var']);
+								var bindData = _app.renderFunctions.parseDataBind($(this).data('bind'));
+								var attribute = _app.renderFunctions.parseDataVar(bindData['var']);
 								kvp += "&"+attribute+"="+$(this).text();
 								});
 							changeArray.push('SETSHIPADDR?'+kvp);
@@ -2522,13 +2522,13 @@ else	{
 //no var declaration because the ship address var is recycled.
 						$address = $("[data-app-role='admin_orders|orderUpdateBillAddress']",$target);
 
-//						app.u.dump(" -> $address.length: "+$address.length);
-//						app.u.dump(" -> $('.edited',$address).length: "+$('.edited',$address).length);
+//						_app.u.dump(" -> $address.length: "+$address.length);
+//						_app.u.dump(" -> $('.edited',$address).length: "+$('.edited',$address).length);
 
 						if($('.edited',$address).length)	{
 							$('[data-bind]',$address).each(function(){
-								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
-								var attribute = app.renderFunctions.parseDataVar(bindData['var']);
+								var bindData = _app.renderFunctions.parseDataBind($(this).data('bind'));
+								var attribute = _app.renderFunctions.parseDataVar(bindData['var']);
 								kvp += "&"+attribute+"="+$(this).text();
 								});
 							if(kvp.charAt(0) == '&')	{kvp.substring(0);} //strip starting ampersand.
@@ -2537,18 +2537,18 @@ else	{
 						delete $address;   //not used anymore.
 						
 						if(changeArray.length)	{
-							if(cid)	{app.model.destroy("adminCustomerDetail|"+cid);} //refresh the customer data in case notes changed.
-							app.ext.admin.calls.adminOrderMacro.init(orderID,changeArray,{},'immutable');
+							if(cid)	{_app.model.destroy("adminCustomerDetail|"+cid);} //refresh the customer data in case notes changed.
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,changeArray,{},'immutable');
 							$target.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,cid,$target.attr('id'),'immutable'); //adds a showloading
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.a.showOrderView(orderID,cid,$target.attr('id'),'immutable'); //adds a showloading
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
 							$("#ordersContent_order").anymessage({'message':'No changes have made.'});
 							}
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateSave, unable to determine order id.");
+						_app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateSave, unable to determine order id.");
 						}
 					});
 				}, //orderUpdateSave
@@ -2561,28 +2561,28 @@ else	{
 					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
 					delete formJSON['want/payby'];
 					
-					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+					_app.u.dump(" -> formJSON.tender: "+formJSON.tender);
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-app-role='orderUpdatePaymentMethodsContainer']"),
 						CMD, //the command for the cart update macro. set later.
-						errors = (typeof app.ext.cco.validate[formJSON.tender] === 'function') ? app.ext.cco.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
+						errors = (typeof _app.ext.cco.validate[formJSON.tender] === 'function') ? _app.ext.cco.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
-						app.u.dump('errors'); app.u.dump(errors);
+						_app.u.dump('errors'); _app.u.dump(errors);
 						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
 						
 
 //the mandatory class gets added to the parent of the input, so that the input, label and more get styled.
 						if(!formJSON.amt)	{
-							var msgObj = app.u.errMsgObject("Please set an amount");
+							var msgObj = _app.u.errMsgObject("Please set an amount");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
-							app.u.throwMessage(msgObj);
+							_app.u.throwMessage(msgObj);
 							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
 							}
 						else if(errors)	{
-							var msgObj = app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
+							var msgObj = _app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
-							app.u.throwMessage(msgObj);
+							_app.u.throwMessage(msgObj);
 							for(var index in errors)	{
 								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
 								}
@@ -2595,8 +2595,8 @@ else	{
 //the object used to create the suplementals is shared with checkout and it currently has the data as payment/cc et all.
 //so that's stripped to just cc. 
 								for(var index in formJSON)	{
-//									app.u.dump(" -> index.substring(0,8): "+index.substring(0,7));
-//									app.u.dump(" -> index.substr(8): "+index.substr(7));
+//									_app.u.dump(" -> index.substring(0,8): "+index.substring(0,7));
+//									_app.u.dump(" -> index.substr(8): "+index.substr(7));
 									if(index.substring(0,8) == 'payment/')	{
 										formJSON[index.substr(8)] = formJSON[index];
 										delete formJSON[index]; //clean out invalid params
@@ -2616,21 +2616,21 @@ else	{
 							var $parent = $btn.closest("[data-order-view-parent]"),
 							orderID = $parent.data('order-view-parent');
 
-							app.ext.admin.calls.adminOrderMacro.init(orderID,[CMD+"?"+decodeURIComponent($.param(formJSON))],{});
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,[CMD+"?"+decodeURIComponent($.param(formJSON))],{});
 							$parent.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-							app.model.dispatchThis('immutable');
+							_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						
 						}
 					else	{
-						var msgObj = app.u.errMsgObject("Please choose a payment method.");
+						var msgObj = _app.u.errMsgObject("Please choose a payment method.");
 						msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
-						app.u.throwMessage(msgObj);
+						_app.u.throwMessage(msgObj);
 						}					
 					
 
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					});
 				}, //orderUpdateAddPayment 
 
@@ -2643,13 +2643,13 @@ else	{
 					var $parent = $btn.closest("[data-app-role='orderUpdateAddTrackingContainer']");
 					$parent.showLoading({'message':'Updating order with tracking information'}); //run just on tracking panel
 					var kvp = $btn.parents('form').serialize();
-					app.ext.admin.calls.adminOrderMacro.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
-					app.model.destroy('adminOrderDetail|'+$btn.data('orderid')); //get a clean copy of the order.
-					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{
+					_app.ext.admin.calls.adminOrderMacro.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
+					_app.model.destroy('adminOrderDetail|'+$btn.data('orderid')); //get a clean copy of the order.
+					_app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{
 						'callback': function(rd){
 							$parent.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								app.u.throwMessage(rd);
+							if(_app.model.responseHasErrors(rd)){
+								_app.u.throwMessage(rd);
 								}
 							else	{
 								var $tbody = $("[data-app-role='transactionHistoryContent']",$parent).empty(); //clear all teh rows from the tracking table.
@@ -2660,7 +2660,7 @@ else	{
 							},
 						'extension':'admin'
 						},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					});
 				}, //orderUpdateAddTracking
 
@@ -2707,11 +2707,11 @@ else	{
 								cmd = "ITEM-UUID-DONE?"
 								}
 							cmd += "UUID="+uuid;
-							app.u.dump(" -> CMD: "+cmd);
-							app.u.dump(" -> orderID: "+orderID);
-							app.ext.admin.calls.adminOrderMacro.init(orderID,[cmd],{});
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]").intervaledEmpty().attr('id'),'immutable');
-							app.model.dispatchThis('immutable');
+							_app.u.dump(" -> CMD: "+cmd);
+							_app.u.dump(" -> orderID: "+orderID);
+							_app.ext.admin.calls.adminOrderMacro.init(orderID,[cmd],{});
+							_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$ele.closest("[data-order-view-parent]").intervaledEmpty().attr('id'),'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
 							$ele.closest('form').anymessage({"message":"In admin_orders.e.inventoryDetailOptionsExec, unable to ascertain the item uuid ["+uuid+"] and/or orderid ["+orderID+"]. Both are required.","gMessage":true});
@@ -2728,24 +2728,24 @@ else	{
 			adminOrderMacroExec : function($ele,p)	{
 				var orderID = $ele.closest("[data-orderid]").attr('data-orderid');
 				if(orderID)	{
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd':'adminOrderMacro',
 						'orderid' : orderID,
 						'@updates' : [$ele.attr('data-macro-cmd')],
 						'_tag':	{
 							'callback':function(rd){
 	//this is used in orders > routes for inventory detail. test there if changes are made.
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$ele.parent().anymessage({'message':rd}); //tag is a button.
 									}
 								else	{
-									$ele.parent().empty().anymessage(app.u.successMsgObject('Route assigned'));
-									app.ext.admin_orders.a.showOrderView(orderID,'','ordersContent')
+									$ele.parent().empty().anymessage(_app.u.successMsgObject('Route assigned'));
+									_app.ext.admin_orders.a.showOrderView(orderID,'','ordersContent')
 									}
 								}
 							}
 						},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					$ele.parent().anymessage({"message":"In admin_orders.e.adminOrderMacroExec, unable to ascertain order ID.","gMessage":true});
@@ -2760,14 +2760,14 @@ else	{
 					var uuid = $ele.closest("[data-uuid]").data('uuid');
 					if(orderID && uuid)	{
 						
-						var $D = app.ext.admin.i.dialogCreate({
+						var $D = _app.ext.admin.i.dialogCreate({
 							'title' : 'Routing options for '+uuid,
 							'showLoading' : false
 							});
 						$D.append("<table data-orderid='"+orderID+"'><tbody data-bind='var: routes(@ROUTES); format:macros2Buttons; extension:admin; _cmd:adminOrderMacro;'></tbody></table>");
 						$D.dialog('open');
 						$D.anydelegate();
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':'adminOrderRouteList',
 							'orderid' : orderID,
 							'uuid' : uuid,
@@ -2778,7 +2778,7 @@ else	{
 								'jqObj' : $D
 								}
 							},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In admin_orders.e.routingDialogShow, unable to ascertain the order id ["+orderID+"] and/or the uuid ["+uuid+"].","gMessage":true});

@@ -22,7 +22,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 */
 
 
-var buysafe_guarantee = function() {
+var buysafe_guarantee = function(_app) {
 	var r = {
 		
 		vars : {
@@ -36,29 +36,29 @@ var buysafe_guarantee = function() {
 		callbacks : {
 			init : {
 				onSuccess : function()	{
-					app.u.dump('BEGIN app.ext.buysafe_guarantee.onSuccess');
+					_app.u.dump('BEGIN _app.ext.buysafe_guarantee.onSuccess');
 /*
 To keep this extension as self-contained as possible, it loads it's own script.
 the callback is handled in the extension loader. It will handle sequencing for the most part.
 The startExtension will re-execute if this script isn't loaded until it has finished loading.
 */
-					app.u.loadScript('https://seal.buysafe.com/private/rollover/rollover.js');
+					_app.u.loadScript('https://seal.buysafe.com/private/rollover/rollover.js');
 					return true; //return false if extension won't load for some reason (account config, dependencies, etc).
 					},
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN app.ext.store_navcats.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.store_navcats.callbacks.init.onError');
 					}
 				},
 
 			startExtension : {
 				onSuccess : function(){
 
-app.u.dump("BEGIN buysafe_guarantee.startExtension.onSuccess.");
+_app.u.dump("BEGIN buysafe_guarantee.startExtension.onSuccess.");
 
 //make sure the templates have been loaded. all the myRIA templates are loaded at the same time.
-					if(app.templates && app.templates.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
+					if(_app.templates && _app.templates.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
 
 //http://developer.buysafe.com/bsg_overview.php
 //http://www.buysafe.com/web/general/kickerpreview.aspx
@@ -68,21 +68,21 @@ if(buySAFE.Hash.length > 0)	{
 	//the showContent function may have already executed prior to startExtension getting executed.
 	WriteBuySafeKickers();
 
-	app.templates.productTemplate.on('complete.buysafe',function($ele,P) {
-//		app.u.dump("Execute WriteBuySafeKicker");
+	_app.templates.productTemplate.on('complete.buysafe',function($ele,P) {
+//		_app.u.dump("Execute WriteBuySafeKicker");
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
-	app.templates.cartTemplate.on('complete.buysafe',function($ele,P) {
+	_app.templates.cartTemplate.on('complete.buysafe',function($ele,P) {
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
 	
 								
-	app.templates.checkoutTemplate.on('complete.buysafe',function($ele,P){
+	_app.templates.checkoutTemplate.on('complete.buysafe',function($ele,P){
 		
-		app.u.dump("BEGIN buysafe_guarantee code pushed on order_create.checkoutCompletes");
-		var order = app.data['order|'+P.orderID].cart;
+		_app.u.dump("BEGIN buysafe_guarantee code pushed on order_create.checkoutCompletes");
+		var order = _app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
 	   buySAFE.Guarantee.subtotal = order['sum/items_total'];
@@ -92,11 +92,11 @@ if(buySAFE.Hash.length > 0)	{
 		}); // end .push					
 	}
 else	{
-	app.u.dump("WARNING! buySAFE.Hash not set/valid ["+buySAFE.Hash+"]");
+	_app.u.dump("WARNING! buySAFE.Hash not set/valid ["+buySAFE.Hash+"]");
 	}
 						}
 					else	{
-						setTimeout(function(){app.ext.buysafe_guarantee.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){_app.ext.buysafe_guarantee.callbacks.startExtension.onSuccess()},250);
 						}
 
 					},

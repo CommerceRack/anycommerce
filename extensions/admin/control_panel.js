@@ -16,7 +16,7 @@
 
 ************************************************************** */
 
-var control_panel = function() {
+var control_panel = function(_app) {
 	var theseTemplates = new Array('controlPanelTemplate');
 	var r = {
 
@@ -31,7 +31,7 @@ var control_panel = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/control_panel.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/control_panel.html',theseTemplates);
 				r = true;
 
 				return r;
@@ -39,7 +39,7 @@ var control_panel = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks

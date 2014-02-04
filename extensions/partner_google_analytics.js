@@ -22,7 +22,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 */
 
 
-var google_analytics = function() {
+var google_analytics = function(_app) {
 	var r = {
 		
 		vars : {
@@ -43,9 +43,9 @@ To keep this extension as self-contained as possible, it loads it's own script.
 the callback is handled in the extension loader. It will handle sequencing for the most part.
 The startExtension will re-execute if this script isn't loaded until it has finished loading.
 */
-					app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+					_app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
 					if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
-						app.u.loadScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'checkout.google.com/files/digital/ga_post.js'); //needed 4 tracking google wallet orders in GA.
+						_app.u.loadScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'checkout.google.com/files/digital/ga_post.js'); //needed 4 tracking google wallet orders in GA.
 						}
 
 					return true;
@@ -53,38 +53,38 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN app.ext.google_analytics.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.google_analytics.callbacks.init.onError');
 					}
 				},
 
 			startExtension : {
 				onSuccess : function(){
-//					app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
+//					_app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
-					if(app.templates && app.templates.productTemplate && typeof _gaq == 'object')	{
+					if(_app.templates && _app.templates.productTemplate && typeof _gaq == 'object')	{
 
-//app.u.dump(" -> adding triggers");
-app.templates.homepageTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/index.html']); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-app.templates.categoryTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-app.templates.productTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-app.templates.companyTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/company/'+P.show]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-app.templates.customerTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
-app.templates.checkoutTemplate.on('init.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/checkout']); app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
+//_app.u.dump(" -> adding triggers");
+_app.templates.homepageTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/index.html']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.categoryTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.productTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.companyTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/company/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.customerTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
+_app.templates.checkoutTemplate.on('init.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/checkout']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
 
-app.templates.searchTemplate.on('init.googleanalytics',function($ele,P) {
+_app.templates.searchTemplate.on('init.googleanalytics',function($ele,P) {
 	_gaq.push('_trackPageview','/search?KEYWORDS='+P.KEYWORDS);
-	app.ext.google_analytics.u.handleAntiBounceEvent(P);
+	_app.ext.google_analytics.u.handleAntiBounceEvent(P);
 	}) 
 //404's don't execute the anti-bounce event because if you go homepage then 404 and leave, it should register as a bounce.
-app.templates.pageNotFoundTemplate.on('complete.googleanalytics',function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
+_app.templates.pageNotFoundTemplate.on('complete.googleanalytics',function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
 
 
 //for GoogleTrustedStores.
-app.ext.order_create.checkoutCompletes.push(function(P){
+_app.ext.order_create.checkoutCompletes.push(function(P){
 	if(typeof window.GoogleTrustedStore)	{
-		if(P && P.datapointer && app.data[P.datapointer] && app.data[P.datapointer].order)	{
-			var order = app.data[P.datapointer].order,
+		if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order)	{
+			var order = _app.data[P.datapointer].order,
 			$div = $("<div \/>",{'id':'gts-order'}),
 			L = order['@ITEMS'].length, hasPreBack = 'N', discounts = 0;
 			
@@ -130,10 +130,10 @@ app.ext.order_create.checkoutCompletes.push(function(P){
 	});
 
 
-app.ext.order_create.checkoutCompletes.push(function(P){
-	app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
-	if(P && P.datapointer && app.data[P.datapointer] && app.data[P.datapointer].order)	{
-		var order = app.data[P.datapointer].order;
+_app.ext.order_create.checkoutCompletes.push(function(P){
+	_app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
+	if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order)	{
+		var order = _app.data[P.datapointer].order;
 		_gaq.push(['_addTrans',
 			  P.orderID,           // order ID - required
 			  '', // affiliation or store name
@@ -146,7 +146,7 @@ app.ext.order_create.checkoutCompletes.push(function(P){
 		   ]);
 	
 		var L = order['@ITEMS'].length;
-		app.u.dump(" -> "+L+" items in @ITEMS");
+		_app.u.dump(" -> "+L+" items in @ITEMS");
 	
 		for(var i = 0; i < L; i += 1)	{
 			_gaq.push(['_addItem',
@@ -167,7 +167,7 @@ app.ext.order_create.checkoutCompletes.push(function(P){
 
 						}
 					else	{
-						setTimeout(function(){app.ext.google_analytics.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){_app.ext.google_analytics.callbacks.startExtension.onSuccess()},250);
 						}
 
 					},
@@ -177,9 +177,9 @@ app.ext.order_create.checkoutCompletes.push(function(P){
 			u : {
 				handleAntiBounceEvent : function(P)	{
 //see comment up by var triggerBounceCode for what this is for.
-					if(!app.ext.google_analytics.vars.triggeredBounceCode)	{
+					if(!_app.ext.google_analytics.vars.triggeredBounceCode)	{
 						_gaq.push(['_trackEvent','pageView','navigate','','',false]);
-						app.ext.google_analytics.vars.triggeredBounceCode = true;
+						_app.ext.google_analytics.vars.triggeredBounceCode = true;
 						}
 					else	{
 						//catch. 

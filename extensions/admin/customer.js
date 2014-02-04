@@ -26,7 +26,7 @@ Giftcards
 
 
 
-var admin_customer = function() {
+var admin_customer = function(_app) {
 	var theseTemplates = new Array(
 	'customerManagerResultsRowTemplate',
 	'CustomerPageTemplate',
@@ -64,8 +64,8 @@ var admin_customer = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/customer.html',theseTemplates);
-//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/customer.css','user_styles']);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/customer.html',theseTemplates);
+//				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/customer.css','user_styles']);
 
 				var $modal = $("<div \/>",{'id':'customerUpdateModal'}).appendTo('body'); //used for various update/add features.
 				$modal.dialog({'autoOpen':false,'width':500,'height':500,'modal':true});
@@ -74,7 +74,7 @@ var admin_customer = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -91,8 +91,8 @@ var admin_customer = function() {
 				$target.intervaledEmpty();
 				$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
 				
-				app.u.handleCommonPlugins($target);
-				app.u.handleButtons($target);
+				_app.u.handleCommonPlugins($target);
+				_app.u.handleButtons($target);
 				$target.anydelegate();
 				//must be after anydelegate or the 'trigger' won't do much.
 				if(vars.scope && vars.searchfor)	{
@@ -112,20 +112,20 @@ var admin_customer = function() {
 					if(Number(obj.CID) > 0)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 //partition allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
-						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || app.vars.partition},{},'mutable');
-						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
+						_app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || _app.vars.partition},{},'mutable');
+						_app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 // always obtain a new copy of the customer record. May have been updated by another process.
-						app.model.destroy("adminCustomerDetail|"+obj.CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
+						_app.model.destroy("adminCustomerDetail|"+obj.CID);
+						_app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
 						  $custEditorTarget.hideLoading();
 						  
-						  if(app.model.responseHasErrors(rd)){
-							  app.u.throwMessage(rd);
+						  if(_app.model.responseHasErrors(rd)){
+							  _app.u.throwMessage(rd);
 							  }
 						  else	{
-							  $custEditorTarget.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer],'dataAttribs':obj});
+							  $custEditorTarget.anycontent({'templateID':'customerEditorTemplate','data':_app.data[rd.datapointer],'dataAttribs':obj});
 							  
-							  var panArr = app.model.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
+							  var panArr = _app.model.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
 						  
 							  if(!$.isEmptyObject(panArr))	{
 								  var L = panArr.length;
@@ -161,20 +161,20 @@ var admin_customer = function() {
 										  var $col = $(this);
 										  dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
 										  });
-									  app.model.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
-						  //			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+									  _app.model.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
+						  //			_app.u.dump(' -> dataObj: '); _app.u.dump(dataObj);
 									  }
 								  });
 						  
 					  
-//							  app.u.handleAppEvents($custEditorTarget);
-							  app.u.handleCommonPlugins($custEditorTarget);
-							  app.u.handleButtons($custEditorTarget);
-							  app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj); //adds buttons to/for the various panels
+//							  _app.u.handleAppEvents($custEditorTarget);
+							  _app.u.handleCommonPlugins($custEditorTarget);
+							  _app.u.handleButtons($custEditorTarget);
+							  _app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj); //adds buttons to/for the various panels
 							  $custEditorTarget.anydelegate({'trackEdits':true});
 	
 							}},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						}
 					else	{
 						$custEditorTarget.anymessage({"message":"CID "+obj.CID+" is not valid.  This may mean there is no record for this customer."});
@@ -187,7 +187,7 @@ var admin_customer = function() {
 
 			showCRMManager : function($target)	{
 				$target.intervaledEmpty();
-				var $DMI = app.ext.admin.i.DMICreate($target,{
+				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'CRM Manager',
 					'className' : 'CRMManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['','ID','Status','Subject','Class','Created','Last Update',''], //leave blank at end if last row is buttons.
@@ -195,7 +195,7 @@ var admin_customer = function() {
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin_customer|crmAdminTicketCreateShow' class='applyButton' data-icon-primary='ui-icon-plus'>Add Ticket</button>"],	
-					'controls' : app.templates.crmManagerControls,
+					'controls' : _app.templates.crmManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminAppTicketList',
 						'STATUS' : 'NEW', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
@@ -205,12 +205,12 @@ var admin_customer = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
 				},
 
 			showCampaignManager : function($target)	{
-				var $table = app.ext.admin.i.DMICreate($target,{
+				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Campaign Manager',
 					'className' : 'campaignManager',
 					'handleAppEvents' : false,
@@ -224,17 +224,17 @@ var admin_customer = function() {
 						'_tag' : {'datapointer' : 'adminCampaignList'}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
+				_app.u.handleButtons($target.anydelegate());
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
-				app.model.dispatchThis();
+				_app.model.dispatchThis();
 				}, //showCampaignManager
 			
 			showCampaignEditor : function($target,CAMPAIGNID)	{
-//				app.u.dump("BEGING admin_customer.a.showCampaignEditor");
+//				_app.u.dump("BEGING admin_customer.a.showCampaignEditor");
 				if($target && $target instanceof jQuery && CAMPAIGNID)	{
 
 					$target.empty()
-					var data = app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
+					var data = _app.ext.admin_customer.u.getCampaignByCAMPAIGNID(CAMPAIGNID);
 
 					if(data)	{
 					
@@ -253,11 +253,11 @@ var admin_customer = function() {
 							});
 					
 						var $picker = $("[data-app-role='pickerContainer']:first",$target);
-						$picker.append(app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));
+						$picker.append(_app.ext.admin.a.getPicker({'templateID':'customerPickerTemplate','mode':'customer'},data.RECIPIENTS));
 						$picker.anycontent({data:data});
 						
-						app.u.handleAppEvents($target);
-						app.u.handleButtons($target.anydelegate());
+						_app.u.handleAppEvents($target);
+						_app.u.handleButtons($target.anydelegate());
 						}
 					else if(data === false)	{
 						$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCampaignEditor, unable to resolve campaign data from CAMPAIGNID: "+CAMPAIGNID,"gMessage":true});
@@ -272,7 +272,7 @@ var admin_customer = function() {
 
 			showGiftcardManager : function($target)	{
 				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
 					'handleAppEvents' : false,
@@ -288,13 +288,13 @@ var admin_customer = function() {
 						'_tag' : {'datapointer' : 'adminGiftcardList'}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis();
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis();
 				},
 
 			showReviewsManager : function($target)	{
 				$target.empty();
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'Reviews Manager',
 					'handleAppEvents' : false,
 					'className' : 'reviewsManager',
@@ -314,8 +314,8 @@ var admin_customer = function() {
 							}
 						}
 					});
-				app.u.handleButtons($target.anydelegate());
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
 				}, //showReviewsManager
 
 
@@ -330,24 +330,24 @@ var admin_customer = function() {
 					var $form = $("form",$modal);
 					$form.append($("<button>").text('Save Wallet').button().on('click',function(event){
 						event.preventDefault();
-						if(app.u.validateForm($form))	{
+						if(_app.u.validateForm($form))	{
 							$form.showLoading({'message':'Adding wallet to customer record '+obj.CID+'.'});
-							app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,["WALLETCREATE?"+$.param($form.serializeJSON())],{'callback':function(rd){
+							_app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,["WALLETCREATE?"+$.param($form.serializeJSON())],{'callback':function(rd){
 								$form.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$form.anymessage({'message':rd});
 									}
 								else	{
 									$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
 									$("tbody",$walletPanel).empty(); //clear wallets
 									$walletPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+obj.CID}); //re-translate panel, which will update wallet list.
-									app.u.handleButtons($walletPanel);
+									_app.u.handleButtons($walletPanel);
 									}
 								}},'immutable');
 						//do this after the update so the detail includes the changes from the update.
-							app.model.destroy('adminCustomerDetail|'+obj.CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.destroy('adminCustomerDetail|'+obj.CID);
+							_app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
 							$form.anymessage({'message':'Please enter all the fields below.'});
@@ -363,7 +363,7 @@ var admin_customer = function() {
 				var $modal = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
 				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false}).anydelegate();
-				app.u.handleButtons($target);
+				_app.u.handleButtons($target);
 				$modal.dialog('open');
 				},
 
@@ -381,21 +381,21 @@ $D is returned.
 			addressCreateUpdateShow : function(vars,callback,address)	{
 				vars = vars || {};
 				address = address || {};
-//				app.u.dump(" -> address: "); app.u.dump(address);
+//				_app.u.dump(" -> address: "); _app.u.dump(address);
 				if((vars.TYPE == 'bill' || vars.TYPE == 'ship') && vars.mode && vars.CID && vars.show)	{
 					//add CID and mode to address object so that translator adds them to hidden inputs.
 					address.CID = vars.CID;
 					address.TYPE = vars.TYPE;
 
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						'title' : vars.mode+' address ('+vars.TYPE+')',
 						'templateID' : 'customerAddressAddUpdateTemplate',
 						'data' : address,
 						});
 
 					//if the email isn't set, use the customer record email to populate.
-					if(address.TYPE == 'bill' && !address.email && app.u.thisNestedExists("app.data.adminCustomerDetail|"+vars.CID+"._EMAIL"))	{
-						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
+					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("_app.data.adminCustomerDetail|"+vars.CID+"._EMAIL"))	{
+						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
 						}
 					//the id can't be changed once it's set.
 					if(vars.mode == 'update' || address._id)	{
@@ -410,14 +410,14 @@ $D is returned.
 					
 					$("<button \/>").html("Save <span class='numChanges'></span> Changes").attr('data-app-role','saveButton').button().on('click',function(event){
 						event.preventDefault();
-						if(app.u.validateForm($form))	{
+						if(_app.u.validateForm($form))	{
 							if(vars.mode == 'update' || vars.mode == 'create')	{
 								var sfo = $form.serializeJSON();
 								delete sfo._id; //shortcut is used in save, which is already part of sfo
 								delete sfo.mode; //this is for forming macro cmd, not part of address.
 								//customerUpdate does return some of the updated customer object, but none of the extras, like wallets, org, orders, etc.
-								app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,["ADDR"+(vars.mode.toUpperCase())+"?"+$.param(sfo)],{'callback' : function(rd){
-									if(app.model.responseHasErrors(rd)){
+								_app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,["ADDR"+(vars.mode.toUpperCase())+"?"+$.param(sfo)],{'callback' : function(rd){
+									if(_app.model.responseHasErrors(rd)){
 										$D.anymessage({'message':rd});
 										}
 									else	{
@@ -431,16 +431,16 @@ $D is returned.
 							else	{
 								$D.anymessage({'message':'In admin_customer.a.addressCreateUpdateShow, mode ['+vars.mode+'] was set but not valid. Must be set to create or update.','gMessage':true});
 								}
-							app.model.destroy('adminCustomerDetail|'+vars.CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':vars.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.destroy('adminCustomerDetail|'+vars.CID);
+							_app.ext.admin.calls.adminCustomerDetail.init({'CID':vars.CID,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{},'immutable');
+							_app.model.dispatchThis('immutable');
 
 							}
 						else	{} //validateForm will handle error display
 						}).appendTo($form);
 
-					app.u.handleCommonPlugins($D);
-					app.u.handleButtons($D);
+					_app.u.handleCommonPlugins($D);
+					_app.u.handleButtons($D);
 					$D.anydelegate({'trackEdits' : (vars.mode == 'update' ? true : false)}).dialog('open');
 					return $D;
 					}
@@ -455,37 +455,37 @@ $D is returned.
 //if only one or the other is set, they'll be the default values selected.
 			customerSearch : function(data,callback)	{
 
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title' : 'Find Customer',
 					'templateID' : 'customerSearchTemplate',
 					'data' : data || {},
 					});
 				$D.dialog('open');
-				app.u.handleButtons($D);
-				app.u.handleCommonPlugins($D);
+				_app.u.handleButtons($D);
+				_app.u.handleCommonPlugins($D);
 				
 				$("form[data-app-role='customerSearch']:first",$D).on('submit',function(){
 					var sfo = $(this).serializeJSON();
 					$D.showLoading({"message":"Searching "+sfo.scope+" for "+sfo.searchfor});
-					app.ext.admin.calls.adminCustomerSearch.init({'scope':sfo.scope,'searchfor':sfo.searchfor},{'callback':function(rd){
+					_app.ext.admin.calls.adminCustomerSearch.init({'scope':sfo.scope,'searchfor':sfo.searchfor},{'callback':function(rd){
 						$D.hideLoading();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$D.anymessage({'message':rd});
 							}
 						else	{
 							//success content goes here.
-							var customers = app.data[rd.datapointer]['@CUSTOMERS'];
+							var customers = _app.data[rd.datapointer]['@CUSTOMERS'];
 							if(!customers || customers.length == 0)	{
 								$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
 								}
-							else if(app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
+							else if(_app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
 								//encountered an issue in order create > lookup customer where $D didn't register as a dialog yet.
 								//	closing it directly here caused a JS error. a slight pause solved this.
 								if($D.is(':data(dialog)'))	{$D.dialog('close');}
 								else	{
 									setTimeout(function(){$D.dialog('close');},500);
 									}
-								callback(app.data[rd.datapointer]['@CUSTOMERS'][0]);
+								callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
 								}
 							else	{
 								$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){
@@ -495,7 +495,7 @@ $D is returned.
 								}
 							}
 						}},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					});
 
 				if(data.scope && data.searchfor)	{
@@ -511,34 +511,34 @@ $D is returned.
 		renderFormats : {
 
 			orderHistoryTotal : function($tag,data)	{
-				app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
+				_app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
 				var L = data.value.length,
 				sum = 0; //sum of all orders combined.
 				for(var i = 0; i < L; i += 1)	{
 					sum += Number(data.value[i].ORDER_TOTAL);
 					}
 				data.value = sum; //preserve data object except data.value. that way other params, such as currency symbol, can still be set.
-				app.renderFormats.money($tag,data)
+				_app.renderFormats.money($tag,data)
 				},
 
 			newsletters : function($tag,data)	{
 				
-				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
-				else if(app.data.adminNewsletterList['@lists'].length == 0)	{
+				if(!_app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
+				else if(_app.data.adminNewsletterList['@lists'].length == 0)	{
 					$tag.anymessage({'message':'You have not created any subscriber lists.','persistent':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
-					L = app.data.adminNewsletterList['@lists'].length,
+					L = _app.data.adminNewsletterList['@lists'].length,
 					listbw = null; //list bitwise. just a shortcut.
 					if(data.value.INFO && data.value.INFO.NEWSLETTER)	{listbw = data.value.INFO.NEWSLETTER}
-//					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
+//					_app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
-						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
+						if(_app.data.adminNewsletterList['@lists'][i].NAME)	{
 						$("<label \/>").addClass('clearfix').append($("<input \/>",{
 							'type':'checkbox',
-							'name':'newsletter_'+app.data.adminNewsletterList['@lists'][i].ID
-							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
+							'name':'newsletter_'+_app.data.adminNewsletterList['@lists'][i].ID
+							}).prop('checked',_app.ext.admin_customer.u.getNewslettersTF(listbw,Number(_app.data.adminNewsletterList['@lists'][i].ID)))).append(_app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+_app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
 							}
 						else	{} //do nothing in this case. It's a newsletter w/ no name (likely the bitwise not appropriated yet)
 						}
@@ -555,7 +555,7 @@ $D is returned.
 		macrobuilders : {
 
 			'adminGiftcardMacro' : function(sfo,$form)	{
-				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-create");
+				_app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-create");
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
@@ -598,13 +598,13 @@ $D is returned.
 				}, //handleChanges
 			
 			getGiftcardCreateDialog : function(data)	{
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title':'Add New Giftcard',
 					'data' : data || {},
 					'templateID':'giftcardCreateTemplate',
 					'showLoading':false //will get passed into anycontent and disable showLoading.
 					});
-				app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anydelegate());
 				$D.dialog('open');
 				$( ".applyDatepicker",$D).datepicker({
 					changeMonth: true,
@@ -622,15 +622,15 @@ $D is returned.
 
 						var addrCallback = function(v)	{
 							var $panel = $("[data-app-role='"+v.TYPE.toLowerCase()+"']",v.$customerEditor); //ship or bill panel.
-							app.u.dump(" -> $panel.length: "+$panel.length);
-							app.u.dump(" -> $customerEditor.length: "+v.$customerEditor.length);
+							_app.u.dump(" -> $panel.length: "+$panel.length);
+							_app.u.dump(" -> $customerEditor.length: "+v.$customerEditor.length);
 							$("tbody",$panel).empty(); //clear address rows so new can be added.
-							$panel.anycontent({'data' : app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
-							app.u.handleButtons($panel);
+							$panel.anycontent({'data' : _app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
+							_app.u.handleButtons($panel);
 							}
 
 						$('.panel_ship',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.addressCreateUpdateShow({
+							_app.ext.admin_customer.a.addressCreateUpdateShow({
 								'mode' : 'create', //will b create or update.
 								'show' : 'dialog',
 								'$customerEditor':$customerEditor,
@@ -640,7 +640,7 @@ $D is returned.
 							}});
 
 						$('.panel_bill',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.addressCreateUpdateShow({
+							_app.ext.admin_customer.a.addressCreateUpdateShow({
 								'mode' : 'create', //will b create or update.
 								'show' : 'dialog',
 								'$customerEditor':$customerEditor,
@@ -650,18 +650,18 @@ $D is returned.
 							}});
 
 						$("[data-app-role='wallets']",$customerEditor).anypanel('option','settingsMenu',{'Add Wallet':function(){
-							app.ext.admin_customer.a.showAddWalletModal(obj,$("[data-app-role='wallets']",$customerEditor));
+							_app.ext.admin_customer.a.showAddWalletModal(obj,$("[data-app-role='wallets']",$customerEditor));
 							}});
 
 						$("[data-app-role='giftcards']",$customerEditor).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
 
-							var $D = app.ext.admin_customer.u.getGiftcardCreateDialog(app.data['adminCustomerDetail|'+obj.CID]);
+							var $D = _app.ext.admin_customer.u.getGiftcardCreateDialog(_app.data['adminCustomerDetail|'+obj.CID]);
 							
 							//These fields are used for processForm on save.
 							//They're here instead of in the form directly so that the form/template can be recycled for other 'creates'.				
 							$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/message' value='The giftcard has been created.' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' />");
 							
-							if(app.u.thisNestedExists("app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+							if(_app.u.thisNestedExists("_app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
 								$("input[name='email']",$D).prop('disabled',true);
 								//quantity and series are only useful when creating a series/bulk group of giftcards. In this instance, a GC is being created for a specific customer, so the values are forced and the inputs are hidden.
 								$("input[name='quantity']",$D).prop('disabled',true).val('1').closest('label').hide(); //force quantity to 1 or the email will get dropped. The field isn't applicable in this instance (assigning to a specific customer).
@@ -674,19 +674,19 @@ $D is returned.
 							}});
 
 						$("[data-app-role='tickets']",$customerEditor).anypanel('option','settingsMenu',{'Start a New Ticket':function(){
-							var $D = app.ext.admin.i.dialogCreate({
+							var $D = _app.ext.admin.i.dialogCreate({
 								'title' : 'Create CRM Ticket for customer '+obj.CID,
 								'templateID':'crmManagerTicketCreateTemplate',
-								'data': app.data['adminCustomerDetail|'+obj.CID]
+								'data': _app.data['adminCustomerDetail|'+obj.CID]
 								});
-							if(app.u.thisNestedExists("app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+							if(_app.u.thisNestedExists("_app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
 								$("input[name='email']",$customerEditor).prop('disabled',true);
 								$("input[name='create']",$customerEditor).prop('disabled',true).closest('label').hide();
 								}
 							var $saveButton = $("button[data-app-role='saveButton']:first",$D)
 							$saveButton.attr('data-app-click',$saveButton.attr('data-app-click')+",admin_customer|refreshCustomerPanel").data('panel','tickets');
 							$D.anydelegate();
-							app.u.handleButtons($D);
+							_app.u.handleButtons($D);
 							$D.dialog('open');
 							//crmAdminTicketCreateShow
 							}});					
@@ -705,15 +705,15 @@ $D is returned.
 //obj should contain CID and type. in the future, likely to contain partition.
 			customerAddressAddUpdate : function($form,MACRO,obj,callback)	{
 				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID && typeof callback == 'function')	{
-					if(app.u.validateForm($form))	{
-						app.u.dump(" -> form validated. proceed.");
+					if(_app.u.validateForm($form))	{
+						_app.u.dump(" -> form validated. proceed.");
 						$form.showLoading({"message":"Updating customer address record."});
 //shortcut is turned into a readonly, which means serialize skips it, so it's added back here.
-						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+((MACRO == 'ADDRUPDATE') ? "SHORTCUT="+$("[name='SHORTCUT']",$form).val()+"&" : "")+$form.serialize()],{'callback':callback},'immutable');
+						_app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+((MACRO == 'ADDRUPDATE') ? "SHORTCUT="+$("[name='SHORTCUT']",$form).val()+"&" : "")+$form.serialize()],{'callback':callback},'immutable');
 //destroy and detail must occur after update
-						app.model.destroy('adminCustomerDetail|'+obj.CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.destroy('adminCustomerDetail|'+obj.CID);
+						_app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						$form.anymessage({'message':'Some required fields were missing or left blank.'})
@@ -746,25 +746,25 @@ $D is returned.
 			getNewslettersTF : function(newsint,val)	{
 //so what's happening here...   the tostring converts the int into binary. split/reverse/join reverse the order, changing 1000 (for 8) into 0001
 				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
-//				app.u.dump(" -> Binary of flags: "+B);
+//				_app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
 				},
 
 			getCampaignByCAMPAIGNID : function(CAMPAIGNID)	{
 				var r = false; //what is returned. Either 'false' if not found, null if an error occured or the data object.
 				if(CAMPAIGNID)	{
-					if(app.data.adminCampaignList && app.data.adminCampaignList['@CAMPAIGNS'] && app.data.adminCampaignList['@CAMPAIGNS'].length)	{
-						var L = app.data.adminCampaignList['@CAMPAIGNS'].length;
+					if(_app.data.adminCampaignList && _app.data.adminCampaignList['@CAMPAIGNS'] && _app.data.adminCampaignList['@CAMPAIGNS'].length)	{
+						var L = _app.data.adminCampaignList['@CAMPAIGNS'].length;
 						for(var i = 0; i < L; i += 1)	{
-							if(app.data.adminCampaignList['@CAMPAIGNS'][i].CAMPAIGNID == CAMPAIGNID)	{
-								r = app.data.adminCampaignList['@CAMPAIGNS'][i];
+							if(_app.data.adminCampaignList['@CAMPAIGNS'][i].CAMPAIGNID == CAMPAIGNID)	{
+								r = _app.data.adminCampaignList['@CAMPAIGNS'][i];
 								break; //match found. Exit early.
 								}
 							}
 						}
 					else	{
 						r = null;
-						$('#globalMessaging').anymessage({"message":"In admin_customer.u.getCampaignByCAMPAIGNID, app.data.adminCampaignList not in memory or @CAMPAIGNS is empty.","gMessage":true});
+						$('#globalMessaging').anymessage({"message":"In admin_customer.u.getCampaignByCAMPAIGNID, _app.data.adminCampaignList not in memory or @CAMPAIGNS is empty.","gMessage":true});
 						}
 					}
 				else	{
@@ -783,11 +783,11 @@ $D is returned.
 			adminCampaignCreateShow : function($ele,P)	{
 //consider the 'create' just having the subject and ID, then creating and going right into the editor. probably a good idea.
 					P.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({'templateID':'campaignCreateTemplate','title':'Create a New Campaign','showLoading':false});
+					var $D = _app.ext.admin.i.dialogCreate({'templateID':'campaignCreateTemplate','title':'Create a New Campaign','showLoading':false});
 					$D.dialog('open');
 					$D.showLoading({'message':'Fetching campaign template list'});
 					
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd':'adminCampaignTemplateList',
 						'_tag':	{
 							'datapointer' : 'adminCampaignTemplateList',
@@ -796,7 +796,7 @@ $D is returned.
 							jqObj : $D
 							}
 						},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 //may need to add some for attributes for processForm or a custom app event button. That'll depend on how the file vs other changes get saved.
 				},
 			
@@ -805,7 +805,7 @@ $D is returned.
 				$btn.off('click.adminCampaignCreateShow').on('click.adminCampaignCreateShow',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
+					if(_app.u.validateForm($form))	{
 						$form.showLoading({'message':'Creating Campaign...'});
 						var
 							sfo = $form.serializeJSON(),
@@ -813,20 +813,20 @@ $D is returned.
 							month = date.getMonth() + 1,
 							CAMPAIGNID = sfo.CAMPAIGNID.toUpperCase()+"_"+date.getFullYear()+(month < 10 ? '0'+month : month)+date.getDate(); //appending epoch timestamp increases likelyhood that campaignID will be globally unique. upper case will be enforced by the API
 
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':'adminCampaignCreate',
 							'CAMPAIGNID' : CAMPAIGNID, 
 							'_tag':	{
 								'callback':function(rd){
-									if(app.model.responseHasErrors(rd)){
+									if(_app.model.responseHasErrors(rd)){
 										$form.hideLoading();
 										$form.anymessage({'message':rd});
 										}
 									else	{
 										//Campaign was successfully created.  Handle the templating piece.
 										//call is daisy chained instead of pipelined in case the first call (create) fails.
-										app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag':{'datapointer' : 'adminCampaignList'}},'immutable'); //this is where all campaign data is, so need this refreshed.
-										app.model.addDispatchToQ({
+										_app.model.addDispatchToQ({'_cmd':'adminCampaignList','_tag':{'datapointer' : 'adminCampaignList'}},'immutable'); //this is where all campaign data is, so need this refreshed.
+										_app.model.addDispatchToQ({
 											'_cmd':'adminCampaignTemplateInstall',
 											'PROJECTID' : "$SYSTEM", //set by what template was selected. !!! needs to be loaded from select list option data. the option renderformat should add more info as data to each option.
 											'CAMPAIGNID' : CAMPAIGNID,
@@ -834,24 +834,24 @@ $D is returned.
 											'_tag':	{
 												'callback':function(responseData){
 													$form.hideLoading();
-													if(app.model.responseHasErrors(responseData)){
+													if(_app.model.responseHasErrors(responseData)){
 														$form.anymessage({'message':rd});
 														}
 													else	{
 														//Template content was successfully added.
 														$btn.closest('.ui-dialog-content').dialog('close'); //closes the 'create' dialog.
-														app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),CAMPAIGNID); //opens the editor for this campaign.
+														_app.ext.admin_customer.a.showCampaignEditor($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),CAMPAIGNID); //opens the editor for this campaign.
 														}
 													}
 												}
 											},'immutable');
-										app.model.dispatchThis('immutable');
+										_app.model.dispatchThis('immutable');
 										}
 									}
 								}
 							},'immutable');
 						
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{} //validateForm handles error display.
 					});
@@ -861,7 +861,7 @@ $D is returned.
 			showCampaignTemplateEditor : function($btn)	{
 				$btn.button();
 				$btn.off('click.showCampaignTemplateEditor').on('click.showCampaignTemplateEditor',function(){
-					app.ext.admin_template.a.showTemplateEditorInModal('campaign',{'campaignid':$btn.data('campaignid')})
+					_app.ext.admin_template.a.showTemplateEditorInModal('campaign',{'campaignid':$btn.data('campaignid')})
 					})
 				}, //showTemplateEditorInModal
 
@@ -876,16 +876,16 @@ $D is returned.
 						})
 					})
 
-				app.ext.admin_customer.a.showCampaignEditor($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
+				_app.ext.admin_customer.a.showCampaignEditor($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data('campaignid'));
 				},
 
 //clicked within the campaign editor.
 			adminCampaignUpdateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminCampaignUpdateExec').on('click.adminCampaignUpdateExec',function(){
-				  app.u.dump("BEGIN adminCampaignUpdateExec click event");
+				  _app.u.dump("BEGIN adminCampaignUpdateExec click event");
 				  var $form = $btn.closest('form');
-				  if(app.u.validateForm($form))	{
+				  if(_app.u.validateForm($form))	{
 				  
 					  var
 						  HTML = $("[name='HTML']",$form).val(),
@@ -893,10 +893,10 @@ $D is returned.
 				  
 					  
 				  //update the campaign.
-					  app.model.addDispatchToQ($.extend(true,{},$("[data-app-role='campaignSettings']",$form).serializeJSON({'cb':true}),{
+					  _app.model.addDispatchToQ($.extend(true,{},$("[data-app-role='campaignSettings']",$form).serializeJSON({'cb':true}),{
 						  '_cmd':'adminCampaignUpdate',
 						  'CAMPAIGNID' : campaignID,
-						  'RECIPIENTS' : app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
+						  'RECIPIENTS' : _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
 						  '_tag':	{
 							  'callback':'showMessaging',
 							  'message' : 'Your campaign settings changes have been saved.',
@@ -908,7 +908,7 @@ $D is returned.
 						  // no html changes for you!
 						  }
 					  else {
-						  app.model.addDispatchToQ({
+						  _app.model.addDispatchToQ({
 							  '_cmd':'adminCampaignFileSave',
 							  'FILENAME' : 'index.html',
 							  'CAMPAIGNID' : campaignID,
@@ -923,7 +923,7 @@ $D is returned.
 				  //update the campaign Template
 					  
 				  
-					  app.model.dispatchThis('immutable');
+					  _app.model.dispatchThis('immutable');
 				  
 				  
 				  
@@ -943,30 +943,30 @@ $D is returned.
 					var 
 						sfo = $btn.closest('form').serializeJSON({cb:true})
 
-					app.ext.admin.i.dialogConfirmRemove({
+					_app.ext.admin.i.dialogConfirmRemove({
 						"title" : "Start Campaign: "+sfo.CAMPAIGNID,
 						"removeButtonText" : "Start Campaign",
-						"message" : "Please confirm that you want to start the campaign: "+sfo.CAMPAIGNID+" from domain <b>"+app.vars.domain+"<\/b>. There is no undo for this action.",
+						"message" : "Please confirm that you want to start the campaign: "+sfo.CAMPAIGNID+" from domain <b>"+_app.vars.domain+"<\/b>. There is no undo for this action.",
 						'removeFunction':function(vars,$D){
 							$D.showLoading({"message":"Sending Campaign "+sfo.CAMPAIGNID});
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'_cmd':'adminCampaignMacro',
 								'CAMPAIGNID': sfo.CAMPAIGNID,
 								'@updates' : ["CPGSTART"],
 								'_tag':	{
 									'callback':function(rd){
 									$D.hideLoading();
-									if(app.model.responseHasErrors(rd)){
+									if(_app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
 										}
 									else	{
 										$D.dialog('close');
-										app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+										_app.ext.admin_customer.a.showCampaignManager($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")));
 										}
 									}
 								}
 							},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						});
 					});
@@ -979,31 +979,31 @@ $D is returned.
 					$tr = $ele.closest('tr'),
 					data = $tr.data();
 
-				app.ext.admin.i.dialogConfirmRemove({
+				_app.ext.admin.i.dialogConfirmRemove({
 					"title" : "Delete Campaign: "+data.campaignid,
 					"removeButtonText" : "Delete Campaign",
 					"message" : "Please confirm that you want to delete the campaign: "+data.title+" ["+data.campaignid+"] . There is no undo for this action.",
 
 					'removeFunction':function(vars,$D){
 						$D.showLoading({"message":"Deleting Campaign "+data.campaignid});
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':'adminCampaignRemove',
 							'CAMPAIGNID': data.campaignid,
 							'_tag':	{
 								'callback':function(rd){
 								$D.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									$D.dialog('close');
-									$('#globalMessaging').anymessage(app.u.successMsgObject('The campaign has been removed.'));
+									$('#globalMessaging').anymessage(_app.u.successMsgObject('The campaign has been removed.'));
 									$tr.empty().remove(); //removes row for list.
 									}
 								}
 							}
 						},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					});
 				}, //adminCampaignRemoveConfirm
@@ -1018,15 +1018,15 @@ $D is returned.
 				var	tktCode = $ele.closest("[data-tktcode]").data('tktcode');
 				
 				if(tktCode)	{
-					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'crmManagerTicketDetailTemplate',
 						'panelID' : 'crmDetail_'+tktCode,
 						'header' : 'Edit Ticket: '+tktCode,
 						'showLoading':false
 						}).attr('data-tktcode',tktCode);
-					app.u.handleButtons($panel);
-					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktCode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+tktCode,'translateOnly':true}},'mutable');						
-					app.model.dispatchThis('mutable');
+					_app.u.handleButtons($panel);
+					_app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktCode,"_tag":{'callback':'anycontent','jqObj':$panel,'datapointer':'adminAppTicketDetail|'+tktCode,'translateOnly':true}},'mutable');						
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_customer.e.crmAdminTicketDetailShow, unable to ascertain tktcode, which is required.","gMessage":true});
@@ -1042,23 +1042,23 @@ $D is returned.
 					sfo = $form.serializeJSON({'cb':true});
 				
 				$form.showLoading({'message':'Updating Ticket'});
-				app.ext.admin.calls.adminAppTicketMacro.init(tktCode,["ADDNOTE?"+$.param(sfo)],{'callback':function(rd){
+				_app.ext.admin.calls.adminAppTicketMacro.init(tktCode,["ADDNOTE?"+$.param(sfo)],{'callback':function(rd){
 					$form.hideLoading();
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$form.anymessage({'message':rd});
 						}
 					else	{		
-						$form.anymessage(app.u.successMsgObject('The ticket has been updated.'));
+						$form.anymessage(_app.u.successMsgObject('The ticket has been updated.'));
 						$('textarea',$form).val('');
 						
 						//adds an instance of the template to the history table to show the update took place.
-						var $tr = app.renderFunctions.createTemplateInstance('crmManagerTicketMsgRowTemplate',sfo);
+						var $tr = _app.renderFunctions.createTemplateInstance('crmManagerTicketMsgRowTemplate',sfo);
 						sfo.NOTE = sfo.note; //input is lowercase for macro. data-binds want uppercase.
 						$tr.anycontent({data:sfo});
 						$ele.closest('.ui-widget-anypanel').find("[data-app-role='ticketHistory'] tbody:first").append($tr);
 						}
 					}},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.model.dispatchThis('immutable');
 
 				}, //appAdminTicketAddNote
 
@@ -1068,19 +1068,19 @@ $D is returned.
 				p.preventDefault();
 				if(tktcode)	{
 					$ele.button('disable');
-					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+(app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? 0 : 1)],{'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
-							app.u.throwMessage(rd);
+					_app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+(_app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? 0 : 1)],{'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							_app.u.throwMessage(rd);
 							}
 						else	{		
 							$ele.button('enable');
-							app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? $ele.button({ label: "De-Escalate" }) : $ele.button({ label: "Escalate" });
+							_app.data['adminAppTicketDetail|'+tktcode].ESCALATED == 1 ? $ele.button({ label: "De-Escalate" }) : $ele.button({ label: "Escalate" });
 							}
 						}},'immutable');
 						
-					app.model.destroy('adminAppTicketDetail|'+tktcode);
-					app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktcode,"_tag":{'datapointer':'adminAppTicketDetail|'+tktcode}},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.destroy('adminAppTicketDetail|'+tktcode);
+					_app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktcode,"_tag":{'datapointer':'adminAppTicketDetail|'+tktcode}},'immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_customer.e.crmAdminTicketEscalationToggle, unable to ascertain tktcode.","gMessage":true});
@@ -1092,8 +1092,8 @@ $D is returned.
 				p.preventDefault();
 				var tktcode = $ele.closest("[data-tktcode]").data('tktcode');
 				if(tktcode)	{
-					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["CLOSE"],{},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["CLOSE"],{},'immutable');
+					_app.model.dispatchThis('immutable');
 					$btn.closest('.ui-widget-anypanel').anypanel('destroy');
 					}
 				else	{
@@ -1102,7 +1102,7 @@ $D is returned.
 				}, //appAdminTicketClose
 
 			crmAdminTicketCreateShow : function($ele,p)	{
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					'title' : 'Create CRM Ticket',
 					'templateID':'crmManagerTicketCreateTemplate',
 					'data':$ele.data()
@@ -1114,7 +1114,7 @@ $D is returned.
 					}
 				
 				$D.anydelegate();
-				app.u.handleButtons($D);
+				_app.u.handleButtons($D);
 				$D.dialog('open');
 
 				}, //appAdminTicketCreateShow
@@ -1125,19 +1125,19 @@ $D is returned.
 				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
 					event.preventDefault();
 					$btn.data('suppress_dmi_update',true); //this old app event is only used outside the CRM manager, so enforce a 'no dmi update'.
-					app.ext.admin_customer.e.crmAdminTicketCreateShow($btn,event);
+					_app.ext.admin_customer.e.crmAdminTicketCreateShow($btn,event);
 					});
 				}, //appAdminTicketCreateShow
 
 			appAdminTicketCreateExec : function($ele,P)	{
 				P.preventDefault();
 				var	$form = $ele.closest('form');
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
 					if(sfo.phone || sfo.email || sfo.orderid)	{
 						$form.showLoading({'message':'Creating CRM Ticket'});
-						app.ext.admin.a.processForm($form,'immutable');
-						app.model.dispatchThis('immutable');
+						_app.ext.admin.a.processForm($form,'immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						$form.anymessage({'message':'Either email, phone or order ID is required for a ticket to be created','errtype':'youerr'});
@@ -1157,22 +1157,22 @@ $D is returned.
 					PID = $ele.closest("[data-pid]").data('pid'),
 					$panel;
 				if($ele.data('edit-mode') == 'panel')	{
-					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						'templateID' : 'reviewAddUpdateTemplate',
 						'panelID' : 'review_'+RID,
 						'header' : 'Edit Review: '+RID,
 						'handleAppEvents' : true,
-						'data' : app.data.adminProductReviewList['@REVIEWS'][$ele.closest('tr').data('obj_index')]
+						'data' : _app.data.adminProductReviewList['@REVIEWS'][$ele.closest('tr').data('obj_index')]
 						});
 					
 					$('form',$panel).append("<input type='hidden' name='_tag/updateDMIList' value='"+$panel.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 					
 					}
 				else if($ele.data('edit-mode') == 'dialog')	{
-					$panel = app.ext.admin.i.dialogCreate({
+					$panel = _app.ext.admin.i.dialogCreate({
 						'title':'Edit Review',
 						'templateID':'reviewAddUpdateTemplate',
-						'data' : app.data['adminProductReviewList|'+PID]['@REVIEWS'][$ele.closest('tr').data('obj_index')],
+						'data' : _app.data['adminProductReviewList|'+PID]['@REVIEWS'][$ele.closest('tr').data('obj_index')],
 						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
 					$panel.dialog('open');
@@ -1198,26 +1198,26 @@ $D is returned.
 					data = $tr.data(),
 					$D = $ele.closest('.ui-dialog-content');
 
-				app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(vars,$D){
+				_app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(vars,$D){
 					$D.showLoading({"message":"Deleting Review"});
-					app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
+					_app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
 						$D.hideLoading();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
 							$D.dialog('close');
-							$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
+							$('#globalMessaging').anymessage(_app.u.successMsgObject('The review has been removed.'));
 							$tr.empty().remove(); //removes row for list.
 							}
 						}}},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.model.dispatchThis('immutable');
 					}});
 				}, //reviewRemoveConfirm
 			
 			reviewCreateShow : function($ele,p)	{
 					p.preventDefault();
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						'title':'Add New Review',
 						'templateID':'reviewAddUpdateTemplate',
 						'showLoading':false //will get passed into anycontent and disable showLoading.
@@ -1243,7 +1243,7 @@ $D is returned.
 					var $tr = $(this);
 					if($(':checkbox:first',$tr).is(':checked'))	{
 						i += 1;
-						app.model.addDispatchToQ({'RID':$tr.data('id'),'PID':$tr.data('pid'),'_cmd':'adminProductReviewApprove'},'immutable');
+						_app.model.addDispatchToQ({'RID':$tr.data('id'),'PID':$tr.data('pid'),'_cmd':'adminProductReviewApprove'},'immutable');
 						}
 					}); // ends tr loop.
 				
@@ -1251,8 +1251,8 @@ $D is returned.
 				if(i)	{
 					$tbody.showLoading({'message':'Setting review status to approved for '+i+' review(s)'})
 //reload the reviews manager.
-app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults','extension':'admin'}},'immutable');
-app.model.dispatchThis('immutable');
+_app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults','extension':'admin'}},'immutable');
+_app.model.dispatchThis('immutable');
 				
 					}
 				else	{
@@ -1265,7 +1265,7 @@ app.model.dispatchThis('immutable');
 
 			giftcardCreateShow : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin_customer.u.getGiftcardCreateDialog();
+				var $D = _app.ext.admin_customer.u.getGiftcardCreateDialog();
 
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.				
@@ -1282,12 +1282,12 @@ app.model.dispatchThis('immutable');
 				
 				  if($ele.data('edit-mode') == 'dialog') {
 					  
-					  $panel = app.ext.admin.i.dialogCreate({'title':'Edit Giftcard','templateID' : 'giftcardDetailTemplate','showLoading':false});
+					  $panel = _app.ext.admin.i.dialogCreate({'title':'Edit Giftcard','templateID' : 'giftcardDetailTemplate','showLoading':false});
 					  $panel.dialog('open');
 					  }
 				  else if($ele.data('edit-mode') == 'panel')	{
 				
-					  $panel = app.ext.admin.i.DMIPanelOpen($ele,{
+					  $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 						  'templateID' : 'giftcardDetailTemplate',
 						  'panelID' : 'giftcard_'+GCID,
 						  'header' : 'Edit Giftcard: '+GCID,
@@ -1302,7 +1302,7 @@ app.model.dispatchThis('immutable');
 				  //panel will be blank if an invalid mode was set.
 				  if($panel)	{
 					$('form',$panel).showLoading({'message':'Fetching giftcard details'});
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd' : 'adminGiftcardDetail',
 						'GCID' : GCID,
 						'_tag' : {
@@ -1312,7 +1312,7 @@ app.model.dispatchThis('immutable');
 						'datapointer' : 'adminGiftcardDetail|'+GCID
 						}
 					},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					  
 					  }
 				  
@@ -1331,12 +1331,12 @@ app.model.dispatchThis('immutable');
 					P.preventDefault();
 					var $form = $ele.closest('form');
 					
-					if(app.u.validateForm($form))	{
+					if(_app.u.validateForm($form))	{
 						var updates = new Array(),
 						formObj = $form.serializeJSON();
 						
 						$form.showLoading({'message':'Creating customer record'});
-						//app.u.dump(" -> formObj: "); app.u.dump(formObj);
+						//_app.u.dump(" -> formObj: "); _app.u.dump(formObj);
 						
 						updates.push("CREATE?email="+formObj.email); //setting email @ create is required.
 						if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
@@ -1344,7 +1344,7 @@ app.model.dispatchThis('immutable');
 						if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
 						
 						// $('body').showLoading("Creating customer record for "+formObj.email);
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd':'adminCustomerCreate',
 							'CID' : 0, //create wants a zero customer id
 							'@updates' : updates,
@@ -1352,18 +1352,18 @@ app.model.dispatchThis('immutable');
 								'datapointer' : 'adminCustomerCreate',
 								'callback': function(rd){
 									$form.hideLoading();
-									if(app.model.responseHasErrors(rd)){
+									if(_app.model.responseHasErrors(rd)){
 										$('#globalMessaging').anymessage({'message':rd});
 										}
 									else	{
 										$('#customerUpdateModal').dialog('close');
-										$('.dualModeListMessaging',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty();
-										app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'CID':app.data[rd.datapointer].CID})
+										$('.dualModeListMessaging',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).empty();
+										_app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),{'CID':_app.data[rd.datapointer].CID})
 										}
 									}
 								}
 							},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 
 						}
 					else	{
@@ -1418,7 +1418,7 @@ app.model.dispatchThis('immutable');
 							else if($("button.ui-state-highlight",$tag).length > 0)	{
 								if(pr == 'ship' || pr == 'bill')	{
 //must pass entire address object any time addrupdate occurs.
-									var addr = app.ext.admin_customer.u.getAddressByID(app.data['adminCustomerDetail|'+CID]['@'+pr.toUpperCase()],$tag.data('_id'));
+									var addr = _app.ext.admin_customer.u.getAddressByID(_app.data['adminCustomerDetail|'+CID]['@'+pr.toUpperCase()],$tag.data('_id'));
 //these two aren't needed. nuke em.
 									delete addr['_is_default'];
 									delete addr['_id'];
@@ -1454,7 +1454,7 @@ app.model.dispatchThis('immutable');
 								general += $tag.attr('name')+"="+handleCheckbox($tag)+"&";
 								}
 						else if(pr == 'organization')	{
-//								app.u.dump(" -> orgid being set to: "+$tag.val());
+//								_app.u.dump(" -> orgid being set to: "+$tag.val());
 								macros.push("LINKORG?orgid="+$tag.val());
 								}
 							else	{
@@ -1474,24 +1474,24 @@ app.model.dispatchThis('immutable');
 							}						
 						
 						if(macros.length)	{
-//							app.u.dump(" -> MACROS: "); app.u.dump(macros);
+//							_app.u.dump(" -> MACROS: "); _app.u.dump(macros);
 							var $custManager = $ele.closest("[data-app-role='customerManager']").parent();
 							$custManager.showLoading({'message':'Saving changes to customer record.'});
 //get a clean copy of the customer record so that the notes panel can be updated.
-							app.ext.admin.calls.adminCustomerUpdate.init(CID,macros,{'callback':function(rd){
+							_app.ext.admin.calls.adminCustomerUpdate.init(CID,macros,{'callback':function(rd){
 								$custManager.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									
 									$custManager.empty();
-									app.ext.admin_customer.a.showCustomerEditor($custManager,{'CID':CID})
+									_app.ext.admin_customer.a.showCustomerEditor($custManager,{'CID':CID})
 									}
 								}},'immutable');
-							app.model.destroy('adminCustomerDetail|'+CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.destroy('adminCustomerDetail|'+CID);
+							_app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						else	{
 							$ele.closest('form').anymessage({'message':'In admin_customer.e.customerEditorSave, no recognizable fields were present.',gMessage:true});
@@ -1505,19 +1505,19 @@ app.model.dispatchThis('immutable');
 			refreshCustomerPanel : function($ele,p){
 				var panel = $ele.data('panel');
 				if(panel)	{
-					var $editor = $("[data-app-role='customerManager']",$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-//					app.u.dump(" -> $editor.length: "+$editor.length); app.u.dump($editor.data());
+					var $editor = $("[data-app-role='customerManager']",$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")));
+//					_app.u.dump(" -> $editor.length: "+$editor.length); _app.u.dump($editor.data());
 					var $panel = $("[data-app-role='"+panel+"']:first",$editor);
-					app.u.dump("$panel.length: "+$panel.length);
+					_app.u.dump("$panel.length: "+$panel.length);
 					//clear any table body contents. they're generated w/ lists and if not cleared, they'll double up.
 					$("tbody:first",$panel).empty();
 
-					app.model.destroy('adminCustomerDetail|'+$editor.data('cid'));
-					app.ext.admin.calls.adminCustomerDetail.init({'CID':$editor.data('cid'),'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{
+					_app.model.destroy('adminCustomerDetail|'+$editor.data('cid'));
+					_app.ext.admin.calls.adminCustomerDetail.init({'CID':$editor.data('cid'),'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{
 						'callback' : 'anycontent',
 						'jqObj' : $panel
 						},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_customer.e.refreshCustomerPanel, data('panel') not set on trigger element.","gMessage":true});
@@ -1530,31 +1530,31 @@ app.model.dispatchThis('immutable');
 				var CID = $ele.closest('[data-cid]').data('cid');
 				if(CID)	{
 //params also support anything in dialogCreate
-					var $D = app.ext.admin.i.dialogConfirmRemove({
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
 						message : "Are you sure you want to delete this Customer? There is no undo for this action.",
 						title : "Delete Customer Record",
 						removeButtonText : "Delete Customer",
 						removeFunction : function()	{
 							$D.parent().showLoading({"message":"Deleting Customer"});
-							app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
-							app.model.addDispatchToQ({
+							_app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
+							_app.model.addDispatchToQ({
 								'_cmd':'adminCustomerRemove',
 								'cid' : CID,
 								'_tag':	{
 									'datapointer' : 'adminCustomerRemove',
 									'callback':function(rd){
 										$D.parent().hideLoading();
-										if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+										if(_app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
 										else	{
 											$(".defaultText",$D).hide(); //clear the default message.
-											$D.anymessage(app.u.successMsgObject('The customer has been removed.'));
+											$D.anymessage(_app.u.successMsgObject('The customer has been removed.'));
 											$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
-											app.ext.admin_customer.a.showCustomerManager();
+											_app.ext.admin_customer.a.showCustomerManager();
 											}
 										}
 									}
 								},'immutable');
-							app.model.dispatchThis('immutable');
+							_app.model.dispatchThis('immutable');
 							}
 						});
 
@@ -1575,30 +1575,30 @@ app.model.dispatchThis('immutable');
 					$form = $("[data-app-role='customerSearch']",$custManager).first(),
 					formObj = $form.serializeJSON();
 				
-				if(app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
 					$custManager.showLoading({"message":"Searching Customers"});
-					app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
+					_app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
 						$custManager.hideLoading();
 						$('.dualModeListMessaging',$custManager).empty();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
 							}
 						else	{
 							//if there was only 1 result, the API returns just that CID. open that customer.
-							if(app.data[rd.datapointer] && app.data[rd.datapointer].CID && (app.data[rd.datapointer].PRT == app.vars.partition))	{
+							if(_app.data[rd.datapointer] && _app.data[rd.datapointer].CID && (_app.data[rd.datapointer].PRT == _app.vars.partition))	{
 								$resultsTable.hide();
 								$editorContainer.show();
-								app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
+								_app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':_app.data[rd.datapointer].CID});
 								}
-							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
+							else if(_app.data[rd.datapointer] && _app.data[rd.datapointer]['@CUSTOMERS'] && _app.data[rd.datapointer]['@CUSTOMERS'].length)	{
 								$resultsTable.show();
 								$editorContainer.hide();	
 								$("tbody",$resultsTable).empty(); //clear any previous customer search results.
 								$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
-								app.u.handleButtons($resultsTable);
+								_app.u.handleButtons($resultsTable);
 								$("tbody tr",$resultsTable).each(function(){
 									var $tr = $(this);
-									if($tr.data('prt') == app.vars.partition)	{
+									if($tr.data('prt') == _app.vars.partition)	{
 										$('td:first',$tr).addClass('lookLikeLink').attr('data-app-click','admin_customer|adminCustomerUpdateShow');
 										}
 									else	{
@@ -1612,7 +1612,7 @@ app.model.dispatchThis('immutable');
 								}
 							}
 						}},'mutable');
-					app.model.dispatchThis();					
+					_app.model.dispatchThis();					
 					}
 				else	{
 					//validateForm handles error display.
@@ -1634,16 +1634,16 @@ app.model.dispatchThis('immutable');
 			
 				$("<button \/>").text('Confirm').addClass('floatRight').button().on('click',function(){
 					$modal.showLoading({'message':'Updating customer record...'});
-					app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
+					_app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
 						$modal.hideLoading();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$modal.anymessage({'message':rd});
 							}
 						else	{
 							$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistent':true})
 							}
 						}},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 					
 					}).appendTo($modal);
 		
@@ -1657,24 +1657,24 @@ app.model.dispatchThis('immutable');
 				
 				if(CID && note)	{
 					$panel.showLoading({'message':'Adding note to customer record'});
-					app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(rd){
+					_app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(rd){
 						//update notes panel or show errors.
 						$panel.hideLoading();
-						if(app.model.responseHasErrors(rd)){
+						if(_app.model.responseHasErrors(rd)){
 							$panel.anymessage({'message':rd});
 							}
 						else	{
 							$("tbody",$panel).empty(); //clear all existing notes.
 							$("input",$panel).val(''); //empty notes input(s).
 							$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
-							app.u.handleButtons($panel);
+							_app.u.handleButtons($panel);
 							}
 						
 						}},'immutable');
 //get a clean copy of the customer record so that the notes panel can be updated.
-					app.model.destroy('adminCustomerDetail|'+CID);
-					app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.destroy('adminCustomerDetail|'+CID);
+					_app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else if(!CID)	{
 					$ele.closest('fieldset').anymessage({'message':'In admin_customer.e.execNoteCreate, unable to determine customer ID','gMessage':true});
@@ -1702,7 +1702,7 @@ app.model.dispatchThis('immutable');
 					CID = $ele.closest('.panel').data('cid'),
 					index = Number($ele.closest('tr').data('obj_index')); // set by process list. is the index of this address in the customer bill/ship address array.
 			
-				app.ext.admin_customer.a.addressCreateUpdateShow({
+				_app.ext.admin_customer.a.addressCreateUpdateShow({
 					'mode' : 'update', //will b create or update.
 					'show' : 'dialog',
 					'TYPE' : addrTypeTrimd,
@@ -1710,14 +1710,14 @@ app.model.dispatchThis('immutable');
 					},function(v){
 						var $panel = $ele.closest(".ui-widget-anypanel"); //ship or bill panel.
 						$("tbody",$panel).empty(); //clear address rows so new can be added.
-						$panel.anycontent({'data' : app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
-						app.u.handleButtons($panel);
-						},app.data['adminCustomerDetail|'+CID][addrType][index]);
+						$panel.anycontent({'data' : _app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
+						_app.u.handleButtons($panel);
+						},_app.data['adminCustomerDetail|'+CID][addrType][index]);
 				}, //showAddrUpdate
 
 //executed on a button to show the customer create form.
 			adminCustomerCreateShow : function($ele,P)	{
-				app.ext.admin_customer.a.showCustomerCreateModal();
+				_app.ext.admin_customer.a.showCustomerCreateModal();
 				}, //adminCustomerCreateShow
 
 			adminCustomerUpdateShow : function($ele,P)	{
@@ -1725,7 +1725,7 @@ app.model.dispatchThis('immutable');
 				var $dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']")
 				$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
 				$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
-				app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
+				_app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //adminCustomerUpdateShow
 
 
@@ -1737,7 +1737,7 @@ app.model.dispatchThis('immutable');
 //when a checkbox is clicked, close the modal, set the val of the orgid input and then trigger the change handler so the save button is clickable.
 					$orgidInput.val($cb.closest('tr').data('orgid'));
 					$orgidInput.toggleClass('edited');
-					app.ext.admin_customer.u.handleChanges($context);
+					_app.ext.admin_customer.u.handleChanges($context);
 					$cb.closest('.ui-dialog-content').dialog('close');
 					})
 				
@@ -1745,24 +1745,24 @@ app.model.dispatchThis('immutable');
 			
 			showMailTool : function($ele,P)	{
 				P.preventDefault();
-				app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
+				_app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':_app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //showMailTool
 
 			showOrgChooser : function($ele,P)	{
 				P.preventDefault();
-				var $D = app.ext.admin.i.dialogCreate({
+				var $D = _app.ext.admin.i.dialogCreate({
 					title : "Organization Chooser",
 					anycontent : true, //the dialogCreate params are passed into anycontent
 					'templateID':'organizationManagerPageTemplate',
 					'data':{},
 					handleAppEvents : false //defaults to true
 					});
-				var $DMI = app.ext.admin.i.DMICreate($D,{
+				var $DMI = _app.ext.admin.i.DMICreate($D,{
 					'header' : 'Organization Chooser',
 					'className' : 'organizationChooser', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['','ID','Company','Domain','Email','Account Manager','Billing Phone','Billing Contact',''], //leave blank at end if last row is buttons.
 					'tbodyDatabind' : "var: tickets(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerChooserRowTemplate;",
-					'controls' : app.templates.orgManagerControls,
+					'controls' : _app.templates.orgManagerControls,
 					'cmdVars' : {
 						'_cmd' : 'adminCustomerOrganizationSearch',
 						'PHONE' : '', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
@@ -1772,10 +1772,10 @@ app.model.dispatchThis('immutable');
 							}
 						}
 					});
-				app.u.handleButtons($D.anydelegate());
+				_app.u.handleButtons($D.anydelegate());
 				$D.dialog('open');
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
-				app.model.dispatchThis();
+				_app.model.dispatchThis();
 				}, //showOrgChooser
 			
 
@@ -1783,10 +1783,10 @@ app.model.dispatchThis('immutable');
 				P.preventDefault();
 				var CID = $ele.closest("[data-cid]").data('cid'), secureID = $ele.closest('tr').data('wi');
 				if(CID && secureID)	{
-					var $D = app.ext.admin.i.dialogCreate({'title':'Wallet Peek','showLoading':false});
+					var $D = _app.ext.admin.i.dialogCreate({'title':'Wallet Peek','showLoading':false});
 					$D.dialog('open');
 					$D.showLoading({"message":'Fetching Wallet Details'});
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd':'adminCustomerWalletPeek',
 						'CID' : $ele.closest("[data-cid]").data('cid'),
 						'SECUREID' : $ele.closest('tr').data('wi'),
@@ -1794,19 +1794,19 @@ app.model.dispatchThis('immutable');
 							'datapointer' : 'adminCustomerWalletPeek',
 							'callback':function(rd) {
 								$D.hideLoading();
-								if(app.model.responseHasErrors(rd)){
+								if(_app.model.responseHasErrors(rd)){
 									$D.anymessage({'message':rd});
 									}
 								else	{
 									//success content goes here.
-									$D.append("<div>CC: "+app.data[rd.datapointer].CC+"<\/div>");
-									$D.append("<div>MM: "+app.data[rd.datapointer].MM+"<\/div>");
-									$D.append("<div>YY: "+app.data[rd.datapointer].YY+"<\/div>");
+									$D.append("<div>CC: "+_app.data[rd.datapointer].CC+"<\/div>");
+									$D.append("<div>MM: "+_app.data[rd.datapointer].MM+"<\/div>");
+									$D.append("<div>YY: "+_app.data[rd.datapointer].YY+"<\/div>");
 									}
 								}
 							}
 						},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$ele.closest('fieldset').anymessage({'message':'In admin_customer.e.adminCustoemrWalletPeekShow, unable to ascertain either the customer id ['+$ele.closest("[data-cid]").data('cid')+'] and/or the wallet/secure id ['+$ele.closest('tr').data('wi')+'].','gMessage':true});
@@ -1817,8 +1817,8 @@ app.model.dispatchThis('immutable');
 			customerEditorModalShow : function($ele)	{
 				var CID = $ele.attr('data-cid');
 				if(CID)	{
-					var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer Record: '+CID});
-					app.ext.admin_customer.a.showCustomerEditor($D,{'CID':CID});
+					var $D = _app.ext.admin.i.dialogCreate({title:'Edit Customer Record: '+CID});
+					_app.ext.admin_customer.a.showCustomerEditor($D,{'CID':CID});
 					$D.dialog('option','height',500);
 					$D.dialog('open');
 					}

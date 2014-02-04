@@ -28,7 +28,7 @@ Dependencies:
 store_product (for add to cart validation).
 
 To implement, change the action on the productTemplate Add to cart to this:
-onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;"
+onSubmit="_app.ext.cart_quickadd.a.addItemToCart($(this)); return false;"
 
 OR, if app events are supported in the product layout (they are not at this time, but it's anticipated):
 <form data-app-event="cart_quickadd|execQuickaddCartAppend"...
@@ -36,7 +36,7 @@ OR, if app events are supported in the product layout (they are not at this time
 */
 
 
-var cart_quickadd = function() {
+var cart_quickadd = function(_app) {
 	
 	var theseTemplates = new Array('cartQuickaddTemplate');
 	var r = {
@@ -55,8 +55,8 @@ var cart_quickadd = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				if(app.ext.cart_quickadd.vars.willFetchMyOwnTemplates)	{
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/cart_quickadd/templates.html',theseTemplates);
+				if(_app.ext.cart_quickadd.vars.willFetchMyOwnTemplates)	{
+					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_quickadd/templates.html',theseTemplates);
 					}
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -66,7 +66,7 @@ var cart_quickadd = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -84,24 +84,24 @@ var cart_quickadd = function() {
 				var quickAddCallback = function(rd){
 					var $QC = $("#quickaddCart")
 					$QC.hideLoading(); //only close on error. otherwise leave for removal in subsequent call.
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$QC.anymessage({'message':rd});
 						}
 					else	{
-						$QC.anycontent({'templateID':'cartQuickaddTemplate',data:app.data['appProductGet|'+$("input[name='sku']",$form).val()]});
-						app.u.handleAppEvents($QC);
+						$QC.anycontent({'templateID':'cartQuickaddTemplate',data:_app.data['appProductGet|'+$("input[name='sku']",$form).val()]});
+						_app.u.handleAppEvents($QC);
 						}
 //close panel whether a success or error is shown.
 					setTimeout(function(){
 						if($QC.is(':visible'))	{
-							app.ext.cart_quickadd.u.cartHide();
+							_app.ext.cart_quickadd.u.cartHide();
 							}
 						else	{} //already minimized, do nothing.
 						},5000);
 					}
 				//the handle add to cart will take care of variations validation and error display.
-				if(app.ext.store_product.u.handleAddToCart($form,{'callback':quickAddCallback}))	{
-					app.ext.cart_quickadd.u.cartShow(); //opens the cart and goes into a 'loading' state.
+				if(_app.ext.store_product.u.handleAddToCart($form,{'callback':quickAddCallback}))	{
+					_app.ext.cart_quickadd.u.cartShow(); //opens the cart and goes into a 'loading' state.
 					}
 				else {} //no default 'fail' action. the function above handles it.
 				} //addItemToCart
@@ -111,7 +111,7 @@ var cart_quickadd = function() {
 		u : {
 
 			cartShow : function()	{
-				app.u.dump("BEGIN cart_quickadd.u.cartShow");
+				_app.u.dump("BEGIN cart_quickadd.u.cartShow");
 				var $QC = $("#quickaddCart");
 				if($QC.length)	{$QC.empty()}
 				else	{
@@ -148,14 +148,14 @@ var cart_quickadd = function() {
 				$btn.button();
 				$btn.off('click.execQuickaddCartHide').on('click.execQuickaddCartHide',function(event){
 					event.preventDefault();
-					app.ext.cart_quickadd.u.cartHide();
+					_app.ext.cart_quickadd.u.cartHide();
 					});
 				}, //execQuickaddCartHide
 
 			execQuickaddCartAppend : function($form)	{
 				$form.off('submit.execQuickaddCartAppend').on('submit.execQuickaddCartAppend',function(event){
 					event.preventDefault();
-					app.ext.cart_quickadd.a.addItemToCart($form);
+					_app.ext.cart_quickadd.a.addItemToCart($form);
 					});
 				}, //execQuickaddCartAppend
 
@@ -163,7 +163,7 @@ var cart_quickadd = function() {
 				$btn.button();
 				$btn.off('click.execCheckout').on('click.execCheckout',function(event){
 					event.preventDefault();
-					app.ext.cart_quickadd.u.cartHide();
+					_app.ext.cart_quickadd.u.cartHide();
 					showContent('checkout',{'show':'checkout'});
 					});
 				} //execCheckoutShow

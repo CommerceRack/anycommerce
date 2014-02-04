@@ -43,11 +43,15 @@
 	var ebaySpecsBlock = '.ebaySpecificsFormInner';
 	var ebaySpecsCSS = 'app-admin/resources/jquery.ebay-specifics-form.css';
 	var ebaySpecsPNG = 'app-admin/resources/jquery.ebay-specifics-form.png';
-	if(app && app.vars && app.vars.baseURL) {
-		ebaySpecsCSS = ebaySpecsCSS+app.vars.baseURL;
-		ebaySpecsPNG = ebaySpecsPNG+app.vars.baseURL;
-	}
-	
+// *** 201401 -> changed cuz app. is no longer a guarantee.
+//	if(app && app.vars && app.vars.baseURL) {
+//		ebaySpecsCSS = ebaySpecsCSS+app.vars.baseURL;
+//		ebaySpecsPNG = ebaySpecsPNG+app.vars.baseURL;
+//	}
+	if(baseURL in window) {
+		ebaySpecsCSS = ebaySpecsCSS+baseURL;
+		ebaySpecsPNG = ebaySpecsPNG+baseURL;
+	}	
 	
   // gets .json chunk with recommended item specific Key/Values
 	// and bulds the advanced eBay specifics form, then restores 'ebay:itemspecifics'

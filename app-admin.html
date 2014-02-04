@@ -15,8 +15,7 @@
 
 <script type="text/javascript">
 
-var myCreole;
-
+//var myCreole;
 var baseURL = '';
 //in admin, used for loading app-specific files. do NOT set the base href tho.
 if (document.location.protocol  == 'file:') {
@@ -30,28 +29,14 @@ else {
    baseURL = "";
    }
 
-var app = {vars:{
-	/////////////////////////////////\
-	"release":"201352.f",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
-	//////////////////////////////////
-	"thisSessionIsAdmin": true,
-	"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
-	"_clientid":"admin",
-	"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
-//	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
-//	"secureURL" : "https://www.zoovy.com",
-	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
-	"baseURL" : baseURL,
-	},u:{},rq:[]};
-
 </script>
 
 <!--
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
+https://developers.google.com/speed/articles/include-scripts-properly -> section 2.
 -->
 
-<!-- <link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.custom.css" /> (old custom UI styles.)-->
 <link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.css" />
 <link rel="STYLESHEET" type="text/css" href="app-admin/standard.css" /><!-- legacy compat css. goal is to be rid of this file -->
 <link rel="STYLESHEET" type="text/css" href="app-admin/styles.css" /><!-- lots of UI specific styles. load early to avoid popping -->
@@ -62,18 +47,37 @@ css files should be included before any .js file to ensure they are downloaded i
 <script src="app-admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 
 
-<!-- not much is going to run without these two. load em early -->
+<!-- not much is going to run without these four. load em early -->
 <script src="resources/jquery-2.0.3.min.js"></script>
 <script src="resources/jquery-ui-1.10.3.min.js"></script>
-
-<script type="text/javascript" src="loadscript.js"></script>
+<script type="text/javascript" src="controller.js"></script>
+<script type="text/javascript" src="model.js"></script>
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
+$(document).ready(function(){
+	window.adminApp = new initApp({
+		/////////////////////////////////\
+		"release":"201352.f",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		//////////////////////////////////
+		"thisSessionIsAdmin": true,
+		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
+		"_clientid":"admin",
+		"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
+		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
+		"baseURL" : baseURL,
+		"initComplete" : function(t){
+			t.u.loadScript('app-admin-init.js',function(){
+				t.u.loadResources(function(){t.model.addExtensions(t.vars.extensions)});
+				adminApp.u.showProgress(t); //run AFTER loadResouces so that rq is not empty.
+				});
+			$('#appversion').text(t.vars.release);
+			}
+		});
+	});
 </script>
 
 </head>
-<body class="control" onLoad="jQuery('#appversion').text(app.vars.release);">
+<body class="control">
 <!-- this div handles getting content to appear below the fixed header -->
 
 
@@ -196,18 +200,18 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!help',{'tab':'support'})">Help</span>
 				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!showPlatformInfo',{'back':0,'dialog':true})">About</span>
 				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!taskManager');" title='view and edit your task list'>Tasks</span>
-				| <span class='pointer lookLikeLink' onClick="app.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
+				| <span class='pointer lookLikeLink' onClick="adminApp.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
 			</div>
 			
 			<div class='floatRight marginRight'>
-	Logged in as: <span class='username'></span> on <span class='domain lookLikeLink' onClick='app.ext.admin.a.showDomainChooser(); return false;'></span> <span class='partition'></span>
+	Logged in as: <span class='username'></span> on <span class='domain lookLikeLink' onClick='adminApp.ext.admin.a.showDomainChooser(); return false;'></span> <span class='partition'></span>
 			</div>
 			
 		</div>
 
 		<div class='mhTabsContainer'>
 		<ul class='showIcons navIcons'>
-			<li class='toggleArrow alignCenter' onClick="app.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
+			<li class='toggleArrow alignCenter' onClick="adminApp.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
 			<li class='setupTab' onClick="navigateTo('#:setup');">
 				<span class='text'>Setup</span>
 				<span class='icon'></span>
@@ -269,7 +273,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 				<span class="animator" data-animation-mouseenter="support?animFunc=fwd" data-animation-mouseout="support?animFunc=back"></span>
 				<span class='animIcon' data-animation="support?imgsrc=app-admin/images/header_anime/support_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=38&amp;height=38&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='messagesTab' onClick="app.ext.admin.u.toggleMessagePane();">
+			<li class='messagesTab' onClick="adminApp.ext.admin.u.toggleMessagePane();">
 				<span class='text'>Messages</span>
 				<span class='messageCount'></span>
 				<span class="animator" data-animation-mouseenter="messages?animFunc=fwd" data-animation-mouseout="messages?animFunc=back"></span>
@@ -277,8 +281,8 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			</li>
 		</ul>
 		<div id='messagesContent' class='displayNone'>
-			<button onClick="app.ext.admin.u.toggleMessagePane();" class='floatRight' id='closePanelButton'>Close Message Panel</button>
-			<button onClick="app.ext.admin.u.clearAllMessages();" class='floatRight' id='clearMessagesButton' title="Clear all messages from queue">Clear All</button>
+			<button onClick="adminApp.ext.admin.u.toggleMessagePane();" class='floatRight' id='closePanelButton'>Close Message Panel</button>
+			<button onClick="adminApp.ext.admin.u.clearAllMessages();" class='floatRight' id='clearMessagesButton' title="Clear all messages from queue">Clear All</button>
 			<div class='messagesList'>
 			<table class='fullWidth'>
 			<tbody data-app-role='messagesContainer'></tbody>
@@ -419,21 +423,21 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<li><a href='#'>Pages</a>
 	<ul>
 		<li><a href='#' onClick="navigateTo('#!templateEditor',{'mode':'Campaign','campaignid':'201312052_2013122'}); return false;">showNewTemplateEditor</a>
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminConfigDetail','tuning':'1'},'mutable'); app.model.dispatchThis('mutable'); return false;">adminConfigDetail -> tuning</a></li>
+		<li><a href='#' onClick="adminApp.model.addDispatchToQ({'_cmd':'adminConfigDetail','tuning':'1'},'mutable'); adminApp.model.dispatchThis('mutable'); return false;">adminConfigDetail -> tuning</a></li>
 		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
 		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
-		<li><a href='#' onClick="app.ext.admin_trainer.a.showTrainerInModal(); return false;">Trainer</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
+		<li><a href='#' onClick="adminApp.ext.admin_trainer.a.showTrainerInModal(); return false;">Trainer</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); adminApp.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Test</a>
 	<ul>
-		<li><a href='#' onClick='app.model.addDispatchToQ({"mode":"elastic-native","size":250,"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":"AC"}}]},"_cmd":"appPublicSearch","type":"product"},"mutable"); app.model.dispatchThis("mutable"); return false;'>elastic-native</a></li>	
-		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
+		<li><a href='#' onClick='adminApp.model.addDispatchToQ({"mode":"elastic-native","size":250,"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":"AC"}}]},"_cmd":"appPublicSearch","type":"product"},"mutable"); adminApp.model.dispatchThis("mutable"); return false;'>elastic-native</a></li>	
+		<li><a href='#' onClick="$('#globalMessaging').anymessage(adminApp.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
-		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
+		<li><a href='#' onClick="adminApp.model.destroy('adminSyndicationList'); adminApp.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); adminApp.model.dispatchThis('mutable');">adminSyndicationList</a></li>
 
-		<li><a href='#' onClick="app.model.destroy('adminConfigDetail'); app.ext.admin.calls.adminConfigDetail.init({'inventory':true},{},'mutable'); app.model.dispatchThis('mutable');">adminConfigDetail</a></li>
+		<li><a href='#' onClick="adminApp.model.destroy('adminConfigDetail'); adminApp.ext.admin.calls.adminConfigDetail.init({'inventory':true},{},'mutable'); adminApp.model.dispatchThis('mutable');">adminConfigDetail</a></li>
 	
 	</ul>
 	</li>

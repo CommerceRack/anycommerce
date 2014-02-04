@@ -40,7 +40,7 @@ Planned Features/UI enhancements:
 
 
 
-var admin_task = function() {
+var admin_task = function(_app) {
 	var theseTemplates = new Array('taskListRowTemplate','taskListCreateEditTemplate','taskListEditPanelTemplate','taskListCreateTemplate');
 	var r = {
 
@@ -55,7 +55,7 @@ var admin_task = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
 
 //used for the add new modal.
 $('body').append("<div id='createTaskModal' class='displayNone' title='Create a new task'></div>");
@@ -66,7 +66,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			},
 
@@ -74,12 +74,12 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 			onSuccess : function(tagObj){
 //hideLoading is handled by the updateTaskList call 
 				$('#createTaskModal').dialog('close');
-				app.u.throwMessage(app.u.successMsgObject("Your task has been created."));
+				_app.u.throwMessage(_app.u.successMsgObject("Your task has been created."));
 				},
 			onError : function(tagObj){
 //hideLoading is handled by the updateTaskList call 
 				tagObj.targetID = 'createTaskModal'; //sets where to put the error messages.
-				app.u.throwMessage(app.data[tagObj.datapointer]);
+				_app.u.throwMessage(_app.data[tagObj.datapointer]);
 				}
 			}, //adminTaskCreate
 
@@ -88,16 +88,16 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 // this code will empty the table, so no need to do it before (means previous results will still show if an error occurs).
 		updateTaskList : {
 			onSuccess : function(tagObj){
-				app.u.dump("BEGIN admin_task.callbacks.updateTaskList.onSuccess");
+				_app.u.dump("BEGIN admin_task.callbacks.updateTaskList.onSuccess");
 				//limit the number of results.  This is to keep the browser from crashing on HUGE tasks lists.
 				var inc = 0;
-				var tasks = app.data[tagObj.datapointer]['@TASKS'];
+				var tasks = _app.data[tagObj.datapointer]['@TASKS'];
 				var filteredTasks = new Array();
 				var L = tasks.length;
 				
 				for(var i = (L-1); i >= 0; i--)	{
-					if(Number(tasks[i].completed_gmt) > 0 && (app.u.epochNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
-						app.u.dump("completed more than three days ago");
+					if(Number(tasks[i].completed_gmt) > 0 && (_app.u.epochNow() - Number(tasks[i].completed_gmt)) > (60*60*24*3)){
+						_app.u.dump("completed more than three days ago");
 						} //don't include tasks completed more than a few days ago
 					else	{
 						//tasks completed in the last 3 days do not count against the 100 task max. so the user gets 100 active tasks.
@@ -111,12 +111,12 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					}
 				tagObj.jqObj.hideLoading();
 				$("[data-app-role='dualModeListTbody']",tagObj.jqObj).empty().anycontent({'translateOnly':true,'data':{'@TASKS':filteredTasks}});
-				app.u.handleButtons(tagObj.jqObj);
+				_app.u.handleButtons(tagObj.jqObj);
 				tagObj.jqObj.find("[data-app-click='admin|checkAllCheckboxesExec']").data('selected',false);
 				},
 			onError : function(responseData, uuid)	{
-				app.u.throwMessage(responseData);
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
+				_app.u.throwMessage(responseData);
+				$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).hideLoading();
 				}
 			} //updateTaskList
 
@@ -130,8 +130,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific task. not supported just yet.
 			showTaskManager : function($target) {
-//				app.u.dump("BEGIN admin_task.a.showTaskManager");
-				var $DMI = app.ext.admin.i.DMICreate($target,{
+//				_app.u.dump("BEGIN admin_task.a.showTaskManager");
+				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Task Manager',
 					'className' : 'taskManager', //applies a class on the DMI, which allows for css overriding for specific use cases.
 					'thead' : ['','Created','Task','Due Date','Priority','Type','Assigned To',''], //leave blank at end if last row is buttons.
@@ -150,10 +150,10 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						}
 					});
-				app.model.dispatchThis('mutable');
-				app.u.handleButtons($target.anydelegate());
+				_app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target.anydelegate());
 				$('.applyButtonset',$target).buttonset().off('change.handleModifyTasks').on('change.handleModifyTasks',function(){
-					app.ext.admin_task.u.handleModifyTasks(this);
+					_app.ext.admin_task.u.handleModifyTasks(this);
 					});
 
 				}, //showTaskManager
@@ -165,13 +165,13 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 		renderFormats : {
 			taskClass : function($tag,data)	{
 				if(Number(data.value.completed_gmt))	{
-					if((app.u.epochNow() - Number(data.value.completed_gmt)) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
+					if((_app.u.epochNow() - Number(data.value.completed_gmt)) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
 					else	{} //do nothing.
 					}
 				else if(Number(data.value.due_gmt))	{
-					app.u.dump(" -> has a due date. Number(data.value.due_gmt) - app.u.epochNow(): "+(Number(data.value.due_gmt) - app.u.epochNow()));
-					if(app.u.epochNow() > Number(data.value.due_gmt)) {$tag.addClass('red');} //past due date.
-					else if ((Number(data.value.due_gmt) - app.u.epochNow()) < (60*60*24*2)){$tag.addClass('orange')} //due within 2 days. highlight.
+					_app.u.dump(" -> has a due date. Number(data.value.due_gmt) - _app.u.epochNow(): "+(Number(data.value.due_gmt) - _app.u.epochNow()));
+					if(_app.u.epochNow() > Number(data.value.due_gmt)) {$tag.addClass('red');} //past due date.
+					else if ((Number(data.value.due_gmt) - _app.u.epochNow()) < (60*60*24*2)){$tag.addClass('orange')} //due within 2 days. highlight.
 					else	{} //not past due or too close to due date.
 					}
 				else	{} // no due data and not completed. do nothing.
@@ -203,7 +203,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$('.datepicker',$target).datepicker({
 					'dateFormat':'@',
 					'onClose' : function(dateText,object)	{
-//						app.u.dump(" -> this:");	app.u.dump(this);
+//						_app.u.dump(" -> this:");	_app.u.dump(this);
 						if(this.defaultValue == this.value)	{
 							//value did not change.
 							}
@@ -212,7 +212,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						}
 					}); //@ sets the format to epoch.
-				app.u.handleButtons($target);
+				_app.u.handleButtons($target);
 				$target.dialog('open');
 				}, //adminTaskCreateShow
 			
@@ -220,7 +220,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				var $checked = $ele.closest("[data-app-role='dualModeContainer']").find(':checkbox:checked');
 				if($checked.length)	{
 
-				app.ext.admin.i.dialogConfirmRemove({
+				_app.ext.admin.i.dialogConfirmRemove({
 					"message" : "Are you sure you wish to delete "+$checked.length+" task(s)? There is no undo for this action.",
 					"removeButtonText" : "Remove Tasks", //will default if blank
 					"title" : "Remove "+$checked.length+" Task(s)", //will default if blank
@@ -228,8 +228,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 						$D.showLoading({"message":"Deleting "});
 						$checked.each(function(index){
 							var taskID = $(this).closest('[data-id]').data('id');
-							if($(app.u.jqSelector('#','task_'+taskID).length))	{
-								var $panel = $(app.u.jqSelector('#','task_'+taskID));
+							if($(_app.u.jqSelector('#','task_'+taskID).length))	{
+								var $panel = $(_app.u.jqSelector('#','task_'+taskID));
 								if($panel.is(':visible'))	{
 									$panel.slideUp('fast',function(){
 										$panel.remove();
@@ -239,7 +239,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 									$panel.remove();
 									}
 								}
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'_cmd':'adminTaskRemove',
 								"taskid":taskID,
 								"_tag" : {
@@ -247,7 +247,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //have a negative check here because having the function at the end of the line reads easier.
 									callback : (index != ($checked.length - 1)) ? '' : function(rd){ 
 										$D.hideLoading();
-										if(app.model.responseHasErrors(rd)){
+										if(_app.model.responseHasErrors(rd)){
 											$D.anymessage({'message':rd});
 											}
 										else	{
@@ -259,7 +259,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 								},'immutable');
 							});
 				
-						app.model.addDispatchToQ({
+						_app.model.addDispatchToQ({
 							'_cmd' : 'adminTaskList',
 							'limit' : '50', //not supported for every call yet.
 							'_tag' : {
@@ -269,7 +269,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 								'jqObj' : $ele.closest("[data-app-role='dualModeContainer']")
 								}
 							},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 				
 						}
 					})
@@ -285,9 +285,9 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				var $checked = $ele.closest("[data-app-role='dualModeContainer']").find(':checkbox:checked');
 				if($checked.length)	{
 					$checked.each(function(){
-						app.model.addDispatchToQ({'_cmd':'adminTaskComplete',"taskid":$(this).closest('[data-id]').data('id')},'immutable');
+						_app.model.addDispatchToQ({'_cmd':'adminTaskComplete',"taskid":$(this).closest('[data-id]').data('id')},'immutable');
 						});
-					app.model.addDispatchToQ({
+					_app.model.addDispatchToQ({
 						'_cmd' : 'adminTaskList',
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
@@ -297,7 +297,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							'jqObj' : $ele.closest("[data-app-role='dualModeContainer']")
 							}
 						},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					
 					}
 				else	{
@@ -308,7 +308,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 			adminTaskUpdateShow : function($ele,p)	{
 
 				var taskID = $ele.closest("[data-id]").data('id');
-				$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+				$panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 					'templateID' : 'taskListEditPanelTemplate',
 					'panelID' : 'task_'+taskID,
 					'header' : 'Edit Task: '+taskID,
@@ -319,7 +319,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$('.datepicker',$panel).datepicker({
 					'dateFormat':'@',
 					'onClose' : function(dateText,object)	{
-//						app.u.dump(" -> this:");	app.u.dump(this);
+//						_app.u.dump(" -> this:");	_app.u.dump(this);
 						if(this.defaultValue == this.value)	{
 							//value did not change.
 							}
@@ -329,7 +329,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 							}
 						}
 					}); //@ sets the format to epoch.
-				app.u.handleButtons($panel);
+				_app.u.handleButtons($panel);
 				} //adminTaskUpdateShow
 			} //events
 

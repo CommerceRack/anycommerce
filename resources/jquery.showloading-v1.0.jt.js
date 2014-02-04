@@ -151,16 +151,7 @@
 			if ( settings.marginLeft ) {
 				indicatorLeft += parseInt(settings.marginLeft);
 				}
-			
-			
-			//
 			// set horizontal position
-			//
-//	app.u.dump(" -> settings:"); app.u.dump(settings);
-//app.u.dump("$overlayDiv.outerWidth(): "+$overlayDiv.outerWidth());
-//app.u.dump("$loadingDiv.outerWidth(): "+$loadingDiv.outerWidth());
-//app.u.dump("indicatorLeft: "+indicatorLeft);
-//app.u.dump("jt left: "+(parseInt(($overlayDiv.outerWidth() - $loadingDiv.outerWidth()) / 2)))
 
 			if ( settings.hPos.toString().toLowerCase() == 'center' ) {
 //				$loadingDiv.css('left', (indicatorLeft + (($overlayDiv.outerWidth() - parseInt($loadingDiv.outerWidth())) / 2)).toString()  + 'px');
@@ -247,20 +238,21 @@
 		var settings = {};
 		jQuery.extend(settings, options);
 
+		 function jqSelector(selector,str){
+			if (undefined == str) { str = new String(""); }	// fix undefined issue
+			return ((selector) ? selector : '')+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+			}
+
 		if ( settings.indicatorID ) {
 			indicatorID = settings.indicatorID;
 			}
 		else {
 			indicatorID = $(this).attr('id');
 			}
-// * 201338 -> toggle an indicator class on/off 
+//toggle an indicator class on/off 
 //indicator class on target element removed. used to detect cases of showloading and remove them globally.
 		$(this).removeClass('ui-showloading');
-// ** 201318 -> better method for selector
-		$(app.u.jqSelector('#','loading-indicator-'+indicatorID),$(this)).remove();
-		$(app.u.jqSelector('#','loading-indicator-'+indicatorID+'-overlay'),$(this)).remove();
-//		$(this).find('#loading-indicator-' + indicatorID ).remove();
-//		$(this).find('#loading-indicator-' + indicatorID + '-overlay' ).remove();
-		
+		$(jqSelector('#','loading-indicator-'+indicatorID),$(this)).remove();
+		$(jqSelector('#','loading-indicator-'+indicatorID+'-overlay'),$(this)).remove();
 		return this;
      	};

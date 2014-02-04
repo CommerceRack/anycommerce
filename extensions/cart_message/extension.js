@@ -18,7 +18,7 @@
 
 
 
-var cart_message = function() {
+var cart_message = function(_app) {
 	var theseTemplates = new Array('adminCartMessageTemplate');
 	var r = {
 
@@ -34,25 +34,25 @@ var cart_message = function() {
 			init : {
 				onSuccess : function()	{
 					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-					app.cmr = app.cmr || [];
-//					app.u.dump(" -> app.cmr: "); app.u.dump(app.cmr);
-					var L = app.cmr.length;
+					_app.cmr = _app.cmr || [];
+//					_app.u.dump(" -> _app.cmr: "); _app.u.dump(_app.cmr);
+					var L = _app.cmr.length;
 					
 					var addCMResponse = function(id,func){
 						//allow but notify if an existing response is overwritten.
-						if(app.cmr[i][0]){
-							app.u.dump("Cart Messaging Response "+app.cmr[i][0]+" is being overwritten","warn");
+						if(_app.cmr[i][0]){
+							_app.u.dump("Cart Messaging Response "+_app.cmr[i][0]+" is being overwritten","warn");
 							}
-						app.ext.cart_message.cmResponse[id] = func;
+						_app.ext.cart_message.cmResponse[id] = func;
 						}
 					
 					for(var i = (L-1); i >= 0; i -= 1)	{
-						addCMResponse(app.cmr[i][0],app.cmr[i][1]);
-						delete app.cmr[i];
+						addCMResponse(_app.cmr[i][0],_app.cmr[i][1]);
+						delete _app.cmr[i];
 						}
-					app.cmr.push = addCMResponse; // all future pushes will get added immediately to the response list.
-					app.u.loadCSSFile(app.vars.baseURL+"extensions/cart_message/styles.css","cart_messageCSS");
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/cart_message/templates.html',theseTemplates);
+					_app.cmr.push = addCMResponse; // all future pushes will get added immediately to the response list.
+					_app.u.loadCSSFile(_app.vars.baseURL+"extensions/cart_message/styles.css","cart_messageCSS");
+					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_message/templates.html',theseTemplates);
 					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 					r = true;
 	
@@ -61,7 +61,7 @@ var cart_message = function() {
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+					_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 					}
 				}, //init
 	
@@ -81,36 +81,36 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 */
 					if(_rtag && _rtag.jqObj && _rtag.jqObj.data('cartid'))	{
 						var
-							messages = app.data[_rtag.datapointer]['@MSGS'], 
+							messages = _app.data[_rtag.datapointer]['@MSGS'], 
 							cartID = _rtag.jqObj.data('cartid'), //shortcut.
 							L = messages.length
 						
 						if(L > 0)	{
-							var messagesDPS = app.model.dpsGet('cartMessages',cartID) || [];
-//							((app.ext.cart_message.vars.carts[cartID].frequency - 6000) < 3000) ? app.ext.cart_message.vars.carts[cartID].frequency=3000 : app.ext.cart_message.vars.carts[cartID].frequency-=6000; //frequency is never less than 3000;
-							app.ext.cart_message.vars.carts[cartID].frequency = 3000; //if a message is present, increase frequency because chat is 'active'.
+							var messagesDPS = _app.model.dpsGet('cartMessages',cartID) || [];
+//							((_app.ext.cart_message.vars.carts[cartID].frequency - 6000) < 3000) ? _app.ext.cart_message.vars.carts[cartID].frequency=3000 : _app.ext.cart_message.vars.carts[cartID].frequency-=6000; //frequency is never less than 3000;
+							_app.ext.cart_message.vars.carts[cartID].frequency = 3000; //if a message is present, increase frequency because chat is 'active'.
 		
 							for(var i = 0; i < L; i += 1)	{
 								messages[i].init = _rtag.init || false; // will be set to true if this is executed as part of the init.
 								messagesDPS.push(messages[i]);
-								if(typeof app.ext.cart_message.cmResponse[messages[i].what] == 'function')	{
-									app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
+								if(typeof _app.ext.cart_message.cmResponse[messages[i].what] == 'function')	{
+									_app.ext.cart_message.cmResponse[messages[i].what](messages[i],_rtag.jqObj)
 									}
-								else if(typeof app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]] == 'function')	{ //what.split will check for 'view' instead of view.product. allows for a default.
-									app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]](messages[i],_rtag.jqObj)
+								else if(typeof _app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]] == 'function')	{ //what.split will check for 'view' instead of view.product. allows for a default.
+									_app.ext.cart_message.cmResponse[messages[i].what.split('.')[0]](messages[i],_rtag.jqObj)
 									}
 								else	{
 									// ### TODO -> what to do if the message type is not defined/unrecognized?
 									}
 								}
-							app.model.dpsSet('cartMessages',_rtag.jqObj.data('cartid'),messagesDPS);
-							app.model.dpsSet('cartMessages','lastMessageTS',app.u.epochNow()); //record when the last message came in. used at init.
+							_app.model.dpsSet('cartMessages',_rtag.jqObj.data('cartid'),messagesDPS);
+							_app.model.dpsSet('cartMessages','lastMessageTS',_app.u.epochNow()); //record when the last message came in. used at init.
 							}
 						else	{
-							(app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
+							(_app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : _app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
 							}
 //now queue up the next request.
-						app.ext.cart_message.u.fetchCartMessages(app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);
+						_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);
 						
 						}
 					else	{
@@ -123,8 +123,8 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 						}
 					else if(rd && rd._rtag && rd._rtag.jqObj && rd._rtag.jqObj.data('cartid'))	{
 						var cartID = rd._rtag.jqObj.data('cartid');
-						app.ext.cart_message.vars.carts[cartID].frequency = 10000;
-						app.ext.cart_message.u.fetchCartMessages(app.ext.cart_message.vars.carts[cartID].frequency,rd._rtag.jqObj);
+						_app.ext.cart_message.vars.carts[cartID].frequency = 10000;
+						_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,rd._rtag.jqObj);
 						}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In cart_message.callbacks.handleCartMessageListPolling, unable to ascertain cartid.","gMessage":true});
@@ -169,31 +169,31 @@ some defaults are present, but they can be overwritten by the app easily enough.
 			a : {
 
 				showCartManager : function($target)	{
-					$target.anycontent({'templateID':'adminCartManagementTemplate','data':{'carts':app.vars.carts}});
+					$target.anycontent({'templateID':'adminCartManagementTemplate','data':{'carts':_app.vars.carts}});
 
 					$target.anydelegate();
-					app.u.handleButtons($target);
-					app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
+					_app.u.handleCommonPlugins($target);
 					
 					var $tbody = $("[data-app-role='cartManagementCartsTbody']",$target); //used for context below.
 
-					for(var i = 0, L = app.vars.carts.length; i < L; i += 1)	{
-//						app.u.dump("tr length: "+$("tr[data-value='"+app.vars.carts[i]+"']",$tbody).length);
-						app.calls.cartDetail.init(app.vars.carts[i],{
+					for(var i = 0, L = _app.vars.carts.length; i < L; i += 1)	{
+//						_app.u.dump("tr length: "+$("tr[data-value='"+_app.vars.carts[i]+"']",$tbody).length);
+						_app.calls.cartDetail.init(_app.vars.carts[i],{
 							'callback':'anycontent',
 							'onComplete' : function(rd)	{
 								$('.wait',rd.jqObj).removeClass('wait');
 								$('button',rd.jqObj).button('enable');
 								},
-							'jqObj':$("tr[data-value='"+app.vars.carts[i]+"']",$tbody)
+							'jqObj':$("tr[data-value='"+_app.vars.carts[i]+"']",$tbody)
 							},'mutable');
 						}
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					},
 
 //used for admin.  Presents user w/ a text input for adding a CSR code.  Will return the cart id.
 				showCart2SessionDialog : function(onComplete)	{
-					var $D = app.ext.admin.i.dialogCreate({
+					var $D = _app.ext.admin.i.dialogCreate({
 						'title' : 'Add a cart to the session',
 						'showLoading' : false
 						});
@@ -208,14 +208,14 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //one of two cmds could get executed here. Regardless of which is executed, the same callback is triggered, which executed the oncomplete passed in and passes in the cart id.
 						var callback = function(rd)	{
 							var thisCartid = false;
-							if(app.model.responseHasErrors(rd)){
+							if(_app.model.responseHasErrors(rd)){
 								$D.anymessage({'message':rd});
 								}
-							else if(app.model.responseIsMissing(rd))	{
+							else if(_app.model.responseIsMissing(rd))	{
 								$D.anymessage({'message':rd});
 								}
 							else	{
-								thisCartid = (rd.datapointer == 'adminCSRLookup') ? app.data[rd.datapointer].cartid : app.data[rd.datapointer].cart.cartid
+								thisCartid = (rd.datapointer == 'adminCSRLookup') ? _app.data[rd.datapointer].cartid : _app.data[rd.datapointer].cart.cartid
 								$D.dialog('close');
 								}
 							if(typeof onComplete == 'function')	{
@@ -225,20 +225,20 @@ some defaults are present, but they can be overwritten by the app easily enough.
 							
 							if(cartCSR.length == 4)	{
 								//at four characters, this is most likely a CSR code.
-								app.model.addDispatchToQ({'_cmd':'adminCSRLookup','csr':$("[name='csr']",$D).val(),'_tag':	{'datapointer':'adminCSRLookup','callback':callback}},'mutable');								
+								_app.model.addDispatchToQ({'_cmd':'adminCSRLookup','csr':$("[name='csr']",$D).val(),'_tag':	{'datapointer':'adminCSRLookup','callback':callback}},'mutable');								
 								}
 							else if(cartCSR.length < 4)	{
 								$D.anymessage({'message':"A CSR code must be four characters.","errtype":"youerr"});
 								}
 							else	{
-								app.calls.cartDetail.init(cartCSR,{'callback' : callback},'mutable');
+								_app.calls.cartDetail.init(cartCSR,{'callback' : callback},'mutable');
 								}
 							}
 						else	{
 							$D.anymessage({'message':"Please add a cart or csv code","errtype":"youerr"});
 							}
 
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						}).appendTo($D);
 					$D.dialog('open');
 					},
@@ -249,24 +249,24 @@ some defaults are present, but they can be overwritten by the app easily enough.
 						var $UI = $("<div \/>");
 						$UI.attr({'title':'CM: '+cartID,'id':'CM_'+cartID});
 						$UI.anycontent({'templateID':'adminCartMessageTemplate'}).showLoading({'message':'Fetching cart detail'});
-						app.ext.cart_message.u.initCartMessenger(cartID,$("[data-app-role='cartMessenger']",$UI)); //starts the cart message polling. needs to be after the anycontent.
+						_app.ext.cart_message.u.initCartMessenger(cartID,$("[data-app-role='cartMessenger']",$UI)); //starts the cart message polling. needs to be after the anycontent.
 						$UI.dialog({
 							'width' : '30%',
 							'close' : function(event,ui)	{
-								app.ext.cart_message.u.destroyCartMessenger($("[data-app-role='cartMessenger']",$(this)).data('cartid')); //kills the cart message polling
+								_app.ext.cart_message.u.destroyCartMessenger($("[data-app-role='cartMessenger']",$(this)).data('cartid')); //kills the cart message polling
 								}
 							});
-						app.model.addCart2Session(cartID); //update app.vars.carts
-						app.u.handleButtons($UI);
+						_app.model.addCart2Session(cartID); //update _app.vars.carts
+						_app.u.handleButtons($UI);
 						$UI.anydelegate();
-						app.model.destroy('cartDetail|'+cartID);
-						app.calls.cartDetail.init(cartID,{'callback':'anycontent','translateOnly':true,'jqObj':$UI,'onComplete':function(rd){
+						_app.model.destroy('cartDetail|'+cartID);
+						_app.calls.cartDetail.init(cartID,{'callback':'anycontent','translateOnly':true,'jqObj':$UI,'onComplete':function(rd){
 							//if no CID is set, lock the edit buyer button.
-							if(app.data[rd.datapointer].customer.cid)	{
+							if(_app.data[rd.datapointer].customer.cid)	{
 								$("[data-app-role='cartMessengerBuyerEditButton']",$UI).button('enable').attr('title','Edit customer record');
 								}
 							}},'mutable');
-						app.model.dispatchThis('mutable');
+						_app.model.dispatchThis('mutable');
 						
 						
 						}
@@ -283,7 +283,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 			renderFormats : {
 				pollDetect : function($tag,data)	{
-					if(app.u.thisNestedExists("app.ext.cart_message.vars.carts."+data.value+".timeout"))	{
+					if(_app.u.thisNestedExists("_app.ext.cart_message.vars.carts."+data.value+".timeout"))	{
 						$tag.append("<span class='ui-icon ui-icon-check'></span>")
 						}
 					else	{
@@ -302,13 +302,13 @@ This intentionally does NOT reset the polling var. If that needs to be reset, se
 That way cartmessages can be fetched without impacting the polling time, if desired.
 */
 				fetchCartMessages : function(when,$context)	{
-//					app.u.dump(" -> queued up the next cartMessages cmd");
+//					_app.u.dump(" -> queued up the next cartMessages cmd");
 					var cartID = $context.data('cartid');
 					if(cartID)	{
-						app.ext.cart_message.vars.carts[cartID].timeout = setTimeout(function(){
+						_app.ext.cart_message.vars.carts[cartID].timeout = setTimeout(function(){
 
-							app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((app.u.thisNestedExists("app.data.cartMessageList.SEQ")) ? (app.data.cartMessageList.SEQ) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
-							app.model.dispatchThis('passive');
+							_app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((_app.u.thisNestedExists("_app.data.cartMessageList.SEQ")) ? (_app.data.cartMessageList.SEQ) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
+							_app.model.dispatchThis('passive');
 							},when);
 						}
 					else	{
@@ -320,13 +320,13 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				initCartMessenger : function(cartID,$context){
 					if(cartID && $context instanceof jQuery)	{
 						$context.data('cartid',cartID);
-						var messagesDPS = app.model.dpsGet('cartMessages',cartID) || []; //, TS = app.model.dpsGet('cartMessages','lastMessageTS') || 0, since = 0;
-						app.ext.cart_message.vars.carts[cartID] = {
+						var messagesDPS = _app.model.dpsGet('cartMessages',cartID) || []; //, TS = _app.model.dpsGet('cartMessages','lastMessageTS') || 0, since = 0;
+						_app.ext.cart_message.vars.carts[cartID] = {
 							frequency : 7000,
 							timeout : null
 							}
 
-						app.model.addDispatchToQ({'_cmd':'cartMessageList','since':0,'_cartid':cartID,'_tag':	{
+						_app.model.addDispatchToQ({'_cmd':'cartMessageList','since':0,'_cartid':cartID,'_tag':	{
 							'datapointer' : 'cartMessageList',
 							'callback':'handleCartMessageListPolling',
 							'extension' : 'cart_message',
@@ -343,8 +343,8 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 //if used on a storefront, the cart message polling will end.
 				destroyCartMessenger : function(cartID){
 					if(cartID)	{
-						window.clearTimeout(app.ext.cart_message.vars.carts[cartID].timeout);
-						delete app.ext.cart_message.vars.carts[cartID];
+						window.clearTimeout(_app.ext.cart_message.vars.carts[cartID].timeout);
+						delete _app.ext.cart_message.vars.carts[cartID];
 						}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In cart_message.u.destroyCartMessenger, cartid ["+cartID+"] not set and is required.","gMessage":true});
@@ -360,20 +360,20 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 		e : {
 			adminCartInteract : function($ele,p)	{
 				var cartid = $ele.closest("[data-cartid]").data('cartid');
-				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartid},'mutable');
-				app.ext.cart_message.a.showAdminCMUI(cartid);
+				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartid},'mutable');
+				_app.ext.cart_message.a.showAdminCMUI(cartid);
 				},
 
 			adminCartRemoveFromSession : function($ele,p)	{
-				app.model.removeCartFromSession($ele.closest("[data-cartid]").data('cartid'));
+				_app.model.removeCartFromSession($ele.closest("[data-cartid]").data('cartid'));
 				$ele.closest('tr').empty().remove();
 				},
 			
 			adminCartAddToSession : function($ele,p)	{
-				//app.ext.cart_message.a.showAdminCMUI(app.data[rd.datapointer].cartid);
-				app.ext.cart_message.a.showCart2SessionDialog(function(cartid){
+				//_app.ext.cart_message.a.showAdminCMUI(_app.data[rd.datapointer].cartid);
+				_app.ext.cart_message.a.showCart2SessionDialog(function(cartid){
 					if(cartid)	{
-						app.model.addCart2Session(cartid);
+						_app.model.addCart2Session(cartid);
 						navigateTo('#!cartManager');
 						}
 					else	{
@@ -399,7 +399,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				$("<button \/>").text('Send to Buyer').attr('data-app-click','cart_message|gotoProductExec').button().appendTo($buttons);
 //				$("<button \/>").text('Add to Cart').attr('data-app-click','order_create|cartItemAddWithChooser').button().appendTo($buttons);
 
-				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
+				_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
 				$buttons.anydelegate();
 				},
 			
@@ -407,8 +407,8 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var sku = $("input[name='sku']",'#chooserResultContainer').val();
 				//cart id on parent set by gotoProductShowChooser
-				app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
+				_app.model.dispatchThis('immutable');
 				$('#prodFinder').anymessage({'message':'Product '+sku+' sent to buyer.','errtype':'done'});
 				},
 
@@ -422,11 +422,11 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 			chatPostExec : function($ele,p)	{
 				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset'), cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
-				if(app.u.validateForm($fieldset) && cartID)	{
+				if(_app.u.validateForm($fieldset) && cartID)	{
 					var $message = $ele.closest('fieldset').find("[name='message']");
-					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.post','message':$message.val(),'_cartid':cartID},'immutable');
-					app.model.dispatchThis('immutable');
-					app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
+					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.post','message':$message.val(),'_cartid':cartID},'immutable');
+					_app.model.dispatchThis('immutable');
+					_app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
 					$message.val(""); //reset textarea.
 					}
 				else	{
@@ -440,16 +440,16 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 			cartCSRShortcutExec : function($ele,p)	{
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(cartID)	{
-					app.model.addDispatchToQ({'_cmd':'cartCSRShortcut','_cartid':cartID,'_tag':	{'datapointer' : 'cartCSRShortcut','callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
+					_app.model.addDispatchToQ({'_cmd':'cartCSRShortcut','_cartid':cartID,'_tag':	{'datapointer' : 'cartCSRShortcut','callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
 							//success content goes here.
-							$("<div \/>").append("Cart ID: "+app.data[rd.datapointer].csr).dialog({'modal':true});
+							$("<div \/>").append("Cart ID: "+_app.data[rd.datapointer].csr).dialog({'modal':true});
 							}
 						}}},'mutable');
-					app.model.dispatchThis('mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In cart_message.e.cartCSRShortcutExec, unable to ascertain cartid.","gMessage":true});
@@ -460,9 +460,9 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(cartID)	{
-					app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartID},'immutable');
-					app.model.dispatchThis('immutable');
-					app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
+					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartID},'immutable');
+					_app.model.dispatchThis('immutable');
+					_app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
 					$ele.hide();
 					}
 				else	{
