@@ -86,6 +86,10 @@ var store_zephyrapp = function() {
 					$('#contentArea').addClass('sideBarRightHide');
 					
 					$('.responsiveDropdown').hide();
+					
+					$('.randomList', $context).each(function(){
+						app.ext.store_zephyrapp.u.randomizeList($(this));
+						});
 				}]);
 				
 				
