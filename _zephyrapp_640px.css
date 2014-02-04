@@ -114,6 +114,8 @@ body{background:#ffffff;}
 #reviewsMessage {height:125px; width:240px;}
 .prodPageReviewCount{position:relative; width:150px; margin-bottom:3px;}
 .prodPageName .numReviews { color: #FF6316; font-size: 12px; display:inline; position:absolute; left:90px; top:1px;}
+.prodChildren { padding: 5px;}
+.childDropdown { background: url("images/childoption-icon.jpg") no-repeat scroll right; border: 1px solid #A95D13; color:#4F4F4F; font-weight:bold; height: 19px; width: 210px;}
 
 /**** Company Pages CSS****/
 .sideline {width:23%; border: 1px solid #939598; padding:6px;}

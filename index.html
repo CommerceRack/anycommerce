@@ -1225,7 +1225,7 @@ this will likely become more flexible in the future. ###
 			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix displayNone displayBlockMobile' action='#' onSubmit="app.ext.store_zephyrapp.u.addItemToCart($(this), {'action':'inline'}); return false;">
 				<div class="prodChildren displayNone" data-bind="var: product(zoovy:grp_children); format:showIfSet; className:active;">
 					<select class="childDropdown" data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildrenOption; withInventory:1; withVariations:1;">
-						<option value="">Choose Option...</option>
+						<option value="">Select Option</option>
 					</select>
 				</div>
 				<div class="inventoryContainer displayNoneMobile" data-bind="useParentData:true; format:inventoryAvailQty; extension:store_zephyrapp;"></div>
