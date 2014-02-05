@@ -557,52 +557,6 @@ var admin = function(_app) {
 			}, //appResource
 
 
-		authNewAccountCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(typeof obj == 'object' && obj.email && obj.domain && obj.phone && obj.firstname && obj.lastname && obj.company)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.authNewAccountCreate, some required attributes were missing.");
-					_app.u.dump(" -> All of the fields in the form must be populated. obj follows: "); _app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "authNewAccountCreate";
-				obj._tag = _tag || {};
-				_tag.datapointer = "authNewAccountCreate";
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
-		authPasswordReset : {
-			init : function(login,_tag,Q)	{
-				var r = 0;
-				if(login)	{
-					this.dispatch(login,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.authPasswordReset, login was not passed.");
-					}
-				return r;
-				},
-			dispatch : function(login,_tag,Q)	{
-				var obj = {};
-				obj.login = login;
-				obj._cmd = "authPasswordReset";
-				obj._tag = _tag || {};
-				_tag.datapointer = "authPasswordReset";
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
-
-
-
 		finder : {
 			
 			adminNavcatProductInsert : {
@@ -637,98 +591,7 @@ var admin = function(_app) {
 					}
 				} //adminNavcatProductDelete
 			
-			}, //finder
-
-
-		bossUserList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserList';
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					this.dispatch(_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				Q = Q || 'immutable';
-				var obj = {_cmd : 'bossUserList'};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserList';
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}, //bossUserList
-
-		bossUserDetail : {
-			init : function(luser,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDetail|'+luser;
-				if(luser)	{
-					if(_app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(luser,_tag,Q);
-						}
-					else	{
-						_app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.bossUserDetail, L user is undefined and required.");
-					}
-				return r;
-				},
-			dispatch : function(luser,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"bossUserDetail","login":luser,"_tag" : _tag},Q);
-				}
-			}, //bossUserDetail
-
-		bossUserDelete : {
-			init : function(luser,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(luser)	{
-					this.dispatch(luser,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.bossUserDelete, uid is undefined and required.");
-					}
-				return r;
-				},
-			dispatch : function(luser,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDelete|'+luser;
-				_app.model.addDispatchToQ({"_cmd":"bossUserDelete","login":luser,"_tag" : _tag},Q);
-				}
-			}, //bossUserDelete
-		bossUserUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(!$.isEmptyObject(obj) && obj.luser)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.bossUserUpdate, obj is empty or obj.luser is not set.");
-					_app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'bossUserUpdate';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserUpdate|'+obj.luser;
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}
-
+			} //finder
 
 		}, //calls
 
@@ -4416,7 +4279,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					event.preventDefault();
 					var $form = $btn.closest('form');
 					if(_app.u.validateForm($form))	{
-						_app.ext.admin.calls.authPasswordReset.init($("[name='login']",$form),{},'immutable');
+						_app.model.addDispatchToQ({"_cmd":"authPasswordReset","login":$("[name='login']",$form),"_tag":{"datapointer":"authPasswordReset"}},"immutable");
 						_app.model.dispatchThis('immutable');
 						}
 					else	{} //validateForm handles error display.
@@ -4453,7 +4316,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 						}
 					else	{
 						$('body').showLoading({'message':'Creating new account. One moment please.'});
-						_app.ext.admin.calls.authNewAccountCreate.init(formObj,{'callback':'showHeader','extension':'admin'},'immutable');
+						formObj._cmd = 'authNewAccountCreate';
+						formObj._tag = {"datapointer":"authNewAccountCreate",'callback':'showHeader','extension':'admin'};
+						_app.model.addDispatchToQ(formObj,"immutable");
 						_app.model.dispatchThis('immutable');
 						}
 					
