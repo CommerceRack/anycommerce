@@ -117,7 +117,7 @@ body{background:#ffffff;}
 
 .similarItemsSection {float:left; width:98%; padding:1%;}
 .similarItemsSection h1{font-size:14px; color:#000000; padding-bottom:3px;}
-.similarItemsSection ul {border-bottom:4px solid #E5E5E5; height:200px; overflow:hidden;}
+.similarItemsSection ul {border-bottom:4px solid #E5E5E5; height:205px; overflow:hidden;}
 .similarProductList {width:100%; border:none;}
 .similarItemList {border: none; float: left; margin: 2%; width: 46%; height:200px; font-family: 'Nunito',​sans-serif;}
 .similarItemList .prodThumb { display: block; float: none; margin: 0 auto;}
