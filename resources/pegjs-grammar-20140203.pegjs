@@ -2,12 +2,11 @@ start
  = call+
 
 call
- = grammar _ lb* { return grammar }
+ = grammar 
  / command:(command) _ lb* { return command }
 
 grammar
  = IfStatement
-// eventually we can add other language functions/commands here.
 
 command
  = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb+ {
@@ -17,6 +16,10 @@ command
        args: args ? args.map(function(a) { return a[1] }) : null
      }
    }
+
+__
+  = _
+
 
 IfStatement
   = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
@@ -28,8 +31,9 @@ IfStatement
       };
    }
 
+
 Block
-  = "{{" _ statements:(StatementList _)? "}}" {
+  = "{{" __ statements:(StatementList __)? "}}" {
       return {
         type:       "Block",
         statements: statements !== null ? statements[0] : []
@@ -37,7 +41,7 @@ Block
     }
 
 StatementList
-  = head:Statement tail:(_ Statement)* {
+  = head:Statement tail:(__ Statement)* {
       var result = [head];
       for (var i = 0; i < tail.length; i++) {
         result.push(tail[i][1]);
@@ -50,9 +54,15 @@ Statement
   / command+
   
 
-// ARGUMENTS START HERE
 
-// longopt start with a --arg or --arg=value
+
+/* value types */
+
+boolean 
+ = "true" {return{ "type":"boolean", "value": true }}
+ / "false" {return{ "type":"boolean", "value": false }}
+
+// longopt start with a --
 longopt
  = "--" k:([a-zA-Z]+) "=" v:( value )  {
     return {
@@ -68,10 +78,6 @@ longopt
       value: null
       }
     }
-    
-boolean 
- = "true" {return{ "type":"boolean", "value": true }}
- / "false" {return{ "type":"boolean", "value": false }}
 
 
 // scalar (string)
@@ -132,7 +138,7 @@ primary
   / "(" _ additive:additive _ ")" { return additive; }
 
 value
- = longopt / variable / integer / scalar / boolean/ hexcolor / additive 
+ = longopt / variable / integer / scalar / boolean / hexcolor / additive 
 
 // /* i am a comment (i can only appear before a command) */
 comment
@@ -149,3 +155,5 @@ _
 
 lb
  = ";"
+ 
+ 
