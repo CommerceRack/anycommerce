@@ -2,7 +2,12 @@ start
  = call+
 
 call
- = command:(block_command / command) _ lb* { return command }
+ = grammar _ lb* { return grammar }
+ / command:(command) _ lb* { return command }
+
+grammar
+ = IfStatement
+// eventually we can add other language functions/commands here.
 
 command
  = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb+ {
@@ -13,17 +18,41 @@ command
      }
    }
 
-block
- = "{" lb* e:(block_command / command)+ lb* _ "}" { return e }
+IfStatement
+  = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
+      return {
+        type:     "IfStatement",
+        When:     condition,
+        IsTrue:   ifStatement,
+        IsFalse: elseStatement !== null ? elseStatement[3] : null
+      };
+   }
 
-block_command
- = e:command _ b:block lb* {
-     e.block = b;
-     return e;
-}
+Block
+  = "{{" _ statements:(StatementList _)? "}}" {
+      return {
+        type:       "Block",
+        statements: statements !== null ? statements[0] : []
+      };
+    }
 
+StatementList
+  = head:Statement tail:(_ Statement)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][1]);
+      }
+      return result;
+    }
 
-// longopt start with a --
+Statement
+  = Block
+  / command+
+  
+
+// ARGUMENTS START HERE
+
+// longopt start with a --arg or --arg=value
 longopt
  = "--" k:([a-zA-Z]+) "=" v:( value )  {
     return {
@@ -32,6 +61,18 @@ longopt
        value: v
        }
     }
+ / "--" k:([a-zA-Z]+) {
+    return {
+      type: "longopt",
+      key: k.join(""),
+      value: null
+      }
+    }
+    
+boolean 
+ = "true" {return{ "type":"boolean", "value": true }}
+ / "false" {return{ "type":"boolean", "value": false }}
+
 
 // scalar (string)
 // NOTE: at this point there is no way to escape a ' in a string.
@@ -91,7 +132,7 @@ primary
   / "(" _ additive:additive _ ")" { return additive; }
 
 value
- = longopt / variable / integer / scalar / hexcolor / additive 
+ = longopt / variable / integer / scalar / boolean/ hexcolor / additive 
 
 // /* i am a comment (i can only appear before a command) */
 comment
