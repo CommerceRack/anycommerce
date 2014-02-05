@@ -1,1 +1,2 @@
-~path	/category/(.*)	/#category?navcat=.$1
+~path	/category/(.*)/?	/#category?navcat=.$1
+~path	/product/([^/]*)/?(.*)	/#product?pid=$1
