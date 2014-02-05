@@ -17,9 +17,6 @@ command
      }
    }
 
-__
-  = _
-
 
 IfStatement
   = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
@@ -33,7 +30,7 @@ IfStatement
 
 
 Block
-  = "{{" __ statements:(StatementList __)? "}}" {
+  = "{{" _ statements:(StatementList _)? "}}" {
       return {
         type:       "Block",
         statements: statements !== null ? statements[0] : []
@@ -41,7 +38,7 @@ Block
     }
 
 StatementList
-  = head:Statement tail:(__ Statement)* {
+  = head:Statement tail:(_ Statement)* {
       var result = [head];
       for (var i = 0; i < tail.length; i++) {
         result.push(tail[i][1]);
