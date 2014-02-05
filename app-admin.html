@@ -57,7 +57,7 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 $(document).ready(function(){
 	window.adminApp = new initApp({
 		/////////////////////////////////\
-		"release":"201352.f",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		"release":"201314.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -67,8 +67,8 @@ $(document).ready(function(){
 		"baseURL" : baseURL,
 		"initComplete" : function(t){
 			t.u.loadScript('app-admin-init.js',function(){
-				t.u.loadResources(function(){t.model.addExtensions(t.vars.extensions)});
-				adminApp.u.showProgress(t); //run AFTER loadResouces so that rq is not empty.
+				var progress = t.u.loadResources();
+				adminApp.u.showProgress(progress); //run AFTER loadResouces so that tmp rq is not empty.
 				});
 			$('#appversion').text(t.vars.release);
 			}

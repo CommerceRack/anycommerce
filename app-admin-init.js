@@ -86,40 +86,37 @@ adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.image-galle
 //adminApp.rq.push(['script',0,adminApp.vars.baseURL+'app-admin/resources/jquery.shapeshift.js']);
 
 
-//gets executed from app-admin.html as part of controller init process.
-//t is this instance of the app (adminApp).
 
-adminApp.u.showProgress = function(t,attempts)	{
-	var includesAreDone = true;
-	attempts = attempts || 0;
-	dump("adminApp.u.showProgress [attempt: "+attempts+"]");
-	if(typeof t.vars.rq == 'object' && t.vars.rq !=  null)	{
-//what percentage of completion a single include represents (if 10 includes, each is 10%).
-		var percentPerInclude = (100 / t.vars.rq.length);  
-		var resourcesLoaded = t.u.numberOfLoadedResourcesFromPass(0);
-		dump(" -> resourcesLoaded: "+resourcesLoaded);
-		if(resourcesLoaded >= 0)	{
-			var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
-		
-			$('#appPreViewProgressBar').val(percentComplete);
-			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
-		
-			if(resourcesLoaded == t.vars.rq.length)	{
-				//the app will handle hiding the loading screen.
-				}
-			else	{
-				attempts++;
-				setTimeout(function(){adminApp.u.showProgress(t,attempts)},250);
-				}
+//gets executed from app-admin.html as part of controller init process.
+//progress is an object that will get updated as the resources load.
+/*
+'passZeroResourcesLength' : [INT],
+'passZeroResourcesLoaded' : [INT],
+'passZeroTimeout' : null //the timeout instance running within loadResources that updates this object. it will run indef unless clearTimeout run here OR all resources are loaded.
+
+*/
+adminApp.u.showProgress = function(progress)	{
+	function showProgress(attempt)	{
+		dump(" -> passZeroResourcesLength: "+progress.passZeroResourcesLength+" and progress.passZeroResourcesLoaded: "+progress.passZeroResourcesLoaded);
+		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
+			//All pass zero resources have loaded.
+			//the app will handle hiding the loading screen.
+			}
+		else if(attempt > 150)	{
+			//hhhhmmm.... something must have gone wrong.
+			clearTimeout(progress.passZeroTimeout); //end the resource loading timeout.
 			}
 		else	{
-			//to get here, rq was empty. either everything was loaded (and the app will take it from here) or an error occured at some point.
+			var percentPerInclude = (100 / progress.passZeroResourcesLength);
+			var percentComplete = Math.round(progress.passZeroResourcesLength * percentPerInclude); //used to sum how many includes have successfully loaded.
+			dump(" -> percentPerInclude: "+percentPerInclude+" and percentComplete: "+percentComplete);
+			$('#appPreViewProgressBar').val(percentComplete);
+			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+			attempt++;
+			setTimeout(function(){showProgress(attempt);},200);
 			}
 		}
-	else	{
-		//rq is set to null once all the resources are loaded. to get here, the resources have been loaded.
-		}
-
+	showProgress(0)
 	}
 
 //don't execute script till both jquery AND the dom are ready.

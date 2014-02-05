@@ -17,25 +17,17 @@
 
 <script type="text/javascript">
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
-var myCreole;
-
-var app = {vars:{
-	"release":"201352.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
-	"baseURL":"", //used in non-local mode.
-	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"http://www.sporks.zoovy.com/" //used ONLY if protocol is file: (for testing)
-	},u:{},rq:[],cmr:[]};
+var myCreole, baseURL;
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol == 'file:')	{
-	app.vars.baseURL  = "";
+	baseURL  = "";
 	}
 else	{
-	app.vars.baseURL = document.location.protocol+"//"+document.domain+"/";
+	baseURL = document.location.protocol+"//"+document.domain+"/";
 	}
-document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+document.getElementsByTagName('base')[0].href = baseURL;
 </script>
 
 
@@ -51,15 +43,33 @@ css files should be included before any .js file to ensure they are downloaded i
 <!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="controller.js"></script>
+<script src="model.js"></script>
+
+<!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
 <script src="resources/jquery.ui.anyplugins.js"></script>
 <script type="text/javascript" src="includes.js"></script>
-<script type="text/javascript" src="loadscript.js"></script>
-
-
 
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
+$(document).ready(function(){
+	window.myApp = new initApp({
+		"release":"201401.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
+		"baseURL":baseURL, //used in non-local mode.
+		"checkoutAuthMode" : "active",//can be passive, active or required
+		"testURL":"http://www.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+		"initComplete" : function(t){
+			dump(" -> init is complete");
+			t.u.loadScript('app-quickstart-init.js',function(){
+				var progress = t.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+				t.u.showProgress(progress);
+				});
+			$('#appversion').text(t.vars.release);
+			}
+		});
+	myCreole = new Parse.Simple.Creole();
+	});
 </script>
 
 
@@ -468,11 +478,11 @@ this will likely become more flexible in the future. ###
 	
 		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 	
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='100' height='100' /></div>
+	<div onClick='myApp.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='100' height='100' /></div>
 	
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='100' height='100' /></div>
+	<div onClick='myApp.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='100' height='100' /></div>
 	
-	<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='100' height='100' /></div>
+	<div onClick='myApp.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='100' height='100' /></div>
 	
 		</div>
 	
@@ -1028,7 +1038,7 @@ onclicks are recursive, so only add it to the parent element.
 This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
 -->
 
-<div id='cartTemplate' class='clearfix'><!-- template role gets added by the app. don't add it yourself -->
+<div id='cartTemplate' class='clearfix'><!-- template role gets added by the myApp. don't add it yourself -->
 
 <form action='#' onSubmit='return false'>
 
@@ -1517,7 +1527,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>
-	<li><a href='#' onClick="app.ext.cart_message.a.showBuyerCMUI();">Messaging UI</a>
+	<li><a href='#' onClick="myApp.ext.cart_message.a.showBuyerCMUI();">Messaging UI</a>
 	<li>Some JS test links
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>

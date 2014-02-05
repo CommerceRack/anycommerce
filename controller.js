@@ -22,14 +22,15 @@
 
 function initApp(params) {
 	params = params || {};
+	console.log(" -> into initApp");
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
 //zglobals is not required in the UI, but is for any
-	else if(typeof zGlobals != 'object' && !params.thisSessionIsAdmin)	{
+//	else if(typeof zGlobals != 'object' && !params.thisSessionIsAdmin)	{
 //zGlobals not required in an admin session.
-		alert("Uh Oh! A  required include (config.js) is not present. This document is required.");
-		}
+//		alert("Uh Oh! A  required include (config.js) is not present. This document is required.");
+//		}
 	else	{
 		function create(parent) {
 			var F = function() {};
@@ -53,6 +54,7 @@ function controller(_app)	{
 	cmr : [],
 	rq : [],
 	initialize: function() {
+		dump(" -> initializing app");
 		_app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
 
 		_app.vars = _app.vars || {};
@@ -81,15 +83,7 @@ function controller(_app)	{
 		_app.handleSession(); //get existing session or create a new one.
 
 		_app.vars.debug = _app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
-//in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
-		if(typeof zGlobals == 'object')	{
-			_app.u.dump(" -> zGlobals is an object")
-			_app.vars.username = zGlobals.appSettings.username.toLowerCase(); //used w/ image URL's.
-//need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
-			_app.vars.secureURL = zGlobals.appSettings.https_app_url;
-			_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
-			_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
-			}
+
 		
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
 // default to blank, not 'null', or += below will start with 'undefined'.
@@ -1164,41 +1158,54 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				}
 			}, //loadCSSFile
 
-// ### TODO -> this needs to support pass.
-		handleRQ : function()	{
+/*
+will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everything with pass less than or equal to 10;
+*/
+		handleRQ : function(pass)	{
+			pass = pass || 0;
 		//	app.u.dump("BEGIN app.u.handleRQ");
 			var numIncludes = 0; //what is returned. The total number of includes for this pass.
 			var L = _app.rq.length - 1; //rq is iterated through backwards, so length - 1 is used.
 
 			_app.vars.rq = new Array(); //to avoid any duplication, as iteration occurs, items are moved from app.rq into this tmp array. 
 		
-		//the callback added to the loadScript on type 'script' sets the last value of the resource array to true.
-		//another script will go through this array and make sure all values are true for validation. That script will execute the callback (once all scripts are loaded).
-			var callback = function(index){
-				_app.vars.rq[index][_app.vars.rq[index].length - 1] = 1; //last index in array is for 'is loaded'. set to false in loop below.
+//the callback added to the loadScript on type 'script' sets the last value of the resource array to true.
+//another script will go through this array and make sure all values are true for validation. That script will execute the callback (once all scripts are loaded).
+			var callback = function(resource){
+				resource[resource.length - 1] = 1; //last index in array is for 'is loaded'. set to false in loop below.
+				if(resource[0] == 'script' && typeof resource[3] == 'function')	{
+					resource[3]();
+					}
 				}
-		
+
 			for(var i = L; i >= 0; i--)	{
-		//		_app.u.dump("_app.rq["+i+"][0]: "+_app.rq[i][0]+" pass: "+_app.rq[i][1]);
-				if(_app.rq[i][0] == 'script' && _app.rq[i][1] === 0)	{
+//				_app.u.dump("_app.rq["+i+"][0]: "+_app.rq[i][0]+" pass: "+_app.rq[i][1]);
+				if(_app.rq[i][0] == 'script' && _app.rq[i][1] <= pass)	{
 		//			_app.u.dump(" -> load it!");
 					numIncludes++;
-					_app.rq[i][_app.rq[i].length] = false; //will get set to true when script loads as part of callback.
+					_app.rq[i][_app.rq[i].length] = 0; //will get set to 1 when script loads as part of callback.
 					_app.vars.rq.push(_app.rq[i]); //add to pass zero rq.
-					_app.u.loadScript(_app.rq[i][2],callback,(_app.vars.rq.length - 1));
+					_app.u.loadScript(_app.rq[i][2],callback,(_app.rq[i]));
 					_app.rq.splice(i, 1); //remove from new array to avoid dupes.
 					}
-				else if(_app.rq[i][0] == 'extension' && _app.rq[i][1] === 0)	{
+				else if(_app.rq[i][0] == 'css' && _app.rq[i][1] <= pass)	{
+					numIncludes++;
+					_app.rq[i][_app.rq[i].length] = 1; //no way to verify a css has loaded, so set to 1 as if it's already loaded. ### FUTURE -> verify this.
+					_app.vars.rq.push(_app.rq[i]); //add to pass zero rq.
+					_app.u.loadCSSFile(_app.rq[i][2],_app.rq[i][3])
+					_app.rq.splice(i, 1); //remove from new array to avoid dupes.
+					}
+				else if(_app.rq[i][0] == 'extension' && _app.rq[i][1] <= pass)	{
 					numIncludes++;
 					_app.vars.extensions.push({"namespace":_app.rq[i][2],"filename":_app.rq[i][3],"callback":_app.rq[i][4]}); //add to extension Q.
-					_app.rq[i][_app.rq[i].length] = false; //will get set to true when script loads as part of callback.
+					_app.rq[i][_app.rq[i].length] = 0; //will get set to 1 when script loads as part of callback.
 					_app.vars.rq.push(_app.rq[i]); //add to pass zero rq.
 		//			_app.u.dump(" -> _app.rq[i][2]: "+_app.rq[i][2]);
 		//on pass 0, for extensions , their specific callback is not added (if there is one.)
 		// because the model will execute it for all extensions once the controller is initiated.
 		// so instead, a generic callback function is added to track if the extension is done loading.
 		// which is why the extension is added to the extension Q (above).
-					_app.u.loadScript(_app.rq[i][3],callback,(_app.vars.rq.length - 1));
+					_app.u.loadScript(_app.rq[i][3],callback,(_app.rq[i]));
 					_app.rq.splice(i, 1); //remove from old array to avoid dupes.
 					}
 				else	{
@@ -1211,26 +1218,27 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 			},
 
 //Run at initComplete. loads all pass zero files and executes their callbacks (if any). then loads resources set for pass > 0
-		loadResources : function(callback)	{
-			var numResources = _app.u.handleRQ(); 
-
-			function resourcesAreLoaded(attempt){
-				attempt = attempt || 0;
-				if(_app.u.numberOfLoadedResourcesFromPass(0,(attempt == 10 ? 1 : 0)) == _app.vars.rq.length)	{
+		loadResources : function()	{
+			var rObj = {
+				'passZeroResourcesLength' : _app.u.handleRQ(0),
+				'passZeroResourcesLoaded' : 0,
+				'passZeroTimeout' : null
+				}; //what is returned.
+			function resourcesAreLoaded(){
+				rObj.passZeroResourcesLoaded = _app.u.numberOfLoadedResourcesFromPass(0); //this should NOT be in the else or it won't get updated once the resources are done.
+				if(_app.u.numberOfLoadedResourcesFromPass(0) == _app.vars.rq.length)	{
 					_app.vars.rq = null; //this is the tmp array used by handleRQ and numberOfResourcesFromPass. Should be cleared for next pass.
-					callback(_app);
-					}
-				else if(attempt > 10)	{ // #### TODO -> change this to 100.
-					console.log("CRAPOLA -> too many attempts to load resources");
+					_app.model.addExtensions(_app.vars.extensions);
+					_app.u.handleRQ(1); //this will empty the RQ.
+					_app.rq.push = _app.u.loadResourceFile; //reassign push function to auto-add the resource.
 					}
 				else	{
-					attempt++;
 //					_app.u.dump(" -> _app.u.numberOfLoadedResourcesFromPass(0,0): "+_app.u.numberOfLoadedResourcesFromPass(0,0));
-					setTimeout(function(){resourcesAreLoaded(attempt);},250);
+					rObj.passZeroTimeout = setTimeout(function(){resourcesAreLoaded();},250);
 					}
 				}
-			
 			resourcesAreLoaded();
+			return rObj;
 			},
 
 		numberOfLoadedResourcesFromPass : function(pass,debug)	{
