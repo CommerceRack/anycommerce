@@ -9,7 +9,7 @@ grammar
  = IfStatement
 
 command
- = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb+ {
+ = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
      return {
        type: "command",
        name: cmd.join("").toLowerCase(),
