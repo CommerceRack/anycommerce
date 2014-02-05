@@ -284,7 +284,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 			renderFormats : {
 				pollDetect : function($tag,data)	{
-					if(_app.u.thisNestedExists("_app.ext.cart_message.vars.carts."+data.value+".timeout"))	{
+					if(_app.u.thisNestedExists("ext.cart_message.vars.carts."+data.value+".timeout",_app))	{
 						$tag.append("<span class='ui-icon ui-icon-check'></span>")
 						}
 					else	{
@@ -308,7 +308,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					if(cartID)	{
 						_app.ext.cart_message.vars.carts[cartID].timeout = setTimeout(function(){
 
-							_app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((_app.u.thisNestedExists("_app.data.cartMessageList.SEQ")) ? (_app.data.cartMessageList.SEQ) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
+							_app.model.addDispatchToQ({'_cmd':'cartMessageList','since':((_app.u.thisNestedExists("data.cartMessageList.SEQ",_app)) ? (_app.data.cartMessageList.SEQ) : 0),'_cartid':cartID,'_tag':	{'datapointer' : 'cartMessageList','callback':'handleCartMessageListPolling','extension' : 'cart_message','jqObj':$context}},'passive');
 							_app.model.dispatchThis('passive');
 							},when);
 						}

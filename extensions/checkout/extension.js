@@ -216,7 +216,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 
 //if a cart messenger is open, log the cart update.
-				if(_app.u.thisNestedExists('_app.ext.cart_message.vars.carts.'+oldCartID))	{
+				if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
 					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':cartid},'immutable');
 					}
 
@@ -454,7 +454,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						$fieldset.anymessage({'message':"It appears something has gone wrong with your paypal authorization. Perhaps it expired. Please click the 'choose alternate payment method' link and either re-authorize through paypal or choose an alternate payment method. We apologize for the inconvenience. "})
 						}
 					//if the balance is zero, no payment method is necessary.
-					else if(_app.u.thisNestedExists("_app.data.cartDetail|"+cartID+".sum.balance_due_total") && Number(_app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
+					else if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".sum.balance_due_total",_app) && Number(_app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
 						valid = 1;
 						}
 					else if($('[name="want/payby"]:checked',$fieldset).length)	{
@@ -493,7 +493,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 							}
 						}
 //in an admin session w/ an existing user, make sure the address has been selected.
-					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("_app.data.cartDetail|"+cartID+".customer.cid") && _app.data['cartDetail|'+cartID].customer.cid > 0) {
+					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -895,7 +895,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						}
 					else {} //user is not logged in.
 				//if the balance is zero, hide the payment inputs to avoid confusion.
-					if(_app.u.thisNestedExists("_app.data.cartDetail|"+cartID+".sum.balance_due_total") && Number(_app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
+					if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".sum.balance_due_total",_app) && Number(_app.data["cartDetail|"+cartID].sum.balance_due_total) <= 0)	{
 						$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
 						}
 					else	{
@@ -1572,7 +1572,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 						$fieldset.anymessage(_app.u.successMsgObject('Your coupon has been added.'));
 						_app.ext.order_create.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
 //if a cart messenger is open, log the cart update.
-						if(cartid && _app.u.thisNestedExists('_app.ext.cart_message.vars.carts.'+cartid))	{
+						if(cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+cartid,_app))	{
 							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
 							_app.model.dispatchThis('passive');
 							}
@@ -1601,7 +1601,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 						$input.val(''); //reset input
 						$fieldset.anymessage(_app.u.successMsgObject('Your giftcard has been added.'));
 //if a cart messenger is open, log the cart update.
-						if(cartid && _app.u.thisNestedExists('_app.ext.cart_message.vars.carts.'+cartid))	{
+						if(cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+cartid,_app))	{
 							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Giftcard added','_cartid':cartid},'passive');
 							_app.model.dispatchThis('passive');
 							}

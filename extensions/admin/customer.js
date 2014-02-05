@@ -397,7 +397,7 @@ $D is returned.
 						});
 
 					//if the email isn't set, use the customer record email to populate.
-					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("_app.data.adminCustomerDetail|"+vars.CID+"._EMAIL"))	{
+					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("data.adminCustomerDetail|"+vars.CID+"._EMAIL",_app))	{
 						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
 						}
 					//the id can't be changed once it's set.
@@ -669,7 +669,7 @@ $D is returned.
 							//They're here instead of in the form directly so that the form/template can be recycled for other 'creates'.				
 							$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/message' value='The giftcard has been created.' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' />");
 							
-							if(_app.u.thisNestedExists("_app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+							if(_app.u.thisNestedExists("data.adminCustomerDetail|"+obj.CID+"._EMAIL",_app))	{
 								$("input[name='email']",$D).prop('disabled',true);
 								//quantity and series are only useful when creating a series/bulk group of giftcards. In this instance, a GC is being created for a specific customer, so the values are forced and the inputs are hidden.
 								$("input[name='quantity']",$D).prop('disabled',true).val('1').closest('label').hide(); //force quantity to 1 or the email will get dropped. The field isn't applicable in this instance (assigning to a specific customer).
@@ -687,7 +687,7 @@ $D is returned.
 								'templateID':'crmManagerTicketCreateTemplate',
 								'data': _app.data['adminCustomerDetail|'+obj.CID]
 								});
-							if(_app.u.thisNestedExists("_app.data.adminCustomerDetail|"+obj.CID+"._EMAIL"))	{
+							if(_app.u.thisNestedExists("data.adminCustomerDetail|"+obj.CID+"._EMAIL",_app))	{
 								$("input[name='email']",$customerEditor).prop('disabled',true);
 								$("input[name='create']",$customerEditor).prop('disabled',true).closest('label').hide();
 								}

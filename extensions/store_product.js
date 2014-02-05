@@ -161,7 +161,7 @@ addToCart : function (pid,$form){
 		_app.u.dump(" -> have a pid and a valid $form.");
 		//copied locally for quick reference.
 		var
-			sogJSON = _app.u.thisNestedExists("_app.data.appProductGet|"+pid+".@variations") ? _app.data['appProductGet|'+pid]['@variations'] : {},
+			sogJSON = _app.u.thisNestedExists("data.appProductGet|"+pid+".@variations",_app) ? _app.data['appProductGet|'+pid]['@variations'] : {},
 			formJSON = $form.serializeJSON();
 
 	//	_app.u.dump('BEGIN validate_pogs. Formid ='+formId);

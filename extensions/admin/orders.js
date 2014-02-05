@@ -1954,7 +1954,7 @@ $('.editable',$container).each(function(){
 							}
 						else	{
 							$('.wait',$li).hide();
-							if(_app.u.thisNestedExists("_app.data."+rd.datapointer+".bill") && (_app.data[rd.datapointer].bill['firstname'] || _app.data[rd.datapointer].bill['lastname']))	{
+							if(_app.u.thisNestedExists("data."+rd.datapointer+".bill",_app) && (_app.data[rd.datapointer].bill['firstname'] || _app.data[rd.datapointer].bill['lastname']))	{
 								$('a',$li).text((_app.data[rd.datapointer].bill['firstname']+" " || "")+(_app.data[rd.datapointer].bill['lastname'] || ""));
 								}
 							else	{} //neither first or last name set in cart. show cart id.

@@ -168,7 +168,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 
 		cartSet : {
 			init : function(obj,_tag,Q)	{
-				if(obj._cartid && _app.u.thisNestedExists('_app.ext.cart_message.vars.carts.'+obj._cartid))	{
+				if(obj._cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+obj._cartid,_app))	{
 					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':obj._cartid},'immutable');
 					}
 				obj["_cmd"] = "cartSet";
@@ -544,7 +544,7 @@ left them be to provide guidance later.
 //				_app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				_app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
-				if(cartid && _app.u.thisNestedExists("_app.data.cartDetail|"+cartid+".@items"))	{
+				if(cartid && _app.u.thisNestedExists("data.cartDetail|"+cartid+".@items",_app))	{
 					var items = _app.data[datapointer]['@ITEMS'], L = items.length;
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
@@ -597,7 +597,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
 				r = new Array(), //what is returned if someFunction returns anything.
 				returned; //what is returned by this function.
-				if(tender && cartID && _app.u.thisNestedExists("_app.data.cartDetail|"+cartID+".@PAYMENTQ"))	{
+				if(tender && cartID && _app.u.thisNestedExists("data.cartDetail|"+cartID+".@PAYMENTQ",_app))	{
 					if(_app.data['cartDetail|'+cartID]['@PAYMENTQ'].length)	{
 	//					_app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
 						var L = _app.data['cartDetail|'+cartID]['@PAYMENTQ'].length;
@@ -1114,7 +1114,7 @@ in a reorder, that data needs to be converted to the variations format required 
 							r += "<option value='"+destinations[i].ISO+"'>"+destinations[i].Z+"</option>";
 							}
 						$tag.append(r);
-						$tag.val(_app.u.thisNestedExists("_app.data.cartDetail|"+cartid+"."+data.bindData.shiptype+".countrycode") ? cartData[data.bindData.shiptype].countrycode : 'US');
+						$tag.val(_app.u.thisNestedExists("data.cartDetail|"+cartid+"."+data.bindData.shiptype+".countrycode",_app) ? cartData[data.bindData.shiptype].countrycode : 'US');
 						}
 					else if(!data.bindData.shiptype)	{
 						$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'In cco.renderFormats.countriesAsOptions, data-bind rules must have a shiptype set.','gMessage':true}));

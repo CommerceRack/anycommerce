@@ -1161,9 +1161,10 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					}
 				}, //printByElementID
 
-//pass in _app.data.something.something and this will test to make sure the 
-			thisNestedExists : function(s){
-				return _app.u.getObjValFromString(s,window,'.') ? true : false;
+//pass in "_app.data.something.something" as s (string) and this will test to make sure it exists.
+//co (Context Object) is an optional param to search within. ex:  thisNestedExists("data.something.something",_app) will look for _app.data.somthing.something and return true if it exists or false if it doesn't.
+			thisNestedExists : function(s,co){
+				return _app.u.getObjValFromString(s,co || window,'.') ? true : false;
 				},
 
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
