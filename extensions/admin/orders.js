@@ -721,7 +721,8 @@ else	{
 				else	{
 					formJSON.orderid = orderID; //needed in obj for dispatch
 					$parent.empty();
-					_app.ext.admin.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
+					formJSON._cmd = 'adminOrderPaymentAction'
+					_app.model.addDispatchToQ(formJSON,"immutable");
 					_app.ext.admin_orders.a.showOrderView(orderID,_app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable'); 
 					_app.model.dispatchThis('immutable');
 					}
@@ -788,8 +789,11 @@ else	{
 		//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
 							if($tr.next().data('app-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
 							else	{} //content hasn't been generated already, so do nothing.
-
-							$tr.after("<tr data-app-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='_app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+_app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
+							var $form = $("<form>").on('submit',function(){
+								_app.ext.admin_orders.a.handlePaymentAction($form);
+								return false;
+								}).append("<fieldset>"+_app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset>");
+							$tr.after($("<tr data-app-role='admin_orders|actionInputs'>").append($("<td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><\/td>").append($form)));
 							$tr.next().find('button').button(); //buttonify the button
 							}
 						else	{
@@ -818,13 +822,20 @@ else	{
 		fetchAndDisplayPayMethods : function($tag,data)	{
 			$tag.showLoading({'message':'Fetching payment methods for order'});
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
-			_app.ext.admin.calls.adminOrderPaymentMethods.init({
+/*
+if order total is zero, zero is only payment method.
+if paypalEC is on order, only paypalEC shows up. (paypal restriction of payment and order MUST be equal)
+if giftcard is on there, no paypal will appear.
+*/
+			_app.model.addDispatchToQ({
+				'_cmd' : 'adminOrderPaymentMethods',
 				'orderid':data.value.our.orderid,
 				'customerid':data.value.customer.cid,
 				'ordertotal':data.value.sum.order_total,
-				'countrycode':data.value.ship.countrycode || data.value.bill.countrycode
-				},{
-				'callback':function(rd){
+				'countrycode':data.value.ship.countrycode || data.value.bill.countrycode,
+				'_tag' : {
+					'datapointer' : 'adminOrderPaymentMethods|'+data.value.our.orderid,
+					'callback':function(rd){
 					$tag.hideLoading();
 					if(_app.model.responseHasErrors(rd)){
 						$tag.anymessage({"message":"In admin_orders.renderFormats.fetchAndDisplayPayMethods, the request for payment methods has failed.",'gMessage':true});
@@ -843,7 +854,8 @@ else	{
 							});
 						}
 					}
-				},'immutable');
+					}
+				},"immutable");
 			_app.model.dispatchThis('immutable');
 
 			},
