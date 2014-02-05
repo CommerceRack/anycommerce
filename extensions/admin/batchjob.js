@@ -248,7 +248,10 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 					$target.intervaledEmpty();
 					$target.showLoading({'message':'Generating Report'}); //run after the empty or the loading gfx gets removed.
 //					_app.u.dump(" -> $target and vars.guid are set.");
-					_app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':'showReport','jqObj':$target,'extension':'admin_batchjob'},'mutable');
+
+					_app.model.addDispatchToQ({"_cmd":"adminReportDownload","GUID":vars.guid,"_tag":{
+						"datapointer":"adminReportDownload|"+vars.guid, 'callback':'showReport','jqObj':$target,'extension':'admin_batchjob'
+						}},"mutable");
 					_app.model.dispatchThis('mutable');
 					}
 				else	{

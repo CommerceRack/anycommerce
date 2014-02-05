@@ -55,7 +55,7 @@ var admin = function(_app) {
 //		'rssAddUpdateTemplate',
 //		'rssListTemplate'		
 		
-		); 
+		);
 	var r = {
 		
 		vars : {
@@ -87,7 +87,7 @@ var admin = function(_app) {
 
 
 	calls : {
-
+// ### FUTURE -> get rid of this call
 		adminAppTicketMacro : {
 			init : function(tktcode,macros,_tag,Q)	{
 				var r = 0;
@@ -191,26 +191,6 @@ var admin = function(_app) {
 				}
 			}, //adminCustomerDetail
 
-//no local storage to ensure latest data always present. 
-		adminCustomerSearch : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.searchfor && obj.scope)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminCustomerSearch, no email specified.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._cmd = "adminCustomerSearch";
-				obj._tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer and customer manager.				
-				_app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminCustomerSearch
 		
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
@@ -235,23 +215,6 @@ var admin = function(_app) {
 				_app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-//used in reports
-		adminDataQuery : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.query)	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminDataQuery, no object or no object.query object passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminDataQuery';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminDataQuery';
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminDataQuery
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{
@@ -349,170 +312,6 @@ var admin = function(_app) {
 			}, //adminEmailSave
 
 
-		adminKPIDBCollectionDetail : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				if(uuid)	{
-					_tag = _tag || {}; 
-					_tag.datapointer = "adminKPIDBCollectionDetail|"+uuid
-					if(_app.model.fetchData('adminKPIDBCollectionDetail|'+uuid) == false)	{
-						r = 1;
-						this.dispatch(uuid,_tag,Q);
-						}
-					else	{
-						_app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionDetail, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionDetail","uuid":uuid,"_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBCollectionDetail
-		adminKPIDBCollectionList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionList"
-				if(_app.model.fetchData('adminKPIDBCollectionList') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionList","_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBCollectionList	
-	
-//obj requires uuid, title, priority and @GRAPHS are optional.
-		adminKPIDBCollectionUpdate : {
-			init : function(obj,_tag,Q)	{
-//				_app.u.dump("BEGIN admin.calls.adminKPIDBCollectionUpdate");
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionUpdate"
-				obj = obj || {};
-				if(obj.uuid)	{
-//					_app.u.dump(" -> have UUID. proceed.");
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionUpdate, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminKPIDBCollectionUpdate'
-				obj._tag = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminKPIDBCollectionUpdate
-
-
-
-//@head and @body in the response is the data I should use.
-//guid comes from batch list.
-		adminReportDownload : {
-			init : function(batchGUID,_tag,Q)	{
-				var r = 0;
-				if(batchGUID)	{
-					this.dispatch(batchGUID,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminReportDownload, no batchGUID passed.");
-					}
-				return r;
-				},
-			dispatch : function(batchGUID,_tag,Q)	{
-				var obj = {};
-				obj._cmd = 'adminReportDownload';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminReportDownload|'+batchGUID;
-				obj.GUID = batchGUID;
-				_app.model.addDispatchToQ(obj,Q || 'passive');
-				}
-			},
-
-		adminRSSUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSUpdate"
-				obj = obj || {};
-				if(obj.CPG)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSUpdate, CPG not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminRSSUpdate'
-				obj._tag = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminRSSUpdate
-
-		adminRSSDetail : {
-			init : function(cpg,_tag,Q)	{
-				var r = 0;
-				if(cpg)	{
-					_tag = _tag || {}; 
-					_tag.datapointer = "adminRSSDetail|"+cpg
-					if(_app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(cpg,_tag,Q);
-						}
-					else	{
-						_app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminRSSDetail, cpg not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(cpg,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminRSSDetail","CPG":cpg,"_tag" : _tag},Q || 'mutable');
-				}
-			}, //adminRSSDetail
-
-
-		adminMessagesList : {
-//ID will be 0 to start.
-			init : function(msgid,_tag,Q)	{
-				var r = 0;
-				if(msgid || msgid === 0)	{
-					this.dispatch(msgid,_tag,Q);
-					r = 1;
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminMessagesList, MESSAGEID not passed and is required.");
-					}
-				return r;
-				},
-			dispatch : function(msgid,_tag,Q)	{
-				var obj = {};
-				obj._cmd = 'adminMessagesList';
-				obj.msgid = msgid;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminMessagesList|'+msgid;
-				_app.model.addDispatchToQ(obj,Q || 'passive');
-				}
-			},
-
-
 //get a list of newsletter subscription lists.
 		adminNewsletterList : {
 			init : function(_tag,Q)	{
@@ -534,111 +333,6 @@ var admin = function(_app) {
 				}
 			},//getNewsletters	
 
-
-		adminPrivateSearch : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$isEmptyObject(obj))	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminPrivateSearch, no query object passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminPrivateSearch';
-				obj.mode = 'elastic-native';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminPrivateSearch';
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminPrivateSearch
-
-
-
-
-
-
-
-
-		adminProjectList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectList"
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					_app.u.dump(' -> data is local');
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminProjectList","_tag" : _tag},Q || 'immutable');	
-				}
-			},//adminProjectList	
-
-
-
-		adminProjectCreate : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectCreate";
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminProjectCreate";
-				obj._tag = _tag || {};
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			},//adminProjectCreate	
-
-		adminProjectDetail : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectDetail|"+uuid;
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(uuid,_tag,Q);
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminProjectDetail","files":true,"UUID":uuid,"_tag" : _tag},Q || 'immutable');	
-				}
-			},//adminProjectDetail	
-
-
-
-
-
-
-		adminOrderList : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminOrderList";
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag;
-				obj._cmd = "adminOrderList";
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminOrderList
 //never look locally for data. Always make sure to load latest from server to ensure it's up to date.
 //order info is critial
 		adminOrderDetail : {
@@ -1876,7 +1570,7 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				else	{} //no new messages.
 				
 //add another request. this means with each immutable dispatch, messages get updated.
-				_app.ext.admin.calls.adminMessagesList.init(_app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'mutable');
+_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"mutable");
 				},
 			onError : function()	{
 				//no error display.
@@ -2779,7 +2473,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //It's necessary to get the product task list elements on to the dom asap so they can be utilized.
 				_app.ext.admin_prodedit.a.showProductManager();
 				_app.u.addEventDelegation($('#messagesContent'));
-//				_app.ext.admin.calls.adminMessagesList.init(_app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable'); // ### TODO -> commented out for testing.
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
 				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
 				$('.username','#appView').text(_app.vars.userid);
@@ -3002,15 +2696,6 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 			getLastMessageID : function()	{
 				return _app.model.dpsGet('admin','lastMessage') || 0;
-				/*
-				var r = 0; //default to zero if no past messageid is present.
-				var DPSMessages = _app.model.dpsGet('admin','messages');
-				if(DPSMessages && DPSMessages.length)	{
-					r = DPSMessages[(DPSMessages.length - 1)].id;
-					_app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
-					}
-				*/
-				return r;
 				},
 
 
@@ -5133,11 +4818,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Updating RSS Feed'});
-					_app.ext.admin.calls.adminRSSUpdate.init(sfo,{
-						'callback': 'showMessaging',
-						'message' : "Your RSS feed has been updated",
-						'jqObj' : $form
-						},'immutable');
+					_app.model.addDispatchToQ({"_cmd":"adminRSSUpdate","_tag":{"datapointer":"adminRSSUpdate",'callback': 'showMessaging','message' : "Your RSS feed has been updated",'jqObj' : $form}},"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles error display

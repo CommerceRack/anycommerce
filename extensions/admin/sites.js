@@ -679,7 +679,8 @@ used, but not pre-loaded.
 					$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
 					_app.model.destroy('adminProjectList');
 					sfo.UUID = _app.u.guidGenerator();
-					_app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
+					sfo._cmd = 'adminProjectCreate';
+					_app.model.addDispatchToQ({"_cmd":"","_tag":{"callback":function(rd){
 						$form.hideLoading();
 						if(_app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd});
@@ -689,7 +690,7 @@ used, but not pre-loaded.
 							$ele.closest('.ui-dialog-content').dialog('close');
 							navigateTo("#:sites");
 							}
-						}},'immutable');
+						}}},"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles error display.

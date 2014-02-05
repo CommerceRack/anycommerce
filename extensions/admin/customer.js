@@ -470,34 +470,39 @@ $D is returned.
 				$("form[data-app-role='customerSearch']:first",$D).on('submit',function(){
 					var sfo = $(this).serializeJSON();
 					$D.showLoading({"message":"Searching "+sfo.scope+" for "+sfo.searchfor});
-					_app.ext.admin.calls.adminCustomerSearch.init({'scope':sfo.scope,'searchfor':sfo.searchfor},{'callback':function(rd){
-						$D.hideLoading();
-						if(_app.model.responseHasErrors(rd)){
-							$D.anymessage({'message':rd});
-							}
-						else	{
-							//success content goes here.
-							var customers = _app.data[rd.datapointer]['@CUSTOMERS'];
-							if(!customers || customers.length == 0)	{
-								$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
-								}
-							else if(_app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
-								//encountered an issue in order create > lookup customer where $D didn't register as a dialog yet.
-								//	closing it directly here caused a JS error. a slight pause solved this.
-								if($D.is(':data(dialog)'))	{$D.dialog('close');}
-								else	{
-									setTimeout(function(){$D.dialog('close');},500);
-									}
-								callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
+					_app.model.addDispatchToQ({"_cmd":"adminCustomerSearch",'scope':sfo.scope,'searchfor':sfo.searchfor,"_tag":{
+						"datapointer":"adminCustomerSearch",
+						"callback":function(rd){
+
+							$D.hideLoading();
+							if(_app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd});
 								}
 							else	{
-								$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){
-									callback($(this).data());
-									$D.dialog('close').empty().remove();
-									}).parent().css({'max-height':200,'overflow':'auto',});
+								//success content goes here.
+								var customers = _app.data[rd.datapointer]['@CUSTOMERS'];
+								if(!customers || customers.length == 0)	{
+									$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
+									}
+								else if(_app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
+									//encountered an issue in order create > lookup customer where $D didn't register as a dialog yet.
+									//	closing it directly here caused a JS error. a slight pause solved this.
+									if($D.is(':data(dialog)'))	{$D.dialog('close');}
+									else	{
+										setTimeout(function(){$D.dialog('close');},500);
+										}
+									callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
+									}
+								else	{
+									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){
+										callback($(this).data());
+										$D.dialog('close').empty().remove();
+										}).parent().css({'max-height':200,'overflow':'auto',});
+									}
 								}
-							}
-						}},'mutable');
+
+							}}
+						},"mutable");
 					_app.model.dispatchThis('mutable');
 					});
 
@@ -1581,42 +1586,47 @@ _app.model.dispatchThis('immutable');
 				
 				if(_app.u.validateForm($form))	{
 					$custManager.showLoading({"message":"Searching Customers"});
-					_app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
-						$custManager.hideLoading();
-						$('.dualModeListMessaging',$custManager).empty();
-						if(_app.model.responseHasErrors(rd)){
-							$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
-							}
-						else	{
-							//if there was only 1 result, the API returns just that CID. open that customer.
-							if(_app.data[rd.datapointer] && _app.data[rd.datapointer].CID && (_app.data[rd.datapointer].PRT == _app.vars.partition))	{
-								$resultsTable.hide();
-								$editorContainer.show();
-								_app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':_app.data[rd.datapointer].CID});
-								}
-							else if(_app.data[rd.datapointer] && _app.data[rd.datapointer]['@CUSTOMERS'] && _app.data[rd.datapointer]['@CUSTOMERS'].length)	{
-								$resultsTable.show();
-								$editorContainer.hide();	
-								$("tbody",$resultsTable).empty(); //clear any previous customer search results.
-								$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
-								_app.u.handleButtons($resultsTable);
-								$("tbody tr",$resultsTable).each(function(){
-									var $tr = $(this);
-									if($tr.data('prt') == _app.vars.partition)	{
-										$('td:first',$tr).addClass('lookLikeLink').attr('data-app-click','admin_customer|adminCustomerUpdateShow');
-										}
-									else	{
-										$("button[data-app-role='customerEditButton']:first",$tr).button('disable').attr('title','Only customers for the partition in focus can be edited.');
-										}
-									});
-								$resultsTable.anytable();
+					formObj._cmd = 'adminCustomerSearch'
+					formObj._tag = {
+						'datapointer' : 'adminCustomerSearch',
+						'callback' : function(rd){
+							$custManager.hideLoading();
+							$('.dualModeListMessaging',$custManager).empty();
+							if(_app.model.responseHasErrors(rd)){
+								$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
 								}
 							else	{
-								$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
+								//if there was only 1 result, the API returns just that CID. open that customer.
+								if(_app.data[rd.datapointer] && _app.data[rd.datapointer].CID && (_app.data[rd.datapointer].PRT == _app.vars.partition))	{
+									$resultsTable.hide();
+									$editorContainer.show();
+									_app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':_app.data[rd.datapointer].CID});
+									}
+								else if(_app.data[rd.datapointer] && _app.data[rd.datapointer]['@CUSTOMERS'] && _app.data[rd.datapointer]['@CUSTOMERS'].length)	{
+									$resultsTable.show();
+									$editorContainer.hide();	
+									$("tbody",$resultsTable).empty(); //clear any previous customer search results.
+									$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
+									_app.u.handleButtons($resultsTable);
+									$("tbody tr",$resultsTable).each(function(){
+										var $tr = $(this);
+										if($tr.data('prt') == _app.vars.partition)	{
+											$('td:first',$tr).addClass('lookLikeLink').attr('data-app-click','admin_customer|adminCustomerUpdateShow');
+											}
+										else	{
+											$("button[data-app-role='customerEditButton']:first",$tr).button('disable').attr('title','Only customers for the partition in focus can be edited.');
+											}
+										});
+									$resultsTable.anytable();
+									}
+								else	{
+									$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
+									}
 								}
 							}
-						}},'mutable');
-					_app.model.dispatchThis();					
+						}
+					_app.model.addDispatchToQ(formObj,"mutable");
+					_app.model.dispatchThis("mutable");					
 					}
 				else	{
 					//validateForm handles error display.

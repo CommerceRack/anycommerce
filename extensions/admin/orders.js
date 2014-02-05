@@ -674,9 +674,10 @@ else	{
 					}
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
-				_app.model.destroy('adminOrderList'); //always refresh list.
-				_app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'});
-					$mainCol.data('activeRequestUUID',_app.model.dispatchThis('mutable'));
+				filterObj._cmd = 'adminOrderList';
+				filterObj._tag = {'datapointer':'adminOrderList','callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem'}
+				_app.model.addDispatchToQ(filterObj,"mutable");
+				$mainCol.data('activeRequestUUID',_app.model.dispatchThis('mutable'));
 				}
 			else	{
 				_app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); _app.u.dump(filterObj);
@@ -2312,16 +2313,16 @@ else	{
 							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
 //							_app.u.dump(" -> frmObj: "); _app.u.dump(frmObj);
 							_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-if(_app.model.responseHasErrors(rd)){
-	rd.parentID = 'orderEmailCustomMessage';
-	_app.u.throwMessage(rd);
-	}
-else	{
-	var msgObj = _app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
-	msgObj.parentID = 'orderEmailCustomMessage';
-	
-	_app.u.throwMessage(msgObj);
-	}
+								if(_app.model.responseHasErrors(rd)){
+									rd.parentID = 'orderEmailCustomMessage';
+									_app.u.throwMessage(rd);
+									}
+								else	{
+									var msgObj = _app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
+									msgObj.parentID = 'orderEmailCustomMessage';
+									
+									_app.u.throwMessage(msgObj);
+									}
 								}},'immutable');
 							}
 						
@@ -2395,7 +2396,6 @@ else	{
 					query;
 				
 				if(frmObj.keyword)	{
-//						_app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 					$('#orderListTableBody').empty();
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					$mainCol.showLoading({'message':'Searching orders...'});
