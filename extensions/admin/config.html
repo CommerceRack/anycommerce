@@ -563,7 +563,7 @@ keep all inputs within one fieldset for the save function.
 		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
 		<option value="SANDBOX/NO">User is on LIVE version</option>
 	</select>
-<!--	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>-->
+<!--	<span onClick='adminApp.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>-->
 </label>
 
 <label>
@@ -1288,7 +1288,7 @@ lookup table to determine the next highest handling fee.">?</span></legend>
 	<h1>Zoovy FedEx&reg; Shipping Options</h1>
 	
 	<section class='marginBottom'>
-		<span class='floatRight'><a href="#" onClick="app.ext.admin_config.a.showFedExMeterInModal(); return false;">Re-Apply for FedEx Meter</a></span>
+		<span class='floatRight'><a href="#" onClick="adminApp.ext.admin_config.a.showFedExMeterInModal(); return false;">Re-Apply for FedEx Meter</a></span>
 		<h2>Rating Configuration</h2>
 		<div data-bind="var: shipmethod(meter); format:text; pretext:Meter: ;"></div>
 		<div data-bind="var: shipmethod(meter_link); format:text;"></div>
@@ -1431,7 +1431,7 @@ lookup table to determine the next highest handling fee.">?</span></legend>
 	
 	<p>
 	UPS Shipper Number: <span data-bind="var:shipmethod(shipper_number); format:text;"></span><br />
-	<a href="#" onClick="app.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br />
+	<a href="#" onClick="adminApp.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br />
 	</p>
 	
 	
@@ -1989,7 +1989,7 @@ UPS, THE UPS SHIELD TRADEMARK, THE UPS READY MARK, THE UPS ONLINE TOOLS MARK AND
 
 <button onClick="$(this).closest('section').hide().next('section').show();" class='applyButton'>Yes, I Do Agree</button>
 <button onClick="if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close');} else {navigateTo('#!shippingManager')}" class='applyButton'>No, I Do Not Agree</button>
-<button onClick="app.u.printByjqObj($('#upsOnlineToolsLicenseAgreement'));" class='applyButton'>Print This Agreement</button>
+<button onClick="adminApp.u.printByjqObj($('#upsOnlineToolsLicenseAgreement'));" class='applyButton'>Print This Agreement</button>
 
 </section>
 

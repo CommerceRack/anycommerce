@@ -309,7 +309,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	<td class='alignRight'><button data-app-click="admin_customer|adminGiftcardUpdateShow" data-edit-mode='dialog' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Giftcard</button></td>
 </tr>
 
-<tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
+<tr id='customerEditorOrderListTemplate' class='pointer' onClick="adminApp.u.dump('click!'); adminApp.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
 	<td data-bind="var:order(ORDERID); format:text;" class='lookLikeLink'></td>
 	<td class='alignRight' data-bind="var:order(ITEMS); format:text;"></td>
 	<td class='alignRight' data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>

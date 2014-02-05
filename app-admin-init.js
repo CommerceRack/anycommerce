@@ -97,7 +97,7 @@ adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.image-galle
 */
 adminApp.u.showProgress = function(progress)	{
 	function showProgress(attempt)	{
-		dump(" -> passZeroResourcesLength: "+progress.passZeroResourcesLength+" and progress.passZeroResourcesLoaded: "+progress.passZeroResourcesLoaded);
+//		dump(" -> passZeroResourcesLength: "+progress.passZeroResourcesLength+" and progress.passZeroResourcesLoaded: "+progress.passZeroResourcesLoaded);
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
@@ -109,7 +109,7 @@ adminApp.u.showProgress = function(progress)	{
 		else	{
 			var percentPerInclude = (100 / progress.passZeroResourcesLength);
 			var percentComplete = Math.round(progress.passZeroResourcesLength * percentPerInclude); //used to sum how many includes have successfully loaded.
-			dump(" -> percentPerInclude: "+percentPerInclude+" and percentComplete: "+percentComplete);
+//			dump(" -> percentPerInclude: "+percentPerInclude+" and percentComplete: "+percentComplete);
 			$('#appPreViewProgressBar').val(percentComplete);
 			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 			attempt++;

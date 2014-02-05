@@ -12,7 +12,7 @@ reminder: you can't have a template for a tr without a parent table (same for li
 	<td class='hideInMinifyMode' data-bind="var: task(due_gmt); format:epoch2mdy; hideZero:true;"></td>
 	<td class='hideInMinifyMode' data-bind="var: task(priority); format:text;"></td>
 	<td class='hideInMinifyMode lowercase' data-bind="var: task(class); format:text;"></td>
-<!--	<td class='hideInMinifyMode lookLikeLink' onClick="app.u.dump($(this).parent().data()); alert($(this).parent().data('link'))">Do it to it</td> -->
+<!--	<td class='hideInMinifyMode lookLikeLink' onClick="adminApp.u.dump($(this).parent().data()); alert($(this).parent().data('link'))">Do it to it</td> -->
 	<td class='hideInMinifyMode' data-bind="var: task(luser); format:text;"></td>
 	<td >
 <button data-app-click="admin_task|adminTaskUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Task</button>

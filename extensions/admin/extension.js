@@ -5070,7 +5070,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					if($tr.data('isnew'))	{$(this).addClass('edited')}
 					else	{$tr.removeClass('edited')}
 					}
-				_app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));				
+				_app.ext.admin.u.handleSaveButtonByEditedClass($ele);				
 				},
 			
 //make sure button is withing the table. tfoot is good.

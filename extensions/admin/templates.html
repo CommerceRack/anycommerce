@@ -33,7 +33,7 @@ PRODUCT FINDER/CHOOSER
 
 <ul>
 	<li class='clearfix loadingBG stdListItem' id='adminProdStdForList'>
-	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
@@ -41,14 +41,14 @@ PRODUCT FINDER/CHOOSER
 	</li>
 
 	<li class='clearfix loadingBG simpleListItem' id='adminProdSimpleForList'>
-	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
 
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
-	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(images); format:imageURL; isElastic:1; extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
@@ -57,7 +57,7 @@ PRODUCT FINDER/CHOOSER
 
 
 
-	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="app.ext.admin.u.handleChooserResultsClick($(this));">
+	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="adminApp.ext.admin.u.handleChooserResultsClick($(this));">
 	<img class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
@@ -636,7 +636,7 @@ PRODUCT TAB
 
 
 <ul>
-	<li><a href='#' onClick="app.ext.admin.a.showCreateProductDialog(); return false;">New Product</a></li>
+	<li><a href='#' onClick="adminApp.ext.admin.a.showCreateProductDialog(); return false;">New Product</a></li>
 	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Filter Product</a>
 	<ul class='displayNone tagFilterList'>
 		<li>IS_FRESH</li>
@@ -719,7 +719,7 @@ PRODUCT TAB
 
 <div id='prodCreateMessaging'></div>
 
-<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
+<form name="createNewProductForm" action="#" method="POST" onSubmit="adminApp.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
 	
 <fieldset class='marginBottom'>
 	<legend>Required Fields</legend>

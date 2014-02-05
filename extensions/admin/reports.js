@@ -102,7 +102,6 @@ var admin_reports = function(_app) {
 					changeYear: true,
 					dateFormat : "@"
 					});
-
 			
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
 				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});

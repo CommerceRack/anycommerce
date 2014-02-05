@@ -520,7 +520,6 @@ var admin_config = function(_app) {
 //will open the rules builder in a modal.
 //vars.rulesmode is REQUIRED.  should be set to shipping or coupons.
 //if shipping, vars.provided is also required.
-//vars will be passed as param 2 (vars) into handleAppEvents so that the button events will know what mode to use.
 
 			showRulesBuilderInModal : function(vars)	{
 //				_app.u.dump("BEGIN admin_config.a.showRulesBuilderInModal");
@@ -568,7 +567,7 @@ var admin_config = function(_app) {
 					else	{}
 					var $DMI = _app.ext.admin.i.DMICreate($D,DMIVars);
 					//rules are nearly entirely updated to delegated events. this is here for the DMI toggle button. DMI is not entirely updated yet.
-					_app.u.handleAppEvents($D); //for toggle and save button.  ### FUTURE -> get rid of this once toggle
+//					_app.u.handleAppEvents($D); //for toggle and save button.  ### FUTURE -> get rid of this once toggle
 					$DMI.closest("[data-app-role='dualModeContainer']").data({'dataTable':vars});
 					
 					$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
@@ -1506,7 +1505,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':rd});
 								}
 							else	{
-								$btn.closest('.ui-dialog-content').dialog('close');
+								$ele.closest('.ui-dialog-content').dialog('close');
 								$('#globalMessaging').anymessage(_app.u.successMsgObject('Your rules have been saved.'));
 								}
 							}},'immutable');
@@ -1553,7 +1552,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					if(ruleData.schedule)	{
 						$("[name='SCHEDULE']",$panel).val();
 						}
-
+					_app.u.handleButtons($panel);
 					}
 				else	{
 					$DMI.anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, rulesmode ['+$ele.data('rulesmode')+'] on trigger element is either missing or invalid. Only coupons and shipping are acceptable values.','gMessage':true});
