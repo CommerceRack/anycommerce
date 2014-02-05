@@ -2398,7 +2398,7 @@ else	{
 
 
 
-			"orderSearch" : function($ele,P)	{
+			orderSearch : function($ele,P)	{
 
 				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
 				_app.ext.admin_orders.u.changeOMMode('order');
