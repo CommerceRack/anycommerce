@@ -311,7 +311,6 @@ var admin = function(_app) {
 				}
 			}, //adminEmailSave
 
-
 //get a list of newsletter subscription lists.
 		adminNewsletterList : {
 			init : function(_tag,Q)	{
@@ -364,29 +363,6 @@ var admin = function(_app) {
 				}
 			}, //adminOrderDetail
 			
-//do not store this. if you do, update order editor and be sure datapointer is orderid specific.
-/*
-This is also true for appPaymentMethods
-if order total is zero, zero is only payment method.
-if paypalEC is on order, only paypalEC shows up. (paypal restriction of payment and order MUST be equal)
-if giftcard is on there, no paypal will appear.
-*/
-		adminOrderPaymentMethods	: {
-			
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			
-			dispatch : function(obj,_tag,Q){
-				obj._cmd = 'adminOrderPaymentMethods';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminOrderPaymentMethods|'+obj.orderid;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			
-			}, //adminOrderPaymentMethods
-			
 //updating an order is a critical function and should ALWAYS be immutable.
 		adminOrderMacro : {
 			init : function(orderID,updates,_tag)	{
@@ -409,6 +385,7 @@ if giftcard is on there, no paypal will appear.
 				_app.model.addDispatchToQ(cmdObj,'immutable');
 				}
 			}, //adminOrderMacro
+
 		adminOrderSearch : {
 			init : function(elasticObj, _tag, Q)	{
 				this.dispatch(elasticObj,_tag,Q);
@@ -424,59 +401,6 @@ if giftcard is on there, no paypal will appear.
 				_app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //adminOrderSearch
-		adminOrderPaymentAction	: {
-			init : function(cmdObj,_tag)	{
-				this.dispatch(cmdObj,_tag)
-				return 1;
-				},
-			dispatch : function(cmdObj,_tag)	{
-				cmdObj._cmd = 'adminOrderPaymentAction';
-				cmdObj._tag = _tag || {};
-				_app.model.addDispatchToQ(cmdObj,'immutable');
-				}
-			}, //adminOrderPaymentAction
-
-
-		adminPartnerSet : {
-			init : function(obj,_tag)	{
-				obj._cmd = 'adminPartnerSet'
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminPartnerSet";
-				_app.model.addDispatchToQ(obj,'immutable');	
-				}
-			},
-
-
-		adminProductManagementCategoryList : {
-			init : function(_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminProductManagementCategoryList";
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					_app.u.handleCallback(_tag)
-					}
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
-				}
-			}, //adminProductManagementCategoryList
-
-
-
-		adminSyndicationDetail : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationDetail|"+DST;
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationDetail
-
 
 		adminSyndicationMacro : {
 			init : function(DST, macros,_tag,Q)	{
@@ -496,115 +420,6 @@ if giftcard is on there, no paypal will appear.
 				_app.model.addDispatchToQ({"_cmd":"adminSyndicationMacro","DST":DST,"@updates":macros,"_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationDetail
-
-
-
-		adminSyndicationHistory : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationHistory";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminSyndicationHistory","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationHistory
-
-		adminSyndicationFeedErrors : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationFeedErrors";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationFeedErrors
-
-		adminSyndicationDebug : {
-			init : function(DST,obj,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationDebug";
-				this.dispatch(DST,obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,obj,_tag,Q)	{
-				obj = obj || {};
-				obj._cmd = "adminSyndicationDebug";
-				obj._tag = _tag;
-				obj.DST = DST;
-				_app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminSyndicationDebug
-
-		adminSyndicationListFiles : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationListFiles";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminSyndicationListFiles","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationListFiles
-
-
-// @updates holds the macros.
-// CLOSE -> no params
-// APPEND -> pass note.
-// leave this one as a call.
-
-		adminTicketMacro : {
-			init : function(ticketid,macro,_tag,Q)	{
-				var r = 0;
-				if(ticketid && typeof macro === 'object')	{
-					r = 1;
-					this.dispatch(ticketid,macro,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketMacro, either ticketid ["+ticketid+"] or macro ["+typeof macro+"] not defined.","gMessage":true});
-					}
-				return r;
-				},
-			dispatch : function(ticketid,macro,_tag,Q)	{
-				var obj = {};
-				obj._cmd = "adminTicketMacro";
-				obj.ticketid = ticketid;
-				obj['@updates'] = macro;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTicketMacro";
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminTicketUpdate
-
-//obj could contain a 'detail' level. values are open, all or waiting.
-		adminTicketList : {
-			init : function(obj,_tag,Q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminTicketList";
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj = obj || {};
-				obj._tag = _tag;
-				obj._cmd = "adminTicketList";
-				_app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminTicketList
-
-
-
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
@@ -653,8 +468,6 @@ if giftcard is on there, no paypal will appear.
 				}
 			}, //adminUIProductPanelExecute
 
-
-
 		adminPriceScheduleList : {
 			init : function(_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
@@ -673,26 +486,6 @@ if giftcard is on there, no paypal will appear.
 				_app.model.addDispatchToQ({"_cmd":"adminPriceScheduleList","_tag":_tag},q);	
 				}
 			}, //adminPriceScheduleList
-		adminWholesaleScheduleDetail : {
-			init : function(scheduleID,_tag,q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminWholesaleScheduleDetail|"+scheduleID;
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,q);
-					}
-				else	{
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(scheduleID,_tag,q)	{
-				_app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleDetail","schedule":scheduleID,"_tag":_tag},q);	
-				}
-			}, //adminPriceScheduleList
-
-
 
 //this call is duplicated inside the admin extension so that the datapointer can be partition specific, to reduce redundant calls.
 //the call is somewhat heavy and things like the rss tool, which needs a list of 'lists', use this to generate the list.
@@ -720,18 +513,6 @@ if giftcard is on there, no paypal will appear.
 			}, //appCategoryList
 
 
-//This will get a copy of the config.js file.
-		appConfig : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"appConfig","_tag" : _tag},Q);
-				}			
-			}, //appConfig
-
-
 //obj.PATH = .cat.safe.id
 		appPageGet : {
 			init : function(obj,_tag,Q)	{
@@ -753,26 +534,6 @@ if giftcard is on there, no paypal will appear.
 				_app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPageGet
-		appPageSet : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$.isEmptyObject(obj))	{
-					r = 1;
-					_tag = _tag || {};
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.appPageSet, obj is empty.");
-					}
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'appPageSet';
-				obj._tag = _tag;
-				_app.model.addDispatchToQ(obj,Q);
-				}			
-			}, //appPageSet
-
 
 		appResource : {
 			init : function(filename,_tag,Q)	{
@@ -1083,7 +844,9 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 //Merchant is most likely returning to the app from a partner site for some sort of verification
 				if(_app.vars.trigger == 'adminPartnerSet')	{
 					_app.u.dump(" -> execute adminPartnerSet call"); _app.u.dump(uriParams);
-					_app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
+					uriParams._cmd = 'adminPartnerSet';
+					uriParams._tag = {'callback':'showHeader','extension':'admin','datapointer':'adminPartnerSet'};
+					_app.model.addDispatchToQ(uriParams,"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 
@@ -1914,7 +1677,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 								var _tag = {}
 								_tag.callback = function(rd)	{
 									if(_app.model.responseHasErrors(rd)){
-										$target.anymessage({'message':rd})
+										$D.anymessage({'message':rd})
 										}
 									else	{
 										//applies the content to the panel.
@@ -1972,7 +1735,8 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 										}
 									}
 								else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
-									_app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+									_tag.datapointer = 'adminProductManagementCategoriesComplete';
+									_app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},"mutable");
 									}
 								else	{
 									//ERROR! unrecognized pick method. !!!
@@ -2285,6 +2049,11 @@ to generate an instance of the finder, run:
 _app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 currently, executing this function directly is not supported. use the showFinderInModal.
 once multiple instances of the finder can be opened at one time, this will get used more.
+vars.findertype is required. acceptable values are:
+	PRODUCT -> will assign to a product. vars.path should = a valid PID.
+	NAVCAT -> vars.path should be a valid category safe name, including preceding .
+	CHOOSER -> no path necessary. used for interacting w/ a single product at a time (orders -> add item to order w/ chooser)
+	PAGE -> no idea.
 */
 			addFinderTo : function(targetID,vars)	{
 //				_app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); _app.u.dump(vars);
@@ -2302,8 +2071,10 @@ once multiple instances of the finder can be opened at one time, this will get u
 					$(_app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('Product Chooser'); //updates modal title
 					}
 				else if(vars.findertype == 'PAGE')	{
+					dump(">>>>>>>>>>>>>>>>>>>>>>> GOT HERE. HOW? <<<<<<<<<<<<<<<<<<<<<<<<");
 					$('#finderTargetList').show();
-					_app.ext.admin.calls.appPageGet.init({'PATH':vars.path,'@get':[vars.attrib]},{"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
+					
+					_app.model.addDispatchToQ({"_cmd":"appPageGet",'PATH':vars.path,'@get':[vars.attrib],_tag : {"datapointer":"appPageGet|"+vars.path,"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID}},"immutable");
 					}
 				else	{
 					_app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+vars.findertype+"]");
@@ -3431,7 +3202,9 @@ for a category, each sku added or removed is a separate request.
 					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
 					obj.PATH = path;
 					obj[attrib] = list;
-					_app.ext.admin.calls.appPageSet.init(obj,{'callback':'pidFinderChangesSaved','extension':'admin'},'immutable');
+					obj._cmd = 'appPageSet';
+					obj._tag = {'callback':'pidFinderChangesSaved','extension':'admin'};
+					_app.model.addDispatchToQ(obj,"immutable");
 					}
 				else {
 					_app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');

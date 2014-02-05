@@ -124,6 +124,7 @@ var admin_marketplace = function(_app) {
 				
 				}
 			},
+		// ### TODO -> get rid of this. use anycontent and 'extendByDatapointers' : ['adminPriceScheduleList'],
 		anycontentPlus : {
 			onSuccess : function(_rtag)	{
 //				_app.u.dump("BEGIN callbacks.anycontentPlus");
@@ -316,11 +317,8 @@ var admin_marketplace = function(_app) {
 				
 				//ebayTokensAndProfilesTemplate
 				//ebay takes a very different path at this point.  
-				//go get 
-				_app.ext.admin.calls.adminSyndicationDetail.init('EBF',{},'mutable');
+				_app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","DST":"EBF","_tag":{"datapointer":"adminSyndicationDetail|EBF"}},"mutable");
 				_app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': {'datapointer':'adminEBAYProfileList'}},'mutable');
-				// * 201336 -> moved this so templates are not requested till template chooser is opened.
-				//_app.model.addDispatchToQ({'_cmd':'adminEBAYTemplateList','_tag': {'datapointer':'adminEBAYTemplateList'}},'mutable');
 				_app.model.addDispatchToQ({'_cmd':'adminEBAYTokenList','_tag': {'datapointer':'adminEBAYTokenList','callback' : function(rd){
 					$target.hideLoading();
 					if(_app.model.responseHasErrors(rd)){
@@ -444,15 +442,17 @@ var admin_marketplace = function(_app) {
 						_app.ext.admin_marketplace.a.showEBAY($form);
 						}
 					else	{
-						$('.applyAnytabs',$target).find('li:first').trigger('click.anytabs');
-						_app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_marketplace','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+						_app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","DST":DST,"_tag":{
+							"datapointer":"adminSyndicationDetail|"+DST,
+							'extendByDatapointers' : ['adminPriceScheduleList'],
+							'callback' : 'anycontent',
+							'templateID':'syndication_'+DST.toLowerCase(),
+							'jqObj':$form
+							}},"mutable");
 						}
-
-						
-						
-						_app.model.dispatchThis();
+						_app.model.dispatchThis('mutable');
 	
-	//add an action to the tab click. the tab code itself already opens the associated content area.
+//add an action to the tab click. the tab code itself already opens the associated content area.
 						$("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='errorsTab']").on('click.fetchData',function(){
 							var
 								$tab = $(this),
@@ -474,22 +474,28 @@ var admin_marketplace = function(_app) {
 							else	{
 								_app.u.dump("UH OH!  got someplace we shouldn't get. In admin.a.showDSTDetails");
 								} //unsupported role. shouldn't get here based on the selector to get into this loop.
-							
-							
 						
 							if($tab.data('haveContent'))	{} //do nothing. content has already been fetched.
 							else if(cmd)	{
 								$tab.data('haveContent',true);
 								$tabContent.showLoading({'message':'Fetching File List'});
-								_app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_marketplace','jqObj':$tabContent},'mutable');
+								_app.model.addDispatchToQ({
+									"_cmd":cmd,
+									"DST" : DST,
+									"_tag":{
+										datapointer : cmd+"|"+DST,
+										extendByDatapointers : ['adminPriceScheduleList'],
+										callback : 'anycontent',
+										jqObj : $tabContent,
+										translateOnly : true
+										}},"mutable");
+
 								_app.model.dispatchThis('mutable');
 								}
 							else	{
 								//should never get here.
 								$('#globalMessaging').anymessage({'message':'In showDSTDetails, the click event added to the tab has an invalid app-role (no cmd could be determined)'});
 								}
-						//	_app.u.dump(" -> Tab Click: "+cmd);
-						//	_app.u.dump(" -> $tabContent.length: "+$tabContent.length);
 							});
 
 					}
@@ -1457,9 +1463,7 @@ _app.model.addDispatchToQ({
 		}
 	},'mutable');
 _app.model.dispatchThis('mutable');					
-					
-//					var url = $btn.data('sandbox') ==1 ? 'https://signin.sandbox.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruve-tly&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&sb=1&domain='+document.domain) : 'https://signin.ebay.com/saw-cgi/eBayISAPI.dll?SignIn&runame=Zoovy-gtagruv3-ronj&ruparams='+encodeURIComponent('linkFrom=ebay-token&partner=EBAY&trigger=adminPartnerSet&domain='+document.domain);
-//					linkOffSite(url); //ruparams are what we get back on the URI, as well as ebaytkn, tknexp and username (which is the ebay username).
+
 					});
 				}, //ebayTokenLinkTo
 
@@ -1643,7 +1647,7 @@ _app.model.dispatchThis('mutable');
 //							_app.u.dump("macros: "); _app.u.dump(macros);
 							$form.showLoading({'message':'Updating Marketplace Settings...'});
 							_app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_marketplace','jqObj':$form},'immutable');
-							_app.ext.admin.calls.adminSyndicationDetail.init(DST,{},'immutable');
+							_app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","DST":DST,"_tag":{"datapointer":"adminSyndicationDetail|"+DST}},"mutable");
 							_app.model.dispatchThis('immutable');
 
 							}
@@ -1677,7 +1681,12 @@ _app.model.dispatchThis('mutable');
 						var $tbody = $btn.closest('.ui-tabs-panel').find('tbody')
 						$tbody.empty().showLoading({'message':'Clearing errors...'})
 						_app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{'callback' : 'showMessaging','message':'Your errors have been cleared','jqObj':$('#globalMessaging')},'immutable');
-						_app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback' : 'anycontentPlus','extension':'admin_marketplace','jqObj':$tbody},'immutable');
+						_app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","DST":DST,"_tag":{
+							"datapointer":"adminSyndicationFeedErrors",
+							'callback' : 'anycontent',
+							'extendByDatapointers' : ['adminPriceScheduleList'],
+							'extension':'admin_marketplace',
+							'jqObj':$tbody}},"immutable");
 						_app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -1769,14 +1778,21 @@ _app.model.dispatchThis('mutable');
 					
 					if(DST)	{
 						if(_app.u.validateForm($form))	{
-							_app.ext.admin.calls.adminSyndicationDebug.init(DST,$form.serializeJSON(),{callback : function(rd){
-if(_app.model.responseHasErrors(rd)){
-	$container.anymessage({'message':rd})
-	}
-else	{
-	$("[data-app-role='diagnosticsResultsContainer']",$container).html(_app.data[rd.datapointer]['HTML']);
-	}
-								}},'mutable');
+							var sfo = $form.serializeJSON();
+							sfo._cmd = 'adminSyndicationDebug';
+							sfo.DST = DST;
+							sfo._tag = {
+								'datapointer' : 'adminSyndicationDebug', //no need to keep a DST specific debug in memory at this time.
+								'callback' : function(rd){
+									if(_app.model.responseHasErrors(rd)){
+										$container.anymessage({'message':rd})
+										}
+									else	{
+										$("[data-app-role='diagnosticsResultsContainer']",$container).html(_app.data[rd.datapointer]['HTML']);
+										}
+									}
+								}
+							_app.model.addDispatchToQ(sfo,"mutable");
 							_app.model.dispatchThis('mutable');
 							}
 						else	{

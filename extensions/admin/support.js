@@ -427,7 +427,7 @@ var admin_support = function(_app) {
 					'message':'Are you sure you want to close this ticket?',
 					'removeButtonText' : 'Close Ticket',
 					'removeFunction':function(rd){
-						_app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
+						_app.model.addDispatchToQ({"_cmd":"adminTicketMacro","ticketid":ticketID,"@updates":['CLOSE'],"_tag":{"datapointer":"adminTicketMacro"}},"immutable");
 						_app.model.dispatchThis('immutable');
 						$ele.closest("[data-app-role='dualModeContainer']").find("button[data-app-click='admin|refreshDMI']:first").trigger('click');
 						$D.dialog('close');
@@ -443,16 +443,13 @@ var admin_support = function(_app) {
 				
 				if(_app.u.validateForm($form))	{
 					$panel.showLoading({'message':'Updating ticket'});
-					_app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
-						$panel.hideLoading();
-						if(_app.model.responseHasErrors(rd)){
-							$form.anymessage({'message':rd});
-							}
-						else	{
-							$form.anymessage({'message':_app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
-							$("textarea",$form).val(''); //clear the values from the text areas.
-							}
-						}},'immutable');
+					
+					_app.model.addDispatchToQ({"_cmd":"adminTicketMacro","ticketid":$panel.data('ticketid'),"@updates":['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],"_tag":{
+						"datapointer":"adminTicketMacro",
+						"callback" : "showMessaging",
+						"message" : 'Ticket '+$panel.data('ticketid')+' has been updated',
+						"jqObj" : $form
+						}},"immutable");
 					//refresh the ticket.
 					_app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
 					_app.model.dispatchThis('immutable');
