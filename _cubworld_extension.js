@@ -117,6 +117,17 @@ var cubworld = function() {
 					
 					}]);
 				*/
+				
+				app.rq.push(['templateFunction','categoryTemplateEarthCam','onCompletes', function(P){
+					$('#topCam').append('<iframe width="650" height="366" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" src="http://www.earthcam.com/js/cubworld.php"></iframe>');
+					$('#bottomCam').append('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="480" id="metro_cam_player_01" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"><param name="quality" value="high"><param name="bgcolor" value="#000000"><embed src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" quality="high" bgcolor="#000000" width="650" height="480" name="metro_cam_player_01" align="middle" allowscriptaccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></object>');
+				}]);
+				
+				app.rq.push(['templateFunction','categoryTemplateEarthCam','onDeparts', function(P){
+					$('#topCam').empty();
+					$('#bottomCam').empty();
+				}]);
+				
 				app.rq.push(['templateFunction','categoryTemplateSitemap','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					var _tag={
