@@ -2425,32 +2425,24 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						switch(infoObj.show)	{
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
-								_app.calls.appNewsletterList.init({callback : function(rd){
-									$article.hideLoading();
-									if(_app.model.responseHasErrors(rd)){
-										$article.anymessage({'message':rd});
-										}
-									else	{
-										$article.anycontent({'datapointer':rd.datapointer});
-										_app.u.handleButtons($article);
-										_app.u.handleCommonPlugins($article);
-										}									
-									}},'mutable'); _app.model.dispatchThis();
+								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
+									"datapointer" : "appNewsletterList",
+									callback : 'anycontent',
+									jqObj : $article,
+									translateOnly : true
+									}},'mutable');
+								_app.model.dispatchThis('mutable');
 								break;
 							
 							case 'subscriberLists':
-								_app.calls.buyerNewsletters.init({},'mutable');
-								_app.calls.appNewsletterList.init({callback : function(rd){
-									$article.hideLoading();
-									if(_app.model.responseHasErrors(rd)){
-										$article.anymessage({'message':rd});
-										}
-									else	{
-										$article.anycontent({'datapointer':rd.datapointer});
-										_app.u.handleButtons($article);
-										_app.u.handleCommonPlugins($article);
-										}									
-									}},'mutable'); _app.model.dispatchThis();
+								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
+								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
+									"datapointer" : "appNewsletterList",
+									callback : 'anycontent',
+									jqObj : $article,
+									translateOnly : true
+									}},'mutable');
+								_app.model.dispatchThis('mutable');
 								break;	
 							case 'invoice':
 							
@@ -2458,16 +2450,11 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								var cartID = infoObj.uriParams.cartid;
 								if(cartID && orderID)	{
 									$article.showLoading({'message':'Retrieving order information'});
-									_app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
-										$article.hideLoading();
-										if(_app.model.responseHasErrors(rd)){
-											$article.anymessage({'message':rd});
-											}
-										else	{
-											$article.anycontent({'datapointer':rd.datapointer});
-											_app.u.handleButtons($article);
-											}
-										}},'mutable');
+									_app.model.addDispatchToQ({"_cmd":"buyerOrderGet",'orderid':orderID,'cartid':cartID,"_tag":{
+										"datapointer":"buyerOrderGet|"+orderID,
+										"callback": "anycontent",
+										"jqObj" : $article
+										}},"mutable");
 									_app.model.dispatchThis('mutable');
 									}
 								else	{
@@ -2475,13 +2462,15 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									}
 								break;
 							case 'orders':
-							//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
-								_app.calls.buyerPurchaseHistory.init({'callback':function(rd){
-									$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
-									}},'mutable');
+							//always fetch a clean copy of the order history.
+								_app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","_tag":{
+									"datapointer":"buyerPurchaseHistory",
+									"callback":"anycontent",
+									"jqObj" : $("[data-app-role='orderList']",'#ordersArticle').empty()
+									}},"mutable");
 								break;
 							case 'lists':
-								_app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
+								_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag":{"datapointer":"buyerProductLists",'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'}},"mutable");
 								break;
 							case 'myaccount':
 	//							dump(" -> myaccount article loaded. now show addresses...");
@@ -2942,18 +2931,14 @@ _app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 
 					$orderContents.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
 					$orderContents.showLoading();
-					
-					_app.calls.buyerOrderGet.init({'orderid':orderID},{'callback':function(rd){
-						$orderContents.hideLoading();
-						if(_app.model.responseHasErrors(rd)){
-							$orderContents.anymessage({'message':rd});
-							}
-						else	{
-							$orderContents.anycontent({'templateID':'invoiceTemplate','datapointer':rd.datapointer});
-							_app.u.handleButtons($orderContents);
-							}
-						}})
-					_app.model.dispatchThis();
+
+					_app.model.addDispatchToQ({"_cmd":"buyerOrderGet",'orderid':orderID,"_tag":{
+						"datapointer":"buyerOrderGet|"+orderID,
+						'templateID':'invoiceTemplate',
+						"callback": "anycontent",
+						"jqObj" : $orderContents
+						}},"mutable");
+					_app.model.dispatchThis('mutable');
 	
 					$orderContents.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
 
@@ -3057,7 +3042,9 @@ else	{
 				if(_app.u.validateForm($ele))	{
 					var sfo = $ele.serializeJSON();
 					_app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":_app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
-					_app.calls.appBuyerLogin.init(sfo,{'callback':'authenticateBuyer','extension':'myRIA'});
+					sfo._cmd = "appBuyerLogin";
+					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'myRIA'}
+					_app.model.addDispatchToQ(sfo,"immutable");
 					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 					_app.model.dispatchThis('immutable');
 					}
@@ -3068,11 +3055,11 @@ else	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
 					$ele.showLoading({'message':'Sending request for password recovery.'});
-					_app.calls.appBuyerPasswordRecover.init($("[name='login']",$ele).val(),{
+					_app.model.addDispatchToQ({"_cmd":"appBuyerPasswordRecover","method":"email","login":$("[name='login']",$ele).val(),"_tag":{"datapointer":"appBuyerPasswordRecover","callback":{
 						'callback':'showMessaging',
 						'message':'Thank you, will receive an email shortly',
 						'jqObj':$ele
-						});
+						}}},"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm will handle the error display.

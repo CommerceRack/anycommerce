@@ -12,6 +12,8 @@ GLOBAL
 	store_cart and store_checkout extensions removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
 	reduce # of domains used for remotely loaded files (more friendly w/ some ff security plugins)
 	clean up of non-used plugins/libraries.
+	The init process changed substantially, as well as what var the app is saved to (store is myApp and admin is adminApp)
+	lots of 'calls' removed from the controller. use addDispatchToQ
 
 ADMIN
 	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
@@ -50,7 +52,7 @@ ADMIN
 	new - file attachment for ticket is new. This method will replace what is used elsewhere (csv, media lib, etc).
 
 Checkout/1PC
-	payment methods now hidden if balance is zero.
+	payment methods now hidden/not required if balance is zero.
 
 CONTROLLER
 	unixNow renamed to epochNow (utility)

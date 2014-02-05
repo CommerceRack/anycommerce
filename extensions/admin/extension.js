@@ -1553,6 +1553,9 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 
 		handleLogout : {
 			onSuccess : function(tagObj)	{
+				_app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
+				_app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
+				if($.support['sessionStorage'])	{sessionStorage.clear();}
 				document.location = 'admin_logout.html'
 				}
 			},
@@ -2655,12 +2658,8 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 			logout : function(){
 				$('body').showLoading({"message":"You are being logged out. One moment please."});
-				_app.calls.authAdminLogout.init({'callback':'handleLogout','extension':'admin'});//always immutable.
+				_app.model.addDispatchToQ({"_cmd":"authAdminLogout","_tag":{'callback':'handleLogout','extension':'admin'}},"immutable");
 				_app.model.dispatchThis('immutable');
-//nuke all this after the request so that the dispatch has the info it needs.
-				_app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
-				_app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
-
 				}, //logout
 
 			showAchievementList : function($target)	{

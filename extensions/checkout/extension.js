@@ -1423,8 +1423,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
 
 					_app.ext.cco.calls.cartSet.init({"bill/email":$email.val(),"_cartid":$checkout.data('cartid')}) //whether the login succeeds or not, set bill/email in the cart.
-					_app.calls.appBuyerLogin.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
-//							_app.u.dump("BEGIN exeBuyerLogin anonymous callback");
+					_app.model.addDispatchToQ({"_cmd":"appBuyerLogin","login":$email.val(),"password":$password.val(),"_tag":{"datapointer":"appBuyerLogin","callback":function(rd){
 						$('body').hideLoading();
 						if(_app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 						else	{
@@ -1449,8 +1448,8 @@ note - the order object is available at _app.data['order|'+P.orderID]
 							_app.model.addDispatchToQ({'_cmd':'buyerWalletList','_tag':	{'datapointer' : 'buyerWalletList','callback':''}},'immutable');
 							_app.model.dispatchThis('immutable');
 							$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
-							}
-						}});
+							}						
+						}}},"mutable");
 					_app.calls.cartDetail.init($checkout.data('cartid'),{},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
 					_app.model.dispatchThis('immutable');
 					}

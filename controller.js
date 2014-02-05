@@ -191,61 +191,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 */
 	calls : {
 
-		appBuyerCreate : {
-			init : function(obj,_tag)	{
-				this.dispatch(obj,_tag);
-				return 1;
-				},
-			dispatch : function(obj,_tag){
-				obj._tag = _tag || {};
-				obj._cmd = "appBuyerCreate";
-				_app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //appBuyerCreate
-
-		appBuyerLogin : {
-			init : function(obj,_tag)	{
-				var r = 0;
-				if(obj && obj.login && obj.password)	{
-					r = 1;
-					this.dispatch(obj,_tag);
-					}
-				else	{$('#globalMessaging').anymessage({'message':'In _app.calls.appBuyerLogin, login or password not specified.','gMessage':true});}
-				return r;
-				},
-			dispatch : function(obj,_tag)	{
-				obj["_cmd"] = "appBuyerLogin";
-				obj['method'] = "unsecure";
-				obj["_tag"] = _tag || {};
-				obj["_tag"]["datapointer"] = "appBuyerLogin";
-				
-				_app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //appBuyerLogin
-
-//formerly customerPasswordRecover
-		appBuyerPasswordRecover : {
-			init : function(login,_tag,Q)	{
-				var r = 0;
-				if(login)	{
-					r = 1;
-					this.dispatch(login,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'appBuyerPasswordRecover requires login','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(login,_tag,Q)	{
-				var obj = {};
-				obj['_cmd'] = 'appBuyerPasswordRecover';
-				obj.login = login;
-				obj.method = 'email';
-				obj['_tag'] = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			},//appBuyerPasswordRecover
-
 		appCartCreate : {
 			init : function(_tag,Q)	{
 				this.dispatch(_tag,Q); 
@@ -255,7 +200,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				_app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},Q || 'immutable');
 				}
 			},//appCartCreate
-// ### TODO -> requested that detail be returned as part of response. verify or update this code (or add it back on in model).
+
 		appNavcatDetail : {
 			init : function(obj,_tag,Q)	{
 				if(obj && obj.path)	{
@@ -300,64 +245,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				_app.model.addDispatchToQ(obj,Q);	
 				}
 			},//appNavcatDetail
-
-//get a list of newsletter subscription lists. partition specific.
-		appNewsletterList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "appNewsletterList"
-				if(_app.model.fetchData('appNewsletterList') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					_app.u.dump(' -> data is local');
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : _tag},Q || 'immutable');	
-				}
-			},//getNewsletters	
-
-		appSendMessage : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj.msgtype = "feedback"
-				obj["_cmd"] = "appSendMessage";
-				obj['_tag'] = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			},//appSendMessage
-//obj should contain @products (array of pids), ship_postal (zip/postal code) and ship_country (as 2 digit country code)
-		appShippingTransitEstimate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.ship_postal && obj.ship_country && typeof obj['@products'] === 'object')	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else if(obj)	{
-					$('#globalMessaging').anymessage({'message':'In _app.calls.appShippingTransitEstimate requires ship_postal ['+obj.ship_postal+'], ship_country ['+obj.ship_country+'] and @products ['+typeof obj['@products']+']','gMessage':true});
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In _app.calls.appShippingTransitEstimate, no obj passed.','gMessage':true});
-					}
-				
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'appShippingTransitEstimate';
-				obj._cmd = "appShippingTransitEstimate"
-				_app.model.addDispatchToQ(obj,Q || 'passive');	
-				}
-			},//appShippingTransitEstimate
 
 //get a product record.
 //required params: obj.pid.
@@ -430,79 +317,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				_app.model.addDispatchToQ(obj,Q);
 				} // dispatch
 			}, //appProfileInfo
-
-/*
-obj is most likely a form object serialized to json.
-see jquery/api webdoc for required/optional param
-*/
-		appReviewAdd : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = 'appReviewAdd';
-				obj['_tag'] = _tag || {};
-				_app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			},//appReviewAdd
-
-		appStash : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj["_cmd"] = "appStash";
-				obj['_tag'] = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			},//appStash
-
-		appSuck : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj["_cmd"] = "appSuck";
-				obj['_tag'] = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			},//appSuck
-
-
-//the authentication through FB sdk has already taken place and this is an internal server check to verify integrity.	
-//the getFacebookUserData function also updates bill_email and adds the fb.user info into memory in a place quickly accessed
-//the obj passed in is passed into the request as the _tag
-		appVerifyTrustedPartner : {
-			init : function(partner,_tag,Q)	{
-				var r = 0;
-				if(partner)	{
-					this.dispatch(partner,_tag,Q);
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In _app.calls.appVerifyTrustedPartner, partner not specified.','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(partner,_tag,Q)	{
-//note - was using FB['_session'].access_token pre v-1202. don't know how long it wasn't working, but now using _authRepsonse.accessToken
-				_app.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':partner,'appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':_app.model.fetchCartID(),"_tag":_tag},Q || 'immutable');
-				}
-			}, //facebook			
 			
-		authAdminLogout : {
-			init : function(_tag)	{
-				this.dispatch(_tag);
-				return 1;
-				},
-			dispatch : function(_tag){
-				_app.model.addDispatchToQ({'_cmd':'authAdminLogout',"_tag":_tag},'immutable');
-				}
-			}, //authAdminLogout
-
 		authAdminLogin : {
 			init : function(obj,_tag)	{
 				this.dispatch(obj,_tag);
@@ -524,19 +339,7 @@ see jquery/api webdoc for required/optional param
 				_app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //authentication
-
-		authAccountCreate : {
-			init : function(obj,_tag){
-				this.dispatch(obj,_tag);
-				},
-			dispatch : function(obj,_tag){
-				obj._cmd = 'authUserRegister';
-				_tag = _tag || {};
-				obj['tag'] = _tag;
-				_app.model.addDispatchToQ(obj,'immutable');
-				}
-			},
-
+// ### FUTURE -> remove this call.
 		buyerAddressList : {
 			init : function(_tag,Q)	{
 				var r = 0;
@@ -556,87 +359,7 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //buyerAddressList	
 
-		buyerNewsletters: {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
-				},
-			dispatch : function(_tag,Q)	{
-				obj = {};
-				obj['_tag'] = _tag;
-				obj['_cmd'] = "buyerNewsletters";
-				_app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //buyerNewsletters
-
-
-//obj should always have orderid.
-//may also have cartid for soft-auth (invoice view)
-		buyerOrderGet : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.orderid)	{
-					r = 1;
-					_tag = _tag || {}; 
-					_tag.datapointer = "buyerOrderGet|"+obj.orderid;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'buyerOrderGet requires orderid','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				if(!Q)	{Q = 'mutable'}
-				obj["_cmd"] = "buyerOrderGet";
-				obj['softauth'] = "order";
-				obj["_tag"] = _tag;
-				_app.model.addDispatchToQ(obj,Q);
-				}
-			}, //buyerOrderGet
-
-
-		buyerPasswordUpdate : {
-			init : function(password,_tag,Q)	{
-				var r = 0;
-				if(password)	{
-					r = 1;
-					this.dispatch(password,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'buyerPasswordUpdate requires password','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(password,_tag,Q)	{
-				var obj = {};
-				obj.password = password;
-				obj['_tag'] = _tag;
-				obj['_cmd'] = "buyerPasswordUpdate";
-				_app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //buyerPasswordUpdate
-
-		buyerProductLists : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "buyerProductLists"
-				if(_app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag);
-					}
-				else	{
-//					_app.u.dump(' -> data is local');
-					_app.u.handleCallback(_tag,Q);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag" : _tag});	
-				}
-			},//buyerProductLists
-
+// ### FUTURE -> remove this call.
 		buyerProductListDetail : {
 			init : function(listID,_tag,Q)	{
 				var r = 0;
@@ -659,6 +382,7 @@ see jquery/api webdoc for required/optional param
 //obj must include listid
 //obj can include sku, qty,priority, note and replace. see github for more info.
 //sku can be a fully qualified stid (w/ options)
+// ### FUTURE -> remove this call.
 		buyerProductListAppendTo : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -678,23 +402,7 @@ see jquery/api webdoc for required/optional param
 				}
 			},//buyerProductListAppendTo
 
-
-//a request for order history should always request latest list (as per B)
-//formerly getCustomerOrderList
-		buyerPurchaseHistory : {
-			init : function(_tag,Q)	{
-				var r = 1;
-				_tag = _tag || {};
-				_tag.datapointer = "buyerPurchaseHistory"
-				this.dispatch(_tag,Q);
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_tag" : _tag},Q || 'mutable');	
-				}			
-			}, //buyerPurchaseHistory
-
-
+// ### FUTURE -> get rid of this as a 'call'. use logBuyerOut. 
 		buyerLogout : {
 			init : function(_tag)	{
 // logging out clears these fields as they contain buyer specific data.
@@ -715,17 +423,6 @@ see jquery/api webdoc for required/optional param
 				_app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //appBuyerLogout
-
-
-		canIUse : {
-			init : function(flag,Q)	{
-				this.dispatch(flag,Q);
-				return 1;
-				},
-			dispatch : function(flag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"canIUse","flag":flag,"_tag":{"datapointer":"canIUse|"+flag}},Q);
-				}
-			}, //canIUse
 
 //WILL look in local
 // ### FUTURE -> this call needs to support a 'create' or need a new call for it. should default to zero. if one (would be used on a storefront probably), if no cart exists, it will be created.
@@ -753,20 +450,6 @@ see jquery/api webdoc for required/optional param
 				} 
 			}, // refreshCart removed comma from here line 383
 
-
-
-
-
-		ping : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"ping","_tag":_tag},Q || 'mutable'); //get new session id.
-				}
-			}, //ping
-
 //used to get a clean copy of the cart. ignores local/memory. used in various places, like checkout. intended to work specifically with the 'active' cart.
 //this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. ### search and destroy when convenient.
 		refreshCart : {
@@ -778,54 +461,16 @@ see jquery/api webdoc for required/optional param
 					}
 				}
 			}, // refreshCart
-
-		time : {
+// ### FUTURE -> remove this call.
+		ping : {
 			init : function(_tag,Q)	{
 				this.dispatch(_tag,Q);
-				return true;
-				},
-			dispatch : function(_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = 'time';
-				_app.model.addDispatchToQ({"_cmd":"time","_tag":_tag},Q || 'mutable');	
-				}
-			}, //time
-
-
-		whereAmI : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = $.isEmptyObject(_tag) ? {} : _tag; 
-				_tag.datapointer = "whereAmI"
-				if(_app.model.fetchData('whereAmI') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					_app.u.dump(' -> data is local');
-					_app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				_app.model.addDispatchToQ({"_cmd":"whereAmI","_tag" : _tag},Q || 'mutable');	
-				}
-			},//whereAmI
-
-//for now, no fetch is done here. it's assumed if you execute this, you don't know who you are dealing with.
-		whoAmI : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
-			dispatch : function(obj,_tag,Q)	{
-				obj = obj || {};
-				obj._cmd = "whoAmI";
-				obj._tag = _tag || {}; 
-				obj._tag.datapointer = "whoAmI"
-				_app.model.addDispatchToQ(obj,Q);
+			dispatch : function(_tag,Q)	{
+				_app.model.addDispatchToQ({"_cmd":"ping","_tag":_tag},Q || 'mutable'); //get new session id.
 				}
-			}//whoAmI
+			} //ping
 
 		}, // calls
 
@@ -1641,7 +1286,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 			successMsgObject : function(msg)	{
 				return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','iconClass':'app-icon-success'}
 				},
-	
+
 			errMsgObject : function(msg,errid)	{
 				return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','iconClass':'app-icon-error','containerClass':'ui-state-error'}
 				},

@@ -331,10 +331,14 @@ will output a newsletter form into 'parentid' using 'templateid'.
 					_app.u.dump("for crm_store.u.showSubscribe, both targetID and templateID are required");
 					}
 				else	{
-//					$('#'+P.parentID);  //if a loadingBG class is needed, add it outside this function.
-// ### modify this so callback and extension can be passed in, but are defaulted if none.
-//in this case, the template is not populated until the call comes back. otherwise, the form would show up but no subscribe list.
-					if(_app.calls.appNewsletterList.init({"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm"}))	{_app.model.dispatchThis()}
+					var _tag = {"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm","datapointer":"appNewsletterList"}
+					if(app.data.appNewsletterList)	{
+						_app.u.handleCallback(_tag);
+						}
+					else	{
+						_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : _tag},'mutable');
+						_app.model.dispatchThis('mutable')
+						}
 					}
 				},
 
@@ -401,11 +405,11 @@ This is used to get add an array of skus, most likely for a product list.
 			handleChangePassword : function($form,tagObj)	{
 				var formObj = $form.serializeJSON();
 				if(formObj.password && formObj.password == formObj.password2)	{
-					_app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
+					_app.model.addDispatchToQ({"_cmd":"buyerPasswordUpdate","password":formObj.password,"_tag":tagObj},"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else{
-					$form.anymessage(_app.u.youErrObject("The two passwords do not match.",42));
+					$form.anymessage({"message":"The two passwords do not match.","errtype":"youerr"});
 					}
 				
 				}, //handleChangePassword
@@ -618,11 +622,13 @@ This is used to get add an array of skus, most likely for a product list.
 			contactFormSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
-					_app.calls.appSendMessage.init($ele.serializeJSON(),{
+					var sfo = $ele.serializeJSON();
+					sfo._tag = {
 						'callback':'showMessaging',
 						'jqObj':$ele,
 						'message':'Thank you, your message has been sent'
-						},'immutable');
+						};
+					_app.model.addDispatchToQ(sfo,"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles error display.
@@ -659,14 +665,21 @@ This is used to get add an array of skus, most likely for a product list.
 			productReviewSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
-					var frmObj = $form.serializeJSON();
-					_app.calls.appReviewAdd.init(frmObj,{
-						"callback":"showMessaging",
-						"jqObj":$form,
-						"jqObjEmpty" : true,
-						"message":"Thank you for your review. Pending approval, it will be added to the store."
-						},'immutable');
-					_app.model.dispatchThis('immutable');
+					var sfo = $form.serializeJSON();
+					if(sfo.pid)	{
+						sfo._cmd = "appReviewAdd";
+						sfo._tag = {
+							"callback":"showMessaging",
+							"jqObj":$form,
+							"jqObjEmpty" : true,
+							"message":"Thank you for your review. Pending approval, it will be added to the store."
+							}
+						_app.model.addDispatchToQ(sfo,"immutable");
+						_app.model.dispatchThis('immutable');
+						}
+					else	{
+						$ele.anymessage({"message":"In productReviewSubmit, validation not passed because no pid was found in the form.","gMessage":true});
+						}
 					}
 				else	{} //validateForm will handle error display.
 				},
