@@ -8,7 +8,7 @@
 <div id='ebayListingsReportPageTemplate' class='ebayListingsReportPage'>
 <form action='#' data-app-submit="admin_reports|ebayReportViewSubmit">
 
-<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird'>
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird borderNone'>
 	<legend>eBay Listings CSV Export</legend>
 	<label><input name='query' value="listing-active" type="radio" /> Active Listings</label>
 	<label><input name='query' value="listing-active-fixed" type="radio" /> Active Listings (Fixed Price)</label>
@@ -18,7 +18,7 @@
 	<label><input name='query' value="listing-allattempts" type="radio" /> All Listings and Attempts</label>
 </fieldset>
 
-<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all oneThird'>
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all oneThird borderNone'>
 	<legend>Event CSV Export</legend>
 	<label><input name='query' value="event-all" type="radio" /> All Events</label>
 	<label><input name='query' value="event-pending" type="radio" /> - Pending/Running</label>
@@ -31,12 +31,9 @@
 	<label>BatchID/Job#: <input name="batchid" size="10" value="" type='number' class='smallInput' /><span class='zhint'>optional</span></label>
 </fieldset>
 <div class='clearfix'></div>
-<fieldset class='marginTop ui-widget ui-widget-content ui-corner-all'>
-
-<div class='floatRight'><button  class='applyButton'>View</button></div>
-
-<label>Time Period/since: <input type='number' class='datepicker' name='since_gmt' /></label>
-
+<fieldset class='marginTop ui-widget ui-widget-content ui-corner-all smallPadding'>
+	<div class='floatRight'><button  class='applyButton'>View</button></div>
+	<label>Time period/since: <input type='number' class='datepicker' name='since_gmt' /></label>
 </fieldset>
 </form>
 
@@ -393,7 +390,7 @@
 
 			<div data-app-role='recentReportsList' class='floatRight'>
 			<h2>Recently Run Reports</h2>
-<table class='gridTable fullWidth marginBottom marginTop' >
+<table class='gridTable fullWidth marginBottom marginTop applyAnytable' >
 <!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 <thead>
 <tr>
@@ -662,7 +659,10 @@
 <tr id='reportsRowTemplate'>
 	<td data-bind="var: user(ID); format:text;"></td>
 	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
-	<td><button data-app-event="admin_batchjob|showReport" class='displayNone'>View Report</button><button data-app-event="admin_batchjob|showBatchDetail">Batch Details</button></td>
+	<td>
+		<button data-app-click="admin_batchjob|showReport" class='displayNone applyButton' data-text='false' data-icon-primary='ui-icon-image'>View Report</button>
+		<button data-app-click="admin_batchjob|showBatchDetail" class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Batch Details</button>
+	</td>
 </tr>
 </table>
 
@@ -776,7 +776,7 @@
 				
 				
 				<span data-panel-id='reportsInventorySummaryTS' class='displayNone reportsInventorySummaryPanel'>
-				<label>Time Period/since: <input type='number' class='datepicker' name='TS' /></label>
+				<label>Time period/since: <input type='number' class='datepicker' name='TS' /></label>
 				</span>
 				
 				<span data-panel-id='reportsInventorySummaryPID' class='displayNone reportsInventorySummaryPanel'>

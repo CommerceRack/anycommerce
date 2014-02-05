@@ -165,9 +165,7 @@ var admin_customer = function(_app) {
 						  //			_app.u.dump(' -> dataObj: '); _app.u.dump(dataObj);
 									  }
 								  });
-						  
-					  
-//							  _app.u.handleAppEvents($custEditorTarget);
+
 							  _app.u.handleCommonPlugins($custEditorTarget);
 							  _app.u.handleButtons($custEditorTarget);
 							  _app.u.addEventDelegation($custEditorTarget);

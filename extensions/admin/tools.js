@@ -603,7 +603,7 @@ var admin_tools = function(_app) {
 						'panelID' : 'agent_'+data.agentid,
 						'showLoading' : false,
 						'header' : 'Edit agent: '+data.agentid,
-						'handleAppEvents' : true
+						'handleAppEvents' : false
 						});
 
 //					$panel.showLoading({'message':'Fetching Agent Details'});

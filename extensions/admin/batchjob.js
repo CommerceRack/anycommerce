@@ -506,12 +506,9 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 				return false;
 				},
 			
-			showBatchDetail : function($btn)	{
-				$btn.button({text: false,icons: {primary: "ui-icon-info"}});
-				$btn.off('click.showBatchDetail').on('click.showBatchDetail',function(event){
-					event.preventDefault();
-					_app.ext.admin_batchjob.e.adminBatchJobStatus($btn);
-					});
+			showBatchDetail : function($ele,P)	{
+				P.preventDefault();
+				_app.ext.admin_batchjob.e.adminBatchJobStatus($ele);
 				}
 			
 			} //e

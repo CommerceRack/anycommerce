@@ -407,7 +407,7 @@ has to be within the fieldset to for data-table to work right.
 
 <div id='CIE_DSA_AddUpdateTemplate'>
 
-<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs'>
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs' data-app-submit="admin|submitForm">
 
 <input type='hidden' name='GUID' value=''  data-bind='var: agent(GUID); format:popVal;' />
 
@@ -415,7 +415,7 @@ has to be within the fieldset to for data-table to work right.
 
 <label>
 	<span>Name</span>
-	<input name='AGENTID' value='' data-bind='var: agent(AGENTID); format:popVal;' data-app-event='admin|alphaNumeric' />
+	<input name='AGENTID' value='' data-bind='var: agent(AGENTID); format:popVal;' data-input-keyup="format" data-input-format='alphanumeric' />
 </label>
 
 <label>
@@ -424,7 +424,7 @@ has to be within the fieldset to for data-table to work right.
 </label>
 
 
-<button data-app-event="admin|processForm">Save</button>
+<button class='applyButton'>Save</button>
 
 </fieldset>
 </form>

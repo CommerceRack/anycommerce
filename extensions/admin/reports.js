@@ -128,8 +128,7 @@ var admin_reports = function(_app) {
 								
 								if(reports.length)	{
 									$reportsList.anycontent({data:{'@JOBS': reports}});
-									_app.u.handleAppEvents($reportsList);
-									$('table',$reportsList).anytable();
+									_app.u.handleCommonPlugins($reportsList);
 									}
 								else	{
 									$reportsList.hide(); //no 'reports' in the list of batches. most likely this means the last X batch jobs didn't contain any reports.
