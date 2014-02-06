@@ -102,7 +102,6 @@ body{background:#ffffff;}
 .tabbedProductContentTD {width:100%;}
 .ui-tabs .ui-tabs-nav li a {padding:7px 12px;}
 .tabContent.ui-tabs-panel.ui-widget-content.ui-corner-bottom{padding:1% 4%;}
-.productReviewsList {padding:0px;}
 .reviewBtn{width:90px; height:25px;}
 .reviewLineItem{border:0px; padding:0px;}
 .reviewLineItem blockquote {margin:0px;}
@@ -115,7 +114,7 @@ body{background:#ffffff;}
 .prodChildren { padding: 5px;}
 .childDropdown { background: url("images/childoption-icon.jpg") no-repeat scroll right; border: 1px solid #A95D13; color:#4F4F4F; font-weight:bold; height: 19px; width: 210px;}
 
-.similarItemsSection {float:left; width:98%; padding:1%;}
+.similarItemsSection {width:98%; padding:1%;}
 .similarItemsSection h1{font-size:14px; color:#000000; padding-bottom:3px;}
 .similarItemsSection ul {border-bottom:4px solid #E5E5E5; height:205px; overflow:hidden;}
 .similarProductList {width:100%; border:none;}
@@ -125,6 +124,15 @@ body{background:#ffffff;}
 .similarItemList .prodPageReviewCount{width:100%; text-align:center; margin:0px;}
 .similarItemList .numReviews {color: #FF6316; font-size:12px;}
 
+.prodPageReviewSection h1{font-size:14px; color:#000000; padding-bottom:3px;}
+.prodReviewContainer{background:#d7d4d4; border:2px solid #000000;}
+.productReviewListHeader{border-bottom:2px solid #000000; padding:5px 7px 0px; margin:0px;}
+.prodPageReviewSection h2{color:#000000; font-size:12px; font-weight:bold; padding:5px 7px 2px;}
+.productReviewsList {padding:0px 10px 5px; margin:0px;}
+.prodReviewInfo {height: 15px; width: 86px; margin:0px 6px 0px 0px;}
+.reviewLineItem p{margin:0px; font-size:13px;}
+.prodReviewCustomerName{color:#817f7f; text-transform:capitalize; padding-left:3px;}
+.prodReviewCustomerName span { padding-left: 2px;}
 /**** Company Pages CSS****/
 .sideline {width:23%; border: 1px solid #939598; padding:6px;}
 .mainColumn {width:70%;}

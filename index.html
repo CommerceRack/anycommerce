@@ -1269,6 +1269,16 @@ this will likely become more flexible in the future. ###
 				<h1>Related Products:</h1>
 				<ul class='listStyleNone clearfix noPadOrMargin similarProductList randomList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateSimilarItems;hide_pagination:true;hide_summary:true; withReviews:1;"></ul>
 			</div>
+			<div class="prodPageReviewSection marginBottom displayNone" data-bind="var: reviews(reviews.@reviews); format:showIfSet;">
+				<h1 class="marginTop">Customer Reviews</h1>
+				<div class="prodReviewContainer">
+					<div class="productReviewListHeader">
+						<h1 data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: Reviews;'></h1>
+						<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
+					</div>
+					<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateZephyr; before:<h2>Most Helpful Reviews</h2>;"></ul>
+				</div>
+			</div>
 			
 		<div class="socialLinks"></div>
 
@@ -2134,6 +2144,18 @@ used on a product layout. Some product have 'children' which may represent the s
 		<h2 data-bind='var:review(SUBJECT); format:text;'></h2>
 		<p data-bind='var:review(MESSAGE); format:text; ;'></p>
 	</blockquote>
+	</li>
+</ul>
+
+<ul>
+	<li id='productReviewsTemplateZephyr' class='reviewLineItem clearfix'>
+		<ul class='prodReviewInfo'>
+			<li data-bind='var:review(RATING); format:addClass; format:addClass; className:review_;' class='reviewSprite'></li>
+		</ul>
+		<blockquote>
+			<p data-bind='var:review(MESSAGE); format:text; ;'></p>
+			<p class="prodReviewCustomerName">-<span data-bind='var:review(CUSTOMER_NAME); format:text;'></span></p>
+		</blockquote>
 	</li>
 </ul>
 
