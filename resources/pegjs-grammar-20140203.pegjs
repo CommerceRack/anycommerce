@@ -1,13 +1,5 @@
-start
- = call+
-
-call
- = grammar 
-
-grammar
- = IfStatement _ lb*
- / BindStatement _ lb*
- / command:(command) _ lb* { return command }
+dataTLC
+ = (IfStatement / BindStatement / command)+
 
 command
  = _ module:([a-z_]+ "#")? cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
