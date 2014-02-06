@@ -3,10 +3,11 @@ start
 
 call
  = grammar 
- / command:(command) _ lb* { return command }
 
 grammar
- = IfStatement
+ = IfStatement _ lb*
+ / command:(command) _ lb* { return command }
+
 
 command
  = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
@@ -139,7 +140,7 @@ value
 
 // /* i am a comment (i can only appear before a command) */
 comment
-  = "/*" (!"*/" SourceCharacter)* "*/"
+  = "/*" (!"*/" SourceCharacter)* "*/" { return{}; }
 
 SourceCharacter
   = .
@@ -152,5 +153,4 @@ _
 
 lb
  = ";"
- 
- 
+
