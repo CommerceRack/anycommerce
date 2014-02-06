@@ -146,22 +146,22 @@ adminApp.cmr.push(["view",function(message,$context){
 					}
 				else	{$o += 'Page type set to category but no navcat specified.'}
 				break;
-			
+
 			case 'search':
 				if(message.vars.keywords)	{}
 				else	{$o += 'Page type set to search but no keywords specified.'}
 				break;
-			
+
 			case 'company':
 				if(message.vars.show)	{}
 				else	{$o += 'Page type set to company but show not specified.'}
 				break;
-			
+
 			case 'customer':
 				if(message.vars.show)	{}
 				else	{$o += 'Page type set to customer but show not specified.'}
 				break;
-			
+
 			default:
 				$o += 'unknown page type: '+message.vars.pageType+' (console contains more detail)';
 				dump("Unrecognized pageType in cart message.vars. vars follow:"); dump(message.vars);
@@ -175,3 +175,62 @@ adminApp.cmr.push(["view",function(message,$context){
 	$history.append($o);
 	$history.parent().scrollTop($history.height());
 	}]);
+
+
+
+
+adminApp.router.appendHash({'type':'exact','route':'dashboard','callback':function(v){
+	adminApp.ext.admin.a.showDashboard(); //will load itself into 'home' content area and bring that into focus.
+	}});
+
+adminApp.router.appendHash({'type':'exact','route':'product','callback':function(v){
+	adminApp.ext.admin_prodedit.a.showProductManager(v.hashParams);
+	}});
+
+adminApp.router.appendHash({'type':'exact','route':'mediaLibraryManageMode','callback':function(v){
+	adminApp.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+	}});
+adminApp.router.appendHash({'type':'exact','route':'logout','callback':function(v){
+	adminApp.ext.admin.a.logout();
+	}});
+
+//will handle any clicks directly on the tabs.
+adminApp.router.appendHash({'type':'match','route':'tab/{{tab}}','callback':function(v){
+	adminApp.ext.admin.a.handleTabClick(v.params.tab,v.hashParams);
+	}});
+
+
+adminApp.router.appendHash({'type':'exact','route':'downloads','callback':function(v){
+	$('#homeContent').empty();
+	adminApp.ext.admin.u.bringTabIntoFocus('home');
+	adminApp.ext.admin.u.bringTabContentIntoFocus($('#homeContent'));
+	adminApp.ext.admin.a.showDownloads($('#homeContent'));
+	}});
+
+adminApp.router.appendHash({'type':'exact','route':'help','callback':function(v){
+	$('#supportContent').empty();
+	adminApp.ext.admin.u.bringTabIntoFocus('support');
+	adminApp.ext.admin.u.bringTabContentIntoFocus($('#supportContent'));
+	adminApp.ext.admin_support.a.showHelpInterface($('#supportContent'));
+	}});
+
+
+
+
+
+//handles a lot of the defaults for loading native apps. More or less a 'catch'.
+adminApp.router.appendHash({'type':'match','route':'ext/{{ext}}/{{a}}','callback':function(v){
+	adminApp.ext.admin.a.execApp(v.params.ext,v.params.a,v.hashParams);
+	}});
+
+
+
+
+
+adminApp.router.appendInit({
+	'type':'regexp',
+	'route': /^(.*?)\/future$/,
+	'callback':function(f){
+		$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts and you should avoid 'using' them (look don't touch).<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
+		}
+	});

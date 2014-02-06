@@ -1701,7 +1701,7 @@ _app.model.dispatchThis('immutable');
 //used in the wholesale ui
 			adminCustomerSearchShowUI : function($ele,p)	{
 				if($ele.data('scope') && $ele.data('searchfor'))	{
-					navigateTo("#!customerManager",{'scope':$ele.data('scope'),'searchfor':$ele.data('searchfor')});
+					navigateTo("#!ext/admin_customer/showCustomerManager",{'scope':$ele.data('scope'),'searchfor':$ele.data('searchfor')});
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_customer.e.adminCustomerSearchShowUI, no data-scope ["+$ele.data('scope')+"] and/or data-searchfor  ["+$ele.data('searchfor')+"] set on trigger element.","gMessage":true});

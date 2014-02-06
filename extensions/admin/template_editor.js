@@ -1003,7 +1003,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 										else	{
 											$TC.dialog('close');
 											$('#globalMessaging').anymessage(_app.u.successMsgObject("Thank you, the template "+vars.SUBDIR+" has been copied."));
-											navigateTo('#!templateEditor',_app.u.getWhitelistedObject(vars,['domain','campaignid','profile','mode']));
+											navigateTo('#!ext/admin_template/showTemplateEditor',_app.u.getWhitelistedObject(vars,['domain','campaignid','profile','mode']));
 											}
 										}
 									}	
@@ -1510,7 +1510,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 					var $templateEditor = $ele.closest("[data-app-role='templateEditor']"), data = $templateEditor.data();
 					if(data.mode == 'Campaign')	{
 						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
-						navigateTo('#!campaignManager',{'campaignid':data.campaignid});
+						navigateTo('#!ext/admin_customer/showCampaignManager',{'campaignid':data.campaignid});
 						}
 					else if(data.mode == 'EBAYProfile')	{
 						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
@@ -1518,7 +1518,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 						}
 					else if(data.mode == 'Site')	{
 						$(".isTinymceTextarea",$templateEditor).tinymce().remove();
-						navigateTo('#!domainConfigPanel',{'domain':data.domain});
+						navigateTo('#!ext/admin_sites/showDomainConfig',{'domain':data.domain});
 						}
 					else	{
 						$("#globalMessaging").anymessage({"message":"In admin_template.e.adminTemplateEditorExit, unrecognize or missing mode ["+data.mode+"] set on template editor.","gMessage":true});
@@ -1657,10 +1657,10 @@ else	{
 				templateEditorShow : function($ele,p)	{
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
-						navigateTo('#!templateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
+						navigateTo('#!ext/admin_template/showTemplateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
-						navigateTo('#!templateEditor',{'profile':$ele.closest("[data-profile]").data('profile'),'mode':'EBAYProfile'});
+						navigateTo('#!ext/admin_template/showTemplateEditor',{'profile':$ele.closest("[data-profile]").data('profile'),'mode':'EBAYProfile'});
 						}
 					else if ($ele.data('mode') == 'Site')	{
 						
@@ -1668,7 +1668,7 @@ else	{
 						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
 						
 						if(hostname && domainname)	{
-							navigateTo('#!templateEditor',{'domain':hostname.toLowerCase()+'.'+domainname,'mode':'Site'});
+							navigateTo('#!ext/admin_template/showTemplateEditor',{'domain':hostname.toLowerCase()+'.'+domainname,'mode':'Site'});
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});

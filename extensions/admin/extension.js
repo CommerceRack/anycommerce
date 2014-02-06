@@ -60,12 +60,13 @@ var admin = function(_app) {
 		
 		vars : {
 			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','utilities','launchpad'],
+			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','kpi','utilities','support','launchpad'],
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
 			versionData : [
-				{'branch' : '201452','youtubeVideoID' : ''},
+				{'branch' : '201401','youtubeVideoID' : ''},
+				{'branch' : '201352','youtubeVideoID' : ''},
 				{'branch' : '201346','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201344','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
@@ -597,8 +598,6 @@ var admin = function(_app) {
 
 
 
-
-
 					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -622,8 +621,6 @@ _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/downloads.htm
 //this is the lesser of two weevils.
 //_app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
 _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/legacy_compat.js']);
-
-
 
 _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/tinymce.min.js']);
 _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/jquery.tinymce.min.js']);
@@ -663,25 +660,13 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 					_app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 					}
 
-
-//if supported, update hash while navigating.
-// see handleHashState function for what this is and how it works.
-				if("onhashchange" in window)	{ // does the browser support the hashchange event?
-//					_app.u.dump("WOOT! browser supports hashchange");
-					_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
-					window.onhashchange = function () {
-//						_app.u.dump("Hash has changed.");
-						_app.ext.admin.u.handleHashState();
-						}
-					}
-	
 //create shortcuts. these are used in backward compatibility areas where brian loads the content.
 				window.navigateTo = _app.ext.admin.a.navigateTo;
 				window.loadElement = _app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = _app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = _app.ext.admin.a.changeDomain;
 				window.linkOffSite = _app.ext.admin.u.linkOffSite;
-				window._ignoreHashChange = false; // see handleHashState to see what this does.
+
 
 //a document.write and app are like dogs and cats. They don't get along. this is the workaround
 				document.write = function(v){
@@ -990,7 +975,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				else	{
 					$("<p>It appears you have no domains configured. <span class='lookLikeLink'>Click here<\/span> to go configure one.<\p>").on('click',function(){
 						$target.dialog('close');
-						navigateTo("#!domainConfigPanel");
+						navigateTo("#!ext/admin_sites/showDomainConfig");
 						}).appendTo($target);
 					}
 				
@@ -1358,11 +1343,69 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-//opts is options 
-// -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
-//    it's in opts to make debugging easier.
-
+//Here for legacy support.  All it does is change the hash, adding opts as key value pairs AFTER the hash.
 			navigateTo : function(path,opts){
+				opts = opts || {};
+				var newHash = path;
+				if($.isEmptyObject(opts))	{}
+				else	{
+					newHash += "?"+$.param(opts)
+					}
+				document.location.hash = newHash; //update hash on URI.
+				},
+
+
+			handleTabClick : function(tab,opts)	{
+				opts = opts || {};
+				var $target = $(_app.u.jqSelector('#',tab+"Content"));
+				//if the tab has no content OR the tab is in focus already, show the tab landing page.
+				if(tab && $.inArray(tab,_app.ext.admin.vars.tabs) >= 0)	{
+					//tab is valid.
+					_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs do not show up.
+					if(tab == _app.ext.admin.vars.tab || $target.children().length === 0)	{
+						//the tab clicked is already in focus. go back to tab landing page. 
+						_app.ext.admin.u.showTabLandingPage(tab,$target,opts);
+						}
+					else	{
+						dump(" -> we jumped between tabs or we moved to a tab that already has content.");
+						_app.ext.admin.u.bringTabIntoFocus(tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
+						_app.ext.admin.u.bringTabContentIntoFocus($target); //brings the tabContent div (homeContent, productContent, etc) into focus.
+						//to get here, the tab has content AND we've moved between tabs.
+						}
+					
+					_app.ext.admin.vars.tab = tab; //do this last so vars.tab shows the old tab for comparison purposes.
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.a.handleTabClick, unrecognized or blank tab specified ["+tab+"]","gMessage":true});
+					}
+
+				},
+
+			execApp : function(ext,a,opts)	{
+				opts = opts || {};
+				var
+					tab = opts.tab || _app.ext.admin.vars.tab,
+					$tab = $(_app.u.jqSelector('#',tab+"Content")),
+					$target = $("<div \/>").addClass('contentContainer'); //content is added to a child, which is then added to the tab. ensures the tab container is left alone (no data or anything like that to get left over)
+				if(ext && a && _app.u.thisNestedExists("ext."+ext+".a."+a,_app))	{
+					$tab.intervaledEmpty().append($target);
+//this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
+					$('#stickytabs').empty(); //clear all the sticky tabs.
+					_app.ext.admin.u.bringTabIntoFocus(tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
+					_app.ext.admin.u.bringTabContentIntoFocus($tab); //brings the tabContent div (homeContent, productContent, etc) into focus.
+					_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs do not show up.
+					_app.ext[ext].a[a]($target,opts); //now execute the action.
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin.a.execApp, either ext ["+ext+"] or a ["+a+"] not passed OR the action does not exist ["+(_app.u.thisNestedExists("ext."+ext+".a."+a,_app))+"] within the extension.","gMessage":true});
+					}
+
+				},
+
+
+			oldNavigateTo : function(path,opts){
 //				_app.u.dump("BEGIN admin.a.navigateTo ["+path+"]");
 				opts = opts || {}; //default to object so setting params within does not cause error.
 				opts.back = (opts.back === 0) ? 0 : -1;
@@ -1387,12 +1430,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 						var $target = undefined; //jquery object of content destination
 						
 						opts = opts || {}; //opts may b empty. treat as object.
-						
-						if(opts.back < 0 || opts.dialog)	{
-							_ignoreHashChange = true; //see handleHashChange for details on what this does.
-							document.location.hash = path; //update hash on URI.
-							}
-						
+					
 						//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
 						if(opts.tab){} // if tab is specified, always use it. this covers mode = tabClick too.
 						else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
@@ -2104,8 +2142,6 @@ vars.findertype is required. acceptable values are:
 //does not dispatch itself, will piggyback on the following immutable dispatches.
 				_app.ext.admin.u.handleDomainInit();
 
-//It's necessary to get the product task list elements on to the dom asap so they can be utilized.
-				_app.ext.admin_prodedit.a.showProductManager();
 				_app.u.addEventDelegation($('#messagesContent'));
 				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
 				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
@@ -2131,10 +2167,6 @@ vars.findertype is required. acceptable values are:
 				else	{
 					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
 					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('#!dashboard'));
-					}
-
-				if(document.URL.indexOf("/future/") > 0)	{
-					$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts and you should avoid 'using' them (look don't touch).<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
 					}
 
 				_app.model.dispatchThis('immutable');
@@ -2418,169 +2450,8 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
-//				if(!$target)	{_app.u.dump("TARGET NOT SPECIFIED")}
+				if(!$target)	{_app.u.dump("TARGET NOT SPECIFIED")}
 
-				if(path == '#!mediaLibraryManageMode')	{
-					_app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
-					}
-				else if(path == '#!domainConfigPanel')	{
-					_app.ext.admin_sites.a.showDomainConfig($target);
-					}
-				else if(path == '#!dashboard')	{_app.ext.admin.a.showDashboard();}
-/*				else if(path == '#!launchpad')	{
-					_app.ext.admin.vars.tab = 'launchpad';
-					_app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
-					_app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
-					}
-*/				else if(path == '#!organizationManager')	{
-					_app.u.dump(" -> tab: "+_app.ext.admin.vars.tab);
-					_app.ext.admin_wholesale.a.showOrganizationManager($target);
-					}
-				else if(path == '#!userManager')	{_app.ext.admin_user.a.showUserManager($target);}
-				else if(path == '#!batchManager')	{
-					_app.ext.admin_batchjob.a.showBatchJobManager($target);
-					}
-				else if(path == '#!customerManager')	{_app.ext.admin_customer.a.showCustomerManager($target,opts);}
-				else if(path == '#!variationsManager')	{
-//					_app.u.dump("$target: "); _app.u.dump($target);
-					_app.ext.admin_prodedit.a.showStoreVariationsManager($target || $target);
-					}
-				else if(path == '#!help')	{
-//for now, let's keep help in the support tab. That way users can toggle between help and another tab/interface, if desired.
-					$('#supportContent').empty();
-					this.bringTabIntoFocus('support');
-					this.bringTabContentIntoFocus($('#supportContent'));
-					_app.ext.admin_support.a.showHelpInterface($('#supportContent'));
-					}
-				else if(path == '#!eBayListingsReport')	{_app.ext.admin_reports.a.showeBayListingsReport();}
-				else if(path == '#!orderPrint')	{_app.ext.cco.a.printOrder(opts.data.oid,opts);}
-				else if(path == '#!supplierManager')	{_app.ext.admin_wholesale.a.showSupplierManager($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).empty())}
-
-				else if(path == '#!orderCreate')	{
-					_app.ext.order_create.a.appCartCreate($target);
-					}
-				else if(path == '#!cartEdit')	{
-					_app.ext.order_create.a.startCheckout($target,opts.cartid);
-					}
-
-				else if(path == '#!downloads')	{
-					$('#homeContent').empty();
-					this.bringTabIntoFocus('home');
-					this.bringTabContentIntoFocus($('#homeContent'));
-					_app.ext.admin.a.showDownloads($('#homeContent'));
-					}
-				else if(path == '#!showEmailAuth')	{
-					_app.ext.admin_config.a.showEmailAuth($target);
-					}
-				else if(path == '#!fileImport')	{
-					_app.ext.admin_medialib.a.showFileImportPage($target);
-					}
-				else if(path == '#!giftcardManager')	{
-					_app.ext.admin_customer.a.showGiftcardManager($target);
-					}
-				else if(path == '#!templateEditor')	{
-					_app.ext.admin_template.a.showTemplateEditor($target,opts);
-					}
-				else if(path == '#!cartManager')	{
-					_app.ext.cart_message.a.showCartManager($target);
-					}
-				else if(path == '#!notifications')	{
-					_app.ext.admin_config.a.showNotifications($target);
-					}
-				else if(path == '#!trainer')	{
-					_app.ext.admin_trainer.a.showTrainer($target);
-					}
-				else if(path == '#!organizationEditor')	{
-					_app.ext.admin_wholesale.a.showOrganizationEditor($target,opts);
-					}
-				else if(path == '#!categoriesAndLists')	{
-					_app.ext.admin_navcats.a.showCategoriesAndLists($target);
-					}
-				else if(path == '#!billingHistory')	{
-					_app.ext.admin_config.a.showBillingHistory($target);
-					}
-				else if(path == '#!globalVariations')	{
-					_app.ext.admin_prodedit.a.showStoreVariationsManager($target);
-					}
-				else if(path == '#!publicFiles')	{
-					_app.ext.admin_medialib.u.showPublicFiles(path,opts);
-					}
-
-				else if(path == '#!globalSettings')	{
-					_app.ext.admin_config.a.showGlobalSettings($target);
-					}
-
-				else if(path == '#!showPlatformInfo')	{
-					_app.ext.admin_support.a.showPlatformInfo($target);
-					}
-
-				else if(path == '#!partitionManager')	{
-					_app.ext.admin_config.a.showPartitionManager($target);
-					}
-
-				else if(path == '#!privateFiles')	{
-					_app.ext.admin_tools.a.showPrivateFiles($target);
-					}
-
-				else if(path == '#!manageFlexedit')	{
-					_app.ext.admin_tools.a.showManageFlexedit($target);
-					}
-
-				else if(path == '#!pluginManager')	{
-					_app.ext.admin_config.a.showPluginManager($target);
-					}
-				else if(path == '#!campaignManager')	{
-					_app.ext.admin_customer.a.showCampaignManager($target);
-					}
-				else if(path == '#!ciEngineAgentManager')	{
-					_app.ext.admin_tools.a.showciEngineAgentManager($target);
-					}
-				else if(path == '#!couponManager')	{
-					_app.ext.admin_config.a.showCouponManager($target);
-					}
-				else if(path == '#!priceSchedules')	{
-					_app.ext.admin_wholesale.a.showPriceSchedules($target);
-					}
-				else if(path == '#!accountUtilities')	{
-					_app.ext.admin_tools.a.showAccountUtilities($target);
-					}
-				else if(path == '#!productPowerTool')	{
-					_app.ext.admin_tools.a.showPPT($target);
-					}
-				else if(path == '#!productExport')	{
-					_app.ext.admin_tools.a.showProductExport($target);
-					}
-				else if(path == '#!warehouseManager')	{
-					_app.ext.admin_wholesale.a.showWarehouseManager($target);
-					}
-				else if(path == '#!warehouseUtilities')	{
-					_app.ext.admin_wholesale.a.showWarehouseUtilities($target);
-					}
-				else if(path == '#!reviewsManager')	{
-					_app.ext.admin_customer.a.showReviewsManager($target);
-					}
-				else if (path == '#!appChooser')	{
-					_app.ext.admin_template.a.showAppChooser();
-					}
-				else if (path == '#!rss')	{
-					_app.ext.admin.a.showRSS($target);
-					}
-				else if (path == '#!paymentManager')	{
-					_app.ext.admin_config.a.showPaymentManager($target);
-					}
-				else if (path == '#!shippingManager')	{
-					_app.ext.admin_config.a.showShippingManager($target);
-					}
-				else if (path == '#!contactInformation')	{
-					_app.ext.admin_config.a.showContactInformation($target);
-					}
-				else if(path == '#!taxConfig')	{
-					_app.ext.admin_config.a.showTaxConfig($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")));
-					}
-
-				else if(path == '#!taskManager')	{
-					_app.ext.admin_task.a.showTaskManager($target);
-					}
 //handle the default tabs specified as #! instead of #:
 				else if(_app.ext.admin.u.showTabLandingPage(path,$(_app.u.jqSelector('#',path.substring(2)+'Content')),opts))	{
 					//the showTabLandingPage will handle the display. It returns t/f
@@ -2664,9 +2535,8 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				return $target;
 				},
 //path should be passed in as either #:orders or #!orders
-			showTabLandingPage : function(path,$target,opts)	{
+			showTabLandingPage : function(tab,$target,opts)	{
 				var r = true;
-				var tab = path.substring(2);
 				this.bringTabIntoFocus(tab);
 				_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
@@ -3491,36 +3361,6 @@ else	{
 				},
 
 //$t is 'this' which is the button.
-
-
-/*
-CODE FOR URL MANAGEMENT
-
-When a page change occurs, the hash is updated.
-This hash change triggers a 'state' in the browser so that the back button will work.
-when the browser detects a hash change, it will execute this code.
-Of course, if we change the hash with JS, it will also trigger this code.
-so, in our js for changing pages (navigateTo), we start by setting the global var _ignoreHashChange to true.
-Then this function will know to NOT perform a navigateTo of it's own.
-because this feature should be on most of the time, ignorehashchange is turned off each 
-time a hash change occurs.
-I didn't have this function actually trigger the page handler instead of toggling ignore... on/off because
-it relied to heavily on a feature of the browser and who knows how consistenly it's supported. If it isn't, we 
-just lose the back button feature.
-*/
-
-			handleHashState : function()	{
-//				_app.u.dump("BEGIN myRIA.u.handleHashState");
-				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
-//				_app.u.dump(" -> hash: "+hash);
-				if(hash.substr(0,5) == "/biz/" && !_ignoreHashChange)	{
-					navigateTo(hash);
-					}
-				else	{
-					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
-					}
-				_ignoreHashChange = false; //turned off again to re-engage this feature.
-				},
 
 
 

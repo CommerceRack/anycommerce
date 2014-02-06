@@ -21,7 +21,7 @@
 	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
 	<button data-app-click="admin_batchjob|adminBatchJobCleanupExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash'>Cancel/Remove Job</button>
 
-	<p>This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="#" onClick="navigateTo('#!batchManager'); if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')}; return false">Batch Job Manager can be found here.</a></p>
+	<p>This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="#" onClick="navigateTo('#!ext/admin_batchjob/showBatchJobManager'); if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')}; return false">Batch Job Manager can be found here.</a></p>
 
 </section>
 

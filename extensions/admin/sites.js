@@ -110,10 +110,8 @@ used, but not pre-loaded.
 				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anyform();
 				_app.u.addEventDelegation($target);
 				_app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
-
 				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
-				
 				}
 			
 			}, //Actions
