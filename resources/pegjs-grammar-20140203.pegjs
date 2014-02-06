@@ -6,23 +6,37 @@ call
 
 grammar
  = IfStatement _ lb*
+ / BindStatement _ lb*
  / command:(command) _ lb* { return command }
 
-
 command
- = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
+ = _ module:([a-z_]+ "#")? cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
      return {
        type: "command",
+       module: module || "core",
        name: cmd.join("").toLowerCase(),
        args: args ? args.map(function(a) { return a[1] }) : null
      }
    }
 
 
+// ** BIND **
+// bind $var 'something';    (jsonpath lookup)
+// bind $var $someothervar;  (jsonpath lookup)
+// bind $var ~tag;           (returns tag id/path)
+// bind ~tag '#tagid';       jQuery('#tagid')
+// bind ~tag $tagid          jQuery($tagid)
+BindStatement
+ = "bind" _ set:(variable tag) _ src:(variable / scalar tag) _ lb+ {
+  return { type:"BIND", Set:set, Src:src } 
+  }
+
+
+
 IfStatement
   = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
       return {
-        type:     "IfStatement",
+        type:     "IF",
         When:     condition,
         IsTrue:   ifStatement,
         IsFalse: elseStatement !== null ? elseStatement[3] : null
@@ -55,6 +69,13 @@ Statement
 
 
 /* value types */
+
+// ~tag is a reference to a jquery object
+tag 
+ = "~" tag:([a-zA-Z]+) {
+   // tag table should maintain reference to tags on DOM
+   return { type:"tag", tag:tag.join(""), jq:null }
+   }
 
 boolean 
  = "true" {return{ "type":"boolean", "value": true }}
@@ -136,7 +157,7 @@ primary
   / "(" _ additive:additive _ ")" { return additive; }
 
 value
- = longopt / variable / integer / scalar / boolean / hexcolor / additive 
+ = longopt / variable / integer / scalar / boolean / tag / hexcolor / additive 
 
 // /* i am a comment (i can only appear before a command) */
 comment
