@@ -1,11 +1,13 @@
 dataTLC
  = (IfStatement / BindStatement / command)+
 
+
+// command name and module name must start with a letter or underscore
 command
- = _ module:([a-z_]+ "#")? cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb* {
+ = _ module:([A-Za-z0-9_]+ "#")? cmd:[A-Za-z0-9_]+ args:((ws+ value)+)? _ lb* {
      return {
        type: "command",
-       module: module || "core",
+       module: module ? module[0].join("") : "core",
        name: cmd.join("").toLowerCase(),
        args: args ? args.map(function(a) { return a[1] }) : null
      }
