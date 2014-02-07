@@ -21,7 +21,7 @@ command
 // bind ~tag '#tagid';       jQuery('#tagid')
 // bind ~tag $tagid          jQuery($tagid)
 BindStatement
- = "bind" _ set:(variable tag) _ src:(variable / scalar tag) _ lb+ {
+ = "bind" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
   return { type:"BIND", Set:set, Src:src } 
   }
 
