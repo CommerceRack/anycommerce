@@ -66,9 +66,9 @@ Statement
 
 // ~tag is a reference to a jquery object
 tag 
- = "~" tag:([a-zA-Z]+) {
+ = "~" tag:([a-zA-Z0-9\-_]+) {
    // tag table should maintain reference to tags on DOM
-   return { type:"tag", tag:tag.join(""), jq:null }
+   return { type:"tag", value:tag.join(""), jq:null }
    }
 
 boolean 
