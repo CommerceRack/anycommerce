@@ -134,11 +134,14 @@ http.createServer(function(req, res) {
 		// for now we'll do all our requests http (we still need a way to know if origin request was http or https)
 // *** 201352 -> new API for httpProxy
 //		FILEMISSINGproxy.proxyRequest(req, res, {
-		//logRequest(req);
-		var target = req.headers.origin+":80"+uri;
+		console.log(req.connection);
+		
+//!!! THIS DOES NOT CURRENTLY ADEQUATELY FORWARD SECURE REQUESTS
+		var target = (req.connection.encrypted ? "https://" : "http://")+req.headers.host+":80"+uri;
 		console.log(target);
 		FILEMISSINGproxy.web(req,res,{
-			target : target
+			target : target,
+			secure : false
 			});
 			
 		return;
