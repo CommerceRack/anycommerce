@@ -1,6 +1,10 @@
 dataTLC
- = (IfStatement / BindStatement / command)+
-
+ = grammar+
+ 
+grammar
+ = IfStatement _ lb*
+ / BindStatement _ lb*
+ / command:(command) _ lb* { return command }
 
 // command name and module name must start with a letter or underscore
 command
