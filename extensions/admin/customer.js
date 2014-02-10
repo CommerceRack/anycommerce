@@ -279,9 +279,9 @@ var admin_customer = function(_app) {
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin|openDialog' class='applyButton' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button>",
-						"<button data-app-click='admin_customer|giftcardCreateShow'  class='applyButton' data-text='true' data-icon-primary='io-icon-circle-plus'>Add New Giftcard</button>"],
+						"<button data-app-click='admin_customer|giftcardCreateShow'  class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add New Giftcard</button>"],
 					'thead' : ['Code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
-					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-click='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminGiftcardList',
@@ -298,7 +298,7 @@ var admin_customer = function(_app) {
 					'header' : 'Reviews Manager',
 					'handleAppEvents' : false,
 					'className' : 'reviewsManager',
-					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-event='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' placeholder='product id' name='PID' \/><button data-app-click='admin|controlFormSubmit' class='applyButton' data-text='false' data-icon-primary='ui-icon-search'>Search<\/button><\/form>",
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin|dataCSVExportExec' data-pointer='adminProductReviewList' data-listpointer='@REVIEWS' data-filename='product_reviews.csv' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>Export<\/button>",
@@ -366,7 +366,7 @@ var admin_customer = function(_app) {
 				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
 				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false}).anyform();
 				_app.u.addEventDelegation($modal);
-				_app.u.handleButtons($target);
+				_app.u.handleButtons($modal);
 				$modal.dialog('open');
 				},
 
@@ -1278,7 +1278,7 @@ _app.model.dispatchThis('immutable');
 
 //These fields are used for processForm on save.
 //They're here instead of in the form directly so that the form/template can be recycled for edit.				
-				$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$btn.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
+				$('form:first',$D).append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
 				
 				}, //giftcardCreateShow
 
