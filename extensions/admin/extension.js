@@ -1345,7 +1345,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 
 //Here for legacy support.  All it does is change the hash, adding opts as key value pairs AFTER the hash.
 			navigateTo : function(path,opts){
-				dump("BEGIN navigateTo");
+//				dump("BEGIN navigateTo");
 				opts = opts || {};
 				var newHash = path;
 //if a tab click occurs for a tab in focus where the hash is already the landing page (but the content isn't), the click doesn't change the hash or trigger the hash change code.
@@ -2715,14 +2715,14 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 						msgObj = this.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
 						msgObj.persistent = true; //for testing, don't hide.
-						
+
 						if(msgObj.BATCH)	{
 							msgObj.errmsg += "<div><button class='buttonify' onClick='_app.ext.admin_batchjob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
 							}
 //						_app.u.dump(msgObj);	
 						var r = _app.u.throwMessage(msgObj);
 						$('.buttonify','.'+r).button();
-						_app.u.dump("throwMessage response = "+r);
+//						_app.u.dump("throwMessage response = "+r);
 						}
 					}
 				else	{

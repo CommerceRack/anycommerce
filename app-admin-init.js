@@ -184,8 +184,8 @@ adminApp.router.addAlias('404',function(v)	{
 
 
 adminApp.router.appendHash({'type':'match','route':'/biz/vstore*','callback':function(v){
-	console.log(" -> Welcome to legacy compat mode.");
-	console.dir(v);
+//	console.log(" -> Welcome to legacy compat mode.");
+//	console.dir(v);
 	adminApp.model.fetchAdminResource(v.hash.substr(2),{'tab':adminApp.ext.admin.vars.tab,'targetID':adminApp.ext.admin.vars.tab+'Content'});
 	}});
 
