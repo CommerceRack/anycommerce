@@ -106,6 +106,7 @@ var order_create = function(_app) {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
 //				_app.u.dump("BEGIN adminCustomerDetail callback for 1PC");
+				tagObj.jqObj.hideLoading();
 				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
 				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
 				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
@@ -982,12 +983,13 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 //don't execute this UNTIL you have a valid cart id.
 			startCheckout : function($chkContainer,cartID)	{
-//				_app.u.dump("BEGIN order_create.a.startCheckout");
+				_app.u.dump("BEGIN order_create.a.startCheckout. cartID: "+cartID);
 //				_app.u.dump(" -> _app.u.buyerIsAuthenticated(): "+_app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length && cartID)	{
 					_app.u.dump(" -> startCheckout cartid: "+cartID);
 					$chkContainer.empty();
+								
 					_app.u.addEventDelegation($chkContainer);
 					$chkContainer.anyform({
 						trackEdits : _app.u.thisIsAnAdminSession() //edits are only tracked in the admin interface
@@ -1015,7 +1017,6 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					
 					_app.model.destroy('cartDetail|'+cartID);
 					
-					
 					_app.calls.cartDetail.init(cartID,{'callback':function(rd){
 						$chkContainer.hideLoading(); //always hideloading, errors or no, so interface is still usable.
 						if(_app.model.responseHasErrors(rd)){
@@ -1024,16 +1025,17 @@ note - the order object is available at _app.data['order|'+P.orderID]
 						else	{
 //							_app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(_app.data[rd.datapointer]['@ITEMS'].length || _app.u.thisIsAnAdminSession())	{
-//								_app.u.dump(" -> cart has items or this is an admin session.");
+								_app.u.dump(" -> cart has items or this is an admin session. cartID: "+cartID);
 								var $checkoutContents = _app.renderFunctions.transmogrify({},'checkoutTemplate',_app.ext.order_create.u.extendedDataForCheckout(cartID));
-				
+								$checkoutContents.data('cartid',cartID);
+
 								if($checkoutContents.attr('id'))	{}
 								else	{
 									$checkoutContents.attr('id','ordercreate_'+_app.u.guidGenerator()); //add a random/unique id for use w/ dialogs and callbacks.
 									}								
-								
+
 								$chkContainer.append($checkoutContents);
-								$checkoutContents.data('cartid',cartID);
+
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
@@ -1045,8 +1047,9 @@ note - the order object is available at _app.data['order|'+P.orderID]
 //								_app.u.dump(" -> handlePanel has been run over all fieldsets.");
 								if(_app.u.thisIsAnAdminSession() && _app.data[rd.datapointer].customer.cid)	{
 									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
-									$chkContainer.showLoading({'message':'Fetching customer record'});
-									_app.ext.admin.calls.adminCustomerDetail.init({'CID':_app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$chkContainer},'mutable');
+									// context must NOT be $checkoutContainer because that is 'higher' than the data-app-role='checkout' that is used by the panels to ascertain the cart id.
+									$checkoutContents.showLoading({'message':'Fetching customer record'});
+									_app.ext.admin.calls.adminCustomerDetail.init({'CID':_app.data[rd.datapointer].customer.cid,'rewards':1,'notes':1,'orders':1,'organization':1,'wallets':1},{'callback' : 'updateAllPanels','extension':'order_create','jqObj':$checkoutContents},'mutable');
 									_app.model.dispatchThis('mutable');
 									}
 								else if(document.compatMode == 'CSS1Compat')	{}
@@ -1786,13 +1789,14 @@ note - the order object is available at _app.data['order|'+P.orderID]
 //actions are rendered in the order they're passed.
 
 			handlePanel : function($context, role, actions)	{
-//				_app.u.dump("BEGIN handlePanel"); //_app.u.dump(actions);
+//				_app.u.dump("BEGIN handlePanel."); //_app.u.dump(actions);
 
-				if($context && role && actions && typeof actions === 'object')	{
+				if($context instanceof jQuery && role && actions && typeof actions === 'object')	{
 //					_app.u.dump(" -> role: "+role);
+
 					var L = actions.length,
 					formObj = $context.is('form') ? $context.serializeJSON() : $("form",$context).serializeJSON(),
-					cartID = $context.closest("[data-app-role]").data('cartid'),
+					cartID = $context.closest("[data-app-role='checkout']").data('cartid'),
 					$fieldset = $("[data-app-role='"+_app.u.jqSelector('',role)+"']",$context),
 					ao = {};
 
@@ -1808,7 +1812,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
-//						_app.u.dump(" -> translating "+role);
+						_app.u.dump(" -> translating "+role+" cartID: "+cartID);
 //						_app.u.dump("_app.ext.order_create.u.extendedDataForCheckout()"); _app.u.dump(_app.ext.order_create.u.extendedDataForCheckout());
 						$fieldset.anycontent({'data' : _app.ext.order_create.u.extendedDataForCheckout(cartID)});
 						} //populates the template.
