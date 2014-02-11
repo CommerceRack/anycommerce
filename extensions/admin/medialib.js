@@ -46,7 +46,7 @@ var admin_medialib = function(_app) {
 				obj._tag =  tagObj || {};
 				obj._tag.datapointer = "adminCSVImport"
 				obj._cmd = "adminCSVImport"
-				__app.model.addDispatchToQ(obj,Q);
+				_app.model.addDispatchToQ(obj,Q);
 				}
 			},
 
@@ -59,7 +59,7 @@ var admin_medialib = function(_app) {
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
 				obj._cmd = "adminImageDelete"
-				__app.model.addDispatchToQ(obj,Q);
+				_app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminImageDelete
 
