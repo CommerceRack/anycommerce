@@ -58,6 +58,8 @@ CONTROLLER
 	unixNow renamed to epochNow (utility)
 	unix2Pretty renamed to epoch2Pretty (utility)
 	unix2mdy renamed to epoch2mdy (render format)
+	New router feature for defining what hash tags should do.
+	
 
 QUICKSTART (and store related updates)
 	Product lists now support a 'complete' event, triggered after all product have loaded.
