@@ -250,6 +250,10 @@ used, but not pre-loaded.
 				
 				if($("input[name='LOGO']",$form).hasClass('edited'))	{
 					newSfo['@updates'].push("DOMAIN-SET-LOGO?LOGO="+sfo.LOGO || ""); //set to value of LOGO. if not set, set to blank (so logo can be cleared).
+					}					
+
+				if($("input[name='IS_FAVORITE']",$form).hasClass('edited'))	{
+					newSfo['@updates'].push("DOMAIN-SET-FAVORITE?IS="+sfo.IS_FAVORITE);
 					}				
 				
 				if($("select[name='PRT']",$form).hasClass('edited'))	{
@@ -457,8 +461,14 @@ used, but not pre-loaded.
 
 //if(domain == _app.vars.domain)	{$ele.addClass('ui-state-highlight')}
 			domainPutInFocus : function($ele,p)	{
-				_app.ext.admin.a.changeDomain(domain,$ele.closest("[data-prt]").attr('data-prt'));
-				navigateTo(_app.ext.admin.u.whatPageToShow(path || '#:sites'));
+				var domain = $ele.closest("[data-domain]").data('domain');
+				if(domain)	{
+					_app.ext.admin.a.changeDomain(domain,$ele.closest("[data-prt]").attr('data-prt'));
+					navigateTo(_app.ext.admin.u.whatPageToShow(path || '#:sites'));
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_sites.e.domainPutInFocus, unable to ascertain domain.","gMessage":true});
+					}
 				}, //domainPutInFocus
 
 //				if($ele.closest("[data-is_favorite]").data('is_favorite') == 1)	{$ele.addClass('ui-state-highlight')}

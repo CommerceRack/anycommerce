@@ -132,7 +132,9 @@
 	<td class='isSearchable' data-bind="var: domain(PRT); hideZero:false; format:text;"></td>
 	<td></td>
 	<td class='alignRight'>
-	<button data-app-click='admin_sites|adminDomainDetailShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Details</button>
+	<button data-app-click="admin_batchjob|adminBatchJobExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-refresh' data-type="UTILITY/SITEMAP" data-whitelist="DOMAINNAME,PRT">Update Sitemap</button>
+	<button data-app-click='admin_sites|domainPutInFocus' class='applyButton' data-text='false' data-icon-primary='ui-icon-check' title="Use this domain">Use Domain</button>
+	<button data-app-click='admin_sites|adminDomainDetailShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' title="Edit this domain">Details</button>
 	</td>
 </tr>
 <tr>
@@ -427,6 +429,12 @@ That's also why the template does not contain a form
 				<input type='checkbox' class='applyAnycb' name='IS_PRIMARY'  data-bind="var: domain(IS_PRIMARY); format:popVal;" />
 				<span>Tag as primary</span>
 				<span class='toolTip' title="Only 1 primary domain per partition.">?</span>
+			</label>
+						
+			<label>
+				<input type='checkbox' class='applyAnycb' name='IS_FAVORITE'  data-bind="var: domain(IS_FAVORITE); format:popVal;" />
+				<span>Tag as favorite</span>
+				<span class='toolTip' title="Will show domain at the top of some lists and enable it in the domain chooser.">?</span>
 			</label>		
 	
 			<label>
