@@ -461,10 +461,10 @@ used, but not pre-loaded.
 
 //if(domain == _app.vars.domain)	{$ele.addClass('ui-state-highlight')}
 			domainPutInFocus : function($ele,p)	{
-				var domain = $ele.closest("[data-domain]").data('domain');
+				var domain = $ele.closest("[data-domainname]").data('domainname');
 				if(domain)	{
 					_app.ext.admin.a.changeDomain(domain,$ele.closest("[data-prt]").attr('data-prt'));
-					navigateTo(_app.ext.admin.u.whatPageToShow(path || '#:sites'));
+					navigateTo(document.location.hash);
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_sites.e.domainPutInFocus, unable to ascertain domain.","gMessage":true});
