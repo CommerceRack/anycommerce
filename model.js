@@ -1602,7 +1602,7 @@ ADMIN/USER INTERFACE
 				'_tag' : {
 					datapointer : 'adminUIExecuteCGI',
 					callback : function(rd)	{
-						if(this.responseHasErrors(rd)){_app.u.throwMessage(rd);}
+						if(_app.model.responseHasErrors(rd)){_app.u.throwMessage(rd);}
 						else	{
 							_app.ext.admin.u.uiHandleContentUpdate(path,_app.data[rd.datapointer],viewObj)
 							_app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
