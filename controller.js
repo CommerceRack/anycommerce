@@ -686,17 +686,17 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			var r = false; //what is returned.
 			obj = obj || {};
 			if((method == 'append' || method == 'prepend') && (mode == 'init' || mode == 'hash'))	{
-				if(obj.type && obj.route)	{ //route isn't validated against because a blank route is a valid route (homepage)
+				if(obj.type && obj.callback)	{ //route isn't validated against because a blank route is a valid route (homepage)
 					if(_app.router.matchFunctions[obj.type])	{
 						method == 'prepend' ? this[mode+'Routes'].unshift(obj) : this[mode+'Routes'].push(obj);
 						r = true;
 						}
 					else	{
-						console.warn("In _addInitOrHash, for route "+arr[1]+" type was set as "+arr[0]+" which is not valid");
+						console.warn("In _addInitOrHash, for route "+obj.route+" type was set as "+obj.type+" which is not valid");
 						}				
 					}
 				else	{
-					console.warn("In _addInitOrHash, type ["+arr[0]+"] or route ["+arr[1]+"] or callback [typeof: "+(typeof arr[2])+"] was not defined and all are required.");
+					console.warn("In _addInitOrHash, type ["+obj.type+"] or route ["+obj.route+"] or callback [typeof: "+(typeof obj.callback)+"] was not defined and all are required.");
 					}
 				}
 			else	{
@@ -741,7 +741,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				return r;
 				},
 			'match' : function(routeObj,hash){
-				var pattern = routeObj.route.replace(/{{(.*?)}}/g,'([^\\/]+)'), r = false, regex = new RegExp(pattern), isMatch = regex.exec(hash);
+				var pattern = routeObj.route.replace(/{{(.*?)}}/g,'([^\\/]+)');
+				if(routeObj.route.charAt(routeObj.route.length - 1) == '*' )	{pattern += "(/\?.*)?";} //allows for wildcards to be set. so admin/ext/a?some=params can be declared w/ admin/{{ext}}/{{a}}*
+				var r = false, regex = new RegExp(pattern), isMatch = regex.exec(hash);
 	//regex.exec[0] will be the match value. so comparing that to the hash will ensure no substring matches get thru.
 	//substring matches can be accomplished w/ a regex in the route.
 				if(isMatch && isMatch[0] == hash)	{
