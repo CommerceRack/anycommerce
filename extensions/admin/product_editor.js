@@ -2908,7 +2908,7 @@ function type2class(type)	{
 				_app.u.dump("BEGIN admin_prodedit.e.viewProductOnWebsite");
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if(pid)	{
-					_app.ext.admin.u.linkOffSite("http://"+_app.vars.domain+"/product/"+pid+"/",'',true);
+					_app.ext.admin.u.linkOffSite("http://www."+_app.vars.domain+"/product/"+pid+"/",'',true);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_prodedit.uiActions.configOptions, unable to determine pid.","gMessage":true});
