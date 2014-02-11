@@ -301,9 +301,17 @@ var admin_config = function(_app) {
 
 
 			showContactInformation : function($target)	{
-				$target.showLoading({'message':'Fetching Contact Details'});
+//				$target.showLoading({'message':'Fetching Contact Details'});
 				_app.model.destroy('adminConfigDetail|account|'+_app.vars.partition);
-				_app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+_app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
+				_app.u.addEventDelegation($target);
+
+				$target.anycontent({'templateID':'contactInformationTemplate'}).anyform({'trackEdits':true});
+
+				_app.ext.admin.calls.adminConfigDetail.init({'account':true},{
+					'datapointer' : 'adminConfigDetail|account|'+_app.vars.partition,
+					'callback' : 'anycontent',
+					'translateOnly' : true,
+					'jqObj':$target},'mutable');
 				_app.model.dispatchThis('mutable');
 				}, //showContactInformation
 
