@@ -431,7 +431,8 @@ var admin_marketplace = function(_app) {
 					
 					var $form = $("[data-anytab-content='settings'] form:first",$target);
 					$form.showLoading({'message':'Fetching Marketplace Details'});
-					
+					$form.anyform({'trackEdits':true});
+
 					_app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 				
 
