@@ -801,7 +801,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(typeof routeObj.callback === 'string')	{
 					console.log(" -> callback is a string: "+routeObj.callback)
 					if(_app.router.aliases[routeObj.callback])	{
-						_app.router.aliases[routeObj.callback](routeObj).bind(_app); //the bind here will set 'this' to _app within the function, so app context remains.
+						_app.router.aliases[routeObj.callback](routeObj);
 						}
 					else	{
 						//no matching handler found.
@@ -809,7 +809,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						}
 					}
 				else if(typeof routeObj.callback == 'function')	{
-					routeObj.callback(routeObj);//the bind here will set 'this' to _app within the function, so app context remains.
+					routeObj.callback(routeObj);
 					}
 				else	{
 					console.error("In _execute handler, invalid type for routeObj.callback. typeof: "+(typeof routeObj.callback));

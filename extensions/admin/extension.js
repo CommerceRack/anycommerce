@@ -1345,32 +1345,41 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 
 //Here for legacy support.  All it does is change the hash, adding opts as key value pairs AFTER the hash.
 			navigateTo : function(path,opts){
+				dump("BEGIN navigateTo");
 				opts = opts || {};
 				var newHash = path;
-				if(path.indexOf('#!') == 0)	{newHash = path;}
-//if/when vstore compat is gone, the next to if/else won't be necessary.
-				else if(path.indexOf('/biz/') == 0)	{
-					newHash = "#!"+path;
-					}
-				else if(path.indexOf('#/biz/') == 0)	{
-					newHash = "#!"+path.substring(1);
+//if a tab click occurs for a tab in focus where the hash is already the landing page (but the content isn't), the click doesn't change the hash or trigger the hash change code.
+//this could happen if you click setup > tax, then another tab, then back to setup. now, the hash is #!tab/setup but the content is tax. and if you click setup again to get to landing, hash doesn't change.
+				if(path.indexOf('#!tab/') == 0 && path == document.location.hash)	{
+					adminApp.router.handleHashChange();
 					}
 				else	{
-
-					}
-				if(newHash)	{
-					if($.isEmptyObject(opts))	{}
-					else	{
-						newHash += "?"+$.param(opts)
+					if(path.indexOf('#!') == 0)	{newHash = path;}
+	//if/when vstore compat is gone, the next to if/else won't be necessary.
+					else if(path.indexOf('/biz/') == 0)	{
+						newHash = "#!"+path;
 						}
-					document.location.hash = newHash; //update hash on URI.
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a #! or is not an acceptable legacy compatibility mode link.','gMessage':true});
+					else if(path.indexOf('#/biz/') == 0)	{
+						newHash = "#!"+path.substring(1);
+						}
+					else	{
+	
+						}
+					if(newHash)	{
+						if($.isEmptyObject(opts))	{}
+						else	{
+							newHash += "?"+$.param(opts)
+							}
+						document.location.hash = newHash; //update hash on URI.
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a #! or is not an acceptable legacy compatibility mode link.','gMessage':true});
+						}
 					}
 				},
-
+//executed after the hashChange, as part of the route callback.
 			handleTabClick : function(tab,opts)	{
+//				dump("BEGIN admin.a.handleTabClick");
 				opts = opts || {};
 				var $target = $(_app.u.jqSelector('#',tab+"Content"));
 				//if the tab has no content OR the tab is in focus already, show the tab landing page.
@@ -1379,11 +1388,11 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs do not show up.
 					if(tab == _app.ext.admin.vars.tab || $target.children().length === 0)	{
-						//the tab clicked is already in focus. go back to tab landing page. 
+						//the tab clicked is already in focus. go back to tab landing page.
 						_app.ext.admin.u.showTabLandingPage(tab,$target,opts);
 						}
 					else	{
-						dump(" -> we jumped between tabs or we moved to a tab that already has content.");
+//						dump(" -> we jumped between tabs or we moved to a tab that already has content.");
 						_app.ext.admin.u.bringTabIntoFocus(tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
 						_app.ext.admin.u.bringTabContentIntoFocus($target); //brings the tabContent div (homeContent, productContent, etc) into focus.
 						//to get here, the tab has content AND we've moved between tabs.
@@ -1404,6 +1413,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					$tab = $(_app.u.jqSelector('#',tab+"Content")),
 					$target = $("<div \/>").addClass('contentContainer'); //content is added to a child, which is then added to the tab. ensures the tab container is left alone (no data or anything like that to get left over)
 				if(ext && a && _app.u.thisNestedExists("ext."+ext+".a."+a,_app))	{
+					$tab.data('focusHash',"ext/"+ext+"/"+a); //remember what app is in focus so when tab is clicked, the correct hash can be displayed.
 					$tab.intervaledEmpty().append($target);
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 					$('#stickytabs').empty(); //clear all the sticky tabs.

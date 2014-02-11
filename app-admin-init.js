@@ -177,6 +177,12 @@ adminApp.cmr.push(["view",function(message,$context){
 	}]);
 
 
+adminApp.router.addAlias('404',function(v)	{
+	$('#globalMessaging').anymessage({'message':'No route has been specified for '+v.hash,'gMessage':true,'errtype':'apperr'});
+	dump(" -> v from 404 alias:"); dump(v);
+	});
+
+
 adminApp.router.appendHash({'type':'match','route':'/biz/vstore*','callback':function(v){
 	console.log(" -> Welcome to legacy compat mode.");
 	console.dir(v);
