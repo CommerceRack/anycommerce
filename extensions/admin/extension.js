@@ -1347,13 +1347,28 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 			navigateTo : function(path,opts){
 				opts = opts || {};
 				var newHash = path;
-				if($.isEmptyObject(opts))	{}
-				else	{
-					newHash += "?"+$.param(opts)
+				if(path.indexOf('#!') == 0)	{newHash = path;}
+//if/when vstore compat is gone, the next to if/else won't be necessary.
+				else if(path.indexOf('/biz/') == 0)	{
+					newHash = "#!"+path;
 					}
-				document.location.hash = newHash; //update hash on URI.
-				},
+				else if(path.indexOf('#/biz/') == 0)	{
+					newHash = "#!"+path.substring(1);
+					}
+				else	{
 
+					}
+				if(newHash)	{
+					if($.isEmptyObject(opts))	{}
+					else	{
+						newHash += "?"+$.param(opts)
+						}
+					document.location.hash = newHash; //update hash on URI.
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a #! or is not an acceptable legacy compatibility mode link.','gMessage':true});
+					}
+				},
 
 			handleTabClick : function(tab,opts)	{
 				opts = opts || {};
@@ -2549,6 +2564,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				_app.ext.admin.u.bringTabContentIntoFocus($target);
 
 				if(tab == 'product')	{
+					_app.ext.admin_prodedit.u.handleNavTabs();
 					_app.ext.admin_prodedit.a.showProductManager(opts);					
 					}
 				else if(tab == 'kpi')	{

@@ -177,7 +177,11 @@ adminApp.cmr.push(["view",function(message,$context){
 	}]);
 
 
-
+adminApp.router.appendHash({'type':'match','route':'/biz/vstore*','callback':function(v){
+	console.log(" -> Welcome to legacy compat mode.");
+	console.dir(v);
+	adminApp.model.fetchAdminResource(v.hash.substr(2),{'tab':adminApp.ext.admin.vars.tab,'targetID':adminApp.ext.admin.vars.tab+'Content'});
+	}});
 
 adminApp.router.appendHash({'type':'exact','route':'dashboard','callback':function(v){
 	adminApp.ext.admin.a.showDashboard(); //will load itself into 'home' content area and bring that into focus.
@@ -197,8 +201,11 @@ adminApp.router.appendHash({'type':'exact','route':'logout','callback':function(
 //will handle any clicks directly on the tabs.
 adminApp.router.appendHash({'type':'match','route':'tab/{{tab}}','callback':function(v){
 	adminApp.ext.admin.a.handleTabClick(v.params.tab,v.hashParams);
+	if(v.params.tab == 'product')	{
+		//product page tab is 'special'. the navtab section needs to always show up. handleTabClick nukes the navTabs and the function below re-adds them.
+		adminApp.ext.admin_prodedit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
+		}
 	}});
-
 
 adminApp.router.appendHash({'type':'exact','route':'downloads','callback':function(v){
 	$('#homeContent').empty();
@@ -215,16 +222,10 @@ adminApp.router.appendHash({'type':'exact','route':'help','callback':function(v)
 	}});
 
 
-
-
-
 //handles a lot of the defaults for loading native apps. More or less a 'catch'.
-adminApp.router.appendHash({'type':'match','route':'ext/{{ext}}/{{a}}','callback':function(v){
+adminApp.router.appendHash({'type':'match','route':'ext/{{ext}}/{{a}}*','callback':function(v){
 	adminApp.ext.admin.a.execApp(v.params.ext,v.params.a,v.hashParams);
 	}});
-
-
-
 
 
 adminApp.router.appendInit({
@@ -232,5 +233,16 @@ adminApp.router.appendInit({
 	'route': /^(.*?)\/future$/,
 	'callback':function(f){
 		$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts and you should avoid 'using' them (look don't touch).<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
+		}
+	});
+
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+adminApp.router.appendInit({
+	'type':'function',
+	'route': function(v){
+		return {'some':'value'} //returning anything but false triggers a match.
+		},
+	'callback':function(f){
+		adminApp.router.handleHashChange();
 		}
 	});

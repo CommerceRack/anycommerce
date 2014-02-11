@@ -803,6 +803,7 @@ _app.u.addEventDelegation($target);
 
 //** 201334 -> for new product manager interface.
 			handleNavTabs : function()	{
+				dump("BEGIN admin_prodEdit.u.handleNavTabs");
 				_app.ext.admin.u.uiHandleNavTabs({}); //will clear out navtabs area.
 				var $navtabs = $('#navTabs');// tabs container
 //the div is created to contain navtab content so that events and anycontent can be attached to it instead of navtabs (which means everything is dropped when navtabs is cleared, which is better for navigating between tabs.
