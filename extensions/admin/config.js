@@ -512,9 +512,7 @@ var admin_config = function(_app) {
 						}
 					});
 				_app.u.handleButtons($target);
-				$target.anyform();
 				_app.model.dispatchThis();
-
 				},//showCouponManager
 
 //will open the rules builder in a modal.
