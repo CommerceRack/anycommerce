@@ -1348,9 +1348,8 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 //				dump("BEGIN navigateTo");
 				opts = opts || {};
 				var newHash = path;
-//if a tab click occurs for a tab in focus where the hash is already the landing page (but the content isn't), the click doesn't change the hash or trigger the hash change code.
-//this could happen if you click setup > tax, then another tab, then back to setup. now, the hash is #!tab/setup but the content is tax. and if you click setup again to get to landing, hash doesn't change.
-				if(path.indexOf('#!tab/') == 0 && path == document.location.hash)	{
+//sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
+				if(path == document.location.hash)	{
 					adminApp.router.handleHashChange();
 					}
 				else	{
@@ -4393,7 +4392,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$("form",$D).append("<input type='hidden' name='_cmd' value='adminRSSCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				
 				$('.buttonbar:first',$D).append("<button data-app-click='admin|submitForm' class='applyButton'>Save Feed</button>");
-				
+				_app.u.handleButtons($D);
 				var numRequests = _app.ext.admin.u.fetchRSSDataSources('mutable');
 				if(numRequests)	{
 					$D.showLoading({'message':'Fetching resources'});
