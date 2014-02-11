@@ -54,7 +54,8 @@ function controller(_app)	{
 	cmr : [],
 	rq : [],
 	initialize: function() {
-		dump(" -> initializing app");
+		window.dump = _app.u.dump; //after 'quiet' code so that if _app.u.dump is nuked, so is dump();
+//		dump(" -> initializing app");
 		_app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
 
 		_app.vars = _app.vars || {};
@@ -75,7 +76,7 @@ function controller(_app)	{
 		if(_app.u.getParameterByName('quiet') == 1){
 			_app.u.dump = function(){};
 			}
-		window.dump = _app.u.dump; //after 'quiet' code so that if _app.u.dump is nuked, so is dump();
+		
 
 		//needs to be after the 'flush' above, or there's no way to flush the cart/session.
 		_app.vars.carts = _app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
