@@ -625,7 +625,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
-			if(this.cmdIsAnAdminUpdate(cmd))	{
+			if(cmd == 'adminNavcatMacro')	{}
+			else if(this.cmdIsAnAdminUpdate(cmd))	{
 				r = false;
 				}
 			else	{

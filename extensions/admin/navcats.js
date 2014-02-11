@@ -419,26 +419,27 @@ Params:
 							'_tag':	{
 								'datapointer' : 'adminNavcatMacro',
 								'callback':function(rd){
-if(_app.model.responseHasErrors(rd)){
-	$('#globalMessaging').anymessage({'message':rd});
-	}
-else	{
-	//clear everything out of memory and local storage that was just updated.
-	_app.ext.admin_navcats.u.destroyPathsModified(_app.data[rd.datapointer]['@PATHS_MODIFIED']);
-	if(verb == 'RENAME')	{
-		$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
-		}
-	else if(verb == 'CREATE')	{
-		$ele.closest("[data-app-role='navcatsContainer']").empty().append(_app.ext.admin_navcats.u.getTree('navcats',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
-		}
-	else if(verb == 'LISTCREATE')	{
-		var $container = $ele.closest("[data-app-role='navcatsSection']");
-		$("[data-app-role='listsContainer']",$container).empty().append(_app.ext.admin_navcats.u.getTree('lists',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
-		}
-	else	{}
-
-	}
-//Need to run _app.model.destroy on everything in the @paths_modified array.									
+									if(_app.model.responseHasErrors(rd)){
+										$('#globalMessaging').anymessage({'message':rd});
+										}
+									else	{
+										dump(" -> rd.datapointer: "+rd.datapointer);
+										//clear everything out of memory and local storage that was just updated.
+										_app.ext.admin_navcats.u.destroyPathsModified(_app.data[rd.datapointer]['@PATHS_MODIFIED']);
+										if(verb == 'RENAME')	{
+											$ele.closest('li').find("[data-app-role='pretty']").text($ele.closest('li').find("[name='pretty']").val())
+											}
+										else if(verb == 'CREATE')	{
+											$ele.closest("[data-app-role='navcatsContainer']").empty().append(_app.ext.admin_navcats.u.getTree('navcats',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
+											}
+										else if(verb == 'LISTCREATE')	{
+											var $container = $ele.closest("[data-app-role='navcatsSection']");
+											$("[data-app-role='listsContainer']",$container).empty().append(_app.ext.admin_navcats.u.getTree('lists',{'path':'.','templateID':'catTreeNavcatItemTemplate'}));
+											}
+										else	{}
+									
+										}
+								
 	
 									}
 								}
