@@ -251,20 +251,15 @@ var admin_marketplace = function(_app) {
 				},
 
 			showSyndication : function($target)	{
-				_app.ext.admin.calls.adminPriceScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
-				_app.model.dispatchThis('passive');
+				_app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //most syndication 'settings' use this. have it handy
 
 				$target.empty();
 				$target.anycontent({'templateID':'pageSyndicationTemplate',data:{}});
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
 				_app.u.handleAppEvents($target);
-
-
 				
 				_app.ext.admin_reports.u.getChartData($("#syndicationSummaryChartOne",$target).show().addClass("graphType_pie"),{"function":"sum","graph":"pie","period":"days.7","grpby":"none","dataColumns":"dynamic","column":"gms","ddataset":"MARKETS","datasetGrp":"","title":"7 Day Gross Sales Summary by Integrations","collection":"collection/graph location","@datasets":["MARKETS"],"_cmd":"adminKPIDBDataQuery"});
 				_app.model.dispatchThis('mutable');
-
-
 				}, //showSyndication
 
 			showAmzRegisterModal : function(){
@@ -415,12 +410,14 @@ var admin_marketplace = function(_app) {
 				}, //showEBAYLaunchProfileEditor
 
 //shows the editor for a given marketplace, by DST code.
-			showDSTDetails : function(DST,$target)	{
-//				_app.u.dump("BEGIN admin_marketplace.a.showDSTDetails"); 
+			showDSTDetails : function($target,vars)	{
+//				_app.u.dump("BEGIN admin_marketplace.a.showDSTDetails");
+				vars = vars || {}
 				_app.ext.admin.calls.adminPriceScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				_app.model.dispatchThis('passive');
 
-				if($target && DST)	{
+				if($target instanceof jQuery && vars.DST)	{
+					var DST = vars.DST;
 //					_app.u.dump(" -> $target and DST are set ");
 
 					$target.empty();
@@ -499,11 +496,11 @@ var admin_marketplace = function(_app) {
 							});
 
 					}
-				else if($target)	{
+				else if($target instanceof jQuery)	{
 					$target.anymessage({"message":"In admin.a.showDSTDetails, no DST specified.",'gMessage':true});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no DST or target specified.",'gMessage':true});
+					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no vars.DST ["+vars.DST+"] or $target is not an instanceof jQuery ["+($target instanceof jQuery)+"] specified.",'gMessage':true});
 					}
 				
 				} //showDSTDetails
@@ -1425,7 +1422,7 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 								else	{
 									$('#globalMessaging').anymessage({'message':'eBay authorization is now complete.','errtype':'success'});
 									//reload the ebay interface so that presence of valid token enables UI as needed.
-									_app.ext.admin_marketplace.a.showDSTDetails('EBF',$btn.closest("[data-app-role='slimLeftContentSection']"))
+									_app.ext.admin_marketplace.a.showDSTDetails($btn.closest("[data-app-role='slimLeftContentSection']"),{'DST':'EBF'})
 									}
 								}
 							}
@@ -1498,7 +1495,7 @@ _app.model.dispatchThis('mutable');
 					$ele.addClass('selectedMarket ui-corner-all');
 
 					if($ele.data('mkt'))	{
-						_app.ext.admin_marketplace.a.showDSTDetails($ele.data('mkt'),$mktContainer)
+						_app.ext.admin_marketplace.a.showDSTDetails($mktContainer,{'DST':$ele.data('mkt')})
 						}
 					else	{
 						$mktContainer.anymessage({"message":"In admin_marketplace.e.showDSTDetail, unable to determine mkt.","gMessage":true});

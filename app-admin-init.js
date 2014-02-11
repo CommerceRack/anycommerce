@@ -230,7 +230,7 @@ adminApp.router.appendHash({'type':'exact','route':'help','callback':function(v)
 
 //handles a lot of the defaults for loading native apps. More or less a 'catch'.
 adminApp.router.appendHash({'type':'match','route':'ext/{{ext}}/{{a}}*','callback':function(v){
-	adminApp.ext.admin.a.execApp(v.params.ext,v.params.a,v.hashParams);
+	adminApp.ext.admin.a.execApp(v.params.ext,v.params.a.split('?')[0],v.hashParams);
 	}});
 
 

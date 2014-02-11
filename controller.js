@@ -863,7 +863,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				var routeObj = _app.router._getRouteObj(location.hash.substr(2),'hash'); //if we decide to strip trailing slash, use .replace(/\/$/, "")
 				if(routeObj)	{
 					routeObj.hash = location.hash;
-					console.log(" -> WOOT! valid route!"); // console.dir(routeObj);
+					routeObj.hashParams = (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(location.hash.split("?")[1]) : {});
+//					console.log(" -> WOOT! valid route!"); // console.dir(routeObj);
 					_app.router._executeCallback(routeObj);
 					}
 				else	{
