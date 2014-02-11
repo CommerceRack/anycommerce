@@ -81,7 +81,6 @@ var admin_orders = function(_app) {
 //				_app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
-				_app.ext.admin_orders.u.handleOrderListTab('init');
 				return r;
 				},
 			onError : function()	{
@@ -322,12 +321,8 @@ else	{
 		
 		initOrderManager : function($target,P)	{
 			P = P || {};
-			_app.u.dump("BEGIN admin_orders.a.initOrderManager.");
-//			var $target = $('#ordersContent');
-			
-			
-//			_app.u.dump(P);
-			_app.ext.admin_orders.u.handleOrderListTab('deactivate');
+//			_app.u.dump("BEGIN admin_orders.a.initOrderManager.");
+$('#orderListTab').find("table").stickytab('destroy');
 			var oldFilters = _app.model.dpsGet('admin_orders');
 			if(P.filters){_app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
@@ -1126,7 +1121,7 @@ if giftcard is on there, no paypal will appear.
 				//tab already exists. don't create a duplicate.
 				}
 			else	{
-				$table.stickytab({'tabtext':'order results','tabID':'productListTab'});
+				$table.stickytab({'tabtext':'order results','tabID':'orderListTab'});
 				_app.u.addEventDelegation($table);
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 				$('button, a',$table).each(function(){
@@ -1956,13 +1951,15 @@ $('.editable',$container).each(function(){
 					$li.append("<a href='#' data-app-click='admin_orders|inProgressOrderEditExec' data-cartid='"+cartID+"'><span class='wait marginRight'><\/span>"+cartID+"<\/a>");
 					$menu.append($li);
 					_app.calls.cartDetail.init(cartID,{'callback':function(rd){
-						if(_app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else if(_app.model.responseIsMissing(rd)){
+						//check for missing needs to come first or responseHasErrors may 'hit' on it.
+						if(_app.model.responseIsMissing(rd)){
+							dump(" -> cartID "+cartID+" was 'missing' and removed from the list and storage");
 							//this point would be reached if the cart had expired. It's a 'success' in that the API call worked, but a special case in the handling. how it's handled would be app-specific.
 							$li.hide();
 							_app.model.removeCartFromSession(cartID);
+							}
+						else if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
 							$('.wait',$li).hide();
