@@ -2558,7 +2558,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					}
 				return $target;
 				},
-//path should be passed in as either #:orders or #!orders
+//path should be passed in as  #!orders
 			showTabLandingPage : function(tab,$target,opts)	{
 				var r = true;
 				this.bringTabIntoFocus(tab);

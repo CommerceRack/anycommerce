@@ -1151,7 +1151,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 			adminCartRemoveFromSession : function($ele,p)	{
 				_app.model.removeCartFromSession($ele.closest("[data-app-role='checkout']").data('cartid'));
-				navigateTo("#!orders");
+				navigateTo("#!tab/orders");
 				},
 			adminOrderDetailShow : function($ele,p)	{
 				var orderID = $ele.closest("[data-orderid]").data('orderid');

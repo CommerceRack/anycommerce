@@ -2254,7 +2254,7 @@ $('.editable',$container).each(function(){
 						$btn.closest('.ui-dialog-content').dialog('close');
 						}
 					else	{
-						navigateTo("#!orders");
+						navigateTo("#!tab/orders");
 						}
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
