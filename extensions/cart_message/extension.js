@@ -181,6 +181,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //						_app.u.dump("tr length: "+$("tr[data-value='"+_app.vars.carts[i]+"']",$tbody).length);
 						_app.calls.cartDetail.init(_app.vars.carts[i],{
 							'callback':'anycontent',
+							'cartid' :_app.vars.carts[i], //on a 'missing', the cart id isn't returned
 							'onComplete' : function(rd)	{
 								$('.wait',rd.jqObj).removeClass('wait');
 								$('button',rd.jqObj).button('enable');
