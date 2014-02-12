@@ -166,7 +166,7 @@ used, but not pre-loaded.
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 
-					if(data.value.HOSTTYPE == 'APPTIMIZER')	{
+					if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
 						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
 
 						if(data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
