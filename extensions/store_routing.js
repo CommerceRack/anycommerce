@@ -33,13 +33,13 @@ var store_routing = function(_app) {
 			onSuccess : function()	{
 				var r = false; 
 				
-				_app.router.addAlias('product', 	function(routeObj){showContent('product',	$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('category', 	function(routeObj){showContent('category',	$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('company', 	function(routeObj){showContent('company',	$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('cart', 		function(routeObj){showContent('cart',		$.extend(true,{},routeObj.params));});
-				_app.router.addAlias('search', 		function(routeObj){showContent('search',	$.extend(true,{},routeObj.params));});
+				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
+				_app.router.addAlias('category', 	function(routeObj){showContent('category',	routeObj.params);});
+				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
+				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});
+				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
+				_app.router.addAlias('cart', 		function(routeObj){showContent('cart',		routeObj.params);});
+				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
 				
 				_app.router.appendHash({'type':'match','route':'/product/{{pid}}/*','callback':'product'});
 				_app.router.appendHash({'type':'match','route':'/category/{{navcat}}/*','callback':'category'});
