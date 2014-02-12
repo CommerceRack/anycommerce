@@ -9,9 +9,7 @@
 		CONFIG
 		***************/
 		var domain = window.location.origin;
-		var pages = [
-			"/my/custom/page.html"
-		];
+		var pages = [];
 		var prodBlacklist = [
 			'WIKITEST'
 			];
@@ -62,9 +60,10 @@
 					for(var i in objects){
 						var o = objects[i];
 						var p = buildPage(o);
-						//Still use false? Blacklisted stuff comes out as false?
 						if(p){
 							pages.push(p);
+						} else {
+							rLog("ERROR");
 						}
 					}
 					promptPages();
@@ -76,139 +75,74 @@
 			var page = false;
 			switch(pageInfo.type){
 				case "pid":
-					var path = "product?pid="+pageInfo.id;
-					page = {
-						path : path,
-						include : ($.inArray(pageInfo.id, prodBlacklist) < 0)
-					}
+					if($.inArray(pageInfo.id, prodBlacklist) < 0){
+						page = "product?pid="+pageInfo.id;
+						}
+					else {
+						console.log("SKIPPING BLACKLISTED PRODUCT: "+pageInfo.id);
+						}
 					break;
 				case "navcat" : 
-					var path = "category?navcat="+pageInfo.id;
-					page = {
-						path : path,
-						include : ($.inArray(pageInfo.id, navcatBlacklist) < 0)
-					}
+					if($.inArray(pageInfo.id, navcatBlacklist) < 0){
+						page = "category?navcat="+pageInfo.id;
+						}
+					else {
+						console.log("SKIPPING BLACKLISTED CATEGORY: "+pageInfo.id);
+						}
 					break;
-				case "list" : 
-					console.log("LIST "+pageInfo.id+" SKIPPED IN PAGE BUILDING");
-					break;
-				default : 
-					rLog("Unrecognized pageInfo type: "+pageInfo.type);
-					console.log("Unrecognized pageInfo type: "+pageInfo.type+" full obj follows:");
-					console.dir(pageInfo);
-					break;
-					
 			}
 			return page;
 		}
 		
 		function promptPages(){
-			//TODO: Filter box for results
-			//TODO: Summary of pages (total, etc...)
-			var $pageTableContainer = $('#pageTableContainer');
-			$pageTableContainer.empty();
-			
-			var $filterDiv = $('<div>Filter: <input name="pageFilter" type="text"/> <button name="checkAll">Check All</button> <button name="uncheckAll">Uncheck All</button></div>');
-			var $pageTable = $('<div class="tableContainer"><table><tbody></tbody></table></div>');
-			var $controls = $('<div id="filterControls">Max Timeout: <input name="maxTimeout" type="text" value="20"/>  Suppress Logs: <input name="suppressLogs" type="checkbox" checked="checked"/></div>');
-			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('input[name=maxTimeout]', $controls).val(), $('input[name=suppressLogs]', $controls).is(':checked'));});
-			
-			$('input', $filterDiv).on('keyup',function(){
-				var filter = $(this).val();
-				if(filter.length > 2){
-					$('tr',$pageTable).each(function(){
-						if($(this).attr('data-page').toUpperCase().indexOf(filter.toUpperCase()) < 0){
-							$(this).hide();
-						} else {
-							$(this).show();
-						}
-					})
-				} else {
-					$('tr',$pageTable).show();
-				}
-			});
-			$('button', $filterDiv).on('click',function(){
-				if($(this).attr('name') == "checkAll"){
-					$('input[type=checkbox]', $pageTable).attr('checked', true);
-				} else if($(this).attr('name') == "uncheckAll"){
-					$('input[type=checkbox]', $pageTable).attr('checked', false);
-				} else {
-					//Not sure what button you've clicked, sir.
-				}
-			});
-
-			$pageTableContainer.append($filterDiv);
-			$pageTableContainer.append($pageTable);
-			$pageTableContainer.append($controls);
-			$pageTableContainer.append($generateSEOBtn);
-			
+			var $pageTable = $('<table id="pageTable"><tbody></tbody></table>');
 			for(var i in pages){
 				var p = pages[i];
-				var path = "";
-				var include = false;
-				if(typeof p === "string"){
-					pages[i] = {
-						path : p,
-						include : true
-					}
-					p = pages[i];
-				} 
-				$('tbody',$pageTable).append('<tr data-page="'+p.path+'"><td>'+p.path+'</td><td><input data-page="'+p.path+'" type="checkbox"'+ (p.include ? 'checked="checked"' : '') +'></td></tr>');
+				$('tbody',$pageTable).append('<tr><td>'+p+'</td><td><input data-page="'+p+'" type="checkbox" checked="checked"/></td></tr>');
 			}
+			$('#output').append($pageTable).append('<button onClick="generateSEO();"></button>');
 		}
 		
-		function generateSEO(maxTimeout, suppressLogs){
-			console.log(maxTimeout);
-			console.log(suppressLogs);
-			for(var i in pages){
-				pages[i].include = $('#pageTableContainer table input[type=checkbox][data-page="'+pages[i].path+'"]').is(":checked");
-			}
-			indexNextPage(maxTimeout, suppressLogs);
+		function generateSEO(){
+			$('#pageTable input[type=checkbox]:not(:checked)').each(function(){
+				console.log("REMOVING SKIPPED PAGE: "+$(this).attr('data-page'));
+				pages.splice($.inArray($(this).attr('data-page'), pages), 1);
+			})
+			indexNextPage();
 		}
 		
 		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
-		function indexNextPage(maxTimeout, suppressLogs){
-			var iframe = $('#appContainer').get(0);
+		function indexNextPage(){
 			if(pages.length){
-				var currPage = pages.splice(0,1)[0];
-				if(currPage.include){
-					currPage = currPage.path;
-					rLog("Indexing "+domain+'#!'+currPage);
-					iframe.src = domain+"?v="+(new Date().getTime())+(suppressLogs ? "&quiet=1" : "")+"#!"+currPage;
-					
-					$(window).on('message', function(event){
-						if(event.data == "renderFinished"){
-							//finishPage(currPage);
-							//indexNextPage();
-						}
-					});
-					window.timeoutID = setTimeout(function(){
-						finishPage(currPage);
-						indexNextPage(maxTimeout, suppressLogs);
-					}, parseInt(maxTimeout)*1000);
-				} else {
-					indexNextPage(maxTimeout, suppressLogs);
-				}
+				console.log("indexing next page");
+				window.currPage = pages.splice(0,1)[0];
+				var iframe = $('#appContainer').get(0);
+				rLog("Indexing "+domain+currPage);
+				iframe.src = domain+"?v="+(new Date().getTime())+"&quiet=1"+"#!"+currPage;
+				addEventListener('message', messageHandler);
 			} else {
 				console.log("no more pages")
-				$(iframe).empty().remove();
 				//Temporarily bypassing this until we have a domain on 201401 to test
 				//finishSEO();
 				window.lock = false;
 			}
 		}
 		
-		
-		function finishPage(page){
-			clearTimeout(window.timeoutID);
-			rLog('Index finished for '+domain+'#!'+page);
-			$(window).off('message');
-			
-			var doctype = "<!DOCTYPE html>";
-			var dochtml = $('#appContainer').get(0).contentWindow.document.documentElement.outerHTML;
-			
-			var html = doctype + dochtml;
-			
+		function messageHandler(event){
+			if(event.data == "renderFinished"){
+				rLog('Index finished for '+domain+currPage);
+				removeEventListener('message', messageHandler);
+				
+				var doctype = "<!DOCTYPE html>";
+				var dochtml = $('#appContainer').get(0).contentWindow.document.documentElement.outerHTML;
+				
+				var html = doctype + dochtml;
+				
+				storeSEO(currPage, html);
+				indexNextPage();
+			}
+		}
+		function storeSEO(page, html){
 			var obj = {
 				"_cmd" : "appSEOStore",
 				"#!" : page,
@@ -225,16 +159,6 @@
 			request(obj);
 		};
 	</script>
-	
-	<style>
-	#pageTableContainer .tableContainer{
-		overflow-y: scroll;
-		overflow-x: hidden;
-		height: 400px;
-		width: 600px;
-		outline: 1px solid #AAAAAA;
-	}
-	</style>
 </head>
 <body>
 	<p>
@@ -247,12 +171,7 @@
 		</div>
 		<input type="submit" value="generate seo"></input>
 	</form>
-	<iframe id="appContainer" style="width:100%; height:400px;"></iframe>
-	<div id="pageTableContainer">
-		
-		
-		
-	</div>
+	<iframe id="appContainer" style="display:none;"></iframe>
 	<code id="output">
 	
 	</code>
