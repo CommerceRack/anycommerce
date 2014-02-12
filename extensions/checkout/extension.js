@@ -980,6 +980,10 @@ note - the order object is available at _app.data['order|'+P.orderID]
 				}},'immutable');
 				_app.model.dispatchThis('immutable');
 				},
+// ### FUTURE -> get rid of this. startCheckout should support an object instead of a single param.
+			editCart : function($target,P)	{
+				this.startCheckout($target,P.cartid);
+				},
 
 //don't execute this UNTIL you have a valid cart id.
 			startCheckout : function($chkContainer,cartID)	{
@@ -1147,7 +1151,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 			adminCartRemoveFromSession : function($ele,p)	{
 				_app.model.removeCartFromSession($ele.closest("[data-app-role='checkout']").data('cartid'));
-				navigateTo("#!orders");
+				navigateTo("#!tab/orders");
 				},
 			adminOrderDetailShow : function($ele,p)	{
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
@@ -1470,8 +1474,12 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 			cartOrderSave : function($ele,p)	{
 				var $form = $ele.closest('form');
-				_app.ext.cco.u.sanitizeAndUpdateCart($form);
-				
+				_app.ext.cco.u.sanitizeAndUpdateCart($form,{
+					callback : 'showMessaging',
+					message : 'Your changes have been saved',
+					jqObj : $form,
+					restoreInputsFromTrackingState : true
+					});
 				_app.model.dispatchThis('immutable');
 				},
 

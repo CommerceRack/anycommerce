@@ -24,19 +24,6 @@ else {
    baseURL = "";
    }
 
-var app = {vars:{
-	/////////////////////////////////\
-	"release":"201352.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
-	//////////////////////////////////
-	"thisSessionIsAdmin": true,
-	"_clientid":"admin",
-	"jqurl": (document.location.protocol == 'file:') ? "https://admin-sporks-zoovy-com.app-hosted.com/jsonapi/" : "/jsonapi/",
-//	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
-//	"secureURL" : "https://www.zoovy.com",
-	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
-	"baseURL" : baseURL,
-	},u:{},rq:[]};
-
 </script>
 
 <!--
@@ -61,49 +48,56 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript" src="extensions/admin/extension.js"></script>
 <script src='https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js'></script>
 
-<script type="text/javascript">
-//don't execute script till both jquery AND the dom are ready.
-$(document).ready(function(){
-	var tmp = new zController(app);
-//instantiate wiki parser.
-//	myCreole = new Parse.Simple.Creole();
-	app.model.addExtensions([{'namespace':'admin_support','filename':'extensions/admin/support.js'}]);
-	app.model.addExtensions([{'namespace':'admin','filename':'extensions/admin/extension.js'}]);
-	});
 
-/*
-function zLogin($form)	{
-	app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':function(rd){
-		if(app.model.responseHasErrors(rd)){
-			$('#loginFormContainer').anymessage({'message':rd});
+
+<script type="text/javascript">
+$(document).ready(function(){
+	window.adminApp = new initApp({
+		/////////////////////////////////\
+		"release":"201401.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		//////////////////////////////////
+		"thisSessionIsAdmin": true,
+		"_clientid":"admin",
+		"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
+		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
+		"baseURL" : baseURL,
+		"initComplete" : function(_app){
+			_app.model.addExtensions([{'namespace':'admin_support','filename':'extensions/admin/support.js'}]);
+			_app.model.addExtensions([{'namespace':'admin','filename':'extensions/admin/extension.js'}]);
+			if(document.location.hash && document.location.hash.indexOf('access_token'))	{
+				var uriParams = _app.u.kvp2Array(document.location.hash.substr(1));
+				supportAppLogin(_app,uriParams.state,uriParams)
+				}
 			}
-		else	{
-			//login successful. now go do something.
-			}
-		}},'immutable');
-	app.model.dispatchThis('immutable')
-	}
-*/
-	function supportAppLogin(state,uriParams)	{
+		});
+	});
+</script>
+
+
+
+
+<script type="text/javascript">
+//executed upon return from google.
+	function supportAppLogin(_app,state,uriParams)	{
 		$('#appLogin').showLoading({'message':'Verifying authentication'});
-		app.calls.authAdminLogin.init({
+		_app.calls.authAdminLogin.init({
 			'authtype' : 'google:id_token',
 			'id_token' : uriParams.id_token
 			},{'datapointer' : 'authAdminLogin','callback':function(rd){
-				if(app.model.responseHasErrors(rd)){
+				if(_app.model.responseHasErrors(rd)){
 					$('#globalMessaging').anymessage({'message':rd});
 					}
 				else	{
 					$('#appLogin').hideLoading().slideUp();
-					app.ext.admin_support.a.showTicketManager($('#appView').show());
+					_app.ext.admin_support.a.showTicketManager($('#appView').show());
 					}
 				}},'immutable');
-		app.model.dispatchThis('immutable');
+		_app.model.dispatchThis('immutable');
 		}
-
+	//executed when the 'login w/ google' button is clicked.
 	function jump2GoogleLogin(){
 		//base64 encoding 'may' add = or == to the end of the string to 'pad' it. so we encode it. This'll get double-encoded when run through $.param(), but the kvp2array function will unencode.
-		app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"supportAppLogin"})))); 
+		adminApp.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"supportAppLogin"})))); 
 		}
 </script>
 
@@ -122,21 +116,7 @@ function zLogin($form)	{
 	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
 	
 	<div class='appMessaging'></div>
-	
-<!--
-	<div id='loginFormContainer'>
-		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' onSubmit='return false'>
-		<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
-			<legend>Merchant Login</legend>
-			
-			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
-			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
-			
-			<button class='loginbutton' onClick="zLogin($(this).closest('form'));">login</button>
-		</fieldset>
-		</form>
-	</div>
--->
+
 	<div>
 		
 		<div class='alignCenter clearfix marginBottom'>

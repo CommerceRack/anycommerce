@@ -57,7 +57,7 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 $(document).ready(function(){
 	window.adminApp = new initApp({
 		/////////////////////////////////\
-		"release":"201401.c",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		"release":"201401.d",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -140,12 +140,12 @@ $(document).ready(function(){
 			
 				<div class="hint"><a href='/201344/app-admin.html'> &#187; Use previous version</a></div>
 			</div>
-			
+			<!--
 			<div class='clearfix marginBottom alignCenter'>
 				<div class='marginBottom hint'> - or - </div>
 				<span data-app-event="admin|googleLogin" class='threePLSprite google'></span>
 			</div>
-			
+			-->
 		</fieldset>
 		</form>
 		<div class='showForAnyCommerceOnly'>
