@@ -29,7 +29,7 @@
 			$('#output').append(msg+"<br/>");
 		};
 		function request(obj, callback){
-			console.log(apiDomain);
+			//console.log(apiDomain);
 			$.extend(obj, {
 				"_clientid" : "zmvc",
 				"_uuid" : requestNum,
@@ -176,10 +176,22 @@
 					rLog("Indexing "+domain+'#!'+currPage);
 					iframe.src = domain+"?v="+(new Date().getTime())+(suppressLogs ? "&quiet=1" : "")+"#!"+currPage;
 					
+					var numAsyncFinished = 0;
+					var numAsync = 0;
 					$(window).on('message', function(event){
-						if(event.data == "renderFinished"){
-							//finishPage(currPage);
-							//indexNextPage();
+						var msg = event.originalEvent.data;
+						if(msg.indexOf("asyncProcesses:") >= 0){
+							numAsync = parseInt(msg.replace("asyncProcesses:", ""));
+						} else if(msg == "asyncFinish"){
+							console.log(msg);
+							numAsyncFinished++;
+						}
+						
+						if(numAsyncFinished < numAsync){
+							//do nothing, wait for finishes fire
+						} else {
+							finishPage(currPage);
+							indexNextPage(maxTimeout, suppressLogs);
 						}
 					});
 					window.timeoutID = setTimeout(function(){
