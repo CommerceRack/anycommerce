@@ -640,7 +640,7 @@ var admin_config = function(_app) {
 						}
 					});
 				_app.u.handleButtons($D); _app.u.handleCommonPlugins($D);
-				_app.u.addEventDelegation($target);
+				_app.u.addEventDelegation($D);
 				$D.anyform();
 				$D.dialog('open');	
 				}, //showUPSOnlineToolsRegInModal
