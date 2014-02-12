@@ -388,7 +388,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid') || $ele.closest("[data-cartid]").data('cartid');
 				if(cartID)	{
-					navigateTo('#!ext/order_create/startCheckout',{'cartid':cartID});
+					navigateTo('#!ext/order_create/editCart',{'cartid':cartID});
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In cart_message.e.chatPostExec, unable to ascertain cartID.','gMessage':true});
