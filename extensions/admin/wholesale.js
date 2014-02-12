@@ -469,7 +469,6 @@ var admin_wholesale = function(_app) {
 			
 			adminSupplierMacro : function(sfo,$form)	{
 				sfo = sfo || {};
-				dump(" --------> SFO: "); dump(sfo);
 				var newSfo = {
 					'_cmd':'adminSupplierMacro',
 					'VENDORID' : sfo.VENDORID,

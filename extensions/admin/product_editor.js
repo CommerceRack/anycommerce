@@ -3524,7 +3524,7 @@ function type2class(type)	{
 
 //clicked when editing a variation group.
 			variationUpdateShow : function($ele,p)	{
-			
+				dump(" -> $ele.data('variationmode'): "+$ele.data('variationmode'));
 				p = p || {};
 				if($ele.data('variationmode') == 'store')	{
 					// ### FUTURE -> update this to use a naviagteTo
@@ -3675,7 +3675,7 @@ function type2class(type)	{
 				},
 
 			variationCreateExec : function($ele,p)	{
-				_app.u.dump("BEGIN admin_prodedit.e.variationCreateExec");
+//				_app.u.dump("BEGIN admin_prodedit.e.variationCreateExec");
 				var 
 					mode = $ele.closest('.ui-dialog-content').data('variationmode'),
 					pid = $ele.closest("[data-pid]").data('pid'),
@@ -3757,8 +3757,10 @@ function type2class(type)	{
 							'templateID':'productVariationManagerProductRowTemplate',
 							'data':sfo,
 							'dataAttribs':sfo
-							})
+							});
 						_app.u.handleButtons($tbody);
+						$("[data-app-click='admin_prodedit|variationUpdateShow']",$tbody).button('disable').attr('title','Product variations must be saved to the product prior to options being added.');
+
 						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).addClass('edited').appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
 						$ele.closest('.ui-dialog-content').dialog('close').empty();
 						$tbody.closest('.anyformEnabled').anyform('updateChangeCounts');
