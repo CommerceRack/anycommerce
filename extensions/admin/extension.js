@@ -4448,11 +4448,11 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 			linkOffSite : function($ele,p)	{
-				if($btn.data('url'))	{
-					linkOffSite($btn.data('url'),'',true);
+				if($ele.data('url'))	{
+					linkOffSite($ele.data('url'),'',true);
 					}
 				else	{
-					$btn.button('disable');
+					$('#globalMessaging').anymessage({'message':'In admin.e.linkOffSite, no data-url set on trigger element.','gMessage':true});
 					}
 				}
 			

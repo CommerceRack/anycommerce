@@ -139,10 +139,10 @@ used, but not pre-loaded.
 					var $menu = $("<menu \/>").addClass('projectMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value.GITHUB_REPO)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
+						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
 						}
 					if(data.value.LINK)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.LINK+"'>Visit GitHub Repository<\/a><\/li>");
+						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
 						}
 					$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
 
