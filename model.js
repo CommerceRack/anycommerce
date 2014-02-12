@@ -590,7 +590,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if datapointer is not set, data is automatically NOT saved to localstorage or memory.
 //however, there is (ping) already, and could be more, cases where datapointers are set, but we don't want the data locally or in memory.
 //so we have simple functions to check by command.
-			if(datapointer && !_app.model.responseHasErrors(responseData))	{
+			if(datapointer && !_app.model.responseHasErrors(responseData) && !_app.model.responseIsMissing(responseData))	{
 //this is the data that will be saved into local or session.
 				var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 				obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
@@ -684,11 +684,11 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var uuid = responseData['_uuid']; //referenced enough to justify saving to a var.
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
-			var hasErrors = _app.model.responseHasErrors(responseData);
-//			_app.u.dump(" -> handleresponse "+responseData._rcmd+" uuid: "+uuid+" and hasErrors: "+hasErrors);
-			if(responseData._rcmd == 'adminTicketFileGet')	{
-				_app.u.dump(" -> responseData:"); _app.u.dump(responseData);
-				}
+//check for missing first or hasErrors will flag it as an error.
+			if(_app.model.responseIsMissing(responseData))	{status = 'missing'}
+			else if(_app.model.responseHasErrors(responseData))	{status = 'error'}
+			else	{} //status will get set later.
+
 
 			if(!$.isEmptyObject(responseData['_rtag']) && _app.u.isSet(responseData['_rtag']['callback']))	{
 	//callback has been defined in the call/response.
@@ -713,7 +713,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if no datapointer is set, the response data is not saved to local storage or into the _app. (add to cart, ping, etc)
 //effectively, a request occured but no data manipulation is required and/or available.
 //likewise, if there's an error in the response, no point saving this locally. 
-			if(!$.isEmptyObject(responseData['_rtag']) && _app.u.isSet(responseData['_rtag']['datapointer']) && hasErrors == false)	{
+			if(!$.isEmptyObject(responseData['_rtag']) && _app.u.isSet(responseData['_rtag']['datapointer']) && status != 'error' && status != 'missing')	{
 				datapointer = responseData['_rtag']['datapointer'];
 //on a ping, it is possible a datapointer may be set but we DO NOT want to write the pings response over that data, so we ignore pings.
 //an appPageGet request needs the requested data to extend the original page object. (in case two separate request come in for different attributes for the same category.	
@@ -729,16 +729,16 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				}
 
 //errors present and a defined action for handling those errors is defined.
-			if(hasErrors && callback)	{
+			if((status == 'error' || status == 'missing') && callback)	{
 				if(typeof callback == 'function')	{
 					callback(responseData,uuid); //if an anonymous function is passed in, it handles does it's own error handling.
 					}
-				else if(typeof callback == 'object' && typeof callback.onError == 'function'){
+				else if(typeof callback == 'object' && typeof callback['on'+(status == 'error' ? 'Error' : 'Missing')] == 'function'){
 /*
 below, responseData['_rtag'] was passed instead of uuid, but that's already available as part of the first var passed in.
 uuid is more useful because on a high level error, rtag isn't passed back in responseData. this way uuid can be used to look up originat _tag obj.
 */
-					callback.onError(responseData,uuid);
+					callback['on'+(status == 'error' ? 'Error' : 'Missing')](responseData,uuid);
 					}
 				else if(typeof callback == 'object' && typeof _app.u.throwMessage === 'function')	{
 //callback defined but no error case defined. use default error handling.
@@ -747,12 +747,13 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 				else{
 					_app.u.dump('ERROR response for uuid '+uuid+'. callback defined but does not exist or is not valid type. callback = '+callback+' datapointer = '+datapointer)
 					}
-				status = 'error';
 				}
 //has errors but no error handler declared. use default
-			else if(hasErrors && typeof _app.u.throwMessage === 'function')	{
+			else if((status == 'error' || status == 'missing') && typeof _app.u.throwMessage === 'function')	{
 				_app.u.throwMessage(responseData);
-				status = 'error';
+				}
+			else if(_app.model.responseIsMissing(responseData) && !callback && typeof _app.u.throwMessage === 'function')	{
+				_app.u.throwMessage(responseData);
 				}
 //no errors. no callback.
 			else if(callback == false)	{

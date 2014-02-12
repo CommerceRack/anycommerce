@@ -513,6 +513,9 @@ _app.u.throwMessage(responseData); is the default error handler.
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
 		anycontent : {
+			onMissing : function(rd)	{
+				rd._rtag.jqObj.anymessage(rd);
+				},
 			onSuccess : function(_rtag)	{
 //				_app.u.dump("BEGIN callbacks.anycontent"); _app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{

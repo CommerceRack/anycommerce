@@ -46,7 +46,7 @@
 .app-icon-fail-fatal, .app-icon-fatal, .app-icon-crashed {background-position:-204px -27px;} /* red circle flame */
 .app-icon-pause, .app-icon-challenge {background-position:-232px -27px;} /* orange circle pause */
 .app-icon-end {background-position:-262px -27px;} /* orange circle arrow east */
-.app-icon-skip {background-position:-291px -27px;} /* orange circle arrow northeast */
+.app-icon-skip, .app-icon-missing {background-position:-291px -27px;} /* orange circle arrow northeast */
 
 .app-icon-status {background-position:0 -56px;} /* blue circle gear */
 .app-icon-future {background-position:-29px -56px;} /* blue circle curly arrow */
