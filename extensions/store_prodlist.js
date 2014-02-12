@@ -201,6 +201,9 @@ A special translate template for product so that reviews can be merged into the 
 				if(app.ext.store_product.u.productIsPurchaseable(pid)){
 					$(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer});
 					}
+				else {
+					$(app.u.jqSelector('#',tagObj.parentID)).hide();
+					}
 //				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				},
 //error needs to clear parent or we end up with orphans (especially in UI finder).
