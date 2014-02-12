@@ -60,6 +60,7 @@ $(document).ready(function(){
 		"release":"201401.c",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
+		"addjQueryPointer" : true, //set $._app to this instance of the app. used by anyplugins.
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
 		"_clientid":"admin",
 		"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
@@ -137,15 +138,16 @@ $(document).ready(function(){
 				<label class='hint floatRight'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
 <!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
 				<div class="hint">App Release #: <span id="appversion">??</span></div>
-			
+
 				<div class="hint"><a href='/201344/app-admin.html'> &#187; Use previous version</a></div>
 			</div>
-			
+			<!--
+			currently doesn't work. redirects to a page on zoovy.com that doesn't exist.
 			<div class='clearfix marginBottom alignCenter'>
 				<div class='marginBottom hint'> - or - </div>
 				<span data-app-event="admin|googleLogin" class='threePLSprite google'></span>
 			</div>
-			
+			-->
 		</fieldset>
 		</form>
 		<div class='showForAnyCommerceOnly'>
