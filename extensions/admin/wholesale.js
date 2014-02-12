@@ -469,6 +469,7 @@ var admin_wholesale = function(_app) {
 			
 			adminSupplierMacro : function(sfo,$form)	{
 				sfo = sfo || {};
+				dump(" --------> SFO: "); dump(sfo);
 				var newSfo = {
 					'_cmd':'adminSupplierMacro',
 					'VENDORID' : sfo.VENDORID,
@@ -486,7 +487,8 @@ var admin_wholesale = function(_app) {
 					if($('.edited',$fieldset).length)	{
 						$('.edited',$fieldset).each(function(){
 							//connectors are 'set' for macro. all other fields are what's set in cmd array.
-							newSfo['@updates'].push((($(this).attr('name').indexOf('CONNECTOR') > -1) ? 'SET' : cmds[i])+"?"+$(this).attr('name')+"="+encodeURIComponent($(this).val())); //encodeURIComponent($.param($fieldset.serializeJSON({'cb':true})))
+							//SANITY!!! -> MUST pull value from SFO, not from val(), so that checkboxes are saves as 1/0 not on/off. If the line below changes, compensate for that.
+							newSfo['@updates'].push((($(this).attr('name').indexOf('CONNECTOR') > -1) ? 'SET' : cmds[i])+"?"+$(this).attr('name')+"="+encodeURIComponent(sfo[$(this).attr('name')])); //encodeURIComponent($.param($fieldset.serializeJSON({'cb':true})))
 							})
 						
 						}

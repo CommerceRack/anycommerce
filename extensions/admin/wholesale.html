@@ -370,7 +370,7 @@
 
 
 <div id='supplierUpdateTemplate' class='clearfix'>
-<form autocomplete="on" action='#' onsubmit="return false;">
+<form autocomplete="on" action='#' onsubmit="return false;" data-cb_tf='true'>
 
 <input type='hidden' name='_macrobuilder' value='admin_wholesale|adminSupplierMacro' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -740,9 +740,6 @@
 				<label><input type='checkbox' class='applyAnycb' name='notes' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Include order notes</label>
 				<label><input type='checkbox' class='applyAnycb' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popVal;" />Show cost field</label>
 				<label><input type='checkbox' class='applyAnycb' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popVal;" />Hide zero quantity items</label>
-<!--
-* 201338 -> not supported as of 201338
-				<label><input type='checkbox' class='applyAnycb' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popVal;" />Dispatch on create (off recommended)</label>-->
 				<label><input type='checkbox' class='applyAnycb' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popVal;" />Transmit full order contents (off recommended)</label>
 				
 
