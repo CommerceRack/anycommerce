@@ -3629,7 +3629,8 @@ function type2class(type)	{
 					'title' : 'Create a new '+jQuery.camelCase(mode)+' variation',
 					'data' : {}, //this is here so that loadsTemplates renderformats still get executed. Won't be necessary after data-bind upgrade.
 					'templateID' : 'variationsManagerCreateTemplate',
-					'showLoading' : false
+					'showLoading' : false,
+					'appendTo' : (mode == 'product' ? $ele.closest('form').parent() : '') //IMPORTANT -> if this isn't appended editor, the 'save' for a product variation won't have any context.
 					});
 				_app.u.addEventDelegation($D);
 				$D.data('variationmode',mode).anyform();
@@ -3749,9 +3750,10 @@ function type2class(type)	{
 						_app.model.dispatchThis('mutable');
 						}
 					else if(mode == 'product' && pid){
-						
+						// the dialog is appendedTo the product editor variations tab, so $ele is still within context of the product.
 						sfo.guid = _app.u.guidGenerator();
 						_app.data['adminProductDetail|'+pid]['@variations'].push(sfo); //add to variation object in memory.
+						var $varEditor = $ele.closest("[data-app-role='variationContainer']");
 
 						var $tbody = $("<tbody \/>").anycontent({
 							'templateID':'productVariationManagerProductRowTemplate',
@@ -3761,9 +3763,10 @@ function type2class(type)	{
 						_app.u.handleButtons($tbody);
 						$("[data-app-click='admin_prodedit|variationUpdateShow']",$tbody).button('disable').attr('title','Product variations must be saved to the product prior to options being added.');
 
-						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).addClass('edited').appendTo("[data-app-role='productVariationManagerProductTbody']",'#productTabMainContent');
+						$tbody.children().attr({'data-isnew':'true','data-ispog':'true'}).addClass('edited').appendTo("[data-app-role='productVariationManagerProductTbody']",$varEditor);
 						$ele.closest('.ui-dialog-content').dialog('close').empty();
 						$tbody.closest('.anyformEnabled').anyform('updateChangeCounts');
+						$varEditor.anymessage({'errtype':'hint','message':'To add options to the variation, please save first.'});
 						}
 					else	{
 						//error. unsupported or unable to ascertain mode. or mode is product and pid could not be ascertained.
