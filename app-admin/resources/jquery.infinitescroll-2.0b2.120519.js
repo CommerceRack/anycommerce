@@ -294,7 +294,7 @@
 
         // Custom error
         _error: function infscr_error(xhr) {
-app.u.dump("REACHED ERROR SECTION");
+
             var opts = this.options;
 
             // if behavior is defined and this function is extended, call that instead of default
@@ -322,7 +322,6 @@ app.u.dump("REACHED ERROR SECTION");
 
         // Load Callback
         _loadcallback: function infscr_loadcallback(box, data) {
-			app.u.dump(" In _loadcallback");
             var opts = this.options,
             callback = this.options.callback, // GLOBAL OBJECT FOR CALLBACK
             result = (opts.state.isDone) ? 'done' : (!opts.appendCallback) ? 'no-append' : 'append',
@@ -558,14 +557,12 @@ app.u.dump("REACHED ERROR SECTION");
 					instance._debug('Using local method');
 
 					var $tag = $('#mediaFilesUL'); //target for adding media files to.
-					var dataBind = app.renderFunctions.parseDataBind($tag.data('bind'));
+					var dataBind = adminApp.renderFunctions.parseDataBind($tag.data('bind'));
 					dataBind.startpoint = $tag.children().length;
-					app.u.dump(" -> dataBind: "); app.u.dump(dataBind);
 					
 					var fname = $tag.data('fname'); //folder name.
-					app.u.dump(" -> fname: "+fname);
-					app.ext.admin_medialib.renderFormats.mediaList($tag,{
-						value : app.data['adminImageFolderDetail|'+fname]['@images'],
+					adminApp.ext.admin_medialib.renderFormats.mediaList($tag,{
+						value : adminApp.data['adminImageFolderDetail|'+fname]['@images'],
 						bindData : dataBind
 						});
 					instance._loadcallback(box, 'done');

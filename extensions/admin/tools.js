@@ -78,7 +78,6 @@ var admin_tools = function(_app) {
 					_app.u.handleCommonPlugins($SD);
 					_app.u.addEventDelegation($SD);
 					$SD.anyform();
-					_app.ext.admin.u.handleFormConditionalDelegation($('form',$SD));
 					}
 				},
 

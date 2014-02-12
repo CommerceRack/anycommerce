@@ -1303,7 +1303,9 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 
 		_fileUpload : function(img, file)	{
 			
-			var newFileName = file.name.replace(/[^A-Za-z0-9]+/ig, "_").toString().toLowerCase(); //alphanumeric only (this will include underscores). the +/ig will replace multiple spaces/specialcharacters in a row w/ 1 underscore.
+			var extension = file.name.substr(file.name.lastIndexOf('.')); //need to put this back onto filename for upload.
+			//strips the file extension off (otherwise it becomes part of the filename).
+			var newFileName = file.name.substr(0, file.name.lastIndexOf('.')).replace(/[^A-Za-z0-9]+/ig, "_").toString().toLowerCase(); //alphanumeric only (this will include underscores). the +/ig will replace multiple spaces/specialcharacters in a row w/ 1 underscore.
 			dump(" revised filename: "+newFileName);
 			var o = this.options;
 			var reader = new FileReader();  
@@ -1314,7 +1316,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 					'_cmd':'adminImageUpload',
 					'base64' : btoa(evt.target.result), //btoa is binary to base64
 					'folder' : folder,
-					'filename' : newFileName,
+					'filename' : newFileName+extension,
 					'_tag':	{
 						'callback' : function(rd){
 //							if(typeof o.upload === 'function')	{

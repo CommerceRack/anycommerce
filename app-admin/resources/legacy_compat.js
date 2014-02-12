@@ -255,10 +255,10 @@ function addNew(safe,mode) {
 		//	}
 
 		var postBody = 'm=NAVCAT/Add&safe='+safe+'&pretty='+encodeURIComponent(pretty)+'&type='+modetype;
-		postBody = postBody + '&_userid=' + app.vars.userid;
-		postBody = postBody + '&_authtoken=' + app.vars.authtoken;
-		postBody = postBody + '&_deviceid=' + app.vars.deviceid;
-		postBody = postBody + '&_domain=' + app.vars.domain;
+		postBody = postBody + '&_userid=' + adminApp.vars.userid;
+		postBody = postBody + '&_authtoken=' + adminApp.vars.authtoken;
+		postBody = postBody + '&_deviceid=' + adminApp.vars.deviceid;
+		postBody = postBody + '&_domain=' + adminApp.vars.domain;
 		if (jQuery('#'+selectorEscapeExpression('_pid'))) { postBody = postBody + '&_pid='+jQuery('#'+selectorEscapeExpression('#\_pid')).val(); }
 		jQuery.ajax(prototypePLURL+'/NAVCAT/Add', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
 		}
@@ -286,10 +286,10 @@ function renameCat(safe,mode) {
 
 
 		var postBody = 'm=NAVCAT/Rename&safe='+safe+'&pretty='+encodeURIComponent(pretty);
-		postBody = postBody + '&_userid=' + app.vars.userid;
-		postBody = postBody + '&_authtoken=' + app.vars.authtoken;
-		postBody = postBody + '&_deviceid=' + app.vars.deviceid;
-		postBody = postBody + '&_domain=' + app.vars.domain;
+		postBody = postBody + '&_userid=' + adminApp.vars.userid;
+		postBody = postBody + '&_authtoken=' + adminApp.vars.authtoken;
+		postBody = postBody + '&_deviceid=' + adminApp.vars.deviceid;
+		postBody = postBody + '&_domain=' + adminApp.vars.domain;
 		if (jQuery('#'+selectorEscapeExpression('_pid'))) { postBody = postBody + '&_pid='+jQuery('#\_pid').val(); }
 		jQuery.ajax(prototypePLURL+'/NAVCAT/Rename', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
 		}
@@ -308,20 +308,20 @@ function toggleCat(safe) {
 	if (icon.prop("src").indexOf('miniup.gif')>=0) {
 		thisDiv.html('Expanding!');
 		var postBody = 'm=NAVCAT/Expand&safe='+safe;
-		postBody = postBody + '&_userid=' + app.vars.userid;
-		postBody = postBody + '&_authtoken=' + app.vars.authtoken;
-		postBody = postBody + '&_deviceid=' + app.vars.deviceid;
-		postBody = postBody + '&_domain=' + app.vars.domain;
+		postBody = postBody + '&_userid=' + adminApp.vars.userid;
+		postBody = postBody + '&_authtoken=' + adminApp.vars.authtoken;
+		postBody = postBody + '&_deviceid=' + adminApp.vars.deviceid;
+		postBody = postBody + '&_domain=' + adminApp.vars.domain;
 		if (jQuery('#'+selectorEscapeExpression('_pid'))) { postBody = postBody + '&_pid='+jQuery('#\_pid').val(); }
 		jQuery.ajax(prototypePLURL+'/NAVCAT/Expand', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
 		}
 	else {
 		thisDiv.html('Collapsing!');
 		var postBody = 'm=NAVCAT/Collapse&safe='+safe;
-		postBody = postBody + '&_userid=' + app.vars.userid;
-		postBody = postBody + '&_authtoken=' + app.vars.authtoken;
-		postBody = postBody + '&_deviceid=' + app.vars.deviceid;
-		postBody = postBody + '&_domain=' + app.vars.domain;
+		postBody = postBody + '&_userid=' + adminApp.vars.userid;
+		postBody = postBody + '&_authtoken=' + adminApp.vars.authtoken;
+		postBody = postBody + '&_deviceid=' + adminApp.vars.deviceid;
+		postBody = postBody + '&_domain=' + adminApp.vars.domain;
 		if (jQuery('#'+selectorEscapeExpression('_pid'))) { postBody = postBody + '&_pid='+jQuery('#\_pid').val(); }
 		jQuery.ajax(prototypePLURL+'/NAVCAT/Collapse', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
 		}
@@ -342,10 +342,10 @@ function deleteCat(safe,z) {
 	else if (z==1) {
 		// yep, really delete it.
 		var postBody = 'm=NAVCAT/Delete&safe='+safe;
-		postBody = postBody + '&_userid=' + app.vars.userid;
-		postBody = postBody + '&_authtoken=' + app.vars.authtoken;
-		postBody = postBody + '&_deviceid=' + app.vars.deviceid;
-		postBody = postBody + '&_domain=' + app.vars.domain;
+		postBody = postBody + '&_userid=' + adminApp.vars.userid;
+		postBody = postBody + '&_authtoken=' + adminApp.vars.authtoken;
+		postBody = postBody + '&_deviceid=' + adminApp.vars.deviceid;
+		postBody = postBody + '&_domain=' + adminApp.vars.domain;
 
 		if (jQuery('#'+selectorEscapeExpression('_pid'))) { postBody = postBody + '&_pid='+jQuery('#\_pid').val(); }
 		jQuery.ajax(prototypePLURL+'/NAVCAT/Delete', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
@@ -406,10 +406,10 @@ function jGet(uri) {
 function jHandleResponse(txt) {
 
 	// alert("jHandleResponse: "+txt);
-	//alert(app.vars.userid);
-	//alert(app.vars.authtoken);
-	//alert(app.vars.deviceid);
-	//alert(app.vars.domain);
+	//alert(adminApp.vars.userid);
+	//alert(adminApp.vars.authtoken);
+	//alert(adminApp.vars.deviceid);
+	//alert(adminApp.vars.domain);
 
    if (txt == '') {
       // empty response, must have been a set only

@@ -63,7 +63,7 @@ $(document).ready(function(){
 	var tmp = new zController(app);
 //instantiate wiki parser.
 //	myCreole = new Parse.Simple.Creole();
-	app.model.addExtensions([{'namespace':'acreate','filename':'app-acreate/extension.js','callback':'initExtension'}]);
+	_app.model.addExtensions([{'namespace':'acreate','filename':'app-acreate/extension.js','callback':'initExtension'}]);
 	_app.u.addEventDelegation($(document.body));
 	});
 

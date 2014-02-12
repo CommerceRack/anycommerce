@@ -1012,7 +1012,7 @@ _app.u.addEventDelegation($target);
 					$(".sortableImagery",$context).anydropzone({
 						folder : 'product/'+pid.toString().toLowerCase().replace(/[^A-Z0-9]/ig, "_"), //folders are lowercase w/ no special characters except underscore.
 						drop : function(files,event,self){
-		
+							_app.model.destroy("adminImageFolderList");
 							for (var i = 0; i < files.length; i++) {
 								var file = files[i];
 								var imageType = /image.*/;

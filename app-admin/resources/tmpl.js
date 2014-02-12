@@ -20,8 +20,6 @@
 
     "use strict";
     var tmpl = function (str, data) {
-//		alert('got here');
-//		app.u.dump("GOT HERE!");
         var f = !/[^\w\-\.:]/.test(str) ? tmpl.cache[str] = tmpl.cache[str] ||
                 tmpl(tmpl.load(str)) :
                     new Function(
@@ -81,12 +79,10 @@
     tmpl.helper = ",print=function(s,e){_s+=e&&(s||'')||_e(s);}" +
         ",include=function(s,d){_s+=tmpl(s,d);}";
     if (typeof define === "function" && define.amd) {
-		app.u.dump("not setting $.tmpl");
         define(function () {
             return tmpl;
         });
     } else {
-		app.u.dump("SETTING tmpl");
         $.tmpl = tmpl;
     }
 }(this));
