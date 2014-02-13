@@ -177,10 +177,7 @@
 					iframe.src = domain+"?v="+(new Date().getTime())+(suppressLogs ? "&quiet=1" : "")+"#!"+currPage;
 					
 					$(window).on('message', function(event){
-						if(event.data == "renderFinished"){
-							//finishPage(currPage);
-							//indexNextPage();
-						}
+						//Currently ignoring all messages from the iframe, since async behavior is at this time impossible to handle
 					});
 					window.timeoutID = setTimeout(function(){
 						finishPage(currPage);
