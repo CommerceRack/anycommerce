@@ -399,8 +399,9 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 				
 				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
 			</fieldset>
-
+			<div data-bind='var:order(our/orderid); format:assignAttribute; attribute:data-orderid;'>
 			<table class='orderContentsTable' data-app-role='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
+			</div>
 		</div>
 		
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
@@ -606,6 +607,7 @@ The following templates are used in the 'order detail' modal/view.
 
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td>
+		
 		<button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button>
 		<button data-app-event="admin_orders|orderItemRemove">Remove From Order</button>
 		<button data-app-event='admin_orders|routingDialogShow' data-app-role='itemSupplierRoutingButton' class='displayNone'>Route</button>
@@ -614,6 +616,7 @@ The following templates are used in the 'order detail' modal/view.
 			<li><a href="#" data-verb='DONE' data-app-event='admin_orders|inventoryDetailOptionsExec'>Done</a></li>
 			<li><a href="#" data-verb='RESET' data-app-event='admin_orders|inventoryDetailOptionsExec'>Reset</a></li>
 		</menu>
+
 		</td>
 	<td></td>
 </tr>
