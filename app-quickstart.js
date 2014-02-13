@@ -864,11 +864,6 @@ fallback is to just output the value.
 			showContent : function(pageType,infoObj)	{
 //				dump("BEGIN showContent ["+pageType+"]."); dump(infoObj);
 				infoObj = infoObj || {}; //could be empty for a cart or checkout
-				
-//Used by the SEO generation utility to signal that a page has finished loading. 
-//numAsync should be incremented for any asynchronous processes started, and those processes should fire an "asyncFinish" message to the parent.
-				var numAsync = 0;
-
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -1067,11 +1062,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
 					
-//Used by the SEO generation utility to signal that a page has finished loading. 
-//numAsync should be incremented for any asynchronous processes started, and those processes should fire an "asyncFinish" message to the parent.
-				numAsync++;
-				setTimeout(function(){parent.postMessage("asyncFinish", "*");}, 4000);
-				parent.postMessage("asyncProcesses:"+numAsync,"*");
+				//Used by the SEO generation utility to signal that a page has finished loading. 
+				//DOES NOT ACCOUNT FOR ASYNCHRONOUS BEHAVIOR! 
+				parent.postMessage("renderFinished","*");
 				
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
