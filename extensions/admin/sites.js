@@ -571,9 +571,19 @@ used, but not pre-loaded.
 				var domain = $ele.closest('[data-domain]').data('domain');
 
 				if(domain)	{
+					var data = {'DOMAINNAME':domain}
+					var title = $ele.data('mode') + '  host';
+					if($ele.data('mode') == 'update')	{
+// ### FUTURE -> this is gonna get more love soon.  When it does, for adding a template to a host, would be nice to remember which template was selected.
+						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
+						title += ': '+(data.HOSTNAME.toString().toLowerCase())
+						}
+					
+					title += ' for '+domain
+					
 					var $D = _app.ext.admin.i.dialogCreate({
-						'title': $ele.data('mode') + '  host',
-						'data' : (($ele.data('mode') == 'create') ? {'DOMAINNAME':domain} : $.extend({},_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')],{'DOMAINNAME':domain})), //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
+						'title': title,
+						'data' : data, //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
 						'templateID':'domainAddUpdateHostTemplate',
 						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
