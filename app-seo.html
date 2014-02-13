@@ -49,6 +49,7 @@
 		};
 		function fetchSEO(token){
 			if(!window.lock){
+				$('#seoTokenForm').hide();
 				window.lock = true;
 				window.token = token;
 				
@@ -190,7 +191,7 @@
 				console.log("no more pages")
 				$(iframe).empty().remove();
 				//Temporarily bypassing this until we have a domain on 201401 to test
-				//finishSEO();
+				finishSEO();
 				window.lock = false;
 			}
 		}
@@ -215,11 +216,12 @@
 			request(obj);
 		}
 		function finishSEO(){
+			rLog('Requesting SEOFinish for token '+token);
 			var obj = {
 				"_cmd" : "appSEOFinish",
 				"token" : token
 			}
-			request(obj);
+			request(obj, function(rLog('SEO finish command sent.  See the js console for details, or refresh to run with a new SEO Token.');));
 		};
 	</script>
 	
