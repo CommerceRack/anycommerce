@@ -266,7 +266,7 @@
 			<option value='APPTIMIZER' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Apptimizer</option>
 			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
 			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store</option>
-			<option value='VSTORE-APP' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store/App</option>
+			<option value='VSTORE-APP' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly' style='display:block;'>V-Store/App</option><!-- inline css to override a behavior w/ showforzoovyonly. ### FUTURE -> fix -->
 			<option value='CUSTOM'>Custom</option>
 		</select>
 	</label>
@@ -282,8 +282,8 @@
 		<label>
 			<span>Project Source: </span>
 			<select name='project_source' data-input-change="panel-selector" data-panel-selector=".domainNewHostProjectSource">
-				<option value='project' data-show-panel='domainNewHostProjectSource_project'>Project</option>
-				<option value='template' data-show-panel='domainNewHostProjectSource_template'>From Template</option>
+				<option value='project' data-show-panel='domainNewHostProjectSource_project'>Existing project</option>
+				<option value='template' data-show-panel='domainNewHostProjectSource_template'>New project from Template</option>
 			</select>
 		
 		</label>

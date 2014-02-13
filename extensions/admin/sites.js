@@ -169,8 +169,8 @@ used, but not pre-loaded.
 					if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
 						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
 
-						if(data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
-// * 201352 -> currently, 'choose template' is in the host editor.
+						if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
+// * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
 //							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
 							$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
 							$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
@@ -490,7 +490,7 @@ used, but not pre-loaded.
 			adminDomainDiagnosticsShow : function($ele,p)	{
 				if($ele.data('domainname'))	{
 					_app.u.dump(" -> tabcontent.length: "+$ele.closest("[data-app-role='tabContainer']").find("tbody[data-app-role='domainDiagnosticsTbody']:first").length);
-					$ele.closest("[data-app-role='tabContainer']").find("tbody[data-anytab-content='domainDiagnosticsTbody']:first").intervaledEmpty();
+					$ele.closest("[data-app-role='tabContainer']").find("tbody[data-app-role='domainDiagnosticsTbody']:first").intervaledEmpty();
 					_app.model.addDispatchToQ({
 						'_cmd':'adminDomainDiagnostics',
 						'DOMAINNAME':$ele.data('domainname'),
