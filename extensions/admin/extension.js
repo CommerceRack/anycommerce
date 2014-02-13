@@ -2276,8 +2276,19 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 						}	
 					}
 				},
-
-
+//When checking to see if the domain passed matches the partition in focus, it's often handy to then do something with the partition that was checked, so it is also returned.
+			domainMatchesPartitionInFocus : function(domain)	{
+				var r = {'isMatch':null,prt:null};
+				r.prt = (_app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain) || {}).PRT;
+				if(_app.vars.partition == r.prt)	{
+					r.isMatch = true;
+					}
+				else if(Number(r.prt) >= 0 && _app.vars.partition != r.prt)	{
+					r.isMatch = false
+					}
+				else	{}
+				return r;
+				},
 
 			//return a boolean. NO MESSAGING>  that's use-case specific.
 			validatePicker : function($picker) {

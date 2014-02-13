@@ -973,7 +973,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 
 		a : {
-			
+			//used in the admin UI for creating a new cart.
 			appCartCreate : function($target)	{
 				_app.calls.appCartCreate.init({'datapointer':'appCartCreate','callback':function(rd){
 					if(_app.model.responseHasErrors(rd)){
@@ -983,7 +983,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 //appCartCreate will automatically update the carts object in localstorage
 						_app.ext.order_create.a.startCheckout($target,_app.data[rd.datapointer]._cartid);
 						_app.ext.cco.calls.cartSet.init({'_cartid':_app.data[rd.datapointer]._cartid,'our/domain':_app.vars.domain}); //do NOT set a host here.
-
+						_app.model.dispatchThis('immutable');
 						}
 				}},'immutable');
 				_app.model.dispatchThis('immutable');

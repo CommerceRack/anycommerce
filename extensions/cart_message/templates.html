@@ -16,6 +16,7 @@
 		<th>First Name</th>
 		<th>Last Name</th>
 		<th># Items</th>
+		<th>Domain</th>
 		<th>Active Polling <span  class='toolTip' title="If this is on, the admin app is actively checking for updates on this cart. If you are not interacting with the cart, you should disable this to improve performance.">?</span></th>
 		<th data-anytable-nosort='true'></th>
 	</tr>
@@ -33,6 +34,7 @@
 	<td class='isSearchable' data-bind="var: cart(bill/firstname); format:text;"></td>
 	<td class='isSearchable' data-bind="var: cart(bill/lastname); format:text;"></td>
 	<td data-bind="var: cart(sum/items_count); format:text;"></td>
+	<td data-bind="var: cart(our/domain); format:text;"></td>
 	<td data-bind="var: cart(value); format:pollDetect; extension:cart_message;"></td>
 	<td data-bind='var:cart(value);format:assignAttribute; attribute:data-cartid;' class='alignRight'>
 	

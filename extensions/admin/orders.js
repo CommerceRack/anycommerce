@@ -1065,7 +1065,7 @@ if giftcard is on there, no paypal will appear.
 
 
 		u : {
-
+			
 		handleOrderListCMenu : function(action,$row,vars)	{
 			_app.u.dump("BEGIN handleOrderListCMenu. action: "+action);
 			if(action)	{
@@ -1967,6 +1967,16 @@ $('.editable',$container).each(function(){
 								$('a',$li).text((_app.data[rd.datapointer].bill['firstname']+" " || "")+(_app.data[rd.datapointer].bill['lastname'] || ""));
 								}
 							else	{} //neither first or last name set in cart. show cart id.
+								if(_app.u.thisNestedExists("data."+rd.datapointer+".our.domain",_app))	{
+								//carts are very partition specific.
+								var dmObj = _app.ext.admin.u.domainMatchesPartitionInFocus(_app.data[rd.datapointer].our.domain);
+								if(dmObj.isMatch === false)	{
+									$("a",$li).removeAttr("data-app-click").addClass('opacity50').attr('title','Change to partition '+dmObj.prt+' to edit this cart');
+									}
+								else	{
+									//means isMatch is true OR isMatch is null (unable to determine)
+									}
+								}
 							}
 						}},'mutable');
 					}

@@ -169,6 +169,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 			a : {
 
 				showCartManager : function($target)	{
+					dump("BEGIN showCartManager");
 					$target.anycontent({'templateID':'adminCartManagementTemplate','data':{'carts':_app.vars.carts}});
 					_app.u.addEventDelegation($target);
 					$target.anyform();
@@ -178,15 +179,42 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					var $tbody = $("[data-app-role='cartManagementCartsTbody']",$target); //used for context below.
 
 					for(var i = 0, L = _app.vars.carts.length; i < L; i += 1)	{
+						var cartID = _app.vars.carts[i];
 //						_app.u.dump("tr length: "+$("tr[data-value='"+_app.vars.carts[i]+"']",$tbody).length);
-						_app.calls.cartDetail.init(_app.vars.carts[i],{
-							'callback':'anycontent',
-							'cartid' :_app.vars.carts[i], //on a 'missing', the cart id isn't returned
-							'onComplete' : function(rd)	{
+						_app.calls.cartDetail.init(cartID,{
+							'callback':function(rd)	{
 								$('.wait',rd.jqObj).removeClass('wait');
-								$('button',rd.jqObj).button('enable');
+								if(_app.model.responseIsMissing(rd))	{
+									$('#globalMessaging').anymessage({'message':rd}); //use global, not jqobj, which is a tr.
+									rd._rtag.jqObj.hide();
+									_app.model.removeCartFromSession(cartID);
+									}
+								else if(_app.model.responseHasErrors(rd))	{
+									$('#globalMessaging').anymessage({'message':rd}); //use global, not jqobj, which is a tr.
+									}
+								else	{
+									console.log(" -> thisNestedExists: "+_app.u.thisNestedExists("data."+rd.datapointer+".our.domain",_app));
+									_app.callbacks.anycontent.onSuccess(rd);
+									if(_app.u.thisNestedExists("data."+rd.datapointer+".our.domain",_app))	{
+										var dmObj = _app.ext.admin.u.domainMatchesPartitionInFocus(_app.data[rd.datapointer].our.domain);
+										if(dmObj.prt >= 0)	{
+											rd.jqObj.find('td:first').append(dmObj.prt);
+											if(dmObj.isMatch)	{
+												$('button',rd.jqObj).button('enable');
+												}
+											else	{
+												//wrong partition. can't edit. Carts are very partition specific.
+												}
+											}
+										}
+									else	{
+										//no domain set on cart.  hhhmmm...
+										rd.jqObj.find('td:first').append("<span class='toolTip' title='Unable to ascertain partition. Most likely, there is no domain for the cart. Editing the cart on a partition that it was not created on may result in unexpected behaviors.'>?</span>");
+										$('button',rd.jqObj).button('enable');
+										}
+									}
 								},
-							'jqObj':$("tr[data-value='"+_app.vars.carts[i]+"']",$tbody)
+							'jqObj':$("tr[data-value='"+cartID+"']",$tbody)
 							},'mutable');
 						}
 					_app.model.dispatchThis('mutable');
