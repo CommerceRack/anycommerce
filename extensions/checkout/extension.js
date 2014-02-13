@@ -1719,7 +1719,8 @@ note - the order object is available at _app.data['order|'+P.orderID]
 // all panels get updated because shipping, totals and potentially payment methods can be impacted by ship country.
 					_app.ext.cco.u.sanitizeAndUpdateCart($form,{
 						'callback':'updateAllPanels',
-						'extension' : 'order_create'
+						'extension' : 'order_create',
+						'jqObj' : $form
 						});
 					}
 				else	{
