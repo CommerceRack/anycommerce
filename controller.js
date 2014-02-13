@@ -55,6 +55,7 @@ function controller(_app)	{
 	rq : [],
 	initialize: function() {
 		window.dump = _app.u.dump; //after 'quiet' code so that if _app.u.dump is nuked, so is dump();
+		window.makeImage = _app.u.makeImage; //FUTURE -> get rid of this. temporary work around for variations code in includes.
 //		dump(" -> initializing app");
 		_app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
 
