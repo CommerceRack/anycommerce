@@ -403,7 +403,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
 	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
 	<div class='clearfix'>
-		<button class='floatRight applyButton' data-app-click='order_create|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
+		<button class='floatRight applyButton' data-app-role='addressSelectButton' data-app-click='order_create|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
 		<button class='floatRight marginRight applyButton' data-app-role='addressEditButton' data-app-click="order_create|adminAddressCreateUpdateShow" data-icon='false' data-icon-primary='ui-icon-pencil' data-mode='update'>Edit This Address</button>
 	</div>
 </address>

@@ -1307,7 +1307,6 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(ep.handleObj && ep.handleObj.origType)	{
 					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
 					}
-				dump(" -> type: "+type);
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
 					var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
@@ -1833,9 +1832,7 @@ VALIDATION
 						required = ($input.attr('required') == 'required') ? true : false;
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
-					
-					_app.u.dump(" -> $input.data('minlength'): "+$input.data('minlength'));
-					
+				
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}

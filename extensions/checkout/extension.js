@@ -928,7 +928,6 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
-// ### TODO -> this doesn't work because want/payby is no longer a valid field. Either need a field to temporarily store this in OR need to start using localStorage for this.
 					if(formObj['want/payby'])	{
 						var
 							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
@@ -1135,23 +1134,31 @@ note - the order object is available at _app.data['order|'+P.orderID]
 			
 			adminAddressCreateUpdateShow : function($ele,p)	{
 				p.preventDefault();
-				var $checkout = $ele.closest("[data-app-role='checkout']");
-				var CID = _app.data['cartDetail|'+$checkout.data('cartid')].customer.cid;
-				var vars = {
-					'mode' : $ele.data('mode'), //will b create or update.
-					'show' : 'dialog',
-					'TYPE' : $ele.closest("[data-app-addresstype]").attr('data-app-addresstype'),
-					'CID' : CID,
-					'editorID' : $checkout.attr('id')
-					};
+				var
+					$checkout = $ele.closest("[data-app-role='checkout']"),
+					addressType = $ele.closest("[data-app-addresstype]").attr('data-app-addresstype'),
+					CID = _app.data['cartDetail|'+$checkout.data('cartid')].customer.cid,
+					vars = {
+						'mode' : $ele.data('mode'), //will b create or update.
+						'show' : 'dialog',
+						'TYPE' : addressType,
+						'CID' : CID,
+						'editorID' : $checkout.attr('id')
+						};
 				
-				_app.ext.admin_customer.a.addressCreateUpdateShow(vars,function(v){
+				
+				_app.ext.admin_customer.a.addressCreateUpdateShow(vars,function(v,addrObj){
+					
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
 					_app.ext.order_create.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+					if($ele.data('mode') == 'update')	{
+					//can't use $ele to trigger the click on the address select after updating the panels, because $ele is no longer on the dom, so $checkout, which is a constant, is used to find the address/button
+						$("fieldset[data-app-addresstype='"+addressType+"']",$checkout).find("address[data-_id='"+addrObj.SHORTCUT+"'] button[data-app-role='addressSelectButton']").trigger('click');
+						}
 					},_app.ext.cco.u.getAndRegularizeAddrObjByID(_app.data['adminCustomerDetail|'+CID]['@'+vars.TYPE.toUpperCase()],$ele.closest("[data-_id]").data('_id'),vars.TYPE,false));
 				},
 
@@ -1358,6 +1365,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 //executed when an predefined address (from a buyer who is logged in) is selected.
 			execBuyerAddressSelect : function($ele,p)	{
+				dump(" -> BEGIN order_create.e.execBuyerAddressSelect");
 				p.preventDefault();
 				var
 					addressType = $ele.closest('fieldset').data('app-addresstype'), //will be ship or bill.
@@ -1367,9 +1375,10 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					
 
 // For an incomplete address, the edit dialog will open automatically and prompt for invalid fields. The intent to select the address will also update the cart.
+// ### FUTURE -> this could be optimized. some vars declared at the top and lookups still occur later.
 				if(addressType && addressID)	{
-					$ele.closest('fieldset').find('.ui-button.ui-state-focus').removeClass('ui-state-focus');
-					$ele.addClass('ui-state-focus');
+					$ele.closest('fieldset').find('.ui-button.ui-state-highlight').removeClass('ui-state-highlight');
+					$ele.addClass('ui-state-highlight');
 					//even if the address doesn't pass validation, set the shortcut to this id. checkout won't let them proceed, but this way their intent is still saved.
 					//and after the update occurs, this address will be selected.
 					$("[name='"+addressType+"/shortcut']",$form).val(addressID);
@@ -1402,7 +1411,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					else	{
 						_app.ext.cco.calls.cartSet.init(cartUpdate,{},'passive');
 						_app.model.dispatchThis('passive');
-						$ele.closest('fieldset').find("[data-app-role='addressEditButton']").data('validate-form',true).trigger('click');
+						$ele.closest('address').find("[data-app-role='addressEditButton']").data('validate-form',true).trigger('click');
 						}
 					}
 				else	{

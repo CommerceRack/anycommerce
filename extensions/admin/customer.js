@@ -397,17 +397,17 @@ $D is returned.
 						});
 
 					//if the email isn't set, use the customer record email to populate.
-					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("data.adminCustomerDetail|"+vars.CID+"._EMAIL",_app))	{
-						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
-						}
+//					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("data.adminCustomerDetail|"+vars.CID+"._EMAIL",_app))	{
+//						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
+//						}
 					//the id can't be changed once it's set.
 					if(vars.mode == 'update' || address._id)	{
 						$("input[name='SHORTCUT']",$D).prop('disabled','disabled');
 						}
 					//ship addresses don't support email address.
-					if(vars.TYPE == 'ship')	{
-						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
-						}
+//					if(vars.TYPE == 'ship')	{
+//						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
+//						}
 					
 					var $form = $('form:first',$D).data(vars);
 					
@@ -426,7 +426,7 @@ $D is returned.
 									else	{
 										$D.dialog('close');
 										if(typeof callback == 'function')	{
-											callback(vars);
+											callback(vars,sfo);
 											}
 										}
 									}},'immutable');
