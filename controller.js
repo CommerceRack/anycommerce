@@ -58,8 +58,8 @@ function controller(_app)	{
 		window.makeImage = _app.u.makeImage; //FUTURE -> get rid of this. temporary work around for variations code in includes.
 //		dump(" -> initializing app");
 		_app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
-
 		_app.vars = _app.vars || {};
+		if(_app.vars.addjQueryPointer) {jQuery._app = _app;} 
 		_app.vars.platform = _app.vars.platform ? _app.vars.platform : 'webapp'; //webapp, ios, android
 		_app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		_app.vars.fbUser = {};

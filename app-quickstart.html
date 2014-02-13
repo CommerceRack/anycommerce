@@ -58,7 +58,8 @@ $(document).ready(function(){
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://www.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+		"testURL":"http://www.sporktacular.com/", //used ONLY if protocol is file: (for testing)
+		"addjQueryPointer" : true,
 		"initComplete" : function(t){
 			dump(" -> init is complete");
 			t.u.loadScript('app-quickstart-init.js',function(){

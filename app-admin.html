@@ -65,6 +65,7 @@ $(document).ready(function(){
 		"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
 		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 		"baseURL" : baseURL,
+		"addjQueryPointer" : true,
 		"initComplete" : function(t){
 			t.u.loadScript('app-admin-init.js',function(){
 				var progress = t.u.loadResources();
