@@ -484,7 +484,7 @@ $D is returned.
 								if(!customers || customers.length == 0)	{
 									$D.anymessage({"message":"Zero customers were found searching "+sfo.scope+" for '"+sfo.searchfor+"'."});
 									}
-								else if(_app.data[rd.datapointer]['@CUSTOMERS'].length == 1)	{
+								else if(_app.data[rd.datapointer]['@CUSTOMERS'].length == 1 && _app.data[rd.datapointer]['@CUSTOMERS'][0].PRT == _app.vars.partition)	{
 									//encountered an issue in order create > lookup customer where $D didn't register as a dialog yet.
 									//	closing it directly here caused a JS error. a slight pause solved this.
 									if($D.is(':data(dialog)'))	{$D.dialog('close');}
@@ -494,7 +494,7 @@ $D is returned.
 									callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
 									}
 								else	{
-									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).on('click','tbody tr',function(){
+									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr[data-prt='"+_app.vars.partition+"']").addClass('lookLikeLink pointer').end().on('click',"tbody tr[data-prt='"+_app.vars.partition+"']",function(){
 										callback($(this).data());
 										$D.dialog('close').empty().remove();
 										}).parent().css({'max-height':200,'overflow':'auto',});

@@ -308,7 +308,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 			onError : function(rd)	{
 				$('body').hideLoading();
 				$('#globalMessaging').anymessage({'message':rd});
-				if(_gaq)	{
+				if(typeof _gaq)	{
 					_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 					}
 
@@ -976,6 +976,17 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					else	{
 //appCartCreate will automatically update the carts object in localstorage
 						_app.ext.order_create.a.startCheckout($target,_app.data[rd.datapointer]._cartid);
+// ### FUTURE -> when setting a domain for a cart is available, set it here to the domain in focus.
+/*						_app.model.addDispatchToQ({
+							'_cmd':'adminCartMacro',
+							'_cartid' : cartid,
+							'_tag' : {
+								'callback' : 'showMessaging',
+								'jqObj' : $('#globalMessaging'),
+								'message' : 'Customer '+customer.EMAIL+' assigned to this cart'
+								},
+							"@updates" : ["LINK-CUSTOMER-ID?CID="+customer.CID]
+							},'immutable');*/
 						}
 				}},'immutable');
 				_app.model.dispatchThis('immutable');
