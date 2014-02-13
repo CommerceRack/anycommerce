@@ -205,8 +205,17 @@
 			var doctype = "<!DOCTYPE html>";
 			var dochtml = $('#appContainer').get(0).contentWindow.document.documentElement.outerHTML;
 			
-			var html = doctype + dochtml;
+			var body = /<body[^>]*>((.*\n*\r*\u2028*\u2029*)*)<\/body>/;
+			var removeHtml = body.exec(dochtml)[1];
+			var $tmp = $('<div>'+removeHtml+'</div>');
+			$('.seoStrip', $tmp).each(function(){
+				$(this).empty().remove();
+			});
+			dochtml = dochtml.replace(removeHtml, $tmp.html());
+			$tmp.remove();
 			
+			
+			var html = doctype + dochtml;
 			var obj = {
 				"_cmd" : "appSEOStore",
 				"#!" : page,
