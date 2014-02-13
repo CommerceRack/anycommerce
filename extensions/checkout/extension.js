@@ -166,11 +166,11 @@ _app.ext.order_create.u.handlePanel($context,'chkoutAddressShip',['empty','trans
 			onSuccess : function(_rtag)	{
 				var r = false; //if false is returned, then no inventory update occured.
 				if(_app.data[_rtag.datapointer] && !$.isEmptyObject(_app.data[_rtag.datapointer]['%changes']))	{
-					var $form = _rtag.jqObj, cartid = $form.closest("[data-app-role='checkout']").data('cartid');
+					var $form = _rtag.jqObj.find('form:first'), cartid = $form.closest("[data-app-role='checkout']").data('cartid');
 					r = "<p>It appears that some inventory adjustments needed to be made:<ul>";
 					for(var key in _app.data[_rtag.datapointer]['%changes']) {
 						r += "<li>sku: "+key+" was set to "+_app.data[_rtag.datapointer]['%changes'][key]+" due to availability<\/li>";
-						_app.ext.cco.calls.cartItemUpdate.init({'stid':key,'quantity':_app.data[_rtag.datapointer]['%changes'][key]}); //## TODO -> this probably needs a cartid.
+						_app.ext.cco.calls.cartItemUpdate.init({'_cartid':cartid,'stid':key,'quantity':_app.data[_rtag.datapointer]['%changes'][key]}); //## TODO -> this probably needs a cartid.
 						}
 					_app.u.dump(" -> SANITY: an extra cartDetail call is occuring because inventory availability required some cartUpdates to occur.");
 					_app.model.destroy('cartDetail|'+cartid);
@@ -1009,12 +1009,6 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.
 
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
-					if(_app.u.thisIsAnAdminSession())	{
-						}
-					else if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
-						_app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
-						_app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create','jqObj':$chkContainer});
-						}
 
 					if(_app.u.buyerIsAuthenticated())	{
 						_app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable'); //will check localStorage.
@@ -1057,7 +1051,12 @@ note - the order object is available at _app.data['order|'+P.orderID]
 									_app.ext.order_create.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
 									});
 //								_app.u.dump(" -> handlePanel has been run over all fieldsets.");
-								if(_app.u.thisIsAnAdminSession() && _app.data[rd.datapointer].customer.cid)	{
+								if(Number(zGlobals.globalSettings.inv_mode) > 1 && !_app.u.thisIsAnAdminSession())	{
+									_app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
+									_app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create','jqObj':$checkoutContents});
+									_app.model.dispatchThis('immutable');
+									}
+								else if(_app.u.thisIsAnAdminSession() && _app.data[rd.datapointer].customer.cid)	{
 									//in the admin interface, the quirksmode bug won't be an issue because it only happens at app init and we're well past that by now.
 									// context must NOT be $checkoutContainer because that is 'higher' than the data-app-role='checkout' that is used by the panels to ascertain the cart id.
 									$checkoutContents.showLoading({'message':'Fetching customer record'});
@@ -1068,12 +1067,12 @@ note - the order object is available at _app.data['order|'+P.orderID]
 								else	{
 									_app.u.dump(" -> Quirks mode detected. Re-render the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
 									setTimeout(function(){
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutAccountCreate',['empty','translate','handleDisplayLogic']);
+										_app.ext.order_create.u.handlePanel($checkoutContents,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
 										},1000);
 									}
 								}
