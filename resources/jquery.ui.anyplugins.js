@@ -16,11 +16,6 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 
 */
 
-// ### TODO -> 	adminApp is referenced directly in some plugins, which was done for testing purposes.
-//				these plugins need to be rewritten to NOT use adminApp.
-//				anycontent will get a complete rewrite to be more peg friendly.
-
-
 // replacement for obsolete .browser() function.
 //.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
 // Figure out what browser is being used
@@ -549,8 +544,10 @@ pass in an event name and a function and it will be added as an eventAction.
 						msgDetails += "<li>errid: "+msg.errid+"<\/li>";
 						msgDetails += "<li>errmsg: "+msg.errmsg+"<\/li>";
 						msgDetails += "<li>uri: "+document.location+"<\/li>";
-//						msgDetails += "<li>domain: "+adminApp.vars.domain+"<\/li>";
-//						msgDetails += "<li>release: "+adminApp.model.version+"|"+adminApp.vars.release+"<\/li>";
+						if($._app)	{
+							msgDetails += "<li>domain: "+$._app.vars.domain+"<\/li>";
+							msgDetails += "<li>release: "+$._app.model.version+"|"+$._app.vars.release+"<\/li>";
+							}
 						msgDetails += "<\/ul>";
 						$r.append(msgDetails);
 						}
@@ -703,8 +700,8 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 		_handleDefaultTab : function()	{
 			var o = this.options;
 //if no anchor is set, activate the default.
-			if(o.persist && o.extension)	{
-				var theAnchor = adminApp.model.dpsGet(o.extension,'anytabs') || {};
+			if(o.persist && o.extension && $._app)	{
+				var theAnchor = $._app.model.dpsGet(o.extension,'anytabs') || {};
 				if(theAnchor.recentTab && $("li[data-anytabs-tab='"+theAnchor+"']",this.element).length)	{
 					this.reveal($("li[data-anytabs-tab='"+theAnchor+"']",this.element));
 					}
@@ -764,10 +761,10 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 				this.tabContent.find('.ui-tabs-panel').hide();
 				$("[data-anytab-content='"+dac+"']",this.tabContent).show();
-				if(o.persist && o.extension)	{
-					var dps = adminApp.model.dpsGet(o.extension,'anytabs') || {};
+				if(o.persist && o.extension && $._app)	{
+					var dps = $._app.model.dpsGet(o.extension,'anytabs') || {};
 					dps.recentTab = dac;
-					adminApp.model.dpsSet(o.extension,'anytabs',dps);
+					$._app.model.dpsSet(o.extension,'anytabs',dps);
 					}
 				}
 			else	{} //unknownn type for $tab far
@@ -842,11 +839,11 @@ either templateID or (data or datapointer) are required.
 //			dump(" -> _init this.element.data(): "); dump(this.element.data());
 			
 //			dump("anycontent params: "); dump(o);
-			if(o.templateID && (adminApp.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
+			if(o.templateID && ($._app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
 //				dump(" -> passed template check.");
 				self._anyContent();
 				}
-			else if(o.data || (o.datapointer && !$.isEmptyObject(adminApp.data[o.datapointer])))	{
+			else if(o.data || (o.datapointer && !$.isEmptyObject($._app.data[o.datapointer])))	{
 //				dump(" -> passed data check."); dump(o.data);
 				self._anyContent();
 				}
@@ -854,7 +851,7 @@ either templateID or (data or datapointer) are required.
 				$t.anymessage({
 					persistent : true,
 					gMessage : true,
-					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof adminApp.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in adminApp.data "});
+					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof $._app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in $._app.data "});
 				}
 // the template code in the controller will apply dataAttribs as data-attributes. Here, we add them as actual 'data' to preserve case and support nested values.
 			if(!$.isEmptyObject(o.dataAttribs))	{
@@ -878,14 +875,14 @@ either templateID or (data or datapointer) are required.
 //				dump(" -> datapointers have been extended for anycontent");
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
-					if(adminApp.data[o.extendByDatapointers[i]])	{
-						$.extend(true,eData,adminApp.data[o.extendByDatapointers[i]])
+					if($._app.data[o.extendByDatapointers[i]])	{
+						$.extend(true,eData,$._app.data[o.extendByDatapointers[i]])
 						}
 					}
 				}
 			
 			//datapointer can be set in addition to data or extendbydatapointers. added near the end to preserve integrity.
-			if(o.datapointer && adminApp.data[o.datapointer])	{$.extend(true,eData,adminApp.data[o.datapointer])}
+			if(o.datapointer && $._app.data[o.datapointer])	{$.extend(true,eData,$._app.data[o.datapointer])}
 
 			//data can be set in addition to datapointer or extendbydatapointers. added near the end to preserve integrity.
 			if(o.data)	{$.extend(true,eData,o.data)}
@@ -901,10 +898,10 @@ either templateID or (data or datapointer) are required.
 			//isTranslated is added as a data() var to any template that's been translated. A way to globally identify if translation has already occured.
 //			dump(" -> _anyContent this.element.data(): "); dump(this.element.data());
 
-			if(o.templateID && o.datapointer && adminApp.data[o.datapointer] && !o.translateOnly)	{
+			if(o.templateID && o.datapointer && $._app.data[o.datapointer] && !o.translateOnly)	{
 //				dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
-				this.element.append(adminApp.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
+				this.element.append($._app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 				this.element.data('isTranslated',true);
 				this.element.data('isTemplated',true);
 				}
@@ -913,7 +910,7 @@ either templateID or (data or datapointer) are required.
 //				dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 //				dump(" -> hideLoading has run.");
-				this.element.append(adminApp.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
+				this.element.append($._app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,this._getData()));
 //				dump(" -> transmogrified");
 				this.element.data('isTranslated',true);
 				this.element.data('isTemplated',true);
@@ -922,7 +919,7 @@ either templateID or (data or datapointer) are required.
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation OR a placeholder has been added and translate will occur after the dispatch.
 			else if(o.templateID && !o.translateOnly)	{
 //				dump(" -> templateID specified. create Instance.");
-				this.element.append(adminApp.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
+				this.element.append($._app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				this.element.data('isTemplated',true);
 				if(o.showLoading)	{
 					this.element.showLoading({'message':o.showLoadingMessage});
@@ -931,14 +928,14 @@ either templateID or (data or datapointer) are required.
 //if just translating because the template has already been rendered
 			else if(o.data)	{
 //				dump(" -> data specified, translate selector");
-				adminApp.renderFunctions.translateSelector(this.element,this._getData());
+				$._app.renderFunctions.translateSelector(this.element,this._getData());
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.data('isTranslated',true);
 				}
 //if just translating because the template has already been rendered
-			else if(o.datapointer  && adminApp.data[o.datapointer])	{
+			else if(o.datapointer  && $._app.data[o.datapointer])	{
 //				dump(" -> data specified, translate selector");
-				adminApp.renderFunctions.translateSelector(this.element,this._getData());
+				$._app.renderFunctions.translateSelector(this.element,this._getData());
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.data('isTranslated',true);
 				}
@@ -957,9 +954,9 @@ either templateID or (data or datapointer) are required.
 		_addNewTemplate : function()	{
 
 			var r = false; //what's returned. true if able to create template.
-			var $tmp = $(adminApp.u.jqSelector('#',this.options.templateID));
+			var $tmp = $($._app.u.jqSelector('#',this.options.templateID));
 			if($tmp.length > 0)	{
-				adminApp.model.makeTemplate($tmp,this.options.templateID);
+				$._app.model.makeTemplate($tmp,this.options.templateID);
 				r = true;
 				}
 			else{} //do nothing. Error will get thrown later.
@@ -1112,7 +1109,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //					dump(" -> file: "); dump(file);
 					//create a template instance.  apply data('file') to it.  translate. then append to self.element.
 					//this can't be done till the plugin is in anyplugins or the 'app' calls wont work
-					var $ele = adminApp.renderFunctions.createTemplateInstance(self.options.templateID,{'name':file.filename});
+					var $ele = $._app.renderFunctions.createTemplateInstance(self.options.templateID,{'name':file.filename});
 					//transmogrify({'name':file.filename},self.options.templateID,{'name':file.filename,'Name':file.filename,'path':'i/imagenotfound'}); //Name is for media lib.
 					self.element.append($ele);
 					$ele.anycontent({
@@ -1312,7 +1309,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			var folder = o.folder || newFileName.charAt(0);
 			$(img).attr('data-filename',folder+'/'+newFileName); //used during the save.
 			reader.onload = function(evt) {
-				adminApp.model.addDispatchToQ({
+				$._app.model.addDispatchToQ({
 					'_cmd':'adminImageUpload',
 					'base64' : btoa(evt.target.result), //btoa is binary to base64
 					'folder' : folder,
@@ -1325,7 +1322,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 							}
 						}
 					},'passive');
-				adminApp.model.dispatchThis('passive');
+				$._app.model.dispatchThis('passive');
 //				xhr.sendAsBinary(evt.target.result);
 				};
 			reader.readAsBinaryString(file);
@@ -1822,7 +1819,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_handleInitialState : function()	{
 			if(this.options.state == 'persistent' && this.options.name && this.options.extension)	{
 //				dump(" -> using persistent settings");
-				var settings = adminApp.model.dpsGet(this.options.extension,'anypanel');
+				var settings = $._app.model.dpsGet(this.options.extension,'anypanel');
 				if(settings && settings[this.options.name])	{
 					this.options.state = settings[this.options.name].state; //if not defined, default to expand.
 					}
@@ -1876,10 +1873,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 				if(this.options.extension && this.options.name)	{
 					var settings = {};
 					settings[this.options.name] = {'state':value};
-					var newSettings = $.extend(true,adminApp.model.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
+					var newSettings = $.extend(true,$._app.model.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
 //					dump(' -> '+this.options.extension);
 //					dump(' -> newSettings:');	dump(newSettings);
-					adminApp.model.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
+					$._app.model.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
 				else	{
@@ -1955,7 +1952,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element, //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-			guid = adminApp.u.guidGenerator()
+			guid = $._app.u.guidGenerator()
 			
 			if($t.data('isstickytab'))	{
 				//already in a stickytab. do nothing.

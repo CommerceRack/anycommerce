@@ -802,7 +802,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
-				if($form)	{
+				dump("BEGIN cco.u.sanitizeAndUpdateCart");
+				if($form instanceof jQuery)	{
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON();
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
@@ -864,6 +865,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					delete formObj['price']; //admin UI for line item editing.
 
 					_app.ext.cco.calls.cartSet.init(formObj,_tag); //adds dispatches.
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In cco.u.sanitizeAndUpdateCart, $form was not a valid instance of jQuery.","gMessage":true});
 					}
 				}, //sanitizeAndUpdateCart
 
