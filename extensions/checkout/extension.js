@@ -106,14 +106,20 @@ var order_create = function(_app) {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
 //				_app.u.dump("BEGIN adminCustomerDetail callback for 1PC");
-				tagObj.jqObj.hideLoading();
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
-				_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+				if(tagObj.jqObj instanceof jQuery)	{
+					tagObj.jqObj.hideLoading();
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+					_app.ext.order_create.u.handlePanel(tagObj.jqObj,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In order_create.callbacks.updateAllPanels.onSuccess, tagObj.jqObj was NOT an instanceof jQuery. See Console for some details.","gMessage":true});
+					dump(" -> tagObj.jqObj (which SHOULD be a jquery instance but isn't"); dump(tagObj.jqObj);
+					}
 				}
 			},
 
@@ -308,7 +314,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 			onError : function(rd)	{
 				$('body').hideLoading();
 				$('#globalMessaging').anymessage({'message':rd});
-				if(typeof _gaq)	{
+				if(typeof _gaq === 'function')	{
 					_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 					}
 
@@ -1831,7 +1837,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
-						_app.u.dump(" -> translating "+role+" cartID: "+cartID);
+//						_app.u.dump(" -> translating "+role+" cartID: "+cartID);
 //						_app.u.dump("_app.ext.order_create.u.extendedDataForCheckout()"); _app.u.dump(_app.ext.order_create.u.extendedDataForCheckout());
 						$fieldset.anycontent({'data' : _app.ext.order_create.u.extendedDataForCheckout(cartID)});
 						} //populates the template.

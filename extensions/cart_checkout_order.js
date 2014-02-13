@@ -196,7 +196,8 @@ calls should always return the number of dispatches needed. allows for cancellin
 			dispatch : function(cartID,_tag)	{
 				_tag = _tag || {};
 				_tag.datapointer = "cartOrderCreate";
-				_app.model.addDispatchToQ({'_cartid':cartID,'_cmd':'cartOrderCreate','_tag':_tag,'iama':_app.vars.passInDispatchV},'immutable');
+				// ### FUTURE -> domain being passed here is a temporary fix until email update occurs. only gets passed on admin.
+				_app.model.addDispatchToQ({'_cartid':cartID,'_cmd':'cartOrderCreate','_tag':_tag,'iama':_app.vars.passInDispatchV, 'domain' : (_app.vars.thisSessionIsAdmin ? 'www.'+_app.vars.domain : '')},'immutable');
 				}
 			},//cartOrderCreate
 
