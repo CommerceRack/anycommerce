@@ -56,7 +56,7 @@ myApp.cmr.push(['goto',function(message,$context){
 		.addClass('chat_post')
 		.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
 		.on('click',function(){
-			showContent('',message.vars);
+			showContent(myApp.ext.myRIA.u.whatAmIFor(message.vars),message.vars);
 			});
 	$history.append($P);
 	$history.parent().scrollTop($history.height());
