@@ -856,7 +856,6 @@ an existing user gets a list of previous addresses they've used and an option to
 			chkoutCartSummary : function(formObj,$fieldset)	{
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
 				isAuthenticated = _app.u.buyerIsAuthenticated();
-				
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
 					}

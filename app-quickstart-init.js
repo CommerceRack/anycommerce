@@ -46,6 +46,8 @@ myApp.cmr.push(['chat.join',function(message){
 	var $ui = myApp.ext.myRIA.a.showBuyerCMUI();
 	$("[data-app-role='messageInput']",$ui).show();
 	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+	$('.show4ActiveChat',$ui).show();
+	$('.hide4ActiveChat',$ui).hide();
 	}]);
 
 myApp.cmr.push(['goto',function(message,$context){

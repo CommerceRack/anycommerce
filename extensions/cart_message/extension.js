@@ -476,7 +476,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 							}
 						else	{
 							//success content goes here.
-							$("<div \/>").append("Cart ID: "+_app.data[rd.datapointer].csr).dialog({'modal':true});
+							$("<div \/>").append("Cart Shortcut: "+_app.data[rd.datapointer].csr).dialog({'modal':true});
 							}
 						}}},'mutable');
 					_app.model.dispatchThis('mutable');
@@ -496,7 +496,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					$ele.hide();
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In cart_message.e.cartCSRShortcutExec, unable to ascertain cartid.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In cart_message.e.chatInitExec, unable to ascertain cartid.","gMessage":true});
 					}
 				} //chatInitExec
 			

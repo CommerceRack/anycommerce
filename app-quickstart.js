@@ -3080,10 +3080,21 @@ else	{
 				},
 			
 			cartMessagePageSend : function($ele,p)	{
+				p.preventDefault();
 				var vars = _app.u.getWhitelistedObject(_app.ext.myRIA.vars.sotw,['pageType','pid','show','navcat','keywords','templateID','uriParams']); //don't need everything in sotw.
 				var cartid = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				vars.domain = (document.location.protocol == 'file:') ? _app.vars.testURL : document.domain;
-				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid},'passive');
+				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid,'_tag':{
+					'callback' : function(rd)	{
+						if(_app.model.responseHasErrors(rd)){
+							$('#cartMessenger').anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$("[data-app-role='messageHistory']",'#cartMessenger').append(vars.pageType+" page sent to admin.");
+							}
+						}
+					}},'passive');
 				_app.model.dispatchThis('passive');
 				},
 			
