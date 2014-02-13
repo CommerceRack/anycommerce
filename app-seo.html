@@ -29,7 +29,7 @@
 			$('#output').append(msg+"<br/>");
 		};
 		function request(obj, callback){
-			//console.log(apiDomain);
+			console.log(apiDomain);
 			$.extend(obj, {
 				"_clientid" : "zmvc",
 				"_uuid" : requestNum,
@@ -49,6 +49,7 @@
 		};
 		function fetchSEO(token){
 			if(!window.lock){
+				$('#seoTokenForm').hide();
 				window.lock = true;
 				window.token = token;
 				
@@ -110,7 +111,7 @@
 			
 			var $filterDiv = $('<div>Filter: <input name="pageFilter" type="text"/> <button name="checkAll">Check All</button> <button name="uncheckAll">Uncheck All</button></div>');
 			var $pageTable = $('<div class="tableContainer"><table><tbody></tbody></table></div>');
-			var $controls = $('<div id="filterControls">Max Timeout: <input name="maxTimeout" type="text" value="20"/>  Suppress Logs: <input name="suppressLogs" type="checkbox" checked="checked"/></div>');
+			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input name="maxTimeout" type="text" value="20"/>  Suppress Logs: <input name="suppressLogs" type="checkbox" checked="checked"/></div>');
 			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('input[name=maxTimeout]', $controls).val(), $('input[name=suppressLogs]', $controls).is(':checked'));});
 			
 			$('input', $filterDiv).on('keyup',function(){
@@ -176,23 +177,8 @@
 					rLog("Indexing "+domain+'#!'+currPage);
 					iframe.src = domain+"?v="+(new Date().getTime())+(suppressLogs ? "&quiet=1" : "")+"#!"+currPage;
 					
-					var numAsyncFinished = 0;
-					var numAsync = 0;
 					$(window).on('message', function(event){
-						var msg = event.originalEvent.data;
-						if(msg.indexOf("asyncProcesses:") >= 0){
-							numAsync = parseInt(msg.replace("asyncProcesses:", ""));
-						} else if(msg == "asyncFinish"){
-							console.log(msg);
-							numAsyncFinished++;
-						}
-						
-						if(numAsyncFinished < numAsync){
-							//do nothing, wait for finishes fire
-						} else {
-							finishPage(currPage);
-							indexNextPage(maxTimeout, suppressLogs);
-						}
+						//Currently ignoring all messages from the iframe, since async behavior is at this time impossible to handle
 					});
 					window.timeoutID = setTimeout(function(){
 						finishPage(currPage);
@@ -205,7 +191,7 @@
 				console.log("no more pages")
 				$(iframe).empty().remove();
 				//Temporarily bypassing this until we have a domain on 201401 to test
-				//finishSEO();
+				finishSEO();
 				window.lock = false;
 			}
 		}
@@ -230,11 +216,12 @@
 			request(obj);
 		}
 		function finishSEO(){
+			rLog('Requesting SEOFinish for token '+token);
 			var obj = {
 				"_cmd" : "appSEOFinish",
 				"token" : token
 			}
-			request(obj);
+			request(obj, function(){rLog('SEO finish command sent.  See the js console for details, or refresh to run with a new SEO Token.');});
 		};
 	</script>
 	
@@ -246,19 +233,20 @@
 		width: 600px;
 		outline: 1px solid #AAAAAA;
 	}
+	.hint {text-decoration: underline; color: grey;}
 	</style>
 </head>
 <body>
 	<p>
 		Open this file in a text editor to add custom pages or update the product and/or category blacklists
 	</p>
-	<form id="seoTokenForm" onSubmit="fetchSEO($('input[name=seoToken]',$(this)).val()); return false;">
+	<div id="seoTokenForm">
 		<div>
 			<label>Enter SEO Token</label>
 			<input type="text" required="required" name="seoToken"/>
 		</div>
-		<input type="submit" value="generate seo"></input>
-	</form>
+		<button onClick="fetchSEO($('input[name=seoToken]',$(this).parent()).val()); return false;">Submit Token</input>
+	</div>
 	<iframe id="appContainer" style="width:100%; height:400px;"></iframe>
 	<div id="pageTableContainer">
 		
