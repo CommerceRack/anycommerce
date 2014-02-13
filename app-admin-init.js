@@ -200,6 +200,14 @@ adminApp.router.appendHash({'type':'exact','route':'product','callback':function
 adminApp.router.appendHash({'type':'exact','route':'mediaLibraryManageMode','callback':function(v){
 	adminApp.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 	}});
+
+adminApp.router.appendHash({'type':'exact','route':'showPlatformInfo','callback':function(v){
+	adminApp.ext.admin_support.a.showPlatformInfo({'mode':'manage'});
+	}});
+
+
+
+
 adminApp.router.appendHash({'type':'exact','route':'logout','callback':function(v){
 	adminApp.ext.admin.a.logout();
 	}});
