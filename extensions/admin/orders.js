@@ -2008,15 +2008,15 @@ $('.editable',$container).each(function(){
 					var popup = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
 					if(popup)	{
 						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
-						var sdomain, $pop = $(popup.document);
-						if(_app.data['adminOrderDetail|'+orderID])	{
-							sdomain = _app.data['adminOrderDetail|'+orderID].our.sdomain;
+						var domain, $pop = $(popup.document);
+						if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderID+".our.domain",_app))	{
+							domain = _app.data['adminOrderDetail|'+orderID].our.domain;
 							}
-						else if(sdomain = $ele.closest("[data-sdomain]").data('sdomain'))	{}
-						else	{} //hhhmm.. no sdomain available. that means no branding.
+						else if(domain = $ele.closest("[data-domain]").data('domain'))	{}
+						else	{} //hhhmm.. no domain available. that means no branding.
 						
-						if(sdomain)	{
-							_app.calls.appProfileInfo.init({'domain':sdomain},{},'mutable'); //have this handy for any orders with no sdomain.
+						if(domain)	{
+							_app.calls.appProfileInfo.init({'domain':domain},{},'mutable'); //have this handy for any orders with no domain.
 							}
 						_app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
 						_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
@@ -2025,8 +2025,8 @@ $('.editable',$container).each(function(){
 								}
 							else	{
 								var tmpData = {};
-								if(sdomain)        {
-									tmpData = $.extend(true,{},_app.data[rd.datapointer],_app.data['appProfileInfo|'+sdomain]);
+								if(domain)        {
+									tmpData = $.extend(true,{},_app.data[rd.datapointer],_app.data['appProfileInfo|'+domain]);
 									}
 								else        {
 									tmpData = _app.data[rd.datapointer];

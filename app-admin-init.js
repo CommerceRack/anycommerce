@@ -260,3 +260,4 @@ adminApp.router.appendInit({
 		adminApp.router.handleHashChange();
 		}
 	});
+
