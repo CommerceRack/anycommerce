@@ -33,16 +33,19 @@ var store_routing = function(_app) {
 			onSuccess : function()	{
 				var r = false; 
 				
-				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
+				_app.router.addAlias('homepage', 	function(routeObj){showContent('homepage',	routeObj.params);});
 				_app.router.addAlias('category', 	function(routeObj){showContent('category',	routeObj.params);});
+				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
 				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
 				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});
 				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
 				_app.router.addAlias('cart', 		function(routeObj){showContent('cart',		routeObj.params);});
 				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
 				
-				_app.router.appendHash({'type':'match','route':'/product/{{pid}}/*','callback':'product'});
+				_app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
+				_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
 				_app.router.appendHash({'type':'match','route':'/category/{{navcat}}/*','callback':'category'});
+				_app.router.appendHash({'type':'match','route':'/product/{{pid}}/*','callback':'product'});
 				_app.router.appendHash({'type':'match','route':'/company/{{show}}/','callback':'company'});
 				_app.router.appendHash({'type':'match','route':'/customer/{{show}}/','callback':'customer'});
 				_app.router.appendHash({'type':'match','exact':'/checkout/','callback':'checkout'});
