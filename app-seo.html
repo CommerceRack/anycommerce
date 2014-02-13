@@ -214,6 +214,8 @@
 			dochtml = dochtml.replace(removeHtml, $tmp.html());
 			$tmp.remove();
 			
+			var iframeHash = $('#appContainer').get(0).contentWindow.location.hash;
+			console.log(iframeHash);
 			
 			var html = doctype + dochtml;
 			var obj = {
