@@ -107,7 +107,9 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 							_app.model.dpsSet('cartMessages','lastMessageTS',_app.u.epochNow()); //record when the last message came in. used at init.
 							}
 						else	{
-							(_app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : _app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
+							if(_app.ext.cart_message.vars.carts[cartID])	{
+								(_app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : _app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
+								}
 							}
 //now queue up the next request.
 						_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);

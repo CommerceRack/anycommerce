@@ -1572,8 +1572,6 @@ setTimeout(function(){
 				},
 				
 
-
-
 //obj is going to be the container around the img. probably a div.
 //the internal img tag gets nuked in favor of an ordered list.
 			addPicSlider2UL : function(){
