@@ -1050,7 +1050,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 									_app.ext.order_create.u.handlePanel($chkContainer,role,['handleDisplayLogic']);
 									});
 //								_app.u.dump(" -> handlePanel has been run over all fieldsets.");
-								if(Number(zGlobals.globalSettings.inv_mode) > 1 && !_app.u.thisIsAnAdminSession())	{
+								if(_app.u.thisNestedExists("zGlobals.globalSettings.inv_mode") && Number(zGlobals.globalSettings.inv_mode) > 1 && !_app.u.thisIsAnAdminSession())	{
 									_app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
 									_app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create','jqObj':$checkoutContents});
 									_app.model.dispatchThis('immutable');
