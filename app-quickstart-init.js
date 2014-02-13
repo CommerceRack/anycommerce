@@ -46,6 +46,8 @@ myApp.cmr.push(['chat.join',function(message){
 	var $ui = myApp.ext.myRIA.a.showBuyerCMUI();
 	$("[data-app-role='messageInput']",$ui).show();
 	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+	$('.show4ActiveChat',$ui).show();
+	$('.hide4ActiveChat',$ui).hide();
 	}]);
 
 myApp.cmr.push(['goto',function(message,$context){
@@ -54,7 +56,7 @@ myApp.cmr.push(['goto',function(message,$context){
 		.addClass('chat_post')
 		.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
 		.on('click',function(){
-			showContent('',message.vars);
+			showContent(myApp.ext.myRIA.u.whatAmIFor(message.vars),message.vars);
 			});
 	$history.append($P);
 	$history.parent().scrollTop($history.height());
