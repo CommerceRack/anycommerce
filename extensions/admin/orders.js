@@ -2002,9 +2002,17 @@ $('.editable',$container).each(function(){
 
 
 			orderPrint : function($ele,p)	{
+				dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID && $ele.data('loadstemplate'))	{
 // SANITY -> browsers didn't like it when the popup was triggered after an ajax request. so instead, we open the popup right away, then populate the content later, followed by the print cmd.
+
+// A new approach to printing.  needs testing.
+//var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($("#printContainer").empty()); //the print container.  emptied to make sure anything leftover from last print is gone.
+//$iframe.contents().find('body').append('<h1>JT WAS HERE!</h1>')
+//$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
+//window.frames["printContainerIframe"].focus(); window.frames["printContainerIframe"].print();
+
 					var popup = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
 					if(popup)	{
 						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
