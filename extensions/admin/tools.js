@@ -104,8 +104,8 @@ var admin_tools = function(_app) {
 						}
 					});
 
+				_app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable'); //have these handy for editor. ### TODO -> don't call these till necessary
 				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
-				_app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'immutable'); //have these handy for editor. ### TODO -> don't call these till necessary
 				_app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
 					$master.hideLoading();
 					$('tr',$enabled).each(function(){$(this).attr('data-guid',_app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
